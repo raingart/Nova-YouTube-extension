@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>__MSG_app_name__ settings</title>
+
+   <link rel="stylesheet" href="/css/libs/normalize.min.css">
+   <link rel="stylesheet" href="/css/libs/tooltip/tooltip.min.css" />
+   <link rel="stylesheet" href="/css/libs/tooltip/tooltip-animation.min.css" />
+   <link rel="stylesheet" href="/css/libs/switch_checkbox.css" />
+   <link rel="stylesheet" href="/css/libs/tabs.css" />
+
+   <link rel="stylesheet" href="/css/globals.css" />
+   <link rel="stylesheet" href="/css/options.css" />
+   <link rel="stylesheet" href="/css/appearance.css" />
+
+   <!-- libs -->
+   <script src="/js/libs/localization.js"></script>
+   <script src="/js/libs/storage.js"></script>
+   <script src="/js/libs/retrieve-ui.js"></script>
+   <script src="/js/libs/options.js"></script>
+
+   <!-- scripts -->
+   <script src="/js/plugins.js"></script>
+   <script src="/js/opt.js"></script>
+
+</head>
+
+<body>
+   <div class="wrapper">
+      <div class="container">
+
+         <!-- <div class="appearance_container"></div> -->
+
+         <div class="tabbed">
+            <input type="radio" name="tabs" id="tab_1" checked>
+            <label for="tab_1">Map</label>
+
+            <input type="radio" name="tabs" id="tab_2">
+            <label for="tab_2" id="show_all_plugins">Plugins</label>
+
+            <input type="radio" name="tabs" id="tab_3">
+            <label for="tab_3">About</label>
+
+
+            <div class="tabs-content">
+               <div class="appearance_container">
+                  <div class="appearance">
+                     <div class="header" id="header">
+                        <span>Header</span>
+                     </div>
+                     <div class="player" id="player">
+                        <span>Player</span>
+                     </div>
+                     <div class="sidebar" id="sidebar">
+                        <span>Sidebar</span>
+                     </div>
+                     <div class="details" id="details">
+                        <span>Details</span>
+                     </div>
+                     <div class="description" id="description">
+                        <span>Description</span>
+                     </div>
+                     <div class="comments" id="comments">
+                        <span>Comments</span>
+                     </div>
+                     <div class="footer" id="footer">
+                        <span>Footer</span>
+                     </div>
+                     <div class="other" id="other">
+                        <span>Other</span>
+                     </div>
+                  </div>
+               </div>
+
+               <div>
+                  <form enctype="multipart/form-data" class="opts_container">
+
+                     <div class="between">
+                        <h2>__MSG_opt_setting__</h2>
+                        <a href="#" id="show_all_plugins">All plugins</a>
+                     </div>
+
+                     <hr />
+
+                     <ul id="plugins">
+                        <ul id="header" class="active"></ul>
+                        <ul id="player" class="active"></ul>
+                        <ul id="sidebar" class="active"></ul>
+                        <ul id="details" class="active"></ul>
+                        <ul id="description" class="active"></ul>
+                        <ul id="comments" class="active"></ul>
+                        <ul id="footer" class="active"></ul>
+                        <ul id="other" class="active"></ul>
+                     </ul>
+
+                     <!-- <div class="item">
+                        <div class="info" tooltip="__MSG_opt_example_tooltip__" flow="left">
+                           <label for="id-example">__MSG_opt_example__
+                              <span>__MSG_opt_example_desc__</span>
+                           </label>
+                        </div>
+                        <div class="opt">
+                           <input type="checkbox" name="id-example" id="id-example" />
+                        </div>
+                     </div> -->
+
+                     <!-- <hr /> -->
+
+                     <div class="between">
+                        <button type="submit" tooltip="__MSG_opt_bth_save_settings_tooltip__" flow="right">__MSG_opt_bth_save_settings__</button>
+                     </div>
+
+                  </form>
+               </div>
+
+               <div>
+                  <ul>
+                     <li>
+                        <a href="https://github.com/raingart/YouTubeCore-extension" target="_blank" tooltip="__MSG_github_page_tooltip__"
+                           flow="right">__MSG_github_page__</a>
+                     </li>
+                     <li>
+                        <a href="https://github.com/raingart/YouTubeCore-extension/issues/new" target="_blank" tooltip="__MSG_github_page_issues_tooltip__"
+                           flow="right">__MSG_github_page_issues__</a>
+                     </li>
+                     <li>
+                        <a href="https://www.patreon.com/bePatron?c=884203" target="_blank" tooltip="__MSG_donate_tooltip__"
+                           flow="right">__MSG_donate__</a>
+                     </li>
+                  </ul>
+               </div>
+
+            </div>
+            <!-- </div> -->
+         </div>
+
+
+
+
+      </div>
+   </div>
+
+</body>
+
+</html>

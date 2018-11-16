@@ -1,0 +1,84 @@
+.appearance_container {
+   width: 350px;
+   margin: 5px auto;
+}
+
+.appearance {
+   grid-column: appearance;
+   display: grid;
+   grid-gap: 10px;
+   grid-template-columns: auto 25% 10%;
+   grid-template-areas: "header header other" "player sidebar other" "video_info sidebar other" "description sidebar other" "comments empty other" "footer footer other";
+}
+
+.appearance>* {
+   /* border: 1px solid #ddd;
+   background: #fff;     */
+   outline: 1px solid #3d3d3d;
+   min-height: 35px;
+   cursor: pointer;
+   user-select: none;
+   position: relative;
+}
+.appearance>*:hover {
+   outline-color: deepskyblue;
+}
+
+.appearance>.header {
+   grid-area: header;
+}
+
+.appearance>.player {
+   grid-area: player;
+   height: 100px;
+   color: #efefef;
+   background: url(../images/appearance_player.png) no-repeat center bottom;
+   background-size: 100% auto;
+   background-color: #000;
+}
+
+.appearance>.sidebar {
+   grid-area: sidebar;
+}
+
+.appearance>.sidebar>span,
+.appearance>.other>span {
+   /* writing-mode: vertical-rl;
+   transform: rotate(180deg); */
+   transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.appearance>.video_info {
+   grid-area: video_info;
+}
+
+.appearance>.description {
+   grid-area: description;
+}
+
+.appearance>.comments {
+   grid-area: comments;
+   height: 100px;
+}
+
+.appearance>.footer {
+   grid-area: footer;
+}
+
+.appearance>.other {
+   grid-area: other;
+}
+.appearance>.other:hover {
+   outline-color: coral;
+}
+
+.appearance>*>span {
+   position: absolute;
+   text-align: center;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   text-transform: uppercase;
+   font-size: 1.2em;
+   color: #8d9399;
+}

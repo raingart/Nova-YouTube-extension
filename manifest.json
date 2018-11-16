@@ -1,0 +1,55 @@
+{
+   "manifest_version": 2,
+   "name": "__MSG_app_name__",
+   "short_name": "__MSG_app_short_name__",
+   "description": "__MSG_app_description__",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "default_locale": "en",
+   "version": "0.3.0",
+   "author": "raingart",
+   "permissions": [
+      "storage",
+      "tabs",
+      "*://www.googleapis.com/*",
+      "*://*/*"
+   ],
+   "background": {
+      "page": "/html/background.html",
+      "persistent": true
+   },
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+   "content_scripts": [{
+      "exclude_globs": [ "*/embed/*" ],
+      "matches": [ "*://www.youtube.com/*", "*://www.youtu.be/*" ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "js": [
+         "/js/plugins.js",
+         "/js/libs/ytc_lib.js",
+         "/js/contentApp.js"
+      ],
+      "css": []
+   }],
+   "web_accessible_resources": [
+      "/plugins/*",
+      "/js/libs/ytc_lib.js"
+   ],
+   "icons": {
+      "16": "/icons/16.png",
+      "48": "/icons/48.png",
+      "128": "/icons/128.png"
+   },
+   "options_page": "/html/options.html",
+   "options_ui": {
+      "chrome_style": false,
+      "page": "/html/options.html"
+   },
+   "browser_action": {
+      "default_icon": {
+         "16": "/icons/16.png",
+         "48": "/icons/48.png",
+         "128": "/icons/128.png"
+      },
+      "default_popup": "/html/options.html"
+   }
+}

@@ -1,0 +1,51 @@
+{
+   "localization": {
+      "message": "en"
+   },
+   "app_name": {
+      "message": "YouTube Core"
+   },
+   "app_short_name": {
+      "message": "YT-Core"
+   },
+   "app_description": {
+      "message": "Combine small plugins, expanding the possibilities of YouTube"
+   },
+
+   "opt_setting": {
+      "message": "plugins"
+   },
+
+   "github_page": {
+      "message": "Source Code"
+   },
+   "github_page_tooltip": {
+      "message": "Open"
+   },
+   "github_page_issues": {
+      "message": "Report Bugs"
+   },
+   "github_page_issues_tooltip": {
+      "message": "To Report"
+   },
+
+   "opt_bth_save_settings": {
+      "message": "Save"
+   },
+   "opt_bth_save_settings_process": {
+      "message": "Saving..."
+   },
+   "opt_bth_save_settings_processed": {
+      "message": "Saved!"
+   },
+   "opt_bth_save_settings_tooltip": {
+      "message": "Open tabs will remain unchanged"
+   },
+
+   "donate_tooltip": {
+      "message": "Support with Patreon"
+   },
+   "donate": {
+      "message": "Donate"
+   }
+}

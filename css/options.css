@@ -1,0 +1,249 @@
+/*------------------*/
+
+.container {
+   display: grid;
+   grid-gap: 15px;
+   /* grid-template-columns: 300px auto; */
+   grid-template-columns: [left appearance] 1fr [right opts];
+}
+
+.opts_container {
+   grid-column: opts;
+   /* min-width: 350px; */
+}
+
+.tabs-content > div {
+   min-height: 15em;
+}
+
+/*------------------*/
+
+body {
+   background-color: #1c1c1c;
+   /* color: white; */
+   color: #D5DDE5;
+   color: slategrey;
+   /* background-color: #eee; */
+   min-width: 300px;
+}
+
+ul {
+   margin: 0;
+   padding: 0;
+}
+
+/* .active {
+   background-color: yellowgreen;
+} */
+
+ul.collapse:before {
+   padding-left: 5px;
+}
+
+ul.collapse:after {
+   content: "+";
+   position: absolute;
+   top: 0;
+   line-height: 1.5em;
+}
+
+#plugins>ul {
+   position: relative;
+}
+
+#plugins>ul:not(.active) {
+   display: none;
+}
+
+#plugins>ul:not(:empty):before {
+   cursor: pointer;
+   display: block;
+   /* background-color: cornflowerblue; */
+   /* padding: 2px 5px;
+   margin: 5px auto 2px;*/
+   text-transform: uppercase;
+   color: rgba(255, 255, 255, .5);
+
+   font-size: 15px;
+   margin: 15px 0 0;
+   /* margin: 10px 0; */
+   border-bottom: 1px dashed #3d3d3d;
+   /* font-style: italic; */
+   /* text-decoration: overline; */
+   white-space: pre;
+   font-family: monospace;
+   /* font-weight: bold; */
+   text-indent: 5px;
+   /* background: #1b1e24; */
+   border-color: #343a45;
+}
+
+#plugins>ul#header:not(:empty):before {
+   content: "header";
+}
+
+#plugins>ul#player:not(:empty):before {
+   content: "player";
+}
+
+#plugins>ul#sidebar:not(:empty):before {
+   content: "sidebar";
+}
+
+#plugins>ul#details:not(:empty):before {
+   content: "details";
+}
+
+#plugins>ul#description:not(:empty):before {
+   content: "description";
+}
+
+#plugins>ul#comments:not(:empty):before {
+   content: "comments";
+}
+
+#plugins>ul#footer:not(:empty):before {
+   content: "footer";
+}
+
+#plugins>ul#other:not(:empty):before {
+   content: "other";
+}
+
+li>ul {
+   /* background-color: aliceblue; */
+}
+
+li>ul>li {
+   /* border-top: 1px solid #e0e0e0; */
+   border-top: 1px solid #575757;
+   padding-left: 2em;
+   display: grid;
+   /* grid-template-columns: 1fr auto; */
+   grid-template-columns: [left label] 1fr [right input];
+}
+
+ul>li>label {
+   grid-column: label;
+   align-self: center;
+}
+
+ul>li>label+* {
+   grid-column: input;
+   align-self: center;
+   justify-self: center;
+}
+
+.container {
+   /* margin: 5px 25px; */
+   margin: 0 10px 5px
+}
+
+.container>form>div {
+   padding: 8px 0;
+}
+
+.container .item {
+   display: grid;
+   grid-template-columns: 1fr auto;
+   grid-template-areas: "info opt""ul ul";
+   /* grid-template-columns: [left info] 1fr [right opt]; */
+   margin: 5px 0;
+}
+
+.container .item:nth-child(odd) {
+   /* background:#4E5066; */
+}
+
+.container .item:nth-child(odd):hover {}
+
+.container .item:not(:last-child) {
+   /* border-bottom: 1px solid #e0e0e0; */
+   border-bottom: 1px dashed #3d3d3d;
+}
+
+/* .container .item:not(:last-child) {
+   border-top: 1px solid #e0e0e0;
+} */
+
+/* .container .item:last-child {
+   margin: 0 5px;
+} */
+
+.info {
+   grid-column: info;
+   align-self: center;
+}
+
+.opt {
+   grid-column: opt;
+   align-self: center;
+   justify-self: center;
+}
+
+.opt+ul,
+.info+ul {
+   grid-column: ul;
+   /* align-self: center;
+   justify-self: center; */
+}
+
+label {
+   cursor: pointer;
+}
+
+label>span {
+   display: block;
+   color: grey;
+   font-size: 12px;
+   font-style: italic;
+   text-transform: capitalize;
+   /* text-indent: 5px */
+}
+
+label>span>q {
+   font-style: italic;
+   color: #006b9e;
+   quotes: "\00ab""\00bb";
+}
+
+label>i {
+   color: slategrey;
+   font-size: 10px;
+}
+
+hr {
+   margin: 5px auto 8px;
+}
+
+h2 {
+   font-weight: normal;
+   margin: 0;
+}
+
+div.between {
+   justify-content: space-between;
+   display: flex;
+   flex-direction: row;
+}
+
+div.between:last-child {
+   margin-top: 1.5em;
+}
+
+div.between>a {
+   align-self: center;
+}
+
+input[type=number] {
+   width: 3em;
+}
+
+.button,
+button,
+input,
+select,
+textarea {
+   background-color: #171717;
+   border: 1px solid #2d2d2d;
+}
