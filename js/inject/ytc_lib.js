@@ -75,9 +75,9 @@ const PolymerYoutube = {
             return object;
          }
          // work executing
-         function startObserver() {
+         let startObserver = () => {
             check(doc);
-         }
+         };
 
          // return { getObserver: function () {
          return (function () {
@@ -207,7 +207,10 @@ const PolymerYoutube = {
 }
 
 
-const RequestFetch = (url, payload, typeResponse, callback) => {
+const RequestFetch = function (url, payload, typeResponse, callback) {
+   url = PolymerYoutube.api_url + url; // for safe
+   // console.log('url', url);
+   
    fetch(url, payload)
       .then(res => {
          return (res.status >= 200 && res.status < 300) ?

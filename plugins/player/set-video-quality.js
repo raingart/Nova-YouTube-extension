@@ -52,13 +52,13 @@ _plugins.push({
             label: 'Quality',
             options: [
                /* beautify preserve:start */
-               { label: '4320p (8k/QUHD)', value: 'highres' },
-               { label: '2880p (5k/UHD+)', value: 'hd2880' },
-               { label: '2160p (4k/UHD)', value: 'hd2160' },
-               { label: '1440p (UHD)', value: 'hd1440' },
+               { label: '4320p (8k/FUHD)', value: 'highres' },
+               { label: '2880p (5k/UHD)', value: 'hd2880' },
+               { label: '2160p (4k/QFHD)', value: 'hd2160' },
+               { label: '1440p (QHD)', value: 'hd1440' },
                { label: '1080p (FHD)', value: 'hd1080' },
                { label: '720p (HD)', value: 'hd720' },
-               { label: '480p', value: 'large' },
+               { label: '480p (SD)', value: 'large' },
                { label: '360p', value: 'medium' },
                { label: '240p', value: 'small' },
                { label: '144p', value: 'tiny' },

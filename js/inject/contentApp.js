@@ -4,12 +4,12 @@ console.log(": init content.js");
 
 const App = {
 
-   // DEBUG: true,
+   DEBUG: true,
 
    // Register the event handlers.
    eventListener: (function () {
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-         App.log("Message from the background script:", JSON.stringify(request));
+         App.log("Message from the background script: %s", JSON.stringify(request));
 
          switch (request.action) {
             // case 'getOptions':
@@ -24,6 +24,7 @@ const App = {
             //   sendResponse(resp);
             // break;
 
+            // if options is update
             case 'setOptions':
                App.storage.set(request.options);
 
@@ -80,6 +81,15 @@ const App = {
       //    App.run.direct();
       // });
 
+      // document.addEventListener('yt-navigate-finish', function () {
+         // console.log('yt-navigate-finish');
+      // });
+
+      document.addEventListener('yt-preconnect-urls', function () {
+         // console.log('yt-preconnect-urls');
+         if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
+      });
+
       // document.addEventListener("webkitfullscreenchange", function () {
       //    console.log('webkitfullscreenchange');
       //    // var R = document.getElementById('PlayBackRatePanel');
@@ -98,6 +108,9 @@ const App = {
 
       // window.addEventListener('focus', function () {
       //    console.log('window focus');
+      // });
+      // window.addEventListener('yt-preconnect-urls', function () {
+      //    console.log('yt-preconnect-urls');
       // });
 
 
@@ -127,7 +140,7 @@ const App = {
    // sessionSettings: null,
 
    storage: {
-      set: (options) => {
+      set: options => {
          App.sessionSettings = options;
          let apiKeys = [
             "AIzaSyA-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA",
@@ -138,13 +151,12 @@ const App = {
          App.sessionSettings.api_key = getRandArrayItem(apiKeys);
       },
 
-      load: (callback) => {
+      load: callback => {
+         // exclude re-receive settings
          chrome.runtime.sendMessage({
             action: 'getOptions'
-         }, (resp) => {
-            // if (callback && typeof (callback) === "function") {
-            //    return callback();
-            // }
+         }, resp => {
+            // if (callback && typeof (callback) === 'function') return callback(resp);
          });
       }
    },
@@ -152,6 +164,7 @@ const App = {
    ready: {},
 
    rerun: () => {
+      // skip first run on page load
       if (App.ready.sandbox && App.ready.direct) {
          App.log('page changed');
          setTimeout(() => {
@@ -165,57 +178,43 @@ const App = {
       App.log('init');
       App.storage.load();
 
-      document.addEventListener('yt-navigate-finish', function () {
-      // console.log('yt-navigate-finish');
-      // });
-      // document.addEventListener('yt-navigate-start', function () {
-         // console.log('yt-navigate-start');
-         // do stuff
-         if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
-      });
-
       //sandbox
       Plugins.load.sandbox();
       let sandbox_wait_loaded = setInterval(() => {
-         App.log("sandbox_wait_loaded load", App.sandbox_loaded, _plugins.length);
+         App.log("sandbox_wait_loaded load %s", App.sandbox_loaded, _plugins.length);
 
-         if (App.sandbox_loaded && _plugins.length) {
+         // wait load sandbox plugins
+         if (App.sandbox_loaded/* && _plugins.length*/) {
+            // wait load setting
             if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
                clearInterval(sandbox_wait_loaded);
                App.run.sandbox();
 
+               // access to rerun
                App.ready.sandbox = true;
             }
          }
       }, 50);
 
       //direct
-      PolymerYoutube.waitFor('head', function (element) {
+      PolymerYoutube.waitFor('head', function (element) {// wait head tag
          Plugins.load.direct_init();
          Plugins.load.direct();
 
          let waitYT = setInterval(() => {
             App.log('waitYT');
+            // wait load setting
             if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
                clearInterval(waitYT);
 
                Plugins.injectScript.in_direct("plugins_run = " + Plugins.run, 'script');
                App.run.direct();
 
+               // access to rerun
                App.ready.direct = true;
             }
          }, 50);
       });
-
-      // window.addEventListener("DOMContentLoaded", () => {
-      //    console.log('DOMContentLoaded');
-      //    App.rerun = () => {
-      //       console.log('rerun');
-      //       App.run.sandbox();
-      //       App.run.direct();
-      //    };
-      //    // window.removeEventListener("DOMContentLoaded", null, null);
-      // });
    },
 
    run: {
@@ -236,6 +235,7 @@ const App = {
             }, 100)";
          };
 
+         // run in new setting
          Plugins.injectScript.in_direct(
             plugins_execute(
                JSON.stringify(App.getPageType()),

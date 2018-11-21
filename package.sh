@@ -21,4 +21,5 @@ zip -r $FILENAME.zip \
                   plugins/*.js \
                   plugins/*/*.js \
                   manifest.json \
+#  -x \*.DS_Store
 # -z $TODAY

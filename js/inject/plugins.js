@@ -104,7 +104,7 @@ const Plugins = {
             "action": "injectScript",
             "src": src
          });
-         Plugins.log('script injected:', chrome.extension.getURL(src));
+         Plugins.log('script injected: %s', chrome.extension.getURL(src));
       },
 
       in_direct: (source, type) => {
@@ -162,97 +162,4 @@ const Plugins = {
          console.log('Plugins:', msg);
       }
    },
-
-
-
-
-   // pre_pl_request: () => {
-   //    for (const i in _plugins) {
-   //       let plugin_id = _plugins[i];
-
-   //       if (plugin_id.depends_request) {
-   //          Plugins.pl_request_add(plugin_id.depends_request);
-   //       }
-   //       // _plugins.splice(i, 1);
-   //    }
-   //    Plugins.pl_request_run (
-   //       function (res) {
-   //       // Plugins.plugin_request_data_2 = res;
-   //       console.log('Plugins.googleapis', JSON.stringify(Plugins.googleapis));
-   //    }
-   //    );
-   // },
-
-   // save data from request
-   // googleapis: {
-   //    videos: null,
-   //    channels: null,
-   // },
-
-   // // request param
-   // pl_request_param: {
-   //    videos: [],
-   //    channels: []
-   // },
-
-   // // request param add
-   // pl_request_add: newItems => {
-   //    for (var k in newItems) {
-   //       Plugins.pl_request_param[k].push(...newItems[k])
-   //       // newItems[k].toString().split(',')
-   //       //    .map((v) => Plugins.pl_request_param[k].push(v));
-
-   //       //unique
-   //       Plugins.pl_request_param[k] = Plugins.pl_request_param[k].toString().split(',').filter((value, index, self) => self.indexOf(value) === index)
-   //    }
-   //    console.log('1pn_request_data', JSON.stringify(Plugins.pl_request_param));
-   // },
-
-   // pl_request_run: callback => {
-   //    let channel_url = element.getAttribute("href").split('/');
-   //    let channel_id = channel_url[channel_url.length - 1];
-
-   //    if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
-   //       console.error('channel_id is not valid');
-   //       return false;
-   //    }
-
-   //    if (pl_request_param.videos.length) {
-   //       let url = "https://www.googleapis.com/youtube/v3/videos" +
-   //          "?id=" + video_id +
-   //          '&key=' + App.sessionSettings.api_key +
-   //          // '&part=snippet';
-   //          '&part=' + pl_request_param.videos.join();
-
-   //       let _callback = (res) => {
-   //          Plugins.googleapis.videos = res;
-   //          if (callback && typeof (callback) === 'function') return callback();
-   //       };
-
-   //       HTTP_request.fetch(url, {}, 'json', _callback);
-   //    }
-
-   // videos[0]snippet.channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
-
-   // if (pl_request_param.channels.length) {
-   //    let url = "https://www.googleapis.com/youtube/v3/channels" +
-   //       "?id=" + channel_id +
-   //       '&key=' + App.sessionSettings.api_key +
-   //       '&part=' + pl_request_param.channels.join();
-
-   //    // let payload = request.payload || {
-   //    //    /*
-   //    //       'method': 'GET',
-   //    //       mode: 'no-cors', 
-   //    //       'payload': {
-   //    //          'client': 'gtx', // official Google Translate extension
-   //    //       }*/
-   //    // };
-   //    let _callback = (res) => {
-   //       Plugins.googleapis.channels = res;
-   //       if (callback && typeof (callback) === 'function') return callback();
-   //    };
-   //    HTTP_request.fetch(url, {}, 'json', _callback);
-   // }
-   // },
 }

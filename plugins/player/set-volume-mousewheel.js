@@ -35,7 +35,6 @@ _plugins.push({
 
             // console.log('playerId.getVolume()', playerId.getVolume());
             // console.log('delta', delta);
-            // console.log('parseInt(playerId.getVolume()) + delta', parseInt(playerId.getVolume()) + delta);
             // console.log('level', level);
             playerId.setVolume(level); // 0 - 100
             saveVolume(level);

@@ -8,7 +8,7 @@
    display: grid;
    grid-gap: 10px;
    grid-template-columns: auto 20% 10%;
-   grid-template-areas: "header header other" "player sidebar other" "video_info sidebar other" "description sidebar other" "comments empty other" "footer footer other";
+   grid-template-areas: "header header other""player sidebar other""video_info sidebar other""description sidebar other""comments empty other""footer footer other";
 }
 
 .appearance>* {
@@ -20,7 +20,8 @@
    user-select: none;
    position: relative;
 }
-.appearance>*:hover {
+
+.appearance>*:not(.empty):hover {
    outline-color: deepskyblue;
 }
 
@@ -68,6 +69,7 @@
 .appearance>.other {
    grid-area: other;
 }
+
 .appearance>.other:hover {
    outline-color: coral;
 }
@@ -81,4 +83,9 @@
    text-transform: uppercase;
    font-size: 1.2em;
    color: #8d9399;
+}
+
+.appearance .empty>span {
+   text-decoration: line-through !important;
+   opacity: .3;
 }

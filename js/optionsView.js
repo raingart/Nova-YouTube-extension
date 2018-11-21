@@ -184,7 +184,7 @@ const Opt = {
    },
 
    init: () => {
-      Opt.eventListener(".appearance > *");
+      Opt.eventListener(".appearance > *:not(.empty)");
       Opt.plugins_.showTable();
    },
 

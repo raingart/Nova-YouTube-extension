@@ -10,13 +10,7 @@ const Background = {
       }, true /* true=sync, false=local */ );
    }()),
 
-   // onMessage: function (request, sender, sendResponse) {
-   // },
-
-   // getPageType: (url) => {
-   //    let page = url.split('/')[1];
-   //    return (page == 'channel' || page == 'user') ? 'channel' : page;
-   // },
+   // onMessage: function (request, sender, sendResponse) {},
 
    // Register the event handlers.
    eventListener: (function () {
@@ -88,20 +82,6 @@ const Background = {
       //    // console.log('onUpdated');
       //    if (changeInfo && changeInfo.status == "complete") {
       //       console.log("Tab updated:", tab.url);
-
-      //       // if (Background.getPageType(tab.url) == "channel") {
-      //       chrome.tabs.sendMessage(tabId, {
-      //          action: 'tabUpdated',
-      //          options: tab.url
-      //       }, (response) => {});
-      //       // }
-
-      //       // chrome.tabs.executeScript(
-      //       //    tabId, {
-      //       //    file: '/js/inject.js'
-      //       // }, function (result) {
-      //       //    Background.log('result bg', JSON.stringify(result))
-      //       // });
       //    }
       // });
    }()),

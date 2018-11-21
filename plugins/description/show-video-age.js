@@ -39,7 +39,7 @@ _plugins.push({
          };
 
          // RequestFetch(soundUrl, payload, type, _callback);
-         RequestFetch(PolymerYoutube.api_url + url, {}, 'json', _callback);
+         RequestFetch(url, {}, 'json', _callback);
 
       });
 
