@@ -17,7 +17,7 @@ zip -r $FILENAME.zip \
                   icons/128.png \
                   images/*.png \
                   js/*.js \
-                  js/libs/*.js \
+                  js/*/*.js \
                   plugins/*.js \
                   plugins/*/*.js \
                   manifest.json \

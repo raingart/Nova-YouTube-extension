@@ -3,12 +3,13 @@
 console.log(": init content.js");
 
 const App = {
-   DEBUG: true,
+
+   // DEBUG: true,
 
    // Register the event handlers.
    eventListener: (function () {
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-         App.log("Message from the background script: %s", JSON.stringify(request));
+         App.log("Message from the background script:", JSON.stringify(request));
 
          switch (request.action) {
             // case 'getOptions':
@@ -35,7 +36,11 @@ const App = {
                break;
 
             case 'tabUpdated':
-               // console.log('request.options %s', JSON.stringify(request.options));
+               // console.log('request.options', JSON.stringify(request.options));
+               break;
+
+            case 'sendMessage':
+               console.log(request.message);
                break;
 
             default:
@@ -43,18 +48,72 @@ const App = {
          }
       });
 
-      // wait head page
+      // // wait head page
       // window.addEventListener("DOMContentLoaded", () => {
       //    console.log('DOMContentLoaded');
-      //    window.removeEventListener("DOMContentLoaded", null, null);
+      //    // window.removeEventListener("DOMContentLoaded", null, null);
       // });
 
       // window.addEventListener("loadstart", function (evt) {
-      //    if (!(evt.target instanceof window.HTMLMediaElement)) return;
-      //    console.log("loadstart load");
-      //    window.removeEventListener("loadstart", null, null);
-      //    App.connect();
+      //    console.log('loadstart');
+      //    // if (!(evt.target instanceof window.HTMLMediaElement)) return;
+      //    // console.log("loadstart load");
+      //    // window.removeEventListener("loadstart", null, null);
+      //    // App.connect();
       // }, true);
+
+      // document.addEventListener('transitionend', function (event) {
+      //    console.log('transitionend', JSON.stringify(event.target.id));
+      //    // console.log('event.propertyName', event.propertyName);
+      //    // if (event.target.id === 'progress')
+      //    // if (event.propertyName == 'top')
+      // });
+
+      // document.addEventListener('spfdone', function () {
+      //    console.log('spfdone');
+      //    // do stuff
+      // });
+      // document.addEventListener('yt-navigate-start', function () {
+      //    console.log('yt-navigate-start');
+      //    // do stuff
+      //    App.run.sandbox();
+      //    App.run.direct();
+      // });
+
+      // document.addEventListener("webkitfullscreenchange", function () {
+      //    console.log('webkitfullscreenchange');
+      //    // var R = document.getElementById('PlayBackRatePanel');
+      //    if (document.webkitIsFullScreen == true) {
+      //       console.log('document.webkitIsFullScreen == true');
+      //    }
+      //    //     R.className = "PlayBackRatePanelFullScreen";
+      //    // } else {
+      //    //     R.className = "PlayBackRatePanel";
+      //    // }
+      // }, false);
+
+      // window.addEventListener('blur', function () {
+      //    console.log('window blur');
+      // });
+
+      // window.addEventListener('focus', function () {
+      //    console.log('window focus');
+      // });
+
+
+      // window.addEventListener("message", function (event) {
+      //    // console.log('message', event.source);
+      //    // if (event.source !== window) return;
+      //    if (event.source !== window) console.warn('message warn');
+
+      //    if (event.data.type) {
+      //       console.log('event.data.value;', JSON.stringify(event.data.value));
+      //    }
+      // });
+
+      // window.dispatchEvent(new Event("resize"));
+      //getEventListeners(window)
+      //getEventListeners(document)
    }()),
 
    getPageType: () => {
@@ -90,61 +149,99 @@ const App = {
       }
    },
 
+   ready: {},
+
+   rerun: () => {
+      if (App.ready.sandbox && App.ready.direct) {
+         App.log('page changed');
+         setTimeout(() => {
+            App.run.sandbox();
+            App.run.direct();
+         }, 500);
+      }
+   },
+
    init: () => {
       App.log('init');
       App.storage.load();
 
-      PolymerYoutube.waitFor('head', function (element) {
-         App.connect();
+      document.addEventListener('yt-navigate-finish', function () {
+      // console.log('yt-navigate-finish');
+      // });
+      // document.addEventListener('yt-navigate-start', function () {
+         // console.log('yt-navigate-start');
+         // do stuff
+         if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
       });
 
-      //so slow
-      // let waitYT = setInterval(() => {
-      //    App.log('init..');
-      //    if (document.head) {
-      //       clearInterval(waitYT);
-      //       App.connect();
-      //    }
-      // }, 100);
-   },
-
-   connect: () => {
-      App.log("connect");
+      //sandbox
       Plugins.load.sandbox();
-      Plugins.load.direct_init();
-      Plugins.load.direct();
+      let sandbox_wait_loaded = setInterval(() => {
+         App.log("sandbox_wait_loaded load", App.sandbox_loaded, _plugins.length);
 
-      let waitYT = setInterval(() => {
-         App.log('waitYT');
-         if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
-            clearInterval(waitYT);
+         if (App.sandbox_loaded && _plugins.length) {
+            if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
+               clearInterval(sandbox_wait_loaded);
+               App.run.sandbox();
 
-            // direct
-            // Plugins.injectScript.in_direct("if (!plugins_run) var plugins_run = " + Plugins.run + ";", 'script');
-            Plugins.injectScript.in_direct("plugins_run = " + Plugins.run + ";", 'script');
-
-            // window.addEventListener("load", () => {
-            // App.log("window load");
-            window.addEventListener("yt-navigate-finish", () => {
-               // App.log("yt-navigate-finish load");
-               App.run();
-            }, true);
+               App.ready.sandbox = true;
+            }
          }
-      }, 100);
+      }, 50);
+
+      //direct
+      PolymerYoutube.waitFor('head', function (element) {
+         Plugins.load.direct_init();
+         Plugins.load.direct();
+
+         let waitYT = setInterval(() => {
+            App.log('waitYT');
+            if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
+               clearInterval(waitYT);
+
+               Plugins.injectScript.in_direct("plugins_run = " + Plugins.run, 'script');
+               App.run.direct();
+
+               App.ready.direct = true;
+            }
+         }, 50);
+      });
+
+      // window.addEventListener("DOMContentLoaded", () => {
+      //    console.log('DOMContentLoaded');
+      //    App.rerun = () => {
+      //       console.log('rerun');
+      //       App.run.sandbox();
+      //       App.run.direct();
+      //    };
+      //    // window.removeEventListener("DOMContentLoaded", null, null);
+      // });
    },
 
-   run: () => {
-      App.log('run');
-      // sandbox
-      Plugins.run(App.getPageType(), App.sessionSettings);
+   run: {
+      sandbox: () => {
+         App.log('run sandbox');
+         // sandbox
+         Plugins.run(App.getPageType(), App.sessionSettings);
+      },
 
-      // direct
-      let plugins_execute = "plugins_run(" + JSON.stringify(App.getPageType()) + "," + JSON.stringify(App.sessionSettings) + ")";
-      Plugins.injectScript.in_direct(plugins_execute, 'script');
+      direct: () => {
+         App.log('run direct');
+         let plugins_execute = function (a, x) {
+            return "_plugins_run = setInterval(() => {\
+               if (_plugins.length) {\
+               clearInterval(_plugins_run);\
+               plugins_run(" + a + ',' + x + ");\
+               }\
+            }, 100)";
+         };
 
-      // Plugins.injectScript.in_direct("plugins_run2 = " + a1 + ";", 'script');
-      // let plugins_execute2 = "plugins_run2()";
-      // Plugins.injectScript.in_direct(plugins_execute2, 'script');
+         Plugins.injectScript.in_direct(
+            plugins_execute(
+               JSON.stringify(App.getPageType()),
+               JSON.stringify(App.sessionSettings)
+            ), 'script');
+      },
    },
 
    log: function (msg) {
@@ -152,7 +249,7 @@ const App = {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());
          }
-         console.log('App: %s', msg);
+         console.log('App:', msg);
       }
    },
 }
@@ -169,6 +266,16 @@ App.init();
 
 
 
+
+
+
+
+// playerId.pauseVideo();
+// if (playerId.getPlayerState() != 1) {
+//    playerId.playVideo();
+//  } else {
+//    playerId.pauseVideo();
+//  }
 
 
 // var a1 = function (e) {
@@ -233,42 +340,6 @@ App.init();
 //    }
 //  }
 
-// var buttons = document.getElementsByClassName("ytp-play-button");
-// for (var i in buttons) {
-//    buttons[i].click();
-// }
-
-// ytp-play-button ytp-button
-
-// window.addEventListener('blur', function() {
-//    var player = document.getElementById('movie_player');
-
-//    // if (player && window.improvedtubex.video_autopause == 1)
-//      player.pauseVideo();
-//  });
-
-/*window.addEventListener('focus', function() {
-         var player = document.getElementById('movie_player');
-     
-         if (player && window.improvedtubex.video_autopause == 1)
-           player.playVideo();
-       });*/
-
-
-// (function() {
-//    'use strict';
-//    console.log('Floating youtube init');
-// })();
-
-// document.addEventListener("webkitfullscreenchange", function () {
-//    console.log('webkitfullscreenchange');
-//    // var R = document.getElementById('PlayBackRatePanel');
-//    // if (document.webkitIsFullScreen == true) {
-//    //     R.className = "PlayBackRatePanelFullScreen";
-//    // } else {
-//    //     R.className = "PlayBackRatePanel";
-//    // }
-// }, false);
 
 // document.addEventListener('DOMNodeInserted', function (R) {
 //    //    var S = R.target || null;

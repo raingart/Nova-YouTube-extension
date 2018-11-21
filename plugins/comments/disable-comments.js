@@ -1,12 +1,12 @@
 _plugins.push({
-   name: 'Off Comments',
-   id: 'comments-disable',
-   group: 'comments',
+   name: 'Disable Comments',
+   id: 'disable-comments',
+   section: 'comments',
    depends_page: 'watch',
    // sandbox: true,
-   // desc: '',
-   version: '0.1',
-   runtime: function (data) {
+   desc: 'Disable comments section',
+   // version: '0.1',
+   _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#comments', function (selector) {
          selector.parentNode.removeChild(selector);

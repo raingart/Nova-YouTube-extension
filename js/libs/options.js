@@ -126,7 +126,7 @@ window.addEventListener('load', (evt) => {
 
          // document.getElementById('')
          //    .addEventListener("change", function (event) {
-         //       // console.log('event.type: %s', event.type);
+         //       // console.log('event.type:', event.type);
          //       Conf.getPermissions(['notifications'], event);
          //    });
       }()),
@@ -135,6 +135,8 @@ window.addEventListener('load', (evt) => {
          let callback = (res) => {
             UIr.restoreElmValue(res);
             Conf.attrDependencies();
+      
+            document.querySelector("body").classList.remove("preload");
          };
          Storage.getParams(null, callback, true /* true=sync, false=local */ );
       },

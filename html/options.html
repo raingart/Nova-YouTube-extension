@@ -11,6 +11,7 @@
    <link rel="stylesheet" href="/css/libs/tooltip/tooltip-animation.min.css" />
    <link rel="stylesheet" href="/css/libs/switch_checkbox.css" />
    <link rel="stylesheet" href="/css/libs/tabs.css" />
+   <link rel="stylesheet" href="/css/libs/loader.min.css" />
 
    <link rel="stylesheet" href="/css/globals.css" />
    <link rel="stylesheet" href="/css/options.css" />
@@ -23,12 +24,19 @@
    <script src="/js/libs/options.js"></script>
 
    <!-- scripts -->
-   <script src="/js/plugins.js"></script>
-   <script src="/js/opt.js"></script>
+   <script src="/js/inject/plugins.js"></script>
+   <script src="/js/optionsView.js"></script>
 
 </head>
 
-<body>
+<body class="preload">
+
+   <div class="loader">
+      <i class="layer"></i>
+      <i class="layer"></i>
+      <i class="layer"></i>
+   </div>
+
    <div class="wrapper">
       <div class="container">
 
@@ -39,23 +47,24 @@
             <label for="tab_1">Map</label>
 
             <input type="radio" name="tabs" id="tab_2">
-            <label for="tab_2" id="show_all_plugins">Plugins</label>
+            <label for="tab_2" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
 
             <input type="radio" name="tabs" id="tab_3">
             <label for="tab_3">About</label>
 
 
             <div class="tabs-content">
+               <!-- map -->
                <div class="appearance_container">
                   <div class="appearance">
                      <div class="header" id="header">
-                        <span>Header</span>
+                        <span style="text-decoration:line-through !important;opacity:.3;">Header</span>
                      </div>
                      <div class="player" id="player">
                         <span>Player</span>
                      </div>
                      <div class="sidebar" id="sidebar">
-                        <span>Sidebar</span>
+                        <span style="text-decoration:line-through !important;opacity:.3;">Sidebar</span>
                      </div>
                      <div class="details" id="details">
                         <span>Details</span>
@@ -67,7 +76,7 @@
                         <span>Comments</span>
                      </div>
                      <div class="footer" id="footer">
-                        <span>Footer</span>
+                        <span style="text-decoration:line-through !important;opacity:.3;">Footer</span>
                      </div>
                      <div class="other" id="other">
                         <span>Other</span>
@@ -75,15 +84,16 @@
                   </div>
                </div>
 
+               <!-- plugins -->
                <div>
-                  <form enctype="multipart/form-data" class="opts_container">
+                  <form enctype="multipart/form-data">
 
-                     <div class="between">
+                     <!-- <div class="between">
                         <h2>__MSG_opt_setting__</h2>
-                        <a href="#" id="show_all_plugins">All plugins</a>
+                        <a href="#">All plugins</a>
                      </div>
 
-                     <hr />
+                     <hr /> -->
 
                      <ul id="plugins">
                         <ul id="header" class="active"></ul>
@@ -107,7 +117,7 @@
                         </div>
                      </div> -->
 
-                     <!-- <hr /> -->
+                     <hr />
 
                      <div class="between">
                         <button type="submit" tooltip="__MSG_opt_bth_save_settings_tooltip__" flow="right">__MSG_opt_bth_save_settings__</button>
@@ -116,6 +126,7 @@
                   </form>
                </div>
 
+               <!-- about -->
                <div>
                   <ul>
                      <li>
@@ -130,6 +141,18 @@
                         <a href="https://www.patreon.com/bePatron?c=884203" target="_blank" tooltip="__MSG_donate_tooltip__"
                            flow="right">__MSG_donate__</a>
                      </li>
+                     <li class="tuti">Make YouTube your b*tch<style>
+                           .tuti {
+                              color: transparent;
+                           }
+
+                           .tuti::selection {
+                              color: white;
+                              background: black;
+                           }
+                        </style>
+                     </li>
+
                   </ul>
                </div>
 

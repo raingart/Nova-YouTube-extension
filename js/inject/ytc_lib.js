@@ -19,18 +19,18 @@ const PolymerYoutube = {
    //             res(document.querySelector(selector));
    //             // if (selector) {
    //             // res(selector);
-   //             PolymerYoutube.log('exist elm: %s', selector);
+   //             PolymerYoutube.log('exist elm:', selector);
 
    //             if (callback && typeof (callback) === 'function') return callback(selector);
    //          } else {
    //             setTimeout(function () {
    //                if (!maxCountLoop) {
    //                   // We have run out of retries
-   //                   console.warn('wait elm force stop: %s', selector);
+   //                   console.warn('wait elm force stop:', selector);
    //                   res(true);
    //                } else {
    //                   // Try again
-   //                   PolymerYoutube.log('wait elm: %s', selector);
+   //                   PolymerYoutube.log('wait elm:', selector);
    //                   waitForElementToDisplay(selector, time, maxCountLoop - 1);
    //                }
    //             }, time);
@@ -50,7 +50,7 @@ const PolymerYoutube = {
          selector: selector,
          fn: callback
       });
-      PolymerYoutube.log('listeners %s', JSON.stringify(PolymerYoutube.listeners));
+      PolymerYoutube.log('listeners', JSON.stringify(PolymerYoutube.listeners));
 
       singleton_Observer(window);
 
@@ -125,9 +125,15 @@ const PolymerYoutube = {
       return (
          bounding.top >= 0 &&
          bounding.left >= 0 &&
-         bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-         bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+         bounding.bottom <= window.innerHeight &&
+         bounding.right <= window.innerWidth
       );
+      // return (
+      //    bounding.top >= 0 &&
+      //    bounding.left >= 0 &&
+      //    bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      //    bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+      // );
    },
 
    // getMatchedCSSRules: (el) => {
@@ -195,7 +201,7 @@ const PolymerYoutube = {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());
          }
-         console.log('PolymerYoutube: %s', msg);
+         console.log('PolymerYoutube:', msg);
       }
    },
 }

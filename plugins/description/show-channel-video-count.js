@@ -1,20 +1,19 @@
 _plugins.push({
    name: 'Channel Video Count',
-   id: 'channel-video-count',
-   group: 'details',
+   id: 'show-channel-video-count',
+   section: 'details',
    depends_page: 'watch',
    // depends_request: {videos: ["statistics", "snippet"]},
    // sandbox: true,
-   // desc: '',
-   version: '0.1',
-   runtime: function (settings) {
+   desc: 'Total number of videos no channel',
+   // version: '0.1',
+   _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#owner-container a', function (element) {
          // console.log('this %s', JSON.stringify(this));
          // console.log('this.selector %s', JSON.stringify(this.selector));
 
-         let channel_url = element.getAttribute("href").split('/');
-         let channel_id = channel_url[channel_url.length - 1];
+         let channel_id = element.getAttribute("href").split('/').pop();
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
             return console.error('channel_id is not valid');;
@@ -22,7 +21,7 @@ _plugins.push({
 
          let url = 'channels' +
             '?id=' + channel_id +
-            '&key=' + settings.api_key +
+            '&key=' + user_settings.api_key +
             '&part=statistics';
 
          // let payload = request.payload || {

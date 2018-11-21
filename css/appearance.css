@@ -1,5 +1,5 @@
 .appearance_container {
-   width: 350px;
+   /* width: 350px; */
    margin: 5px auto;
 }
 
@@ -7,7 +7,7 @@
    grid-column: appearance;
    display: grid;
    grid-gap: 10px;
-   grid-template-columns: auto 25% 10%;
+   grid-template-columns: auto 20% 10%;
    grid-template-areas: "header header other" "player sidebar other" "video_info sidebar other" "description sidebar other" "comments empty other" "footer footer other";
 }
 
@@ -32,7 +32,7 @@
    grid-area: player;
    height: 100px;
    color: #efefef;
-   background: url(../images/appearance_player.png) no-repeat center bottom;
+   background: url(/images/appearance_player.png) no-repeat center bottom;
    background-size: 100% auto;
    background-color: #000;
 }

@@ -2,7 +2,7 @@ const UIr = {
    // DEBUG: true,
 
    restoreElmValue: function (base) {
-      this.log("Load from Storage: %s", JSON.stringify(base));
+      this.log("Load from Storage:", JSON.stringify(base));
 
       for (var key in base) {
          var val = base[key];
@@ -52,7 +52,7 @@ const UIr = {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());
          }
-         console.log('[+] %s', msg);
+         console.log('[+]', msg);
       }
    },
 }

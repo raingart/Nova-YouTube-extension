@@ -1,13 +1,13 @@
 _plugins.push({
    name: 'Channel Video Time',
-   id: 'channel-video-time',
-   group: 'details',
+   id: 'show-video-age',
+   section: 'details',
    depends_page: 'watch',
    // depends_request: {videos:["snippet"]},
    // sandbox: true,
-   // desc: '',
-   version: '0.1',
-   runtime: function (settings) {
+   desc: 'How long ago video was uploaded',
+   // version: '0.1',
+   _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#upload-info .date', function (element) {
          let video_id = PolymerYoutube.getUrlVars()['v'];
@@ -16,7 +16,7 @@ _plugins.push({
 
          let url = 'videos' +
             '?id=' + video_id +
-            '&key=' + settings.api_key +
+            '&key=' + user_settings.api_key +
             '&part=snippet';
          // '&part=snippet,contentDetails,statistics,status';
 
