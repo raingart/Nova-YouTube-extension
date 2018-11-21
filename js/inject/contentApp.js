@@ -4,7 +4,7 @@ console.log(": init content.js");
 
 const App = {
 
-   DEBUG: true,
+   // DEBUG: true,
 
    // Register the event handlers.
    eventListener: (function () {
@@ -70,10 +70,6 @@ const App = {
       //    // if (event.propertyName == 'top')
       // });
 
-      // document.addEventListener('spfdone', function () {
-      //    console.log('spfdone');
-      //    // do stuff
-      // });
       // document.addEventListener('yt-navigate-start', function () {
       //    console.log('yt-navigate-start');
       //    // do stuff
@@ -81,14 +77,23 @@ const App = {
       //    App.run.direct();
       // });
 
-      // document.addEventListener('yt-navigate-finish', function () {
-         // console.log('yt-navigate-finish');
-      // });
-
-      document.addEventListener('yt-preconnect-urls', function () {
-         // console.log('yt-preconnect-urls');
-         if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
+      document.addEventListener('yt-navigate-finish', function () {
+         if (location.href != App.this_url) {
+            App.this_url = location.href;
+            // console.log('yt-navigate-finish');
+            App.rerun();
+         } 
       });
+
+      // document.addEventListener('yt-preconnect-urls', function () {
+      //    console.log('yt-preconnect-urls');
+      //    // if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
+      //    App.rerun();
+      // });
+      // document.addEventListener('yt-action', function (a) {
+      //    console.log('yt-action', JSON.stringify(a));
+      //    // if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
+      // });
 
       // document.addEventListener("webkitfullscreenchange", function () {
       //    console.log('webkitfullscreenchange');
@@ -161,18 +166,20 @@ const App = {
       }
    },
 
-   ready: {},
+   // ready: {},
 
    rerun: () => {
       // skip first run on page load
-      if (App.ready.sandbox && App.ready.direct) {
+      // if (App.ready.sandbox && App.ready.direct) {
          App.log('page changed');
          setTimeout(() => {
             App.run.sandbox();
             App.run.direct();
          }, 500);
-      }
+      // }
    },
+
+   this_url: location.href,
 
    init: () => {
       App.log('init');
@@ -181,17 +188,16 @@ const App = {
       //sandbox
       Plugins.load.sandbox();
       let sandbox_wait_loaded = setInterval(() => {
-         App.log("sandbox_wait_loaded load %s", App.sandbox_loaded, _plugins.length);
-
          // wait load sandbox plugins
-         if (App.sandbox_loaded/* && _plugins.length*/) {
+         if (App.sandbox_loaded && _plugins.length) {
+            App.log("sandbox_wait_loaded load %s %s", App.sandbox_loaded, _plugins.length);
             // wait load setting
             if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
                clearInterval(sandbox_wait_loaded);
                App.run.sandbox();
 
-               // access to rerun
-               App.ready.sandbox = true;
+               // // access to rerun
+               // App.ready.sandbox = true;
             }
          }
       }, 50);
@@ -210,8 +216,8 @@ const App = {
                Plugins.injectScript.in_direct("plugins_run = " + Plugins.run, 'script');
                App.run.direct();
 
-               // access to rerun
-               App.ready.direct = true;
+               // // access to rerun
+               // App.ready.direct = true;
             }
          }, 50);
       });
