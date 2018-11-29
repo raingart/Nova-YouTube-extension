@@ -1,10 +1,10 @@
 _plugins.push({
-   name: 'Stop AutoPlay',
-   id: 'stop-video-autoplay',
+   name: 'Stop Video Preload',
+   id: 'stop-preload',
    section: 'player',
-   depends_page: 'watch, embed',
+   depends_page: 'watch',
    // sandbox: false,
-   desc: 'Pauses videos',
+   desc: 'Disables Preload',
    // version: '0.1',
    _runtime: function (user_settings) {
 
@@ -20,10 +20,10 @@ _plugins.push({
          //    // 5 – video cued
          //    console.log('state', state);
          //    if (state === 1 || state === 3) {
-         //       playerId.pauseVideo();
+         //       playerId.stopVideo();
          //    }
          // }
-         
+
          let wait_buffering = setInterval(() => {
             // 1 – unstarted
             // 0 – ended
@@ -32,10 +32,11 @@ _plugins.push({
             // 3 – buffering
             // 5 – video cued
             // console.log('getPlayerState', playerId.getPlayerState());
-            if (playerId.getPlayerState() !== 3) {
-               // console.log('getPlayerState ok');
+            // if (playerId.getPlayerState() !== 3) {
+            if (playerId.getPlayerState() >= 1) {
                clearInterval(wait_buffering);
-               playerId.pauseVideo();
+               // console.log('getPlayerState ok');
+               playerId.stopVideo();
             }
          }, 50);
       })

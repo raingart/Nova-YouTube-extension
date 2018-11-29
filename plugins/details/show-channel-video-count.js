@@ -9,10 +9,12 @@ _plugins.push({
    // version: '0.1',
    _runtime: function (user_settings) {
 
+      // PolymerYoutube.waitFor('#owner-container', function (element) {
       PolymerYoutube.waitFor('#owner-container a', function (element) {
          // console.log('this %s', JSON.stringify(this));
          // console.log('this.selector %s', JSON.stringify(this.selector));
 
+         // let channel_id = element.getElementsByTagName("a")[0].getAttribute("href").split('/').pop();
          let channel_id = element.getAttribute("href").split('/').pop();
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
@@ -33,13 +35,10 @@ _plugins.push({
          //       }*/
          // };
 
-         let _callback = (res) => {
+         let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
-            let videoCount = res
-               // .items[0].statistics.videoCount
-               .items.map((item) => {
-                  return item.statistics.videoCount;
-               }).join();
+            let videoCount = res.items[0].statistics.videoCount;
+               // .items.map(item => item.statistics.videoCount).join();
 
             // console.log('videoCount: %s', videoCount);
 

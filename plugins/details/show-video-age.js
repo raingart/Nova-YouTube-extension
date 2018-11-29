@@ -20,7 +20,7 @@ _plugins.push({
             '&part=snippet';
          // '&part=snippet,contentDetails,statistics,status';
 
-         let _callback = (res) => {
+         let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
             let publishedAt = res.items[0].snippet.publishedAt;
             // console.log('publishedAt: %s', publishedAt);

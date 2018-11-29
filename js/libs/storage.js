@@ -3,8 +3,8 @@ const Storage = function () {
    let saveParams = {};
 
    return {
-      setParams: function (x, is_sync) {
-         let storageArea = is_sync ? chrome.storage.sync : chrome.storage.local;
+      setParams: function (x, sync_type) {
+         let storageArea = sync_type === 'sync' ? chrome.storage.sync : chrome.storage.local;
          storageArea.clear();
 
          saveParams[nameApp] = x;
@@ -17,8 +17,8 @@ const Storage = function () {
          })
       },
 
-      getParams: function (x, callback, is_sync) {
-         let storageArea = is_sync ? chrome.storage.sync : chrome.storage.local;
+      getParams: function (x, callback, sync_type) {
+         let storageArea = sync_type === 'sync' ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.get(x, function (items) {
             // console.log('saveParams '+JSON.stringify(items));

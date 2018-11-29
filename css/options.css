@@ -69,13 +69,18 @@ label {
    cursor: pointer;
 }
 
-label>span {
+.warn,
+label>* {
+   color: #ff2525;
+}
+
+/* label>span {
    display: block;
    color: grey;
    font-size: 12px;
    font-style: italic;
    text-transform: capitalize;
-   /* text-indent: 5px */
+   text-indent: 5px
 }
 
 label>span>q {
@@ -87,7 +92,7 @@ label>span>q {
 label>i {
    color: slategrey;
    font-size: 10px;
-}
+} */
 
 hr {
    margin: 1em auto;
@@ -163,7 +168,7 @@ form li>ul>li {
    grid-template-columns: [left label] 1fr [right input];
    border-top: 1px solid #575757;
    padding: 2px 0;
-   padding-left: 2em;
+   padding-left: 1.5em;
 }
 
 /* form li>ul>li:last-child {
@@ -213,10 +218,6 @@ ul#sidebar:not(:empty):before {
 
 ul#details:not(:empty):before {
    content: "details";
-}
-
-ul#description:not(:empty):before {
-   content: "description";
 }
 
 ul#comments:not(:empty):before {

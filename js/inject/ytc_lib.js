@@ -121,6 +121,7 @@ const PolymerYoutube = {
    },
 
    isInViewport: function (elem) {
+      if (!elem) return;
       var bounding = elem.getBoundingClientRect();
       return (
          bounding.top >= 0 &&
@@ -188,6 +189,52 @@ const PolymerYoutube = {
    //    return val;
    // },
 
+   // connect_DragnDrop: function (element, callback) {
+   //    // if (!element) return;
+   //    element.onmousedown = function (event, callback) {
+   //       let shiftX = event.clientX - this.getBoundingClientRect().left;
+   //       let shiftY = event.clientY - this.getBoundingClientRect().top;
+   
+   //       this.style.position = 'absolute !important;';
+   //       // act_elm.style.zIndex = 1000;
+   
+   //       Object.assign(this.style, {
+   //          'z-index': 9999,
+   //          cursor: 'move',
+   //          outline: '1px dashed deepskyblue',
+   //       });
+   
+   //       moveAt(event.pageX, event.pageY);
+   //       // centers the active element at (pageX, pageY) coordinates
+   //       function moveAt(pageX, pageY) {
+   //          element.style.left = pageX - shiftX + 'px';
+   //          element.style.top = pageY - shiftY + 'px';
+   //       }
+   
+   //       function onMouseMove(event) {
+   //          moveAt(event.pageX, event.pageY);
+   //       }
+   
+   //       // (3) move the active element on mousemove
+   //       document.addEventListener('mousemove', onMouseMove);
+   
+   //       // (4) drop the active element, remove unneeded handlers
+   //       this.onmouseup = function () {
+   //          document.removeEventListener('mousemove', onMouseMove);
+   //          this.onmouseup = null;
+   //          Object.assign(this.style, {
+   //             'z-index': 'unset',
+   //             cursor: 'unset',
+   //             outline: 'unset',
+   //          });
+   //          if (callback && typeof (callback) === 'function') return callback({
+   //             top: this.style.top,
+   //             left: this.style.left,
+   //          });
+   //       };
+   //    };
+   // },
+   
    getUrlVars: function (v) {
       var vars = {};
       var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {

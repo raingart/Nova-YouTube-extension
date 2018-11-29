@@ -27,18 +27,16 @@ const App = {
             // if options is update
             case 'setOptions':
                App.storage.set(request.options);
+               App.reversal_plugins(request.options);
 
-               // if (App.runned) App.run()
-               // window.location.reload();
                sendResponse({
-                  // reaction: "setOptions - ok"
-                  reaction: "gotMessage"
+                  reaction: "setOptions gotMessage"
                });
                break;
 
-            case 'tabUpdated':
-               // console.log('request.options', JSON.stringify(request.options));
-               break;
+               // case 'tabUpdated':
+               //    console.log('request.options', JSON.stringify(request.options));
+               //    break;
 
             case 'sendMessage':
                console.log(request.message);
@@ -49,20 +47,21 @@ const App = {
          }
       });
 
-      // // wait head page
+      // DOM (HTML+CSS) ready
       // window.addEventListener("DOMContentLoaded", () => {
       //    console.log('DOMContentLoaded');
-      //    // window.removeEventListener("DOMContentLoaded", null, null);
+      //    // window.removeEventListener("DOMContentLoaded", null);
       // });
 
       // window.addEventListener("loadstart", function (evt) {
       //    console.log('loadstart');
       //    // if (!(evt.target instanceof window.HTMLMediaElement)) return;
       //    // console.log("loadstart load");
-      //    // window.removeEventListener("loadstart", null, null);
+      //    // window.removeEventListener("loadstart", null);
       //    // App.connect();
       // }, true);
 
+      // CSS ready
       // document.addEventListener('transitionend', function (event) {
       //    console.log('transitionend', JSON.stringify(event.target.id));
       //    // console.log('event.propertyName', event.propertyName);
@@ -70,19 +69,19 @@ const App = {
       //    // if (event.propertyName == 'top')
       // });
 
-      // document.addEventListener('yt-navigate-start', function () {
+      document.addEventListener('yt-navigate-start', function () {
       //    console.log('yt-navigate-start');
       //    // do stuff
       //    App.run.sandbox();
       //    App.run.direct();
       // });
 
-      document.addEventListener('yt-navigate-finish', function () {
+      // document.addEventListener('yt-navigate-finish', function () {
          if (location.href != App.this_url) {
             App.this_url = location.href;
             // console.log('yt-navigate-finish');
             App.rerun();
-         } 
+         }
       });
 
       // document.addEventListener('yt-preconnect-urls', function () {
@@ -146,6 +145,8 @@ const App = {
 
    storage: {
       set: options => {
+         App.log('storage.set: %s', JSON.stringify(options));
+
          App.sessionSettings = options;
          let apiKeys = [
             "AIzaSyA-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA",
@@ -166,16 +167,51 @@ const App = {
       }
    },
 
-   // ready: {},
+   ready: {},
+
+   reversal_plugins: st => {
+      if (st && Object.keys(st).length && st['restart-app'] 
+      && (App.ready.sandbox || App.ready.direct)
+      ) {
+         console.log('reversal setting');
+
+         if (st['restart-app'] === 'soft') {
+            console.log('soft restart');
+            // Plugins.injectScript.in_direct('_plugins = []', 'script');
+            // App.rerun();
+            // App.run.sandbox();
+
+         } else if (st['restart-app'] === 'full') {
+            window.location.reload();
+         }
+      }
+   },
+   // reversal_plugins: e => {
+   //    if (App.sessionSettings &&
+   //       Object.keys(App.sessionSettings).length &&
+   //       App.sessionSettings['restart-app']) {
+
+   //       console.log('reversal setting');
+
+   //       if (App.sessionSettings['restart-app'] === 'soft') {
+   //          // Plugins.injectScript.in_direct('_plugins = []', 'script');
+   //          // App.rerun();
+   //          // App.run.sandbox();
+
+   //       } else if (App.sessionSettings['restart-app'] === 'full') {
+   //          window.location.reload();
+   //       }
+   //    }
+   // },
 
    rerun: () => {
       // skip first run on page load
       // if (App.ready.sandbox && App.ready.direct) {
-         App.log('page changed');
-         setTimeout(() => {
-            App.run.sandbox();
-            App.run.direct();
-         }, 500);
+      App.log('page transition');
+      // setTimeout(() => {
+      App.run.sandbox();
+      App.run.direct();
+      // }, 500);
       // }
    },
 
@@ -197,13 +233,13 @@ const App = {
                App.run.sandbox();
 
                // // access to rerun
-               // App.ready.sandbox = true;
+               App.ready.sandbox = true;
             }
          }
       }, 50);
 
       //direct
-      PolymerYoutube.waitFor('head', function (element) {// wait head tag
+      PolymerYoutube.waitFor('head', function (element) { // wait head tag
          Plugins.load.direct_init();
          Plugins.load.direct();
 
@@ -217,7 +253,7 @@ const App = {
                App.run.direct();
 
                // // access to rerun
-               // App.ready.direct = true;
+               App.ready.direct = true;
             }
          }, 50);
       });
@@ -273,7 +309,31 @@ App.init();
 
 
 
+// elm.addEventListener("click auxclick contextmenu", function (e) {
+//    e.preventDefault();
+//    console.log(e.which);
+//    console.log(e.type);
 
+//    if (e.type == "contextmenu") {
+//       console.log("Context menu prevented.");
+//       return;
+//    }
+
+//    switch (e.which) {
+//       case 1:
+//          //window.location = $(this).attr('href');
+//          console.log("ONE");
+//          break;
+//       case 2:
+//          //window.open($(this).attr('href'));
+//          console.log("TWO");
+//          break;
+//       case 3:
+//          console.log("THREE");
+//          break;
+//    }
+//    window.scrollTo(0, 0);
+// });
 
 
 // playerId.pauseVideo();
@@ -297,17 +357,6 @@ App.init();
 //         }
 //    });
 // } 
-
-// vid.setPlaybackQualityRange(player_quality);
-// document.getElementById('movie_player').setPlaybackQuality(player_quality);
-// document.getElementById('movie_player').setPlaybackQualityRange(player_quality);
-// function playSpeed() {
-//    document.getElementsByTagName("video")[0].playbackRate = 2; //WORKING
-//    document.getElementById('movie_player').setPlaybackRate(2); //NOT WORKING
-//    document.getElementById("movie_player").stopVideo(); //NOT WORKING
-//    document.getElementById("movie_player").setPlaybackQuality('hd720'); //NOT WORKING
-//    document.getElementById("movie_player").playVideo(); //NOT WORKING
-// }
 
 
 // function player_autoplay(playerAPI, player, playlist) {

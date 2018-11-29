@@ -1,6 +1,6 @@
 _plugins.push({
    name: 'Video Quality',
-   id: 'set-video-quality',
+   id: 'video-quality',
    section: 'player',
    depends_page: 'watch, embed',
    // sandbox: false,
@@ -10,7 +10,7 @@ _plugins.push({
       
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
          // Available 'highres', 'hd2880', 'hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small', 'tiny'
-         const target_quality = user_settings['player_quality'];
+         const target_quality = user_settings['video_quality'];
          // const target_quality = 'small'; //test
 
          let wait_quality = setInterval(() => {
@@ -37,8 +37,8 @@ _plugins.push({
       
                // console.log("set quality to: " + qualityToSet);
                // changeResolution
-               playerId.setPlaybackQuality(qualityToSet);
                playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
+               playerId.setPlaybackQuality(qualityToSet);
       
                // console.log('set realy quality to: %s', playerId.getPlaybackQuality());
             }
@@ -47,9 +47,10 @@ _plugins.push({
    },
    export_opt: (function (data) {
       return {
-         'player_quality': {
+         'video_quality': {
             _elementType: 'select',
             label: 'Quality',
+            title: 'If unavailable, the nearest is selected',
             options: [
                /* beautify preserve:start */
                { label: '4320p (8k/FUHD)', value: 'highres' },
@@ -57,12 +58,12 @@ _plugins.push({
                { label: '2160p (4k/QFHD)', value: 'hd2160' },
                { label: '1440p (QHD)', value: 'hd1440' },
                { label: '1080p (FHD)', value: 'hd1080' },
-               { label: '720p (HD)', value: 'hd720' },
+               { label: '720p (HD)', value: 'hd720', selected: true },
                { label: '480p (SD)', value: 'large' },
                { label: '360p', value: 'medium' },
                { label: '240p', value: 'small' },
                { label: '144p', value: 'tiny' },
-               { label: 'Auto', value: 'auto', selected: true }
+               // { label: 'Auto', value: 'auto' },
                /* beautify preserve:end */
             ]
          },

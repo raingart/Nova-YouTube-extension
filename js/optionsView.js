@@ -154,7 +154,7 @@ const Opt = {
                Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
                Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
                document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
-            }, false);
+            });
          });
 
       // link show_all_plugins
@@ -169,7 +169,7 @@ const Opt = {
             Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
             Opt.UI.toggleListView(Opt.plugins_.conteiner + ' li.item', null, 'hide');
             document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
-         }, false);
+         });
 
       // spoler
       Array.from(document.querySelectorAll(Opt.plugins_.conteiner + '> ul'))

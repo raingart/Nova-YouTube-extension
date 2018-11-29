@@ -1,7 +1,7 @@
 _plugins.push({
    name: 'Hide Navigation Panel',
    id: 'collapse-navigation-panel',
-   // section: '',
+   section: 'channel',
    depends_page: 'channel, results',
    // sandbox: true,
    desc: 'Hide left panel',

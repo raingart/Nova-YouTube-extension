@@ -12,26 +12,28 @@ const Plugins = {
          '/js/inject/ytc_lib.js'
       ],
       direct: [
-         'player/stop-video-autoplay.js',
-         'player/stop-video-preload.js',
-         'player/set-video-quality.js',
-         'player/set-volume-mousewheel.js',
-         // 'player/set-video-speed.js',
+         'player/stop-autoplay.js',
+         'player/stop-preload-video.js',
+         'player/video-quality.js',
+         'player/video-speed-wheel.js',
+         'player/volume-wheel.js',
       ],
       sandbox: [
-         'channel/collapse-navigation-panel.js',
-         'channel/set-default-channel-tab.js',
-         // 'channel/-autopause-homepage-video.js',
+         // 'player/remove-video-annotations.js',
+         'player/fixed-player-scroll.js',
+         'player/player-focused.js',
+
+         'details/reveal-description-video.js',
+         'details/show-channel-video-count.js',
+         'details/show-video-age.js',
 
          'comments/disable-comments.js',
+         
+         // 'channel/-autopause-homepage-video.js',
+         'channel/collapse-navigation-panel.js',
+         'channel/default-channel-tab.js',
 
-         'details/reveal-video-description.js',
-
-         'description/show-channel-video-count.js',
-         'description/show-video-age.js',
-
-         // 'player/fixed-video-scroll.js',
-         // 'player/remove-video-annotations.js',
+         '/other/scroll-to-top.js',
       ],
    },
 
@@ -90,13 +92,43 @@ const Plugins = {
       }
    },
 
-   // injectStyle: src => {
-   //    chrome.runtime.sendMessage({
-   //       "action": "injectStyle",
-   //       "code": code
-   //    });
-   //    // console.log('style injected:', chrome.extension.getURL(src));
-   // },
+   injectStyle: (styles, selector, important) => {
+      if (!styles) return;
+
+      if (typeof styles === 'object') { // is json
+         if (!selector) selector = '*';
+
+         chrome.runtime.sendMessage({
+            "action": "injectStyle",
+            // "code": selector + JSON.stringify(styles)
+            "code": selector + json2css(styles)
+         });
+
+         function json2css(obj) {
+            let _css = '';
+            Object.entries(obj).forEach(
+               // ([key, value]) => _css += key + ':' + value + ' !important;'
+               ([key, value]) => {
+                  _css += key + ':' + value + (important ? ' !important': '') + ';';
+               }
+            );
+            return '{' + _css + '}';
+         }
+         // console.log('style injected:', chrome.extension.getURL(src));
+
+      } else if (styles.slice(-3) === '.css') { // is file
+         chrome.runtime.sendMessage({
+            "action": "injectStyle",
+            "src": styles
+         });
+
+      } else { // is string
+         chrome.runtime.sendMessage({
+            "action": "injectStyle",
+            "code": styles
+         });
+      }
+   },
 
    injectScript: { //runtime
       in_sandbox: src => {
@@ -140,6 +172,7 @@ const Plugins = {
                s.appendChild(document.createTextNode(source));
             }
          } else {
+            console.error('injectScript in_direct: unknown type inject')
             return false;
          }
 

@@ -16,6 +16,41 @@
       "message": "plugins"
    },
 
+   "opt_bth_save_settings": {
+      "message": "Save"
+   },
+   "opt_bth_save_settings_process": {
+      "message": "Saving..."
+   },
+   "opt_bth_save_settings_processed": {
+      "message": "Saved!"
+   },
+   "opt_bth_save_settings_tooltip": {
+      "message": "All changes"
+   },
+
+   "opt_reversal_plugins": {
+      "message": "Restart ALL plugins when settings saved."
+   },
+   "opt_reversal_plugins_warn": {
+      "message": "Caution!"
+   },
+   "opt_reversal_plugins_warn_full1": {
+      "message": "Restart all pages."
+   },
+   "opt_reversal_plugins_warn_full2": {
+      "message": "all plugins are restarted."
+   },
+   "opt_reversal_plugins_warn_soft1": {
+      "message": "Can restart the video."
+   },
+   "opt_reversal_plugins_warn_soft2": {
+      "message": "Does not cancel actions already performed on the DOM."
+   },
+   "opt_reversal_plugins_warn_soft3": {
+      "message": "Part of the plugins can not be restarted."
+   },
+
    "github_page": {
       "message": "Source Code"
    },
@@ -27,19 +62,6 @@
    },
    "github_page_issues_tooltip": {
       "message": "To Report"
-   },
-
-   "opt_bth_save_settings": {
-      "message": "Save"
-   },
-   "opt_bth_save_settings_process": {
-      "message": "Saving..."
-   },
-   "opt_bth_save_settings_processed": {
-      "message": "Saved!"
-   },
-   "opt_bth_save_settings_tooltip": {
-      "message": "Open tabs will remain unchanged"
    },
 
    "donate_tooltip": {

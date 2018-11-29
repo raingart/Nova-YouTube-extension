@@ -13,7 +13,7 @@ console.log(i18n("app_name") + ": init runtimeListener.js");
          // var defaultSetting = {
          //    'showNotification': true,
          // }
-         // Storage.setParams(defaultSetting, true /* true=sync, false=local */ );
+         // Storage.setParams(defaultSetting, 'sync');
 
          chrome.runtime.openOptionsPage();
          // openNewTab('data:text/html, <html contenteditable>');

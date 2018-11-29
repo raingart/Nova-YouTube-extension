@@ -8,14 +8,14 @@
    display: grid;
    grid-gap: 10px;
    grid-template-columns: auto 20% 10%;
-   grid-template-areas: "header header other""player sidebar other""video_info sidebar other""description sidebar other""comments empty other""footer footer other";
+   grid-template-areas: "header header other""player sidebar other""details sidebar other""comments empty other""footer footer other";
 }
 
 .appearance>* {
    /* border: 1px solid #ddd;
    background: #fff;     */
    outline: 1px solid #3d3d3d;
-   min-height: 35px;
+   min-height: 30px;
    cursor: pointer;
    user-select: none;
    position: relative;
@@ -49,12 +49,9 @@
    transform: translate(-50%, -50%) rotate(-90deg);
 }
 
-.appearance>.video_info {
-   grid-area: video_info;
-}
-
-.appearance>.description {
-   grid-area: description;
+.appearance>.details {
+   grid-area: details;
+   height: 40px;
 }
 
 .appearance>.comments {

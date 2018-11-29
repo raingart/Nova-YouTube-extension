@@ -61,7 +61,7 @@ window.addEventListener('load', (evt) => {
             newOptions[key] = value;
          }
 
-         Storage.setParams(newOptions, true /* true=sync, false=local */ );
+         Storage.setParams(newOptions, 'sync');
 
          chrome.extension.sendMessage({
             "action": 'setOptions',
@@ -116,13 +116,16 @@ window.addEventListener('load', (evt) => {
 
       // Register the event handlers.
       eventListener: (function () {
+         // Array.from(document.forms)
+         //    .forEach((form) => {
          document.forms[0] // get form
             .addEventListener('submit', function (event) {
                event.preventDefault();
                Conf.bthSaveAnimation._process();
                Conf.saveOptions(this, Conf.bthSaveAnimation._processed);
                Conf.bthSaveAnimation._defaut();
-            }, false);
+            });
+         // });
 
          // document.getElementById('')
          //    .addEventListener("change", function (event) {
@@ -132,13 +135,13 @@ window.addEventListener('load', (evt) => {
       }()),
 
       init: () => {
-         let callback = (res) => {
+         let callback = res => {
             UIr.restoreElmValue(res);
             Conf.attrDependencies();
-      
+
             document.querySelector("body").classList.remove("preload");
          };
-         Storage.getParams(null, callback, true /* true=sync, false=local */ );
+         Storage.getParams(null, callback, 'sync');
       },
    }
 

@@ -4,10 +4,10 @@ const Background = {
    // sessionSettings: null,
 
    getStorageData: (function () {
-      Storage.getParams(null /*all*/ , (res) => {
+      Storage.getParams(null /*all*/ , res => {
          console.log('confStorage:', JSON.stringify(res));
          Background.sessionSettings = res;
-      }, true /* true=sync, false=local */ );
+      }, 'sync');
    }()),
 
    // onMessage: function (request, sender, sendResponse) {},
@@ -55,23 +55,29 @@ const Background = {
                // tabs.forEach(tab => {
                chrome.tabs.executeScript(sender.tab.id, source, result => {
                   const lastErr = chrome.runtime.lastError;
-                  if (lastErr) console.log('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
+                  if (lastErr) {
+                     // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
+                     console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
+                  }
                });
                //   });
                break;
 
-               // case 'injectStyle':
-               //    source = {
-               //       allFrames: false
-               //    };
-               //    if (request.src) source.file = request.src;
-               //    else if (request.code) source.code = request.code;
+               case 'injectStyle':
+                  source = {
+                     allFrames: false
+                  };
+                  if (request.src) source.file = request.src;
+                  else if (request.code) source.code = request.code;
 
-               //    chrome.tabs.insertCSS(sender.tab.id, source, result => {
-               //       const lastErr = chrome.runtime.lastError;
-               //       if (lastErr) console.log('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
-               //    });
-               //    break;
+                  chrome.tabs.insertCSS(sender.tab.id, source, result => {
+                     const lastErr = chrome.runtime.lastError;
+                     if (lastErr) {
+                        // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
+                     console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
+                     }
+                  });
+                  break;
 
                // default:
          }
@@ -82,6 +88,7 @@ const Background = {
       //    // console.log('onUpdated');
       //    if (changeInfo && changeInfo.status == "complete") {
       //       console.log("Tab updated:", tab.url);
+               // chrome.tabs.insertCSS(tabId, {code: "body{border:1px solid red}"});
       //    }
       // });
    }()),
