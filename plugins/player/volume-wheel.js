@@ -28,9 +28,9 @@ _plugins.push({
 
                let step = user_settings['volume_step'] || _this.export_opt['volume_step'] || 10;
                const delta = Math.sign(event.wheelDelta) * step;
+               let level = videoVolume(delta);
 
-               const level = videoVolume(delta);
-               if (user_settings['show_volume_indicator']) displayBar(level, this);
+               displayBar(level, this);
             }
          }
 
@@ -66,13 +66,27 @@ _plugins.push({
          }
 
          function displayBar(level, display_container) {
+            if (!user_settings['show_volume_indicator']) return;
+
             let divBarId = "rate-player-info";
             let divBar = document.getElementById(divBarId);
 
-            let showBar = text => {
+            let showBar = pt => {
                if (typeof fateBar !== "undefined") clearTimeout(fateBar);
-               divBar.textContent = text;
 
+               if (user_settings['show_volume_indicator'] === 'bar' ||
+                  user_settings['show_volume_indicator'] === 'full') {
+                  let color = user_settings['show_volume_indicator_color'];
+                  divBar.style.background = 'linear-gradient(to right, ' +
+                     color + 'd0 ' + pt +
+                     '%, rgba(0,0,0,0.3) ' + pt + '%)';
+               }
+               if (user_settings['show_volume_indicator'] === 'text' ||
+                  user_settings['show_volume_indicator'] === 'full') {
+                  divBar.textContent = pt;
+               }
+
+               // divBar.style.cssText ='';
                divBar.style.transition = 'none';
                divBar.style.opacity = 1;
                // divBar.style.visibility = 'visibility';
@@ -81,14 +95,14 @@ _plugins.push({
                   divBar.style.transition = 'opacity 200ms ease-in';
                   divBar.style.opacity = 0;
                   // divBar.style.visibility = 'hidden';
-               }, 1300); //200ms + 1300ms = 1.5s
+               }, 1000); //200ms + 1000ms = 1.2s
             };
 
             if (divBar) {
                showBar(level);
 
             } else if (display_container) {
-               display_container.insertAdjacentHTML("afterend", '<div id="' + divBarId + '">' + level + '</div>');
+               display_container.insertAdjacentHTML("afterend", '<div id="' + divBarId + '"></div>');
                divBar = document.getElementById(divBarId);
 
                Object.assign(divBar.style, {
@@ -96,13 +110,16 @@ _plugins.push({
                   color: '#fff',
                   opacity: 0,
                   // transition: 'opacity 200ms ease-in',
-                  'font-size': '1.6em',
+                  'font-size': '1.5em',
+                  'line-height': '2em',
                   left: 0,
-                  padding: '.4em 0',
+                  // padding: '.4em 0',
+                  // padding: '0.1em 0',
                   position: 'absolute',
                   'text-align': 'center',
                   top: 'auto',
                   width: '100%',
+                  'min-height': '0.2em',
                   'z-index': '35',
                });
                showBar(level);
@@ -115,7 +132,7 @@ _plugins.push({
       return {
          'volume_step': {
             _elementType: 'input',
-            label: 'volume step',
+            label: 'step',
             type: 'number',
             placeholder: '1-33',
             step: 1,
@@ -126,7 +143,7 @@ _plugins.push({
          },
          'volume_hotkey': {
             _elementType: 'select',
-            label: 'Volume hotkey',
+            label: 'hotkey',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey' },
@@ -137,9 +154,22 @@ _plugins.push({
             ]
          },
          'show_volume_indicator': {
+            _elementType: 'select',
+            label: 'indicator',
+            options: [
+               /* beautify preserve:start */
+               { label: 'bar', value: 'bar' },
+               { label: 'text', value: 'text' },
+               { label: 'bar+text', value: 'full', selected: true },
+               { label: 'off', value: '' },
+               /* beautify preserve:end */
+            ]
+         },
+         'show_volume_indicator_color': {
             _elementType: 'input',
-            label: 'show indicator',
-            type: 'checkbox',
+            label: 'indicator color',
+            type: 'color',
+            value: '#ff0000', // red
          },
       };
    }()),

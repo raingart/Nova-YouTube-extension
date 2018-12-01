@@ -175,10 +175,14 @@ form li>ul>li {
    margin-bottom: 10px;
 } */
 
+form ul>li>label,
+form ul>li.item label {
+   text-transform: capitalize;
+}
+
 form ul>li>label {
    grid-column: label;
    align-self: center;
-   text-transform: capitalize;
    color: rgba(255, 255, 255, 0.5);
 }
 

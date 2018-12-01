@@ -49,10 +49,10 @@ _plugins.push({
          function initStyle() {
             let initcss = {
                position: 'fixed',
-               top: 'auto',
-               left: 'auto',
-               right: 'auto',
-               bottom: 'auto',
+               // top: 'auto',
+               // left: 'auto',
+               // right: 'auto',
+               // bottom: 'auto',
                // top: 0,
                // right: 0,
                // width: '50%',

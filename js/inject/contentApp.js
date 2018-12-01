@@ -26,6 +26,8 @@ const App = {
 
             // if options is update
             case 'setOptions':
+               console.log('setOptions', JSON.stringify(request));
+
                App.storage.set(request.options);
                App.reversal_plugins(request.options);
 
@@ -70,13 +72,13 @@ const App = {
       // });
 
       document.addEventListener('yt-navigate-start', function () {
-      //    console.log('yt-navigate-start');
-      //    // do stuff
-      //    App.run.sandbox();
-      //    App.run.direct();
-      // });
+         //    console.log('yt-navigate-start');
+         //    // do stuff
+         //    App.run.sandbox();
+         //    App.run.direct();
+         // });
 
-      // document.addEventListener('yt-navigate-finish', function () {
+         // document.addEventListener('yt-navigate-finish', function () {
          if (location.href != App.this_url) {
             App.this_url = location.href;
             // console.log('yt-navigate-finish');
@@ -170,8 +172,8 @@ const App = {
    ready: {},
 
    reversal_plugins: st => {
-      if (st && Object.keys(st).length && st['restart-app'] 
-      && (App.ready.sandbox || App.ready.direct)
+      if (st && Object.keys(st).length && st['restart-app'] &&
+         (App.ready.sandbox || App.ready.direct)
       ) {
          console.log('reversal setting');
 
@@ -210,7 +212,7 @@ const App = {
       App.log('page transition');
       // setTimeout(() => {
       App.run.sandbox();
-      App.run.direct();
+      // App.run.direct();
       // }, 500);
       // }
    },

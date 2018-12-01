@@ -12,11 +12,10 @@ _plugins.push({
       // https://youtu.be/RwFKzJlwf8A?t=515
       PolymerYoutube.waitFor('#columns', function (elm) {
          elm.addEventListener("auxclick", function (e) {
-            e.preventDefault();
-            // console.log(e.which);
-            // console.log(e.type);
-
-            if (e.which === 2) {
+            // console.log('target.tagName',e.target.tagName);
+            // console.log('which',e.which);
+            if (e.target.tagName.toLowerCase() !== 'a') {
+               // e.preventDefault();
                window.scrollTo(0, 0);
             }
          });

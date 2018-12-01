@@ -37,8 +37,8 @@ _plugins.push({
 
          let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
-            let videoCount = res.items[0].statistics.videoCount;
-               // .items.map(item => item.statistics.videoCount).join();
+            // let videoCount = res.items[0].statistics.videoCount;
+            let videoCount = res.items.map(item => item.statistics.videoCount).join();
 
             // console.log('videoCount: %s', videoCount);
 
