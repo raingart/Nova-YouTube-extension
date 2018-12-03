@@ -1,10 +1,10 @@
 _plugins.push({
-   name: 'Stop Video Preload',
-   id: 'stop-preload',
+   name: 'Auto pause video',
+   id: 'stop-autoplay',
    section: 'player',
-   depends_page: 'watch',
+   depends_page: 'watch, embed',
    // sandbox: false,
-   desc: 'Disables Preload',
+   desc: 'Pause video autoplay',
    // version: '0.1',
    _runtime: function (user_settings) {
 
@@ -19,8 +19,8 @@ _plugins.push({
             // 2- paused
             // 3- buffering
             // 5- video cued
-            if (state >= 1 && state <= 3)
-               playerId.stopVideo();
+            if (state === 1 || state === 3) 
+               playerId.pauseVideo();
          }
 
       })

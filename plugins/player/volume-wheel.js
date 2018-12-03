@@ -8,53 +8,63 @@ _plugins.push({
    // version: '0.1',
    _runtime: function (user_settings) {
 
-      const _this = this;
+      const _this = this; // get default step
 
       // PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
-         document.getElementsByClassName("html5-video-container")[0]
-            .addEventListener("wheel", onWheel); //mousewheel
 
-         function onWheel(event) {
-            // console.log(event.target);
+         // player area
+         document.getElementsByClassName("html5-video-container")[0]
+            .addEventListener("wheel", onWheel_setVolume); //mousewheel
+
+         function onWheel_setVolume(event) {
             event.preventDefault();
 
-            if (user_settings['volume_hotkey'] &&
-               (event[user_settings['volume_hotkey']] ||
-                  (user_settings['volume_hotkey'] === 'none' && !event.ctrlKey && !event.altKey && !event.shiftKey)
+            if (user_settings['volume_hotkey'] && (
+                  event[user_settings['volume_hotkey']] ||
+                  (
+                     user_settings['volume_hotkey'] === 'none' &&
+                     !event.ctrlKey && !event.altKey && !event.shiftKey)
                )) {
 
-               if (!playerId.hasOwnProperty('getVolume')) return console.warn('getVolume error');
+               if (!playerId.hasOwnProperty('getVolume')) {
+                  return console.error('getVolume error');
+               }
 
                let step = user_settings['volume_step'] || _this.export_opt['volume_step'] || 10;
-               const delta = Math.sign(event.wheelDelta) * step;
-               let level = videoVolume(delta);
+               let delta = Math.sign(event.wheelDelta) * step;
+               let level = _setVideoVolume(delta);
 
-               displayBar(level, this);
+               if (user_settings['show_volume_indicator']) {
+                  showIndicator(playerId.getVolume(), this);
+               }
             }
          }
 
-         function videoVolume(delta) {
-            // if (!playerId) var playerId = document.getElementById('movie_player');
-            playerId.isMuted() && playerId.unMute();
+         function _setVideoVolume(delta) {
+            // if (!playerId) let playerId = document.getElementById('movie_player');
+            const volume = playerId.getVolume();
 
             let limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
-            let level = limiter(parseInt(playerId.getVolume()) + delta);
-            playerId.setVolume(level); // 0 - 100
-            // console.log('.getVolume()', playerId.getVolume());
-            saveVolume(level);
-            return level;
+            let volumeToSet = limiter(parseInt(volume) + delta);
 
-            // function getVolume() {
-            //    var playerId = document.getElementById("movie_player");
-            //    var volume = null;
-            //    if (playerId) {
-            //       if (playerId.hasOwnProperty('getVolume')) volume = parseInt(playerId.getVolume());
-            //    }
-            //    return volume;
-            // }
+            // set volume
+            if (volumeToSet !== volume) {
+               playerId.isMuted() && playerId.unMute();
+               playerId.setVolume(volumeToSet); // 0 - 100
 
-            function saveVolume(level) {
+               // check is correct
+               if (volumeToSet === playerId.getVolume()) {
+                  _saveVolume(volumeToSet); // saving state in sessions
+               } else {
+                  return console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
+               }
+            }
+
+            return volumeToSet === playerId.getVolume() ? volumeToSet : false;
+
+
+            function _saveVolume(level) {
                // console.log('sessionStorage["yt-player-volume"] %s', JSON.stringify(sessionStorage["yt-player-volume"]));
                let now = (new Date).getTime();
                let muted = level ? "false" : "true";
@@ -65,14 +75,12 @@ _plugins.push({
             }
          }
 
-         function displayBar(level, display_container) {
-            if (!user_settings['show_volume_indicator']) return;
-
-            let divBarId = "rate-player-info";
+         function showIndicator(level, display_container) {
+            let divBarId = "volume-player-info";
             let divBar = document.getElementById(divBarId);
 
-            let showBar = pt => {
-               if (typeof fateBar !== "undefined") clearTimeout(fateBar);
+            let updateIndicator = pt => {
+               if (typeof fate_volumeBar !== "undefined") clearTimeout(fate_volumeBar);
 
                if (user_settings['show_volume_indicator'] === 'bar' ||
                   user_settings['show_volume_indicator'] === 'full') {
@@ -80,26 +88,26 @@ _plugins.push({
                   divBar.style.background = 'linear-gradient(to right, ' +
                      color + 'd0 ' + pt +
                      '%, rgba(0,0,0,0.3) ' + pt + '%)';
+                  divBar.textContent = '';
                }
                if (user_settings['show_volume_indicator'] === 'text' ||
                   user_settings['show_volume_indicator'] === 'full') {
                   divBar.textContent = pt;
                }
 
-               // divBar.style.cssText ='';
                divBar.style.transition = 'none';
                divBar.style.opacity = 1;
                // divBar.style.visibility = 'visibility';
 
-               fateBar = setTimeout(() => {
+               fate_volumeBar = setTimeout(() => {
                   divBar.style.transition = 'opacity 200ms ease-in';
                   divBar.style.opacity = 0;
                   // divBar.style.visibility = 'hidden';
-               }, 1000); //200ms + 1000ms = 1.2s
+               }, 800); //200ms + 800ms = 1s
             };
 
             if (divBar) {
-               showBar(level);
+               updateIndicator(level);
 
             } else if (display_container) {
                display_container.insertAdjacentHTML("afterend", '<div id="' + divBarId + '"></div>');
@@ -109,12 +117,9 @@ _plugins.push({
                   'background-color': 'rgba(0,0,0,0.3)',
                   color: '#fff',
                   opacity: 0,
-                  // transition: 'opacity 200ms ease-in',
                   'font-size': '1.5em',
                   'line-height': '2em',
                   left: 0,
-                  // padding: '.4em 0',
-                  // padding: '0.1em 0',
                   position: 'absolute',
                   'text-align': 'center',
                   top: 'auto',
@@ -122,7 +127,8 @@ _plugins.push({
                   'min-height': '0.2em',
                   'z-index': '35',
                });
-               showBar(level);
+
+               updateIndicator(level);
             }
          }
       });
@@ -144,6 +150,7 @@ _plugins.push({
          'volume_hotkey': {
             _elementType: 'select',
             label: 'hotkey',
+            title: 'hotkey+WheelUp/Down',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey' },
@@ -155,7 +162,7 @@ _plugins.push({
          },
          'show_volume_indicator': {
             _elementType: 'select',
-            label: 'indicator',
+            label: 'indicator type',
             options: [
                /* beautify preserve:start */
                { label: 'bar', value: 'bar' },

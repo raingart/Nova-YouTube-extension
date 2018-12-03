@@ -12,7 +12,7 @@ const Plugins = {
          '/js/inject/ytc_lib.js'
       ],
       direct: [
-         'player/stop-autoplay.js',
+         'player/pause-video.js',
          'player/stop-preload-video.js',
          'player/video-quality.js',
          'player/video-speed-wheel.js',
@@ -20,8 +20,8 @@ const Plugins = {
       ],
       sandbox: [
          // 'player/remove-video-annotations.js',
-         'player/fixed-player-scroll.js',
-         'player/player-focused.js',
+         'player/pin-player-onscroll.js',
+         'player/player-force-focused.js',
 
          'details/reveal-description-video.js',
          'details/show-channel-video-count.js',

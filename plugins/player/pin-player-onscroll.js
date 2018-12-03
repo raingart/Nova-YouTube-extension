@@ -9,6 +9,7 @@ _plugins.push({
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
+
          let in_viewport;
          let scroll_toggle_class = "pin_video";
 
@@ -49,14 +50,6 @@ _plugins.push({
          function initStyle() {
             let initcss = {
                position: 'fixed',
-               // top: 'auto',
-               // left: 'auto',
-               // right: 'auto',
-               // bottom: 'auto',
-               // top: 0,
-               // right: 0,
-               // width: '50%',
-               // height: 'auto',
                'z-index': 9999,
             };
 
@@ -81,7 +74,6 @@ _plugins.push({
                   initcss.bottom = 0;
                   initcss.right = 0;
                   break;
-                  // default:
             }
 
             let size = (() => {
@@ -94,7 +86,6 @@ _plugins.push({
             })();
 
             let player_ratio = user_settings['pin_player_size_ratio'] || 3;
-
             // calc size
             size.calc = calculateAspectRatioFit(
                size.width, size.height,
@@ -114,6 +105,7 @@ _plugins.push({
                'width: ' + initcss.width + ' !important;' +
                'height: ' + initcss.height + ' !important' +
                '}');
+               
             // fix player panel
             Plugins.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
                'width: ' + initcss.width + ' !important;' +

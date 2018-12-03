@@ -4,7 +4,7 @@ _plugins.push({
    section: 'comments',
    depends_page: 'watch',
    // sandbox: true,
-   desc: 'Disable comments section',
+   desc: 'Remove comments section',
    // version: '0.1',
    _runtime: function (user_settings) {
 

@@ -9,7 +9,7 @@ _plugins.push({
    _runtime: function (user_settings) {
       
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
-         // Available 'highres', 'hd2880', 'hd2160', 'hd1440', 'hd1080', 'hd720', 'large', 'medium', 'small', 'tiny'
+
          const target_quality = user_settings['video_quality'];
          // const target_quality = 'small'; //test
 
@@ -19,30 +19,21 @@ _plugins.push({
                clearInterval(wait_quality);
 
                const qualities = playerId.getAvailableQualityLevels();
-               let qualityToSet;
       
                if (playerId.getPlaybackQuality() == target_quality) return;
+
+               let max_available_quality = Math.max(qualities.indexOf(target_quality), 0);
+               qualityToSet = qualities[max_available_quality];
       
-               // console.log('Available qualities: %s', JSON.stringify(qualities));
-      
-               // is available target_quality
-               if (qualities.indexOf(target_quality) > -1) {
-                  qualityToSet = target_quality;
-                  // set max available quality
-               } else {
-                  // let max_available_quality = Math.max(qualities.indexOf(target_quality), 0);
-                  // quality = qualities[max_available_quality];
-                  qualityToSet = qualities[0];
-               }
-      
-               // console.log("set quality to: " + qualityToSet);
-               // changeResolution
                playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
                playerId.setPlaybackQuality(qualityToSet);
-      
-               // console.log('set realy quality to: %s', playerId.getPlaybackQuality());
+
+               // console.log('Available qualities:', JSON.stringify(qualities));
+               // console.log("try set quality:",qualityToSet);
+               // console.log('set realy quality:', playerId.getPlaybackQuality());
             }
          }, 50);
+         
       });
    },
    export_opt: (function (data) {
@@ -50,8 +41,9 @@ _plugins.push({
          'video_quality': {
             _elementType: 'select',
             label: 'Quality',
-            title: 'If unavailable, the nearest is selected',
+            title: 'If unavailable, set max available quality',
             options: [
+               // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'
                /* beautify preserve:start */
                { label: '4320p (8k/FUHD)', value: 'highres' },
                { label: '2880p (5k/UHD)', value: 'hd2880' },

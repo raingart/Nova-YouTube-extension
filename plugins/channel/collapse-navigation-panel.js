@@ -10,10 +10,7 @@ _plugins.push({
 
       PolymerYoutube.waitFor('#guide[opened]', function (element) {
          // console.log('#guide is opened');
-         // If the element has a attribute, delete it
-         // if (element.hasAttribute("opened")) {
-            element.removeAttribute("opened");
-         // }
+         element.removeAttribute("opened");
       });
 
    }

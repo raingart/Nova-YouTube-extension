@@ -26,7 +26,7 @@ const App = {
 
             // if options is update
             case 'setOptions':
-               console.log('setOptions', JSON.stringify(request));
+               // console.log('setOptions', JSON.stringify(request));
 
                App.storage.set(request.options);
                App.reversal_plugins(request.options);
@@ -72,13 +72,13 @@ const App = {
       // });
 
       document.addEventListener('yt-navigate-start', function () {
-         //    console.log('yt-navigate-start');
-         //    // do stuff
-         //    App.run.sandbox();
-         //    App.run.direct();
-         // });
+      //    console.log('yt-navigate-start');
+      //    // do stuff
+      //    App.run.sandbox();
+      //    App.run.direct();
+      // });
 
-         // document.addEventListener('yt-navigate-finish', function () {
+      // document.addEventListener('yt-navigate-finish', function () {
          if (location.href != App.this_url) {
             App.this_url = location.href;
             // console.log('yt-navigate-finish');
@@ -171,8 +171,8 @@ const App = {
 
    ready: {},
 
-   reversal_plugins: st => {
-      if (st && Object.keys(st).length && st['restart-app'] &&
+   reversal_plugins: sessionSettings => {
+      if (sessionSettings && Object.keys(sessionSettings).length && sessionSettings['restart-app'] &&
          (App.ready.sandbox || App.ready.direct)
       ) {
          console.log('reversal setting');
@@ -181,30 +181,12 @@ const App = {
             console.log('soft restart');
             // Plugins.injectScript.in_direct('_plugins = []', 'script');
             // App.rerun();
-            // App.run.sandbox();
 
-         } else if (st['restart-app'] === 'full') {
+         } else if (sessionSettings['restart-app'] === 'full') {
             window.location.reload();
          }
       }
    },
-   // reversal_plugins: e => {
-   //    if (App.sessionSettings &&
-   //       Object.keys(App.sessionSettings).length &&
-   //       App.sessionSettings['restart-app']) {
-
-   //       console.log('reversal setting');
-
-   //       if (App.sessionSettings['restart-app'] === 'soft') {
-   //          // Plugins.injectScript.in_direct('_plugins = []', 'script');
-   //          // App.rerun();
-   //          // App.run.sandbox();
-
-   //       } else if (App.sessionSettings['restart-app'] === 'full') {
-   //          window.location.reload();
-   //       }
-   //    }
-   // },
 
    rerun: () => {
       // skip first run on page load
@@ -338,21 +320,13 @@ App.init();
 // });
 
 
-// playerId.pauseVideo();
-// if (playerId.getPlayerState() != 1) {
-//    playerId.playVideo();
-//  } else {
-//    playerId.pauseVideo();
-//  }
-
-
 // var a1 = function (e) {
 //    var isUnMuted = true;
 
 //    player.addEventListener("onStateChange", function(event) {
 //       console.log('onStateChange');
 //         if( player.isMuted() && player.getPlayerState() == 2 && isUnMuted ) {
-//          console.log('2');
+//              console.log('2');
 //              player.unMute();
 //              player.playVideo(); // resume playback
 //              isUnMuted = false;  // you want to run this once only! 
@@ -415,7 +389,3 @@ App.init();
 //    //            }
 //    //        }
 // }, false);
-
-
-// $(document).on("keydown", onKeyDown);
-// $(document).on("scroll", onPageScroll);

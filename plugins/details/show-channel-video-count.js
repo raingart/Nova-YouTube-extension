@@ -9,10 +9,20 @@ _plugins.push({
    // version: '0.1',
    _runtime: function (user_settings) {
 
-      // PolymerYoutube.waitFor('#owner-container', function (element) {
       PolymerYoutube.waitFor('#owner-container a', function (element) {
-         // console.log('this %s', JSON.stringify(this));
-         // console.log('this.selector %s', JSON.stringify(this.selector));
+
+         let _callback = res => {
+            // console.log('res %s', JSON.stringify(res));
+            let videoCount = res.items.map(item => item.statistics.videoCount).join();
+
+            if (document.getElementById('video_count')) {
+               document.getElementById('video_count').textContent = videoCount;
+
+            } else {
+               element.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp-&nbsp<span id="video_count">' + videoCount + '</span> videos</span>');
+            }
+
+         };
 
          // let channel_id = element.getElementsByTagName("a")[0].getAttribute("href").split('/').pop();
          let channel_id = element.getAttribute("href").split('/').pop();
@@ -26,34 +36,9 @@ _plugins.push({
             '&key=' + user_settings.api_key +
             '&part=statistics';
 
-         // let payload = request.payload || {
-         //    /*
-         //       'method': 'GET',
-         //       mode: 'no-cors', 
-         //       'payload': {
-         //          'client': 'gtx', // official Google Translate extension
-         //       }*/
-         // };
-
-         let _callback = res => {
-            // console.log('res %s', JSON.stringify(res));
-            // let videoCount = res.items[0].statistics.videoCount;
-            let videoCount = res.items.map(item => item.statistics.videoCount).join();
-
-            // console.log('videoCount: %s', videoCount);
-
-            if (document.getElementById('video_count')) {
-               document.getElementById('video_count').innerHTML = videoCount;
-
-            } else {
-               element.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp-&nbsp<span id="video_count">' + videoCount + '</span> videos</span>');
-               // div.textContent = "div text";
-            }
-
-         };
-
-         // RequestFetch(soundUrl, payload, type, _callback);
          RequestFetch(url, {}, 'json', _callback);
+
       });
+      
    }
 });

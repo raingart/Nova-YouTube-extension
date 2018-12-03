@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Channel Video Time',
+   name: 'Channel Video Age',
    id: 'show-video-age',
    section: 'details',
    depends_page: 'watch',
@@ -10,35 +10,26 @@ _plugins.push({
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#upload-info .date', function (element) {
-         let video_id = PolymerYoutube.getUrlVars()['v'];
-
-         // console.log('video_id ' + video_id);
-
-         let url = 'videos' +
-            '?id=' + video_id +
-            '&key=' + user_settings.api_key +
-            '&part=snippet';
-         // '&part=snippet,contentDetails,statistics,status';
 
          let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
             let publishedAt = res.items[0].snippet.publishedAt;
-            // console.log('publishedAt: %s', publishedAt);
+            let between_time = new Date().getTime() - new Date(publishedAt);
+            let video_age = timeFormat_short(between_time);
 
-            var between_time = new Date().getTime() - new Date(publishedAt);
-            let how_long = timeFormat_short(between_time);
-            // console.log('how_long '+ how_long);
-            // console.log('publishedAt '+ publishedAt);
-
-            if (document.getElementById('how_long')) {
-               document.getElementById('how_long').innerHTML = how_long;
+            if (document.getElementById('video_age')) {
+               document.getElementById('video_age').textContent = video_age;
 
             } else {
-               element.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="how_long">' + how_long + ' ago</i></span>');
+               element.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="video_age">' + video_age + ' ago</i></span>');
             }
          };
 
-         // RequestFetch(soundUrl, payload, type, _callback);
+         let url = 'videos' +
+            '?id=' + PolymerYoutube.getUrlVars()['v'] +
+            '&key=' + user_settings.api_key +
+            '&part=snippet';
+
          RequestFetch(url, {}, 'json', _callback);
 
       });

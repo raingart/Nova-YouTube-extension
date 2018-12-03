@@ -9,7 +9,6 @@ _plugins.push({
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#container > ytd-expander[collapsed]', function (element) {
-         // console.log('element1', element);
          element.removeAttribute("collapsed");
       });
 

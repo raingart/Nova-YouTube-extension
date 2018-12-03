@@ -8,17 +8,16 @@ _plugins.push({
    // version: '0.1',
    _runtime: function (user_settings) {
 
-      // ytp-button ytp-cards-button
-      // https://youtu.be/RwFKzJlwf8A?t=515
-      PolymerYoutube.waitFor('#columns', function (elm) {
-         elm.addEventListener("auxclick", function (e) {
-            // console.log('target.tagName',e.target.tagName);
-            // console.log('which',e.which);
-            if (e.target.tagName.toLowerCase() !== 'a') {
-               // e.preventDefault();
+      PolymerYoutube.waitFor('#columns', function (element) {
+
+         element.addEventListener("auxclick", scrollTop);
+
+         function scrollTop(event) {
+            // console.log('auxclick tagName',event.target.tagName);
+            if (event.target.tagName.toLowerCase() !== 'a')
                window.scrollTo(0, 0);
-            }
-         });
+         }
+
       });
 
    },
