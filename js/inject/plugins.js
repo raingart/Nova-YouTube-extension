@@ -12,9 +12,9 @@ const Plugins = {
          '/js/inject/ytc_lib.js'
       ],
       direct: [
-         'player/pause-video.js',
-         'player/stop-preload-video.js',
-         'player/video-quality.js',
+         'player/pause-video.js', // fix re-connect
+         'player/stop-preload-video.js', // fix re-connect
+         'player/video-quality.js', // fix re-connect
          'player/video-speed-wheel.js',
          'player/volume-wheel.js',
       ],

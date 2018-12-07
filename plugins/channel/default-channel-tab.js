@@ -25,9 +25,9 @@ _plugins.push({
             case 'about': break;
             /* beautify preserve:end */
             default:
-               if (channel_url.length >= 24) {
+               // if (channel_url.length >= 24) {
                   window.location = url.replace(/(\/)+$/, "") + '/' + target;
-               }
+               // }
          }
       }
    },

@@ -72,19 +72,17 @@ const App = {
       // });
 
       document.addEventListener('yt-navigate-start', function () {
-      //    console.log('yt-navigate-start');
-      //    // do stuff
-      //    App.run.sandbox();
-      //    App.run.direct();
-      // });
-
-      // document.addEventListener('yt-navigate-finish', function () {
+         // console.log('yt-navigate-start');
+         // skip first run on page load
          if (location.href != App.this_url) {
             App.this_url = location.href;
-            // console.log('yt-navigate-finish');
             App.rerun();
          }
       });
+
+      // document.addEventListener('yt-navigate-finish', function () {
+      // console.log('yt-navigate-finish');
+      // });
 
       // document.addEventListener('yt-preconnect-urls', function () {
       //    console.log('yt-preconnect-urls');
@@ -189,13 +187,10 @@ const App = {
    },
 
    rerun: () => {
-      // skip first run on page load
       // if (App.ready.sandbox && App.ready.direct) {
       App.log('page transition');
-      // setTimeout(() => {
       App.run.sandbox();
       // App.run.direct();
-      // }, 500);
       // }
    },
 

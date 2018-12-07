@@ -8,7 +8,17 @@ _plugins.push({
    // version: '0.1',
    _runtime: function (user_settings) {
 
+      // page re-connect (fix to direct olugin)
+      document.addEventListener('yt-navigate-start', function () {
+         _set_stop_preload(document.getElementById('movie_player'));
+      });
+
+      // page load
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
+         _set_stop_preload(playerId);
+      });
+
+      function _set_stop_preload(playerId) {
          playerId.addEventListener("onStateChange", _onStateChange.bind(this));
 
          function _onStateChange(state) {
@@ -23,7 +33,7 @@ _plugins.push({
                playerId.stopVideo();
          }
 
-      })
+      }
 
    },
 });

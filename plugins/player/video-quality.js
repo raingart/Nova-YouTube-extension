@@ -7,9 +7,18 @@ _plugins.push({
    desc: 'Set prefered quality',
    // version: '0.1',
    _runtime: function (user_settings) {
-      
-      PolymerYoutube.waitFor('#movie_player', function (playerId) {
 
+      // page re-connect (fix to direct olugin)
+      document.addEventListener('yt-navigate-start', function () {
+         _set_quality(document.getElementById('movie_player'));
+      });
+
+      // page load
+      PolymerYoutube.waitFor('#movie_player', function (playerId) {
+         _set_quality(playerId);
+      });
+
+      function _set_quality(playerId) {
          const target_quality = user_settings['video_quality'];
          // const target_quality = 'small'; //test
 
@@ -19,22 +28,21 @@ _plugins.push({
                clearInterval(wait_quality);
 
                const qualities = playerId.getAvailableQualityLevels();
-      
+
                if (playerId.getPlaybackQuality() == target_quality) return;
 
                let max_available_quality = Math.max(qualities.indexOf(target_quality), 0);
                qualityToSet = qualities[max_available_quality];
-      
-               playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
+
                playerId.setPlaybackQuality(qualityToSet);
+               playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
                // console.log('Available qualities:', JSON.stringify(qualities));
-               // console.log("try set quality:",qualityToSet);
+               // console.log("try set quality:", qualityToSet);
                // console.log('set realy quality:', playerId.getPlaybackQuality());
             }
          }, 50);
-         
-      });
+      }
    },
    export_opt: (function (data) {
       return {
