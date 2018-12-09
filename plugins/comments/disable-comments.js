@@ -5,7 +5,6 @@ _plugins.push({
    depends_page: 'watch',
    // sandbox: true,
    desc: 'Remove comments section',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#comments', function (selector) {

@@ -5,7 +5,6 @@ _plugins.push({
    depends_page: 'watch',
    // sandbox: true,
    desc: 'See full description',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#container > ytd-expander[collapsed]', function (element) {

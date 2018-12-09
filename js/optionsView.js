@@ -2,9 +2,20 @@
 
 console.log(i18n("app_name") + ": init opt.js");
 
-var _plugins = [];
+// Plugins.load(
+//    Plugins_list.plugins_init
+//    .concat(Plugins_list.strong_dependent)
+//    .concat(Plugins_list.strong_self)
+//    .concat(Plugins_list.one_off)
+// );
 
-Plugins.load.direct(Plugins.list_plugins.sandbox.concat(Plugins.list_plugins.direct))
+Plugins.load((() => {
+   let pl = [];
+   for (i in Plugins_list) {
+      for (p of Plugins_list[i]) pl.push(p);
+   }
+   return pl;
+})());
 
 const Opt = {
 
@@ -74,7 +85,8 @@ const Opt = {
 
       combine_html_opt: (tags, id) => {
          let outHTML = document.createElement('ul');
-         outHTML.setAttribute('data-dependent', '{"' + id + '":[true]}');
+         // outHTML.setAttribute('data-dependent', '{"' + id + '":[true]}');
+         outHTML.setAttribute('data-dependent', '{\"' + id + '\":[true]}');
 
          for (const name in tags) {
             Opt.log('tags[name]', JSON.stringify(tags[name]));
@@ -91,6 +103,13 @@ const Opt = {
             property.name = name;
             property.id = name;
             delete property._elementType;
+
+            if (property['data-dependent']) {
+               // tagHTML_conteiner.setAttribute('data-dependent', '{\"'+ id +'\":[true]}');
+               tagHTML_conteiner.setAttribute("data-dependent", property['data-dependent']);
+               // tagHTML.setAttribute('data-dependent', property['data-dependent']);
+               delete property['data-dependent'];
+            }
 
             for (const attr in property) {
                // console.log('attr', JSON.stringify(attr));

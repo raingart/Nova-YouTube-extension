@@ -6,13 +6,13 @@ _plugins.push({
    // depends_request: {videos: ["statistics", "snippet"]},
    // sandbox: true,
    desc: 'Total number of videos no channel',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
-      PolymerYoutube.waitFor('#owner-container a', function (element) {
+      PolymerYoutube.waitFor('#owner-container a[href]', function (element) {
+         // console.log('#owner-container a', element);
 
          let _callback = res => {
-            // console.log('res %s', JSON.stringify(res));
+            // console.log('res', JSON.stringify(res));
             let videoCount = res.items.map(item => item.statistics.videoCount).join();
 
             if (document.getElementById('video_count')) {
@@ -26,6 +26,7 @@ _plugins.push({
 
          // let channel_id = element.getElementsByTagName("a")[0].getAttribute("href").split('/').pop();
          let channel_id = element.getAttribute("href").split('/').pop();
+         // console.log('channel_id', channel_id);
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
             return console.error('channel_id is not valid');;
@@ -39,6 +40,6 @@ _plugins.push({
          RequestFetch(url, {}, 'json', _callback);
 
       });
-      
+
    }
 });

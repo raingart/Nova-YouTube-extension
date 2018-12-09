@@ -5,13 +5,15 @@ _plugins.push({
    depends_page: 'channel',
    // sandbox: true,
    desc: 'Set default tab on YT channels',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       pageRedirect(location.href, user_settings.default_channel_tab);
 
       function pageRedirect(url, target) {
          let channel_url = location.pathname.split('/').pop();
+         // console.log('location.pathname', location.pathname);
+         // console.log('location.href', location.href);
+         // console.log('channel_url', channel_url);
 
          switch (channel_url) {
             /* beautify preserve:start */
@@ -23,6 +25,7 @@ _plugins.push({
             case 'channels': break;
             case 'discussion': break;
             case 'about': break;
+            case '': break; // home etc
             /* beautify preserve:end */
             default:
                // if (channel_url.length >= 24) {

@@ -6,7 +6,6 @@ _plugins.push({
    // depends_request: {videos:["snippet"]},
    // sandbox: true,
    desc: 'How long ago video was uploaded',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#upload-info .date', function (element) {

@@ -5,25 +5,34 @@ _plugins.push({
    depends_page: 'watch',
    // sandbox: true,
    desc: 'Fixed player position',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
-      PolymerYoutube.waitFor('#movie_player', function (playerId) {
+      // PolymerYoutube.waitFor('#ytd-player.pin_video', function (el) {
+      //    console.log('1111');
+      //    PolymerYoutube.connect_DragnDrop(
+      //       el
+      //    , position => {
+      //       console.log('222');
+      //       // PolymerYoutube.connect_DragnDrop(playerId, (position) => {
+      //          localStorage.setItem('player-position-top', position.top);
+      //          localStorage.setItem('player-position-left', position.left);
+      //       });
+      // })
+
+      PolymerYoutube.waitFor('.html5-video-player video[style]', function (vid_) {
+      // PolymerYoutube.waitFor('#player', function (playerId) {
+      // PolymerYoutube.waitFor('#movie_player', function (playerId) {
 
          let in_viewport;
          let scroll_toggle_class = "pin_video";
 
          initStyle();
 
-         // PolymerYoutube.connect_DragnDrop(playerId, (position) => {
-         //    localStorage.setItem('player-position-top', position.top);
-         //    localStorage.setItem('player-position-left', position.left);
-         // });
-
          window.addEventListener('scroll', function () {
             pinned_elm(
-               playerId,
-               // document.getElementsByTagName('video')[0],
+               document.getElementById('ytd-player'),
+               // document.getElementById('movie_player'),
+               // playerId,
                document.getElementById("player-theater-container")
             );
          });
@@ -77,7 +86,8 @@ _plugins.push({
             }
 
             let size = (() => {
-               let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
+               let cssVid = window.getComputedStyle(vid_, null);
+               // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
                // initStyle = document.getElementsByTagName('video')[0].style.cssText;
                return {
                   width: cssVid.getPropertyValue('width').replace(/px/i, ''),
@@ -93,30 +103,33 @@ _plugins.push({
             );
 
             // add calc size
-            initcss.width = size.calc.width + 'px';
-            initcss.height = size.calc.height + 'px';
+            initcss.width = size.calc.width + 'px' + ' !important;';
+            initcss.height = size.calc.height + 'px' + ' !important;';
 
             // apply css
-            Plugins.injectStyle(initcss, '.' + scroll_toggle_class, 'important');
-            // Plugins.injectStyle(initcss, '.' + scroll_toggle_class);
+            // PolymerYoutube.injectStyle(initcss, '.' + scroll_toggle_class, 'important');
+            PolymerYoutube.injectStyle(initcss, '.' + scroll_toggle_class);
 
             // fix video tag
-            Plugins.injectStyle('.' + scroll_toggle_class + ' video {' +
-               'width: ' + initcss.width + ' !important;' +
-               'height: ' + initcss.height + ' !important' +
+            PolymerYoutube.injectStyle('.' + scroll_toggle_class + ' video {' +
+               'width: ' + initcss.width +
+               'height: ' + initcss.height +
+               // 'width: ' + initcss.width + ' !important;' +
+               // 'height: ' + initcss.height + ' !important;' +
                '}');
                
-            // fix player panel
-            Plugins.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
-               'width: ' + initcss.width + ' !important;' +
+            // fix control-player panel
+            PolymerYoutube.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
+               'width: ' + initcss.width +
+               // 'width: ' + initcss.width + ' !important;' +
                'left: 0 !important;' +
                '}');
 
             function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
                let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
                return {
-                  width: srcWidth * ratio,
-                  height: srcHeight * ratio,
+                  width: Math.round(srcWidth * ratio),
+                  height: Math.round(srcHeight * ratio),
                };
             }
          }
@@ -134,7 +147,7 @@ _plugins.push({
             step: 0.1,
             min: 2,
             max: 5,
-            value: 3,
+            value: 2.5,
             title: 'less - more size',
          },
          'pin_player_size_position': {

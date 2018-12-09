@@ -5,21 +5,16 @@ _plugins.push({
    depends_page: 'watch, embed',
    // sandbox: false,
    desc: 'Pause video autoplay',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
-      // page re-connect (fix to direct olugin)
-      document.addEventListener('yt-navigate-start', function () {
-         _set_stop_autoplay(document.getElementById('movie_player'));
-      });
-
-      // page load
       PolymerYoutube.waitFor('#movie_player', function (playerId) {
-         _set_stop_autoplay(playerId);
-      });
 
-      function _set_stop_autoplay(playerId) {
-         playerId.addEventListener("onStateChange", _onStateChange.bind(this));
+         if (user_settings['stop-autoplay-ignore-playlist'] && window.location.href.indexOf('list=') !== -1) return;
+
+         // playerId.addEventListener("onStateChange", _onStateChange.bind(this));
+         let wait_pause = setInterval(() => {
+            _onStateChange(playerId.getPlayerState());
+         }, 50);
 
          function _onStateChange(state) {
             // console.log('state', state);
@@ -29,11 +24,23 @@ _plugins.push({
             // 2- paused
             // 3- buffering
             // 5- video cued
-            if (state === 1 || state === 3)
+            if (state === 1) {
+               // console.log('pauseVideo');
+               clearInterval(wait_pause);
                playerId.pauseVideo();
+            }
          }
 
-      }
+      });
 
    },
+   export_opt: (function (data) {
+      return {
+         'stop-autoplay-ignore-playlist': {
+            _elementType: 'input',
+            label: 'ignore playlist',
+            type: 'checkbox',
+         },
+      };
+   }()),
 });

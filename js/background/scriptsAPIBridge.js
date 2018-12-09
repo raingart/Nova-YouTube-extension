@@ -44,53 +44,62 @@ const Background = {
                });
                break;
 
-            case 'injectScript':
-               source = {
-                  allFrames: false
-               };
-               if (request.src) source.file = request.src;
-               else if (request.code) source.code = request.code;
+            // case 'injectScript':
+            //    source = {
+            //       allFrames: false
+            //    };
+            //    if (request.src) source.file = request.src;
+            //    else if (request.code) source.code = request.code;
 
-               // chrome.tabs.executeScript(sender.tab.id, source, function (response) {});
-               // tabs.forEach(tab => {
-               chrome.tabs.executeScript(sender.tab.id, source, result => {
-                  const lastErr = chrome.runtime.lastError;
-                  if (lastErr) {
-                     // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
-                     console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
-                  }
-               });
-               //   });
-               break;
+            //    // chrome.tabs.executeScript(sender.tab.id, source, function (response) {});
+            //    // tabs.forEach(tab => {
+            //    chrome.tabs.executeScript(sender.tab.id, source, result => {
+            //       const lastErr = chrome.runtime.lastError;
+            //       if (lastErr) {
+            //          // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
+            //          console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
+            //       }
+            //    });
+            //    //   });
+            //    break;
 
-               case 'injectStyle':
-                  source = {
-                     allFrames: false
-                  };
-                  if (request.src) source.file = request.src;
-                  else if (request.code) source.code = request.code;
+            //    case 'injectStyle':
+            //       source = {
+            //          allFrames: false
+            //       };
+            //       if (request.src) source.file = request.src;
+            //       else if (request.code) source.code = request.code;
 
-                  chrome.tabs.insertCSS(sender.tab.id, source, result => {
-                     const lastErr = chrome.runtime.lastError;
-                     if (lastErr) {
-                        // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
-                     console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
-                     }
-                  });
-                  break;
+            //       chrome.tabs.insertCSS(sender.tab.id, source, result => {
+            //          const lastErr = chrome.runtime.lastError;
+            //          if (lastErr) {
+            //             // console.error('tab: ' + sender.tab.id + ' lastError: ' + JSON.stringify(lastErr));
+            //          console.error('lastError: %s\n%s', JSON.stringify(lastErr), JSON.stringify(request));
+            //          }
+            //       });
+            //       break;
 
                // default:
          }
       });
 
-      // // Listen for when a Tab changes state
+      // Listen for when a Tab changes state
       // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       //    // console.log('onUpdated');
       //    if (changeInfo && changeInfo.status == "complete") {
       //       console.log("Tab updated:", tab.url);
-               // chrome.tabs.insertCSS(tabId, {code: "body{border:1px solid red}"});
+
+      //       chrome.tabs.query({}, function (tabs) {
+      //          for (const tab of tabs) {
+      //             chrome.tabs.sendMessage(tab.id, {
+      //                action: 'tabUpdated',
+      //                url: tab.url
+      //             });
+      //          }
+      //       });
       //    }
       // });
+
    }()),
 
    // init: () => {

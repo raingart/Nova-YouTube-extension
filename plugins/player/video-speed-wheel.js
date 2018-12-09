@@ -5,7 +5,6 @@ _plugins.push({
    depends_page: 'watch, embed',
    // sandbox: false,
    desc: 'Use mouse wheel to change speed video',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       // PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
@@ -16,24 +15,28 @@ _plugins.push({
             .addEventListener("wheel", onWheel_setVideoSpeed); //mousewheel
 
          function onWheel_setVideoSpeed(event) {
+            // console.log('onWheel');
             event.preventDefault();
 
             if (user_settings['player_rate_hotkey'] && (
                   event[user_settings['player_rate_hotkey']] ||
                   (
-                     user_settings['player_rate_hotkey'] === 'none' && 
+                     user_settings['player_rate_hotkey'] === 'none' &&
                      !event.ctrlKey && !event.altKey && !event.shiftKey
                   )
                )) {
+               // console.log('hotkey caught');
 
                if (!playerId.hasOwnProperty('getPlaybackRate')) {
+                  // console.log('getPlaybackRate error');
                   return console.error('getPlaybackRate error');
                }
 
                let delta = Math.sign(event.wheelDelta);
-               let rate = _setVideoSpeed(delta) 
-               
+               let rate = _setVideoSpeed(delta)
+
                if (user_settings['show_rate_indicator']) {
+                  // console.log('on show_rate_indicator',user_settings['show_rate_indicator']);
                   // show indicator
                   showIndicator('x' + playerId.getPlaybackRate(), this);
                }
@@ -53,6 +56,7 @@ _plugins.push({
             // set rate
             if (rateToSet && rateToSet !== rate) {
                playerId.setPlaybackRate(rateToSet);
+               // console.log('try set speed',rateToSet);
 
                // check is correct
                if (rateToSet !== playerId.getPlaybackRate()) {
@@ -60,6 +64,7 @@ _plugins.push({
                }
             }
 
+            // console.log('real speed', playerId.getPlaybackRate());
             return rateToSet === playerId.getPlaybackRate() ? rateToSet : false;
          }
 
@@ -114,7 +119,7 @@ _plugins.push({
       return {
          'player_rate_hotkey': {
             _elementType: 'select',
-            label: 'Rate hotkey',
+            label: 'Hotkey',
             title: 'hotkey+WheelUp/Down',
             options: [
                /* beautify preserve:start */

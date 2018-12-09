@@ -5,7 +5,6 @@ _plugins.push({
    depends_page: 'watch, embed',
    // sandbox: false,
    desc: 'Use mouse wheel to change volume',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       const _this = this; // get default step
@@ -31,7 +30,7 @@ _plugins.push({
                   return console.error('getVolume error');
                }
 
-               let step = user_settings['volume_step'] || _this.export_opt['volume_step'] || 10;
+               let step = user_settings['volume_step'] || _this.export_opt['volume_step'] || 5;
                let delta = Math.sign(event.wheelDelta) * step;
                let level = _setVideoVolume(delta);
 
@@ -144,12 +143,12 @@ _plugins.push({
             step: 1,
             min: 1,
             max: 33,
-            value: 10,
+            value: 5,
             title: 'switch option to show you volume percentage on screen',
          },
          'volume_hotkey': {
             _elementType: 'select',
-            label: 'hotkey',
+            label: 'Hotkey',
             title: 'hotkey+WheelUp/Down',
             options: [
                /* beautify preserve:start */
@@ -177,6 +176,7 @@ _plugins.push({
             label: 'indicator color',
             type: 'color',
             value: '#ff0000', // red
+            'data-dependent': '{"show_volume_indicator":["bar","full"]}',
          },
       };
    }()),

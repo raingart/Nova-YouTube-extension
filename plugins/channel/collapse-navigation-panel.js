@@ -2,10 +2,9 @@ _plugins.push({
    name: 'Hide Navigation Panel',
    id: 'collapse-navigation-panel',
    section: 'channel',
-   depends_page: 'channel, results',
+   depends_page: 'channel, results, playlist, null',
    // sandbox: true,
    desc: 'Hide left panel',
-   // version: '0.1',
    _runtime: function (user_settings) {
 
       PolymerYoutube.waitFor('#guide[opened]', function (element) {

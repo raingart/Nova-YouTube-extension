@@ -5,40 +5,6 @@ const PolymerYoutube = {
 
    api_url: 'https://www.googleapis.com/youtube/v3/',
 
-   // waitFor: function (selector, callback) {
-   //    return new Promise(function (res, rej) {
-   //       waitForElementToDisplay(selector, 300);
-
-   //       function waitForElementToDisplay(selector, time, maxCountLoop) {
-   //          if (maxCountLoop === undefined) {
-   //             let sec = 20; // max wait sec
-   //             maxCountLoop = sec / (time / 1000); // max loop (sec->loop count)
-   //          }
-
-   //          if (document.querySelector(selector) != null) {
-   //             res(document.querySelector(selector));
-   //             // if (selector) {
-   //             // res(selector);
-   //             PolymerYoutube.log('exist elm:', selector);
-
-   //             if (callback && typeof (callback) === 'function') return callback(selector);
-   //          } else {
-   //             setTimeout(function () {
-   //                if (!maxCountLoop) {
-   //                   // We have run out of retries
-   //                   console.warn('wait elm force stop:', selector);
-   //                   res(true);
-   //                } else {
-   //                   // Try again
-   //                   PolymerYoutube.log('wait elm:', selector);
-   //                   waitForElementToDisplay(selector, time, maxCountLoop - 1);
-   //                }
-   //             }, time);
-   //          }
-   //       }
-   //    });
-   // },
-
    listeners: [],
 
    waitFor: function (selector, callback) {
@@ -137,93 +103,41 @@ const PolymerYoutube = {
       // );
    },
 
-   // getMatchedCSSRules: (el) => {
-   //    let rules = [...document.styleSheets]
-   //    rules = rules.filter(({
-   //       href
-   //    }) => !href)
-   //    rules = rules.map((sheet) => [...(sheet.cssRules || sheet.rules || [])].map((rule) => {
-   //       if (rule instanceof CSSStyleRule) {
-   //          return [rule]
-   //       } else if (rule instanceof CSSMediaRule && window.matchMedia(rule.conditionText)) {
-   //          return [...rule.cssRules]
-   //       }
-   //       return []
-   //    }))
-   //    rules = rules.reduce((acc, rules) => acc.concat(...rules), [])
-   //    rules = rules.filter((rule) => el.matches(rule.selectorText))
-   //    rules = rules.map(({
-   //       style
-   //    }) => style)
-   //    return rules
-   // },
-
-   // getMatchedStyle: (elem, property) => {
-   //    // element property has highest priority
-   //    var val = elem.style.getPropertyValue(property);
-
-   //    // if it's important, we are done
-   //    if (elem.style.getPropertyPriority(property))
-   //       return val;
-
-   //    // get matched rules
-   //    var rules = PolymerYoutube.getMatchedCSSRules(elem);
-
-   //    // iterate the rules backwards
-   //    // rules are ordered by priority, highest last
-   //    for (var i = rules.length; i-- > 0;) {
-   //       var r = rules[i];
-
-   //       var important = r.style.getPropertyPriority(property);
-
-   //       // if set, only reset if important
-   //       if (val == null || important) {
-   //          val = r.style.getPropertyValue(property);
-
-   //          // done if important
-   //          if (important)
-   //             break;
-   //       }
-   //    }
-
-   //    return val;
-   // },
-
    // connect_DragnDrop: function (element, callback) {
    //    // if (!element) return;
    //    element.onmousedown = function (event, callback) {
    //       let shiftX = event.clientX - this.getBoundingClientRect().left;
    //       let shiftY = event.clientY - this.getBoundingClientRect().top;
-   
+
    //       this.style.position = 'absolute !important;';
    //       // act_elm.style.zIndex = 1000;
-   
+
    //       Object.assign(this.style, {
-   //          'z-index': 9999,
+   //          // 'z-index': 9999,
    //          cursor: 'move',
    //          outline: '1px dashed deepskyblue',
    //       });
-   
+
    //       moveAt(event.pageX, event.pageY);
    //       // centers the active element at (pageX, pageY) coordinates
    //       function moveAt(pageX, pageY) {
    //          element.style.left = pageX - shiftX + 'px';
    //          element.style.top = pageY - shiftY + 'px';
    //       }
-   
+
    //       function onMouseMove(event) {
    //          moveAt(event.pageX, event.pageY);
    //       }
-   
+
    //       // (3) move the active element on mousemove
    //       document.addEventListener('mousemove', onMouseMove);
-   
+
    //       // (4) drop the active element, remove unneeded handlers
    //       this.onmouseup = function () {
    //          document.removeEventListener('mousemove', onMouseMove);
    //          this.onmouseup = null;
    //          Object.assign(this.style, {
-   //             'z-index': 'unset',
+   //             // 'z-index': 'unset',
    //             cursor: 'unset',
    //             outline: 'unset',
    //          });
@@ -234,7 +148,68 @@ const PolymerYoutube = {
    //       };
    //    };
    // },
-   
+
+   // search_xpath: function (query, outer_dom, inner_dom) {
+   //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
+   //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
+   //    outer_dom = outer_dom || document;
+   //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
+   // },
+
+   injectStyle: (styles, selector, important) => {
+      if (!styles) return;
+
+      if (typeof styles === 'object') { // is json
+         if (!selector) selector = '*';
+
+         injectCss(selector + json2css(styles));
+
+         function json2css(obj) {
+            let _css = '';
+            Object.entries(obj).forEach(
+               // ([key, value]) => _css += key + ':' + value + ' !important;'
+               ([key, value]) => {
+                  _css += key + ':' + value + (important ? ' !important' : '') + ';';
+               }
+            );
+            return '{' + _css + '}';
+         }
+
+      } else {
+         injectCss(styles);
+      }
+
+
+      function injectCss(source) {
+         let sheet = document.createElement('style');
+         sheet.type = 'text/css';
+
+         // if (source.slice(-3) === '.css') sheet.src = source;
+         // else sheet.styleSheet.cssText = source;
+         // else sheet.textContent = source;
+
+         if (source.slice(-3) === '.css') {
+            sheet.src = source;
+         } else if (sheet.styleSheet) {
+            sheet.styleSheet.cssText = source;
+         } else {
+            sheet.innerHTML = source;
+         }
+
+         (document.head || document.documentElement).appendChild(sheet);
+
+         // sheet.onload = function () {
+         // PolymerYoutube.log('style loading:', sheet.src || sheet.textContent);
+         // console.log('style loading:', sheet.src || sheet.textContent);
+         // sheet.parentNode.removeChild(sheet);
+         // };
+
+         // sheet.onload = sheet.onerror = function () {
+         //    this.remove();
+         // };
+      }
+   },
+
    getUrlVars: function (v) {
       var vars = {};
       var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -257,7 +232,7 @@ const PolymerYoutube = {
 const RequestFetch = function (url, payload, typeResponse, callback) {
    url = PolymerYoutube.api_url + url; // for safe
    // console.log('url', url);
-   
+
    fetch(url, payload)
       .then(res => {
          return (res.status >= 200 && res.status < 300) ?
@@ -283,23 +258,4 @@ const RequestFetch = function (url, payload, typeResponse, callback) {
       .catch(error => {
          console.error('Request Error: %s\n%s', error.response, error);
       });
-
-   // // Performs an ajax request
-   // function ajaxRequest(request, callback) {
-   //    var xhr = new XMLHttpRequest();
-   //    xhr.onreadystatechange = function () {
-   //       if (xhr.readyState == 4) {
-   //          if (xhr.status == 200) {
-   //             callback(xhr.responseText);
-   //          } else {
-   //             callback(null);
-   //          }
-   //       }
-   //    };
-   //    xhr.open(request.method, request.url, true);
-   //    for (var i in request.headers) {
-   //       xhr.setRequestHeader(request.headers[i].header, request.headers[i].value);
-   //    }
-   //    xhr.send(request.data);
-   // }
 }

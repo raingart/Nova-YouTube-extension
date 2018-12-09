@@ -36,9 +36,10 @@ const App = {
                });
                break;
 
-               // case 'tabUpdated':
-               //    console.log('request.options', JSON.stringify(request.options));
-               //    break;
+               case 'tabUpdated':
+                  // console.log('request.url', JSON.stringify(request.url));
+                  // App.rerun();
+                  break;
 
             case 'sendMessage':
                console.log(request.message);
@@ -71,19 +72,6 @@ const App = {
       //    // if (event.propertyName == 'top')
       // });
 
-      document.addEventListener('yt-navigate-start', function () {
-         // console.log('yt-navigate-start');
-         // skip first run on page load
-         if (location.href != App.this_url) {
-            App.this_url = location.href;
-            App.rerun();
-         }
-      });
-
-      // document.addEventListener('yt-navigate-finish', function () {
-      // console.log('yt-navigate-finish');
-      // });
-
       // document.addEventListener('yt-preconnect-urls', function () {
       //    console.log('yt-preconnect-urls');
       //    // if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
@@ -93,18 +81,6 @@ const App = {
       //    console.log('yt-action', JSON.stringify(a));
       //    // if (App.rerun && typeof (App.rerun) === 'function') return App.rerun();
       // });
-
-      // document.addEventListener("webkitfullscreenchange", function () {
-      //    console.log('webkitfullscreenchange');
-      //    // var R = document.getElementById('PlayBackRatePanel');
-      //    if (document.webkitIsFullScreen == true) {
-      //       console.log('document.webkitIsFullScreen == true');
-      //    }
-      //    //     R.className = "PlayBackRatePanelFullScreen";
-      //    // } else {
-      //    //     R.className = "PlayBackRatePanel";
-      //    // }
-      // }, false);
 
       // window.addEventListener('blur', function () {
       //    console.log('window blur');
@@ -116,7 +92,6 @@ const App = {
       // window.addEventListener('yt-preconnect-urls', function () {
       //    console.log('yt-preconnect-urls');
       // });
-
 
       // window.addEventListener("message", function (event) {
       //    // console.log('message', event.source);
@@ -131,18 +106,40 @@ const App = {
       // window.dispatchEvent(new Event("resize"));
       //getEventListeners(window)
       //getEventListeners(document)
+
+      document.addEventListener('yt-navigate-start', function () {
+         // console.log('yt-navigate-start');
+         // skip first run on page load
+         if (location.href != App.this_url) {
+            App.this_url = location.href;
+            App.rerun();
+         }
+      });
+
+      // document.addEventListener('yt-navigate-finish', function () {
+      // console.log('yt-navigate-finish');
+      // });
    }()),
+
+   this_url: location.href,
+
+   // new_url: () => {
+   //    App.this_url = App.this_url == location.href ? App.this_url : location.href;
+   //    return 
+   // },
 
    getPageType: () => {
       // "*://www.youtube.com/watch?v=*",
       // "*://www.youtube.com/user/*",
       // "*://www.youtube.com/channel/*"
+      // "*://www.youtube.com/results?search_query=*"
+      // "*://www.youtube.com/playlist?list=PL*"
       let page = location.pathname.split('/')[1];
-      return (page == 'channel' || page == 'user') ? 'channel' : page;
+      App.log('page type', page);
+      return (page == 'channel' || page == 'user') ? 'channel' : page || null;
    },
 
    // sessionSettings: null,
-
    storage: {
       set: options => {
          App.log('storage.set: %s', JSON.stringify(options));
@@ -167,15 +164,11 @@ const App = {
       }
    },
 
-   ready: {},
-
    reversal_plugins: sessionSettings => {
-      if (sessionSettings && Object.keys(sessionSettings).length && sessionSettings['restart-app'] &&
-         (App.ready.sandbox || App.ready.direct)
-      ) {
+      if (sessionSettings && Object.keys(sessionSettings).length && sessionSettings['restart-app']) {
          console.log('reversal setting');
 
-         if (st['restart-app'] === 'soft') {
+         if (sessionSettings['restart-app'] === 'soft') {
             console.log('soft restart');
             // Plugins.injectScript.in_direct('_plugins = []', 'script');
             // App.rerun();
@@ -187,82 +180,78 @@ const App = {
    },
 
    rerun: () => {
-      // if (App.ready.sandbox && App.ready.direct) {
-      App.log('page transition');
-      App.run.sandbox();
-      // App.run.direct();
-      // }
-   },
+      console.log('page transition');
+      // App.log('page transition');
 
-   this_url: location.href,
+      Plugins.injectScript("_plugins = [];");
+      Plugins.load(
+         Plugins_list.one_off_dependent
+         .concat(Plugins_list.one_off)
+         .concat(Plugins_list.plugins_end)
+      );
+
+      setTimeout(() => {
+         App.run();
+      }, 500);
+   },
 
    init: () => {
       App.log('init');
       App.storage.load();
 
-      //sandbox
-      Plugins.load.sandbox();
-      let sandbox_wait_loaded = setInterval(() => {
-         // wait load sandbox plugins
-         if (App.sandbox_loaded && _plugins.length) {
-            App.log("sandbox_wait_loaded load %s %s", App.sandbox_loaded, _plugins.length);
-            // wait load setting
-            if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
-               clearInterval(sandbox_wait_loaded);
-               App.run.sandbox();
+      // load all Plugins
+      Plugins.load((() => {
+         let pl = [];
+         for (i in Plugins_list) {
+            for (p of Plugins_list[i]) pl.push(p);
+         }
+         return pl;
+      })());
 
-               // // access to rerun
-               App.ready.sandbox = true;
-            }
+      let sandbox_wait_loaded = setInterval(() => {
+         // wait load setting
+         if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
+            clearInterval(sandbox_wait_loaded);
+            App.run();
          }
       }, 50);
-
-      //direct
-      PolymerYoutube.waitFor('head', function (element) { // wait head tag
-         Plugins.load.direct_init();
-         Plugins.load.direct();
-
-         let waitYT = setInterval(() => {
-            App.log('waitYT');
-            // wait load setting
-            if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
-               clearInterval(waitYT);
-
-               Plugins.injectScript.in_direct("plugins_run = " + Plugins.run, 'script');
-               App.run.direct();
-
-               // // access to rerun
-               App.ready.direct = true;
-            }
-         }, 50);
-      });
    },
 
-   run: {
-      sandbox: () => {
-         App.log('run sandbox');
-         // sandbox
-         Plugins.run(App.getPageType(), App.sessionSettings);
-      },
+   run: () => {
+      App.log('run');
 
-      direct: () => {
-         App.log('run direct');
-         let plugins_execute = function (a, x) {
-            return "_plugins_run = setInterval(() => {\
-               if (_plugins.length) {\
-               clearInterval(_plugins_run);\
-               plugins_run(" + a + ',' + x + ");\
-               }\
-            }, 100)";
-         };
+      // if onYouTubePlayerReady is ready before init = ALL BROKEN
+      // let plugins_execute = function (a, x) {
+      //    return "//window.onYouTubePlayerReady = function (player) {\
+      //          //console.log('onYouTubePlayerReady');\
+      //          //if (!player) return;\
+      //          _plugins_run = setInterval(() => {\
+      //             if (_plugins.length) {\
+      //                clearInterval(_plugins_run);\
+      //                plugins_run(" + a + ',' + x + ");\
+      //             }\
+      //          }, 50)\
+      //       //}";
+      // };
 
-         // run in new setting
-         Plugins.injectScript.in_direct(
-            plugins_execute(
-               JSON.stringify(App.getPageType()),
-               JSON.stringify(App.sessionSettings)
-            ), 'script');
-      },
+      let preparation_for_execute = function (a, x) {
+         // return "var plugins_run=" + Plugins.run + ";\
+         return "plugins_run=" + Plugins.run + ";\
+               _plugins_run = setInterval(() => {\
+                  if (_plugins.length && plugins_loading) {\
+                     clearInterval(_plugins_run);\
+                     plugins_run(" + a + "," + x + ");\
+                     plugins_loading = false;\
+                  }\
+               }, 100)";
+      };
+
+      Plugins.injectScript(
+         preparation_for_execute(
+            JSON.stringify(App.getPageType()),
+            JSON.stringify(App.sessionSettings)
+         )
+      );
    },
 
    log: function (msg) {
@@ -280,11 +269,21 @@ App.init();
 
 
 
+// https://developers.google.com/youtube/iframe_api_reference
+
+// try {
+//    let a = PolymerYoutube.search_xpath(".//*[@id='toggleButton']")
+//    console.log('a', JSON.stringify(a.snapshotItem(0)));
+//    console.log('a', a.snapshotItem(0));
+// } catch (error) {
+//    console.log('error search_xpath', error);
+// }
 
 
 
-
-
+// function is_fullscreen() {
+//    return !!document.getElementById('movie_player').classList.contains('ytp-fullscreen');
+// }
 
 
 

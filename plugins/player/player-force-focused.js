@@ -5,7 +5,6 @@ _plugins.push({
    depends_page: 'watch',
    // sandbox: false,
    desc: 'HotKeys player priority (SPACE/F etc.)',
-   // version: '0.1',
    _runtime: function (user_settings) {
       
       // document.addEventListener('focus', captureFocus);
