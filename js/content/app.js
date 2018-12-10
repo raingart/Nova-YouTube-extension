@@ -1,6 +1,6 @@
 // 'use strict';
 // console.log(i18n("app_name") + ": init app.js");
-console.log(": init content.js");
+// console.log(": init content.js");
 
 const App = {
 
@@ -185,14 +185,13 @@ const App = {
 
       Plugins.injectScript("_plugins = [];");
       Plugins.load(
-         Plugins_list.one_off_dependent
-         .concat(Plugins_list.one_off)
+         Plugins_list.one_off
          .concat(Plugins_list.plugins_end)
       );
 
-      setTimeout(() => {
+      // setTimeout(() => {
          App.run();
-      }, 500);
+      // }, 500);
    },
 
    init: () => {

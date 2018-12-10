@@ -85,15 +85,19 @@ _plugins.push({
                   break;
             }
 
-            let size = (() => {
-               let cssVid = window.getComputedStyle(vid_, null);
-               // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
-               // initStyle = document.getElementsByTagName('video')[0].style.cssText;
-               return {
-                  width: cssVid.getPropertyValue('width').replace(/px/i, ''),
-                  height: cssVid.getPropertyValue('height').replace(/px/i, ''),
+            let size = {
+                  width: vid_.style.width.replace(/px/i, ''),
+                  height: vid_.style.height.replace(/px/i, ''),
                };
-            })();
+            // let size = (() => {
+            //    let cssVid = window.getComputedStyle(vid_, null);
+            //    // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
+            //    // initStyle = document.getElementsByTagName('video')[0].style.cssText;
+            //    return {
+            //       width: cssVid.getPropertyValue('width').replace(/px/i, ''),
+            //       height: cssVid.getPropertyValue('height').replace(/px/i, ''),
+            //    };
+            // })();
 
             let player_ratio = user_settings['pin_player_size_ratio'] || 3;
             // calc size

@@ -7,8 +7,7 @@ _plugins.push({
    desc: 'Use mouse wheel to change speed video',
    _runtime: function (user_settings) {
 
-      // PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-      PolymerYoutube.waitFor('#movie_player', function (playerId) {
+      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
 
          // player area
          document.getElementsByClassName("html5-video-container")[0]

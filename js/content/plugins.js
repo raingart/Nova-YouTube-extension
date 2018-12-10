@@ -1,4 +1,4 @@
-console.log(": init plugins.js");
+// console.log(": init plugins.js");
 
 // sandbox
 let _plugins = [];
@@ -34,8 +34,9 @@ const Plugins = {
       .appendChild(s);
 
       s.onload = function () {
-         console.log('script loading:', s.src);
+         // Remove <script> node after injectScript runs.
          s.parentNode.removeChild(s);
+         Plugins.log('script loading:', s.src);
       };
 
       // s.onload = s.onerror = function () {

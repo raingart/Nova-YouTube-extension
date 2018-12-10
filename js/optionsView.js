@@ -122,7 +122,7 @@ const Opt = {
                      value.forEach((option) => {
                         let optionHTML = document.createElement('option');
                         optionHTML.setAttribute('value', option.value);
-                        optionHTML.innerHTML = option.label;
+                        optionHTML.textContent = option.label;
                         if (option.selected) optionHTML.setAttribute('selected', true);
                         tagHTML.appendChild(optionHTML);
                      });
@@ -131,7 +131,7 @@ const Opt = {
 
                   case 'label':
                      let label = document.createElement(attr);
-                     label.textContent = value;
+                     label.innerHTML = '<font>↪</font>' + value;
                      label.htmlFor = property.name;
                      if (property.hasOwnProperty('title')) {
                         label.setAttribute("tooltip", property.title);

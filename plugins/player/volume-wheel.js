@@ -9,8 +9,7 @@ _plugins.push({
 
       const _this = this; // get default step
 
-      // PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-      PolymerYoutube.waitFor('#movie_player', function (playerId) {
+      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
 
          // player area
          document.getElementsByClassName("html5-video-container")[0]
@@ -67,10 +66,16 @@ _plugins.push({
                // console.log('sessionStorage["yt-player-volume"] %s', JSON.stringify(sessionStorage["yt-player-volume"]));
                let now = (new Date).getTime();
                let muted = level ? "false" : "true";
-               // localStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
-               //    '}","expiration":' + (now + 2592E6) + ',"creation":' + c + "}";
-               sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
-                  '}","creation":' + now + "}";
+
+               try {
+                  // localStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
+                  //    '}","expiration":' + (now + 2592E6) + ',"creation":' + c + "}";
+                  sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
+                     '}","creation":' + now + "}";
+               } catch (err) {
+                  console.warn('SaveVolume is impossible (Maybe on "Block third-party cookies)\n', err);
+               }
+
             }
          }
 
@@ -165,8 +170,8 @@ _plugins.push({
             options: [
                /* beautify preserve:start */
                { label: 'bar', value: 'bar' },
-               { label: 'text', value: 'text' },
-               { label: 'bar+text', value: 'full', selected: true },
+               { label: 'text', value: 'text', selected: true },
+               { label: 'bar+text', value: 'full' },
                { label: 'off', value: '' },
                /* beautify preserve:end */
             ]

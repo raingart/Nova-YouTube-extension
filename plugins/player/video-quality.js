@@ -7,35 +7,69 @@ _plugins.push({
    desc: 'Set prefered quality',
    _runtime: function (user_settings) {
 
-      PolymerYoutube.waitFor('#movie_player', function (playerId) {
+      const _this = this;
+
+      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
 
          const target_quality = user_settings['video_quality'];
 
-         let wait_quality = setInterval(() => {
-            // console.log('wait_quality', playerId.getAvailableQualityLevels().length);
+         // playerId.addEventListener("onStateChange", onChangeQuality.bind(this));
 
-            if (playerId.getAvailableQualityLevels().length) {
-               clearInterval(wait_quality);
+         document.querySelector("video").addEventListener("canplay", onChangeQuality);
 
-               const qualities = playerId.getAvailableQualityLevels();
+         function onChangeQuality(_vid) {
 
-               // if (playerId.getPlaybackQuality() == target_quality) {
-               //    console.log('skip_quality');
-               //    console.log('quality', document.getElementById('movie_player').getPlaybackQuality());
-               //    return;
-               // }
+            const qualities = playerId.getAvailableQualityLevels();
 
-               let max_available_quality = Math.max(qualities.indexOf(target_quality), 0);
-               qualityToSet = qualities[max_available_quality];
+            // if (playerId.getPlaybackQuality() == target_quality) {
+            //    console.log('skip set quality');
+            //    return;
+            // }
 
+            let max_available_quality = Math.max(qualities.indexOf(target_quality), 0);
+            let qualityToSet = qualities[max_available_quality];
+
+            //set PlaybackQuality'
+            if (playerId.hasOwnProperty('setPlaybackQuality')) {
+               // console.log('use setPlaybackQuality');
                playerId.setPlaybackQuality(qualityToSet);
+            }
+
+            // set QualityRange
+            if (playerId.hasOwnProperty('setPlaybackQualityRange')) {
                playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
-               // console.log('Available qualities:', JSON.stringify(qualities));
-               // console.log("try set quality:", qualityToSet);
-               // console.log('set realy quality:', playerId.getPlaybackQuality());
+            } else { // emul clicked (in embed iframe)
+               console.log('use emul clicked');
+               document.querySelector(".ytp-settings-button").click(); // settings button
+
+               const quality_option = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
+               // test is quality option
+               if (quality_option.children[1].firstElementChild.textContent.match(/\d{3,4}[ps]/)) {
+                  quality_option.click(); // open option
+
+                  const shownQualities = document
+                     .querySelector(".ytp-settings-menu")
+                     .querySelector(".ytp-quality-menu .ytp-panel-menu").children;
+
+                  shownQualities[max_available_quality].click(); // choosing it quality
+
+                  //unfocused
+                  _vid.target.click();
+                  _vid.target.focus();
+
+                  // console.log('choosing it quality', shownQualities[max_available_quality].innerText);
+               }
             }
-         }, 50);
+            
+            if (qualities.indexOf(target_quality) === -1) {
+               console.warn('no have target_quality. Choosing instead the top-most quality available\n', qualities, target_quality);
+            }
+
+            // console.log('Available qualities:', JSON.stringify(qualities));
+            // console.log("try set quality:", qualityToSet);
+            // console.log('set realy quality:', playerId.getPlaybackQuality());
+         }
 
       });
 
@@ -55,9 +89,9 @@ _plugins.push({
                { label: '1440p (QHD)', value: 'hd1440' },
                { label: '1080p (FHD)', value: 'hd1080' },
                { label: '720p (HD)', value: 'hd720', selected: true },
-               { label: '480p (HQ/SD)', value: 'large' },
-               { label: '360p (MQ)', value: 'medium' },
-               { label: '240p (LQ)', value: 'small' },
+               { label: '480p (SD)', value: 'large' },
+               { label: '360p', value: 'medium' },
+               { label: '240p', value: 'small' },
                { label: '144p', value: 'tiny' },
                // { label: 'Auto', value: 'auto' },
                /* beautify preserve:end */

@@ -2,15 +2,13 @@ const Plugins_list = {
    lib: [ 'ytc_lib.js' ],
    plugins_init: [ 'plugins_init.js' ],
 
-   strong_dependent: [
-      'player/video-speed-wheel.js', // addEventListener
-      'player/volume-wheel.js', // addEventListener
+   strong_dependent: [ // addEventListener
+      'player/video-speed-wheel.js',
+      'player/volume-wheel.js',
+      'player/pin-player-onscroll.js',
    ],
-   strong_self: [
-      'player/pin-player-onscroll.js', // addEventListener
-      'player/player-force-focused.js', // addEventListener
-   ],
-   one_off_dependent: [
+   strong_self: [  // addEventListener
+      'player/player-force-focused.js',
       'player/video-quality.js',
       'player/pause-video.js',
       'player/stop-preload-video.js',

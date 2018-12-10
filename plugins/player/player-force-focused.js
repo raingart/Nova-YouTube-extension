@@ -17,9 +17,9 @@ _plugins.push({
             document.activeElement.slot.toLowerCase() !== "input"
             // && !window.getSelection()
          ) {
-            // console.log('focused');
             // document.activeElement.style.border = "2px solid red";
-            document.getElementById("movie_player").focus();
+            document.querySelector("video").focus();
+            // console.log('focused');
          }
       }
 

@@ -168,7 +168,7 @@ form li>ul>li {
    grid-template-columns: [left label] 1fr [right input];
    border-top: 1px solid #575757;
    padding: 2px 0;
-   padding-left: 1.5em;
+   padding-left: 1em;
 }
 
 /* form li>ul>li:last-child {
@@ -183,7 +183,13 @@ form ul>li.item label {
 form ul>li>label {
    grid-column: label;
    align-self: center;
-   color: rgba(255, 255, 255, 0.5);
+   color: #8c8b8b;
+}
+
+form ul>li>label>font {
+   padding-right: .1em;
+   /* color: slategrey; */
+   color: #8c8b8b;
 }
 
 form ul>li>label+* {

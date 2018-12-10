@@ -181,32 +181,24 @@ const PolymerYoutube = {
 
 
       function injectCss(source) {
-         let sheet = document.createElement('style');
-         sheet.type = 'text/css';
-
-         // if (source.slice(-3) === '.css') sheet.src = source;
-         // else sheet.styleSheet.cssText = source;
-         // else sheet.textContent = source;
+         let sheet;
 
          if (source.slice(-3) === '.css') {
-            sheet.src = source;
-         } else if (sheet.styleSheet) {
-            sheet.styleSheet.cssText = source;
+            sheet = document.createElement('link');
+            sheet.rel = "stylesheet";
+            sheet.href = source;
+
          } else {
-            sheet.innerHTML = source;
+            sheet = document.createElement('style');
+            sheet.type = 'text/css';
+            sheet.textContent = source;
          }
 
          (document.head || document.documentElement).appendChild(sheet);
 
-         // sheet.onload = function () {
-         // PolymerYoutube.log('style loading:', sheet.src || sheet.textContent);
-         // console.log('style loading:', sheet.src || sheet.textContent);
-         // sheet.parentNode.removeChild(sheet);
-         // };
-
-         // sheet.onload = sheet.onerror = function () {
-         //    this.remove();
-         // };
+         sheet.onload = function () {
+            PolymerYoutube.log('style loading:', sheet.src || sheet.textContent);
+         };
       }
    },
 
