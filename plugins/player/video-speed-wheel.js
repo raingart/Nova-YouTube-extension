@@ -34,11 +34,8 @@ _plugins.push({
                let delta = Math.sign(event.wheelDelta);
                let rate = _setVideoSpeed(delta)
 
-               if (user_settings['show_rate_indicator']) {
-                  // console.log('on show_rate_indicator',user_settings['show_rate_indicator']);
-                  // show indicator
-                  showIndicator('x' + playerId.getPlaybackRate(), this);
-               }
+               // show indicator
+               showIndicator('x' + playerId.getPlaybackRate(), this);
             }
          }
 
@@ -128,11 +125,6 @@ _plugins.push({
                { label: 'Wheel', value: 'none' }
                /* beautify preserve:end */
             ]
-         },
-         'show_rate_indicator': {
-            _elementType: 'input',
-            label: 'show indicator',
-            type: 'checkbox',
          },
       };
    }()),

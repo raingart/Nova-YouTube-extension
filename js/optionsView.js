@@ -2,13 +2,6 @@
 
 console.log(i18n("app_name") + ": init opt.js");
 
-// Plugins.load(
-//    Plugins_list.plugins_init
-//    .concat(Plugins_list.strong_dependent)
-//    .concat(Plugins_list.strong_self)
-//    .concat(Plugins_list.one_off)
-// );
-
 Plugins.load((() => {
    let pl = [];
    for (i in Plugins_list) {

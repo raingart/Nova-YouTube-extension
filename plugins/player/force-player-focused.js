@@ -6,9 +6,10 @@ _plugins.push({
    // sandbox: false,
    desc: 'HotKeys player priority (SPACE/F etc.)',
    _runtime: function (user_settings) {
-      
-      // document.addEventListener('focus', captureFocus);
-      document.addEventListener('keydown', captureFocus);
+
+      ["keydown", "focus"].forEach(function(event) {
+         document.addEventListener(event, captureFocus);
+       });
 
       function captureFocus(event) {
          // console.log('captureFocus', document.activeElement);

@@ -7,8 +7,6 @@ _plugins.push({
    desc: 'Set prefered quality',
    _runtime: function (user_settings) {
 
-      const _this = this;
-
       PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
 
          const target_quality = user_settings['video_quality'];
@@ -39,8 +37,8 @@ _plugins.push({
             if (playerId.hasOwnProperty('setPlaybackQualityRange')) {
                playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
-            } else { // emul clicked (in embed iframe)
-               console.log('use emul clicked');
+            } else { // emulate clicked (in embed iframe)
+               console.log('used emulate clicked');
                document.querySelector(".ytp-settings-button").click(); // settings button
 
                const quality_option = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
@@ -63,7 +61,7 @@ _plugins.push({
             }
             
             if (qualities.indexOf(target_quality) === -1) {
-               console.warn('no have target_quality. Choosing instead the top-most quality available\n', qualities, target_quality);
+               console.log('no have target_quality. Choosing instead the top-most quality available\n', qualities, target_quality);
             }
 
             // console.log('Available qualities:', JSON.stringify(qualities));

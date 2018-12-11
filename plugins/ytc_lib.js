@@ -16,7 +16,7 @@ const PolymerYoutube = {
          selector: selector,
          fn: callback
       });
-      PolymerYoutube.log('listeners', JSON.stringify(PolymerYoutube.listeners));
+      PolymerYoutube.log('listeners %s', JSON.stringify(PolymerYoutube.listeners));
 
       singleton_Observer(window);
 
@@ -197,7 +197,7 @@ const PolymerYoutube = {
          (document.head || document.documentElement).appendChild(sheet);
 
          sheet.onload = function () {
-            PolymerYoutube.log('style loading:', sheet.src || sheet.textContent);
+            PolymerYoutube.log('style loading: %s', sheet.src || sheet.textContent);
          };
       }
    },

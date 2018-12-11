@@ -4,7 +4,6 @@
 let _plugins = [];
 
 const Plugins = {
-
    // DEBUG: true,
 
    // filename: filepath => {
@@ -34,9 +33,9 @@ const Plugins = {
       .appendChild(s);
 
       s.onload = function () {
+         Plugins.log('script loading: %s', String(s.src || s.textContent).substring(0, 100));
          // Remove <script> node after injectScript runs.
          s.parentNode.removeChild(s);
-         Plugins.log('script loading:', s.src);
       };
 
       // s.onload = s.onerror = function () {
@@ -45,19 +44,26 @@ const Plugins = {
    },
 
    run: function (depends, store) {
-      this.DEBUG && console.log('plugins loading count:' + String(_plugins ? _plugins.length : 'null') + ', page:' + depends);
+      this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
+      
+      // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
+      uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
+      _plugins = uniqueArray(_plugins);
 
       // console.log('store', JSON.stringify(store));
-      for (const plugin of _plugins) {
+      for (const i in _plugins) {
+         let plugin = _plugins[i];
          // console.log('plugin ' + JSON.stringify(plugin));
 
-         if ((plugin.depends_page && plugin.depends_page.indexOf(depends) > -1) &&
+         if ((plugin.depends_page && plugin.depends_page.indexOf(depends) !== -1) &&
             store && store[plugin.id]) {
 
             try {
                console.log('plugin executing:', plugin.name);
                //'use strict';
                plugin._runtime(store);
+
+               delete _plugins[i];
 
             } catch (error) {
                console.error('plugin error: %s\n%s', plugin.name, error);
@@ -66,6 +72,32 @@ const Plugins = {
 
       }
    },
+   // run: function (depends, store) {
+   //    this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
+
+   //    // console.log('store', JSON.stringify(store));
+   //    for (const plugin of _plugins) {
+   //       // console.log('plugin ' + JSON.stringify(plugin));
+
+   //       if ((plugin.depends_page && plugin.depends_page.indexOf(depends) !== -1) &&
+   //          store && store[plugin.id]) {
+
+   //          try {
+   //             console.log('plugin executing:', plugin.name);
+   //             //'use strict';
+   //             plugin._runtime(store);
+
+   //             console.log('xx', _plugins.length);
+   //             delete plugin;
+   //             console.log('xx', _plugins.length);
+
+   //          } catch (error) {
+   //             console.error('plugin error: %s\n%s', plugin.name, error);
+   //          }
+   //       } else this.DEBUG && console.log('plugin skiping', plugin.name);
+
+   //    }
+   // },
 
    log: function (msg) {
       if (this.DEBUG) {

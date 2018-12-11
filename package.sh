@@ -21,5 +21,6 @@ zip -r $FILENAME.zip \
                   plugins/*.js \
                   plugins/*/*.js \
                   manifest.json \
+ --exclude="*/-*.js"
 #  -x \*.DS_Store
 # -z $TODAY

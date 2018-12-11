@@ -36,10 +36,10 @@ const App = {
                });
                break;
 
-               case 'tabUpdated':
-                  // console.log('request.url', JSON.stringify(request.url));
-                  // App.rerun();
-                  break;
+            case 'tabUpdated':
+               // console.log('request.url', JSON.stringify(request.url));
+               // App.rerun();
+               break;
 
             case 'sendMessage':
                console.log(request.message);
@@ -103,6 +103,8 @@ const App = {
       //    }
       // });
 
+      // event.target.removeEventListener(event.type, arguments.callee);
+
       // window.dispatchEvent(new Event("resize"));
       //getEventListeners(window)
       //getEventListeners(document)
@@ -135,7 +137,7 @@ const App = {
       // "*://www.youtube.com/results?search_query=*"
       // "*://www.youtube.com/playlist?list=PL*"
       let page = location.pathname.split('/')[1];
-      App.log('page type', page);
+      App.log('page type %s', page);
       return (page == 'channel' || page == 'user') ? 'channel' : page || null;
    },
 
@@ -179,11 +181,17 @@ const App = {
       }
    },
 
+   // history: [],
+
    rerun: () => {
       console.log('page transition');
       // App.log('page transition');
 
-      Plugins.injectScript("_plugins = [];");
+      // if (App.history.indexOf(App.getPageType()) !== -1) {
+      //    App.history.push(App.getPageType());
+      // }
+
+      // Plugins.injectScript("_plugins = [];");
       Plugins.load(
          Plugins_list.one_off
          .concat(Plugins_list.plugins_end)
@@ -237,7 +245,7 @@ const App = {
          // return "var plugins_run=" + Plugins.run + ";\
          return "plugins_run=" + Plugins.run + ";\
                _plugins_run = setInterval(() => {\
-                  if (_plugins.length && plugins_loading) {\
+                  if (_plugins && _plugins.length && plugins_loading) {\
                      clearInterval(_plugins_run);\
                      plugins_run(" + a + "," + x + ");\
                      plugins_loading = false;\
