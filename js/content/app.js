@@ -163,7 +163,7 @@ const App = {
    },
 
    rerun: () => {
-      App.log('page transition');
+      console.log('page transition');
       Plugins.load(Plugins_list.one_off.concat(Plugins_list.plugins_end));
       App.run();
    },
@@ -182,7 +182,7 @@ const App = {
       })());
 
       let sandbox_wait_loaded = setInterval(() => {
-         console.log('sandbox_wait_loaded');
+         // App.log('sandbox_wait_loaded');
          // wait load setting
          if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
             clearInterval(sandbox_wait_loaded);

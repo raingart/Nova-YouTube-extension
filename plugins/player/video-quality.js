@@ -35,7 +35,7 @@ _plugins.push({
                playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
             } else { // emulate clicked (in embed iframe)
-               console.log('used emulate clicked');
+               // console.log('used emulate clicked');
                document.querySelector(".ytp-settings-button").click(); // settings button
 
                const quality_option = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
