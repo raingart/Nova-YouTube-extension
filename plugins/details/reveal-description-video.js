@@ -3,13 +3,10 @@ _plugins.push({
    id: 'reveal-description-video',
    section: 'details',
    depends_page: 'watch',
-   // sandbox: true,
    desc: 'See full description',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('#container > ytd-expander[collapsed]', function (element) {
-         element.removeAttribute("collapsed");
-      });
-
+      YDOM.waitFor('#container > ytd-expander[collapsed]', el => el.removeAttribute("collapsed"));
+      
    }
 });

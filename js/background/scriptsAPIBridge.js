@@ -1,14 +1,14 @@
 console.log(i18n("app_name") + ": init Background.js");
 
 const Background = {
+   
    // sessionSettings: null,
-
-   getStorageData: (function () {
-      Storage.getParams(null /*all*/ , res => {
-         console.log('confStorage:', JSON.stringify(res));
-         Background.sessionSettings = res;
-      }, 'sync');
-   }()),
+   // getStorageData: (function () {
+   //    Storage.getParams(null /*all*/ , res => {
+   //       console.log('confStorage:', JSON.stringify(res));
+   //       Background.sessionSettings = res;
+   //    }, 'sync');
+   // }()),
 
    // onMessage: function (request, sender, sendResponse) {},
 
@@ -21,18 +21,18 @@ const Background = {
          // console.log('> sendResponse', JSON.stringify(sendResponse));
 
          switch (request.action) {
-            case 'getOptions':
-               // chrome.tabs.sendMessage((request.tab && request.tab.id), {
-               chrome.tabs.sendMessage(sender.tab.id, {
-                  action: 'setOptions',
-                  options: Background.sessionSettings
-               }, (response) => {
-                  // console.log(request.action);
-               });
-               break;
+            // case 'getOptions':
+            //    // chrome.tabs.sendMessage((request.tab && request.tab.id), {
+            //    chrome.tabs.sendMessage(sender.tab.id, {
+            //       action: 'setOptions',
+            //       options: Background.sessionSettings
+            //    }, (response) => {
+            //       // console.log(request.action);
+            //    });
+            //    break;
 
             case 'setOptions':
-               Background.sessionSettings = request.options;
+               // Background.sessionSettings = request.options;
                //from alls tabs
                chrome.tabs.query({}, function (tabs) {
                   for (const tab of tabs) {

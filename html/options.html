@@ -27,7 +27,6 @@
    <script src="/js/content/plugins-list.js"></script>
    <script src="/js/content/plugins.js"></script>
    <script src="/js/optionsView.js"></script>
-
 </head>
 
 <body class="preload">
@@ -135,20 +134,8 @@
                               <select name="restart-app" id="restart-app">
                                  <option value="false" selected="true">off</option>
                                  <!-- <option value="soft">soft</option> -->
-                                 <option value="full">full</option>
+                                 <option value="full">on</option>
                               </select>
-                           </div>
-                           <div class="warn" data-dependent='{"restart-app":["full", "soft"]}'>
-                              <div><b>__MSG_opt_reversal_plugins_warn__</b></div>
-                              <ul data-dependent='{"restart-app":["full"]}'>
-                                 <li>__MSG_opt_reversal_plugins_warn_full1__</li>
-                                 <li>__MSG_opt_reversal_plugins_warn_full2__</li>
-                              </ul>
-                              <!-- <ul data-dependent='{"restart-app":["soft"]}'>
-                                 <li>__MSG_opt_reversal_plugins_warn_soft1__</li>
-                                 <li>__MSG_opt_reversal_plugins_warn_soft2__</li>
-                                 <li>__MSG_opt_reversal_plugins_warn_soft3__</li>
-                              </ul> -->
                            </div>
                         </li>
                      </ul>
@@ -198,6 +185,6 @@
          </div>
       </div>
    </form>
+   
 </body>
-
 </html>

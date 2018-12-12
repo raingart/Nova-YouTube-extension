@@ -3,12 +3,10 @@ _plugins.push({
    id: 'video-speed-Wheel',
    section: 'player',
    depends_page: 'watch, embed',
-   // sandbox: false,
-   desc: 'Use mouse wheel to change speed video',
-   _runtime: function (user_settings) {
+   desc: 'Use mouse wheel to change speed of video',
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-
+      YDOM.waitFor('.html5-video-player', playerId => {
          // player area
          document.getElementsByClassName("html5-video-container")[0]
             .addEventListener("wheel", onWheel_setVideoSpeed); //mousewheel
@@ -111,12 +109,11 @@ _plugins.push({
       });
 
    },
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'player_rate_hotkey': {
             _elementType: 'select',
-            label: 'Hotkey',
-            title: 'hotkey+WheelUp/Down',
+            label: 'Select hotkeys',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey', selected: true  },

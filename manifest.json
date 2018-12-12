@@ -5,7 +5,7 @@
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
-   "version": "0.4.2",
+   "version": "1.0.0",
    "author": "raingart",
    "permissions": [
       "storage",
@@ -23,6 +23,7 @@
             "/js/content/plugins-list.js",
             "/js/content/plugins.js",
             "/plugins/ytc_lib.js",
+            "/js/libs/storage.js",
             "/js/content/app.js"
          ],
          "css": []

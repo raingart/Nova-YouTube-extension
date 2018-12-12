@@ -3,12 +3,10 @@ _plugins.push({
    id: 'stop-autoplay',
    section: 'player',
    depends_page: 'watch, embed',
-   // sandbox: false,
-   desc: 'Pause video autoplay',
-   _runtime: function (user_settings) {
+   desc: 'Disables autoplay',
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-
+      YDOM.waitFor('.html5-video-player', playerId => {
          let is_change_quality;
 
          playerId.addEventListener("onStateChange", onPlayerStateChange.bind(this));
@@ -37,11 +35,12 @@ _plugins.push({
       });
 
    },
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'stop-autoplay-ignore-playlist': {
             _elementType: 'input',
             label: 'ignore playlist',
+            title: 'Autoplay will work in playlist',
             type: 'checkbox',
          },
       };

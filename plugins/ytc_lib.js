@@ -1,22 +1,31 @@
 // 'use strict';
 
-const PolymerYoutube = {
+const YDOM = {
    // DEBUG: true,
 
    api_url: 'https://www.googleapis.com/youtube/v3/',
 
-   listeners: [],
+   // waitFor_test: function (selector, callback) {
+   //    document.addEventListener('DOMNodeInserted', function (R) {
+   //       var S = R.target || null;
+   //       if (S && S.nodeName === 'VIDEO') {
+   //          //  new p.videoController(S);
+   //          console.log('DOMNodeInserted');
+   //       }
+   //    });
+   // },
 
-   waitFor: function (selector, callback) {
+   listeners: [],
+   waitFor: (selector, callback) => {
       // waitFor: (selector, callback) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
-      PolymerYoutube.listeners.push({
+      YDOM.listeners.push({
          selector: selector,
          fn: callback
       });
-      PolymerYoutube.log('listeners %s', JSON.stringify(PolymerYoutube.listeners));
+      YDOM.log('listeners %s', JSON.stringify(YDOM.listeners));
 
       singleton_Observer(window);
 
@@ -26,14 +35,14 @@ const PolymerYoutube = {
             doc = win.document;
 
          function createObserver() {
-            PolymerYoutube.log('create Observer');
+            YDOM.log('create Observer');
             let MutationObserver = win.MutationObserver || win.WebKitMutationObserver;
             let object = new MutationObserver(function () {
                startObserver()
 
                // stop observing
-               if (!PolymerYoutube.listeners.length) {
-                  PolymerYoutube.log('stop Observer');
+               if (!YDOM.listeners.length) {
+                  YDOM.log('stop Observer');
                   observer.disconnect();
                   observer = null;
                }
@@ -47,7 +56,7 @@ const PolymerYoutube = {
 
          // return { getObserver: function () {
          return (function () {
-            PolymerYoutube.log('init Observer');
+            YDOM.log('init Observer');
             if (!observer) {
                observer = createObserver();
                let config = {
@@ -68,27 +77,27 @@ const PolymerYoutube = {
 
       // Check if the element is currently in the DOM
       function check(doc) {
-         PolymerYoutube.log('check (left: %s count)', PolymerYoutube.listeners.length);
+         YDOM.log('check (left: %s count)', YDOM.listeners.length);
 
          // Check the DOM for elements matching a stored selector
-         for (const i in PolymerYoutube.listeners) {
-            let listener = PolymerYoutube.listeners[i];
+         for (const i in YDOM.listeners) {
+            let listener = YDOM.listeners[i];
 
             // // Query for elements matching the specified selector
             Array.from(doc.querySelectorAll(listener.selector))
                .forEach((element) => {
-                  PolymerYoutube.log('element ready, listeners_id:%s', i);
-                  PolymerYoutube.listeners.splice(i, 1); // delete element from listeners
-                  // PolymerYoutube.listeners.filter(e => e !== element)
+                  YDOM.log('element ready, listeners_id:%s', i);
+                  YDOM.listeners.splice(i, 1); // delete element from listeners
+                  // YDOM.listeners.filter(e => e !== element)
                   listener.fn(element); // cun element callback
                });
          }
       }
    },
 
-   isInViewport: function (elem) {
-      if (!elem) return;
-      var bounding = elem.getBoundingClientRect();
+   isInViewport: el => {
+      if (!el) return;
+      var bounding = el.getBoundingClientRect();
       return (
          bounding.top >= 0 &&
          bounding.left >= 0 &&
@@ -197,12 +206,23 @@ const PolymerYoutube = {
          (document.head || document.documentElement).appendChild(sheet);
 
          sheet.onload = function () {
-            PolymerYoutube.log('style loading: %s', sheet.src || sheet.textContent);
+            YDOM.log('style loading: %s', sheet.src || sheet.textContent);
          };
       }
    },
 
-   getUrlVars: function (v) {
+   getPageType: () => {
+      // "*://www.youtube.com/watch?v=*",
+      // "*://www.youtube.com/user/*",
+      // "*://www.youtube.com/channel/*"
+      // "*://www.youtube.com/results?search_query=*"
+      // "*://www.youtube.com/playlist?list=PL*"
+      let page = location.pathname.split('/')[1];
+      YDOM.log('page type %s', page);
+      return (page == 'channel' || page == 'user') ? 'channel' : page || null;
+   },
+
+   getUrlVars: v => {
       var vars = {};
       var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
          vars[key] = value;
@@ -215,14 +235,14 @@ const PolymerYoutube = {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());
          }
-         console.log('PolymerYoutube:', msg);
+         console.log('YDOM:', msg);
       }
    },
 }
 
 
-const RequestFetch = function (url, payload, typeResponse, callback) {
-   url = PolymerYoutube.api_url + url; // for safe
+const RequestFetch = (url, payload, typeResponse, callback) => {
+   url = YDOM.api_url + url; // for safe
    // console.log('url', url);
 
    fetch(url, payload)

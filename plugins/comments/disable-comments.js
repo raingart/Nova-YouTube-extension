@@ -3,13 +3,10 @@ _plugins.push({
    id: 'disable-comments',
    section: 'comments',
    depends_page: 'watch',
-   // sandbox: true,
    desc: 'Remove comments section',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('#comments', function (selector) {
-         selector.parentNode.removeChild(selector);
-      });
+      YDOM.waitFor('#comments', el => el.parentNode.removeChild(el));
 
    }
 });

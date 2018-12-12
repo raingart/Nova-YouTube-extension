@@ -3,26 +3,22 @@ _plugins.push({
    id: 'fixed-player-scroll',
    section: 'player',
    depends_page: 'watch',
-   // sandbox: true,
    desc: 'Fixed player position',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      // PolymerYoutube.waitFor('#ytd-player.pin_video', function (el) {
+      // YDOM.waitFor('#ytd-player.pin_video', function (el) {
       //    console.log('1111');
-      //    PolymerYoutube.connect_DragnDrop(
+      //    YDOM.connect_DragnDrop(
       //       el
       //    , position => {
       //       console.log('222');
-      //       // PolymerYoutube.connect_DragnDrop(playerId, (position) => {
+      //       // YDOM.connect_DragnDrop(playerId, (position) => {
       //          localStorage.setItem('player-position-top', position.top);
       //          localStorage.setItem('player-position-left', position.left);
       //       });
       // })
 
-      PolymerYoutube.waitFor('.html5-video-player video[style]', function (vid_) {
-      // PolymerYoutube.waitFor('#player', function (playerId) {
-      // PolymerYoutube.waitFor('#movie_player', function (playerId) {
-
+      YDOM.waitFor('.html5-video-player video[style]', vid_ => {
          let in_viewport;
          let scroll_toggle_class = "pin_video";
 
@@ -39,7 +35,7 @@ _plugins.push({
 
          function pinned_elm(scroll_target, viewer) {
             // console.log('playerId in_viewport %s', in_viewport);
-            if (PolymerYoutube.isInViewport(viewer || scroll_target)) {
+            if (YDOM.isInViewport(viewer || scroll_target)) {
                if (!in_viewport) {
                   // console.log('scroll_target isInViewport');
                   scroll_target.classList.remove(scroll_toggle_class);
@@ -52,7 +48,7 @@ _plugins.push({
                scroll_target.classList.add(scroll_toggle_class);
                in_viewport = false;
 
-               // PolymerYoutube.connect_DragnDrop(scroll_target);
+               // YDOM.connect_DragnDrop(scroll_target);
             }
          }
 
@@ -86,9 +82,9 @@ _plugins.push({
             }
 
             let size = {
-                  width: vid_.style.width.replace(/px/i, ''),
-                  height: vid_.style.height.replace(/px/i, ''),
-               };
+               width: vid_.style.width.replace(/px/i, ''),
+               height: vid_.style.height.replace(/px/i, ''),
+            };
             // let size = (() => {
             //    let cssVid = window.getComputedStyle(vid_, null);
             //    // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
@@ -111,19 +107,19 @@ _plugins.push({
             initcss.height = size.calc.height + 'px' + ' !important;';
 
             // apply css
-            // PolymerYoutube.injectStyle(initcss, '.' + scroll_toggle_class, 'important');
-            PolymerYoutube.injectStyle(initcss, '.' + scroll_toggle_class);
+            // YDOM.injectStyle(initcss, '.' + scroll_toggle_class, 'important');
+            YDOM.injectStyle(initcss, '.' + scroll_toggle_class);
 
             // fix video tag
-            PolymerYoutube.injectStyle('.' + scroll_toggle_class + ' video {' +
+            YDOM.injectStyle('.' + scroll_toggle_class + ' video {' +
                'width: ' + initcss.width +
                'height: ' + initcss.height +
                // 'width: ' + initcss.width + ' !important;' +
                // 'height: ' + initcss.height + ' !important;' +
                '}');
-               
+
             // fix control-player panel
-            PolymerYoutube.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
+            YDOM.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
                'width: ' + initcss.width +
                // 'width: ' + initcss.width + ' !important;' +
                'left: 0 !important;' +
@@ -141,23 +137,23 @@ _plugins.push({
       });
 
    },
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'pin_player_size_ratio': {
             _elementType: 'input',
             label: 'Player ratio to screen size',
+            title: 'less - more size',
             type: 'number',
             placeholder: '2-5',
             step: 0.1,
             min: 2,
             max: 5,
             value: 2.5,
-            title: 'less - more size',
          },
          'pin_player_size_position': {
             _elementType: 'select',
             label: 'Player position',
-            title: 'One of the corners of the screen',
+            title: 'Where to show minimized player',
             options: [
                /* beautify preserve:start */
                { label: 'left-top', value: 'top-left' },

@@ -27,8 +27,8 @@ const Opt = {
                let li = document.createElement("li");
                li.className = "item";
 
-               li.innerHTML = '<div class="info">\
-   <label for="' + plugin.id + '" tooltip="' + plugin.desc + '" flow="up">' + plugin.name + '\
+               li.innerHTML = '<div class="info" tooltip="' + plugin.desc + '" flow="up">\
+   <label for="' + plugin.id + '">' + plugin.name + '\
       <!--\
       <i>v.' + plugin.version + '</i>\
       <span>section: ' + plugin.depends_page + '</span>\
@@ -36,7 +36,7 @@ const Opt = {
       -->\
    </label>\
 </div>\
-<div class="opt" tooltip="ON/OFF" flow="left">\
+<div class="opt">\
    <input type="checkbox" name="' + plugin.id + '" id="' + plugin.id + '" />\
 </div>';
 
@@ -56,8 +56,9 @@ const Opt = {
 
                document.querySelector(p).appendChild(li);
 
-            } catch (e) {
-               console.error(JSON.stringify(plugin));
+            } catch (err) {
+               console.error('error:', err);
+               console.warn(JSON.stringify(plugin));
             }
          }
       },
@@ -103,6 +104,11 @@ const Opt = {
                // tagHTML.setAttribute('data-dependent', property['data-dependent']);
                delete property['data-dependent'];
             }
+            
+            if (property.hasOwnProperty('title')) {
+               tagHTML_conteiner.setAttribute("tooltip", property.title);
+               delete property.title;
+            }
 
             for (const attr in property) {
                // console.log('attr', JSON.stringify(attr));
@@ -126,10 +132,6 @@ const Opt = {
                      let label = document.createElement(attr);
                      label.innerHTML = '<font>↪</font>' + value;
                      label.htmlFor = property.name;
-                     if (property.hasOwnProperty('title')) {
-                        label.setAttribute("tooltip", property.title);
-                        delete property.title;
-                     }
                      tagHTML_conteiner.appendChild(label);
                      // tagHTML_conteiner.insertAdjacentHTML("beforeend", '<label>' + value + '</label>');
                      break;

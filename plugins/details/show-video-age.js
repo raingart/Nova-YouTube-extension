@@ -3,13 +3,10 @@ _plugins.push({
    id: 'show-video-age',
    section: 'details',
    depends_page: 'watch',
-   // depends_request: {videos:["snippet"]},
-   // sandbox: true,
    desc: 'How long ago video was uploaded',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('#upload-info .date', function (element) {
-
+      YDOM.waitFor('#upload-info .date', el => {
          let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
             let publishedAt = res.items[0].snippet.publishedAt;
@@ -20,12 +17,12 @@ _plugins.push({
                document.getElementById('video_age').textContent = video_age;
 
             } else {
-               element.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="video_age">' + video_age + ' ago</i></span>');
+               el.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="video_age">' + video_age + ' ago</i></span>');
             }
          };
 
          let url = 'videos' +
-            '?id=' + PolymerYoutube.getUrlVars()['v'] +
+            '?id=' + YDOM.getUrlVars()['v'] +
             '&key=' + user_settings.api_key +
             '&part=snippet';
 

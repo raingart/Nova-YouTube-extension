@@ -3,14 +3,12 @@ _plugins.push({
    id: 'volume-wheel',
    section: 'player',
    depends_page: 'watch, embed',
-   // sandbox: false,
    desc: 'Use mouse wheel to change volume',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
       const _this = this; // get default step
 
-      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-
+      YDOM.waitFor('.html5-video-player', playerId => {
          // player area
          document.getElementsByClassName("html5-video-container")[0]
             .addEventListener("wheel", onWheel_setVolume); //mousewheel
@@ -138,7 +136,7 @@ _plugins.push({
       });
 
    },
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'volume_step': {
             _elementType: 'input',
@@ -149,12 +147,11 @@ _plugins.push({
             min: 1,
             max: 33,
             value: 5,
-            title: 'switch option to show you volume percentage on screen',
+            title: 'Select volume step percentage',
          },
          'volume_hotkey': {
             _elementType: 'select',
-            label: 'Hotkey',
-            title: 'hotkey+WheelUp/Down',
+            label: 'Select hotkeys',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey' },
@@ -166,7 +163,7 @@ _plugins.push({
          },
          'show_volume_indicator': {
             _elementType: 'select',
-            label: 'indicator type',
+            label: 'Volume level visualization',
             options: [
                /* beautify preserve:start */
                { label: 'bar', value: 'bar' },
@@ -178,7 +175,7 @@ _plugins.push({
          },
          'show_volume_indicator_color': {
             _elementType: 'input',
-            label: 'indicator color',
+            label: 'Color of visualization',
             type: 'color',
             value: '#ff0000', // red
             'data-dependent': '{"show_volume_indicator":["bar","full"]}',

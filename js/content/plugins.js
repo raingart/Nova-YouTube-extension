@@ -1,8 +1,5 @@
 // console.log(": init plugins.js");
 
-// sandbox
-let _plugins = [];
-
 const Plugins = {
    // DEBUG: true,
 
@@ -72,32 +69,6 @@ const Plugins = {
 
       }
    },
-   // run: function (depends, store) {
-   //    this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
-
-   //    // console.log('store', JSON.stringify(store));
-   //    for (const plugin of _plugins) {
-   //       // console.log('plugin ' + JSON.stringify(plugin));
-
-   //       if ((plugin.depends_page && plugin.depends_page.indexOf(depends) !== -1) &&
-   //          store && store[plugin.id]) {
-
-   //          try {
-   //             console.log('plugin executing:', plugin.name);
-   //             //'use strict';
-   //             plugin._runtime(store);
-
-   //             console.log('xx', _plugins.length);
-   //             delete plugin;
-   //             console.log('xx', _plugins.length);
-
-   //          } catch (error) {
-   //             console.error('plugin error: %s\n%s', plugin.name, error);
-   //          }
-   //       } else this.DEBUG && console.log('plugin skiping', plugin.name);
-
-   //    }
-   // },
 
    log: function (msg) {
       if (this.DEBUG) {

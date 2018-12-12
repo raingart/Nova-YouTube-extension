@@ -3,13 +3,12 @@ _plugins.push({
    id: 'player-focused-onkeydown',
    section: 'player',
    depends_page: 'watch',
-   // sandbox: false,
-   desc: 'HotKeys player priority (SPACE/F etc.)',
-   _runtime: function (user_settings) {
+   desc: 'HotKeys player priority [SPACE/F] etc.',
+   _runtime: user_settings => {
 
-      ["keydown", "focus"].forEach(function(event) {
+      ["keydown", "focus"].forEach(event => {
          document.addEventListener(event, captureFocus);
-       });
+      });
 
       function captureFocus(event) {
          // console.log('captureFocus', document.activeElement);

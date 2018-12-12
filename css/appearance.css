@@ -1,5 +1,5 @@
 .appearance_container {
-   /* width: 350px; */
+   max-width: 400px;
    margin: 5px auto;
 }
 
@@ -19,10 +19,19 @@
    cursor: pointer;
    user-select: none;
    position: relative;
+   opacity: 0.8;
+   transition: all 80ms ease-in;
 }
 
 .appearance>*:not(.empty):hover {
+   opacity: 1;
    outline-color: deepskyblue;
+   /* box-shadow: 0 0 5px rgba(0, 196, 255, 0.7); */
+}
+
+.appearance>*:not(.empty):hover>* {
+   color: #00c4ff;
+   text-shadow: 0 0 5px rgba(0, 196, 255, 0.7);
 }
 
 .appearance>.header {
@@ -67,8 +76,13 @@
    grid-area: other;
 }
 
-.appearance>.other:hover {
+.appearance>.other:not(.empty):hover {
    outline-color: coral;
+}
+
+.appearance>.other:not(.empty):hover>* {
+   color: rgb(255, 127, 80);
+   text-shadow: 0 0 5px rgba(255, 127, 80, 0.7);
 }
 
 .appearance>*>span {

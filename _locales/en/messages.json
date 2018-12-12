@@ -9,7 +9,7 @@
       "message": "YT-Core"
    },
    "app_description": {
-      "message": "Combine small plugins, expanding the possibilities of YouTube"
+      "message": "Combine plugins, expanding the horizons of YouTube"
    },
 
    "opt_setting": {
@@ -30,25 +30,7 @@
    },
 
    "opt_reversal_plugins": {
-      "message": "Restart ALL plugins when settings saved."
-   },
-   "opt_reversal_plugins_warn": {
-      "message": "Caution!"
-   },
-   "opt_reversal_plugins_warn_full1": {
-      "message": "Restart all pages."
-   },
-   "opt_reversal_plugins_warn_full2": {
-      "message": "all plugins are restarted."
-   },
-   "opt_reversal_plugins_warn_soft1": {
-      "message": "Can restart the video."
-   },
-   "opt_reversal_plugins_warn_soft2": {
-      "message": "Does not cancel actions already performed on the DOM."
-   },
-   "opt_reversal_plugins_warn_soft3": {
-      "message": "Part of the plugins can not be restarted."
+      "message": "Reload pages when changing settings"
    },
 
    "github_page": {

@@ -3,16 +3,13 @@ _plugins.push({
    id: 'video-quality',
    section: 'player',
    depends_page: 'watch, embed',
-   // sandbox: false,
    desc: 'Set prefered quality',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('.html5-video-player', function (playerId) {
-
+      YDOM.waitFor('.html5-video-player', playerId => {
          const target_quality = user_settings['video_quality'];
-
+         
          // playerId.addEventListener("onStateChange", onChangeQuality.bind(this));
-
          document.querySelector("video").addEventListener("canplay", onChangeQuality);
 
          function onChangeQuality(_vid) {
@@ -72,11 +69,11 @@ _plugins.push({
       });
 
    },
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'video_quality': {
             _elementType: 'select',
-            label: 'Quality',
+            label: 'Set prefered quality',
             title: 'If unavailable, set max available quality',
             options: [
                // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'

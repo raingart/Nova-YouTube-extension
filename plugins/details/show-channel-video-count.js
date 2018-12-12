@@ -3,13 +3,11 @@ _plugins.push({
    id: 'show-channel-video-count',
    section: 'details',
    depends_page: 'watch',
-   // depends_request: {videos: ["statistics", "snippet"]},
-   // sandbox: true,
    desc: 'Total number of videos no channel',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
-      PolymerYoutube.waitFor('#owner-container a[href]', function (element) {
-         // console.log('#owner-container a', element);
+      YDOM.waitFor('#owner-container a[href]', el => {
+         // console.log('#owner-container a', el);
 
          let _callback = res => {
             // console.log('res', JSON.stringify(res));
@@ -19,13 +17,13 @@ _plugins.push({
                document.getElementById('video_count').textContent = videoCount;
 
             } else {
-               element.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp-&nbsp<span id="video_count">' + videoCount + '</span> videos</span>');
+               el.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp-&nbsp<span id="video_count">' + videoCount + '</span> videos</span>');
             }
 
          };
 
-         // let channel_id = element.getElementsByTagName("a")[0].getAttribute("href").split('/').pop();
-         let channel_id = element.getAttribute("href").split('/').pop();
+         // let channel_id = el.getElementsByTagName("a")[0].getAttribute("href").split('/').pop();
+         let channel_id = el.getAttribute("href").split('/').pop();
          // console.log('channel_id', channel_id);
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {

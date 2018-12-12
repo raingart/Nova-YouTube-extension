@@ -3,9 +3,8 @@ _plugins.push({
    id: 'set-default-channel-tab',
    section: 'channel',
    depends_page: 'channel',
-   // sandbox: true,
    desc: 'Set default tab on YT channels',
-   _runtime: function (user_settings) {
+   _runtime: user_settings => {
 
       pageRedirect(location.href, user_settings.default_channel_tab);
 
@@ -25,17 +24,15 @@ _plugins.push({
             case 'channels': break;
             case 'discussion': break;
             case 'about': break;
-            case '': break; // home etc
+            case '': break; // home page
             /* beautify preserve:end */
             default:
-               // if (channel_url.length >= 24) {
-                  window.location = url.replace(/(\/)+$/, "") + '/' + target;
-               // }
+               window.location = url.replace(/(\/)+$/, "") + '/' + target;
          }
       }
    },
 
-   export_opt: (function (data) {
+   export_opt: (function () {
       return {
          'default_channel_tab': {
             _elementType: 'select',
@@ -47,8 +44,6 @@ _plugins.push({
                { label: 'videos', value: 'videos' },
                // { label: 'community', value: 'community' },
                { label: 'playlists', value: 'playlists' },
-               { label: 'channels', value: 'channels' },
-               { label: 'discussion', value: 'discussion' },
                { label: 'about', value: 'about' },
                /* beautify preserve:end */
             ]
