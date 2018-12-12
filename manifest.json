@@ -36,6 +36,7 @@
             "/js/content/plugins-list.js",
             "/js/content/plugins.js",
             "/plugins/ytc_lib.js",
+            "/js/libs/storage.js",
             "/js/content/app.js"
          ]
       }
