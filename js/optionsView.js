@@ -9,7 +9,6 @@ Plugins.load((() => {
 })());
 
 const Opt = {
-
    // DEBUG: true,
 
    plugins_: {
@@ -25,18 +24,13 @@ const Opt = {
                let li = document.createElement("li");
                li.className = "item";
 
-               li.innerHTML = '<div class="info" tooltip="' + plugin.desc + '" flow="up">\
-   <label for="' + plugin.id + '">' + plugin.name + '\
-      <!--\
-      <i>v.' + plugin.version + '</i>\
-      <span>section: ' + plugin.depends_page + '</span>\
-      <span>' + plugin.desc + '</span>\
-      -->\
-   </label>\
-</div>\
-<div class="opt">\
-   <input type="checkbox" name="' + plugin.id + '" id="' + plugin.id + '" />\
-</div>';
+               li.innerHTML = '<div class="info"' +
+                  (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
+                  '  <label for="' + plugin.id + '">' + plugin.name + '</label>' +
+                  '</div>' +
+                  '<div class="opt">' +
+                  '   <input type="checkbox" name="' + plugin.id + '" id="' + plugin.id + '" />' +
+                  '</div>';
 
                if (plugin.export_opt)
                   li.appendChild(
@@ -47,10 +41,9 @@ const Opt = {
                   );
 
                let p = Opt.plugins_.conteiner;
+               let pl_selector = '>#' + plugin.section.toString().toLowerCase();
 
-               p += plugin.section && document.querySelector(
-                  p + '> #' + plugin.section.toString().toLowerCase()
-               ) ? '> #' + plugin.section.toString().toLowerCase() : '>#other';
+               p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
 
                document.querySelector(p).appendChild(li);
 
@@ -67,11 +60,11 @@ const Opt = {
       toggleListView: (hideElms, activeElm, activeClass) => {
          // hide all
          if (hideElms) Array.from(document.querySelectorAll(hideElms))
-            .forEach((i) => i.classList.remove(activeClass));
+            .forEach(i => i.classList.remove(activeClass));
 
          // target show
          if (activeElm) Array.from(document.querySelectorAll(activeElm))
-            .forEach((i) => i.classList.add(activeClass));
+            .forEach(i => i.classList.add(activeClass));
 
       },
 
@@ -102,7 +95,7 @@ const Opt = {
                // tagHTML.setAttribute('data-dependent', property['data-dependent']);
                delete property['data-dependent'];
             }
-            
+
             if (property.hasOwnProperty('title')) {
                tagHTML_conteiner.setAttribute("tooltip", property.title);
                delete property.title;
@@ -147,26 +140,33 @@ const Opt = {
          return outHTML;
       },
 
-      outerHTML: (node) => {
+      outerHTML: node => {
          return node.outerHTML || new XMLSerializer().serializeToString(node);
       },
    },
 
-   eventListener: (el) => {
+   eventListener: () => {
       // appearance map
-      Array.from(document.querySelectorAll(el))
-         .forEach((i) => {
-            i.addEventListener('click', function (event) {
-               // event.preventDefault();
-               Opt.UI.toggleListView(
-                  Opt.plugins_.conteiner + ' > *',
-                  Opt.plugins_.conteiner + '>#' + this.id,
-                  'active'
-               );
-               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
-               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
-               document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
-            });
+      Array.from(document.querySelectorAll(".appearance > *"))
+         .forEach(al => {
+            // test plugins is empty
+            if (document.querySelector(Opt.plugins_.conteiner + '>#' + al.id + ':empty')) {
+               al.classList.add('empty');
+
+            } else {
+               // add click event
+               al.addEventListener('click', event => {
+                  // event.preventDefault();
+                  Opt.UI.toggleListView(
+                     Opt.plugins_.conteiner + '> *',
+                     Opt.plugins_.conteiner + '>#' + al.id, //event.target.id <- error
+                     'active'
+                  );
+                  Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
+                  Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
+                  document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
+               });
+            }
          });
 
       // link show_all_plugins
@@ -178,6 +178,7 @@ const Opt = {
                Opt.plugins_.conteiner + ' > *',
                'active'
             );
+            // unset collapse state
             Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
             Opt.UI.toggleListView(Opt.plugins_.conteiner + ' li.item', null, 'hide');
             document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
@@ -185,19 +186,17 @@ const Opt = {
 
       // spoler
       Array.from(document.querySelectorAll(Opt.plugins_.conteiner + '> *'))
-         .forEach(ul => {
-            ul.addEventListener('click', event => {
-               // event.preventDefault();
-               event.target.classList.toggle("collapse")
-               event.target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
-            }, false);
-         });
+         .forEach(ul => ul.addEventListener('click', event => {
+            // event.preventDefault();
+            event.target.classList.toggle("collapse")
+            event.target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
+         }));
 
    },
 
    init: () => {
-      Opt.eventListener(".appearance > *:not(.empty)");
       Opt.plugins_.showTable();
+      Opt.eventListener();
    },
 
    log: function (msg) {
@@ -210,6 +209,6 @@ const Opt = {
    },
 }
 
-window.addEventListener('load', (event) => {
+window.addEventListener('load', event => {
    Opt.init();
 });
