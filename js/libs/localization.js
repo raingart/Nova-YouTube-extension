@@ -21,5 +21,5 @@ function setLocalization(parent) {
 
 document.addEventListener('DOMContentLoaded', function () {
 // window.addEventListener('load', function (evt) {
-   setLocalization();
+   setLocalization('html');
 });
