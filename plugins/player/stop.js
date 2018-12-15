@@ -46,7 +46,7 @@ _plugins.push({
       return {
          'stop-preload-ignore-playlist': {
             _elementType: 'input',
-            label: 'Ignore Playlist',
+            label: 'Ignore playlist',
             type: 'checkbox',
          },
          'stop-preload-homepage-video': {
