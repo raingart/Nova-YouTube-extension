@@ -28,19 +28,9 @@ const App = {
 
    getToken: (function () {
       const YOUTUBE_API_KEYS = [
-         "A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA", "CXRRCFwKAXOiF1JkUBmibzxJF1cPuKNwA",
-         "AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ",
-
-         'AQt1mEVq6zwVBjwx_lcJkQoAAxGExgN7A', 'AiNg2XXdwX8liIXPyih1JwGN3LUchU3PQ',
-         'Anpi2EwgMa7zCA3YFlkXGP4r7DYRxXvr0', 'D4V0Xqf_zyJ2uj1yvGcZsdQUc6lqWwHdg',
-         'Atw79-LJc8hU2xR8we09t8wmK-I9aByR4', 'DhvZZMn_gAOMAEFMEWSnY187SSmRTXVvw',
-         'DBaSVT7oDylExQNafSIihX_zBpumF5Vuk',
-
-         "AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw", "DQ9jq7u_2Xc5yp_rf9oaH1HgJZQWfOKEw",
-         "BEWfotUHmjDEg17hlMZXbu2kvfIsgbbVw", "BMCSjKu6byATzbCi0lVqlf_Y8pIpEmxFA",
-         "CZ49MPBhXFNEWc9jvsZqY82nkH_Jwca80", "BPFodMA7VOAr338JfHeR08uv_-CYAj-1w",
-         "CbqbGj5PeSZ028EHINfnsSG-MgHmG7NQk", "BtzKknwPgbOiGXyHOYD5tU-cuaRAbK31M",
-         "Co_RosHubOxkgyksXylL7rueuEDdsHViE"
+         'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA', 'CXRRCFwKAXOiF1JkUBmibzxJF1cPuKNwA',
+         'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AQt1mEVq6zwVBjwx_lcJkQoAAxGExgN7A',
+         'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
       ];
       const getRandArrayItem = arr => arr[Math.floor(Math.random() * arr.length)];
       return 'AIzaSy' + getRandArrayItem(YOUTUBE_API_KEYS);
