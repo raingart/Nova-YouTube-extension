@@ -26,11 +26,7 @@
       "message": "Saved!"
    },
    "opt_bth_save_settings_tooltip": {
-      "message": "All changes"
-   },
-
-   "opt_reversal_plugins": {
-      "message": "Reload pages when changing settings"
+      "message": "Open tabs don't change"
    },
 
    "github_page": {

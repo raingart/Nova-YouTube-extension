@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitFor('.html5-video-player', playerId => {
-         let is_change_quality;
+         let is_stop_video;
          
          playerId.addEventListener("onStateChange", onPlayerStateChange.bind(this));
 
@@ -23,21 +23,19 @@ _plugins.push({
                return;
             }
 
-            // if ((1 === state || 3 === state) && !is_change_quality) {
-            // Error: Your browser does not currently recognize any of the video formats 
-            if ((1 === state) && !is_change_quality) {
-               is_change_quality = true;
-               // 1- unstarted
-               // 0- ended
-               // 1- playing
-               // 2- paused
-               // 3- buffering
-               // 5- video cued
+            // 1- unstarted
+            // 0- ended
+            // 1- playing
+            // 2- paused
+            // 3- buffering
+            // 5- video cued
+            if ((1 === state || 3 === state) && !is_stop_video) {
+               is_stop_video = true;
                playerId.stopVideo();
                // console.log('stopVideo');
 
             } else if (-1 === state || 0 === state) {
-               is_change_quality = false;
+               is_stop_video = false;
             }
          }
 
@@ -57,9 +55,9 @@ _plugins.push({
             label: 'Stop preload on selected page',
             options: [
                /* beautify preserve:start */
-               { label: 'all', value: 'all' },
+               { label: 'all', value: 'all', selected: true },
                { label: 'watch', value: 'watch' },
-               { label: 'channel', value: 'channel', selected: true },
+               { label: 'channel', value: 'channel' },
                /* beautify preserve:end */
             ]
          },

@@ -1,12 +1,12 @@
 _plugins.push({
-   name: 'Force player focused',
+   name: 'Player Hotkeys always active',
    id: 'player-focused-onkeydown',
    section: 'player',
    depends_page: 'watch',
-   desc: 'HotKeys player priority [SPACE/F] etc.',
+   desc: 'shortcuts priority [SPACE/F] etc.',
    _runtime: user_settings => {
 
-      ["keydown", "focus"].forEach(event => {
+      ["keydown"/*, "focus"*/].forEach(event => {
          document.addEventListener(event, captureFocus);
       });
 

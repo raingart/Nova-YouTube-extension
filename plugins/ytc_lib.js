@@ -7,7 +7,7 @@ const YDOM = {
 
    // waitFor_test: function (selector, callback) {
    //    document.addEventListener('DOMNodeInserted', function (R) {
-   //       var S = R.target || null;
+   //       let S = R.target || null;
    //       if (S && S.nodeName === 'VIDEO') {
    //          //  new p.videoController(S);
    //          console.log('DOMNodeInserted');
@@ -17,7 +17,6 @@ const YDOM = {
 
    listeners: [],
    waitFor: (selector, callback) => {
-      // waitFor: (selector, callback) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -54,7 +53,6 @@ const YDOM = {
             check(doc);
          };
 
-         // return { getObserver: function () {
          return (function () {
             YDOM.log('init Observer');
             if (!observer) {
@@ -72,7 +70,6 @@ const YDOM = {
             // return observer;
             return startObserver();
          }());
-         // },};
       }
 
       // Check if the element is currently in the DOM
@@ -83,7 +80,7 @@ const YDOM = {
          for (const i in YDOM.listeners) {
             let listener = YDOM.listeners[i];
 
-            // // Query for elements matching the specified selector
+            // Query for elements matching the specified selector
             Array.from(doc.querySelectorAll(listener.selector))
                .forEach((element) => {
                   YDOM.log('element ready, listeners_id:%s', i);
@@ -97,19 +94,13 @@ const YDOM = {
 
    isInViewport: el => {
       if (!el) return;
-      var bounding = el.getBoundingClientRect();
+      let bounding = el.getBoundingClientRect();
       return (
          bounding.top >= 0 &&
          bounding.left >= 0 &&
          bounding.bottom <= window.innerHeight &&
          bounding.right <= window.innerWidth
       );
-      // return (
-      //    bounding.top >= 0 &&
-      //    bounding.left >= 0 &&
-      //    bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      //    bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
-      // );
    },
 
    // connect_DragnDrop: function (element, callback) {
@@ -169,9 +160,14 @@ const YDOM = {
       if (!styles) return;
 
       if (typeof styles === 'object') { // is json
-         if (!selector) selector = '*';
+         if (!selector) return;
 
+         // if (important) {
          injectCss(selector + json2css(styles));
+
+         // } else {
+         //    Object.assign(document.querySelector(selector).style, styles);
+         // }
 
          function json2css(obj) {
             let _css = '';
@@ -211,20 +207,42 @@ const YDOM = {
       }
    },
 
+   // cookie: {
+   //    get: name => {
+   //       let cookie = {};
+   //       document.cookie.split(';').forEach(function (el) {
+   //          let [k, v] = el.split('=');
+   //          cookie[k.trim()] = v;
+   //       })
+   //       return name ? cookie[name] : cookie[name];
+   //    },
+
+   //    set: (name, value) => {
+   //       let cookie = { [name]: value, path: '/' };
+
+   //       let date = new Date();
+   //       date.setTime(date.getTime() + 31536000);
+   //       cookie.expires = date.toUTCString();
+
+   //       cookie.domain = '.' + window.location.hostname.split('.').slice(-2).join('.'); // .youtube.com
+
+   //       let arr = []
+   //       for (let key in cookie) {
+   //          arr.push(`${key}=${cookie[key]}`);
+   //       }
+   //       document.cookie = arr.join('; ');
+   //    },
+   // },
+
    getPageType: () => {
-      // "*://www.youtube.com/watch?v=*",
-      // "*://www.youtube.com/user/*",
-      // "*://www.youtube.com/channel/*"
-      // "*://www.youtube.com/results?search_query=*"
-      // "*://www.youtube.com/playlist?list=PL*"
       let page = location.pathname.split('/')[1];
       YDOM.log('page type %s', page);
       return (page == 'channel' || page == 'user') ? 'channel' : page || null;
    },
 
    getUrlVars: v => {
-      var vars = {};
-      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      let vars = {};
+      let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
          vars[key] = value;
       });
       return vars;
@@ -242,7 +260,7 @@ const YDOM = {
 
 
 const RequestFetch = (url, payload, typeResponse, callback) => {
-   url = YDOM.api_url + url; // for safe
+   url = YDOM.api_url + url; // to secure
    // console.log('url', url);
 
    fetch(url, payload)

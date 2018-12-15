@@ -1,5 +1,3 @@
-// console.log(": init plugins.js");
-
 const Plugins = {
    // DEBUG: true,
 
@@ -14,6 +12,8 @@ const Plugins = {
    },
 
    injectScript: source => {
+      if (!source) return;
+
       let s = document.createElement('script');
       s.type = "text/javascript";
 
@@ -21,7 +21,7 @@ const Plugins = {
          s.src = source;
          // s.async = true;
       } else {
-         s.textContent = source.toString() + ";";
+         s.textContent = source.toString() + ';';
          // s.src = "data:text/plain;base64," + btoa(source);
          // s.src = 'data:text/javascript,' + encodeURIComponent(source)
       }
@@ -34,10 +34,6 @@ const Plugins = {
          // Remove <script> node after injectScript runs.
          s.parentNode.removeChild(s);
       };
-
-      // s.onload = s.onerror = function () {
-      //    this.remove();
-      // };
    },
 
    run: function (depends, store) {

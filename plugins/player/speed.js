@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Video Speed with MouseWheel',
+   name: 'Video playback speed with MouseWheel',
    id: 'video-speed-Wheel',
    section: 'player',
    depends_page: 'watch, embed',

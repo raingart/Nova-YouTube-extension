@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Channel Video Count',
+   name: 'Show channel videos count',
    id: 'show-channel-video-count',
    section: 'details',
    depends_page: 'watch',
@@ -27,7 +27,7 @@ _plugins.push({
          // console.log('channel_id', channel_id);
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
-            return console.error('channel_id is not valid');;
+            return console.warn('channel_id is not valid');
          }
 
          let url = 'channels' +

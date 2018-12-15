@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Auto pause video',
+   name: 'Video AutoPause ',
    id: 'stop-autoplay',
    section: 'player',
    depends_page: 'watch, embed',
@@ -16,14 +16,14 @@ _plugins.push({
 
             if (user_settings['stop-autoplay-ignore-playlist'] && window.location.href.indexOf('list=') !== -1) return;
 
+            // 1- unstarted
+            // 0- ended
+            // 1- playing
+            // 2- paused
+            // 3- buffering
+            // 5- video cued
             if ((1 === state) && !is_change_quality) {
                is_change_quality = true;
-               // 1- unstarted
-               // 0- ended
-               // 1- playing
-               // 2- paused
-               // 3- buffering
-               // 5- video cued
                playerId.pauseVideo();
                // console.log('pauseVideo');
 

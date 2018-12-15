@@ -10,8 +10,7 @@ _plugins.push({
          let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
             let publishedAt = res.items[0].snippet.publishedAt;
-            let between_time = new Date().getTime() - new Date(publishedAt);
-            let video_age = timeFormat_short(between_time);
+            let video_age = timeSince(new Date(publishedAt));
 
             if (document.getElementById('video_age')) {
                document.getElementById('video_age').textContent = video_age;
@@ -20,9 +19,15 @@ _plugins.push({
                el.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="video_age">' + video_age + ' ago</i></span>');
             }
          };
+         
+         let videos_id = YDOM.getUrlVars()['v'];
+
+         if (!videos_id.match(/([a-z0-9-_])/i)) {
+            return console.warn('videos_id is not valid');
+         }
 
          let url = 'videos' +
-            '?id=' + YDOM.getUrlVars()['v'] +
+            '?id=' + videos_id +
             '&key=' + user_settings.api_key +
             '&part=snippet';
 
@@ -30,9 +35,10 @@ _plugins.push({
 
       });
 
-      function timeFormat_short(ms) {
-         let day, min, sec;
-         return sec = Math.floor(ms / 1e3), 0 >= sec ? "0 secs" : (years = Math.floor(sec / 31536000), years > 0 ? years + " years" : (day = Math.floor(sec / 86400), day > 0 ? day + " days" : (min = Math.floor(Math.log(sec) / Math.log(60)), Math.floor(sec / Math.pow(60, min)) + " " + ["sec", "mins", "hours", "years"][min])))
+      function timeSince(ts) {
+         var sec = Math.floor((new Date - ts) / 1e3),
+            d = Math.floor(sec / 31536e3);
+         return d > 1 ? d + " years" : (d = Math.floor(sec / 2592e3), d > 1 ? d + " months" : (d = Math.floor(sec / 86400), d > 1 ? d + " days" : (d = Math.floor(sec / 3600), d > 1 ? d + " hours" : (d = Math.floor(sec / 60), d > 1 ? d + " minutes" : Math.floor(sec) + " seconds"))))
       }
 
    },

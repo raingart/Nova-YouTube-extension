@@ -25,7 +25,7 @@ _plugins.push({
          initStyle();
 
          window.addEventListener('scroll', function () {
-            pinned_elm(
+            onScreenToggle(
                document.getElementById('ytd-player'),
                // document.getElementById('movie_player'),
                // playerId,
@@ -33,7 +33,7 @@ _plugins.push({
             );
          });
 
-         function pinned_elm(scroll_target, viewer) {
+         function onScreenToggle(scroll_target, viewer) {
             // console.log('playerId in_viewport %s', in_viewport);
             if (YDOM.isInViewport(viewer || scroll_target)) {
                if (!in_viewport) {

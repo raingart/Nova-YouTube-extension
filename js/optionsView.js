@@ -1,5 +1,3 @@
-// 'use strict';
-
 console.log(i18n("app_name") + ": init opt.js");
 
 Plugins.load((() => {
@@ -186,7 +184,7 @@ const Opt = {
          });
 
       // spoler
-      Array.from(document.querySelectorAll(Opt.plugins_.conteiner + '> ul'))
+      Array.from(document.querySelectorAll(Opt.plugins_.conteiner + '> *'))
          .forEach(ul => {
             ul.addEventListener('click', event => {
                // event.preventDefault();
@@ -212,48 +210,6 @@ const Opt = {
    },
 }
 
-
 window.addEventListener('load', (event) => {
    Opt.init();
 });
-
-
-// function sendMessage (message) {
-//    chrome.runtime.sendMessage({ action: message }, (response) => {
-//      console.log('MessageResponse: ', response)
-//    })
-//  }
-
-//  const actionElements = document.getElementsByClassName('action')
-
-//  for (const key in actionElements) {
-//    const action = actionElements[key]
-//    action.onclick = () => sendMessage(action.id)
-//  }
-
-//  window.onkeyup = function (e) {
-//    if (e.shiftKey || e.ctrlKey) {
-//      return
-//    }
-
-// let message;
-// switch (e.key) {
-//    case 'a':
-//       message = 'sortByAge';
-//       break;
-//    case 'u':
-//       message = 'sortByUrl';
-//       break;
-//    case 'd':
-//       message = 'sortByNumDomain';
-//       break;
-//    case 'r':
-//       message = 'reverseSort';
-//       break;
-
-//    default:
-//       return;
-//       // break;
-//    sendMessage(message);
-// }
-//  }
