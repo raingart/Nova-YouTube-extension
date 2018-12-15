@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Video AutoPause ',
+   name: 'Video autopause',
    id: 'stop-autoplay',
    section: 'player',
    depends_page: 'watch, embed',
@@ -40,7 +40,6 @@ _plugins.push({
          'stop-autoplay-ignore-playlist': {
             _elementType: 'input',
             label: 'ignore playlist',
-            title: 'Autoplay will work in playlist',
             type: 'checkbox',
          },
       };

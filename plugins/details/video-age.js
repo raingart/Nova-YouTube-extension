@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Channel Video Age',
+   name: 'Show video age',
    id: 'show-video-age',
    section: 'details',
    depends_page: 'watch',

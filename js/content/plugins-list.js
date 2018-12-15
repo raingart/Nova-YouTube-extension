@@ -21,7 +21,7 @@ const Plugins_list = {
       'player/annotations.js',
       'player/timeline-color.js',
 
-      'details/description-video.js',
+      'details/expand-description.js',
       'details/channel-video-count.js',
       'details/video-age.js',
 

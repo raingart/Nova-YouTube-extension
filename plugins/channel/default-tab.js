@@ -1,9 +1,8 @@
 _plugins.push({
-   name: 'Default Channel Tab',
+   name: 'The default tab on the channel page',
    id: 'set-default-channel-tab',
    section: 'channel',
    depends_page: 'channel',
-   desc: 'Set default tab on YT channels',
    _runtime: user_settings => {
 
       // console.log('location.pathname', location.pathname);
@@ -19,7 +18,7 @@ _plugins.push({
       return {
          'default_channel_tab': {
             _elementType: 'select',
-            label: 'default tab',
+            label: 'Set default tab',
             options: [
                /* beautify preserve:start */
                { label: 'videos', value: 'videos' },

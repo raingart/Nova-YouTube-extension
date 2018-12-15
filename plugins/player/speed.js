@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Video playback speed with MouseWheel',
+   name: 'Video playback speed with mousewheel',
    id: 'video-speed-Wheel',
    section: 'player',
    depends_page: 'watch, embed',
@@ -113,7 +113,7 @@ _plugins.push({
       return {
          'player_rate_hotkey': {
             _elementType: 'select',
-            label: 'Select hotkeys',
+            label: 'Select hotkey',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey', selected: true  },

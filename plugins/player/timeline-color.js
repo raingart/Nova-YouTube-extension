@@ -1,17 +1,17 @@
 _plugins.push({
-   name: 'Player Timeline Progress color',
-   id: 'player-progress-color',
+   name: 'Color timeline player',
+   id: 'player-timeline-color',
    section: 'player',
    depends_page: 'watch',
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.ytp-swatch-background-color', timeline => timeline.style.backgroundColor = user_settings['player_progress_color']);
+      YDOM.waitFor('.ytp-swatch-background-color', progress => progress.style.backgroundColor = user_settings['player_timeline_color']);
 
    },
    export_opt: (function () {
       return {
-         'player_progress_color': {
+         'player_timeline_color': {
             _elementType: 'input',
             label: 'Color',
             type: 'color',

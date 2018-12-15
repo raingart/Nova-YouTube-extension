@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Volume with MouseWheel',
+   name: 'Volume with mousewheel',
    id: 'volume-wheel',
    section: 'player',
    depends_page: 'watch, embed',
@@ -140,18 +140,17 @@ _plugins.push({
       return {
          'volume_step': {
             _elementType: 'input',
-            label: 'step',
+            label: 'Select step percentage',
             type: 'number',
             placeholder: '1-33',
             step: 1,
             min: 1,
             max: 33,
             value: 5,
-            title: 'Select volume step percentage',
          },
          'volume_hotkey': {
             _elementType: 'select',
-            label: 'Select hotkeys',
+            label: 'Hotkey',
             options: [
                /* beautify preserve:start */
                { label: 'Alt+wheel', value: 'altKey' },
@@ -163,7 +162,7 @@ _plugins.push({
          },
          'show_volume_indicator': {
             _elementType: 'select',
-            label: 'Volume level visualization',
+            label: 'Type visualization',
             options: [
                /* beautify preserve:start */
                { label: 'bar', value: 'bar' },

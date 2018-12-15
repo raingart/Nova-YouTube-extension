@@ -1,9 +1,9 @@
 _plugins.push({
-   name: 'Stop Video Preload',
+   name: 'Disables video preload',
    id: 'stop-preload',
    section: 'player',
    depends_page: 'watch, channel',
-   desc: 'Disables Preload',
+   // desc: '',
    _runtime: user_settings => {
 
       YDOM.waitFor('.html5-video-player', playerId => {
@@ -47,12 +47,11 @@ _plugins.push({
          'stop-preload-ignore-playlist': {
             _elementType: 'input',
             label: 'Ignore Playlist',
-            title: 'Preload will work in playlist',
             type: 'checkbox',
          },
          'stop-preload-homepage-video': {
             _elementType: 'select',
-            label: 'Stop preload on selected page',
+            label: 'Active on selected page',
             options: [
                /* beautify preserve:start */
                { label: 'all', value: 'all', selected: true },

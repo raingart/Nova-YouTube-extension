@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Player Hotkeys always active',
+   name: 'Player hotkeys always active',
    id: 'player-focused-onkeydown',
    section: 'player',
    depends_page: 'watch',

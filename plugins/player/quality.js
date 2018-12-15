@@ -1,9 +1,9 @@
 _plugins.push({
-   name: 'Video Quality',
+   name: 'Video quality',
    id: 'video-quality',
    section: 'player',
    depends_page: 'watch, embed',
-   desc: 'Set prefered quality',
+   // desc: '',
    _runtime: user_settings => {
 
       YDOM.waitFor('.html5-video-player', playerId => {

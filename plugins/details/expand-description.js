@@ -1,6 +1,6 @@
 _plugins.push({
-   name: 'Video Description Expander',
-   id: 'reveal-description-video',
+   name: 'Expand video description',
+   id: 'expand-description-video',
    section: 'details',
    depends_page: 'watch',
    desc: 'See full description',

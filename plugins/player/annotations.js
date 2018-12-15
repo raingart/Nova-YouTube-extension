@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Hide Annotations/Cards',
+   name: 'Hide annotations/cards',
    id: 'hide-annotations',
    section: 'player',
    depends_page: 'watch, embed',

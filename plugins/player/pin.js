@@ -3,7 +3,7 @@ _plugins.push({
    id: 'fixed-player-scroll',
    section: 'player',
    depends_page: 'watch',
-   desc: 'Fixed player position',
+   // desc: '',
    _runtime: user_settings => {
 
       // YDOM.waitFor('#ytd-player.pin_video', function (el) {
@@ -142,7 +142,7 @@ _plugins.push({
          'pin_player_size_ratio': {
             _elementType: 'input',
             label: 'Player ratio to screen size',
-            title: 'less - more size',
+            title: 'less - more player size',
             type: 'number',
             placeholder: '2-5',
             step: 0.1,
@@ -152,8 +152,7 @@ _plugins.push({
          },
          'pin_player_size_position': {
             _elementType: 'select',
-            label: 'Player position',
-            title: 'Where to show minimized player',
+            label: 'Fixed player position',
             options: [
                /* beautify preserve:start */
                { label: 'left-top', value: 'top-left' },

@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Hide LiveChat',
+   name: 'Hide livechat',
    id: 'collapse-livechat',
    section: 'sidebar',
    depends_page: 'watch',

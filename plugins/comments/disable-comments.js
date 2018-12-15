@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Disable Comments',
+   name: 'Disable comments',
    id: 'disable-comments',
    section: 'comments',
    depends_page: 'watch',

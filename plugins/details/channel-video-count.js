@@ -3,7 +3,7 @@ _plugins.push({
    id: 'show-channel-video-count',
    section: 'details',
    depends_page: 'watch',
-   desc: 'Total number of videos no channel',
+   desc: 'Total number of videos on channel',
    _runtime: user_settings => {
 
       YDOM.waitFor('#owner-container a[href]', el => {

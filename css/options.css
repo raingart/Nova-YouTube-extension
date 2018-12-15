@@ -155,7 +155,7 @@ li>ul {
 #plugins {
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-   grid-gap: 10px;
+   grid-gap: 15px;
 }
 
 #plugins>* {
@@ -183,7 +183,6 @@ li>label {
    grid-column: label;
    align-self: center;
    color: #8c8b8b;
-   text-transform: capitalize;
 }
 
 li>label>font {
