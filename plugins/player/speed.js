@@ -113,13 +113,13 @@ _plugins.push({
       return {
          'player_rate_hotkey': {
             _elementType: 'select',
-            label: 'Select hotkey',
+            label: 'Hotkey',
             options: [
                /* beautify preserve:start */
-               { label: 'Alt+wheel', value: 'altKey', selected: true  },
-               { label: 'Shift+wheel', value: 'shiftKey' },
-               { label: 'Ctrl+wheel', value: 'ctrlKey'},
-               { label: 'Wheel', value: 'none' }
+               { label: 'alt+wheel', value: 'altKey', selected: true  },
+               { label: 'shift+wheel', value: 'shiftKey' },
+               { label: 'ctrl+wheel', value: 'ctrlKey'},
+               { label: 'wheel', value: 'none' }
                /* beautify preserve:end */
             ]
          },

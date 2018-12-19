@@ -15,7 +15,7 @@ _plugins.push({
             _elementType: 'input',
             label: 'Color',
             type: 'color',
-            value: '#ff0000', // red
+            value: '#0089ff',
          },
       };
    }()),

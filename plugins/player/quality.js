@@ -25,54 +25,61 @@ _plugins.push({
             if ((1 === state || 3 === state) && !is_change_quality) {
                is_change_quality = true;
 
-               const availableQualityLevels = playerId.getAvailableQualityLevels();
-               const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
-               let qualityToSet = availableQualityLevels[maxAvailableQuality];
+               let interval_quality = setInterval(() => {
+                  let availableQualityLevels = playerId.getAvailableQualityLevels();
 
-               // if (!qualityToSet || playerId.getPlaybackQuality() == selectedQuality) {
-               //    console.log('skip set quality');
-               //    return;
-               // }
+                  if (availableQualityLevels.length) {
+                     clearInterval(interval_quality);
 
-               if (availableQualityLevels.indexOf(selectedQuality) === -1) {
-                  console.log('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"', selectedQuality, qualityToSet);
-               }
+                     const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
+                     let qualityToSet = availableQualityLevels[maxAvailableQuality];
 
-               if (playerId.hasOwnProperty('setPlaybackQuality')) {
-                  // console.log('use setPlaybackQuality');
-                  playerId.setPlaybackQuality(qualityToSet);
-               }
+                     // if (!qualityToSet || playerId.getPlaybackQuality() == selectedQuality) {
+                     //    console.log('skip set quality');
+                     //    return;
+                     // }
 
-               // set QualityRange
-               if (playerId.hasOwnProperty('setPlaybackQualityRange')) {
-                  playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
+                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
+                        console.log('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"\n%s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
+                     }
 
-               } else { // emulate clicked (in embed iframe)
-                  // console.log('used emulate clicked');
-                  document.querySelector(".ytp-settings-button").click(); // settings button
+                     if (playerId.hasOwnProperty('setPlaybackQuality')) {
+                        // console.log('use setPlaybackQuality');
+                        playerId.setPlaybackQuality(qualityToSet);
+                     }
 
-                  const qualityOption = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
-                  // test is quality option
-                  if (qualityOption.children[1].firstElementChild.textContent.match(/\d{3,4}[ps]/)) {
-                     qualityOption.click(); // open option
+                     // set QualityRange
+                     if (playerId.hasOwnProperty('setPlaybackQualityRange')) {
+                        playerId.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
-                     const showQualities = document
-                        .querySelector(".ytp-settings-menu")
-                        .querySelector(".ytp-quality-menu .ytp-panel-menu").children;
+                     } else { // emulate clicked (in embed iframe)
+                        // console.log('used emulate clicked');
+                        document.querySelector(".ytp-settings-button").click(); // settings button
 
-                     showQualities[maxAvailableQuality].click(); // choosing it quality
+                        const qualityOption = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
+                        // test is quality option
+                        if (qualityOption.children[1].firstElementChild.textContent.match(/\d{3,4}[ps]/)) {
+                           qualityOption.click(); // open option
 
-                     //unfocused
-                     document.querySelector("body").click();
-                     document.querySelector("video").focus();
+                           const showQualities = document
+                              .querySelector(".ytp-settings-menu")
+                              .querySelector(".ytp-quality-menu .ytp-panel-menu").children;
 
-                     // console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
+                           showQualities[maxAvailableQuality].click(); // choosing it quality
+
+                           //unfocused
+                           document.querySelector("body").click();
+                           document.querySelector("video").focus();
+
+                           // console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
+                        }
+                     }
+
+                     // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));
+                     // console.log("try set quality:", qualityToSet);
+                     // console.log('set realy quality:', playerId.getPlaybackQuality());
                   }
-               }
-
-               // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));
-               // console.log("try set quality:", qualityToSet);
-               // console.log('set realy quality:', playerId.getPlaybackQuality());
+               }, 50);
 
             } else if (-1 === state || 0 === state) {
                is_change_quality = false;
@@ -101,7 +108,7 @@ _plugins.push({
                { label: '360p', value: 'medium' },
                { label: '240p', value: 'small' },
                { label: '144p', value: 'tiny' },
-               // { label: 'Auto', value: 'auto' },
+               // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
                /* beautify preserve:end */
             ]
          },

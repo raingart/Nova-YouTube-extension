@@ -15,6 +15,11 @@ a {
    /* text-decoration: none; */
 }
 
+ul {
+   margin: 0;
+   padding-left: 1.5em;
+}
+
 div {
    position: relative;
 }

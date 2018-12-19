@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'See full description',
    _runtime: user_settings => {
 
-      YDOM.waitFor('#container > ytd-expander[collapsed]', el => el.removeAttribute("collapsed"));
+      YDOM.waitFor('.ytd-video-secondary-info-renderer > [collapsed] #more', el => el.click());
       
    }
 });

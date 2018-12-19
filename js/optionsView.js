@@ -50,6 +50,7 @@ const Opt = {
             } catch (err) {
                console.error('error:', err);
                console.warn(JSON.stringify(plugin));
+               // alert(plugin.name\n + err.slice(25));
             }
          }
       },

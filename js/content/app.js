@@ -1,5 +1,5 @@
 const App = {
-   // DEBUG: true,
+   DEBUG: true,
 
    // Register the event handlers.
    eventListener: (function () {
@@ -82,18 +82,18 @@ const App = {
    run: () => {
       App.log('run');
 
-      let preparation_for_execute = 'plugins_run= ' + Plugins.run + ';\n' +
+      let preparation_for_execute = '_plugins_executor= ' + Plugins.run + ';\n' +
          '_plugins_run = setInterval(() => {\n' +
          'if (plugins_loaded) {\n' +
          '  clearInterval(_plugins_run);\n' +
          '  plugins_loaded = false;\n' +
          '  if (_plugins && _plugins.length) {\n' +
-         '     plugins_run(' + JSON.stringify(YDOM.getPageType()) + ',' + 
-               JSON.stringify(App.sessionSettings) + ');\n' +
+         '     _plugins_executor(' +
+         JSON.stringify(YDOM.getPageType()) + ',' + JSON.stringify(App.sessionSettings) + ');\n' +
          '  }\n' +
          '}\n' +
          '}, 100)';
-         
+
       Plugins.injectScript(preparation_for_execute);
    },
 

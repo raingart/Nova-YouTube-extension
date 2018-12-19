@@ -285,7 +285,7 @@ const RequestFetch = (url, payload, typeResponse, callback) => {
          // console.log('Request Succeeded:', JSON.stringify(res));
          return (callback && typeof (callback) === "function") ? callback(res) : res;
       })
-      .catch(error => {
-         console.error('Request Error: %s\n%s', error.response, error);
+      .catch(err => {
+         console.error('Request Error: %s\n%s', err.response, err);
       });
 }

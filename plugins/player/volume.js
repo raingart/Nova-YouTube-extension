@@ -140,9 +140,9 @@ _plugins.push({
       return {
          'volume_step': {
             _elementType: 'input',
-            label: 'Select step percentage',
+            label: 'Step',
             type: 'number',
-            placeholder: '1-33',
+            placeholder: '%',
             step: 1,
             min: 1,
             max: 33,
@@ -153,10 +153,10 @@ _plugins.push({
             label: 'Hotkey',
             options: [
                /* beautify preserve:start */
-               { label: 'Alt+wheel', value: 'altKey' },
-               { label: 'Shift+wheel', value: 'shiftKey' },
-               { label: 'Ctrl+wheel', value: 'ctrlKey' },
-               { label: 'Wheel', value: 'none', selected: true },
+               { label: 'alt+wheel', value: 'altKey' },
+               { label: 'shift+wheel', value: 'shiftKey' },
+               { label: 'ctrl+wheel', value: 'ctrlKey' },
+               { label: 'wheel', value: 'none', selected: true },
                /* beautify preserve:end */
             ]
          },

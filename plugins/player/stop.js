@@ -8,7 +8,7 @@ _plugins.push({
 
       YDOM.waitFor('.html5-video-player', playerId => {
          let is_stop_video;
-         
+
          playerId.addEventListener("onStateChange", onPlayerStateChange.bind(this));
 
          function onPlayerStateChange(state) {
@@ -20,6 +20,7 @@ _plugins.push({
 
             if ((typePage == 'channel' && user_settings['stop-preload-homepage-video'] == 'watch') ||
                (typePage == 'watch' && user_settings['stop-preload-homepage-video'] == 'channel')) {
+               // console.log('exit preload');
                return;
             }
 
@@ -48,6 +49,7 @@ _plugins.push({
             _elementType: 'input',
             label: 'Ignore playlist',
             type: 'checkbox',
+            'data-dependent': '{"stop-preload-homepage-video":["all","watch"]}',
          },
          'stop-preload-homepage-video': {
             _elementType: 'select',

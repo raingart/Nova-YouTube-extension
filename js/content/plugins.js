@@ -58,8 +58,9 @@ const Plugins = {
 
                delete _plugins[i];
 
-            } catch (error) {
-               console.error('plugin error: %s\n%s', plugin.name, error);
+            } catch (err) {
+               console.error('plugin error: %s\n%s', plugin.name, err);
+               // alert(plugin.name\n + err.slice(25));
             }
          } else this.DEBUG && console.log('plugin skiping', plugin.name);
 
