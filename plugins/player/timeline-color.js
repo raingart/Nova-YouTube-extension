@@ -6,7 +6,7 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.ytp-swatch-background-color', progress => progress.style.backgroundColor = user_settings['player_timeline_color']);
+      YDOM.waitFor('.ytp-swatch-background-color', progress => progress.style.backgroundColor = user_settings.player_timeline_color);
 
    },
    export_opt: (function () {

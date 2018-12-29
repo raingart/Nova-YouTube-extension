@@ -6,8 +6,7 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.ytd-live-chat-frame #show-hide-button paper-button',
-         hide_chat_replay => hide_chat_replay.click());
+      YDOM.waitFor('ytd-live-chat-frame #show-hide-button paper-button', bth => bth.click());
 
    }
 });

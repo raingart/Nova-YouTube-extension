@@ -6,19 +6,7 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // YDOM.waitFor('#ytd-player.pin_video', function (el) {
-      //    console.log('1111');
-      //    YDOM.connect_DragnDrop(
-      //       el
-      //    , position => {
-      //       console.log('222');
-      //       // YDOM.connect_DragnDrop(playerId, (position) => {
-      //          localStorage.setItem('player-position-top', position.top);
-      //          localStorage.setItem('player-position-left', position.left);
-      //       });
-      // })
-
-      YDOM.waitFor('.html5-video-player video[style]', vid_ => {
+      YDOM.waitFor('.html5-video-container video[style]', vid_ => {
          let in_viewport;
          let scroll_toggle_class = "pin_video";
 
@@ -41,14 +29,19 @@ _plugins.push({
                   scroll_target.classList.remove(scroll_toggle_class);
                   in_viewport = true;
 
-                  scroll_target.onmousedown = null;
+                  if (user_settings.pin_player_size_position == 'float')
+                     YDOM.dragnDrop.disconnect(scroll_target);
                }
             } else if (in_viewport) {
                // console.log('scroll_target isInViewport');
                scroll_target.classList.add(scroll_toggle_class);
                in_viewport = false;
 
-               // YDOM.connect_DragnDrop(scroll_target);
+               if (user_settings.pin_player_size_position == 'float')
+                  YDOM.dragnDrop.connect(scroll_target, position => {
+                     localStorage.setItem('player-pin-position-top', position.top);
+                     localStorage.setItem('player-pin-position-left', position.left);
+                  });
             }
          }
 
@@ -56,13 +49,13 @@ _plugins.push({
             let initcss = {
                position: 'fixed',
                'z-index': 9999,
+               'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14),' +
+                  '0 6px 30px 5px rgba(0, 0, 0, 0.12),' +
+                  '0 8px 10px -5px rgba(0, 0, 0, 0.4)',
             };
 
-            // initcss.top = localStorage.getItem('player-position-top');
-            // initcss.left = localStorage.getItem('player-position-left');
-
             // set pin_player_size_position
-            switch (user_settings['pin_player_size_position']) {
+            switch (user_settings.pin_player_size_position) {
                case 'top-left':
                   initcss.top = 0;
                   initcss.left = 0;
@@ -79,7 +72,12 @@ _plugins.push({
                   initcss.bottom = 0;
                   initcss.right = 0;
                   break;
+               case 'float':
+                  initcss.top = localStorage.getItem('player-pin-position-top');
+                  initcss.left = localStorage.getItem('player-pin-position-left');
+                  break;
             }
+
 
             let size = {
                width: vid_.style.width.replace(/px/i, ''),
@@ -95,7 +93,7 @@ _plugins.push({
             //    };
             // })();
 
-            let player_ratio = user_settings['pin_player_size_ratio'] || 3;
+            let player_ratio = user_settings.pin_player_size_ratio || 3;
             // calc size
             size.calc = calculateAspectRatioFit(
                size.width, size.height,
@@ -157,8 +155,9 @@ _plugins.push({
                /* beautify preserve:start */
                { label: 'left-top', value: 'top-left' },
                { label: 'left-bottom', value: 'bottom-left' },
-               { label: 'right-top', value: 'top-right', selected: true },
+               { label: 'right-top', value: 'top-right' },
                { label: 'right-bottom', value: 'bottom-right' },
+               { label: 'drag&Drop', value: 'float', selected: true },
                /* beautify preserve:end */
             ]
          },

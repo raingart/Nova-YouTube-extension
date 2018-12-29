@@ -15,10 +15,10 @@ _plugins.push({
             // console.log('onWheel');
             event.preventDefault();
 
-            if (user_settings['player_rate_hotkey'] && (
-                  event[user_settings['player_rate_hotkey']] ||
+            if (user_settings.player_rate_hotkey && (
+                  event[user_settings.player_rate_hotkey] ||
                   (
-                     user_settings['player_rate_hotkey'] === 'none' &&
+                     user_settings.player_rate_hotkey === 'none' &&
                      !event.ctrlKey && !event.altKey && !event.shiftKey
                   )
                )) {

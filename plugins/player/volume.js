@@ -16,10 +16,10 @@ _plugins.push({
          function onWheel_setVolume(event) {
             event.preventDefault();
 
-            if (user_settings['volume_hotkey'] && (
-                  event[user_settings['volume_hotkey']] ||
+            if (user_settings.volume_hotkey && (
+                  event[user_settings.volume_hotkey] ||
                   (
-                     user_settings['volume_hotkey'] === 'none' &&
+                     user_settings.volume_hotkey === 'none' &&
                      !event.ctrlKey && !event.altKey && !event.shiftKey)
                )) {
 
@@ -27,11 +27,11 @@ _plugins.push({
                   return console.error('getVolume error');
                }
 
-               let step = user_settings['volume_step'] || _this.export_opt['volume_step'] || 5;
+               let step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
                let delta = Math.sign(event.wheelDelta) * step;
                let level = _setVideoVolume(delta);
 
-               if (user_settings['show_volume_indicator']) {
+               if (user_settings.show_volume_indicator) {
                   showIndicator(playerId.getVolume(), this);
                }
             }
@@ -84,16 +84,16 @@ _plugins.push({
             let updateIndicator = pt => {
                if (typeof fate_volumeBar !== "undefined") clearTimeout(fate_volumeBar);
 
-               if (user_settings['show_volume_indicator'] === 'bar' ||
-                  user_settings['show_volume_indicator'] === 'full') {
-                  let color = user_settings['show_volume_indicator_color'];
+               if (user_settings.show_volume_indicator === 'bar' ||
+                  user_settings.show_volume_indicator === 'full') {
+                  let color = user_settings.show_volume_indicator_color;
                   divBar.style.background = 'linear-gradient(to right, ' +
                      color + 'd0 ' + pt +
                      '%, rgba(0,0,0,0.3) ' + pt + '%)';
                   divBar.textContent = '';
                }
-               if (user_settings['show_volume_indicator'] === 'text' ||
-                  user_settings['show_volume_indicator'] === 'full') {
+               if (user_settings.show_volume_indicator === 'text' ||
+                  user_settings.show_volume_indicator === 'full') {
                   divBar.textContent = pt;
                }
 

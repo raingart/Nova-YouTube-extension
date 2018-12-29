@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'How long ago video was uploaded',
    _runtime: user_settings => {
 
-      YDOM.waitFor('#upload-info .date', el => {
+      YDOM.waitFor('#upload-info > .date', el => {
          let _callback = res => {
             // console.log('res %s', JSON.stringify(res));
             let publishedAt = res.items[0].snippet.publishedAt;
@@ -16,7 +16,7 @@ _plugins.push({
                document.getElementById('video_age').textContent = video_age;
 
             } else {
-               el.insertAdjacentHTML("beforeEnd", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp/&nbsp<i id="video_age">' + video_age + ' ago</i></span>');
+               el.insertAdjacentHTML("beforeEnd", '<i class="date style-scope ytd-video-secondary-info-renderer"> / <span id="video_age">' + video_age + '</span> ago</i>');
             }
          };
          

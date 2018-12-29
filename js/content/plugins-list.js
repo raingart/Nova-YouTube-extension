@@ -9,7 +9,7 @@ const Plugins_list = {
       'player/quality.js',
 
       'player/pause.js',
-      'player/stop.js',
+      // 'player/stop.js',
 
       'player/pin.js',
       'player/focused.js',

@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Total number of videos on channel',
    _runtime: user_settings => {
 
-      YDOM.waitFor('#owner-container a[href]', el => {
+      YDOM.waitFor('#owner-name > a[href]', el => {
          // console.log('#owner-container a', el);
 
          let _callback = res => {
@@ -17,7 +17,7 @@ _plugins.push({
                document.getElementById('video_count').textContent = videoCount;
 
             } else {
-               el.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">&nbsp-&nbsp<span id="video_count">' + videoCount + '</span> videos</span>');
+               el.parentElement.insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer"> - <span id="video_count">' + videoCount + '</span> videos</span>');
             }
 
          };

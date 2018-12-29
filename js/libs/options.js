@@ -6,7 +6,7 @@ window.addEventListener('load', (evt) => {
 
       attrDependencies: () => {
          Array.from(document.querySelectorAll("[data-dependent]"))
-            .forEach((dependentItem) => {
+            .forEach(dependentItem => {
                // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
 
@@ -16,14 +16,18 @@ window.addEventListener('load', (evt) => {
                // init state
                handler();
 
-               document.getElementById(Object.keys(dependentsJson)) //dependentTag
-                  .addEventListener("change", handler);
+               let dependentTag = document.getElementById(Object.keys(dependentsJson))
+               if (dependentTag) dependentTag.addEventListener("change", handler);
             });
 
          function showOrHide(dependentItem, dependentsList) {
             for (const name in dependentsList)
                for (const thisVal of dependentsList[name]) {
                   let reqParent = document.getElementsByName(name)[0];
+                  if (!reqParent) {
+                     console.error('error showOrHide:', name);
+                     continue;
+                  }
 
                   if (reqParent.checked && thisVal) {
                      // console.log('reqParent.checked');

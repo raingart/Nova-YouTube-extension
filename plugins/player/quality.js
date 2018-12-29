@@ -8,12 +8,11 @@ _plugins.push({
 
       YDOM.waitFor('.html5-video-player', playerId => {
          let is_change_quality;
+         let selectedQuality = user_settings.video_quality;
 
-         const selectedQuality = user_settings['video_quality'];
+         playerId.addEventListener("onStateChange", setQuality.bind(this));
 
-         playerId.addEventListener("onStateChange", onChangeQuality.bind(this));
-
-         function onChangeQuality(state) {
+         function setQuality(state) {
             // console.log('onStateChange', state);
 
             // 1- unstarted
@@ -38,10 +37,6 @@ _plugins.push({
                      //    console.log('skip set quality');
                      //    return;
                      // }
-
-                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
-                        console.log('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"\n%s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
-                     }
 
                      if (playerId.hasOwnProperty('setPlaybackQuality')) {
                         // console.log('use setPlaybackQuality');
@@ -75,6 +70,17 @@ _plugins.push({
                         }
                      }
 
+                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
+                        console.log('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"\n%s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
+
+                        // fix by "keep quality in session"
+                        // if "selectedQuality" overwritten by not user (max in video)
+                        // test (set480>Next>Next) https://www.youtube.com/watch?v=Q0wbyQRRQJA&list=RDEMZ2pDgMiNn9lB-p_V6oxbiw&index=20
+                        setTimeout(() => {
+                           selectedQuality = quality;
+                        }, 2000);
+                     }
+
                      // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));
                      // console.log("try set quality:", qualityToSet);
                      // console.log('set realy quality:', playerId.getPlaybackQuality());
@@ -84,6 +90,14 @@ _plugins.push({
             } else if (-1 === state || 0 === state) {
                is_change_quality = false;
             }
+
+            // keep quality in session
+            playerId.addEventListener("onPlaybackQualityChange", function (quality) {
+               if (quality !== selectedQuality) {
+                  console.log('new different quality:', quality);
+                  selectedQuality = quality;
+               }
+            });
          }
 
       });

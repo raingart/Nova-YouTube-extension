@@ -103,58 +103,91 @@ const YDOM = {
       );
    },
 
-   // connect_DragnDrop: function (element, callback) {
-   //    // if (!element) return;
-   //    element.onmousedown = function (event, callback) {
-   //       let shiftX = event.clientX - this.getBoundingClientRect().left;
-   //       let shiftY = event.clientY - this.getBoundingClientRect().top;
+   dragnDrop: {
+      connect: (element, callback) => {
+         if (!element || element.hasAttribute("dragnDrop")) return;
 
-   //       this.style.position = 'absolute !important;';
-   //       // act_elm.style.zIndex = 1000;
+         YDOM.log('dragnDrop: connect %s', element);
 
-   //       Object.assign(this.style, {
-   //          // 'z-index': 9999,
-   //          cursor: 'move',
-   //          outline: '1px dashed deepskyblue',
-   //       });
+         element.setAttribute('dragnDrop', true);
 
-   //       moveAt(event.pageX, event.pageY);
-   //       // centers the active element at (pageX, pageY) coordinates
-   //       function moveAt(pageX, pageY) {
-   //          element.style.left = pageX - shiftX + 'px';
-   //          element.style.top = pageY - shiftY + 'px';
-   //       }
+         let offset = [0, 0];
+         let isDown = false;
 
-   //       function onMouseMove(event) {
-   //          moveAt(event.pageX, event.pageY);
-   //       }
+         // element.addEventListener("touchstart", dragStart, false);
+         // element.addEventListener("touchend", dragEnd, false);
+         // element.addEventListener("touchmove", drag, false);
 
-   //       // (3) move the active element on mousemove
-   //       document.addEventListener('mousemove', onMouseMove);
+         // element.addEventListener("mousedown", dragStart, true);
+         // element.addEventListener("mouseup", dragEnd, true);
+         // document.addEventListener("mousemove", drag, false);
 
-   //       // (4) drop the active element, remove unneeded handlers
-   //       this.onmouseup = function () {
-   //          document.removeEventListener('mousemove', onMouseMove);
-   //          this.onmouseup = null;
-   //          Object.assign(this.style, {
-   //             // 'z-index': 'unset',
-   //             cursor: 'unset',
-   //             outline: 'unset',
-   //          });
-   //          if (callback && typeof (callback) === 'function') return callback({
-   //             top: this.style.top,
-   //             left: this.style.left,
-   //          });
-   //       };
-   //    };
-   // },
+         // init dragnDrop
+         element.onmousedown = function (event) {
+            dragStart(event);
+            // move the active element on mousemove
+            document.addEventListener('mousemove', drag);
+            // drop the active element, remove unneeded handlers
+            element.onmouseup = dragEnd;
+         };
 
-   // search_xpath: function (query, outer_dom, inner_dom) {
-   //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
-   //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
-   //    outer_dom = outer_dom || document;
-   //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
-   // },
+         function dragStart(e) {
+            isDown = true;
+            offset = [
+               element.offsetLeft - e.clientX,
+               element.offsetTop - e.clientY
+            ];
+
+            Object.assign(element.style, {
+               // 'z-index': 9999,
+               cursor: 'move',
+               outline: '1px dashed deepskyblue',
+            });
+         };
+
+         function dragEnd() {
+            isDown = false;
+
+            Object.assign(element.style, {
+               // 'z-index': 'unset', // removes the original meaning breaking style
+               cursor: 'unset',
+               outline: 'unset',
+            });
+
+            if (callback && typeof (callback) === 'function') return callback({
+               top: element.style.top,
+               left: element.style.left,
+            });
+         };
+
+         function drag(e) {
+            event.preventDefault();
+            if (isDown) {
+               element.style.left = (e.clientX + offset[0]) + 'px';
+               element.style.top = (e.clientY + offset[1]) + 'px';
+            }
+         };
+      },
+
+      disconnect: el => {
+         if (!el || !el.hasAttribute("dragnDrop")) return;
+
+         YDOM.log('dragnDrop: disconnect');
+
+         el.onmousedown = null;
+         el.onmouseup = null;
+         // document.removeEventListener('mousemove', drag);
+
+         el.removeAttribute('dragnDrop');
+      },
+   },
+
+   search_xpath: function (query, outer_dom, inner_dom) {
+      // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
+      //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
+      outer_dom = outer_dom || document;
+      return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
+   },
 
    injectStyle: (styles, selector, important) => {
       if (!styles) return;

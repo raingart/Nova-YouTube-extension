@@ -14,7 +14,7 @@ _plugins.push({
          function onPlayerStateChange(state) {
             // console.log('onStateChange', state);
 
-            if (user_settings['stop-autoplay-ignore-playlist'] && window.location.href.indexOf('list=') !== -1) return;
+            if (user_settings.stop_autoplay_ignore_playlist && window.location.href.indexOf('list=') !== -1) return;
 
             // 1- unstarted
             // 0- ended
@@ -37,7 +37,7 @@ _plugins.push({
    },
    export_opt: (function () {
       return {
-         'stop-autoplay-ignore-playlist': {
+         'stop_autoplay_ignore_playlist': {
             _elementType: 'input',
             label: 'ignore playlist',
             type: 'checkbox',
