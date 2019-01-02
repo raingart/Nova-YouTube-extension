@@ -38,6 +38,10 @@ _plugins.push({
                      //    return;
                      // }
 
+                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
+                        console.info('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"\n%s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
+                     }
+
                      if (playerId.hasOwnProperty('setPlaybackQuality')) {
                         // console.log('use setPlaybackQuality');
                         playerId.setPlaybackQuality(qualityToSet);
@@ -70,17 +74,6 @@ _plugins.push({
                         }
                      }
 
-                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
-                        console.log('no has selectedQuality "%s". Choosing instead the top-most quality available "%s"\n%s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
-
-                        // fix by "keep quality in session"
-                        // if "selectedQuality" overwritten by not user (max in video)
-                        // test (set480>Next>Next) https://www.youtube.com/watch?v=Q0wbyQRRQJA&list=RDEMZ2pDgMiNn9lB-p_V6oxbiw&index=20
-                        setTimeout(() => {
-                           selectedQuality = quality;
-                        }, 2000);
-                     }
-
                      // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));
                      // console.log("try set quality:", qualityToSet);
                      // console.log('set realy quality:', playerId.getPlaybackQuality());
@@ -92,12 +85,17 @@ _plugins.push({
             }
 
             // keep quality in session
-            playerId.addEventListener("onPlaybackQualityChange", function (quality) {
-               if (quality !== selectedQuality) {
-                  console.log('new different quality:', quality);
-                  selectedQuality = quality;
-               }
-            });
+            if (location.pathname == '/watch') // no sense if in the embed
+               playerId.addEventListener("onPlaybackQualityChange", quality => {
+                  // console.log('document.activeElement,',document.activeElement);
+                  if (document.activeElement.getAttribute('role') == "menuitemradio" && // now focuse setting menu
+                     quality !== selectedQuality && // the new quality
+                     playerId.hasOwnProperty('setPlaybackQuality') // not automatically changed
+                  ) {
+                     console.info('save session new quality:', quality);
+                     selectedQuality = quality;
+                  }
+               });
          }
 
       });

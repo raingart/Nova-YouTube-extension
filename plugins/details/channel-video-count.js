@@ -27,7 +27,7 @@ _plugins.push({
          // console.log('channel_id', channel_id);
 
          if (!channel_id.match(/UC([a-z0-9-_]{22})/i)) {
-            return console.warn('channel_id is not valid');
+            return console.error('channel_id is not valid');
          }
 
          let url = 'channels' +

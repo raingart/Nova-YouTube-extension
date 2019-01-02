@@ -15,6 +15,7 @@ const Plugins_list = {
       'player/focused.js',
 
       'other/scroll-to-top.js',
+      'other/dark-theme.js',
    ],
    
    one_off: [

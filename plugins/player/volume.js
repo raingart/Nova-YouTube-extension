@@ -71,7 +71,7 @@ _plugins.push({
                   sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
                      '}","creation":' + now + "}";
                } catch (err) {
-                  console.warn('SaveVolume is impossible (Maybe on "Block third-party cookies)\n', err);
+                  console.info('SaveVolume is impossible (Maybe on "Block third-party cookies)\n', err);
                }
 
             }

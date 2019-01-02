@@ -38,7 +38,7 @@ const Plugins = {
 
    run: function (depends, store) {
       this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
-      
+
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
       uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
       _plugins = uniqueArray(_plugins);
@@ -48,7 +48,8 @@ const Plugins = {
          let plugin = _plugins[i];
          // console.log('plugin ' + JSON.stringify(plugin));
 
-         if ((plugin.depends_page && plugin.depends_page.indexOf(depends) !== -1) &&
+         if ((plugin.depends_page && 
+            (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all') &&
             store && store[plugin.id]) {
 
             try {

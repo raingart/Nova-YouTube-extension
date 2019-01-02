@@ -51,7 +51,7 @@ const App = {
    },
 
    rerun: () => {
-      console.log('page transition');
+      console.info('page transition');
       Plugins.load(Plugins_list.one_off.concat(Plugins_list.plugins_end));
       App.run();
    },
@@ -93,7 +93,7 @@ const App = {
          JSON.stringify(YDOM.getPageType()) + ',' + JSON.stringify(App.sessionSettings) + ');\n' +
          '  }\n' +
          '}\n' +
-         '} catch (err) { console.error("_plugins_run:", err) }\n' +
+         '} catch (err) { console.info("_plugins_run:", err) }\n' +
          '}, 100)';
 
       Plugins.injectScript(preparation_for_execute);

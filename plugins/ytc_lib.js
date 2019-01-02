@@ -240,32 +240,39 @@ const YDOM = {
       }
    },
 
-   // cookie: {
-   //    get: name => {
-   //       let cookie = {};
-   //       document.cookie.split(';').forEach(function (el) {
-   //          let [k, v] = el.split('=');
-   //          cookie[k.trim()] = v;
-   //       })
-   //       return name ? cookie[name] : cookie[name];
-   //    },
+   cookie: {
+      get: name => {
+         let cookie = {};
+         document.cookie.split(';').forEach(el => {
+            // console.log('el', el);
+            let param = el.split('=');
+            cookie[param[0].trim()] = param.slice(1).join('=');
+            // let [k, v] = el.split('=');
+            // cookie[k.trim()] = v;
+         })
+         // console.log(JSON.stringify(cookie));
+         return name ? cookie[name] : cookie[name];
+      },
 
-   //    set: (name, value) => {
-   //       let cookie = { [name]: value, path: '/' };
+      set: (name, value) => {
+         let cookie = {
+            [name]: value,
+            path: '/'
+         };
 
-   //       let date = new Date();
-   //       date.setTime(date.getTime() + 31536000);
-   //       cookie.expires = date.toUTCString();
+         let date = new Date();
+         date.setTime(date.getTime() + 31536000);
+         cookie.expires = date.toUTCString();
 
-   //       cookie.domain = '.' + window.location.hostname.split('.').slice(-2).join('.'); // .youtube.com
+         cookie.domain = '.' + window.location.hostname.split('.').slice(-2).join('.'); // .youtube.com
 
-   //       let arr = []
-   //       for (let key in cookie) {
-   //          arr.push(`${key}=${cookie[key]}`);
-   //       }
-   //       document.cookie = arr.join('; ');
-   //    },
-   // },
+         let arr = []
+         for (let key in cookie) {
+            arr.push(`${key}=${cookie[key]}`);
+         }
+         document.cookie = arr.join('; ');
+      },
+   },
 
    getPageType: () => {
       let page = location.pathname.split('/')[1];
@@ -273,9 +280,11 @@ const YDOM = {
       return (page == 'channel' || page == 'user') ? 'channel' : page || null;
    },
 
-   getUrlVars: v => {
+   getUrlVars: url => {
+      if (url && url.indexOf('?') === -1) url = '?' + url;
+
       let vars = {};
-      let parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      let parts = (url || window.location.href).replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
          vars[key] = value;
       });
       return vars;
