@@ -52,7 +52,7 @@ const App = {
 
    rerun: () => {
       console.info('page transition');
-      Plugins.load(Plugins_list.one_off.concat(Plugins_list.plugins_end));
+      Plugins.load(Plugins_list.runOnTransition.concat(Plugins_list.plugins_end));
       App.run();
    },
 

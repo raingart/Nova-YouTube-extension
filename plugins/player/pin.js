@@ -122,7 +122,12 @@ _plugins.push({
                // 'width: ' + initcss.width + ' !important;' +
                'left: 0 !important;' +
                // 'margin-left: -12px !important;' +
-               '}');
+               '}' +
+               '.' + scroll_toggle_class + ' .ytp-preview'+
+               ',.' + scroll_toggle_class + ' .ytp-scrubber-container' +
+               ',.' + scroll_toggle_class + ' .ytp-hover-progress' +
+               '{display:none !important;}'
+            );
 
             function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
                let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);

@@ -32,9 +32,10 @@ _plugins.push({
                   return console.error('getVolume error');
                }
 
-               let step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
-               let delta = Math.sign(event.wheelDelta) * step;
-               let level = _setVideoVolume(playerId.getVolume() + delta);
+               const step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
+               const delta = Math.sign(event.wheelDelta) * step;
+               const getVolume = playerId.getVolume();
+               const level = _setVideoVolume(getVolume + delta, getVolume);
 
                if (user_settings.show_volume_indicator) {
                   showIndicator(playerId.getVolume(), this);
@@ -42,31 +43,33 @@ _plugins.push({
             }
          }
 
-         function _setVideoVolume(volume) {
+         function _setVideoVolume(volume, volumeStatus) {
+            // console.log('volume', volume);
             // if (!playerId) let playerId = document.getElementById('movie_player');
             const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
             const volumeToSet = limiter(parseInt(volume));
 
             // set volume
-            if (volumeToSet !== volume) {
+            if (volumeToSet !== volumeStatus) {
                playerId.isMuted() && playerId.unMute();
                playerId.setVolume(volumeToSet); // 0 - 100
 
                // check is correct
                if (volumeToSet === playerId.getVolume()) {
                   _saveVolume(volumeToSet); // saving state in sessions
+                  // console.log('volume saved');
                } else {
-                  return console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
+                  console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
                }
             }
 
-            return volumeToSet === playerId.getVolume() ? volumeToSet : false;
+            // return volumeToSet === playerId.getVolume() ? volumeToSet : false;
 
 
             function _saveVolume(level) {
                // console.log('sessionStorage["yt-player-volume"] %s', JSON.stringify(sessionStorage["yt-player-volume"]));
-               let now = (new Date).getTime();
-               let muted = level ? "false" : "true";
+               const now = (new Date).getTime();
+               const muted = level ? "false" : "true";
 
                try {
                   // localStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +

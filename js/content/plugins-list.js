@@ -2,7 +2,7 @@ const Plugins_list = {
    lib: [ 'ytc_lib.js' ],
    plugins_init: [ 'plugins_init.js' ],
 
-   strong: [ // addEventListener
+   runOnce: [ // addEventListener
       'player/speed.js',
       'player/volume.js',
 
@@ -18,7 +18,7 @@ const Plugins_list = {
       'other/dark-theme.js',
    ],
    
-   one_off: [
+   runOnTransition: [
       'player/annotations.js',
       'player/timeline-color.js',
 
