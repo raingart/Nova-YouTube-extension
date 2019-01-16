@@ -9,6 +9,11 @@ _plugins.push({
       const _this = this; // get default step
 
       YDOM.waitFor('.html5-video-player', playerId => {
+
+         if (user_settings.default_volume_level && !sessionStorage["yt-player-volume"]) {
+            _setVideoVolume(user_settings.default_volume_level || _this.export_opt['default_volume_level']);
+         }
+
          // player area
          document.getElementsByClassName("html5-video-container")[0]
             .addEventListener("wheel", onWheel_setVolume); //mousewheel
@@ -29,7 +34,7 @@ _plugins.push({
 
                let step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
                let delta = Math.sign(event.wheelDelta) * step;
-               let level = _setVideoVolume(delta);
+               let level = _setVideoVolume(playerId.getVolume() + delta);
 
                if (user_settings.show_volume_indicator) {
                   showIndicator(playerId.getVolume(), this);
@@ -37,12 +42,10 @@ _plugins.push({
             }
          }
 
-         function _setVideoVolume(delta) {
+         function _setVideoVolume(volume) {
             // if (!playerId) let playerId = document.getElementById('movie_player');
-            const volume = playerId.getVolume();
-
-            let limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
-            let volumeToSet = limiter(parseInt(volume) + delta);
+            const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
+            const volumeToSet = limiter(parseInt(volume));
 
             // set volume
             if (volumeToSet !== volume) {
@@ -78,7 +81,7 @@ _plugins.push({
          }
 
          function showIndicator(level, display_container) {
-            let divBarId = "volume-player-info";
+            const divBarId = "volume-player-info";
             let divBar = document.getElementById(divBarId);
 
             let updateIndicator = pt => {
@@ -138,6 +141,17 @@ _plugins.push({
    },
    export_opt: (function () {
       return {
+         'default_volume_level': {
+            _elementType: 'input',
+            label: 'Level at startup',
+            title: '0 - auto/disable',
+            type: 'number',
+            placeholder: '%',
+            step: 1,
+            min: 0,
+            max: 100,
+            value: 50,
+         },
          'volume_step': {
             _elementType: 'input',
             label: 'Step',

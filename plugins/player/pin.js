@@ -121,6 +121,7 @@ _plugins.push({
                'width: ' + initcss.width +
                // 'width: ' + initcss.width + ' !important;' +
                'left: 0 !important;' +
+               // 'margin-left: -12px !important;' +
                '}');
 
             function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
@@ -155,9 +156,9 @@ _plugins.push({
                /* beautify preserve:start */
                { label: 'left-top', value: 'top-left' },
                { label: 'left-bottom', value: 'bottom-left' },
-               { label: 'right-top', value: 'top-right' },
+               { label: 'right-top', value: 'top-right', selected: true },
                { label: 'right-bottom', value: 'bottom-right' },
-               { label: 'drag&Drop', value: 'float', selected: true },
+               { label: 'drag&Drop', value: 'float' },
                /* beautify preserve:end */
             ]
          },
