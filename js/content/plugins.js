@@ -11,9 +11,7 @@ const Plugins = {
       );
    },
 
-   injectScript: source => {
-      if (!source) return;
-
+   injectScript: (source = required()) => {
       let s = document.createElement('script');
       s.type = "text/javascript";
 
@@ -29,14 +27,14 @@ const Plugins = {
       (document.head || document.documentElement || document.getElementsByTagName("script")[0].parentNode)
       .appendChild(s);
 
-      s.onload = function () {
+      s.onload = () => {
          Plugins.log('script loading: %s', String(s.src || s.textContent).substring(0, 100));
          // Remove <script> node after injectScript runs.
          s.parentNode.removeChild(s);
       };
    },
 
-   run: function (depends, store) {
+   run: (depends = required(), store) => {
       this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
@@ -48,9 +46,7 @@ const Plugins = {
          let plugin = _plugins[i];
          // console.log('plugin ' + JSON.stringify(plugin));
 
-         if ((plugin.depends_page && 
-            (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all') &&
-            store && store[plugin.id]) {
+         if ((plugin.depends_page && (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all') && store && store[plugin.id]) {
 
             try {
                console.log('plugin executing:', plugin.name);
@@ -64,8 +60,8 @@ const Plugins = {
                // alert(plugin.name\n + err.slice(25));
             }
          } else this.DEBUG && console.log('plugin skiping', plugin.name);
-
       }
+      // console.log('plugin ' + JSON.stringify(_plugins));
    },
 
    log: function (msg) {

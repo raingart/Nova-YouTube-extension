@@ -17,13 +17,14 @@ const App = {
       //getEventListeners(window)
       //getEventListeners(document)
 
-      document.addEventListener('yt-navigate-start', function () {
+      document.addEventListener('yt-navigate-start', () => {
          // skip first run on page load
          App.is_new_url() && App.rerun();
       });
    }()),
 
    this_url: location.href,
+   
    is_new_url: () => App.this_url === location.href ? false : App.this_url = location.href,
 
    getToken: (function () {
@@ -46,7 +47,7 @@ const App = {
 
       load: callback => {
          // load store settings
-         Storage.getParams(null /*all*/ , callback || App.storage.set, 'sync');
+         Storage.getParams(callback || App.storage.set, 'sync');
       },
    },
 
@@ -63,9 +64,7 @@ const App = {
       // load all Plugins
       Plugins.load((() => {
          let pl = [];
-         for (i in Plugins_list) {
-            for (p of Plugins_list[i]) pl.push(p);
-         }
+         for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
          return pl;
       })());
 

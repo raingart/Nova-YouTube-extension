@@ -16,7 +16,7 @@ const YDOM = {
    // },
 
    listeners: [],
-   waitFor: (selector, callback) => {
+   waitFor: (selector = required(), callback = required()) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -92,8 +92,7 @@ const YDOM = {
       }
    },
 
-   isInViewport: el => {
-      if (!el) return;
+   isInViewport: (el = required()) => {
       let bounding = el.getBoundingClientRect();
       return (
          bounding.top >= 0 &&
@@ -104,8 +103,8 @@ const YDOM = {
    },
 
    dragnDrop: {
-      connect: (element, callback) => {
-         if (!element || element.hasAttribute("dragnDrop")) return;
+      connect: (element = required(), callback) => {
+         if (element.hasAttribute("dragnDrop")) return;
 
          YDOM.log('dragnDrop: connect %s', element);
 
@@ -123,7 +122,7 @@ const YDOM = {
          // document.addEventListener("mousemove", drag, false);
 
          // init dragnDrop
-         element.onmousedown = function (event) {
+         element.onmousedown = event => {
             dragStart(event);
             // move the active element on mousemove
             document.addEventListener('mousemove', drag);
@@ -169,8 +168,8 @@ const YDOM = {
          };
       },
 
-      disconnect: el => {
-         if (!el || !el.hasAttribute("dragnDrop")) return;
+      disconnect: (el = required()) => {
+         if (!el.hasAttribute("dragnDrop")) return;
 
          YDOM.log('dragnDrop: disconnect');
 
@@ -182,19 +181,15 @@ const YDOM = {
       },
    },
 
-   search_xpath: function (query, outer_dom, inner_dom) {
-      // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
-      //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
-      outer_dom = outer_dom || document;
-      return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
-   },
+   // search_xpath: function (query, outer_dom, inner_dom) {
+   //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
+   //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
+   //    outer_dom = outer_dom || document;
+   //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
+   // },
 
-   injectStyle: (styles, selector, important) => {
-      if (!styles) return;
-
+   injectStyle: (styles = required(), selector, important) => {
       if (typeof styles === 'object') { // is json
-         if (!selector) return;
-
          // if (important) {
          injectCss(selector + json2css(styles));
 
@@ -213,12 +208,9 @@ const YDOM = {
             return '{' + _css + '}';
          }
 
-      } else {
-         injectCss(styles);
-      }
+      } else injectCss(styles);
 
-
-      function injectCss(source) {
+      function injectCss(source = required()) {
          let sheet;
 
          if (source.slice(-3) === '.css') {
@@ -251,10 +243,10 @@ const YDOM = {
             // cookie[k.trim()] = v;
          })
          // console.log(JSON.stringify(cookie));
-         return name ? cookie[name] : cookie[name];
+         return name ? cookie[name] : cookie;
       },
 
-      set: (name, value) => {
+      set: (name = required(), value) => {
          let cookie = {
             [name]: value,
             path: '/'
@@ -267,7 +259,7 @@ const YDOM = {
          cookie.domain = '.' + window.location.hostname.split('.').slice(-2).join('.'); // .youtube.com
 
          let arr = []
-         for (let key in cookie) {
+         for (const key in cookie) {
             arr.push(`${key}=${cookie[key]}`);
          }
          document.cookie = arr.join('; ');
@@ -284,7 +276,7 @@ const YDOM = {
       if (url && url.indexOf('?') === -1) url = '?' + url;
 
       let vars = {};
-      let parts = (url || window.location.href).replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      const parts = (url || window.location.href).replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
          vars[key] = value;
       });
       return vars;
@@ -301,15 +293,13 @@ const YDOM = {
 }
 
 
-const RequestFetch = (url, payload, typeResponse, callback) => {
+const RequestFetch = (url = required(), payload, typeResponse, callback) => {
    url = YDOM.api_url + url; // to secure
    // console.log('url', url);
 
    fetch(url, payload)
       .then(res => {
-         return (res.status >= 200 && res.status < 300) ?
-            Promise.resolve(res) :
-            Promise.reject(new Error(res.statusText));
+         return (res.status >= 200 && res.status < 300) ? Promise.resolve(res) : Promise.reject(new Error(res.statusText));
       })
       .then(response => {
          switch (typeResponse.toLowerCase()) {
@@ -327,7 +317,5 @@ const RequestFetch = (url, payload, typeResponse, callback) => {
          // console.log('Request Succeeded:', JSON.stringify(res));
          return (callback && typeof (callback) === "function") ? callback(res) : res;
       })
-      .catch(err => {
-         console.error('Request Error: %s\n%s', err.response, err);
-      });
+      .catch(err => console.error('Request Error: %s\n%s', err.response, err));
 }

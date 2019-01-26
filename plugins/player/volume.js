@@ -10,8 +10,13 @@ _plugins.push({
 
       YDOM.waitFor('.html5-video-player', playerId => {
 
-         if (user_settings.default_volume_level && !sessionStorage["yt-player-volume"]) {
-            _setVideoVolume(user_settings.default_volume_level || _this.export_opt['default_volume_level']);
+         let yt_player_volume;
+         /* beautify preserve:start */
+         // fix "Block third-party cookies"
+         try { yt_player_volume = sessionStorage["yt-player-volume"]; } catch (err) {}
+         /* beautify preserve:end */
+         if (!yt_player_volume && user_settings.default_volume_level && user_settings.default_volume_level != 0) {
+            _setVideoVolume(user_settings.default_volume_level);
          }
 
          // player area
@@ -77,7 +82,7 @@ _plugins.push({
                   sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
                      '}","creation":' + now + "}";
                } catch (err) {
-                  console.info('SaveVolume is impossible (Maybe on "Block third-party cookies)\n', err);
+                  console.info('%s: SaveVolume is impossible (Maybe on "Block third-party cookies")', err.name);
                }
 
             }

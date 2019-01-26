@@ -21,7 +21,6 @@ const UIr = {
 
                case 'input':
                   this.log('>>opt %s[%s]: %s', key, el.tagName.toLowerCase(), val);
-                  
                   switch (el.type.toLowerCase()) {
                      case 'checkbox':
                         el.checked = val ? true : false; // Check/Uncheck
@@ -37,9 +36,8 @@ const UIr = {
       }
    },
 
-   setSelectOption: function (selectObj, val) {
-      for (var i in selectObj.children) {
-         var option = selectObj.children[i];
+   setSelectOption: (selectObj, val) => {
+      for (const option of selectObj.children) {
          if (option.value === val) {
             option.selected = true;
             break

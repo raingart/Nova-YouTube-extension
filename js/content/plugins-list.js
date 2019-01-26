@@ -16,6 +16,7 @@ const Plugins_list = {
 
       'other/scroll-to-top.js',
       'other/dark-theme.js',
+      'other/desable-trailer.js',
    ],
    
    runOnTransition: [

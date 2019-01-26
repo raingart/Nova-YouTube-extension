@@ -32,10 +32,12 @@ window.addEventListener('load', (evt) => {
                   if (reqParent.checked && thisVal) {
                      // console.log('reqParent.checked');
                      dependentItem.classList.remove("hide");
+
                   } else if (reqParent.value == thisVal) {
                      dependentItem.classList.remove("hide");
                      // console.log(reqParent.value + '==' + thisVal);
                      break;
+
                   } else {
                      dependentItem.classList.add("hide");
                      // console.log(reqParent.value + '!=' + thisVal);
@@ -145,7 +147,7 @@ window.addEventListener('load', (evt) => {
 
             document.querySelector("body").classList.remove("preload");
          };
-         Storage.getParams(null, callback, 'sync');
+         Storage.getParams(callback, 'sync');
       },
    }
 

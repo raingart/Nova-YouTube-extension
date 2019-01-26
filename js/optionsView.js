@@ -2,9 +2,7 @@ console.log(i18n("app_name") + ": init opt.js");
 
 Plugins.load((() => {
    let pl = [];
-   for (i in Plugins_list) {
-      for (p of Plugins_list[i]) pl.push(p);
-   }
+   for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
    return pl;
 })());
 
@@ -17,7 +15,8 @@ const Opt = {
 
       showTable: () => {
          Opt.log('showTable _plugins: %s', JSON.stringify(_plugins));
-         for (const plugin of _plugins) {
+
+         _plugins.forEach(plugin => {
             try {
                console.log('plugin load:', plugin.name);
 
@@ -52,13 +51,13 @@ const Opt = {
                console.warn(JSON.stringify(plugin));
                // alert(plugin.name\n + err.slice(25));
             }
-         }
+         });
       },
 
    },
 
    UI: {
-      toggleListView: (hideElms, activeElm, activeClass) => {
+      toggleListView: (hideElms, activeElm, activeClass = required()) => {
          // hide all
          if (hideElms) Array.from(document.querySelectorAll(hideElms))
             .forEach(i => i.classList.remove(activeClass));
@@ -109,15 +108,13 @@ const Opt = {
 
                switch (attr) {
                   case 'options':
-                     // for (const option of value) {
-                     value.forEach((option) => {
+                     value.forEach(option => {
                         let optionHTML = document.createElement('option');
                         optionHTML.setAttribute('value', option.value);
                         optionHTML.textContent = option.label;
                         if (option.selected) optionHTML.setAttribute('selected', true);
                         tagHTML.appendChild(optionHTML);
                      });
-                     // }
                      break;
 
                   case 'label':
