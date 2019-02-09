@@ -24,7 +24,7 @@ const App = {
    }()),
 
    this_url: location.href,
-   
+
    is_new_url: () => App.this_url === location.href ? false : App.this_url = location.href,
 
    getToken: (function () {
@@ -53,7 +53,7 @@ const App = {
 
    rerun: () => {
       console.info('page transition');
-      Plugins.load(Plugins_list.runOnTransition.concat(Plugins_list.plugins_end));
+      Plugins.load(Plugins_list.runOnTransition);
       App.run();
    },
 
@@ -61,41 +61,47 @@ const App = {
       App.log('init');
       App.storage.load();
 
+      Plugins.injectScript('_plugins = []');
+
+      let pluginsLoadedCount;
       // load all Plugins
       Plugins.load((() => {
          let pl = [];
          for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
+         pluginsLoadedCount = pl.length - 1; // with the exception of "lib"
          return pl;
       })());
 
-      let sandbox_wait_loaded = setInterval(() => {
-         App.log('sandbox_wait_loaded');
+      let settings_loaded = setInterval(() => {
+         App.log('settings_loaded');
          // wait load setting
          if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
-            clearInterval(sandbox_wait_loaded);
-            App.run();
+            clearInterval(settings_loaded);
+            App.run(pluginsLoadedCount);
          }
       }, 50);
    },
 
-   run: () => {
+   run: pluginsLoadedCount => {
       App.log('run');
+      let preparation_execute = function () {
+         let _plugins_run = setInterval(() => {
+            console.log('plugins loaded:', _plugins.length);
+            if (_plugins && (!_pluginsLoadedCount || _plugins.length === _pluginsLoadedCount)) {
+               clearInterval(_plugins_run);
+               _plugins_executor(_typePage, _sessionSettings);
+            }
 
-      let preparation_for_execute = '_plugins_executor= ' + Plugins.run + ';\n' +
-         '_plugins_run = setInterval(() => {\n' +
-         'try {\n' +
-         'if (plugins_loaded) {\n' +
-         '  clearInterval(_plugins_run);\n' +
-         '  plugins_loaded = false;\n' +
-         '  if (_plugins && _plugins.length) {\n' +
-         '     _plugins_executor(' +
-         JSON.stringify(YDOM.getPageType()) + ',' + JSON.stringify(App.sessionSettings) + ');\n' +
-         '  }\n' +
-         '}\n' +
-         '} catch (err) { console.info("_plugins_run:", err) }\n' +
-         '}, 100)';
+         }, 100);
+      };
 
-      Plugins.injectScript(preparation_for_execute);
+      let scriptText = 'let _plugins_executor = ' + Plugins.run + ';\n';
+      scriptText += 'let _pluginsLoadedCount = ' + pluginsLoadedCount + ';\n';
+      scriptText += 'let _typePage = "' + YDOM.getPageType() + '";\n';
+      scriptText += 'let _sessionSettings = ' + JSON.stringify(App.sessionSettings) + ';\n';
+      scriptText += '(' + preparation_execute.toString() + '())';
+
+      Plugins.injectScript('(function () {' + scriptText + '})()');
    },
 
    log: function (msg) {

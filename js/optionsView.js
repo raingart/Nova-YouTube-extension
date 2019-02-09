@@ -1,5 +1,7 @@
 console.log(i18n("app_name") + ": init opt.js");
 
+let _plugins = [];
+
 Plugins.load((() => {
    let pl = [];
    for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));

@@ -14,9 +14,9 @@ const Storage = function () {
       getParams: (callback, sync_type, x) => {
          let storageArea = sync_type === 'sync' ? chrome.storage.sync : chrome.storage.local;
 
-         storageArea.get(x, items => {
-            // console.log('saveParams '+JSON.stringify(items));
-            let item = items[nameApp] && items[nameApp][items] ? items[nameApp][items] : items[nameApp] || items;
+         storageArea.get(x, prefs => {
+            // console.log('saveParams '+JSON.stringify(prefs));
+            let item = prefs[nameApp] && prefs[nameApp][prefs] ? prefs[nameApp][prefs] : prefs[nameApp] || prefs;
             chrome.runtime.lastError ? console.log(chrome.runtime.lastError) : callback(item);
          })
       },
@@ -24,12 +24,9 @@ const Storage = function () {
 }();
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-   for (const key in changes) {
-      const storageChange = changes[key];
-      //   console.log('Storage key "%s" in namespace "%s" changed. ' +
-      //               'Old value was "%s", new value is "%s".',
+   Object.entries(changes).forEach(([key, value]) => {
       console.log('("%s") "%s" : "%s" => "%s"', key, namespace,
-         JSON.stringify(storageChange.oldValue),
-         JSON.stringify(storageChange.newValue));
-   }
+         JSON.stringify(value.oldValue),
+         JSON.stringify(value.newValue));
+   });
 });

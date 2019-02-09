@@ -1,6 +1,5 @@
 const Plugins_list = {
    lib: [ 'ytc_lib.js' ],
-   plugins_init: [ 'plugins_init.js' ],
 
    runOnce: [ // addEventListener
       'player/speed.js',
@@ -17,6 +16,7 @@ const Plugins_list = {
       'other/scroll-to-top.js',
       'other/dark-theme.js',
       'other/desable-trailer.js',
+      // 'other/H264.js',
    ],
    
    runOnTransition: [
@@ -34,6 +34,4 @@ const Plugins_list = {
       'channel/collapse-navigation-panel.js',
       'channel/default-tab.js',
    ],
-   
-   plugins_end: [ 'plugins_loaded.js' ],
 }

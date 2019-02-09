@@ -56,6 +56,7 @@ const Plugins = {
                delete _plugins[i];
 
             } catch (err) {
+               console.trace();
                console.error('plugin error: %s\n%s', plugin.name, err);
                // alert(plugin.name\n + err.slice(25));
             }

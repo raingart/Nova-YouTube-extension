@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 const YDOM = {
    // DEBUG: true,
@@ -82,11 +82,11 @@ const YDOM = {
 
             // Query for elements matching the specified selector
             Array.from(doc.querySelectorAll(listener.selector))
-               .forEach((element) => {
+               .forEach(el => {
                   YDOM.log('element ready, listeners_id:%s', i);
                   YDOM.listeners.splice(i, 1); // delete element from listeners
                   // YDOM.listeners.filter(e => e !== element)
-                  listener.fn(element); // cun element callback
+                  listener.fn(el); // cun element callback
                });
          }
       }
@@ -181,6 +181,10 @@ const YDOM = {
       },
    },
 
+   // uncheck: toggle => {
+   //    toggle.hasAttribute("checked") && toggle.click();
+   // },
+
    // search_xpath: function (query, outer_dom, inner_dom) {
    //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
    //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
@@ -273,12 +277,8 @@ const YDOM = {
    },
 
    getUrlVars: url => {
-      if (url && url.indexOf('?') === -1) url = '?' + url;
-
       let vars = {};
-      const parts = (url || window.location.href).replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-         vars[key] = value;
-      });
+      (url || location.search).replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => vars[key] = value);
       return vars;
    },
 
@@ -317,5 +317,8 @@ const RequestFetch = (url = required(), payload, typeResponse, callback) => {
          // console.log('Request Succeeded:', JSON.stringify(res));
          return (callback && typeof (callback) === "function") ? callback(res) : res;
       })
-      .catch(err => console.error('Request Error: %s\n%s', err.response, err));
+      .catch(err => {
+         console.trace();
+         console.error('Request Error: %s\n%s', err.response, err)
+      });
 }
