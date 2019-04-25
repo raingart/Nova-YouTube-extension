@@ -15,7 +15,8 @@ const Plugins_list = {
 
       'other/scroll-to-top.js',
       'other/dark-theme.js',
-      'other/desable-trailer.js',
+      'other/disable-trailer.js',
+      'other/rating-bars.js',
       // 'other/H264.js',
    ],
    

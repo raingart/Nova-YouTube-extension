@@ -16,12 +16,13 @@ const YDOM = {
    // },
 
    listeners: [],
-   waitFor: (selector = required(), callback = required()) => {
+   waitFor: (selector = required(), callback = required(), isStrong) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
       YDOM.listeners.push({
          selector: selector,
+         clear: !isStrong,
          fn: callback
       });
       YDOM.log('listeners %s', JSON.stringify(YDOM.listeners));
@@ -74,7 +75,7 @@ const YDOM = {
 
       // Check if the element is currently in the DOM
       function check(doc) {
-         YDOM.log('check (left: %s count)', YDOM.listeners.length);
+         YDOM.log('check (left: %s count): %s', YDOM.listeners.length, JSON.stringify(YDOM.listeners));
 
          // Check the DOM for elements matching a stored selector
          for (const i in YDOM.listeners) {
@@ -83,9 +84,12 @@ const YDOM = {
             // Query for elements matching the specified selector
             Array.from(doc.querySelectorAll(listener.selector))
                .forEach(el => {
-                  YDOM.log('element ready, listeners_id:%s', i);
-                  YDOM.listeners.splice(i, 1); // delete element from listeners
-                  // YDOM.listeners.filter(e => e !== element)
+                  YDOM.log('element ready, listeners: %s', listener.selector);
+                  if (listener.clear) {
+                     YDOM.log('element clear, listeners :%s', listener.selector);
+                     YDOM.listeners.splice(i, 1); // delete element from listeners
+                     // YDOM.listeners.filter(e => e !== element)
+                  }
                   listener.fn(el); // cun element callback
                });
          }

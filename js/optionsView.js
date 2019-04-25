@@ -4,7 +4,7 @@ let _plugins = [];
 
 Plugins.load((() => {
    let pl = [];
-   for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
+   for (const i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
    return pl;
 })());
 

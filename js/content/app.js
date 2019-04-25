@@ -63,12 +63,12 @@ const App = {
 
       Plugins.injectScript('_plugins = []');
 
-      let pluginsLoadedCount;
+      let pluginsExportedCount;
       // load all Plugins
       Plugins.load((() => {
          let pl = [];
-         for (i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
-         pluginsLoadedCount = pl.length - 1; // with the exception of "lib"
+         for (const i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
+         pluginsExportedCount = pl.length - 1; // with the exception of "lib"
          return pl;
       })());
 
@@ -77,17 +77,24 @@ const App = {
          // wait load setting
          if (App.sessionSettings && Object.keys(App.sessionSettings).length) {
             clearInterval(settings_loaded);
-            App.run(pluginsLoadedCount);
+            App.run(pluginsExportedCount);
          }
       }, 50);
    },
 
-   run: pluginsLoadedCount => {
+   run: pluginsExportedCount => {
       App.log('run');
       let preparation_execute = function () {
          let _plugins_run = setInterval(() => {
-            console.log('plugins loaded:', _plugins.length);
-            if (_plugins && (!_pluginsLoadedCount || _plugins.length === _pluginsLoadedCount)) {
+            if (document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
+               console.log('waiting page load..');
+               return;
+            }
+
+            console.log('plugins loaded: %s/%s | page type: ', _pluginsExportedCount, _plugins.length, _typePage);
+            // console.log(`YTC load status: ${_pluginsExportedCount}/${_plugins.length} | page type: ${_typePage}`);
+
+            if (_pluginsExportedCount === undefined || _plugins.length === _pluginsExportedCount) {
                clearInterval(_plugins_run);
                _plugins_executor(_typePage, _sessionSettings);
             }
@@ -96,7 +103,7 @@ const App = {
       };
 
       let scriptText = 'let _plugins_executor = ' + Plugins.run + ';\n';
-      scriptText += 'let _pluginsLoadedCount = ' + pluginsLoadedCount + ';\n';
+      scriptText += 'let _pluginsExportedCount = ' + pluginsExportedCount + ';\n';
       scriptText += 'let _typePage = "' + YDOM.getPageType() + '";\n';
       scriptText += 'let _sessionSettings = ' + JSON.stringify(App.sessionSettings) + ';\n';
       scriptText += '(' + preparation_execute.toString() + '())';

@@ -6,7 +6,7 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.html5-video-player', trailer => trailer.remove());
+      YDOM.waitFor('.ytd-page-manager[page-subtype=channels] #player', trailer => trailer.remove());
 
    },
 });

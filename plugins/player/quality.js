@@ -6,6 +6,9 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // fail test setQuality this url:
+      //https://www.youtube.com/watch?v=IgvlBz-tMFQ
+
       YDOM.waitFor('.html5-video-player', playerId => {
          let is_change_quality;
          let selectedQuality = user_settings.video_quality;
