@@ -1,9 +1,9 @@
-## YouTubeCore-extension
+## New Horizons for YouTube-extension
 [![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](#)
 
 Combine small plugins, expanding the possibilities of YouTube.
 
-![YouTubeCore-extension](https://lh3.googleusercontent.com/7g-72wWazvL__x0zLP223sCFDpyA_5BH65MzkaEa5u4yABAXLITzxiqha6jsEMzrfTRfOiI1=w640-h400-e365)
+![New Horizons for YouTube-extension](https://lh3.googleusercontent.com/4EjpHB0f1WkJWsr-yd53ZRgbMDwZpCY1Q82Vz7KqIk33oYR_0Db-ZolXmcIs_Lh839Eck7Py2Q=w640-h400-e365)
 
 ### Installation
 [Download the extension from the Chrome store.](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)(It's free.)
