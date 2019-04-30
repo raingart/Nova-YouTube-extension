@@ -5,8 +5,8 @@ _plugins.push({
    depends_page: 'channel',
    // desc: '',
    _runtime: user_settings => {
-
-      YDOM.waitFor('.ytd-page-manager[page-subtype=channels] #player', trailer => trailer.remove());
+      
+      YDOM.waitFor('.ytd-page-manager[page-subtype=channels] .html5-video-player', trailer => trailer.stopVideo());
 
    },
 });

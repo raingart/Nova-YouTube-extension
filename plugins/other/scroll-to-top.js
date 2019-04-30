@@ -6,10 +6,11 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // create button and add styleы
       let scrollToTop_bth = (() => {
-         let bth_Id = 'scrollToTop_bth';
+         const bthId = 'scrollToTop_bth';
 
-         document.documentElement.insertAdjacentHTML("beforeend", '<button id="' + bth_Id + '"><i></i></button>');
+         document.documentElement.insertAdjacentHTML("beforeend", `<button id="${bthId}"><i></i></button>`);
 
          // bth
          YDOM.injectStyle({
@@ -29,10 +30,10 @@ _plugins.push({
             'border-radius': '100% 100% 0 0',
             'font-size': '16px',
             'background-color': 'rgba(0,0,0,0.3)',
-         }, '#' + bth_Id);
+         }, '#' + bthId);
 
          // arrow
-         YDOM.injectStyle('#' + bth_Id + ' > * {\
+         YDOM.injectStyle('#' + bthId + ' > * {\
             border: solid white;\
             border-width: 0 3px 3px 0;\
             display: inline-block !important;\
@@ -40,12 +41,12 @@ _plugins.push({
             vertical-align: middle;\
             transform: rotate(-135deg);\
          }\
-         #' + bth_Id + ':hover {\
+         #' + bthId + ':hover {\
            opacity: 1 !important;\
            box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);\
          }');
 
-         return document.getElementById(bth_Id);
+         return document.getElementById(bthId);
 
       })();
 

@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Force hide annotations elements in player',
    _runtime: user_settings => {
 
-      let css = [
+      const css = [
          "[class*=annotation]",
          "[class*=ytp-cards]",
          ".iv-drawer",

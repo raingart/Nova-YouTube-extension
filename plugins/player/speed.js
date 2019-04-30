@@ -29,8 +29,8 @@ _plugins.push({
                   return console.error('getPlaybackRate error');
                }
 
-               let delta = Math.sign(event.wheelDelta);
-               let rate = _setVideoSpeed(delta)
+               const delta = Math.sign(event.wheelDelta);
+               const rate = _setVideoSpeed(delta)
 
                // show indicator
                showIndicator('x' + playerId.getPlaybackRate(), this);
@@ -40,12 +40,12 @@ _plugins.push({
          function _setVideoSpeed(delta) {
             // if (!playerId) let playerId = document.getElementById('movie_player');
             const rate = playerId.getPlaybackRate();
-            let limiter = d => {
+            const limiter = d => {
                const availableRate = playerId.getAvailablePlaybackRates();
-               let rateId = availableRate.indexOf(rate);
+               const rateId = availableRate.indexOf(rate);
                return availableRate[rateId + d] ? availableRate[rateId + d] : false;
             };
-            let rateToSet = limiter(delta);
+            const rateToSet = limiter(delta);
 
             // set rate
             if (rateToSet && rateToSet !== rate) {
@@ -63,7 +63,7 @@ _plugins.push({
          }
 
          function showIndicator(level, display_container) {
-            let divBarId = "rate-player-info";
+            const divBarId = "rate-player-info";
             let divBar = document.getElementById(divBarId);
 
             let updateIndicator = text => {
@@ -85,7 +85,7 @@ _plugins.push({
                updateIndicator(level);
 
             } else if (display_container) { // create
-               display_container.insertAdjacentHTML("afterend", '<div id="' + divBarId + '">' + level + '</div>');
+               display_container.insertAdjacentHTML("afterend", `<div id="${divBarId}">${level}</div>`);
                divBar = document.getElementById(divBarId);
 
                Object.assign(divBar.style, {
@@ -115,12 +115,10 @@ _plugins.push({
             _elementType: 'select',
             label: 'Hotkey',
             options: [
-               /* beautify preserve:start */
                { label: 'alt+wheel', value: 'altKey', selected: true  },
                { label: 'shift+wheel', value: 'shiftKey' },
                { label: 'ctrl+wheel', value: 'ctrlKey'},
                { label: 'wheel', value: 'none' }
-               /* beautify preserve:end */
             ]
          },
       };

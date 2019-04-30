@@ -33,11 +33,9 @@ _plugins.push({
             _elementType: 'select',
             label: 'Set default tab',
             options: [
-               /* beautify preserve:start */
                { label: 'videos', value: 'videos' },
                { label: 'playlists', value: 'playlists' },
                { label: 'about', value: 'about' },
-               /* beautify preserve:end */
             ]
          },
       };

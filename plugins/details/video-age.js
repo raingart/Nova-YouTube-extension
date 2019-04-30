@@ -6,38 +6,50 @@ _plugins.push({
    desc: 'How long ago video was uploaded',
    _runtime: user_settings => {
 
-      YDOM.waitFor('#upload-info > .date', el => {
-         const videos_id = YDOM.getUrlVars()['v'];
+      const CACHED_PREFIX = 'video-age_';
 
-         if (!videos_id.match(/([a-z0-9-_])/i)) {
+      YDOM.waitFor('#upload-info > .date', el => {
+         const VIDEOS_ID = YDOM.getUrlVars()['v'];
+
+         if (!VIDEOS_ID.match(/([a-z0-9-_])/i)) {
             return console.warn('videos_id is not valid');
          }
+         // cached
+         const STORAGE = sessionStorage.getItem(CACHED_PREFIX + VIDEOS_ID);
 
-         const url = 'videos' +
-            '?id=' + videos_id +
-            '&key=' + user_settings.api_key +
-            '&part=snippet';
+         if (STORAGE) {
+            insertToHTML(el, STORAGE);
 
-         RequestFetch(url, {}, 'json', res => {
-            // console.log('res %s', JSON.stringify(res));
-            const publishedAt = res.items[0].snippet.publishedAt;
-            const video_age = timeSince(new Date(publishedAt));
-
-            if (document.getElementById('video_age')) {
-               document.getElementById('video_age').textContent = video_age;
-
-            } else {
-               el.insertAdjacentHTML("beforeEnd", '<i class="date style-scope ytd-video-secondary-info-renderer"> / <span id="video_age">' + video_age + '</span> ago</i>');
-            }
-         });
+         } else {
+            YDOM.request.API('videos', {
+               'id': VIDEOS_ID,
+               'part': 'snippet',
+            })
+               .then(res => {
+                  // console.log('res:', JSON.stringify(res));
+                  // const VIDEO_COUNT = res.items.map(item => item.snippet.publishedAt).join();
+                  const publishedAt = res.items[0].snippet.publishedAt;
+                  // console.log('publishedAt:', publishedAt);
+                  const VIDEO_AGE = timeSince(new Date(publishedAt));
+                  // save cache in tabs
+                  sessionStorage.setItem(CACHED_PREFIX + VIDEOS_ID, VIDEO_AGE);
+                  // out
+                  insertToHTML(el, VIDEO_AGE);
+               });
+         }
 
       });
 
-      function timeSince(ts) {
-         let sec = Math.floor((new Date - ts) / 1e3),
-            d = Math.floor(sec / 31536e3);
-         return d > 1 ? d + " years" : (d = Math.floor(sec / 2592e3), d > 1 ? d + " months" : (d = Math.floor(sec / 86400), d > 1 ? d + " days" : (d = Math.floor(sec / 3600), d > 1 ? d + " hours" : (d = Math.floor(sec / 60), d > 1 ? d + " minutes" : d + " seconds"))))
-      }
+      function insertToHTML(el, data) {
+         const DIV_ID = 'video_age';
+         if (document.getElementById(DIV_ID)) {
+            document.getElementById(DIV_ID).textContent = data;
 
-   },
+         } else {
+            el.insertAdjacentHTML("beforeend",
+               '<i class="date style-scope ytd-video-secondary-info-renderer">' +
+               ` - <span id="${DIV_ID}">${data}</span> ago</i>`);
+         }
+      }
+   }
 });

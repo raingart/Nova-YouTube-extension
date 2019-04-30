@@ -35,7 +35,7 @@ const Plugins = {
    },
 
    run: (depends = required(), store) => {
-      this.DEBUG && console.log('plugins loading count:' + (_plugins ? _plugins.length : 'null') + ', page:' + depends);
+      this.DEBUG && console.log(`plugins loading count: ${_plugins.length}, page: ${_plugins.length}`);
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
       uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
@@ -57,7 +57,7 @@ const Plugins = {
 
             } catch (err) {
                console.trace();
-               console.error('plugin error: %s\n%s', plugin.name, err);
+               console.error(`plugin error: ${plugin.name}\n${err}`);
                // alert(plugin.name\n + err.slice(25));
             }
          } else this.DEBUG && console.log('plugin skiping', plugin.name);

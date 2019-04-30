@@ -72,11 +72,14 @@ window.addEventListener('load', (evt) => {
          chrome.extension.sendMessage({
             "action": 'setOptions',
             "options": newOptions
-         }, function (resp) {
-            if (callback && typeof (callback) === "function") {
-               return callback();
-            }
-         });
+         }
+         // fix: Could not establish connection. Receiving end does not exist.
+         // , function (resp) {
+         //    if (callback && typeof (callback) === "function") {
+         //       return callback();
+         //    }
+         // }
+         );
       },
 
       bthSaveAnimation: {

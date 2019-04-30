@@ -27,10 +27,8 @@ _plugins.push({
             _elementType: 'select',
             label: 'Type hide',
             options: [
-               /* beautify preserve:start */
-               { label: 'disable', value: 'disable' },
-               { label: 'collapse', value: 'collapse', selected: true },
-               /* beautify preserve:end */
+               { label: 'remove', value: 'disable', selected: true },
+               { label: 'collapse', value: 'collapse' },
             ]
          },
       };

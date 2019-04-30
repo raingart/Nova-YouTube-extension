@@ -28,13 +28,13 @@ _plugins.push({
                is_change_quality = true;
 
                let interval_quality = setInterval(() => {
-                  let availableQualityLevels = playerId.getAvailableQualityLevels();
+                  const availableQualityLevels = playerId.getAvailableQualityLevels();
 
                   if (availableQualityLevels.length) {
                      clearInterval(interval_quality);
 
                      const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
-                     let qualityToSet = availableQualityLevels[maxAvailableQuality];
+                     const qualityToSet = availableQualityLevels[maxAvailableQuality];
 
                      // if (!qualityToSet || playerId.getPlaybackQuality() == selectedQuality) {
                      //    console.log('skip set quality');
@@ -112,7 +112,6 @@ _plugins.push({
             title: 'If unavailable, set max available quality',
             options: [
                // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'
-               /* beautify preserve:start */
                { label: '4320p (8k/FUHD)', value: 'highres' },
                { label: '2880p (5k/UHD)', value: 'hd2880' },
                { label: '2160p (4k/QFHD)', value: 'hd2160' },
@@ -124,7 +123,6 @@ _plugins.push({
                { label: '240p', value: 'small' },
                { label: '144p', value: 'tiny' },
                // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
-               /* beautify preserve:end */
             ]
          },
          'save_manual_quality_in_tab': {

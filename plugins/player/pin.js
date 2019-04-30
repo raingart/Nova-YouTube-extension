@@ -7,8 +7,8 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitFor('.html5-video-container video[style]', vid_ => {
+         const scroll_toggle_class = "pin_video";
          let in_viewport;
-         let scroll_toggle_class = "pin_video";
 
          initStyle();
 
@@ -93,7 +93,7 @@ _plugins.push({
             //    };
             // })();
 
-            let player_ratio = user_settings.pin_player_size_ratio || 3;
+            const player_ratio = user_settings.pin_player_size_ratio || 3;
             // calc size
             size.calc = calculateAspectRatioFit(
                size.width, size.height,
@@ -130,7 +130,7 @@ _plugins.push({
             );
 
             function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-               let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+               const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
                return {
                   width: Math.round(srcWidth * ratio),
                   height: Math.round(srcHeight * ratio),
@@ -158,13 +158,11 @@ _plugins.push({
             _elementType: 'select',
             label: 'Fixed player position',
             options: [
-               /* beautify preserve:start */
                { label: 'left-top', value: 'top-left' },
                { label: 'left-bottom', value: 'bottom-left' },
                { label: 'right-top', value: 'top-right', selected: true },
                { label: 'right-bottom', value: 'bottom-right' },
                { label: 'drag&Drop', value: 'float' },
-               /* beautify preserve:end */
             ]
          },
       };

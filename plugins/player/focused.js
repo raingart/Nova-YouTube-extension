@@ -19,7 +19,6 @@ _plugins.push({
          ) {
             // document.activeElement.style.border = "2px solid red";
             document.querySelector("video").focus();
-            // console.log('focused');
          }
       }
 

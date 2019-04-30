@@ -3,18 +3,6 @@
 const YDOM = {
    // DEBUG: true,
 
-   api_url: 'https://www.googleapis.com/youtube/v3/',
-
-   // waitFor_test: function (selector, callback) {
-   //    document.addEventListener('DOMNodeInserted', function (R) {
-   //       let S = R.target || null;
-   //       if (S && S.nodeName === 'VIDEO') {
-   //          //  new p.videoController(S);
-   //          console.log('DOMNodeInserted');
-   //       }
-   //    });
-   // },
-
    listeners: [],
    waitFor: (selector = required(), callback = required(), isStrong) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
@@ -58,7 +46,7 @@ const YDOM = {
             YDOM.log('init Observer');
             if (!observer) {
                observer = createObserver();
-               let config = {
+               const config = {
                   childList: true,
                   subtree: true,
                   // attributes: true,
@@ -79,7 +67,7 @@ const YDOM = {
 
          // Check the DOM for elements matching a stored selector
          for (const i in YDOM.listeners) {
-            let listener = YDOM.listeners[i];
+            const listener = YDOM.listeners[i];
 
             // Query for elements matching the specified selector
             Array.from(doc.querySelectorAll(listener.selector))
@@ -97,7 +85,7 @@ const YDOM = {
    },
 
    isInViewport: (el = required()) => {
-      let bounding = el.getBoundingClientRect();
+      const bounding = el.getBoundingClientRect();
       return (
          bounding.top >= 0 &&
          bounding.left >= 0 &&
@@ -245,7 +233,7 @@ const YDOM = {
          let cookie = {};
          document.cookie.split(';').forEach(el => {
             // console.log('el', el);
-            let param = el.split('=');
+            const param = el.split('=');
             cookie[param[0].trim()] = param.slice(1).join('=');
             // let [k, v] = el.split('=');
             // cookie[k.trim()] = v;
@@ -274,8 +262,66 @@ const YDOM = {
       },
    },
 
+   request: {
+      // caching: (key, expiresHours, transitFn, callback) => {
+      //    const now = new Date();
+      //    const value = JSON.parse(sessionStorage.getItem(key));
+
+      //    if (value && value.hasOwnProperty('expires') && +value.expires > now.getTime()) {
+      //       if (callback && typeof (callback) === 'function') {
+      //          callback(value);
+      //       }
+
+      //    } else {
+      //       const callbackFn = newValueData => {
+      //          if (callback && typeof (callback) === 'function') callback(newValueData);
+
+      //          if (!Array.isArray(newValueData)) newValueData = [newValueData];
+
+      //          // saving to sessionStorage afler all
+      //          for (const item of newValueData) {
+      //             sessionStorage.setItem(key, JSON.stringify({
+      //                ...{
+      //                   'expires': +now.setHours(now.getHours() + (+expiresHours || 1)), // add 1 hour,
+      //                }, ...item
+      //             }));
+      //          }
+
+      //       };
+      //       transitFn(callbackFn);
+      //    }
+      // },
+
+      API: (url, params) => {
+         const YOUTUBE_API_KEYS = [
+            'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA', 'CXRRCFwKAXOiF1JkUBmibzxJF1cPuKNwA',
+            'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AQt1mEVq6zwVBjwx_lcJkQoAAxGExgN7A',
+            'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
+         ];
+         // Distribute the load over multiple APIs by selecting one randomly.
+         const getRandArrayItem = arr => 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+
+         // combine GET
+         const query = (url == 'videos' ? 'videos' : 'channels') + '?'
+            + Object.keys(params)
+               .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+               .join('&');
+
+         const URL = 'https://www.googleapis.com/youtube/v3/' + query + '&key=' + getRandArrayItem(YOUTUBE_API_KEYS);
+
+         console.log('URL:', JSON.stringify(URL));
+
+         return fetch(URL)
+            .then(response => response.json())
+            .catch(error => {
+               console.warn('URL:', URL);
+               console.warn('Request failed:\n', error);
+            });
+      },
+   },
+
    getPageType: () => {
-      let page = location.pathname.split('/')[1];
+      const page = location.pathname.split('/')[1];
       YDOM.log('page type %s', page);
       return (page == 'channel' || page == 'user') ? 'channel' : page || null;
    },
@@ -296,33 +342,16 @@ const YDOM = {
    },
 }
 
+function chunkArray(arr, size) {
+   let results = [];
+   while (arr.length) {
+      results.push(arr.splice(0, size));
+   }
+   return results;
+}
 
-const RequestFetch = (url = required(), payload, typeResponse, callback) => {
-   url = YDOM.api_url + url; // to secure
-   // console.log('url', url);
-
-   fetch(url, payload)
-      .then(res => {
-         return (res.status >= 200 && res.status < 300) ? Promise.resolve(res) : Promise.reject(new Error(res.statusText));
-      })
-      .then(response => {
-         switch (typeResponse.toLowerCase()) {
-            case 'text':
-               return response.text();
-            case 'json':
-               return response.json();
-            case 'arraybuffer':
-               return response.arrayBuffer();
-            default:
-               return response.text();
-         }
-      })
-      .then(res => {
-         // console.log('Request Succeeded:', JSON.stringify(res));
-         return (callback && typeof (callback) === "function") ? callback(res) : res;
-      })
-      .catch(err => {
-         console.trace();
-         console.error('Request Error: %s\n%s', err.response, err)
-      });
+function timeSince(ts) {
+   let sec = Math.floor((new Date - ts) / 1e3),
+      d = Math.floor(sec / 31536e3);
+   return d > 1 ? d + " years" : (d = Math.floor(sec / 2592e3), d > 1 ? d + " months" : (d = Math.floor(sec / 86400), d > 1 ? d + " days" : (d = Math.floor(sec / 3600), d > 1 ? d + " hours" : (d = Math.floor(sec / 60), d > 1 ? d + " minutes" : d + " seconds"))))
 }

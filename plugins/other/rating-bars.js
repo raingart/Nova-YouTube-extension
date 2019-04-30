@@ -6,12 +6,12 @@ _plugins.push({
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 
-      const YOUTUBE_API_MAX_OPERATIONS_PER_REQUEST = 50; // API maximum is 50
-      const ratioBarSelectorIdName = 'ratioRateLine';
+      const OUT_SELECTOR_ID = 'ratioRateLine';
+      const CACHED_PREFIX = 'rbar_';
       let collectVideoIds = [];
 
       // init bars style
-      YDOM.injectStyle('#' + ratioBarSelectorIdName + ' {' +
+      YDOM.injectStyle('#' + OUT_SELECTOR_ID + ' {' +
          'position: absolute;' +
          'bottom: 0;' +
          'width: 100%;' +
@@ -29,126 +29,101 @@ _plugins.push({
       }, 'hard-waitFor-listener');
 
       // chack update new thumbnail
-      let interval_check_thumbnail = setInterval(() => {
+      setInterval(() => {
          if (collectVideoIds.length) {
             // console.log('find new thumbnail');
+            let _collectVideoIds = collectVideoIds;
+            // clear the array to prevent repeated requests "setInterval"
+            collectVideoIds = [];
 
-            // start optimized block
-            const _collectVideoIds = collectVideoIds; // link new arr
-            collectVideoIds = []; // clear the array to prevent repeated requests "setInterval"
-            // end optimized block
+            const now = new Date();  //epoch time, lets deal only with integer
+            const new_video_ids = _collectVideoIds.filter(video_id => {
+               const item = JSON.parse(localStorage.getItem(CACHED_PREFIX + video_id));
 
-            // cached and process "generateRatioBar" 
-            saveInCache(_collectVideoIds, generateRatioBar);
+               if (item && item.hasOwnProperty('expires')) {
+                  if (+item.expires > now) {
+                     // console.log('cached', video_id);
+                     addRatingBars(item);
+
+                  } else {
+                     // console.log('expired', video_id);
+                     // clear expired storage
+                     localStorage.removeItem(item)
+
+                     return true; // need update
+                  }
+               } else {
+                  return true; // will be created
+               }
+
+            });
+            // new_video_ids.forEach(k => localStorage.removeItem(k));
+            // console.log('new', new_video_ids);
+            getVideoData(new_video_ids);
          }
       }, 3000);
 
-      function saveInCache(arrList, callback) {
-         // console.log('saveInCache', arrList);
 
-         for (const id in arrList) {
-            const key = arrList[id];
+      function getVideoData(videoIds) {
+         if (!videoIds.length || !Array.isArray(videoIds)) return;
+         // console.log('getVideoData', videoIds);
 
-            let now = new Date();
-            // now = 1556128098981; //to test to have expired
-            const savePrefix = 'vid-';
-            let storeSessionKey = {}; // fix: Uncaught TypeError: is not iterable
-            storeSessionKey = JSON.parse(sessionStorage.getItem(savePrefix + key));
-            // console.log('>', storeSessionKey);
+         const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
 
-            // take from sessionStorage
-            if (storeSessionKey &&
-               storeSessionKey.hasOwnProperty('expires') &&
-               storeSessionKey.hasOwnProperty('pt') &&
-               +storeSessionKey.expires > now.getTime()) {
-               // console.log('get from store', key);
-               if (callback && typeof (callback) === 'function') callback([storeSessionKey]);
+         chunkArray(videoIds, YOUTUBE_API_MAX_IDS_PER_CALL)
+            .forEach(ids => {
+               YDOM.request.API('videos', {
+                  'id': ids.join(','),
+                  'part': 'statistics',
+               })
+                  .then(res => {
+                     // console.log('res:', JSON.stringify(res));
+                     const now = new Date();  //epoch time, lets deal only with integer
+                     res.items.map(item => {
+                        // console.log('item', item);
+                        const views = parseInt(item.statistics.viewCount) || 0;
+                        const likes = parseInt(item.statistics.likeCount) || 0;
+                        const dislikes = parseInt(item.statistics.dislikeCount) || 0;
+                        const total = likes + dislikes;
+                        const percent = Math.floor(likes / total * 100);
 
-            } else { // create amd save new
-               fetchVideosData(arrList, videosStatistics => {
-                  // console.log('videosStatistics:', JSON.stringify(videosStatistics));
-                  if (callback && typeof (callback) === 'function') callback(videosStatistics);
+                        if (views > 5 && likes > 2) {
+                           const videoStatistics = {
+                              'id': item.id, // need to selector out
+                              'pt': percent,
+                              // 'views': views,
+                              'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
+                           }
+                           addRatingBars(videoStatistics);
 
-                  // saving to sessionStorage afler all
-                  for (const stats of videosStatistics) {
-                     sessionStorage.setItem(savePrefix + key, JSON.stringify({
-                        'id': key, //videosStatistics.id
-                        'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
-                        'pt': +stats.pt,
-                     })); // expires
-                  }
-               });
-            }
-         }
+                           // save cache
+                           localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
+                        }
+                     });
+                  });
+            })
       }
 
-      function generateRatioBar(thumbnailObj) {
-         // console.log('generateRatioBar', thumbnailObj);
+      const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
+      const colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
-         const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
-         const colorDislike = user_settings.ratio_dislike_color || '#ddd';
+      function addRatingBars(thumbnailObj) {
+         // console.log('generateRatioBar', thumbnailObj);
+         // fix: Uncaught TypeError: is not iterable
+         if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
 
          for (const thumb of thumbnailObj) {
             const pt = thumb.pt;
 
             Array.from(document.querySelectorAll("a#thumbnail[href]"))
                .forEach(a => {
-                  if (a.href.indexOf(thumb.id) !== -1) { // gref has id
-                     // console.log('ok', thumb.id, a.href);
-                     a.insertAdjacentHTML("beforeend", '<div id="' + ratioBarSelectorIdName + '" style="background:linear-gradient(to right, ' + colorLiker + ' ' + pt + '%, ' +
-                        colorDislike + ' ' + pt + '%)"></div>');
+                  // href has id
+                  if (a.href.indexOf(thumb.id) !== -1) {
+                     // console.log('finded', thumb.id, a.href);
+                     a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
                   }
                });
 
-         }
-      }
-
-      function fetchVideosData(videoIdsArray, callback) {
-         // console.log('fetchVideosData', videoIdsArray);
-
-         if (videoIdsArray.length > YOUTUBE_API_MAX_OPERATIONS_PER_REQUEST) {
-            function chunkArray(arr, size) {
-               let results = [];
-               while (arr.length) {
-                  results.push(arr.splice(0, size));
-               }
-               return results;
-            };
-
-            console.log('more max YOUTUBE_API_MAX_OPERATIONS_PER_REQUEST', videoIdsArray.length);
-            const requestCount = Math.ceil(+YOUTUBE_API_MAX_OPERATIONS_PER_REQUEST / videoIdsArray.length);
-            const videoChunkArray = chunkArray(videoIdsArray, requestCount);
-            let limitsIds = arr => arr.splice(0, YOUTUBE_API_MAX_OPERATIONS_PER_REQUEST).join(',');
-
-            for (const part in videoChunkArray) {
-               createRequest(limitsIds(videoChunkArray[part]));
-            }
-
-         } else {
-            createRequest(videoIdsArray);
-         }
-
-         function createRequest(videoIds) {
-            const url = 'videos?id=' + videoIds + '&part=statistics&key=' + user_settings.api_key;
-            RequestFetch(url, {}, 'json', res => {
-               // console.log('res', JSON.stringify(res));
-               const videosStatistics = res.items.map(item => {
-                  const views = parseInt(item.statistics.viewCount);
-                  const likes = parseInt(item.statistics.likeCount);
-                  const dislikes = parseInt(item.statistics.dislikeCount);
-                  const total = likes + dislikes;
-                  const pt = Math.floor(likes / total * 100);
-
-                  if (views > 5 && likes > 2) return {
-                     'id': item.id,
-                     'pt': pt,
-                     // 'views': views,
-                  };
-               });
-               // console.log('need create bars', JSON.stringify(videosStatistics));
-
-               if (callback && typeof (callback) === 'function') return callback(videosStatistics);
-            });
          }
       }
 

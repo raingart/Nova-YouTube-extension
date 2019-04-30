@@ -6,9 +6,9 @@ _plugins.push({
    desc: 'Enable default dark theme',
    _runtime: user_settings => {
 
-      let pref = YDOM.cookie.get('PREF'),
-         f6 = YDOM.getUrlVars(pref)['f6'],
-         new_pref;
+      const pref = YDOM.cookie.get('PREF');
+      const f6 = YDOM.getUrlVars(pref)['f6'];
+      let new_pref;
 
       // create if not set
       if (!f6) {

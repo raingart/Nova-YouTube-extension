@@ -11,10 +11,7 @@ _plugins.push({
       YDOM.waitFor('.html5-video-player', playerId => {
 
          let yt_player_volume;
-         /* beautify preserve:start */
-         // fix "Block third-party cookies"
-         try { yt_player_volume = sessionStorage["yt-player-volume"]; } catch (err) {}
-         /* beautify preserve:end */
+         try { yt_player_volume = sessionStorage["yt-player-volume"]; } catch (err) { }
          if (!yt_player_volume && user_settings.default_volume_level && user_settings.default_volume_level != 0) {
             _setVideoVolume(user_settings.default_volume_level);
          }
@@ -27,11 +24,11 @@ _plugins.push({
             event.preventDefault();
 
             if (user_settings.volume_hotkey && (
-                  event[user_settings.volume_hotkey] ||
-                  (
-                     user_settings.volume_hotkey === 'none' &&
-                     !event.ctrlKey && !event.altKey && !event.shiftKey)
-               )) {
+               event[user_settings.volume_hotkey] ||
+               (
+                  user_settings.volume_hotkey === 'none' &&
+                  !event.ctrlKey && !event.altKey && !event.shiftKey)
+            )) {
 
                if (!playerId.hasOwnProperty('getVolume')) {
                   return console.error('getVolume error');
@@ -123,7 +120,7 @@ _plugins.push({
                updateIndicator(level);
 
             } else if (display_container) {
-               display_container.insertAdjacentHTML("afterend", '<div id="' + divBarId + '"></div>');
+               display_container.insertAdjacentHTML("afterend", `<div id="${divBarId}"></div>`);
                divBar = document.getElementById(divBarId);
 
                Object.assign(divBar.style, {
@@ -158,7 +155,7 @@ _plugins.push({
             step: 1,
             min: 0,
             max: 100,
-            value: 50,
+            value: 75,
          },
          'volume_step': {
             _elementType: 'input',
@@ -168,30 +165,26 @@ _plugins.push({
             step: 1,
             min: 1,
             max: 33,
-            value: 5,
+            value: 10,
          },
          'volume_hotkey': {
             _elementType: 'select',
             label: 'Hotkey',
             options: [
-               /* beautify preserve:start */
                { label: 'alt+wheel', value: 'altKey' },
                { label: 'shift+wheel', value: 'shiftKey' },
                { label: 'ctrl+wheel', value: 'ctrlKey' },
                { label: 'wheel', value: 'none', selected: true },
-               /* beautify preserve:end */
             ]
          },
          'show_volume_indicator': {
             _elementType: 'select',
             label: 'Type visualization',
             options: [
-               /* beautify preserve:start */
                { label: 'bar', value: 'bar' },
                { label: 'text', value: 'text', selected: true },
                { label: 'bar+text', value: 'full' },
                { label: 'off', value: '' },
-               /* beautify preserve:end */
             ]
          },
          'show_volume_indicator_color': {

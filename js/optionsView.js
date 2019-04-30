@@ -24,25 +24,22 @@ const Opt = {
 
                let li = document.createElement("li");
                li.className = "item";
-
+                  
                li.innerHTML = '<div class="info"' +
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
-                  '  <label for="' + plugin.id + '">' + plugin.name + '</label>' +
-                  '</div>' +
-                  '<div class="opt">' +
-                  '   <input type="checkbox" name="' + plugin.id + '" id="' + plugin.id + '" />' +
-                  '</div>';
+                  `<label for="${plugin.id}">${plugin.name}</label></div>` +
+                  `<div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)
                   li.appendChild(
                      document.createElement("li")
-                     .appendChild(
-                        Opt.UI.combine_html_opt(plugin.export_opt, plugin.id)
-                     )
+                        .appendChild(
+                           Opt.UI.combine_html_opt(plugin.export_opt, plugin.id)
+                        )
                   );
 
+               const pl_selector = '>#' + plugin.section.toString().toLowerCase();
                let p = Opt.plugins_.conteiner;
-               let pl_selector = '>#' + plugin.section.toString().toLowerCase();
 
                p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
 
@@ -72,15 +69,14 @@ const Opt = {
 
       combine_html_opt: (tags, id) => {
          let outHTML = document.createElement('ul');
-         // outHTML.setAttribute('data-dependent', '{"' + id + '":[true]}');
-         outHTML.setAttribute('data-dependent', '{\"' + id + '\":[true]}');
+         outHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
          for (const name in tags) {
             Opt.log('tags[name]', JSON.stringify(tags[name]));
             let property = tags[name];
 
             if (!property._elementType) {
-               console.warn('tag "%s" not has _elementType...skiping', property);
+               console.warn(`tag "${property}" not has _elementType...skiping`);
                continue;
             }
 
@@ -106,7 +102,7 @@ const Opt = {
             for (const attr in property) {
                // console.log('attr', JSON.stringify(attr));
                // console.log('values[attr]', JSON.stringify(values[attr]));
-               let value = property[attr];
+               const value = property[attr];
 
                switch (attr) {
                   case 'options':
@@ -150,7 +146,7 @@ const Opt = {
       Array.from(document.querySelectorAll(".appearance > *"))
          .forEach(al => {
             // test plugins is empty
-            if (document.querySelector(Opt.plugins_.conteiner + '>#' + al.id + ':empty')) {
+            if (document.querySelector(Opt.plugins_.conteiner + `>#${al.id}:empty`)) {
                al.classList.add('empty');
 
             } else {

@@ -27,22 +27,11 @@ const App = {
 
    is_new_url: () => App.this_url === location.href ? false : App.this_url = location.href,
 
-   getToken: (function () {
-      const YOUTUBE_API_KEYS = [
-         'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA', 'CXRRCFwKAXOiF1JkUBmibzxJF1cPuKNwA',
-         'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AQt1mEVq6zwVBjwx_lcJkQoAAxGExgN7A',
-         'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
-      ];
-      const getRandArrayItem = arr => arr[Math.floor(Math.random() * arr.length)];
-      return 'AIzaSy' + getRandArrayItem(YOUTUBE_API_KEYS);
-   }()),
-
    // sessionSettings: null,
    storage: {
       set: options => {
          App.log('storage.set: %s', JSON.stringify(options));
          App.sessionSettings = options;
-         App.sessionSettings.api_key = App.getToken;
       },
 
       load: callback => {
@@ -90,9 +79,8 @@ const App = {
                console.log('waiting page load..');
                return;
             }
-
-            console.log('plugins loaded: %s/%s | page type: ', _pluginsExportedCount, _plugins.length, _typePage);
-            // console.log(`YTC load status: ${_pluginsExportedCount}/${_plugins.length} | page type: ${_typePage}`);
+            
+            console.log(`plugins loaded: ${_pluginsExportedCount}/${_plugins.length} | page type: ${_typePage}`);
 
             if (_pluginsExportedCount === undefined || _plugins.length === _pluginsExportedCount) {
                clearInterval(_plugins_run);

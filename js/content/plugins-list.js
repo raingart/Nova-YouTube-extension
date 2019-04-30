@@ -22,7 +22,6 @@ const Plugins_list = {
    
    runOnTransition: [
       'player/annotations.js',
-      'player/timeline-color.js',
 
       'details/expand-description.js',
       'details/channel-video-count.js',
