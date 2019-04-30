@@ -4,14 +4,11 @@ const Plugins_list = {
    runOnce: [ // addEventListener
       'player/speed.js',
       'player/volume.js',
-
       'player/quality.js',
-
       'player/pause.js',
-      // 'player/stop.js',
-
       'player/pin.js',
       'player/focused.js',
+      // 'player/stop.js',
 
       'other/scroll-to-top.js',
       'other/dark-theme.js',
@@ -22,6 +19,7 @@ const Plugins_list = {
    
    runOnTransition: [
       'player/annotations.js',
+      'player/timeline-color.js',
 
       'details/expand-description.js',
       'details/channel-video-count.js',
