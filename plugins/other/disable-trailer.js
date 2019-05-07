@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Remove channel trailer',
+   name: 'Stop channel trailer',
    id: 'disable-channel-trailer',
    section: 'channel',
    depends_page: 'channel',

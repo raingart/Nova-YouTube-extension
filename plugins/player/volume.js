@@ -149,8 +149,8 @@ _plugins.push({
          'default_volume_level': {
             _elementType: 'input',
             label: 'Level at startup',
-            title: '0 - auto/disable',
             type: 'number',
+            title: '0 - auto/disable',
             placeholder: '%',
             step: 1,
             min: 0,
@@ -161,6 +161,7 @@ _plugins.push({
             _elementType: 'input',
             label: 'Step',
             type: 'number',
+            title: 'percent',
             placeholder: '%',
             step: 1,
             min: 1,

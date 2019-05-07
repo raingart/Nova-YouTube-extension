@@ -173,6 +173,39 @@ const YDOM = {
       },
    },
 
+   addDoublePressListener: (callback, keyCodeFilter) => {
+      let pressed;
+      let lastPressed = parseInt(keyCodeFilter) || null;
+      let isDoublePress;
+
+      const handleDoublePresss = key => {
+         // console.log(key.key, 'pressed two times');
+         if (callback && typeof (callback) === 'function') return callback(key);
+      }
+
+      const timeOut = () => setTimeout(() => isDoublePress = false, 500);
+
+      const keyPress = key => {
+         pressed = key.keyCode;
+         // console.log('key', pressed, lastPressed, isDoublePress);
+
+         if (isDoublePress && pressed === lastPressed) {
+            isDoublePress = false;
+            handleDoublePresss(key);
+         } else {
+            isDoublePress = true;
+            timeOut();
+         }
+
+         if (!keyCodeFilter) {
+            lastPressed = pressed;
+         }
+      }
+
+      // window.onkeyup = key => keyPress(key);
+      document.addEventListener("keyup", keyPress);
+   },
+
    // uncheck: toggle => {
    //    toggle.hasAttribute("checked") && toggle.click();
    // },
@@ -309,7 +342,7 @@ const YDOM = {
 
          const URL = 'https://www.googleapis.com/youtube/v3/' + query + '&key=' + getRandArrayItem(YOUTUBE_API_KEYS);
 
-         console.log('URL:', JSON.stringify(URL));
+         // console.log('URL:', JSON.stringify(URL));
 
          return fetch(URL)
             .then(response => response.json())

@@ -13,8 +13,8 @@ _plugins.push({
       function captureFocus(event) {
          // console.log('captureFocus', document.activeElement);
 
-         if (document.activeElement.tagName.toLowerCase() !== "input" &&
-            document.activeElement.slot.toLowerCase() !== "input"
+         if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
+            && document.activeElement.parentElement.slot.toLowerCase().indexOf('input') === -1 // comment-area
             // && !window.getSelection()
          ) {
             // document.activeElement.style.border = "2px solid red";

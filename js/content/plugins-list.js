@@ -8,11 +8,11 @@ const Plugins_list = {
       'player/pause.js',
       'player/pin.js',
       'player/focused.js',
+      'player/time-jump.js',
       // 'player/stop.js',
 
       'other/scroll-to-top.js',
       'other/dark-theme.js',
-      'other/disable-trailer.js',
       'other/rating-bars.js',
       // 'other/H264.js',
    ],
@@ -31,5 +31,7 @@ const Plugins_list = {
       
       'channel/collapse-navigation-panel.js',
       'channel/default-tab.js',
+      
+      'other/disable-trailer.js',
    ],
 }

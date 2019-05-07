@@ -18,9 +18,9 @@ _plugins.push({
          'height: 0.' + (+user_settings.ratio_bar_height || 5) + 'em;' +
          '}');
 
-      YDOM.waitFor('#thumbnail:not(.genThumbnail)', thumbnail => {
+      YDOM.waitFor('#thumbnail:not([rating-bar-added])', thumbnail => {
          // console.log('start gen: rateBar');
-         thumbnail.classList.add('genThumbnail'); // lock
+         thumbnail.setAttribute('rating-bar-added', true); // lock
 
          collectVideoIds.push(
             YDOM.getUrlVars(thumbnail.href)['v'] // take GET id
@@ -30,6 +30,8 @@ _plugins.push({
 
       // chack update new thumbnail
       setInterval(() => {
+         // console.log('collectVideoIds', collectVideoIds);
+         
          if (collectVideoIds.length) {
             // console.log('find new thumbnail');
             let _collectVideoIds = collectVideoIds;
@@ -87,18 +89,17 @@ _plugins.push({
                         const total = likes + dislikes;
                         const percent = Math.floor(likes / total * 100);
 
-                        if (views > 5 && likes > 2) {
-                           const videoStatistics = {
-                              'id': item.id, // need to selector out
-                              'pt': percent,
-                              // 'views': views,
-                              'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
-                           }
-                           addRatingBars(videoStatistics);
-
-                           // save cache
-                           localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
+                        const videoStatistics = {
+                           'id': item.id, // need to selector out
+                           'pt': percent,
+                           // 'views': views,
+                           'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
                         }
+                        if (views > 5 && total > 3) {
+                           addRatingBars(videoStatistics);
+                        }
+                        // save cache
+                        localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
                      });
                   });
             })
