@@ -187,7 +187,7 @@ const YDOM = {
 
       const keyPress = key => {
          pressed = key.keyCode;
-         // console.log('key', pressed, lastPressed, isDoublePress);
+         YDOM.log('addDoublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
 
          if (isDoublePress && pressed === lastPressed) {
             isDoublePress = false;
@@ -280,6 +280,7 @@ const YDOM = {
             [name]: value,
             path: '/'
          };
+         YDOM.log('cookie set: %s', JSON.stringify(cookie));
 
          let date = new Date();
          date.setTime(date.getTime() + 31536000);
@@ -342,7 +343,7 @@ const YDOM = {
 
          const URL = 'https://www.googleapis.com/youtube/v3/' + query + '&key=' + getRandArrayItem(YOUTUBE_API_KEYS);
 
-         // console.log('URL:', JSON.stringify(URL));
+         YDOM.log('URL: %s', URL);
 
          return fetch(URL)
             .then(response => response.json())

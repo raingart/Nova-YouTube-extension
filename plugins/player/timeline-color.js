@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Color timeline player',
+   name: 'Player color timeline',
    id: 'player-timeline-color',
    section: 'player',
    depends_page: 'watch',

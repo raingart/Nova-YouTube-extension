@@ -90,14 +90,14 @@ _plugins.push({
                         const percent = Math.floor(likes / total * 100);
 
                         const videoStatistics = {
+                           'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
                            'id': item.id, // need to selector out
                            'pt': percent,
-                           // 'views': views,
-                           'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
+
+                           'views': views,
+                           'total': total,
                         }
-                        if (views > 5 && total > 3) {
-                           addRatingBars(videoStatistics);
-                        }
+                        addRatingBars(videoStatistics);
                         // save cache
                         localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
                      });
@@ -107,23 +107,28 @@ _plugins.push({
 
       const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
       const colorDislike = user_settings.ratio_dislike_color || '#ddd';
-
+      
       function addRatingBars(thumbnailObj) {
-         // console.log('generateRatioBar', thumbnailObj);
+         const thumbnails_el = document.querySelectorAll("a#thumbnail[href]");
+         // console.log('addRatingBars', thumbnailObj);
          // fix: Uncaught TypeError: is not iterable
          if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
 
          for (const thumb of thumbnailObj) {
             const pt = thumb.pt;
 
-            Array.from(document.querySelectorAll("a#thumbnail[href]"))
-               .forEach(a => {
-                  // href has id
-                  if (a.href.indexOf(thumb.id) !== -1) {
-                     // console.log('finded', thumb.id, a.href);
-                     a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
-                  }
-               });
+            // filter small values
+            if (thumb.views < 5 || thumb.total < 3) continue; //tmp fix for clear old store
+            // if (thumb.views > 5 && thumb.total > 3) {
+               Array.from(thumbnails_el)
+                  .forEach(a => {
+                     // href has id
+                     if (a.href.indexOf(thumb.id) !== -1) {
+                        // console.log('finded', thumb.id, a.href);
+                        a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+                     }
+                  });
+            // }
 
          }
       }
