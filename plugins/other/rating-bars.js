@@ -26,12 +26,12 @@ _plugins.push({
             YDOM.getUrlVars(thumbnail.href)['v'] // take GET id
          );
 
-      }, 'hard-waitFor-listener');
+      }, 'hard waitFor listener');
 
       // chack update new thumbnail
       setInterval(() => {
          // console.log('collectVideoIds', collectVideoIds);
-         
+
          if (collectVideoIds.length) {
             // console.log('find new thumbnail');
             let _collectVideoIds = collectVideoIds;
@@ -107,29 +107,22 @@ _plugins.push({
 
       const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
       const colorDislike = user_settings.ratio_dislike_color || '#ddd';
-      
+
       function addRatingBars(thumbnailObj) {
-         const thumbnails_el = document.querySelectorAll("a#thumbnail[href]");
-         // console.log('addRatingBars', thumbnailObj);
          // fix: Uncaught TypeError: is not iterable
          if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
 
          for (const thumb of thumbnailObj) {
-            const pt = thumb.pt;
-
             // filter small values
-            if (thumb.views < 5 || thumb.total < 3) continue; //tmp fix for clear old store
-            // if (thumb.views > 5 && thumb.total > 3) {
-               Array.from(thumbnails_el)
-                  .forEach(a => {
-                     // href has id
-                     if (a.href.indexOf(thumb.id) !== -1) {
-                        // console.log('finded', thumb.id, a.href);
-                        a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
-                     }
-                  });
-            // }
+            if (thumb.views < 5 || thumb.total < 3) continue;
 
+            Array.from(document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]'))
+               .forEach(a => {
+                  const pt = thumb.pt;
+                  // console.log('finded', thumb.id, a.href, pt);
+
+                  a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+               });
          }
       }
 
