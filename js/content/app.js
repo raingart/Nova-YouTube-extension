@@ -75,12 +75,14 @@ const App = {
       App.log('run');
       let preparation_execute = function () {
          let _plugins_run = setInterval(() => {
-            if (document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
+            let documentLoaded = () => document.readyState === "complete" || document.readyState === "interactive";
+
+            if (!documentLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
                console.log('waiting page load..');
                return;
             }
             
-            console.log(`plugins loaded: ${_pluginsExportedCount}/${_plugins.length} | page type: ${_typePage}`);
+            console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount} | page type: ${_typePage}`);
 
             if (_pluginsExportedCount === undefined || _plugins.length === _pluginsExportedCount) {
                clearInterval(_plugins_run);

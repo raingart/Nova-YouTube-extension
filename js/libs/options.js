@@ -73,50 +73,50 @@ window.addEventListener('load', (evt) => {
             "action": 'setOptions',
             "options": newOptions
          }
-         // fix: Could not establish connection. Receiving end does not exist.
-         // , function (resp) {
-         //    if (callback && typeof (callback) === "function") {
-         //       return callback();
-         //    }
-         // }
+            // fix: Could not establish connection. Receiving end does not exist.
+            // , function (resp) {
+            //    if (callback && typeof (callback) === "function") {
+            //       return callback();
+            //    }
+            // }
          );
       },
 
-      bthSaveAnimation: {
-         outputStatus: document.querySelector("button"),
+      bthSubmitAnimation: {
+         outputStatus: document.querySelector("button[type=submit]"),
 
          _process: () => {
-            Conf.bthSaveAnimation.outputStatus.innerHTML = i18n("opt_bth_save_settings_process");
-            Conf.bthSaveAnimation.outputStatus.classList.add("disabled");
-            Conf.bthSaveAnimation.outputStatus.classList.add("in-progress");
+            Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_process");
+            Conf.bthSubmitAnimation.outputStatus.classList.add("disabled");
+            Conf.bthSubmitAnimation.outputStatus.classList.add("in-progress");
          },
 
          _processed: () => {
-            Conf.bthSaveAnimation.outputStatus.innerHTML = i18n("opt_bth_save_settings_processed");
-            Conf.bthSaveAnimation.outputStatus.classList.remove("in-progress");
+            Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_processed");
+            Conf.bthSubmitAnimation.outputStatus.classList.remove("in-progress");
          },
 
          _defaut: () => {
             setTimeout(function () {
-               Conf.bthSaveAnimation._processed();
-               Conf.bthSaveAnimation.outputStatus.innerHTML = i18n("opt_bth_save_settings");
-               Conf.bthSaveAnimation.outputStatus.classList.remove("disabled");
+               Conf.bthSubmitAnimation._processed();
+               Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings");
+               Conf.bthSubmitAnimation.outputStatus.classList.remove("disabled");
             }, 300);
          },
       },
 
-      // Conf.getPermissions(['notifications'], event);
       // getPermissions: (requested, event) => {
-      //    if (Array.isArray(requested) && event.target.checked) {
+      //    if (Array.isArray(requested) && (event.target.checked || event.target.options)) {
       //       // Permissions must be requested
       //       chrome.permissions.contains({
       //          permissions: requested
-      //       }, function (granted) {
+      //       }, granted => {
       //          chrome.permissions.request({
       //             permissions: requested,
-      //          }, function (granted) {
+      //          }, granted => {
       //             // The callback argument will be true if the user granted the permissions.
       //             event.target.checked = granted ? true : false;
+      //             event.target.selectedIndex = granted ? event.target.selectedIndex : event.target.selectedIndex === 0 ? -1 : 0;
       //             Conf.attrDependencies(); //fix trigger
       //          });
       //       });
@@ -130,9 +130,9 @@ window.addEventListener('load', (evt) => {
          document.forms[0] // get form
             .addEventListener('submit', function (event) {
                event.preventDefault();
-               Conf.bthSaveAnimation._process();
-               Conf.saveOptions(this, Conf.bthSaveAnimation._processed);
-               Conf.bthSaveAnimation._defaut();
+               Conf.bthSubmitAnimation._process();
+               Conf.saveOptions(this, Conf.bthSubmitAnimation._processed);
+               Conf.bthSubmitAnimation._defaut();
             });
          // });
 

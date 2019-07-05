@@ -26,7 +26,7 @@ _plugins.push({
                'part': 'snippet',
             })
                .then(res => {
-                  // console.log('res:', JSON.stringify(res));
+                  if (!Object.keys(res).length) return;
                   // const VIDEO_COUNT = res.items.map(item => item.snippet.publishedAt).join();
                   const publishedAt = res.items[0].snippet.publishedAt;
                   // console.log('publishedAt:', publishedAt);

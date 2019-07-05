@@ -347,7 +347,12 @@ const YDOM = {
 
          return fetch(URL)
             .then(response => response.json())
+            .then(res => {
+               if (Object.keys(res).length) return res;
+               else throw new Error('empty API response:', JSON.stringify(res));
+            })
             .catch(error => {
+               alert( 'empty API response:', JSON.stringify(res) );
                console.warn('URL:', URL);
                console.warn('Request failed:\n', error);
             });

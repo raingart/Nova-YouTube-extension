@@ -61,14 +61,14 @@ _plugins.push({
             });
             // new_video_ids.forEach(k => localStorage.removeItem(k));
             // console.log('new', new_video_ids);
-            getVideoData(new_video_ids);
+            getVideoObject(new_video_ids);
          }
       }, 3000);
 
 
-      function getVideoData(videoIds) {
+      function getVideoObject(videoIds) {
          if (!videoIds.length || !Array.isArray(videoIds)) return;
-         // console.log('getVideoData', videoIds);
+         // console.log('getVideoObject', videoIds);
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
 
@@ -79,7 +79,8 @@ _plugins.push({
                   'part': 'statistics',
                })
                   .then(res => {
-                     // console.log('res:', JSON.stringify(res));
+                     if (!Object.keys(res).length) return;
+
                      const now = new Date();  //epoch time, lets deal only with integer
                      res.items.map(item => {
                         // console.log('item', item);

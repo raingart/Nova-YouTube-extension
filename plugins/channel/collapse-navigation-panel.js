@@ -6,7 +6,10 @@ _plugins.push({
    desc: 'Hide left (guide) panel',
    _runtime: user_settings => {
 
-      YDOM.waitFor('#guide[opened]', el => el.removeAttribute("opened"));
+      YDOM.waitFor('#guide[opened]', el => {
+         document.getElementById('guide-button').click();
+         el.removeAttribute("opened"); //dupl.
+      });
 
    }
 });

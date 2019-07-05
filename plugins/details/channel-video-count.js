@@ -26,7 +26,7 @@ _plugins.push({
                'part': 'statistics',
             })
                .then(res => {
-                  // console.log('res:', JSON.stringify(res));
+                  if (!Object.keys(res).length) return;
                   // const VIDEO_COUNT = res.items.map(item => item.statistics.videoCount).join();
                   const VIDEO_COUNT = res.items[0].statistics.videoCount
                   // save cache in tabs
