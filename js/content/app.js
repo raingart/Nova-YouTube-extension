@@ -76,18 +76,22 @@ const App = {
       let preparation_execute = function () {
          let _plugins_run = setInterval(() => {
             let documentLoaded = () => document.readyState === "complete" || document.readyState === "interactive";
-
+            
             if (!documentLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
                console.log('waiting page load..');
                return;
             }
-            
+
             console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount} | page type: ${_typePage}`);
 
             if (_pluginsExportedCount === undefined || _plugins.length === _pluginsExportedCount) {
                clearInterval(_plugins_run);
                _plugins_executor(_typePage, _sessionSettings);
             }
+            // force run "_plugins_executor" after 2000 ms
+            setTimeout(() => {
+               if (_plugins.length < _pluginsExportedCount) _pluginsExportedCount = undefined;
+            }, 2000);
 
          }, 100);
       };

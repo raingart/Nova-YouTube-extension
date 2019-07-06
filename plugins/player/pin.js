@@ -114,6 +114,7 @@ _plugins.push({
                'height: ' + initcss.height +
                // 'width: ' + initcss.width + ' !important;' +
                // 'height: ' + initcss.height + ' !important;' +
+               'left: 0 !important;' +
                '}');
 
             // fix control-player panel

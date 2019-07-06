@@ -24,17 +24,16 @@ _plugins.push({
             YDOM.request.API('videos', {
                'id': VIDEOS_ID,
                'part': 'snippet',
-            })
+            }, user_settings['custom-api-key'])
                .then(res => {
-                  if (!Object.keys(res).length) return;
-                  // const VIDEO_COUNT = res.items.map(item => item.snippet.publishedAt).join();
-                  const publishedAt = res.items[0].snippet.publishedAt;
-                  // console.log('publishedAt:', publishedAt);
-                  const VIDEO_AGE = timeSince(new Date(publishedAt));
-                  // save cache in tabs
-                  sessionStorage.setItem(CACHED_PREFIX + VIDEOS_ID, VIDEO_AGE);
-                  // out
-                  insertToHTML(el, VIDEO_AGE);
+                  res.items.forEach(item => {
+                     const publishedAt = item.snippet.publishedAt;
+                     const VIDEO_AGE = timeSince(new Date(publishedAt));
+                     // save cache in tabs
+                     sessionStorage.setItem(CACHED_PREFIX + VIDEOS_ID, VIDEO_AGE);
+                     // out
+                     insertToHTML(el, VIDEO_AGE);
+                  });
                });
          }
 

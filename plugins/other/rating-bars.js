@@ -77,12 +77,10 @@ _plugins.push({
                YDOM.request.API('videos', {
                   'id': ids.join(','),
                   'part': 'statistics',
-               })
+               }, user_settings['custom-api-key'])
                   .then(res => {
-                     if (!Object.keys(res).length) return;
-
                      const now = new Date();  //epoch time, lets deal only with integer
-                     res.items.map(item => {
+                     res.items.forEach(item => {
                         // console.log('item', item);
                         const views = parseInt(item.statistics.viewCount) || 0;
                         const likes = parseInt(item.statistics.likeCount) || 0;

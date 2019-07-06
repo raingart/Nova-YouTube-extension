@@ -24,15 +24,15 @@ _plugins.push({
             YDOM.request.API('channels', {
                'id': CHANNEL_ID,
                'part': 'statistics',
-            })
+            }, user_settings['custom-api-key'])
                .then(res => {
-                  if (!Object.keys(res).length) return;
-                  // const VIDEO_COUNT = res.items.map(item => item.statistics.videoCount).join();
-                  const VIDEO_COUNT = res.items[0].statistics.videoCount
-                  // save cache in tabs
-                  sessionStorage.setItem(CACHED_PREFIX + CHANNEL_ID, VIDEO_COUNT);
-                  // out
-                  insertToHTML(el, VIDEO_COUNT);
+                  res.items.forEach(item => {
+                     const VIDEO_COUNT = item.statistics.videoCount;
+                     // save cache in tabs
+                     sessionStorage.setItem(CACHED_PREFIX + CHANNEL_ID, VIDEO_COUNT);
+                     // out
+                     insertToHTML(el, VIDEO_COUNT);
+                  });
                });
          }
 
@@ -47,7 +47,7 @@ _plugins.push({
             // #owner-container
             el.parentElement.parentElement.insertAdjacentHTML("beforeend",
                '<span class="date style-scope ytd-video-secondary-info-renderer">' +
-               ` - <span id="${DIV_ID}">${data}</span> videos</span>`);
+               ` - <span id="${DIV_ID}">${data}</span>videos</span>`);
          }
       }
    }

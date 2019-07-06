@@ -326,14 +326,13 @@ const YDOM = {
       //    }
       // },
 
-      API: (url, params) => {
+      API: async (url, params, custom_api_key) => {
          const YOUTUBE_API_KEYS = [
-            'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA', 'CXRRCFwKAXOiF1JkUBmibzxJF1cPuKNwA',
-            'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AQt1mEVq6zwVBjwx_lcJkQoAAxGExgN7A',
-            'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
+            'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA',
+            'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
          ];
          // Distribute the load over multiple APIs by selecting one randomly.
-         const getRandArrayItem = arr => 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+         const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 
          // combine GET
          const query = (url == 'videos' ? 'videos' : 'channels') + '?'
@@ -345,17 +344,35 @@ const YDOM = {
 
          YDOM.log('URL: %s', URL);
 
-         return fetch(URL)
-            .then(response => response.json())
-            .then(res => {
-               if (Object.keys(res).length) return res;
-               else throw new Error('empty API response:', JSON.stringify(res));
-            })
-            .catch(error => {
-               alert( 'empty API response:', JSON.stringify(res) );
-               console.warn('URL:', URL);
-               console.warn('Request failed:\n', error);
-            });
+         try {
+            const response = await fetch(URL);
+            const json = await response.json();
+            // empty response
+            if (!Object.keys(json).length) {
+               throw new Error(`empty API response: ${JSON.stringify(json)}`);
+
+            } else if (json.error) { // API error
+               let usedAPIkey = YDOM.getUrlVars(URL)['key'];
+               throw new Error(`${json.error.message}\n${usedAPIkey}`);
+            }
+
+            return json;
+
+         } catch (error) {
+            let err_text = `Request failed ${URL}:\n${error}`;
+            console.warn(err_text);
+            throw new Error(err_text);
+         }
+
+         // return fetch(URL)
+         //    .then(response => response.json())
+         //    .then(json => {
+         //       if (Object.keys(json).length) return json;
+         //       else throw new Error('empty API response:', JSON.stringify(json));
+         //    })
+         //    .catch(error => {
+         //       throw new Error(`Request failed ${URL}:\n${error}`);
+         //    });
       },
    },
 

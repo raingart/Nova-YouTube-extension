@@ -40,49 +40,50 @@
    <div class="wrapper">
       <div class="container">
 
-         <div class="tabbed">
-            <input type="radio" name="tabs" id="tab_1" checked>
-            <label for="tab_1">Map</label>
+         <form enctype="multipart/form-data">
 
-            <input type="radio" name="tabs" id="tab_2">
-            <label for="tab_2" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
+            <div class="tabbed">
+               <input type="radio" name="tabs" id="tab_1" checked>
+               <label for="tab_1">Map</label>
 
-            <input type="radio" name="tabs" id="tab_3">
-            <label for="tab_3">About</label>
+               <input type="radio" name="tabs" id="tab_2">
+               <label for="tab_2" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
 
+               <input type="radio" name="tabs" id="tab_3">
+               <label for="tab_3">About</label>
 
-            <div class="tabs-content">
+               <div class="tabs-content">
 
-               <!-- map -->
-               <div class="appearance_container">
-                  <div class="appearance">
-                     <div class="header" id="header">
-                        <span>Header</span>
-                     </div>
-                     <div class="player" id="player">
-                        <span>Player</span>
-                     </div>
-                     <div class="sidebar" id="sidebar">
-                        <span>Sidebar</span>
-                     </div>
-                     <div class="details" id="details">
-                        <span>Details</span>
-                     </div>
-                     <div class="comments" id="comments">
-                        <span>Comments</span>
-                     </div>
-                     <div class="footer" id="footer">
-                        <span>Footer</span>
-                     </div>
-                     <div class="other" id="other">
-                        <span>Other</span>
+                  <!-- map -->
+                  <div class="appearance_container">
+                     <div class="appearance">
+                        <div class="header" id="header">
+                           <span>Header</span>
+                        </div>
+                        <div class="player" id="player">
+                           <span>Player</span>
+                        </div>
+                        <div class="sidebar" id="sidebar">
+                           <span>Sidebar</span>
+                        </div>
+                        <div class="details" id="details">
+                           <span>Details</span>
+                        </div>
+                        <div class="comments" id="comments">
+                           <span>Comments</span>
+                        </div>
+                        <div class="footer" id="footer">
+                           <span>Footer</span>
+                        </div>
+                        <div class="other" id="other">
+                           <span>Other</span>
+                        </div>
                      </div>
                   </div>
-               </div>
 
-               <!-- plugins -->
-               <div>
-                  <form enctype="multipart/form-data">
+                  <!-- plugins -->
+                  <div>
+                     <!-- <form enctype="multipart/form-data"> -->
 
                      <div id="plugins">
                         <ul id="player" class="active"></ul>
@@ -112,32 +113,34 @@
                            flow="right">__MSG_opt_bth_save_settings__</button>
                      </div>
 
-                  </form>
-               </div>
+                     <!-- </form> -->
+                  </div>
 
-               <!-- about -->
-               <div>
-                  <ul>
-                     <li>
-                        <a href="https://github.com/raingart/YouTubeCore-extension" target="_blank"
-                           tooltip="__MSG_github_page_tooltip__" flow="right">__MSG_github_page__</a>
-                     </li>
-                     <li>
-                        <a href="https://github.com/raingart/YouTubeCore-extension/issues/new" target="_blank"
-                           tooltip="__MSG_github_page_issues_tooltip__" flow="right">__MSG_github_page_issues__</a>
-                     </li>
-                     <li>
-                        <a href="https://www.patreon.com/join/raingart/checkout?rid=3120225" target="_blank"
-                           tooltip="__MSG_donate_tooltip__" flow="right">__MSG_donate__</a>
-                     </li>
-                  </ul>
+                  <!-- about -->
+                  <div>
+                     <input type="text" name="custom-api-key" id="" pattern="^(AIzaSy)[\d\w]+" placeholder="personal API key" title="ex: AIzaSy*********************************">
+                     <button type="submit" tooltip="" flow="left">__MSG_opt_bth_save_settings__</button>
+                     <ul>
+                        <li>
+                           <a href="https://github.com/raingart/YouTubeCore-extension" target="_blank"
+                              tooltip="__MSG_github_page_tooltip__" flow="right">__MSG_github_page__</a>
+                        </li>
+                        <li>
+                           <a href="https://github.com/raingart/YouTubeCore-extension/issues/new" target="_blank"
+                              tooltip="__MSG_github_page_issues_tooltip__" flow="right">__MSG_github_page_issues__</a>
+                        </li>
+                        <li>
+                           <a href="https://www.patreon.com/join/raingart/checkout?rid=3120225" target="_blank"
+                              tooltip="__MSG_donate_tooltip__" flow="right">__MSG_donate__</a>
+                        </li>
+                     </ul>
+                  </div>
+
                </div>
 
             </div>
 
-         </div>
-
-
+         </form>
 
 
       </div>
