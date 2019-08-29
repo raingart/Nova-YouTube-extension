@@ -34,7 +34,7 @@ _plugins.push({
             placeholder: 'sec',
             step: 1,
             min: 1,
-            max: 60,
+            max: 300,
             value: 30,
          },
          'jump_hotkey': {

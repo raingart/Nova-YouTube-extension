@@ -25,7 +25,7 @@ const Plugins = {
       }
 
       (document.head || document.documentElement || document.getElementsByTagName("script")[0].parentNode)
-      .appendChild(s);
+         .appendChild(s);
 
       s.onload = () => {
          Plugins.log('script loading: %s', String(s.src || s.textContent).substring(0, 100));

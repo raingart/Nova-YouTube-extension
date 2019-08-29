@@ -85,13 +85,15 @@ const YDOM = {
    },
 
    isInViewport: (el = required()) => {
-      const bounding = el.getBoundingClientRect();
-      return (
-         bounding.top >= 0 &&
-         bounding.left >= 0 &&
-         bounding.bottom <= window.innerHeight &&
-         bounding.right <= window.innerWidth
-      );
+      if (el instanceof HTMLElement) {
+         const bounding = el.getBoundingClientRect();
+         return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= window.innerHeight &&
+            bounding.right <= window.innerWidth
+         );
+      }
    },
 
    dragnDrop: {
@@ -234,7 +236,7 @@ const YDOM = {
                   _css += key + ':' + value + (important ? ' !important' : '') + ';';
                }
             );
-            return '{' + _css + '}';
+            return `{ ${_css} }`;
          }
 
       } else injectCss(styles);
@@ -327,10 +329,12 @@ const YDOM = {
       // },
 
       API: async (url, params, custom_api_key) => {
-         const YOUTUBE_API_KEYS = [
-            'A-dlBUjVQeuc4a6ZN4RkNUYDFddrVLxrA',
-            'AgcQ6VzgBPjTY49pxeqHsIIDQgQ09Q4bQ', 'AGosg8Ncdqw8IrwV4iT9E1xCIAVvg4CBw',
-         ];
+         const YOUTUBE_API_KEYS = JSON.parse(sessionStorage.getItem('YOUTUBE_API_KEYS'));
+
+         if (custom_api_key && YOUTUBE_API_KEYS.length) {
+            console.error('empty YOUTUBE_API_KEYS', YOUTUBE_API_KEYS);
+            return;
+         }
          // Distribute the load over multiple APIs by selecting one randomly.
          const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 

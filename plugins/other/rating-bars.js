@@ -6,25 +6,25 @@ _plugins.push({
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 
-      const OUT_SELECTOR_ID = 'ratioRateLine';
-      const CACHED_PREFIX = 'rbar_';
+      const SELECTOR_NAME = 'ratio-rate-line';
+      const CACHED_PREFIX = 'rate-bar_';
       let collectVideoIds = [];
 
       // init bars style
-      YDOM.injectStyle('#' + OUT_SELECTOR_ID + ' {' +
-         'position: absolute;' +
-         'bottom: 0;' +
-         'width: 100%;' +
-         'height: 0.' + (+user_settings.ratio_bar_height || 5) + 'em;' +
-         '}');
+      YDOM.injectStyle(`#${SELECTOR_NAME} {
+         width: 100%;
+         height: ${ (+user_settings.ratio_bar_height || 5) }px;
+      }
+      a#thumbnail > #${SELECTOR_NAME} {
+         position: absolute;
+         bottom: 0;
+      }`);
 
       YDOM.waitFor('#thumbnail:not([rating-bar-added])', thumbnail => {
          // console.log('start gen: rateBar');
          thumbnail.setAttribute('rating-bar-added', true); // lock
 
-         collectVideoIds.push(
-            YDOM.getUrlVars(thumbnail.href)['v'] // take GET id
-         );
+         collectVideoIds.push(YDOM.getUrlVars(thumbnail.href)['v']);
 
       }, 'hard waitFor listener');
 
@@ -45,11 +45,11 @@ _plugins.push({
                if (item && item.hasOwnProperty('expires')) {
                   if (+item.expires > now) {
                      // console.log('cached', video_id);
-                     addRatingBars(item);
+                     appendRatingBars(item);
 
                   } else {
-                     // console.log('expired', video_id);
                      // clear expired storage
+                     // console.log('expired', video_id);
                      localStorage.removeItem(item)
 
                      return true; // need update
@@ -61,14 +61,14 @@ _plugins.push({
             });
             // new_video_ids.forEach(k => localStorage.removeItem(k));
             // console.log('new', new_video_ids);
-            getVideoObject(new_video_ids);
+            getRatingsObj(new_video_ids);
          }
       }, 3000);
 
 
-      function getVideoObject(videoIds) {
+      function getRatingsObj(videoIds) {
          if (!videoIds.length || !Array.isArray(videoIds)) return;
-         // console.log('getVideoObject', videoIds);
+         // console.log('getRatingsObj', videoIds);
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
 
@@ -96,7 +96,7 @@ _plugins.push({
                            'views': views,
                            'total': total,
                         }
-                        addRatingBars(videoStatistics);
+                        appendRatingBars(videoStatistics);
                         // save cache
                         localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
                      });
@@ -107,7 +107,8 @@ _plugins.push({
       const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
       const colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
-      function addRatingBars(thumbnailObj) {
+      function appendRatingBars(thumbnailObj) {
+         // console.log('appendRatingBars start', thumbnailObj);
          // fix: Uncaught TypeError: is not iterable
          if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
 
@@ -117,10 +118,10 @@ _plugins.push({
 
             Array.from(document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]'))
                .forEach(a => {
+                  // console.log('finded', thumb.id, a.href, thumb.pt);
                   const pt = thumb.pt;
-                  // console.log('finded', thumb.id, a.href, pt);
-
-                  a.insertAdjacentHTML("beforeend", `<div id="${OUT_SELECTOR_ID}" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+                  a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
+                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
                });
          }
       }
@@ -136,7 +137,7 @@ _plugins.push({
             step: 1,
             min: 1,
             max: 9,
-            value: 3,
+            value: 2,
          },
          'ratio_like_color': {
             _elementType: 'input',

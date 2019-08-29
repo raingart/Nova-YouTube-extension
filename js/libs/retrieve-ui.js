@@ -1,14 +1,14 @@
-const UIr = {
+const PopulateForm = {
    // DEBUG: true,
 
-   restoreElmValue: function (base) {
-      this.log("Load from Storage:", JSON.stringify(base));
+   fill: function (obj) {
+      this.log("Load from Storage:", JSON.stringify(obj));
 
-      for (var key in base) {
-         var val = base[key];
-         var el = document.getElementsByName(key)[0] || document.getElementById(key);
+      for (const key in obj) {
+         const val = obj[key];
+         const el = document.getElementsByName(key)[0] || document.getElementById(key);
          if (el) {
-            this.log('>opt %s[%s]: %s', key, el.tagName.toLowerCase(), val);
+            this.log('>opt %s[%s]: %s', key, el.tagName, val);
 
             switch (el.tagName.toLowerCase()) {
                case 'textarea':
@@ -16,15 +16,20 @@ const UIr = {
                   break;
 
                case 'select':
-                  this.setSelectOption(el, val);
+                  (Array.isArray(val) ? val : [val])
+                     .forEach(value => this.setSelectOption(el, value)); // select multiple
                   break;
 
                case 'input':
-                  this.log('>>opt %s[%s]: %s', key, el.tagName.toLowerCase(), val);
                   switch (el.type.toLowerCase()) {
                      case 'checkbox':
-                        el.checked = val ? true : false; // Check/Uncheck
-                        // el.value = val ? true : false; // Check/Uncheck
+                        (Array.isArray(val) ? val : [val])
+                           .forEach(value => el.checked = value ? true : false); // multiple Check/Uncheck
+                        break;
+
+                     case 'radio':
+                        (Array.isArray(val) ? val : [val])
+                           .forEach(value => el.checked = value ? true : false); // multiple Check/Uncheck
                         break;
 
                      default:
@@ -40,7 +45,7 @@ const UIr = {
       for (const option of selectObj.children) {
          if (option.value === val) {
             option.selected = true;
-            break
+            break;
          }
       }
    },

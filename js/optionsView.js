@@ -24,7 +24,7 @@ const Opt = {
 
                let li = document.createElement("li");
                li.className = "item";
-                  
+
                li.innerHTML = '<div class="info"' +
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label></div>` +
@@ -205,6 +205,29 @@ const Opt = {
    },
 }
 
+
 window.addEventListener('load', event => {
+   const UI = {
+      search: document.getElementById('search'),
+      plugins_list: document.getElementById('plugins'),
+   };
+
+   // search
+   ["change", "keyup"].forEach(event => {
+      // UI.search.addEventListener(event, () => searchFilter(UI.search.value, UI.plugins_list.children));
+      UI.search.addEventListener(event, () => searchFilter(UI.search.value, UI.plugins_list.getElementsByTagName('li')));
+   });
+
    Opt.init();
 });
+
+
+function searchFilter(input, where) {
+   // console.log('searchFilter', input);
+   const filter = input.toLowerCase();
+
+   for (const target of where) {
+      let found = target.textContent || target.innerText;
+      target.style.display = found.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+   }
+}

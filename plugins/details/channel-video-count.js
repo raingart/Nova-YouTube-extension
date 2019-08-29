@@ -47,7 +47,7 @@ _plugins.push({
             // #owner-container
             el.parentElement.parentElement.insertAdjacentHTML("beforeend",
                '<span class="date style-scope ytd-video-secondary-info-renderer">' +
-               ` - <span id="${DIV_ID}">${data}</span>videos</span>`);
+               ` - <span id="${DIV_ID}">${data}</span> videos</span>`);
          }
       }
    }

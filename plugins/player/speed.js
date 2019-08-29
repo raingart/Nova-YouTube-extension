@@ -33,7 +33,7 @@ _plugins.push({
                const rate = _setVideoSpeed(delta)
 
                // show indicator
-               showIndicator('x' + playerId.getPlaybackRate(), this);
+               showIndicator(playerId.getPlaybackRate() + 'x', this);
             }
          }
 

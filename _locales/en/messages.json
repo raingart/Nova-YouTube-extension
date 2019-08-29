@@ -12,8 +12,8 @@
       "message": "Combine plugins, expanding the horizons of YouTube™"
    },
 
-   "opt_setting": {
-      "message": "plugins"
+   "plugins_search_placeholder": {
+      "message": "filter..."
    },
 
    "opt_bth_save_settings": {

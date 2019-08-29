@@ -15,11 +15,11 @@ const Plugins_list = {
       'other/dark-theme.js',
       'other/rating-bars.js',
       // 'other/H264.js',
+      // 'player/30-fps.js',
    ],
-   
+
    runOnTransition: [
       'player/annotations.js',
-      'player/timeline-color.js',
 
       'details/expand-description.js',
       'details/channel-video-count.js',
@@ -28,10 +28,10 @@ const Plugins_list = {
       'comments/disable-comments.js',
 
       'sidebar/livechat-hide.js',
-      
+
       'channel/collapse-navigation-panel.js',
       'channel/default-tab.js',
-      
+
       'other/disable-trailer.js',
    ],
 }

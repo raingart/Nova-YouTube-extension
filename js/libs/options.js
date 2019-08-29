@@ -47,39 +47,25 @@ window.addEventListener('load', (evt) => {
       },
 
       // Saves options to localStorage/chromeSync.
-      saveOptions: (form, callback) => {
-         let formData = new FormData(form);
-         let newOptions = {};
+      saveOptions: form => {
+         var obj = {};
 
-         // add unchecked checkboxes
-         // NOTE broked checkbox fill
-         // let inputs = document.getElementsByTagName("input");
-         // for (let i in inputs) {
-         //    let el = inputs[i];
-         //    if (el.type == "checkbox") {
-         //       // formData.append(el.name, el.checked ? el.value : false);
-         //       formData.append(el.name, el.checked ? true : false);
-         //    }
-         // }
+         new FormData(form).forEach((value, key) => {
+            // SerializedArray
+            if (obj.hasOwnProperty(key)) {
+               // adding another val
+               obj[key] += ';' + value; // add new
+               obj[key] = obj[key].split(';'); // to key = [old, new]
 
-         for (const [key, value] of formData.entries()) {
-            // console.log(key, value);
-            newOptions[key] = value;
-         }
+            } else obj[key] = value;
+         });
 
-         Storage.setParams(newOptions, 'sync');
+         Storage.setParams(obj, 'sync');
 
          chrome.extension.sendMessage({
             "action": 'setOptions',
-            "options": newOptions
-         }
-            // fix: Could not establish connection. Receiving end does not exist.
-            // , function (resp) {
-            //    if (callback && typeof (callback) === "function") {
-            //       return callback();
-            //    }
-            // }
-         );
+            "options": obj
+         });
       },
 
       bthSubmitAnimation: {
@@ -131,7 +117,7 @@ window.addEventListener('load', (evt) => {
             .addEventListener('submit', function (event) {
                event.preventDefault();
                Conf.bthSubmitAnimation._process();
-               Conf.saveOptions(this, Conf.bthSubmitAnimation._processed);
+               Conf.saveOptions(this);
                Conf.bthSubmitAnimation._defaut();
             });
          // });
@@ -144,8 +130,9 @@ window.addEventListener('load', (evt) => {
       }()),
 
       init: () => {
-         let callback = res => {
-            UIr.restoreElmValue(res);
+         let callback = obj => {
+            PopulateForm.fill(obj);
+
             Conf.attrDependencies();
 
             document.querySelector("body").classList.remove("preload");

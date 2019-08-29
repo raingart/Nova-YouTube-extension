@@ -110,6 +110,7 @@ _plugins.push({
             _elementType: 'select',
             label: 'Set prefered quality',
             title: 'If unavailable, set max available quality',
+            // multiple: null,
             options: [
                // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'
                { label: '4320p (8k/FUHD)', value: 'highres' },

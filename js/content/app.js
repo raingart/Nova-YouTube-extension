@@ -17,6 +17,15 @@ const App = {
       //getEventListeners(window)
       //getEventListeners(document)
 
+      chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+         App.log('onMessage request: %s', JSON.stringify(request.action || request));
+         if (request.action === "YOUTUBE_API_KEYS") {
+            sessionStorage.setItem('YOUTUBE_API_KEYS', JSON.stringify(request.options));
+         }
+      });
+
+      chrome.runtime.sendMessage("get_YOUTUBE_API_KEYS");
+
       document.addEventListener('yt-navigate-start', () => {
          // skip first run on page load
          App.is_new_url() && App.rerun();
@@ -76,7 +85,7 @@ const App = {
       let preparation_execute = function () {
          let _plugins_run = setInterval(() => {
             let documentLoaded = () => document.readyState === "complete" || document.readyState === "interactive";
-            
+
             if (!documentLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
                console.log('waiting page load..');
                return;
@@ -84,7 +93,7 @@ const App = {
 
             console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount} | page type: ${_typePage}`);
 
-            if (_pluginsExportedCount === undefined || _plugins.length === _pluginsExportedCount) {
+            if (_pluginsExportedCount === undefined || _plugins.length >= _pluginsExportedCount) {
                clearInterval(_plugins_run);
                _plugins_executor(_typePage, _sessionSettings);
             }
