@@ -12,7 +12,7 @@ _plugins.push({
          const VIDEOS_ID = YDOM.getUrlVars()['v'];
 
          if (!VIDEOS_ID.match(/([a-z0-9-_])/i)) {
-            return console.warn('videos_id is not valid');
+            return console.warn('videos_id is not valid', VIDEOS_ID);
          }
          // cached
          const STORAGE = sessionStorage.getItem(CACHED_PREFIX + VIDEOS_ID);

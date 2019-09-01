@@ -31,7 +31,8 @@ _plugins.push({
             )) {
 
                if (!playerId.hasOwnProperty('getVolume')) {
-                  return console.error('getVolume error');
+                  console.error('getVolume error');
+                  return;
                }
 
                const step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
@@ -172,19 +173,19 @@ _plugins.push({
             _elementType: 'select',
             label: 'Hotkey',
             options: [
-               { label: 'alt+wheel', value: 'altKey' },
+               { label: 'wheel', value: 'none', selected: true },
                { label: 'shift+wheel', value: 'shiftKey' },
                { label: 'ctrl+wheel', value: 'ctrlKey' },
-               { label: 'wheel', value: 'none', selected: true },
+               { label: 'alt+wheel', value: 'altKey' },
             ]
          },
          'show_volume_indicator': {
             _elementType: 'select',
             label: 'Type visualization',
             options: [
-               { label: 'bar', value: 'bar' },
                { label: 'text', value: 'text', selected: true },
-               { label: 'bar+text', value: 'full' },
+               { label: 'bar', value: 'bar' },
+               { label: 'text+bar', value: 'full' },
                { label: 'off', value: '' },
             ]
          },

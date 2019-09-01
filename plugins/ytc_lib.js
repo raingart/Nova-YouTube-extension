@@ -329,9 +329,11 @@ const YDOM = {
       // },
 
       API: async (url, params, custom_api_key) => {
+         // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
+         // console.trace();
          const YOUTUBE_API_KEYS = JSON.parse(sessionStorage.getItem('YOUTUBE_API_KEYS'));
 
-         if (custom_api_key && YOUTUBE_API_KEYS.length) {
+         if (!custom_api_key && (!YOUTUBE_API_KEYS || !YOUTUBE_API_KEYS.length)) {
             console.error('empty YOUTUBE_API_KEYS', YOUTUBE_API_KEYS);
             return;
          }
@@ -402,12 +404,10 @@ const YDOM = {
    },
 }
 
-function chunkArray(arr, size) {
-   let results = [];
-   while (arr.length) {
-      results.push(arr.splice(0, size));
-   }
-   return results;
+function chunkArray(array, size) {
+   let chunked = [];
+   while (array.length) chunked.push(array.splice(0, size));
+   return chunked;
 }
 
 function timeSince(ts) {

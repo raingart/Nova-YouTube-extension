@@ -7,16 +7,15 @@ _plugins.push({
    _runtime: user_settings => {
 
       const css = [
-         "[class*=annotation]",
-         "[class*=ytp-cards]",
-         ".iv-drawer",
-         ".ima-container",
-         "[class*=ytp-ad]"
-      ].map(selector => '.html5-video-player ' + selector).join(',\n');
+         // "[class*=annotation]",
+         // "[class^=ytp-cards-teaser],
+         ".ytp-cards-teaser",
+         // ".iv-drawer",
+         // ".ima-container",
+         // "[class*=ytp-ad]"
+      ].map(selector => selector).join(',\n');
 
-      YDOM.injectStyle({
-         display: 'none'
-      }, css, 'important');
+      YDOM.injectStyle({ display: 'none' }, css, 'important');
 
    },
 });

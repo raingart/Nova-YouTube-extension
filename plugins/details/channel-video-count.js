@@ -8,11 +8,12 @@ _plugins.push({
 
       const CACHED_PREFIX = 'channel-video-count_';
 
-      YDOM.waitFor('#owner-name > a[href]', el => {
+      YDOM.waitFor('#channel-name a[href]', el => {
          const CHANNEL_ID = el.getAttribute("href").split('/').pop();
 
          if (!CHANNEL_ID.match(/UC([a-z0-9-_]{22})/i)) {
-            return console.error('CHANNEL_ID is not valid');
+            console.error('CHANNEL_ID is not valid', CHANNEL_ID);
+            return;
          }
          // cached
          const STORAGE = sessionStorage.getItem(CACHED_PREFIX + CHANNEL_ID);

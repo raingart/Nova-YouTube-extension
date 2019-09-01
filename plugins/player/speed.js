@@ -25,8 +25,8 @@ _plugins.push({
                // console.log('hotkey caught');
 
                if (!playerId.hasOwnProperty('getPlaybackRate')) {
-                  // console.log('getPlaybackRate error');
-                  return console.error('getPlaybackRate error');
+                  console.error('getPlaybackRate error');
+                  return
                }
 
                const delta = Math.sign(event.wheelDelta);

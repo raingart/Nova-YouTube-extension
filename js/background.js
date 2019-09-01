@@ -20,7 +20,8 @@ update_YOUTUBE_API_KEYS();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
    console.log('onMessage request: %s', JSON.stringify(request.action || request));
 
-   const sendMessage_ = out => chrome.tabs.query({ url: '*://www.youtube.com/*' }, tabs =>
+   // const sendMessage_ = out => chrome.tabs.query({url: "*://www.youtube.com/*"}, tabs => // need "permissions": ["tabs"]
+   const sendMessage_ = out => chrome.tabs.query({ "currentWindow": true }, tabs =>
       tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, out)));
 
    switch (request.action || request) {

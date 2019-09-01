@@ -35,34 +35,31 @@ const Plugins = {
    },
 
    run: (depends = required(), store) => {
-      this.DEBUG && console.log(`plugins loading count: ${_plugins.length}, page: ${_plugins.length}`);
+      // console.log('plugins loading count:', _plugins.length);
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
       uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
       _plugins = uniqueArray(_plugins);
 
-      // console.log('store', JSON.stringify(store));
       for (const i in _plugins) {
          let plugin = _plugins[i];
          // console.log('plugin ' + JSON.stringify(plugin));
-
-         if ((plugin.depends_page && (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all') && store && store[plugin.id]) {
+         if ((plugin.depends_page && (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all')
+            && store && store[plugin.id]) {
 
             try {
                console.log('plugin executing:', plugin.name);
                //'use strict';
                plugin._runtime(store);
-
                delete _plugins[i];
 
             } catch (err) {
-               console.trace();
                console.error(`plugin error: ${plugin.name}\n${err}`);
-               // alert(plugin.name\n + err.slice(25));
+               alert(`ERROR plugin "${plugin.name}"\nTry disable this plugin\n${err}`);
             }
-         } else this.DEBUG && console.log('plugin skiping', plugin.name);
+         }
+         // else console.log('plugin skiping', plugin.name);
       }
-      // console.log('plugin ' + JSON.stringify(_plugins));
    },
 
    log: function (msg) {

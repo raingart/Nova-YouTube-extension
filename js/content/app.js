@@ -18,6 +18,7 @@ const App = {
       //getEventListeners(document)
 
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+         if (chrome.runtime.id != sender.id) return;
          App.log('onMessage request: %s', JSON.stringify(request.action || request));
          if (request.action === "YOUTUBE_API_KEYS") {
             sessionStorage.setItem('YOUTUBE_API_KEYS', JSON.stringify(request.options));
