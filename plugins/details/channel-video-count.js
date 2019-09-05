@@ -8,7 +8,7 @@ _plugins.push({
 
       const CACHED_PREFIX = 'channel-video-count_';
 
-      YDOM.waitFor('#channel-name a[href]', el => {
+      YDOM.waitFor('#upload-info #channel-name a[href]', el => {
          const CHANNEL_ID = el.getAttribute("href").split('/').pop();
 
          if (!CHANNEL_ID.match(/UC([a-z0-9-_]{22})/i)) {

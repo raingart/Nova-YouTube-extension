@@ -10,6 +10,7 @@ _plugins.push({
          // "[class*=annotation]",
          // "[class^=ytp-cards-teaser],
          ".ytp-cards-teaser",
+         ".ytp-paid-content-overlay-text",
          // ".iv-drawer",
          // ".ima-container",
          // "[class*=ytp-ad]"
