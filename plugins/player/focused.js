@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'shortcuts priority [SPACE/F] etc.',
    _runtime: user_settings => {
 
-      ["keydown"/*, "focus"*/].forEach(event => {
+      ["keydown", "yt-navigate-start", /*, "focus"*/].forEach(event => {
          document.addEventListener(event, captureFocus);
       });
 
