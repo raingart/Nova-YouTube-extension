@@ -5,6 +5,7 @@ _plugins.push({
    depends_page: 'watch, embed',
    desc: 'Use mouse wheel to change speed of video',
    _runtime: user_settings => {
+      // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       YDOM.waitFor('.html5-video-player', playerId => {
          const playerArea = document.querySelector('.html5-video-container');
@@ -59,12 +60,16 @@ _plugins.push({
             }
          };
 
-          //mousewheel
+         // hide default indicator
+         if (document.querySelector('.ytp-bezel-text-wrapper')) {
+            document.querySelector('.ytp-bezel-text-wrapper').style.display = 'none';
+         }
+
+         // mousewheel
          playerArea.addEventListener("wheel", setPlaybackRate_wheel);
 
          // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
          videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
-
 
          function setPlaybackRate_wheel(event) {
             // console.log('onWheel');

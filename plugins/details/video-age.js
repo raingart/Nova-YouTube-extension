@@ -8,7 +8,7 @@ _plugins.push({
 
       const CACHED_PREFIX = 'video-age_';
 
-      YDOM.waitFor('#upload-info > .date', el => {
+      YDOM.waitFor('#date', el => {
          const VIDEOS_ID = YDOM.getUrlVars()['v'];
 
          if (!VIDEOS_ID.match(/([a-z0-9-_])/i)) {
@@ -46,8 +46,7 @@ _plugins.push({
 
          } else {
             el.insertAdjacentHTML("beforeend",
-               '<i class="date style-scope ytd-video-secondary-info-renderer">' +
-               ` - <span id="${DIV_ID}">${data}</span> ago</i>`);
+               `<i class="date style-scope ytd-video-secondary-info-renderer"> / <span id="${DIV_ID}">${data}</span> ago</i>`);
          }
       }
    }

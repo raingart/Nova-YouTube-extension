@@ -13,7 +13,7 @@ _plugins.push({
       function captureFocus(event) {
          // console.log('captureFocus', document.activeElement);
 
-         if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
+         if (document.activeElement.tagName != "INPUT" // search-input
             && document.activeElement.parentElement.slot.toLowerCase().indexOf('input') === -1 // comment-area
             // && !window.getSelection()
          ) {

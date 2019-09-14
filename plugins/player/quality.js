@@ -88,7 +88,7 @@ _plugins.push({
             }
 
             // keep quality in session
-            if (user_settings.save_manual_quality_in_tab && location.pathname == '/watch') // no sense if in the embed
+            if (user_settings.save_manual_quality_in_tab && location.pathname == '/watch') {// no sense if in the embed
                playerId.addEventListener("onPlaybackQualityChange", quality => {
                   // console.log('document.activeElement,',document.activeElement);
                   if (document.activeElement.getAttribute('role') == "menuitemradio" && // now focuse setting menu
@@ -99,6 +99,7 @@ _plugins.push({
                      selectedQuality = quality;
                   }
                });
+            }
          }
 
       });

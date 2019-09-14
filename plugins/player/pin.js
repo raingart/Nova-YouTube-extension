@@ -6,9 +6,10 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.html5-video-container video[style]', vid_ => {
-         const scroll_toggle_class = "pin_video";
-         let in_viewport;
+      // YDOM.waitFor('.html5-video-container video[style]', videoEl => {
+      YDOM.waitFor('.html5-video-container video', videoEl => {
+         const pinnedClass = "video-pinned";
+         let inViewport;
 
          initStyle();
 
@@ -21,27 +22,27 @@ _plugins.push({
             );
          });
 
-         function onScreenToggle(scroll_target, viewer) {
-            // console.log('playerId in_viewport %s', in_viewport);
-            if (YDOM.isInViewport(viewer || scroll_target)) {
-               if (!in_viewport) {
-                  // console.log('scroll_target isInViewport');
-                  scroll_target.classList.remove(scroll_toggle_class);
-                  in_viewport = true;
+         function onScreenToggle(targetEl, viewer) {
+            // console.log('playerId inViewport %s', inViewport);
+            if (YDOM.isInViewport(viewer || targetEl)) {
+               if (!inViewport) {
+                  // console.log('targetEl isInViewport');
+                  targetEl.classList.remove(pinnedClass);
+                  inViewport = true;
 
-                  if (user_settings.pin_player_size_position == 'float')
-                     YDOM.dragnDrop.disconnect(scroll_target);
+                  if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(targetEl);
                }
-            } else if (in_viewport) {
-               // console.log('scroll_target isInViewport');
-               scroll_target.classList.add(scroll_toggle_class);
-               in_viewport = false;
+            } else if (inViewport) {
+               // console.log('targetEl isInViewport');
+               targetEl.classList.add(pinnedClass);
+               inViewport = false;
 
-               if (user_settings.pin_player_size_position == 'float')
-                  YDOM.dragnDrop.connect(scroll_target, position => {
+               if (user_settings.pin_player_size_position == 'float') {
+                  YDOM.dragnDrop.connect(targetEl, position => {
                      localStorage.setItem('player-pin-position-top', position.top);
                      localStorage.setItem('player-pin-position-left', position.left);
                   });
+               }
             }
          }
 
@@ -78,38 +79,43 @@ _plugins.push({
                   break;
             }
 
+            // let size = {
+            //    width: videoEl.width,
+            //    height: videoEl.height,
+            // };
+            // console.log('size',JSON.stringify(size));
+            // console.log('size2',window.getComputedStyle(videoEl, null).getPropertyValue('width'));
+            // let size = {
+            //    width: videoEl.style.width.replace(/px/i, ''),
+            //    height: videoEl.style.height.replace(/px/i, ''),
+            // };
+            let size = (() => {
+               let cssVid = window.getComputedStyle(videoEl, null);
+               // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
+               // initStyle = document.getElementsByTagName('video')[0].style.cssText;
+               return {
+                  width: cssVid.getPropertyValue('width').replace(/px/i, ''),
+                  height: cssVid.getPropertyValue('height').replace(/px/i, ''),
+               };
+            })();
 
-            let size = {
-               width: vid_.style.width.replace(/px/i, ''),
-               height: vid_.style.height.replace(/px/i, ''),
-            };
-            // let size = (() => {
-            //    let cssVid = window.getComputedStyle(vid_, null);
-            //    // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
-            //    // initStyle = document.getElementsByTagName('video')[0].style.cssText;
-            //    return {
-            //       width: cssVid.getPropertyValue('width').replace(/px/i, ''),
-            //       height: cssVid.getPropertyValue('height').replace(/px/i, ''),
-            //    };
-            // })();
-
-            const player_ratio = user_settings.pin_player_size_ratio || 3;
+            const playerRatio = user_settings.pin_player_size_ratio || 3;
             // calc size
             size.calc = calculateAspectRatioFit(
                size.width, size.height,
-               window.innerWidth / player_ratio, window.innerWidth / player_ratio
+               window.innerWidth / playerRatio, window.innerWidth / playerRatio
             );
 
             // add calc size
-            initcss.width = size.calc.width + 'px' + ' !important;';
-            initcss.height = size.calc.height + 'px' + ' !important;';
+            initcss.width = size.calc.width + 'px !important;';
+            initcss.height = size.calc.height + 'px !important;';
 
             // apply css
-            // YDOM.injectStyle(initcss, '.' + scroll_toggle_class, 'important');
-            YDOM.injectStyle(initcss, '.' + scroll_toggle_class);
+            YDOM.injectStyle(initcss, '.' + pinnedClass, 'important');
+            // YDOM.injectStyle(initcss, '.' + pinnedClass);
 
             // fix video tag
-            YDOM.injectStyle('.' + scroll_toggle_class + ' video {' +
+            YDOM.injectStyle('.' + pinnedClass + ' video {' +
                'width: ' + initcss.width +
                'height: ' + initcss.height +
                // 'width: ' + initcss.width + ' !important;' +
@@ -118,15 +124,15 @@ _plugins.push({
                '}');
 
             // fix control-player panel
-            YDOM.injectStyle('.' + scroll_toggle_class + ' .ytp-chrome-bottom {' +
+            YDOM.injectStyle('.' + pinnedClass + ' .ytp-chrome-bottom {' +
                'width: ' + initcss.width +
                // 'width: ' + initcss.width + ' !important;' +
                'left: 0 !important;' +
                // 'margin-left: -12px !important;' +
                '}' +
-               '.' + scroll_toggle_class + ' .ytp-preview'+
-               ',.' + scroll_toggle_class + ' .ytp-scrubber-container' +
-               ',.' + scroll_toggle_class + ' .ytp-hover-progress' +
+               '.' + pinnedClass + ' .ytp-preview' +
+               ',.' + pinnedClass + ' .ytp-scrubber-container' +
+               ',.' + pinnedClass + ' .ytp-hover-progress' +
                '{display:none !important;}'
             );
 

@@ -5,22 +5,38 @@ _plugins.push({
    depends_page: 'watch, embed',
    desc: 'Use mouse wheel to change volume',
    _runtime: user_settings => {
+      // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      const _this = this; // get default step
+      const _this = this; // link to export_opt.volume_step
 
       YDOM.waitFor('.html5-video-player', playerId => {
-
+         const playerArea = document.querySelector('.html5-video-container');
          let yt_player_volume;
-         try { yt_player_volume = sessionStorage["yt-player-volume"]; } catch (err) { }
+         // session vol level
+         try { yt_player_volume = sessionStorage["yt-player-volume"] } catch (err) { }
+         // init default_volume_level
          if (!yt_player_volume && user_settings.default_volume_level && user_settings.default_volume_level != 0) {
-            _setVideoVolume(user_settings.default_volume_level);
+            setVolumeLevel(user_settings.default_volume_level);
          }
 
-         // player area
-         document.getElementsByClassName("html5-video-container")[0]
-            .addEventListener("wheel", onWheel_setVolume); //mousewheel
+         // hide default indicator
+         if (user_settings.show_volume_indicator && document.querySelector('.ytp-bezel-text-wrapper')) {
+            document.querySelector('.ytp-bezel-text-wrapper').style.display = 'none';
+         }
 
-         function onWheel_setVolume(event) {
+         // press keyboard
+         playerId.querySelector('video')
+            .addEventListener("volumechange", event => showIndicator(playerArea, playerId.getVolume()));
+         // .addEventListener("volumechange", function (event) {
+         //    let volume = parseInt(this.volume * 100);
+         //    console.log('volumechange', volume, playerId.getVolume());
+         //    showIndicator(playerArea, volume); // Error: volume this.volume is incorrect
+         // });
+
+         // mousewheel in player area
+         playerArea.addEventListener("wheel", volume_onWheel);
+
+         function volume_onWheel(event) {
             event.preventDefault();
 
             if (user_settings.volume_hotkey && (
@@ -38,38 +54,19 @@ _plugins.push({
                const step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
                const delta = Math.sign(event.wheelDelta) * step;
                const getVolume = playerId.getVolume();
-               const level = _setVideoVolume(getVolume + delta, getVolume);
+               // const level = setVolumeLevel(getVolume + delta, getVolume);
+               setVolumeLevel(getVolume + delta, getVolume);
 
-               if (user_settings.show_volume_indicator) {
-                  showIndicator(playerId.getVolume(), this);
-               }
+               showIndicator(this, playerId.getVolume());
             }
          }
 
-         function _setVideoVolume(volume, volumeStatus) {
-            // console.log('volume', volume);
+         function setVolumeLevel(volume, volumeStatus) {
+            // console.log('volume', volume, volumeStatus);
             // if (!playerId) let playerId = document.getElementById('movie_player');
             const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
             const volumeToSet = limiter(parseInt(volume));
-
-            // set volume
-            if (volumeToSet !== volumeStatus) {
-               playerId.isMuted() && playerId.unMute();
-               playerId.setVolume(volumeToSet); // 0 - 100
-
-               // check is correct
-               if (volumeToSet === playerId.getVolume()) {
-                  _saveVolume(volumeToSet); // saving state in sessions
-                  // console.log('volume saved');
-               } else {
-                  console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
-               }
-            }
-
-            // return volumeToSet === playerId.getVolume() ? volumeToSet : false;
-
-
-            function _saveVolume(level) {
+            const volumeStorage = level => {
                // console.log('sessionStorage["yt-player-volume"] %s', JSON.stringify(sessionStorage["yt-player-volume"]));
                const now = (new Date).getTime();
                const muted = level ? "false" : "true";
@@ -80,15 +77,29 @@ _plugins.push({
                   sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
                      '}","creation":' + now + "}";
                } catch (err) {
-                  console.info('%s: SaveVolume is impossible (Maybe on "Block third-party cookies")', err.name);
+                  console.info('%s: SaveVolume is impossible (Maybe on "Block third-party cookies")', err.name, err.message);
                }
-
             }
+
+            // set volume
+            if (volumeToSet !== volumeStatus) {
+               playerId.isMuted() && playerId.unMute();
+               playerId.setVolume(volumeToSet); // 0 - 100
+
+               // check is correct
+               if (volumeToSet === playerId.getVolume()) {
+                  volumeStorage(volumeToSet); // saving state in sessions
+                  // console.log('volume saved');
+               } else console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
+            }
+            // return volumeToSet === playerId.getVolume() ? volumeToSet : false;
          }
 
-         function showIndicator(level, display_container) {
-            const divBarId = "volume-player-info";
-            let divBar = document.getElementById(divBarId);
+         function showIndicator(display_container, level) {
+            if (!user_settings.show_volume_indicator) return;
+
+            const divId = "volume-player-info";
+            let div = document.getElementById(divId);
 
             let updateIndicator = pt => {
                if (typeof fate_volumeBar !== "undefined") clearTimeout(fate_volumeBar);
@@ -96,35 +107,32 @@ _plugins.push({
                if (user_settings.show_volume_indicator === 'bar' ||
                   user_settings.show_volume_indicator === 'full') {
                   let color = user_settings.show_volume_indicator_color;
-                  divBar.style.background = 'linear-gradient(to right, ' +
+                  div.style.background = 'linear-gradient(to right, ' +
                      color + 'd0 ' + pt +
                      '%, rgba(0,0,0,0.3) ' + pt + '%)';
-                  divBar.textContent = '';
+                  div.textContent = '';
                }
                if (user_settings.show_volume_indicator === 'text' ||
                   user_settings.show_volume_indicator === 'full') {
-                  divBar.textContent = pt;
+                  div.textContent = pt;
                }
 
-               divBar.style.transition = 'none';
-               divBar.style.opacity = 1;
-               // divBar.style.visibility = 'visibility';
+               div.style.transition = 'none';
+               div.style.opacity = 1;
+               // div.style.visibility = 'visibility';
 
                fate_volumeBar = setTimeout(() => {
-                  divBar.style.transition = 'opacity 200ms ease-in';
-                  divBar.style.opacity = 0;
-                  // divBar.style.visibility = 'hidden';
+                  div.style.transition = 'opacity 200ms ease-in';
+                  div.style.opacity = 0;
+                  // div.style.visibility = 'hidden';
                }, 800); //200ms + 800ms = 1s
             };
 
-            if (divBar) {
-               updateIndicator(level);
+            if (!div && display_container instanceof HTMLElement) {
+               display_container.insertAdjacentHTML("afterend", `<div id="${divId}"></div>`);
+               div = document.getElementById(divId);
 
-            } else if (display_container) {
-               display_container.insertAdjacentHTML("afterend", `<div id="${divBarId}"></div>`);
-               divBar = document.getElementById(divBarId);
-
-               Object.assign(divBar.style, {
+               Object.assign(div.style, {
                   'background-color': 'rgba(0,0,0,0.3)',
                   color: '#fff',
                   opacity: 0,
@@ -138,9 +146,8 @@ _plugins.push({
                   'min-height': '0.2em',
                   'z-index': '35',
                });
-
-               updateIndicator(level);
             }
+            updateIndicator(level);
          }
       });
 
