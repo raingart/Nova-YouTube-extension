@@ -1,7 +1,7 @@
 _plugins.push({
    name: 'Rating Preview for Youtube',
    id: 'global-rating-bars',
-   section: 'other',
+   section: 'global',
    depends_page: 'all',
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {

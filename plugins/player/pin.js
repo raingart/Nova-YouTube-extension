@@ -6,9 +6,10 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // YDOM.waitFor('.html5-video-container video[style]', videoEl => {
+      const _this = this; // link to export_opt.pin_player_size_ratio
+
       YDOM.waitFor('.html5-video-container video', videoEl => {
-         const pinnedClass = "video-pinned";
+         const pinnedClassName = "video-pinned";
          let inViewport;
 
          initStyle();
@@ -27,14 +28,14 @@ _plugins.push({
             if (YDOM.isInViewport(viewer || targetEl)) {
                if (!inViewport) {
                   // console.log('targetEl isInViewport');
-                  targetEl.classList.remove(pinnedClass);
+                  targetEl.classList.remove(pinnedClassName);
                   inViewport = true;
 
                   if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(targetEl);
                }
             } else if (inViewport) {
                // console.log('targetEl isInViewport');
-               targetEl.classList.add(pinnedClass);
+               targetEl.classList.add(pinnedClassName);
                inViewport = false;
 
                if (user_settings.pin_player_size_position == 'float') {
@@ -78,71 +79,55 @@ _plugins.push({
                   initcss.left = localStorage.getItem('player-pin-position-left');
                   break;
             }
+            let size = {
+               // width: videoEl.clientWidth,
+               // height: videoEl.clientHeight,
+               width: videoEl.scrollWidth,
+               height: videoEl.scrollHeight,
+            };
 
-            // let size = {
-            //    width: videoEl.width,
-            //    height: videoEl.height,
-            // };
-            // console.log('size',JSON.stringify(size));
-            // console.log('size2',window.getComputedStyle(videoEl, null).getPropertyValue('width'));
-            // let size = {
-            //    width: videoEl.style.width.replace(/px/i, ''),
-            //    height: videoEl.style.height.replace(/px/i, ''),
-            // };
-            let size = (() => {
-               let cssVid = window.getComputedStyle(videoEl, null);
-               // let cssVid = window.getComputedStyle(document.getElementsByTagName('video')[0], null);
-               // initStyle = document.getElementsByTagName('video')[0].style.cssText;
-               return {
-                  width: cssVid.getPropertyValue('width').replace(/px/i, ''),
-                  height: cssVid.getPropertyValue('height').replace(/px/i, ''),
+            size.calc = (() => {
+               const playerRatio = user_settings.pin_player_size_ratio || _this.export_opt['pin_player_size_ratio'];
+               const calculateAspectRatioFit = (srcWidth, srcHeight, maxWidth, maxHeight) => {
+                  const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+                  return {
+                     width: Math.round(srcWidth * ratio),
+                     height: Math.round(srcHeight * ratio),
+                  };
                };
+               return calculateAspectRatioFit(
+                  size.width, size.height,
+                  (window.innerWidth / playerRatio), (window.innerWidth / playerRatio)
+               );
             })();
-
-            const playerRatio = user_settings.pin_player_size_ratio || 3;
-            // calc size
-            size.calc = calculateAspectRatioFit(
-               size.width, size.height,
-               window.innerWidth / playerRatio, window.innerWidth / playerRatio
-            );
 
             // add calc size
             initcss.width = size.calc.width + 'px !important;';
             initcss.height = size.calc.height + 'px !important;';
 
+            const pinnedSelector = '.' + pinnedClassName;
+
             // apply css
-            YDOM.injectStyle(initcss, '.' + pinnedClass, 'important');
-            // YDOM.injectStyle(initcss, '.' + pinnedClass);
+            YDOM.injectStyle(initcss, pinnedSelector, 'important');
 
             // fix video tag
-            YDOM.injectStyle('.' + pinnedClass + ' video {' +
-               'width: ' + initcss.width +
-               'height: ' + initcss.height +
-               // 'width: ' + initcss.width + ' !important;' +
-               // 'height: ' + initcss.height + ' !important;' +
-               'left: 0 !important;' +
-               '}');
+            YDOM.injectStyle(`${pinnedSelector} video {
+                  width:${initcss.width} !important;
+                  height:${initcss.height} !important;
+                  left: 0 !important;
+               }`);
 
             // fix control-player panel
-            YDOM.injectStyle('.' + pinnedClass + ' .ytp-chrome-bottom {' +
-               'width: ' + initcss.width +
-               // 'width: ' + initcss.width + ' !important;' +
-               'left: 0 !important;' +
-               // 'margin-left: -12px !important;' +
-               '}' +
-               '.' + pinnedClass + ' .ytp-preview' +
-               ',.' + pinnedClass + ' .ytp-scrubber-container' +
-               ',.' + pinnedClass + ' .ytp-hover-progress' +
-               '{display:none !important;}'
+            YDOM.injectStyle(`${pinnedSelector} .ytp-chrome-bottom {
+                  width: ${initcss.width} !important;
+                  left: 0 !important;
+                  /*margin-left: -12px !important;*/
+               }
+               ${pinnedSelector} .ytp-preview,
+               ${pinnedSelector} .ytp-scrubber-container,
+               ${pinnedSelector} .ytp-hover-progress,
+               {display:none !important;}`
             );
-
-            function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-               const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-               return {
-                  width: Math.round(srcWidth * ratio),
-                  height: Math.round(srcHeight * ratio),
-               };
-            }
          }
 
       });

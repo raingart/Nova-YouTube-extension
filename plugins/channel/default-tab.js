@@ -1,29 +1,31 @@
 _plugins.push({
    name: 'The default tab on the channel page',
    id: 'set-default-channel-tab',
-   section: 'channel',
+   section: 'other',
    depends_page: 'channel',
    _runtime: user_settings => {
 
+      // tabs are not open
       if (location.pathname.match(/\/channel\/UC([a-z0-9-_]{22})$/i) ||
          location.pathname.match(/\/user\/([a-z0-9-_])+$$/i)) {
 
-         let tab_nth_child;
+         let tab_nth;
          switch (user_settings.default_channel_tab) {
             case 'videos':
-               tab_nth_child = 4;
+               tab_nth = 4;
                break;
             case 'playlists':
-               tab_nth_child = 6;
+               tab_nth = 6;
                break;
             case 'about':
-               tab_nth_child = 12;
+               tab_nth = 12;
                break;
             default:
                return;
          }
 
-         YDOM.waitFor('#tabsContent > paper-tab:nth-child(' + tab_nth_child + ')', tab => tab.click());
+         YDOM.waitFor('#tabsContent > [role="tab"]:nth-child(' + tab_nth + ')[aria-selected="false"]',
+            tab => tab.click());
       }
 
    },
@@ -33,7 +35,7 @@ _plugins.push({
             _elementType: 'select',
             label: 'Set default tab',
             options: [
-               { label: 'videos', value: 'videos' },
+               { label: 'videos', value: 'videos', selected: true },
                { label: 'playlists', value: 'playlists' },
                { label: 'about', value: 'about' },
             ]

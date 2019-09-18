@@ -385,7 +385,7 @@ const YDOM = {
    getPageType: () => {
       const page = location.pathname.split('/')[1];
       YDOM.log('page type %s', page);
-      return (page == 'channel' || page == 'user') ? 'channel' : page || null;
+      return (page == 'channel' || page == 'user') ? 'channel' : page || 'main';
    },
 
    getUrlVars: url => {

@@ -51,7 +51,7 @@ _plugins.push({
                   return;
                }
 
-               const step = user_settings.volume_step || _this.export_opt['volume_step'] || 5;
+               const step = user_settings.volume_step || _this.export_opt['volume_step'];
                const delta = Math.sign(event.wheelDelta) * step;
                const getVolume = playerId.getVolume();
                // const level = setVolumeLevel(getVolume + delta, getVolume);

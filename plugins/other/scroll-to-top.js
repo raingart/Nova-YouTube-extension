@@ -1,8 +1,8 @@
 _plugins.push({
    name: 'Scroll to top button',
    id: 'scroll-to-top',
-   section: 'other',
-   depends_page: 'watch, channel, results, playlist, null',
+   section: 'global',
+   depends_page: 'all',
    // desc: '',
    _runtime: user_settings => {
 
@@ -61,7 +61,6 @@ _plugins.push({
       scrollToTop_bth.addEventListener('click', () => window.scrollTo(scroll_position));
 
       window.addEventListener('scroll', () => {
-
          if (document.documentElement.scrollTop > (window.innerHeight / 2)) {
             // scrollToTop_bth.style.display = "block";
             scrollToTop_bth.style.zIndex = 1;

@@ -5,11 +5,13 @@ const Plugins = {
    //    return filepath.split(/[\\/]/g).pop().split('.')[0];
    // },
 
-   load: list => {
-      list.forEach(plugin =>
-         Plugins.injectScript(chrome.extension.getURL('/plugins/' + plugin))
-      );
-   },
+   load: list => list.forEach(plugin => {
+      try {
+         Plugins.injectScript(chrome.extension.getURL('/plugins/' + plugin));
+      } catch (error) {
+         console.error(`plugin loading failed: ${plugin}\n${error}`);
+      }
+   }),
 
    injectScript: (source = required()) => {
       let s = document.createElement('script');
