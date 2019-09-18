@@ -7,7 +7,7 @@ _plugins.push({
 
       // tabs are not open
       if (location.pathname.match(/\/channel\/UC([a-z0-9-_]{22})$/i) ||
-         location.pathname.match(/\/user\/([a-z0-9-_])+$$/i)) {
+         location.pathname.match(/\/user\/([a-z0-9-_]+)$/i)) {
 
          let tab_nth;
          switch (user_settings.default_channel_tab) {
