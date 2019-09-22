@@ -2,27 +2,30 @@ _plugins.push({
    name: 'Rating Preview for Youtube',
    id: 'global-rating-bars',
    section: 'global',
-   depends_page: 'all',
+   depends_page: 'all, -embed',
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 
       const SELECTOR_NAME = 'ratio-rate-line';
+      const SELECTOR_RATE = '#' + SELECTOR_NAME;
       const CACHED_PREFIX = 'rate-bar_';
       let collectVideoIds = [];
 
       // init bars style
-      YDOM.injectStyle(`#${SELECTOR_NAME} {
+      YDOM.injectStyle(`${SELECTOR_RATE} {
          width: 100%;
-         height: ${ (+user_settings.ratio_bar_height || 5) }px;
+         height: ${(+user_settings.ratio_bar_height || 5)}px;
       }
-      a#thumbnail > #${SELECTOR_NAME} {
+      a#thumbnail > ${SELECTOR_RATE} {
          position: absolute;
          bottom: 0;
       }`);
 
-      YDOM.waitFor('#thumbnail:not([rating-bar-added])', thumbnail => {
+      const cachedAttrName = 'rating-bar-added';
+
+      YDOM.waitFor('#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
          // console.log('start gen: rateBar');
-         thumbnail.setAttribute('rating-bar-added', true); // lock
+         thumbnail.setAttribute(cachedAttrName, true); // lock
 
          collectVideoIds.push(YDOM.getUrlVars(thumbnail.href)['v']);
 
@@ -50,7 +53,7 @@ _plugins.push({
                   } else {
                      // clear expired storage
                      // console.log('expired', video_id);
-                     localStorage.removeItem(item)
+                     localStorage.removeItem(item);
 
                      return true; // need update
                   }

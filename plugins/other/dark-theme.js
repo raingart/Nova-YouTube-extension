@@ -2,7 +2,7 @@ _plugins.push({
    name: 'Dark theme',
    id: 'dark-theme',
    section: 'global',
-   depends_page: 'all',
+   depends_page: 'all, -embed',
    desc: 'Enable default dark theme',
    _runtime: user_settings => {
 

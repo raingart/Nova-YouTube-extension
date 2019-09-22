@@ -36,7 +36,7 @@ const Plugins = {
       };
    },
 
-   run: (depends = required(), store) => {
+   run: (pageType = required(), store) => {
       // console.log('plugins loading count:', _plugins.length);
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
@@ -45,8 +45,9 @@ const Plugins = {
 
       for (const i in _plugins) {
          let plugin = _plugins[i];
-         // console.log('plugin ' + JSON.stringify(plugin));
-         if ((plugin.depends_page && (plugin.depends_page.indexOf(depends) !== -1) || plugin.depends_page == 'all')
+         let pluginDepends = plugin.depends_page.split(',').map(i => i.trim().toLowerCase());
+         if (
+            (pluginDepends.includes(pageType) || (pluginDepends.includes('all') && !pluginDepends.includes('-' + pageType)))
             && store && store[plugin.id]) {
 
             try {

@@ -94,11 +94,11 @@ const App = {
                return;
             }
 
-            console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount} | page type: ${_typePage}`);
+            console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount} | page type: ${_pageType}`);
 
             if (_pluginsExportedCount === undefined || _plugins.length >= _pluginsExportedCount) {
                clearInterval(_plugins_run);
-               _plugins_executor(_typePage, _sessionSettings);
+               _plugins_executor(_pageType, _sessionSettings);
             }
             // force run "_plugins_executor" after 2000 ms
             setTimeout(() => {
@@ -110,7 +110,7 @@ const App = {
 
       let scriptText = 'let _plugins_executor = ' + Plugins.run + ';\n';
       scriptText += 'let _pluginsExportedCount = ' + pluginsExportedCount + ';\n';
-      scriptText += 'let _typePage = "' + YDOM.getPageType() + '";\n';
+      scriptText += 'let _pageType = "' + YDOM.getPageType() + '";\n';
       scriptText += 'let _sessionSettings = ' + JSON.stringify(App.sessionSettings) + ';\n';
       scriptText += '(' + preparation_execute.toString() + '())';
 

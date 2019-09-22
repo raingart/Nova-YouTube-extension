@@ -9,7 +9,7 @@ _plugins.push({
       const _this = this; // link to export_opt.pin_player_size_ratio
 
       YDOM.waitFor('.html5-video-container video', videoEl => {
-         const pinnedClassName = "video-pinned";
+         const PINNED_CLASS_NAME = "video-pinned";
          let inViewport;
 
          initStyle();
@@ -28,14 +28,14 @@ _plugins.push({
             if (YDOM.isInViewport(viewer || targetEl)) {
                if (!inViewport) {
                   // console.log('targetEl isInViewport');
-                  targetEl.classList.remove(pinnedClassName);
+                  targetEl.classList.remove(PINNED_CLASS_NAME);
                   inViewport = true;
 
                   if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(targetEl);
                }
             } else if (inViewport) {
                // console.log('targetEl isInViewport');
-               targetEl.classList.add(pinnedClassName);
+               targetEl.classList.add(PINNED_CLASS_NAME);
                inViewport = false;
 
                if (user_settings.pin_player_size_position == 'float') {
@@ -105,27 +105,27 @@ _plugins.push({
             initcss.width = size.calc.width + 'px !important;';
             initcss.height = size.calc.height + 'px !important;';
 
-            const pinnedSelector = '.' + pinnedClassName;
+            const PINNED_SELECTOR = '.' + PINNED_CLASS_NAME;
 
             // apply css
-            YDOM.injectStyle(initcss, pinnedSelector, 'important');
+            YDOM.injectStyle(initcss, PINNED_SELECTOR, 'important');
 
             // fix video tag
-            YDOM.injectStyle(`${pinnedSelector} video {
+            YDOM.injectStyle(`${PINNED_SELECTOR} video {
                   width:${initcss.width} !important;
                   height:${initcss.height} !important;
                   left: 0 !important;
                }`);
 
             // fix control-player panel
-            YDOM.injectStyle(`${pinnedSelector} .ytp-chrome-bottom {
+            YDOM.injectStyle(`${PINNED_SELECTOR} .ytp-chrome-bottom {
                   width: ${initcss.width} !important;
                   left: 0 !important;
                   /*margin-left: -12px !important;*/
                }
-               ${pinnedSelector} .ytp-preview,
-               ${pinnedSelector} .ytp-scrubber-container,
-               ${pinnedSelector} .ytp-hover-progress,
+               ${PINNED_SELECTOR} .ytp-preview,
+               ${PINNED_SELECTOR} .ytp-scrubber-container,
+               ${PINNED_SELECTOR} .ytp-hover-progress,
                {display:none !important;}`
             );
          }
