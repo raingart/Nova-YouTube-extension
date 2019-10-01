@@ -4,7 +4,7 @@ body {
    color: slategrey;
 }
 
-form ul {
+#plugins ul {
    padding: 0;
 }
 
@@ -27,13 +27,8 @@ textarea {
 }
 
 div.between {
-   justify-content: space-between;
-   display: flex;
-   flex-direction: row;
-}
-
-div.between>a {
-   align-self: center;
+   display: grid;
+   grid-template-columns: 1fr auto;
 }
 
 .container {
