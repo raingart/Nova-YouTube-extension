@@ -40,7 +40,7 @@ _plugins.push({
                const playbackRate = playerId.querySelector('video').playbackRate;
                const inRange = d => {
                   const setRateStep = playbackRate + (d * (user_settings.player_rate_step || 0.25));
-                  return (0.25 <= setRateStep && setRateStep <= 5.0) && setRateStep;
+                  return (0.5 <= setRateStep && setRateStep <= 3.0) && setRateStep;
                };
                const rateToSet = inRange(delta);
 

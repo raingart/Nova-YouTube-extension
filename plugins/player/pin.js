@@ -8,13 +8,18 @@ _plugins.push({
 
       const _this = this; // link to export_opt.pin_player_size_ratio
 
-      YDOM.waitFor('.html5-video-container video', videoEl => {
+      YDOM.waitFor('.html5-video-container video[style]', videoEl => {
          const PINNED_CLASS_NAME = "video-pinned";
+         const playerId = document.querySelector('.html5-video-player');
+         let initedStyle;
          let inViewport;
+         // window.pageYOffset || document.documentElement.scrollTop
 
-         initStyle();
-
-         window.addEventListener('scroll', function () {
+         window.addEventListener('scroll', () => {
+            if (!initedStyle) {
+               initedStyle = true;
+               initStyle();
+            }
             onScreenToggle(
                document.getElementById('ytd-player'),
                // document.getElementById('movie_player'),
@@ -25,6 +30,7 @@ _plugins.push({
 
          function onScreenToggle(targetEl, viewer) {
             // console.log('playerId inViewport %s', inViewport);
+            // no pinned
             if (YDOM.isInViewport(viewer || targetEl)) {
                if (!inViewport) {
                   // console.log('targetEl isInViewport');
@@ -32,7 +38,10 @@ _plugins.push({
                   inViewport = true;
 
                   if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(targetEl);
+
+                  if (user_settings.pin_player_pause_pinned_video) playerId.playVideo();
                }
+               // pinned
             } else if (inViewport) {
                // console.log('targetEl isInViewport');
                targetEl.classList.add(PINNED_CLASS_NAME);
@@ -44,6 +53,7 @@ _plugins.push({
                      localStorage.setItem('player-pin-position-left', position.left);
                   });
                }
+               if (user_settings.pin_player_pause_pinned_video) playerId.pauseVideo();
             }
          }
 
@@ -156,6 +166,12 @@ _plugins.push({
                { label: 'right-bottom', value: 'bottom-right' },
                { label: 'drag&Drop', value: 'float' },
             ]
+         },
+         'pin_player_pause_pinned_video': {
+            _elementType: 'input',
+            label: 'Pause pinned video',
+            type: 'checkbox',
+            // checked: false,
          },
       };
    }()),

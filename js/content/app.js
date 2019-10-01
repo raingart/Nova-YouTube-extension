@@ -27,10 +27,8 @@ const App = {
 
       chrome.runtime.sendMessage("get_YOUTUBE_API_KEYS");
 
-      document.addEventListener('yt-navigate-start', () => {
-         // skip first run on page load
-         App.is_new_url() && App.rerun();
-      });
+      // skip first run on page load
+      document.addEventListener('yt-navigate-start', () => App.is_new_url() && App.rerun());
    }()),
 
    this_url: location.href,
@@ -90,7 +88,7 @@ const App = {
             let documentLoaded = () => document.readyState === "complete" || document.readyState === "interactive";
 
             if (!documentLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
-               console.log('waiting page load..');
+               console.log('waiting, page loading..');
                return;
             }
 
