@@ -74,12 +74,12 @@ window.addEventListener('load', (evt) => {
          _process: () => {
             Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_process");
             Conf.bthSubmitAnimation.outputStatus.classList.add("disabled");
-            Conf.bthSubmitAnimation.outputStatus.classList.add("in-progress");
+            Conf.bthSubmitAnimation.outputStatus.classList.add("progress-animate");
          },
 
          _processed: () => {
             Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_processed");
-            Conf.bthSubmitAnimation.outputStatus.classList.remove("in-progress");
+            Conf.bthSubmitAnimation.outputStatus.classList.remove("progress-animate");
          },
 
          _defaut: () => {

@@ -57,7 +57,7 @@ li>ul>li {
    /* grid-template-columns: 1fr auto; */
    grid-template-columns: [left label] 1fr [right input];
    line-height: 25px;
-   padding-left: 0.5em;
+   padding-left: .5em;
 }
 
 /* li>ul>li:not(:first-child) { */

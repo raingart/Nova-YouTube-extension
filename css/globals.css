@@ -1,7 +1,6 @@
 body {
    font-size: 13px;
-   font-family: Arial, sans-serif;
-   color: #111;
+   font-family: Raleway, HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif;
    margin: 0 auto;
    line-height: 1.3;
    position: relative;
@@ -12,7 +11,6 @@ body {
 a {
    /* color: #3d3d3d; */
    color: deepskyblue;
-   /* text-decoration: none; */
 }
 
 ul {
@@ -32,15 +30,15 @@ button,
 input,
 select,
 textarea {
-   padding: 5px 10px;
+   padding: 3px 5px;
    background-color: #ffffff;
    border: 1px solid #cccccc;
-   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 input:valid,
-intextareaput:valid,
+textarea:valid,
 select:valid {
    outline: none;
 }
@@ -53,14 +51,6 @@ select:invalid {
 
 input[type=color] {
    padding: 3px;
-}
-
-select {
-   padding: 3px 4px;
-}
-
-textarea {
-   padding: 3px 5px;
 }
 
 button,
@@ -90,8 +80,6 @@ input[type=button] {
    color: #FFF;
    background-color: deepskyblue;
    border-color: deepskyblue;
-   /* background-color: #33C3F0;
-   border-color: #33C3F0; */
 }
 
 button:focus,
@@ -102,21 +90,25 @@ input[type=reset]:focus,
 input[type=reset]:hover,
 input[type=button]:focus,
 input[type=button]:hover,
-textarea:focus {
+select:focus,
+select:hover,
+textarea:focus,
+textarea:hover {
    outline: 0;
 }
 
-/*input:not([disabled]):focus,
+input:not([disabled]):focus,
 select:not([disabled]):focus,
 textarea:not([disabled]):not([readonly]):focus {
    border-color: #66afe9;
    outline: 0;
-   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-} */
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
 .disabled,
 [disabled] {
    opacity: .7;
-   cursor: default !important;
+   cursor: default;
    pointer-events: none;
 }
 
@@ -152,59 +144,24 @@ legend {
    font-weight: normal;
 }
 
-.hide, .hide * {
+.hide {
    visibility: collapse !important;
    height: 0 !important;
    margin: 0 !important;
    padding: 0 !important;
 }
 
-.in-progress {
-   color: #3e4346 !important;
-   border-color: #9e9e9e !important;
-}
+.progress-animate {
+   color: #3e4346;
+   border-color: #9e9e9e;
 
-.in-progress {
-   background: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), -webkit-linear-gradient(top, #f6f5f0, #e1e0dc);
-   background: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), -moz-linear-gradient(top, #f6f5f0, #e1e0dc);
-   background: -ms-linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), -ms-linear-gradient(top, #f6f5f0, #e1e0dc);
-   background: -o-linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), -o-linear-gradient(top, #f6f5f0, #e1e0dc);
-   background: linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), linear-gradient(top, #f6f5f0, #e1e0dc);
-   -pie-background: linear-gradient(-45deg, rgba(255, 255, 255, 0.6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0.6) 75%, transparent 75%, transparent), linear-gradient(top, #f6f5f0, #e1e0dc);
+   background: linear-gradient(-45deg, rgba(255, 255, 255, .6) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, .6) 75%, transparent 75%, transparent), linear-gradient(top, #f6f5f0, #e1e0dc);
    background-repeat: repeat;
-   -webkit-background-size: 40px 40px, 100% 100%;
-   -moz-background-size: 40px 40px, 100% 100%;
-   -ms-background-size: 40px 40px, 100% 100%;
-   -o-background-size: 40px 40px, 100% 100%;
    background-size: 40px 40px, 100% 100%;
-   -webkit-animation: progress-bar-stripes 2s linear infinite;
-   -moz-animation: progress-bar-stripes 2s linear infinite;
-   -ms-animation: progress-bar-stripes 2s linear infinite;
-   -o-animation: progress-bar-stripes 2s linear infinite;
-   animation: progress-bar-stripes 2s linear infinite;
+   animation: stripes 2s linear infinite;
 }
 
-@-webkit-keyframes progress-bar-stripes {
-   from {
-      background-position: 0 0;
-   }
-
-   to {
-      background-position: 40px 0;
-   }
-}
-
-@-moz-keyframes progress-bar-stripes {
-   from {
-      background-position: 0 0;
-   }
-
-   to {
-      background-position: 40px 0;
-   }
-}
-
-@keyframes progress-bar-stripes {
+@keyframes progress-stripes {
    from {
       background-position: 0 0;
    }
