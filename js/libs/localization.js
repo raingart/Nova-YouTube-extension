@@ -1,11 +1,9 @@
-function i18n(msg) {
-   return chrome.i18n.getMessage(msg);
-}
+const i18n = msg => chrome.i18n.getMessage(msg);
 
-function internationalize(str) {
+function internationalize(name) {
 	// "__MSG_name__"
-	// return str.replace( /__MSG_([^_]+)__/g, function ( m, key ) {
-	return str.replace(/__MSG_(\w+)__/g, function (m, key) {
+	// return name.replace( /__MSG_([^_]+)__/g, function ( m, key ) {
+	return name.replace(/__MSG_(\w+)__/g, function (m, key) {
 		if (i18n(key) !== "undefined" && i18n(key) !== "") {
 			return i18n(key);
 		} else {
@@ -19,7 +17,4 @@ function setLocalization(parent) {
 	html.innerHTML = internationalize(html.innerHTML)
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-// window.addEventListener('load', function (evt) {
-   setLocalization('html');
-});
+document.addEventListener('DOMContentLoaded', () => setLocalization('html'));

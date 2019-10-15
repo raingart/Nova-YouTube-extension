@@ -16,16 +16,18 @@ _plugins.push({
          // window.pageYOffset || document.documentElement.scrollTop
 
          window.addEventListener('scroll', () => {
-            if (!initedStyle) {
+            if (!initedStyle && (videoEl.scrollWidth && videoEl.scrollHeight)) {
                initedStyle = true;
                initStyle();
+
+            } else if (initedStyle) {
+               onScreenToggle(
+                  document.getElementById('ytd-player'),
+                  // document.getElementById('movie_player'),
+                  // playerId,
+                  document.getElementById("player-theater-container")
+               );
             }
-            onScreenToggle(
-               document.getElementById('ytd-player'),
-               // document.getElementById('movie_player'),
-               // playerId,
-               document.getElementById("player-theater-container")
-            );
          });
 
          function onScreenToggle(targetEl, viewer) {
