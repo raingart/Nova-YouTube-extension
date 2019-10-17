@@ -14,8 +14,9 @@ const Plugins_list = {
       'other/scroll-to-top.js',
       'other/dark-theme.js',
       'other/rating-bars.js',
-      // 'other/H264.js',
       // 'player/30-fps.js',
+      'other/normalize-video-title.js',
+      'other/thumbnail-clear.js',
    ],
 
    runOnTransition: [
