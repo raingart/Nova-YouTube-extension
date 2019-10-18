@@ -6,8 +6,8 @@ _plugins.push({
    _runtime: user_settings => {
 
       // tabs are not open
-      if (location.pathname.match(/\/channel\/UC([a-z0-9-_]{22})$/i) ||
-         location.pathname.match(/\/user\/([a-z0-9-_]+)$/i)) {
+      if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname) ||
+      /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
          let tab_nth;
          switch (user_settings.default_channel_tab) {
@@ -24,7 +24,7 @@ _plugins.push({
                return;
          }
 
-         YDOM.waitFor('#tabsContent > [role="tab"]:nth-child(' + tab_nth + ')[aria-selected="false"]',
+         YDOM.waitHTMLElement('#tabsContent > [role="tab"]:nth-child(' + tab_nth + ')[aria-selected="false"]',
             tab => tab.click());
       }
 

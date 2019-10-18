@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', playerId => {
 
          YDOM.addDoublePressListener(jumpTime, user_settings.jump_hotkey);
 

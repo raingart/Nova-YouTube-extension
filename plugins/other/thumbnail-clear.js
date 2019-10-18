@@ -6,19 +6,19 @@ _plugins.push({
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
-      const switchAttrUpdated = 'thumbnail-updated';
+      const switchAttrUpdated = 'timestamps-updated';
 
-      YDOM.waitFor('#thumbnail:not([' + switchAttrUpdated + ']) img', thumbnail => {
-         // console.log('switchAttrUpdated:', thumbnail);
-         thumbnail.setAttribute(switchAttrUpdated, true);
+      YDOM.waitHTMLElement('#thumbnail:not([' + switchAttrUpdated + ']) img', imgEl => {
+         // console.log('switchAttrUpdated:', imgEl);
+         imgEl.setAttribute(switchAttrUpdated, true);
 
-         var re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
+         const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 
-         if (thumbnail.src.match(re)) {
-            thumbnail.src = thumbnail.src.replace(re, `${(user_settings.thumbnail_time_stamp || 'hq1')}.jpg`);
+         if (re.test(imgEl.src)) {
+            imgEl.src = imgEl.src.replace(re, `${(user_settings.thumbnail_time_stamp || 'hq1')}.jpg`);
          }
 
-      }, 'hard waitFor listener');
+      }, 'hard waitHTMLElement listener');
 
    },
    export_opt: (function () {
@@ -28,8 +28,8 @@ _plugins.push({
             label: 'Thumbnail timestamps',
             title: 'Thumbnail display video timestamps',
             options: [
-               { label: 'start', value: 'hq1', selected: true },
-               { label: 'middle', value: 'hq2' },
+               { label: 'start', value: 'hq1' }, // often shows intro
+               { label: 'middle', value: 'hq2', selected: true },
                { label: 'end', value: 'hq3' },
             ]
          },

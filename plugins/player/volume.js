@@ -9,7 +9,7 @@ _plugins.push({
 
       const _this = this; // link to export_opt.volume_step
 
-      YDOM.waitFor('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', playerId => {
          const playerArea = document.querySelector('.html5-video-container');
          let yt_player_volume;
          // session vol level

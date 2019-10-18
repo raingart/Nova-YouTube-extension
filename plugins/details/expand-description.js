@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'See full video description',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.ytd-video-secondary-info-renderer > [collapsed] #more', el => el.click());
+      YDOM.waitHTMLElement('.ytd-video-secondary-info-renderer > [collapsed] #more', el => el.click());
 
    }
 });

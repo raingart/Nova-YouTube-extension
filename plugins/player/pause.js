@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Disables autoplay',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', playerId => {
          let is_change_quality;
 
          playerId.addEventListener("onStateChange", onPlayerStateChange.bind(this));

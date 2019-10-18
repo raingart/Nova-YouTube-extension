@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      YDOM.waitFor('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', playerId => {
          const playerArea = document.querySelector('.html5-video-container');
          const videoElm = playerId.querySelector('video');
 

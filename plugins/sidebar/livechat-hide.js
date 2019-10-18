@@ -7,15 +7,15 @@ _plugins.push({
    _runtime: user_settings => {
 
       if (user_settings.livechat === 'disable') {
-         YDOM.waitFor('#chat', chat => chat.parentNode.removeChild(chat));
+         YDOM.waitHTMLElement('#chat', chat => chat.parentNode.removeChild(chat));
 
       } else {
-         YDOM.waitFor('#chat:not([collapsed]) #show-hide-button paper-button', bth => bth.click());
+         YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button', bth => bth.click());
          // test livechat already collapsed
          // https://www.youtube.com/watch?v=uyKzS_FDHTI
 
          // not working next
-         // YDOM.waitFor('#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])', bth => {
+         // YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])', bth => {
          //    console.log('bth', bth);
          // });
       }

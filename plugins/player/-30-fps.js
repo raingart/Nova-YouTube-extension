@@ -9,11 +9,11 @@ _plugins.push({
       window.MediaSource.isTypeSupported.bind(window.MediaSource)
 
       window.MediaSource.isTypeSupported = videoType => {
-         var injectedTooLate = !(!window.ytplayer || Object.getOwnPropertyNames(window.ytplayer).length === 0);
+         const injectedTooLate = !(!window.ytplayer || Object.getOwnPropertyNames(window.ytplayer).length === 0);
          if (!injectedTooLate) {
             console.log('videoType:', JSON.stringify(videoType));
 
-            var matches = videoType.match(/framerate=(\d+)/);
+            const matches = videoType.match(/framerate=(\d+)/);
 
             if (matches && (matches[1] > 30)) {
                console.log('Blocking High-FPS format: "' + videoType + '"');

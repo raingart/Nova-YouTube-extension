@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Enable default dark theme',
    _runtime: user_settings => {
 
-      YDOM.waitFor('html:not([dark])', () => {
+      YDOM.waitHTMLElement('html:not([dark])', () => {
          // console.log('cookie.set: "Dark theme"');
          const new_pref = (function () {
             const pref = YDOM.cookie.get('PREF');

@@ -8,7 +8,7 @@ _plugins.push({
 
       const _this = this; // link to export_opt.pin_player_size_ratio
 
-      YDOM.waitFor('.html5-video-container video[style]', videoEl => {
+      YDOM.waitHTMLElement('.html5-video-container video[style]', videoEl => {
          const PINNED_CLASS_NAME = "video-pinned";
          const playerId = document.querySelector('.html5-video-player');
          let initedStyle;

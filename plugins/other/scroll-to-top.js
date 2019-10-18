@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'added in long pages',
    _runtime: user_settings => {
 
-      YDOM.waitFor('body', body => {
+      YDOM.waitHTMLElement('body', body => {
          // create button and add styleы
          let scrollToTop_bth = (() => {
             const bthId = 'scrollToTop_bth';

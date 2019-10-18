@@ -23,13 +23,13 @@ _plugins.push({
 
       const cachedAttrName = 'rating-bar-added';
 
-      YDOM.waitFor('#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
+      YDOM.waitHTMLElement('#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
          // console.log('start gen: rateBar');
          thumbnail.setAttribute(cachedAttrName, true); // lock
 
          collectVideoIds.push(YDOM.getUrlVars(thumbnail.href)['v']);
 
-      }, 'hard waitFor listener');
+      }, 'hard waitHTMLElement listener');
 
       // chack update new thumbnail
       setInterval(() => {

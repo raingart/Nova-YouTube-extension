@@ -8,10 +8,11 @@ _plugins.push({
 
       const CACHED_PREFIX = 'channel-video-count_';
 
-      YDOM.waitFor('#upload-info #channel-name a[href]', el => {
+      YDOM.waitHTMLElement('#upload-info #channel-name a[href]', el => {
          const CHANNEL_ID = el.getAttribute("href").split('/').pop();
+         console.log('CHANNEL_ID', CHANNEL_ID);
 
-         if (!CHANNEL_ID.match(/UC([a-z0-9-_]{22})/i)) {
+         if (!CHANNEL_ID || !/UC([a-z0-9-_]{22})/i.test(CHANNEL_ID)) {
             console.error('CHANNEL_ID is not valid', CHANNEL_ID);
             return;
          }

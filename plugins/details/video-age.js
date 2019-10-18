@@ -8,10 +8,10 @@ _plugins.push({
 
       const CACHED_PREFIX = 'video-age_';
 
-      YDOM.waitFor('#date', el => {
+      YDOM.waitHTMLElement('#date', el => {
          const VIDEOS_ID = YDOM.getUrlVars()['v'];
 
-         if (!VIDEOS_ID.match(/([a-z0-9-_])/i)) {
+         if (!VIDEOS_ID || !/[a-z0-9-_]/i.test(VIDEOS_ID)) {
             return console.warn('videos_id is not valid', VIDEOS_ID);
          }
          // cached

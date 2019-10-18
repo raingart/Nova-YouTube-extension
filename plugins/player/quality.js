@@ -6,7 +6,7 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitFor('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', playerId => {
          let is_change_quality;
          let selectedQuality = user_settings.video_quality;
 
@@ -57,7 +57,7 @@ _plugins.push({
 
                         const qualityOption = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
                         // test is quality option
-                        if (qualityOption.children[1].firstElementChild.textContent.match(/\d{3,4}[ps]/)) {
+                        if (/\d{3,4}[ps]/.test(qualityOption.children[1].firstElementChild.textContent)) {
                            qualityOption.click(); // open option
 
                            const showQualities = document

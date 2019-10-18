@@ -1,3 +1,21 @@
+
+chrome.runtime.onInstalled.addListener(() => {
+   console.log('Installed');
+   chrome.storage.sync.get(null, storage => {
+      const manifest = chrome.runtime.getManifest();
+      const initialStorage = { "collapse-livechat": "on", "collapse-navigation-panel": "on", "custom-api-key": "", "dark-theme": "on", "default_channel_tab": "videos", "default_volume_level": "75", "disable-channel-trailer": "on", "expand-description-video": "on", "fixed-player-scroll": "on", "global-rating-bars": "on", "hide-annotations": "on", "jump_hotkey": "17", "jump_step": "30", "livechat": "disable", "normalize-video-title": "on", "pin_player_size_position": "top-right", "pin_player_size_ratio": "2.5", "player-focused-onkeydown": "on", "player_rate_hotkey": "altKey", "player_rate_step": "0.25", "ratio_bar_height": "2", "ratio_dislike_color": "#dddddd", "ratio_like_color": "#3ea6ff", "save_manual_quality_in_tab": "on", "scroll-to-top": "on", "set-default-channel-tab": "on", "show-channel-video-count": "on", "show-video-age": "on", "show_full_video_title": "on", "show_volume_indicator": "text", "show_volume_indicator_color": "#ff0000", "tabs": "on", "thumbnail-clear": "on", "thumbnail_time_stamp": "hq1", "time-jump": "on", "video-quality": "on", "video-speed-Wheel": "on", "video_quality": "hd1080", "volume-wheel": "on", "volume_hotkey": "none", "volume_step": "10" }
+      // console.log('Storage:', storage);
+
+      if (!Object.keys(storage).length) {
+         if (confirm(`${manifest.short_name}: no configuration data found!\nActivate default plugins?`)) {
+            console.log('Apply initial configuration', JSON.stringify(initialStorage));
+            chrome.storage.sync.set(initialStorage);
+         }
+      }
+   });
+});
+
+
 let YOUTUBE_API_KEYS = [];
 
 // no internet connection

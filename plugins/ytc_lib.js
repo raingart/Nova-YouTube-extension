@@ -4,7 +4,7 @@ const YDOM = {
    // DEBUG: true,
 
    listeners: [],
-   waitFor: (selector = required(), callback = required(), isStrong) => {
+   waitHTMLElement: (selector = required(), callback = required(), isStrong) => {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -13,74 +13,76 @@ const YDOM = {
          clear: !isStrong,
          fn: callback
       });
-      YDOM.log('listeners %s', JSON.stringify(YDOM.listeners));
 
-      singleton_Observer(window);
+      // instantiating observer
+      if (!YDOM.Observer && YDOM.listeners.length) {
+         YDOM.Observer = true;
+         createObserver();
 
-      function singleton_Observer(win) {
-         let observer,
-            target = document.body || document,
-            doc = win.document;
+         // stop
+      } else if (YDOM.Observer && !YDOM.listeners.length) {
+         observer.disconnect();
+         YDOM.log('Observer stop');
 
-         function createObserver() {
-            YDOM.log('create Observer');
-            let MutationObserver = win.MutationObserver || win.WebKitMutationObserver;
-            let object = new MutationObserver(function () {
-               startObserver()
+         // check
+      } else checkinlisteners();
 
-               // stop observing
-               if (!YDOM.listeners.length) {
-                  YDOM.log('stop Observer');
-                  observer.disconnect();
-                  observer = null;
-               }
-            });
-            return object;
-         }
-         // work executing
-         let startObserver = () => {
-            check(doc);
-         };
+      function createObserver() {
+         YDOM.log('Observer create');
 
-         return (function () {
-            YDOM.log('init Observer');
-            if (!observer) {
-               observer = createObserver();
-               const config = {
-                  childList: true,
-                  subtree: true,
-                  // attributes: true,
-                  // haracterData: false,
-                  // attributeFilter: ['src']
-               };
-               // pass in the target node, as well as the observer options
-               observer.observe(target || document.documentElement, config);
+         new MutationObserver(mutations => {
+            // mutations.forEach(mutation => {
+            //    for (const node of mutation.addedNodes) {
+            //       if (node instanceof HTMLElement) checkinlisteners(node);
+            //    }
+            // });
+            const { addedNodes } = mutations[0];
+            const matches = [...addedNodes]
+               .filter(node => node instanceof HTMLElement)
+            // .filter(element => element.matches('selector'))
+            // .filter(element => {
+            //    for (const elem of node.querySelectorAll(listener.selector)) {
+            //       //
+            //    }
+            // });
+
+            if (matches.length) {
+               // console.log('matches node:', matches);
+               checkinlisteners();
             }
-            // return observer;
-            return startObserver();
-         }());
+         })
+            // fix "Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'."
+            .observe(document.body || document.documentElement, {
+               // attributes: true, // add/remove/change attributes
+               // attributeOldValue: true, // will show oldValue of attribute | on add/remove/change attributes | default: null
+               // characterData: true, // data changes will be observed | on add/remove/change characterData
+               // characterDataOldValue: true, // will show OldValue of characterData | on add/remove/change characterData | default: null
+               childList: true, // target childs will be observed | on add/remove
+               subtree: true, // target childs will be observed | on attributes/characterData changes if they observed on target
+               // attributeFilter: ['style'] // filter for attributes | array of attributes that should be observed, in this case only style
+            });
       }
 
       // Check if the element is currently in the DOM
-      function check(doc) {
+      function checkinlisteners() {
          YDOM.log('check (left: %s count): %s', YDOM.listeners.length, JSON.stringify(YDOM.listeners));
-
          // Check the DOM for elements matching a stored selector
          for (const i in YDOM.listeners) {
             const listener = YDOM.listeners[i];
+            // console.log('element test', listener.selector, element);
 
             // Query for elements matching the specified selector
-            Array.from(doc.querySelectorAll(listener.selector))
-               .forEach(el => {
-                  YDOM.log('element ready, listeners: %s', listener.selector);
+            Array.from(document.querySelectorAll(listener.selector))
+               .forEach(element => {
+                  listener.clear && YDOM.log('element ready: %s', listener.selector);
+
                   if (listener.clear) {
-                     YDOM.log('element clear, listeners :%s', listener.selector);
                      YDOM.listeners.splice(i, 1); // delete element from listeners
-                     // YDOM.listeners.filter(e => e !== element)
+                     YDOM.log('element clear: %s', listener.selector);
                   }
-                  listener.fn(el); // cun element callback
+                  listener.fn(element);
                });
-         }
+         };
       }
    },
 
