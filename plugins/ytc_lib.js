@@ -177,7 +177,7 @@ const YDOM = {
       },
    },
 
-   addDoublePressListener: (callback, keyCodeFilter) => {
+   doublePressListener: (callback, keyCodeFilter) => {
       let pressed;
       let lastPressed = parseInt(keyCodeFilter) || null;
       let isDoublePress;
@@ -191,7 +191,7 @@ const YDOM = {
 
       const keyPress = key => {
          pressed = key.keyCode;
-         YDOM.log('addDoublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
+         YDOM.log('doublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
 
          if (isDoublePress && pressed === lastPressed) {
             isDoublePress = false;
@@ -318,31 +318,40 @@ const YDOM = {
       API: async (url, params, custom_api_key) => {
          // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
          // console.trace();
-         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS'));
+         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
 
          if (!custom_api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
-            console.error('empty YOUTUBE_API_KEYS', YOUTUBE_API_KEYS);
-            return;
+            throw new Error('YOUTUBE_API_KEYS ' + YOUTUBE_API_KEYS);
          }
          // Distribute the load over multiple APIs by selecting one randomly.
          const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 
          // combine GET
-         const query = (url == 'videos' ? 'videos' : 'channels') + '?'
-            + Object.keys(params)
+         const query = (url == 'videos' ? 'videos' : 'channels')
+            + '?' + Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                .join('&');
 
-         const URL = 'https://www.googleapis.com/youtube/v3/' + query + '&key=' + getRandArrayItem(YOUTUBE_API_KEYS);
+         const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + getRandArrayItem(YOUTUBE_API_KEYS);
 
          YDOM.log('URL: %s', URL);
 
          try {
+            // fetch(URL)
+            //    .then(response => response.json())
+            //    .then(json => {
+            //       if (Object.keys(json).length) return json;
+            //       else throw new Error('empty API response:', JSON.stringify(json));
+            //    })
+            //    .catch(error => {
+            //       throw new Error(`Request failed ${URL}:\n${error}`);
+            //    });
+
             const response = await fetch(URL);
             const json = await response.json();
             // empty response
             if (!Object.keys(json).length) {
-               throw new Error(`empty API response: ${JSON.stringify(json)}`);
+               throw new Error('empty API response: ' + JSON.stringify(json));
 
             } else if (json.error) { // API error
                let usedAPIkey = YDOM.getURLParams(URL).get('key');
@@ -356,23 +365,7 @@ const YDOM = {
             console.warn(err_text);
             throw new Error(err_text);
          }
-
-         // return fetch(URL)
-         //    .then(response => response.json())
-         //    .then(json => {
-         //       if (Object.keys(json).length) return json;
-         //       else throw new Error('empty API response:', JSON.stringify(json));
-         //    })
-         //    .catch(error => {
-         //       throw new Error(`Request failed ${URL}:\n${error}`);
-         //    });
       },
-   },
-
-   getPageType: () => {
-      const page = location.pathname.split('/')[1];
-      YDOM.log('page type %s', page);
-      return (page == 'channel' || page == 'user') ? 'channel' : page || 'main';
    },
 
    getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),

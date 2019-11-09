@@ -17,7 +17,7 @@ const App = {
       //getEventListeners(window)
       //getEventListeners(document)
 
-      // also change in file '/js/background.js'
+      // also change "APIKeysStoreName" in file '/js/background.js', '/plugins/ytc_lib.js'
       const APIKeysStoreName = 'YOUTUBE_API_KEYS';
 
       // set youtubeApiKeys
@@ -31,9 +31,9 @@ const App = {
       });
 
       // youtubeApiKeys dont has
-      if (!Array.isArray(localStorage.getItem(APIKeysStoreName))) {
+      if (!Array.isArray(JSON.parse(localStorage.getItem(APIKeysStoreName) || 'null'))) {
          // Cannot access 'App' before initialization, because 'console.log' and not the 'App.log'
-         console.log('onMessage request REQUESTING_' + APIKeysStoreName);
+         console.log('onMessage REQUESTING_' + APIKeysStoreName);
          chrome.runtime.sendMessage('REQUESTING_' + APIKeysStoreName);
       }
 
@@ -91,6 +91,11 @@ const App = {
       }, 50);
    },
 
+   getPageType: () => {
+      const page = location.pathname.split('/')[1];
+      return (page == 'channel' || page == 'user') ? 'channel' : page || 'main';
+   },
+
    run: pluginsExportedCount => {
       App.log('run');
       let preparation_execute = function () {
@@ -116,13 +121,15 @@ const App = {
          }, 100);
       };
 
-      let scriptText = 'let _plugins_executor = ' + Plugins.run + ';\n';
-      scriptText += 'let _pluginsExportedCount = ' + pluginsExportedCount + ';\n';
-      scriptText += 'let _pageType = "' + YDOM.getPageType() + '";\n';
-      scriptText += 'let _sessionSettings = ' + JSON.stringify(App.sessionSettings) + ';\n';
-      scriptText += '(' + preparation_execute.toString() + '())';
+      const scriptText = [
+         `let _plugins_executor = ${Plugins.run}`,
+         `let _pluginsExportedCount = ${pluginsExportedCount}`,
+         `let _pageType = "${App.getPageType()}"`,
+         `let _sessionSettings = ${JSON.stringify(App.sessionSettings)}`,
+         `( ${preparation_execute.toString()} ())`
+      ].join(';\n');
 
-      Plugins.injectScript('(function () {' + scriptText + '})()');
+      Plugins.injectScript(`(function () { ${scriptText} })()`);
    },
 
    log: function (msg) {

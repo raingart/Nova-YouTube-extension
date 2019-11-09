@@ -12,7 +12,7 @@ _plugins.push({
          const CHANNEL_ID = linkElement.getAttribute("href").split('/').pop();
 
          if (!CHANNEL_ID || !/UC([a-z0-9-_]{22})/i.test(CHANNEL_ID)) {
-            console.error('CHANNEL_ID is not valid', CHANNEL_ID);
+            console.error('CHANNEL_ID is invalid', CHANNEL_ID);
             return;
          }
          // cached

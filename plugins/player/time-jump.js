@@ -8,7 +8,7 @@ _plugins.push({
 
       YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
 
-         YDOM.addDoublePressListener(jumpTime, user_settings.jump_hotkey);
+         YDOM.doublePressListener(jumpTime, user_settings.jump_hotkey);
 
          function jumpTime(event) {
             if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
