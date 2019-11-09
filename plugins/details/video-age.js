@@ -9,7 +9,7 @@ _plugins.push({
       const CACHED_PREFIX = 'video-age_';
 
       YDOM.waitHTMLElement('#date', el => {
-         const VIDEOS_ID = YDOM.getUrlVars()['v'];
+         const VIDEOS_ID = YDOM.getURLParams().get('v');
 
          if (!VIDEOS_ID || !/[a-z0-9-_]/i.test(VIDEOS_ID)) {
             return console.warn('videos_id is not valid', VIDEOS_ID);

@@ -6,7 +6,7 @@ _plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
 
          YDOM.addDoublePressListener(jumpTime, user_settings.jump_hotkey);
 
@@ -15,9 +15,9 @@ _plugins.push({
                && document.activeElement.parentElement.slot.toLowerCase().indexOf('input') === -1 // comment-area
                // && !window.getSelection()
             ) {
-               const SEC = playerId.getCurrentTime() + parseInt(user_settings.jump_step);
-               // console.log('seekTo', SEC);
-               playerId.seekTo(SEC);
+               const sec = videoPlayer.getCurrentTime() + parseInt(user_settings.jump_step);
+               // console.log('seekTo', sec);
+               videoPlayer.seekTo(sec);
             }
          }
 

@@ -27,7 +27,7 @@ _plugins.push({
          // console.log('start gen: rateBar');
          thumbnail.setAttribute(cachedAttrName, true); // lock
 
-         collectVideoIds.push(YDOM.getUrlVars(thumbnail.href)['v']);
+         collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
 
       }, 'hard waitHTMLElement listener');
 

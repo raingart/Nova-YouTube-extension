@@ -266,44 +266,29 @@ const YDOM = {
    },
 
    cookie: {
-      get: name => {
-         let cookie = {};
-         document.cookie.split(';').forEach(el => {
-            // console.log('el', el);
-            const param = el.split('=');
-            cookie[param[0].trim()] = param.slice(1).join('=');
-            // let [k, v] = el.split('=');
-            // cookie[k.trim()] = v;
-         })
-         // console.log(JSON.stringify(cookie));
-         return name ? cookie[name] : cookie;
-      },
+      get: (name = required()) => Object.fromEntries(
+         document.cookie
+            .split(/; */)
+            .map(c => [c.split("=")[0], decodeURIComponent(c.split("=")[1])])
+      )[name],
 
       set: (name = required(), value) => {
-         let cookie = {
-            [name]: value,
-            path: '/'
-         };
-         YDOM.log('cookie set: %s', JSON.stringify(cookie));
-
          let date = new Date();
-         date.setTime(date.getTime() + 31536000);
-         cookie.expires = date.toUTCString();
+         date.setTime(date.getTime() + (90 * 86400000)); // 90 days
 
-         cookie.domain = '.' + window.location.hostname.split('.').slice(-2).join('.'); // .youtube.com
-
-         let arr = []
-         for (const key in cookie) {
-            arr.push(`${key}=${cookie[key]}`);
-         }
-         document.cookie = arr.join('; ');
+         document.cookie = Object.entries({
+            path: '/',
+            [name]: encodeURIComponent(value),
+            domain: '.' + window.location.hostname.split('.').slice(-2).join('.'), // .youtube.com
+            expires: date.toUTCString(),
+         }).map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
       },
    },
 
    request: {
       // caching: (key, expiresHours, transitFn, callback) => {
       //    const now = new Date();
-      //    const value = JSON.parse(sessionStorage.getItem(key));
+      //    const value = JSON.parse(localStorage.getItem(key));
 
       //    if (value && value.hasOwnProperty('expires') && +value.expires > now.getTime()) {
       //       if (callback && typeof (callback) === 'function') {
@@ -316,9 +301,9 @@ const YDOM = {
 
       //          if (!Array.isArray(newValueData)) newValueData = [newValueData];
 
-      //          // saving to sessionStorage afler all
+      //          // saving to localStorage afler all
       //          for (const item of newValueData) {
-      //             sessionStorage.setItem(key, JSON.stringify({
+      //             localStorage.setItem(key, JSON.stringify({
       //                ...{
       //                   'expires': +now.setHours(now.getHours() + (+expiresHours || 1)), // add 1 hour,
       //                }, ...item
@@ -333,9 +318,9 @@ const YDOM = {
       API: async (url, params, custom_api_key) => {
          // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
          // console.trace();
-         const YOUTUBE_API_KEYS = JSON.parse(sessionStorage.getItem('YOUTUBE_API_KEYS'));
+         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS'));
 
-         if (!custom_api_key && (!YOUTUBE_API_KEYS || !YOUTUBE_API_KEYS.length)) {
+         if (!custom_api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
             console.error('empty YOUTUBE_API_KEYS', YOUTUBE_API_KEYS);
             return;
          }
@@ -360,7 +345,7 @@ const YDOM = {
                throw new Error(`empty API response: ${JSON.stringify(json)}`);
 
             } else if (json.error) { // API error
-               let usedAPIkey = YDOM.getUrlVars(URL)['key'];
+               let usedAPIkey = YDOM.getURLParams(URL).get('key');
                throw new Error(`${json.error.message}\n${usedAPIkey}`);
             }
 
@@ -390,11 +375,7 @@ const YDOM = {
       return (page == 'channel' || page == 'user') ? 'channel' : page || 'main';
    },
 
-   getUrlVars: url => {
-      let vars = {};
-      (url || location.search).replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => vars[key] = value);
-      return vars;
-   },
+   getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
 
    log: function (msg) {
       if (this.DEBUG) {

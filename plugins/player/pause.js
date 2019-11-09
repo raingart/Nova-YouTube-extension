@@ -6,10 +6,10 @@ _plugins.push({
    desc: 'Disables autoplay',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          let is_change_quality;
 
-         playerId.addEventListener("onStateChange", onPlayerStateChange.bind(this));
+         videoPlayer.addEventListener("onStateChange", onPlayerStateChange.bind(this));
 
          function onPlayerStateChange(state) {
             // console.log('onStateChange', state);
@@ -22,9 +22,9 @@ _plugins.push({
             // 2- paused
             // 3- buffering
             // 5- video cued
-            if ((1 === state) && !is_change_quality) {
+            if (1 === state && !is_change_quality) {
                is_change_quality = true;
-               playerId.pauseVideo();
+               videoPlayer.pauseVideo();
                // console.log('pauseVideo');
 
             } else if (-1 === state || 0 === state) {

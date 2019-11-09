@@ -8,14 +8,14 @@ _plugins.push({
 
       const switchAttrUpdated = 'timestamps-updated';
 
-      YDOM.waitHTMLElement('#thumbnail:not([' + switchAttrUpdated + ']) img', imgEl => {
-         // console.log('switchAttrUpdated:', imgEl);
-         imgEl.setAttribute(switchAttrUpdated, true);
+      YDOM.waitHTMLElement('#thumbnail:not([' + switchAttrUpdated + ']) img', imgElement => {
+         // console.log('switchAttrUpdated:', imgElement);
+         imgElement.setAttribute(switchAttrUpdated, true);
 
          const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 
-         if (re.test(imgEl.src)) {
-            imgEl.src = imgEl.src.replace(re, `${(user_settings.thumbnail_time_stamp || 'hq1')}.jpg`);
+         if (re.test(imgElement.src)) {
+            imgElement.src = imgElement.src.replace(re, `${(user_settings.thumbnail_time_stamp || 'hq1')}.jpg`);
          }
 
       }, 'hard waitHTMLElement listener');

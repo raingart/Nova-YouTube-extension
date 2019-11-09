@@ -17,23 +17,33 @@ const App = {
       //getEventListeners(window)
       //getEventListeners(document)
 
+      // also change in file '/js/background.js'
+      const APIKeysStoreName = 'YOUTUBE_API_KEYS';
+
+      // set youtubeApiKeys
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
          if (chrome.runtime.id != sender.id) return;
          App.log('onMessage request: %s', JSON.stringify(request.action || request));
-         if (request.action === "YOUTUBE_API_KEYS") {
-            sessionStorage.setItem('YOUTUBE_API_KEYS', JSON.stringify(request.options));
+         if (request.action === APIKeysStoreName) {
+            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
+            localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
          }
       });
 
-      chrome.runtime.sendMessage("get_YOUTUBE_API_KEYS");
+      // youtubeApiKeys dont has
+      if (!Array.isArray(localStorage.getItem(APIKeysStoreName))) {
+         // Cannot access 'App' before initialization, because 'console.log' and not the 'App.log'
+         console.log('onMessage request REQUESTING_' + APIKeysStoreName);
+         chrome.runtime.sendMessage('REQUESTING_' + APIKeysStoreName);
+      }
 
       // skip first run on page load
-      document.addEventListener('yt-navigate-start', () => App.is_new_url() && App.rerun());
+      document.addEventListener('yt-navigate-start', () => App.isNewUrl() && App.rerun());
    }()),
 
-   this_url: location.href,
+   thisUrl: location.href, // prev state
 
-   is_new_url: () => App.this_url === location.href ? false : App.this_url = location.href,
+   isNewUrl: () => App.thisUrl === location.href ? false : App.thisUrl = location.href,
 
    // sessionSettings: null,
    storage: {
@@ -56,7 +66,7 @@ const App = {
 
    init: () => {
       const manifest = chrome.runtime.getManifest();
-      console.log("init: %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v ' + manifest.version);
+      console.log("loaded %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v ' + manifest.version);
       // App.log('init');
       App.storage.load();
 

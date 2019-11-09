@@ -7,16 +7,16 @@ _plugins.push({
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      YDOM.waitHTMLElement('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          const playerArea = document.querySelector('.html5-video-container');
-         const videoElm = playerId.querySelector('video');
+         const videoElm = videoPlayer.querySelector('video');
 
          const setPlaybackRate = {
             Default: delta => {
-               // if (!playerId) let playerId = document.getElementById('movie_player');
-               const playbackRate = playerId.getPlaybackRate();
+               // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
+               const playbackRate = videoPlayer.getPlaybackRate();
                const inRange = d => {
-                  const availableRate = playerId.getAvailablePlaybackRates();
+                  const availableRate = videoPlayer.getAvailablePlaybackRates();
                   const rangeId = availableRate.indexOf(playbackRate);
                   return availableRate[rangeId + d];
                };
@@ -24,20 +24,20 @@ _plugins.push({
 
                // set rate
                if (rateToSet && rateToSet !== playbackRate) {
-                  playerId.setPlaybackRate(rateToSet);
+                  videoPlayer.setPlaybackRate(rateToSet);
                   // console.log('try set rate',rateToSet);
 
                   // check is correct
-                  if (rateToSet !== playerId.getPlaybackRate()) {
-                     console.error('setPlaybackRate different: %s!=%s', rateToSet, playerId.getPlaybackRate());
+                  if (rateToSet !== videoPlayer.getPlaybackRate()) {
+                     console.error('setPlaybackRate different: %s!=%s', rateToSet, videoPlayer.getPlaybackRate());
                   }
                }
-               // return rateToSet === playerId.getPlaybackRate();
-               return playerId.getPlaybackRate();
+               // return rateToSet === videoPlayer.getPlaybackRate();
+               return videoPlayer.getPlaybackRate();
             },
 
             HTML5: delta => {
-               const playbackRate = playerId.querySelector('video').playbackRate;
+               const playbackRate = videoPlayer.querySelector('video').playbackRate;
                const inRange = d => {
                   const setRateStep = playbackRate + (d * (user_settings.player_rate_step || 0.25));
                   return (0.5 <= setRateStep && setRateStep <= 3.0) && setRateStep;
@@ -48,22 +48,22 @@ _plugins.push({
                if (rateToSet && rateToSet !== playbackRate) {
                   // set rate
                   // document.getElementsByTagName('video')[0].defaultPlaybackRate = rateToSet;
-                  playerId.querySelector('video').playbackRate = rateToSet;
+                  videoPlayer.querySelector('video').playbackRate = rateToSet;
 
                   // check is correct
-                  if (rateToSet !== playerId.querySelector('video').playbackRate) {
-                     console.error('setPlaybackRate different: %s!=%s', rateToSet, playerId.querySelector('video').playbackRate);
+                  if (rateToSet !== videoPlayer.querySelector('video').playbackRate) {
+                     console.error('setPlaybackRate different: %s!=%s', rateToSet, videoPlayer.querySelector('video').playbackRate);
                   }
                }
-               // return rateToSet === playerId.querySelector('video').playbackRate;
-               return playerId.querySelector('video').playbackRate;
+               // return rateToSet === videoPlayer.querySelector('video').playbackRate;
+               return videoPlayer.querySelector('video').playbackRate;
             }
          };
 
          // hide default indicator
-         if (document.querySelector('.ytp-bezel-text-wrapper')) {
-            document.querySelector('.ytp-bezel-text-wrapper').style.display = 'none';
-         }
+         Array.from(document.querySelectorAll('[class^="ytp-bezel"]'))
+            .forEach(bezel => bezel.parentNode.removeChild(bezel))
+            // .forEach(bezel => bezel.style.display = 'none');
 
          // mousewheel
          playerArea.addEventListener("wheel", setPlaybackRate_wheel);
@@ -84,7 +84,7 @@ _plugins.push({
             )) {
                // console.log('hotkey caught');
 
-               if (!playerId.hasOwnProperty('getPlaybackRate')) {
+               if (!videoPlayer.hasOwnProperty('getPlaybackRate')) {
                   console.error('getPlaybackRate error');
                   return
                }

@@ -14,7 +14,7 @@ _plugins.push({
          // ".iv-drawer",
          // ".ima-container",
          // "[class*=ytp-ad]"
-      ].map(selector => selector).join(',\n');
+      ].join(',\n');
 
       YDOM.injectStyle({ display: 'none' }, css, 'important');
 

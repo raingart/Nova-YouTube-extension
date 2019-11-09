@@ -6,8 +6,10 @@ const Plugins_list = {
       'player/volume.js',
       'player/quality.js',
       'player/pause.js',
-      'player/pin.js',
+      'player/pause-tab.js',
       'player/focused.js',
+      'player/pin.js',
+      'player/theater-mode.js',
       'player/time-jump.js',
       // 'player/stop.js',
 

@@ -8,7 +8,7 @@ _plugins.push({
 
       const _this = this; // link to export_opt.pin_player_size_ratio
 
-      YDOM.waitHTMLElement('.html5-video-container video[style]', videoEl => {
+      YDOM.waitHTMLElement('.html5-video-container video[style]', videoElement => {
          const PINNED_CLASS_NAME = "video-pinned";
          const playerId = document.querySelector('.html5-video-player');
          let initedStyle;
@@ -16,7 +16,7 @@ _plugins.push({
          // window.pageYOffset || document.documentElement.scrollTop
 
          window.addEventListener('scroll', () => {
-            if (!initedStyle && (videoEl.scrollWidth && videoEl.scrollHeight)) {
+            if (!initedStyle && (videoElement.scrollWidth && videoElement.scrollHeight)) {
                initedStyle = true;
                initStyle();
 
@@ -30,27 +30,27 @@ _plugins.push({
             }
          });
 
-         function onScreenToggle(targetEl, viewer) {
+         function onScreenToggle(changedElement, listeningElement) {
             // console.log('playerId inViewport %s', inViewport);
             // no pinned
-            if (YDOM.isInViewport(viewer || targetEl)) {
+            if (YDOM.isInViewport(listeningElement || changedElement)) {
                if (!inViewport) {
-                  // console.log('targetEl isInViewport');
-                  targetEl.classList.remove(PINNED_CLASS_NAME);
+                  // console.log('changedElement isInViewport');
+                  changedElement.classList.remove(PINNED_CLASS_NAME);
                   inViewport = true;
 
-                  if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(targetEl);
+                  if (user_settings.pin_player_size_position == 'float') YDOM.dragnDrop.disconnect(changedElement);
 
                   if (user_settings.pin_player_pause_pinned_video) playerId.playVideo();
                }
                // pinned
             } else if (inViewport) {
-               // console.log('targetEl isInViewport');
-               targetEl.classList.add(PINNED_CLASS_NAME);
+               // console.log('changedElement isInViewport');
+               changedElement.classList.add(PINNED_CLASS_NAME);
                inViewport = false;
 
                if (user_settings.pin_player_size_position == 'float') {
-                  YDOM.dragnDrop.connect(targetEl, position => {
+                  YDOM.dragnDrop.connect(changedElement, position => {
                      localStorage.setItem('player-pin-position-top', position.top);
                      localStorage.setItem('player-pin-position-left', position.left);
                   });
@@ -92,10 +92,10 @@ _plugins.push({
                   break;
             }
             let size = {
-               // width: videoEl.clientWidth,
-               // height: videoEl.clientHeight,
-               width: videoEl.scrollWidth,
-               height: videoEl.scrollHeight,
+               // width: videoElement.clientWidth,
+               // height: videoElement.clientHeight,
+               width: videoElement.scrollWidth,
+               height: videoElement.scrollHeight,
             };
 
             size.calc = (() => {
@@ -112,6 +112,10 @@ _plugins.push({
                   (window.innerWidth / playerRatio), (window.innerWidth / playerRatio)
                );
             })();
+
+            // restore original player size. Attempt to fix a bug with unpin player
+            playerId.style.width = size.width;
+            // playerId.style.height = size.height;
 
             // add calc size
             initcss.width = size.calc.width + 'px !important;';

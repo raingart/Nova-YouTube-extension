@@ -1,15 +1,15 @@
 _plugins.push({
-   name: 'Volume with mousewheel',
+   name: 'Mouse wheel volume control',
    id: 'volume-wheel',
    section: 'player',
    depends_page: 'watch, embed',
-   desc: 'Use mouse wheel to change volume',
+   // desc: '',
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       const _this = this; // link to export_opt.volume_step
 
-      YDOM.waitHTMLElement('.html5-video-player', playerId => {
+      YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          const playerArea = document.querySelector('.html5-video-container');
          let yt_player_volume;
          // session vol level
@@ -20,16 +20,20 @@ _plugins.push({
          }
 
          // hide default indicator
+         Array.from(document.querySelectorAll('[class^="ytp-bezel"]'))
+            .forEach(bezel => bezel.parentNode.removeChild(bezel));
+            // .forEach(bezel => bezel.style.display = 'none');
+
          if (user_settings.show_volume_indicator && document.querySelector('.ytp-bezel-text-wrapper')) {
             document.querySelector('.ytp-bezel-text-wrapper').style.display = 'none';
          }
 
          // press keyboard
-         playerId.querySelector('video')
-            .addEventListener("volumechange", event => showIndicator(playerArea, playerId.getVolume()));
+         videoPlayer.querySelector('video')
+            .addEventListener("volumechange", event => showIndicator(playerArea, videoPlayer.getVolume()));
          // .addEventListener("volumechange", function (event) {
          //    let volume = parseInt(this.volume * 100);
-         //    console.log('volumechange', volume, playerId.getVolume());
+         //    console.log('volumechange', volume, videoPlayer.getVolume());
          //    showIndicator(playerArea, volume); // Error: volume this.volume is incorrect
          // });
 
@@ -46,24 +50,24 @@ _plugins.push({
                   !event.ctrlKey && !event.altKey && !event.shiftKey)
             )) {
 
-               if (!playerId.hasOwnProperty('getVolume')) {
+               if (!videoPlayer.hasOwnProperty('getVolume')) {
                   console.error('getVolume error');
                   return;
                }
 
                const step = user_settings.volume_step || _this.export_opt['volume_step'];
                const delta = Math.sign(event.wheelDelta) * step;
-               const getVolume = playerId.getVolume();
+               const currentVolume = videoPlayer.getVolume();
                // const level = setVolumeLevel(getVolume + delta, getVolume);
-               setVolumeLevel(getVolume + delta, getVolume);
+               setVolumeLevel(currentVolume + delta, currentVolume);
 
-               showIndicator(this, playerId.getVolume());
+               showIndicator(this, videoPlayer.getVolume());
             }
          }
 
-         function setVolumeLevel(volume, volumeStatus) {
+         function setVolumeLevel(volume, volumeСurrent) {
             // console.log('volume', volume, volumeStatus);
-            // if (!playerId) let playerId = document.getElementById('movie_player');
+            // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
             const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
             const volumeToSet = limiter(parseInt(volume));
             const volumeStorage = level => {
@@ -77,22 +81,22 @@ _plugins.push({
                   sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
                      '}","creation":' + now + "}";
                } catch (err) {
-                  console.info('%s: SaveVolume is impossible (Maybe on "Block third-party cookies")', err.name, err.message);
+                  console.info(`${err.name}: save volume level - failed. It seems that "Block third-party cookies" is enabled`, err.message);
                }
             }
 
             // set volume
-            if (volumeToSet !== volumeStatus) {
-               playerId.isMuted() && playerId.unMute();
-               playerId.setVolume(volumeToSet); // 0 - 100
+            if (volumeToSet !== volumeСurrent) {
+               videoPlayer.isMuted() && videoPlayer.unMute();
+               videoPlayer.setVolume(volumeToSet); // 0 - 100
 
                // check is correct
-               if (volumeToSet === playerId.getVolume()) {
+               if (volumeToSet === videoPlayer.getVolume()) {
                   volumeStorage(volumeToSet); // saving state in sessions
                   // console.log('volume saved');
-               } else console.error('setVolume error. Different: %s!=%s', volumeToSet, playerId.getVolume());
+               } else console.error('setVolume error. Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
             }
-            // return volumeToSet === playerId.getVolume() ? volumeToSet : false;
+            // return volumeToSet === videoPlayer.getVolume() ? volumeToSet : false;
          }
 
          function showIndicator(display_container, level) {

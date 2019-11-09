@@ -28,33 +28,33 @@ _plugins.push({
       // }, `${VIDEO_TITLE_SELECTOR}::first-letter`, 'important');
       // }, `[title-normalize]::first-letter`, 'important');
 
-      const capitalizeFirstLetter = s => {
-         if (typeof s !== 'string') return ''
-         return s.charAt(0).toUpperCase() + s.slice(1)
+      const capitalizeFirstLetter = str => {
+         if (typeof str !== 'string') return ''
+         return str.charAt(0).toUpperCase() + str.slice(1)
       }
 
-      YDOM.waitHTMLElement(`${VIDEO_TITLE_SELECTOR}:not([${switchAttrNormalize}])`, a => {
-         // console.log('switchAttrNormalize:', a);
-         a.setAttribute(switchAttrNormalize, true);
+      YDOM.waitHTMLElement(`${VIDEO_TITLE_SELECTOR}:not([${switchAttrNormalize}])`, titleElement => {
+         // console.log('switchAttrNormalize:', titleElement);
+         titleElement.setAttribute(switchAttrNormalize, true);
 
          let counterMatch = 0;
-         const normalizedText = a.textContent.replace(UpperCaseLetter_regex, match => {
+         const normalizedText = titleElement.textContent.replace(UpperCaseLetter_regex, match => {
             counterMatch++;
             return match.toLowerCase();
          });
 
          // Upper case > 2 words
          if (counterMatch > 2) {
-            // console.log('switchAttrNormalize:', a.title, upperCaseArr);
-            a.textContent = capitalizeFirstLetter(normalizedText);
+            // console.log('switchAttrNormalize:', titleElement.title, upperCaseArr);
+            titleElement.textContent = capitalizeFirstLetter(normalizedText);
          }
 
-         // const upperCaseArr = a.textContent.match(UpperCaseLetter_regex);
+         // const upperCaseArr = titleElement.textContent.match(UpperCaseLetter_regex);
 
          // Upper case > 2 words
          // if (upperCaseArr && upperCaseArr.length > 2) {
-         //    // console.log('switchAttrNormalize:', a.title, upperCaseArr);
-         //    upperCaseArr.forEach(match => a.textContent = a.textContent.replace(match, match.toLowerCase()));
+         //    // console.log('switchAttrNormalize:', titleElement.title, upperCaseArr);
+         //    upperCaseArr.forEach(match => titleElement.textContent = titleElement.textContent.replace(match, match.toLowerCase()));
          // }
 
       }, 'hard waitHTMLElement listener');

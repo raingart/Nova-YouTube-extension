@@ -8,8 +8,8 @@ _plugins.push({
 
       const CACHED_PREFIX = 'channel-video-count_';
 
-      YDOM.waitHTMLElement('#upload-info #channel-name a[href]', el => {
-         const CHANNEL_ID = el.getAttribute("href").split('/').pop();
+      YDOM.waitHTMLElement('#upload-info #channel-name a[href]', linkElement => {
+         const CHANNEL_ID = linkElement.getAttribute("href").split('/').pop();
 
          if (!CHANNEL_ID || !/UC([a-z0-9-_]{22})/i.test(CHANNEL_ID)) {
             console.error('CHANNEL_ID is not valid', CHANNEL_ID);
@@ -19,7 +19,7 @@ _plugins.push({
          const STORAGE = sessionStorage.getItem(CACHED_PREFIX + CHANNEL_ID);
 
          if (STORAGE) {
-            insertToHTML(el, STORAGE);
+            insertToHTML(linkElement, STORAGE);
 
          } else {
             YDOM.request.API('channels', {
@@ -32,7 +32,7 @@ _plugins.push({
                      // save cache in tabs
                      sessionStorage.setItem(CACHED_PREFIX + CHANNEL_ID, VIDEO_COUNT);
                      // out
-                     insertToHTML(el, VIDEO_COUNT);
+                     insertToHTML(linkElement, VIDEO_COUNT);
                   });
                });
          }
