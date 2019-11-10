@@ -161,6 +161,7 @@ _plugins.push({
          'player_rate_html5': {
             _elementType: 'input',
             label: 'HTML5 speed range',
+            title: 'Bypassing the player. Expand the range to x3',
             type: 'checkbox',
          },
          'player_rate_step': {

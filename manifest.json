@@ -5,7 +5,7 @@
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
-   "version": "1.6.0",
+   "version": "1.6.1",
    "author": "raingart",
    "permissions": [
       "storage",

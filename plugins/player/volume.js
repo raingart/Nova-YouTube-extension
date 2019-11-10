@@ -7,8 +7,6 @@ _plugins.push({
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      const _this = this; // link to export_opt.volume_step
-
       YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          const playerArea = document.querySelector('.html5-video-container');
          let yt_player_volume;
@@ -55,7 +53,7 @@ _plugins.push({
                   return;
                }
 
-               const step = user_settings.volume_step || _this.export_opt['volume_step'];
+               const step = user_settings.volume_step;
                const delta = Math.sign(event.wheelDelta) * step;
                const currentVolume = videoPlayer.getVolume();
                // const level = setVolumeLevel(getVolume + delta, getVolume);

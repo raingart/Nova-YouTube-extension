@@ -6,8 +6,6 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      const _this = this; // link to export_opt.pin_player_size_ratio
-
       YDOM.waitHTMLElement('.html5-video-container video[style]', videoElement => {
          const PINNED_CLASS_NAME = "video-pinned";
          const playerId = document.querySelector('.html5-video-player');
@@ -99,7 +97,7 @@ _plugins.push({
             };
 
             size.calc = (() => {
-               const playerRatio = user_settings.pin_player_size_ratio || _this.export_opt['pin_player_size_ratio'];
+               const playerRatio = user_settings.pin_player_size_ratio;
                const calculateAspectRatioFit = (srcWidth, srcHeight, maxWidth, maxHeight) => {
                   const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
                   return {

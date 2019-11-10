@@ -3,7 +3,7 @@ _plugins.push({
    id: 'scroll-to-top',
    section: 'global',
    depends_page: 'all, -embed',
-   desc: 'added in long pages',
+   desc: 'Displayed on long pages',
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement('body', () => {
