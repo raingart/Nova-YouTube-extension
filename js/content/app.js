@@ -59,15 +59,17 @@ const App = {
    },
 
    rerun: () => {
-      console.info('page transition');
-      Plugins.load(Plugins_list.runOnTransition);
-      App.run();
+      setTimeout(() => { // to avoid premature start. Dirty trick
+         console.info('page transition');
+         Plugins.load(Plugins_list.runOnTransition);
+         App.run();
+      }, 500);
    },
 
    init: () => {
       const manifest = chrome.runtime.getManifest();
       console.log("loaded %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v ' + manifest.version);
-      // App.log('init');
+
       App.storage.load();
 
       Plugins.injectScript('_plugins = []');

@@ -5,12 +5,11 @@
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
-   "version": "1.6.1",
+   "version": "1.6.2",
    "author": "raingart",
    "permissions": [
       "storage",
-      "cookies",
-      "*://github.com/*.json"
+      "cookies"
    ],
    "background": {
       "page": "/html/background.html",

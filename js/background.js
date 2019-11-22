@@ -28,7 +28,7 @@ let YOUTUBE_API_KEYS = [];
 let interval_update_keys = setInterval(() => {
    if (YOUTUBE_API_KEYS.length) clearInterval(interval_update_keys);
    else update_YOUTUBE_API_KEYS();
-}, 60 * 1000); // 1 mins
+}, 30 * 1000); // 1 mins
 
 function update_YOUTUBE_API_KEYS() {
    // https://gist.github.com/raingart/c685f14d7186a8c9bf009a83b41d1f66/

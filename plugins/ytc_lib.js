@@ -269,19 +269,25 @@ const YDOM = {
       get: (name = required()) => Object.fromEntries(
          document.cookie
             .split(/; */)
-            .map(c => [c.split("=")[0], decodeURIComponent(c.split("=")[1])])
+            .map(c => {
+               const [ key, ...v ] = c.split('=');
+               return [ key, decodeURIComponent(v.join('=')) ];
+            })
       )[name],
 
       set: (name = required(), value) => {
          let date = new Date();
          date.setTime(date.getTime() + (90 * 86400000)); // 90 days
 
-         document.cookie = Object.entries({
-            path: '/',
-            [name]: encodeURIComponent(value),
+         const newcookie = Object.entries({
+            [encodeURIComponent(name)]: encodeURIComponent(value),
             domain: '.' + window.location.hostname.split('.').slice(-2).join('.'), // .youtube.com
             expires: date.toUTCString(),
+            path: '/', // what matters at the end
          }).map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
+
+         document.cookie = newcookie
+         return newcookie;
       },
    },
 

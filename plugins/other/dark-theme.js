@@ -8,9 +8,9 @@ _plugins.push({
 
       YDOM.waitHTMLElement('html', htmlElement => {
          const switchAttrWentDark = 'dark';
-         if (htmlElement.hasAttribute(switchAttrWentDark)) {
+         if (!htmlElement.hasAttribute(switchAttrWentDark)) {
             // console.log('enable "Dark theme"');
-            htmlElement.setAttribute(switchAttrWentDark, true);
+            htmlElement.setAttribute(switchAttrWentDark, true);  // ineffective
 
             // set cookies
             const new_pref = (function () {
@@ -18,10 +18,14 @@ _plugins.push({
                const f6 = new URLSearchParams(pref).get('f6');
                return (f6 && f6 != 400)
                   ? pref.replace(f6, 400) // update
-                  : pref + '&f6=400'; // create
+                  : pref + '&f6=400&aa=11'; // create
             }());
 
-            new_pref && YDOM.cookie.set('PREF', new_pref);
+            if (new_pref) {
+               var tryset = YDOM.cookie.set('PREF', new_pref);
+               // console.log('try set document.cookie:', tryset);
+               // console.log('current document.cookie:', document.cookie);
+            }
 
          }
       });
