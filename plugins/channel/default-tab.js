@@ -5,26 +5,28 @@ _plugins.push({
    depends_page: 'channel',
    _runtime: user_settings => {
 
-      // tabs are not open
+      // channel/user home page
       if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname) ||
          /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
-         let tab_nth;
-         switch (user_settings.default_channel_tab) {
-            case 'videos':
-               tab_nth = 4;
-               break;
-            case 'playlists':
-               tab_nth = 6;
-               break;
-            case 'about':
-               tab_nth = 12;
-               break;
-            default:
-               return;
-         }
-
-         YDOM.waitHTMLElement(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`, tab => tab.click());
+         // HOME yab selected
+         YDOM.waitHTMLElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', tab => {
+            let tab_nth;
+            switch (user_settings.default_channel_tab) {
+               case 'videos':
+                  tab_nth = 4;
+                  break;
+               case 'playlists':
+                  tab_nth = 6;
+                  break;
+               case 'about':
+                  tab_nth = 12;
+                  break;
+               default:
+                  return;
+            }
+            document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`).click();
+         });
       }
 
    },

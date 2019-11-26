@@ -112,8 +112,8 @@ _plugins.push({
             })();
 
             // restore original player size. Attempt to fix a bug with unpin player
-            playerId.style.width = size.width;
-            // playerId.style.height = size.height;
+            videoElement.style.width = size.width;
+            // videoElement.style.height = size.height;
 
             // add calc size
             initcss.width = size.calc.width + 'px !important;';
