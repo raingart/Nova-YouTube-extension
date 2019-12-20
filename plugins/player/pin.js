@@ -111,8 +111,8 @@ _plugins.push({
                );
             })();
 
-            // restore original player size. Attempt to fix a bug with unpin player
-            videoElement.style.width = size.width;
+            // restore original player size. Try to fix a bug with unpin player
+            videoElement.style.width = Math.max(videoElement.clientWidth, videoElement.scrollWidth);
             // videoElement.style.height = size.height;
 
             // add calc size

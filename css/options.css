@@ -4,17 +4,9 @@ body {
    color: slategrey;
 }
 
-#plugins ul {
-   padding: 0;
-}
-
 hr {
-   margin: 0 auto 1em;
+   margin: .3em auto .6em;
    border-top: 1px solid #3d3d3d;
-}
-
-input[type=number] {
-   width: 3em;
 }
 
 .button,
@@ -26,9 +18,35 @@ textarea {
    border: 1px solid #2d2d2d;
 }
 
+[type=submit] {
+   background-color: #3e3e3e;
+   height: auto;
+   line-height: normal;
+}
+
+input[type=number] {
+   width: 3em;
+}
+
 div.between {
    display: grid;
    grid-template-columns: 1fr auto;
+   grid-gap: 5px;
+   padding: 10px 0;
+}
+
+div.between:first-child {
+   padding-top: 0;
+}
+
+div.between:last-child {
+   padding-bottom: 0;
+}
+div.between:last-child {
+   padding-bottom: 0;
+}
+div.between input {
+   padding: 5px;
 }
 
 .container {
@@ -82,7 +100,6 @@ input[type=search]:focus {
    border: 1px solid deepskyblue;
 }
 
-
 #plugins #header:not(:empty):before {
    content: "header";
 }
@@ -110,7 +127,6 @@ input[type=search]:focus {
 #plugins #other:not(:empty):before {
    content: "other";
 }
-
 
 [data-dependent] {
    transition: background-color 500ms ease-out;
@@ -159,6 +175,17 @@ input[type=search]:focus {
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
    grid-gap: 15px;
+
+   overflow-x: hidden;
+   overflow-y: auto;
+   max-height: 83vh;
+
+   padding-right: 8px;
+   padding-left: 5px;
+}
+
+#plugins ul {
+   padding: 0;
 }
 
 #plugins>* {

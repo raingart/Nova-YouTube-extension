@@ -12,6 +12,7 @@
    <link rel="stylesheet" href="/css/libs/switch_checkbox.css" />
    <link rel="stylesheet" href="/css/libs/tabs.css" />
    <link rel="stylesheet" href="/css/libs/loader.min.css" />
+   <link rel="stylesheet" href="/css/libs/scrollbar.css" />
 
    <link rel="stylesheet" href="/css/globals.css" />
    <link rel="stylesheet" href="/css/options.css" />
@@ -27,6 +28,8 @@
    <script src="/js/content/plugins-list.js"></script>
    <script src="/js/content/plugins.js"></script>
    <script src="/js/optionsView.js"></script>
+
+   <!-- <script src="/js/libs/options.js"></script> -->
 </head>
 
 <body class="preload">
@@ -84,10 +87,12 @@
                   <!-- plugins -->
                   <div>
                      <!-- <form enctype="multipart/form-data"> -->
-                     <input type="search" id="search" title="filter item"
-                        placeholder="__MSG_plugins_search_placeholder__" />
-
-                     <hr />
+                     <div class="between">
+                        <input type="search" id="search" title="filter item"
+                           placeholder="__MSG_plugins_search_placeholder__" />
+                        <button type="submit" tooltip="__MSG_opt_bth_save_settings_tooltip__"
+                           flow="left">__MSG_opt_bth_save_settings__</button>
+                     </div>
 
                      <div id="plugins">
                         <ul id="player" class="active"></ul>
@@ -98,6 +103,8 @@
                         <ul id="header" class="active"></ul>
                         <ul id="footer" class="active"></ul>
                      </div>
+
+                     <!-- <hr /> -->
 
                      <!-- <div class="item">
                         <div class="info" tooltip="__MSG_opt_example_tooltip__" flow="left">
@@ -110,25 +117,25 @@
                         </div>
                      </div> -->
 
-                     <hr />
-
-                     <div class="between">
-                        <button type="submit" tooltip="__MSG_opt_bth_save_settings_tooltip__"
-                           flow="right">__MSG_opt_bth_save_settings__</button>
-                     </div>
-
                      <!-- </form> -->
                   </div>
 
                   <!-- about -->
                   <div>
-                     <input type="text" name="custom-api-key" id="" pattern="^(AIzaSy)[\d\w]+"
-                        placeholder="personal API key" title="ex: AIzaSy...">
-                     <button type="submit" tooltip="" flow="left">__MSG_opt_bth_save_settings__</button>
-                     </br>
-                     <a href="https://console.developers.google.com/apis/credentials" target="_blank">Generate API
-                        key</a>
-                     <hr>
+                     <div class="between">
+                        <input type="text" name="custom-api-key" id="" pattern="^(AIzaSy)[\d\w]+"
+                           placeholder="Personal YouTube API key">
+                        <button type="submit" tooltip="" flow="right">__MSG_opt_bth_save_settings__</button>
+                     </div>
+
+                     <ul>
+                        <li>
+                           <a href="https://console.developers.google.com/apis/credentials" target="_blank">Generate API key</a>
+                        </li>
+                     </ul>
+
+                     <hr />
+
                      <ul>
                         <li>
                            <a href="https://github.com/raingart/YouTubeCore-extension" target="_blank"
@@ -143,6 +150,7 @@
                               tooltip="__MSG_donate_tooltip__" flow="right">__MSG_donate__</a>
                         </li>
                      </ul>
+
                   </div>
 
                </div>

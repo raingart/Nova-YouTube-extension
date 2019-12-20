@@ -119,13 +119,12 @@ _plugins.push({
             // filter small values
             if (thumb.views < 5 || thumb.total < 3) continue;
 
-            Array.from(document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]'))
-               .forEach(a => {
-                  // console.log('finded', thumb.id, a.href, thumb.pt);
-                  const pt = thumb.pt;
-                  a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
-                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
-               });
+            [...document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]')].forEach(a => {
+               // console.log('finded', thumb.id, a.href, thumb.pt);
+               const pt = thumb.pt;
+               a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
+               a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+            });
          }
       }
 

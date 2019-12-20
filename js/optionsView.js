@@ -58,12 +58,10 @@ const Opt = {
    UI: {
       toggleListView: (hideElms, activeElm, activeClass = required()) => {
          // hide all
-         if (hideElms) Array.from(document.querySelectorAll(hideElms))
-            .forEach(i => i.classList.remove(activeClass));
+         if (hideElms) [...document.querySelectorAll(hideElms)].forEach(i => i.classList.remove(activeClass));
 
          // target show
-         if (activeElm) Array.from(document.querySelectorAll(activeElm))
-            .forEach(i => i.classList.add(activeClass));
+         if (activeElm) [...document.querySelectorAll(activeElm)].forEach(i => i.classList.add(activeClass));
 
       },
 
@@ -143,27 +141,26 @@ const Opt = {
 
    eventListener: () => {
       // appearance map
-      Array.from(document.querySelectorAll(".appearance > *"))
-         .forEach(al => {
-            // test plugins is empty
-            if (document.querySelector(Opt.plugins_.conteiner + `>#${al.id}:empty`)) {
-               al.classList.add('empty');
+      [...document.querySelectorAll(".appearance > *")].forEach(al => {
+         // test plugins is empty
+         if (document.querySelector(Opt.plugins_.conteiner + `>#${al.id}:empty`)) {
+            al.classList.add('empty');
 
-            } else {
-               // add click event
-               al.addEventListener('click', event => {
-                  // event.preventDefault();
-                  Opt.UI.toggleListView(
-                     Opt.plugins_.conteiner + '> *',
-                     Opt.plugins_.conteiner + '>#' + al.id, //event.target.id <- error
-                     'active'
-                  );
-                  Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
-                  Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
-                  document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
-               });
-            }
-         });
+         } else {
+            // add click event
+            al.addEventListener('click', event => {
+               // event.preventDefault();
+               Opt.UI.toggleListView(
+                  Opt.plugins_.conteiner + '> *',
+                  Opt.plugins_.conteiner + '>#' + al.id, //event.target.id <- error
+                  'active'
+               );
+               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
+               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
+               document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
+            });
+         }
+      });
 
       // link show_all_plugins
       document.getElementById("show_all_plugins")
@@ -181,7 +178,7 @@ const Opt = {
          });
 
       // spoler
-      Array.from(document.querySelectorAll(Opt.plugins_.conteiner + '> *'))
+      [...document.querySelectorAll(Opt.plugins_.conteiner + '> *')]
          .forEach(ul => ul.addEventListener('click', event => {
             // event.preventDefault();
             event.target.classList.toggle("collapse")
@@ -231,7 +228,7 @@ function searchFilter(keyword, containers, filterChildTagName) {
    // console.log('searchFilter', keyword);
    for (const item of containers) {
       let text = item.textContent;
-      let found = text.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+      let found = text.toLowerCase().includes(keyword.toLowerCase());
       let highlight = el => {
          el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
          if (found && keyword.toString().trim()) highlightSearchTerm(el, keyword);

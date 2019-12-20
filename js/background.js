@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(details => {
          case 'install':
             if (!Object.keys(storage).length &&
                confirm(`${manifest.short_name}: no configuration data found!\nActivate default plugins and settings?`)) {
-               chrome.storage.sync.set(initialStorage);
+               Storage.setParams(initialStorage, 'sync');
                console.log('Apply initial configuration', JSON.stringify(initialStorage));
             }
             break;

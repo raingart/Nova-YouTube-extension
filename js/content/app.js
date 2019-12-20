@@ -145,3 +145,6 @@ const App = {
 }
 
 App.init();
+
+// for inspect
+// getEventListeners(document.querySelector('video'));

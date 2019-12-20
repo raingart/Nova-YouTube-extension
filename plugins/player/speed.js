@@ -11,6 +11,20 @@ _plugins.push({
          const playerArea = document.querySelector('.html5-video-container');
          const videoElm = videoPlayer.querySelector('video');
 
+         // [listener block]
+         // mousewheel
+         playerArea.addEventListener("wheel", setPlaybackRate_wheel);
+
+         // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
+         videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
+
+         // [bezel block]
+         // hide default indicator
+         [...document.querySelectorAll('[class^="ytp-bezel"]')]
+            .forEach(bezel => bezel.parentNode.removeChild(bezel))
+            // .forEach(bezel => bezel.style.display = 'none');
+
+         // [funcs/libs block]
          const setPlaybackRate = {
             Default: delta => {
                // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
@@ -59,18 +73,6 @@ _plugins.push({
                return videoPlayer.querySelector('video').playbackRate;
             }
          };
-
-         // hide default indicator
-         Array.from(document.querySelectorAll('[class^="ytp-bezel"]'))
-            .forEach(bezel => bezel.parentNode.removeChild(bezel))
-            // .forEach(bezel => bezel.style.display = 'none');
-
-         // mousewheel
-         playerArea.addEventListener("wheel", setPlaybackRate_wheel);
-
-         // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
-         videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
-
          function setPlaybackRate_wheel(event) {
             // console.log('onWheel');
             event.preventDefault();

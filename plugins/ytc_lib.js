@@ -72,16 +72,15 @@ const YDOM = {
             // console.log('element test', listener.selector, element);
 
             // Query for elements matching the specified selector
-            Array.from(document.querySelectorAll(listener.selector))
-               .forEach(element => {
-                  listener.clear && YDOM.log('element ready: %s', listener.selector);
+            [...document.querySelectorAll(listener.selector)].forEach(element => {
+               listener.clear && YDOM.log('element ready: %s', listener.selector);
 
-                  if (listener.clear) {
-                     YDOM.listeners.splice(i, 1); // delete element from listeners
-                     YDOM.log('element clear: %s', listener.selector);
-                  }
-                  listener.fn(element);
-               });
+               if (listener.clear) {
+                  YDOM.listeners.splice(i, 1); // delete element from listeners
+                  YDOM.log('element clear: %s', listener.selector);
+               }
+               listener.fn(element);
+            });
          };
       }
    },
@@ -270,8 +269,8 @@ const YDOM = {
          document.cookie
             .split(/; */)
             .map(c => {
-               const [ key, ...v ] = c.split('=');
-               return [ key, decodeURIComponent(v.join('=')) ];
+               const [key, ...v] = c.split('=');
+               return [key, decodeURIComponent(v.join('='))];
             })
       )[name],
 

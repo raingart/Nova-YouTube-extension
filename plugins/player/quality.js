@@ -13,6 +13,10 @@ _plugins.push({
          videoPlayer.addEventListener("onStateChange", setQuality.bind(this));
 
          function setQuality(state) {
+            if (!selectedQuality) {
+               console.error('selectedQuality unavailable', selectedQuality);
+               return;
+            }
             // console.log('onStateChange', state);
 
             // 1- unstarted
@@ -38,8 +42,8 @@ _plugins.push({
                      //    return;
                      // }
 
-                     if (availableQualityLevels.indexOf(selectedQuality) === -1) {
-                        console.info('no has selectedQuality "%s". Choosing instead the top-most quality available "%s" of %s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
+                     if (!availableQualityLevels.includes(selectedQuality)) {
+                        console.info('no has selectedQuality: "%s". Choosing instead the top-most quality available "%s" of %s', selectedQuality, qualityToSet, JSON.stringify(availableQualityLevels));
                      }
 
                      if (videoPlayer.hasOwnProperty('setPlaybackQuality')) {
@@ -51,27 +55,22 @@ _plugins.push({
                      if (videoPlayer.hasOwnProperty('setPlaybackQualityRange')) {
                         videoPlayer.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
-                     } else { // emulate clicked (in embed iframe)
-                        // console.log('used emulate clicked');
-                        document.querySelector(".ytp-settings-button").click(); // settings button
+                        // emulate clicked (in embed iframe)
+                     } else if (document.querySelector('.ytp-settings-button:not([aria-expanded]')) { // the menu is not open
+                        // console.log('emulate clicked');
+                        document.querySelector('.ytp-settings-button').click(); // settings button
+                        document.querySelector('.ytp-settings-menu [role=menuitem]:last-child').click(); // quality menu
 
-                        const qualityOption = document.querySelector(".ytp-panel-menu .ytp-menuitem:last-child");
-                        // test is quality option
-                        if (/\d{3,4}[ps]/.test(qualityOption.children[1].firstElementChild.textContent)) {
-                           qualityOption.click(); // open option
+                        // [...document.querySelector(".ytp-quality-menu .ytp-panel-menu").children]
+                        //    .filter(menuitem => menuitem.textContent.includes(qualityToSet))[0].click();
 
-                           const showQualities = document
-                              .querySelector(".ytp-settings-menu")
-                              .querySelector(".ytp-quality-menu .ytp-panel-menu").children;
+                        const showQualities = document.querySelectorAll('.ytp-quality-menu [role=menuitemradio]');
+                        console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
+                        showQualities[maxAvailableQuality].click(); // choosing it quality
 
-                           showQualities[maxAvailableQuality].click(); // choosing it quality
-
-                           //unfocused
-                           document.querySelector("body").click();
-                           document.querySelector("video").focus();
-
-                           // console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
-                        }
+                        //unfocused
+                        document.querySelector("body").click();
+                        document.querySelector("video").focus();
                      }
 
                      // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));

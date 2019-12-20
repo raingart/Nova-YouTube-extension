@@ -12,7 +12,7 @@ _plugins.push({
 
          function jumpTime(event) {
             if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
-               && document.activeElement.parentElement.slot.toLowerCase().indexOf('input') === -1 // comment-area
+               && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                // && !window.getSelection()
             ) {
                const sec = videoPlayer.getCurrentTime() + parseInt(user_settings.jump_step);

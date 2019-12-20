@@ -1,6 +1,6 @@
 _plugins.push({
    name: 'Video autopause',
-   id: 'stop-autoplay',
+   id: 'pause-autoplay',
    section: 'player',
    depends_page: 'watch, embed',
    desc: 'Disables autoplay',
@@ -14,7 +14,7 @@ _plugins.push({
          function onPlayerStateChange(state) {
             // console.log('onStateChange', state);
 
-            if (user_settings.stop_autoplay_ignore_playlist && window.location.href.indexOf('list=') !== -1) return;
+            if (user_settings.stop_autoplay_ignore_playlist && window.location.href.includes('list=')) return;
 
             // 1- unstarted
             // 0- ended

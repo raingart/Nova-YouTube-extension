@@ -38,7 +38,8 @@
 .tabs-content {
    clear: both;
    border-top: 2px solid #3d3d3d;
-   padding: 15px 6px;
+   /* padding: 15px 6px; */
+   padding: 10px 0px;
 }
 
 .tabs-content>* {

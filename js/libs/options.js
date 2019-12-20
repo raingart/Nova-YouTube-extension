@@ -5,20 +5,19 @@ window.addEventListener('load', (evt) => {
    const Conf = {
 
       attrDependencies: () => {
-         Array.from(document.querySelectorAll("[data-dependent]"))
-            .forEach(dependentItem => {
-               // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-               let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
+         [...document.querySelectorAll("[data-dependent]")].forEach(dependentItem => {
+            // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
+            let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
 
-               let handler = function () {
-                  showOrHide(dependentItem, dependentsJson);
-               };
-               // init state
-               handler();
+            let handler = function () {
+               showOrHide(dependentItem, dependentsJson);
+            };
+            // init state
+            handler();
 
-               let dependentTag = document.getElementById(Object.keys(dependentsJson))
-               if (dependentTag) dependentTag.addEventListener("change", handler);
-            });
+            let dependentTag = document.getElementById(Object.keys(dependentsJson))
+            if (dependentTag) dependentTag.addEventListener("change", handler);
+         });
 
          function showOrHide(dependentItem, dependentsList) {
             for (const name in dependentsList)
@@ -138,6 +137,23 @@ window.addEventListener('load', (evt) => {
             document.querySelector("body").classList.remove("preload");
          };
          Storage.getParams(callback, 'sync');
+
+         // // Bug reload page. Need fix options.html
+         // // save callback event
+         // let form = document.forms[0];
+         // let submitted = e => {
+         //    e.preventDefault();
+         //    Conf.saveOptions(form);
+         // }
+         // form.onsubmit = submitted.bind(form);
+
+         // // auto submit form
+         // Array.from(form.getElementsByTagName("input"))
+         //    .forEach(input =>
+         //       input.addEventListener('change', () => {
+         //          form.submit()
+         //       })
+         //    );
       },
    }
 
