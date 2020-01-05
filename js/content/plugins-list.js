@@ -32,8 +32,8 @@ const Plugins_list = {
 
       'sidebar/livechat-hide.js',
 
-      'channel/default-tab.js',
-      'channel/disable-trailer.js',
+      'other/default-tab.js',
+      'other/disable-trailer.js',
 
       'other/collapse-navigation-panel.js',
    ],

@@ -27,7 +27,8 @@ const Opt = {
 
                li.innerHTML = '<div class="info"' +
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
-                  `<label for="${plugin.id}">${plugin.name}</label></div>` +
+                  `<label for="${plugin.id}">${plugin.name}` +
+                  `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a></label></div>` +
                   `<div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)

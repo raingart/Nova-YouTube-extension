@@ -68,7 +68,7 @@ _plugins.push({
                         console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
                         showQualities[maxAvailableQuality].click(); // choosing it quality
 
-                        //unfocused
+                        // unfocused
                         document.querySelector("body").click();
                         document.querySelector("video").focus();
                      }
@@ -125,7 +125,7 @@ _plugins.push({
          },
          'save_manual_quality_in_tab': {
             _elementType: 'input',
-            label: 'Save changes made manually in the tab',
+            label: 'Save manually selected quality for the same tab',
             type: 'checkbox',
             checked: true,
          },

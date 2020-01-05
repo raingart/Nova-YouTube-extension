@@ -3,12 +3,12 @@
 
 Combine small plugins, expanding the possibilities of YouTube.
 
-![New Horizons for YouTube-extension](https://lh3.googleusercontent.com/4EjpHB0f1WkJWsr-yd53ZRgbMDwZpCY1Q82Vz7KqIk33oYR_0Db-ZolXmcIs_Lh839Eck7Py2Q=w640-h400-e365)
+![New Horizons for YouTube-extension](https://lh3.googleusercontent.com/NUJv5yIT-6NUT7YiBgkNu8kCULGkbG8YL3XXjNiB_Q3XW87rvfyYDbPj55u2RTqJihtX_94Y=w640-h400-e365)
 
 ### Installation
 [Download the extension from the Chrome store.](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)(It's free.)
 
-OR 
+OR
 
 You can now load the extension into your browser through the browser's extension tools page:
 - Type `chrome://extensions` in your address bar to bring up the extensions page.
