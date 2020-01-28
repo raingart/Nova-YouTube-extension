@@ -23,7 +23,7 @@ _plugins.push({
 
       const cachedAttrName = 'rating-bar-added';
 
-      YDOM.waitHTMLElement('#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
+      YDOM.waitHTMLElement('a#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
          // console.log('start gen: rateBar');
          thumbnail.setAttribute(cachedAttrName, true); // lock
 
@@ -122,7 +122,7 @@ _plugins.push({
             [...document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]')].forEach(a => {
                // console.log('finded', thumb.id, a.href, thumb.pt);
                const pt = thumb.pt;
-               a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
+               // a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
                a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
             });
          }
@@ -136,6 +136,7 @@ _plugins.push({
             label: 'Bar height',
             type: 'number',
             placeholder: '1-9',
+            title: 'In pixels',
             step: 1,
             min: 1,
             max: 9,

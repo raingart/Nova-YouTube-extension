@@ -24,6 +24,10 @@ textarea {
    line-height: normal;
 }
 
+[type=submit]:hover {
+   background-color: deepskyblue;
+}
+
 input[type=number] {
    width: 3em;
 }
@@ -230,4 +234,12 @@ li>label+* {
    grid-column: input;
    align-self: center;
    justify-self: center;
+}
+
+.info > label {
+   display: inline;
+}
+.info > label+a {
+   margin-left: 3px;
+   /* color: #D5DDE5; */
 }

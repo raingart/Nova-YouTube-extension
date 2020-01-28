@@ -15,6 +15,29 @@ _plugins.push({
          // mousewheel
          playerArea.addEventListener("wheel", setPlaybackRate_wheel);
 
+         // [session block]
+         // session rate level
+         try { yt_player_rate = sessionStorage["yt-player-playback-rate"] } catch (err) { }
+         // init default_playback_rate
+         if (!yt_player_rate && user_settings.default_playback_rate > 1) {
+            const rateIsSet = user_settings.player_rate_html5 ?
+               // setPlaybackRate.HTML5(user_settings.default_playback_rate) : setPlaybackRate.Default(user_settings.default_playback_rate);
+               videoPlayer.querySelector('video').playbackRate = +user_settings.default_playback_rate
+               : videoPlayer.setPlaybackRate(+user_settings.default_playback_rate);
+
+            rateStorage(user_settings.default_playback_rate);
+
+            function rateStorage(level) {
+               // console.log('sessionStorage["yt-player-playback-rate"] %s', JSON.stringify(sessionStorage["yt-player-playback-rate"]));
+               const now = (new Date).getTime();
+               try {
+                  sessionStorage["yt-player-playback-rate"] = JSON.stringify({ "data": level, "creation": now });
+               } catch (err) {
+                  console.info(`${err.name}: save volume level - failed.`, err.message);
+               }
+            }
+         }
+
          // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
          videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
 
@@ -30,9 +53,9 @@ _plugins.push({
                // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
                const playbackRate = videoPlayer.getPlaybackRate();
                const inRange = d => {
-                  const availableRate = videoPlayer.getAvailablePlaybackRates();
-                  const rangeId = availableRate.indexOf(playbackRate);
-                  return availableRate[rangeId + d];
+                  const rangeRate = videoPlayer.getAvailablePlaybackRates();
+                  const rangeIdx = rangeRate.indexOf(playbackRate);
+                  return rangeRate[rangeIdx + d];
                };
                const rateToSet = inRange(delta);
 
@@ -73,6 +96,7 @@ _plugins.push({
                return videoPlayer.querySelector('video').playbackRate;
             }
          };
+
          function setPlaybackRate_wheel(event) {
             // console.log('onWheel');
             event.preventDefault();
@@ -150,6 +174,17 @@ _plugins.push({
    },
    export_opt: (function () {
       return {
+         'default_playback_rate': {
+            _elementType: 'input',
+            label: 'Speed at startup',
+            type: 'number',
+            title: '1 - auto/disable',
+            placeholder: '1-2',
+            step: 0.25,
+            min: 1,
+            max: 2,
+            value: 1,
+         },
          'player_rate_hotkey': {
             _elementType: 'select',
             label: 'Hotkey',

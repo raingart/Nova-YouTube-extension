@@ -19,7 +19,7 @@ _plugins.push({
          const STORAGE = sessionStorage.getItem(CACHED_PREFIX + CHANNEL_ID);
 
          if (STORAGE) {
-            insertToHTML(linkElement, STORAGE);
+            insertToHTML(STORAGE);
 
          } else {
             YDOM.request.API('channels', {
@@ -31,24 +31,23 @@ _plugins.push({
                      const VIDEO_COUNT = item.statistics.videoCount;
                      // save cache in tabs
                      sessionStorage.setItem(CACHED_PREFIX + CHANNEL_ID, VIDEO_COUNT);
-                     // out
-                     insertToHTML(linkElement, VIDEO_COUNT);
+                     insertToHTML(VIDEO_COUNT);
                   });
                });
          }
 
       });
 
-      function insertToHTML(el, data) {
+      function insertToHTML(text) {
          const DIV_ID = 'video_count';
          if (document.getElementById(DIV_ID)) {
-            document.getElementById(DIV_ID).textContent = data;
+            document.getElementById(DIV_ID).textContent = text;
 
          } else {
             // #owner-container
-            el.parentElement.parentElement.insertAdjacentHTML("beforeend",
-               '<span class="date style-scope ytd-video-secondary-info-renderer">' +
-               ` - <span id="${DIV_ID}">${data}</span> videos</span>`);
+            document.querySelector('#upload-info #channel-name')
+               .insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">' +
+               `&nbsp- <span id="${DIV_ID}">${text}</span> videos</span>`);
          }
       }
    }

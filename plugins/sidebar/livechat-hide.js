@@ -11,8 +11,7 @@ _plugins.push({
 
       } else {
          YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button', bth => bth.click());
-         // test livechat already collapsed
-         // https://www.youtube.com/watch?v=uyKzS_FDHTI
+         // test livechat already collapsed - https://www.youtube.com/watch?v=uyKzS_FDHTI
 
          // not working next
          // YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])', bth => {

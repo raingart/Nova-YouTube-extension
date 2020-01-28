@@ -70,7 +70,7 @@ input[type=button] {
    text-decoration: none;
    white-space: nowrap;
    background-color: transparent;
-   border-radius: 4px;
+   border-radius: 2px;
    border: 1px solid #bbb;
    box-sizing: border-box;
    height: 35px;
