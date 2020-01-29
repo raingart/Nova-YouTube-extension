@@ -42,7 +42,7 @@ _plugins.push({
             collectVideoIds = [];
 
             const now = new Date();  //epoch time, lets deal only with integer
-            const new_video_ids = _collectVideoIds.filter(video_id => {
+            const newVidIds = _collectVideoIds.filter(video_id => {
                const item = JSON.parse(localStorage.getItem(CACHED_PREFIX + video_id));
 
                if (item && item.hasOwnProperty('expires')) {
@@ -62,9 +62,9 @@ _plugins.push({
                }
 
             });
-            // new_video_ids.forEach(k => localStorage.removeItem(k));
-            // console.log('new', new_video_ids);
-            getRatingsObj(new_video_ids);
+            // newVidIds.forEach(k => localStorage.removeItem(k));
+            // console.log('new', newVidIds);
+            getRatingsObj(newVidIds);
          }
       }, 3000);
 

@@ -7,6 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement('.html5-video-container video[style]', videoElement => {
+         const STORE_PREFIX = 'player-pin-position-';
          const PINNED_CLASS_NAME = "video-pinned";
          const playerId = document.querySelector('.html5-video-player');
          let initedStyle;
@@ -49,8 +50,8 @@ _plugins.push({
 
                if (user_settings.pin_player_size_position == 'float') {
                   YDOM.dragnDrop.connect(changedElement, position => {
-                     localStorage.setItem('player-pin-position-top', position.top);
-                     localStorage.setItem('player-pin-position-left', position.left);
+                     localStorage.setItem(STORE_PREFIX + 'top', position.top);
+                     localStorage.setItem(STORE_PREFIX + 'left', position.left);
                   });
                }
                if (user_settings.pin_player_pause_pinned_video) playerId.pauseVideo();
@@ -85,8 +86,8 @@ _plugins.push({
                   initcss.right = 0;
                   break;
                case 'float':
-                  initcss.top = localStorage.getItem('player-pin-position-top');
-                  initcss.left = localStorage.getItem('player-pin-position-left');
+                  initcss.top = localStorage.getItem(STORE_PREFIX + 'top');
+                  initcss.left = localStorage.getItem(STORE_PREFIX + 'left');
                   break;
             }
             let size = {

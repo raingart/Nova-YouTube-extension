@@ -2,13 +2,13 @@ _plugins.push({
    name: 'Pauses playing videos in other tabs',
    id: 'pause-background-tab',
    section: 'player',
-   depends_page: 'watch',
-   // desc: '',
+   depends_page: 'watch, embed',
+   desc: 'Supports frames and open browser windows',
    _runtime: user_settings => {
 
       const storeName = 'playngInstanceIDTab';
       // Generate a random script instance ID
-      const instanceID = YDOM.getURLParams().get('v') + '-' + Math.round(Math.random() * 10);
+      const instanceID = Math.random();
 
       YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          const removeStorage = () => localStorage.removeItem(storeName);
@@ -23,6 +23,9 @@ _plugins.push({
 
          videoPlayer.addEventListener("onStateChange", onPlayer.bind(this));
 
+         // remove storage if this tab closed
+         window.addEventListener("beforeunload", event => removeStorage());
+
          window.addEventListener('storage', event => {
             if (event.key === storeName && event.storageArea === localStorage // checking the right item
                && localStorage[storeName] && localStorage[storeName] !== instanceID // has storage
@@ -31,9 +34,6 @@ _plugins.push({
                videoPlayer.pauseVideo();
             }
          });
-
-         // remove storage if this tab closed
-         window.addEventListener("beforeunload", event => removeStorage());
 
       });
 

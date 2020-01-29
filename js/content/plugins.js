@@ -56,9 +56,10 @@ const Plugins = {
                plugin._runtime(store);
                delete _plugins[i];
 
+            // try { // for test
             } catch (err) {
                console.error(`plugin error: ${plugin.name}\n${err}`);
-               alert(`ERROR plugin "${plugin.name}"\nTry disable this plugin\n${err}`);
+               alert(`Critical plugin error - "${plugin.name}"!\nDetails in the console.\n\nPlease report a bug or disable the plugin.`);
             }
          }
          // else console.log('plugin skiping', plugin.name);

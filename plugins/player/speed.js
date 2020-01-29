@@ -15,29 +15,6 @@ _plugins.push({
          // mousewheel
          playerArea.addEventListener("wheel", setPlaybackRate_wheel);
 
-         // [session block]
-         // session rate level
-         try { yt_player_rate = sessionStorage["yt-player-playback-rate"] } catch (err) { }
-         // init default_playback_rate
-         if (!yt_player_rate && user_settings.default_playback_rate > 1) {
-            const rateIsSet = user_settings.player_rate_html5 ?
-               // setPlaybackRate.HTML5(user_settings.default_playback_rate) : setPlaybackRate.Default(user_settings.default_playback_rate);
-               videoPlayer.querySelector('video').playbackRate = +user_settings.default_playback_rate
-               : videoPlayer.setPlaybackRate(+user_settings.default_playback_rate);
-
-            rateStorage(user_settings.default_playback_rate);
-
-            function rateStorage(level) {
-               // console.log('sessionStorage["yt-player-playback-rate"] %s', JSON.stringify(sessionStorage["yt-player-playback-rate"]));
-               const now = (new Date).getTime();
-               try {
-                  sessionStorage["yt-player-playback-rate"] = JSON.stringify({ "data": level, "creation": now });
-               } catch (err) {
-                  console.info(`${err.name}: save volume level - failed.`, err.message);
-               }
-            }
-         }
-
          // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
          videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
 
@@ -47,17 +24,19 @@ _plugins.push({
             .forEach(bezel => bezel.parentNode.removeChild(bezel))
             // .forEach(bezel => bezel.style.display = 'none');
 
-         // [funcs/libs block]
+         // [funcs/libs block] #1
          const setPlaybackRate = {
-            Default: delta => {
+            set: x => user_settings.player_rate_html5 ? setPlaybackRate.html5(x) : setPlaybackRate.default(x),
+
+            default: playback_rate => {
                // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
                const playbackRate = videoPlayer.getPlaybackRate();
-               const inRange = d => {
+               const inRange = delta => {
                   const rangeRate = videoPlayer.getAvailablePlaybackRates();
                   const rangeIdx = rangeRate.indexOf(playbackRate);
-                  return rangeRate[rangeIdx + d];
+                  return rangeRate[rangeIdx + delta];
                };
-               const rateToSet = inRange(delta);
+               const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
 
                // set rate
                if (rateToSet && rateToSet !== playbackRate) {
@@ -73,13 +52,13 @@ _plugins.push({
                return videoPlayer.getPlaybackRate();
             },
 
-            HTML5: delta => {
+            html5: playback_rate => {
                const playbackRate = videoPlayer.querySelector('video').playbackRate;
-               const inRange = d => {
-                  const setRateStep = playbackRate + (d * (user_settings.player_rate_step || 0.25));
+               const inRange = delta => {
+                  const setRateStep = playbackRate + (delta * (user_settings.player_rate_step || 0.25));
                   return (0.5 <= setRateStep && setRateStep <= 3.0) && setRateStep;
                };
-               const rateToSet = inRange(delta);
+               const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
 
                // set rate
                if (rateToSet && rateToSet !== playbackRate) {
@@ -96,6 +75,11 @@ _plugins.push({
                return videoPlayer.querySelector('video').playbackRate;
             }
          };
+
+         // init default_playback_rate
+         if (user_settings.default_playback_rate > 1) {
+            setPlaybackRate.set(+user_settings.default_playback_rate);
+         }
 
          function setPlaybackRate_wheel(event) {
             // console.log('onWheel');
@@ -114,11 +98,8 @@ _plugins.push({
                   console.error('getPlaybackRate error');
                   return
                }
-
                const delta = Math.sign(event.wheelDelta);
-
-               const rateIsSet = user_settings.player_rate_html5 ?
-                  setPlaybackRate.HTML5(delta) : setPlaybackRate.Default(delta);
+               const rateIsSet = setPlaybackRate.set(delta);
 
                // show indicator
                if (!user_settings.player_rate_html5) showIndicator(rateIsSet + 'x', this);

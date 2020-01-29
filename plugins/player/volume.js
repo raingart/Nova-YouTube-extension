@@ -9,7 +9,9 @@ _plugins.push({
 
       YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
          const playerArea = document.querySelector('.html5-video-container');
-         let yt_player_volume;
+
+         // init default_volume_level
+         setVolumeLevel(+user_settings.default_volume_level, videoPlayer.getVolume())
 
          // [listener block]
          // volume keyboard shortcuts
@@ -23,14 +25,6 @@ _plugins.push({
 
          // mousewheel in player area
          playerArea.addEventListener("wheel", volume_onWheel);
-
-         // [session block]
-         // session volume level
-         try { yt_player_volume = sessionStorage["yt-player-volume"] } catch (err) { }
-         // init default_volume_level
-         if (!yt_player_volume && user_settings.default_volume_level && user_settings.default_volume_level != 0) {
-            setVolumeLevel(user_settings.default_volume_level);
-         }
 
          // [bezel block]
          // hide default indicator
@@ -76,23 +70,21 @@ _plugins.push({
 
                // check is correct
                if (volumeToSet === videoPlayer.getVolume()) {
-                  volumeStorage(volumeToSet); // saving state in sessions
+                  saveInSession(volumeToSet);
                   // console.log('volume saved');
                } else console.error('setVolume error. Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
             }
 
-            function volumeStorage(level) {
-               // console.log('sessionStorage["yt-player-volume"] %s', JSON.stringify(sessionStorage["yt-player-volume"]));
+            // saving state in sessions
+            function saveInSession(level) {
+               if (!level) return;
                const now = (new Date).getTime();
                const muted = level ? "false" : "true";
 
                try {
-                  // localStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
-                  //    '}","expiration":' + (now + 2592E6) + ',"creation":' + c + "}";
-                  sessionStorage["yt-player-volume"] = '{"data":"{\\"volume\\":' + level + ',\\"muted\\":' + muted +
-                     '}","creation":' + now + "}";
+                  sessionStorage['yt-player-volume'] = JSON.stringify({ "data": { "volume": level, "muted": muted }, "expiration": now, "creation": now });
                } catch (err) {
-                  console.info(`${err.name}: save volume level - failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                  console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
                }
             }
             // return volumeToSet === videoPlayer.getVolume() ? volumeToSet : false;

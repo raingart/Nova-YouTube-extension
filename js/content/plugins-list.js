@@ -26,9 +26,9 @@ const Plugins_list = {
 
       'details/expand-description.js',
       'details/channel-video-count.js',
-      'details/video-age.js',
 
       'comments/disable-comments.js',
+      'comments/hide-creator-heart.js',
 
       'sidebar/livechat-hide.js',
 

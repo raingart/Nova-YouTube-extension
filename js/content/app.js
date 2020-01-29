@@ -25,8 +25,8 @@ const App = {
          if (chrome.runtime.id != sender.id) return;
          App.log('onMessage request: %s', JSON.stringify(request.action || request));
          if (request.action === APIKeysStoreName) {
-            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
-            localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
+            App.log(`get and save ytc-${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
+            localStorage.setItem('ytc-' + APIKeysStoreName, JSON.stringify(request.options));
          }
       });
 

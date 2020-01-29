@@ -323,7 +323,7 @@ const YDOM = {
       API: async (url, params, custom_api_key) => {
          // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
          // console.trace();
-         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
+         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('ytc-' + 'YOUTUBE_API_KEYS') || 'null');
 
          if (!custom_api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
             throw new Error('YOUTUBE_API_KEYS ' + YOUTUBE_API_KEYS);
@@ -332,8 +332,8 @@ const YDOM = {
          const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 
          // combine GET
-         const query = (url == 'videos' ? 'videos' : 'channels')
-            + '?' + Object.keys(params)
+         const query = (url == 'videos' ? 'videos' : 'channels') + '?'
+               + Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                .join('&');
 
