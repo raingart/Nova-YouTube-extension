@@ -13,6 +13,8 @@ const Plugins_list = {
       'player/time-jump.js',
       // 'player/stop.js',
 
+      // 'comments/filter-comments.js',
+
       'other/scroll-to-top.js',
       'other/dark-theme.js',
       'other/rating-bars.js',
@@ -28,7 +30,6 @@ const Plugins_list = {
       'details/channel-video-count.js',
 
       'comments/disable-comments.js',
-      'comments/hide-creator-heart.js',
 
       'sidebar/livechat-hide.js',
 

@@ -25,8 +25,8 @@ const App = {
          if (chrome.runtime.id != sender.id) return;
          App.log('onMessage request: %s', JSON.stringify(request.action || request));
          if (request.action === APIKeysStoreName) {
-            App.log(`get and save ytc-${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
-            localStorage.setItem('ytc-' + APIKeysStoreName, JSON.stringify(request.options));
+            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
+            localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
          }
       });
 
@@ -90,7 +90,7 @@ const App = {
             clearInterval(settings_loaded);
             App.run(pluginsExportedCount);
          }
-      }, 50);
+      }, 125); // 125 ms
    },
 
    getPageType: () => {
@@ -117,9 +117,11 @@ const App = {
             }
             // force run "_plugins_executor" after 2000 ms
             setTimeout(() => {
-               if (_plugins.length < _pluginsExportedCount) _pluginsExportedCount = undefined;
-            }, 2000);
-
+               if (_plugins.length < _pluginsExportedCount) {
+                  console.log('force plugins load');
+                  _pluginsExportedCount = undefined;
+               }
+            }, 2500); // 2.5 sec
          }, 100);
       };
 

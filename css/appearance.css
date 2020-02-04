@@ -14,7 +14,7 @@
 .appearance>* {
    /* border: 1px solid #ddd;
    background: #fff;     */
-   outline: 1px solid #3d3d3d;
+   outline: 1px solid var(--hr);
    min-height: 30px;
    cursor: pointer;
    user-select: none;

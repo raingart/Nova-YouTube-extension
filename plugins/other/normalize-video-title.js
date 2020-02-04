@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       const VIDEO_TITLE_SELECTOR = '#video-title';
-      const switchAttrNormalize = 'title-normalize';
+      const markAttrName = 'title-normalize';
 
       // Letters (Lu): Upper case letter unicode
       // https://apps.timwhitlock.info/js/regex
@@ -33,9 +33,10 @@ _plugins.push({
          return str.charAt(0).toUpperCase() + str.slice(1)
       }
 
-      YDOM.waitHTMLElement(`${VIDEO_TITLE_SELECTOR}:not([${switchAttrNormalize}])`, titleElement => {
-         // console.log('switchAttrNormalize:', titleElement);
-         titleElement.setAttribute(switchAttrNormalize, true);
+      YDOM.waitHTMLElement(`${VIDEO_TITLE_SELECTOR}:not([${markAttrName}])`, titleElement => {
+         if (titleElement.hasAttribute(markAttrName)) return;
+         // console.log('markAttrName:', titleElement);
+         titleElement.setAttribute(markAttrName, true);
 
          let counterMatch = 0;
          const normalizedText = titleElement.textContent.replace(UpperCaseLetter_regex, match => {
@@ -45,7 +46,7 @@ _plugins.push({
 
          // Upper case > 2 words
          if (counterMatch > 2) {
-            // console.log('switchAttrNormalize:', titleElement.title, upperCaseArr);
+            // console.log('markAttrName:', titleElement.title, upperCaseArr);
             titleElement.textContent = capitalizeFirstLetter(normalizedText);
          }
 
@@ -53,7 +54,7 @@ _plugins.push({
 
          // Upper case > 2 words
          // if (upperCaseArr && upperCaseArr.length > 2) {
-         //    // console.log('switchAttrNormalize:', titleElement.title, upperCaseArr);
+         //    // console.log('markAttrName:', titleElement.title, upperCaseArr);
          //    upperCaseArr.forEach(match => titleElement.textContent = titleElement.textContent.replace(match, match.toLowerCase()));
          // }
 

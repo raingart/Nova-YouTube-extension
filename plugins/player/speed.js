@@ -24,7 +24,7 @@ _plugins.push({
             .forEach(bezel => bezel.parentNode.removeChild(bezel))
             // .forEach(bezel => bezel.style.display = 'none');
 
-         // [funcs/libs block] #1
+         // [funcs/libs block]
          const setPlaybackRate = {
             set: x => user_settings.player_rate_html5 ? setPlaybackRate.html5(x) : setPlaybackRate.default(x),
 

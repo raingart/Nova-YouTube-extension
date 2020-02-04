@@ -47,7 +47,7 @@ _plugins.push({
             // #owner-container
             document.querySelector('#upload-info #channel-name')
                .insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">' +
-               `&nbsp- <span id="${DIV_ID}">${text}</span> videos</span>`);
+               `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
          }
       }
    }

@@ -21,11 +21,12 @@ _plugins.push({
          bottom: 0;
       }`);
 
-      const cachedAttrName = 'rating-bar-added';
+      const markAttrName = 'rating-bar-added';
 
-      YDOM.waitHTMLElement('a#thumbnail:not([' + cachedAttrName + '])', thumbnail => {
+      YDOM.waitHTMLElement('a#thumbnail:not([' + markAttrName + '])', thumbnail => {
+         if (thumbnail.hasAttribute(markAttrName)) return;
          // console.log('start gen: rateBar');
-         thumbnail.setAttribute(cachedAttrName, true); // lock
+         thumbnail.setAttribute(markAttrName, true); // lock
 
          collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
 
@@ -66,7 +67,7 @@ _plugins.push({
             // console.log('new', newVidIds);
             getRatingsObj(newVidIds);
          }
-      }, 3000);
+      }, 1000); // 1 sec
 
 
       function getRatingsObj(videoIds) {

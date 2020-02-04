@@ -6,11 +6,12 @@ _plugins.push({
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
-      const switchAttrUpdated = 'timestamps-updated';
+      const markAttrName = 'timestamps-updated';
 
-      YDOM.waitHTMLElement('#thumbnail:not([' + switchAttrUpdated + ']) img', imgElement => {
-         // console.log('switchAttrUpdated:', imgElement);
-         imgElement.setAttribute(switchAttrUpdated, true);
+      YDOM.waitHTMLElement('#thumbnail:not([' + markAttrName + ']) img', imgElement => {
+         if (imgElement.hasAttribute(markAttrName)) return;
+         // console.log('switchAttrUName', imgElement);
+         imgElement.setAttribute(markAttrName, true);
 
          const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 

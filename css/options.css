@@ -1,21 +1,10 @@
 body {
    min-width: 340px;
-   background-color: #1c1c1c;
-   color: slategrey;
 }
 
 hr {
    margin: .3em auto .6em;
    border-top: 1px solid #3d3d3d;
-}
-
-.button,
-button,
-input,
-select,
-textarea {
-   background-color: #171717;
-   border: 1px solid #2d2d2d;
 }
 
 [type=submit] {
@@ -211,7 +200,7 @@ input[type=search]:focus {
    display: block;
    /* background-color: cornflowerblue; */
    text-transform: uppercase;
-   color: #D5DDE5;
+   color: var(--plugins-before);
    font-size: 15px;
    font-family: monospace;
    text-indent: 5px;
@@ -220,13 +209,11 @@ input[type=search]:focus {
 li>label {
    grid-column: label;
    align-self: center;
-   color: #8c8b8b;
+   color: var(--label2);
 }
 
 li>label>font {
    padding-right: .2em;
-   /* color: slategrey; */
-   /* color: #8c8b8b; */
    color: #343a45;
 }
 
@@ -238,8 +225,9 @@ li>label+* {
 
 .info > label {
    display: inline;
+   color: var(--label1);
 }
+
 .info > label+a {
    margin-left: 3px;
-   /* color: #D5DDE5; */
 }
