@@ -9,7 +9,7 @@ _plugins.push({
       const markAttrName = 'timestamps-updated';
 
       YDOM.waitHTMLElement('#thumbnail:not([' + markAttrName + ']) img', imgElement => {
-         if (imgElement.hasAttribute(markAttrName)) return;
+         // if (imgElement.hasAttribute(markAttrName)) return; // Bug. Very strange, interrupts the replacement
          // console.log('switchAttrUName', imgElement);
          imgElement.setAttribute(markAttrName, true);
 

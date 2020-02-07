@@ -176,7 +176,6 @@ _plugins.push({
             _elementType: 'input',
             label: 'Pause pinned video',
             type: 'checkbox',
-            // checked: false,
          },
       };
    }()),

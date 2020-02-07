@@ -66,8 +66,7 @@ _plugins.push({
          'show_full_video_title': {
             _elementType: 'input',
             label: 'Show full title',
-            type: 'checkbox',
-            checked: true,
+            type: 'checkbox'
          },
       };
    }()),

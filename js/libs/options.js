@@ -72,20 +72,13 @@ window.addEventListener('load', (evt) => {
 
          _process: () => {
             Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_process");
-            Conf.bthSubmitAnimation.outputStatus.classList.add("disabled");
-            Conf.bthSubmitAnimation.outputStatus.classList.add("progress-animate");
-         },
-
-         _processed: () => {
-            Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_processed");
-            Conf.bthSubmitAnimation.outputStatus.classList.remove("progress-animate");
+            Conf.bthSubmitAnimation.outputStatus.setAttribute("disabled", true);
          },
 
          _defaut: () => {
             setTimeout(function () {
-               Conf.bthSubmitAnimation._processed();
                Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings");
-               Conf.bthSubmitAnimation.outputStatus.classList.remove("disabled");
+               Conf.bthSubmitAnimation.outputStatus.removeAttribute("disabled");
             }, 300);
          },
       },

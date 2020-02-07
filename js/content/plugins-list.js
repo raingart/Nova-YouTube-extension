@@ -13,7 +13,7 @@ const Plugins_list = {
       'player/time-jump.js',
       // 'player/stop.js',
 
-      // 'comments/filter-comments.js',
+      'comments/filter-comments.js',
 
       'other/scroll-to-top.js',
       'other/dark-theme.js',

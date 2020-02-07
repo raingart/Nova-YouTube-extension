@@ -2,7 +2,7 @@ input[type="checkbox"] {
    appearance: none;
    -webkit-appearance: none;
    width: 3.1em;
-   /* height: 1.5em; */
+   height: 1.5em;
    line-height: 1.6em;
    background-color: #ddd;
    border-radius: 3em;

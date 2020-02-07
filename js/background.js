@@ -26,8 +26,11 @@ let YOUTUBE_API_KEYS = [];
 
 // no internet connection
 let interval_update_keys = setInterval(() => {
-   if (YOUTUBE_API_KEYS.length) clearInterval(interval_update_keys);
-   else update_YOUTUBE_API_KEYS();
+   if (YOUTUBE_API_KEYS.length) {
+      clearInterval(interval_update_keys);
+   } else {
+      update_YOUTUBE_API_KEYS();
+   }
 }, 30 * 1000); // 30 sec
 
 function update_YOUTUBE_API_KEYS() {
@@ -45,7 +48,7 @@ update_YOUTUBE_API_KEYS();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
    console.log('onMessage request: %s', JSON.stringify(request.action || request));
 
-   // const sendMessage_ = out => chrome.tabs.query({url: "*://www.youtube.com/*"}, tabs => // need "permissions": ["tabs"]
+   // const sendMessage_ = out => chrome.tabs.query({url: "*://www.youtube.com/*"}, tabs => // need "permissions": ["tabs"] what means "read your history"
    const sendMessage_ = out => chrome.tabs.query({ "currentWindow": true }, tabs =>
       tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, out)));
 

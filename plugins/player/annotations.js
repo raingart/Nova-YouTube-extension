@@ -6,17 +6,18 @@ _plugins.push({
    desc: 'Force hide annotations elements in player',
    _runtime: user_settings => {
 
-      const css = [
-         // "[class*=annotation]",
-         // "[class^=ytp-cards-teaser],
-         ".ytp-cards-teaser",
-         ".ytp-paid-content-overlay-text",
-         // ".iv-drawer",
-         // ".ima-container",
-         // "[class*=ytp-ad]"
+      const cssSelector = [
+         // '[class*=annotation]',
+         // '[class^=ytp-cards-teaser]',
+         '[class^=ytp-ce-element]',
+         '.ytp-cards-teaser',
+         '.ytp-paid-content-overlay-text',
+         // '.iv-drawer',
+         // '.ima-container',
+         // '[class*=ytp-ad]'
       ].join(',\n');
 
-      YDOM.injectStyle({ display: 'none' }, css, 'important');
+      YDOM.injectStyle({ display: 'none' }, cssSelector, 'important');
 
    },
 });

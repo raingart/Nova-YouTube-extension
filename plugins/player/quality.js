@@ -127,7 +127,6 @@ _plugins.push({
             _elementType: 'input',
             label: 'Save manually selected quality for the same tab',
             type: 'checkbox',
-            checked: true,
          },
       };
    }()),
