@@ -9,14 +9,15 @@
    "author": "raingart",
    "permissions": [
       "storage",
-      "cookies"
+      "cookies",
+      "https://www.youtube.com/*"
    ],
    "background": {
       "page": "/html/background.html",
       "persistent": true
    },
    "content_scripts": [{
-      "matches": ["*://www.youtube.com/*"],
+      "matches": ["https://www.youtube.com/*"],
       "run_at": "document_start",
       "all_frames": true,
       "js": [
