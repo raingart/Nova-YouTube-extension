@@ -8,7 +8,7 @@ _plugins.push({
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       YDOM.waitHTMLElement('.html5-video-player', videoPlayer => {
-         const playerArea = document.querySelector('.html5-video-container');
+         const playerArea = document.querySelector('#ytd-player');
 
          // init default_volume_level
          setVolumeLevel(+user_settings.default_volume_level, videoPlayer.getVolume())

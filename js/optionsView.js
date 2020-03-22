@@ -29,7 +29,7 @@ const Opt = {
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label>` +
                   `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
-                  (plugin.api_key_dependent ? ' <b>API</b> ' : '') +
+                  (plugin.api_key_dependent ? ' <b tooltip="Need Youtube API key" flow="right">API</b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)
@@ -187,10 +187,10 @@ const Opt = {
 
    },
 
-   asd: () => {
+   apiKeyDependent_lockCheckbox: store => {
       [...document.querySelectorAll('li.item')].forEach(li => {
          let el = li.querySelector('.info b');
-         if (el) {
+         if (el && !store['custom-api-key']) {
             console.log('11111');
             if (li.querySelector('input').checked) li.querySelector('input').click();
             li.querySelector('.opt').setAttribute('tooltip', "Need Youtube API key");
@@ -201,13 +201,12 @@ const Opt = {
          }
       });
 
-
-
    },
+
    init: () => {
       Opt.plugins_.showTable();
       Opt.eventListener();
-      Storage.getParams(Opt.asd, 'sync');
+      Storage.getParams(Opt.apiKeyDependent_lockCheckbox, 'sync');
    },
 
    log: function (msg) {
