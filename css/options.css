@@ -228,6 +228,10 @@ li>label+* {
    color: var(--label1);
 }
 
+.info > b {
+   color: red;
+}
+
 .info > label+a {
    margin-left: 3px;
 }

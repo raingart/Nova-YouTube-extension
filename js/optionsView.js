@@ -28,15 +28,14 @@ const Opt = {
                li.innerHTML = '<div class="info"' +
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label>` +
-                  `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a></div>` +
-                  `<div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
+                  `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
+                  (plugin.api_key_dependent ? ' <b>API</b> ' : '') +
+                  `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)
                   li.appendChild(
                      document.createElement("li")
-                        .appendChild(
-                           Opt.UI.combine_html_opt(plugin.export_opt, plugin.id)
-                        )
+                        .appendChild(Opt.UI.combine_html_opt(plugin.export_opt, plugin.id))
                   );
 
                const pl_selector = '>#' + plugin.section.toString().toLowerCase();
@@ -188,9 +187,27 @@ const Opt = {
 
    },
 
+   asd: () => {
+      [...document.querySelectorAll('li.item')].forEach(li => {
+         let el = li.querySelector('.info b');
+         if (el) {
+            console.log('11111');
+            if (li.querySelector('input').checked) li.querySelector('input').click();
+            li.querySelector('.opt').setAttribute('tooltip', "Need Youtube API key");
+            li.querySelector('.opt').setAttribute('flow', "left");
+
+            li.querySelector('input').setAttribute('disabled', true);
+            li.querySelector('label').setAttribute('for', 'tab_3');
+         }
+      });
+
+
+
+   },
    init: () => {
       Opt.plugins_.showTable();
       Opt.eventListener();
+      Storage.getParams(Opt.asd, 'sync');
    },
 
    log: function (msg) {

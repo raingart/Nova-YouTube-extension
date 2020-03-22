@@ -29,8 +29,8 @@ _plugins.push({
          // [bezel block]
          // hide default indicator
          [...document.querySelectorAll('[class^="ytp-bezel"]')]
-            .forEach(bezel => bezel.parentNode.removeChild(bezel));
-         // .forEach(bezel => bezel.style.display = 'none');
+            // .forEach(bezel => bezel.parentNode.removeChild(bezel));
+            .forEach(bezel => bezel.style.display = 'none');
 
          // [funcs block]
          function volume_onWheel(event) {
@@ -160,7 +160,7 @@ _plugins.push({
             step: 5,
             min: 0,
             max: 100,
-            value: 75,
+            value: 100,
          },
          'volume_step': {
             _elementType: 'input',
@@ -168,9 +168,9 @@ _plugins.push({
             type: 'number',
             title: 'percent',
             placeholder: '%',
-            step: 1,
-            min: 1,
-            max: 33,
+            step: 5,
+            min: 5,
+            max: 30,
             value: 10,
          },
          'volume_hotkey': {

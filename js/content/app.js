@@ -68,7 +68,7 @@ const App = {
 
    init: () => {
       const manifest = chrome.runtime.getManifest();
-      console.log("loaded %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v ' + manifest.version);
+      console.log("loaded %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v.' + manifest.version);
 
       App.storage.load();
 

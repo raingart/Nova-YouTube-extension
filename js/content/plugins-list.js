@@ -16,7 +16,7 @@ const Plugins_list = {
       'comments/filter-comments.js',
 
       'other/scroll-to-top.js',
-      'other/dark-theme.js',
+      // 'other/dark-theme.js',
       'other/rating-bars.js',
       // 'player/30-fps.js',
       'other/normalize-video-title.js',

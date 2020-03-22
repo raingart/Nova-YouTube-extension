@@ -21,8 +21,8 @@ _plugins.push({
          // [bezel block]
          // hide default indicator
          [...document.querySelectorAll('[class^="ytp-bezel"]')]
-            .forEach(bezel => bezel.parentNode.removeChild(bezel))
-            // .forEach(bezel => bezel.style.display = 'none');
+            // .forEach(bezel => bezel.parentNode.removeChild(bezel))
+            .forEach(bezel => bezel.style.display = 'none');
 
          // [funcs/libs block]
          const setPlaybackRate = {

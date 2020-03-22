@@ -15,12 +15,12 @@ zip -r $FILENAME.zip \
                   icons/16.png \
                   icons/48.png \
                   icons/128.png \
-                  images/*.png \
                   js/*.js \
                   js/*/*.js \
+                  manifest.json \
                   plugins/*.js \
                   plugins/*/*.js \
-                  manifest.json \
+                  images/*.png \
  --exclude="*/-*.*"
 #  -x \*.DS_Store
 # -z $TODAY

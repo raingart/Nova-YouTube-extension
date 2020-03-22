@@ -326,7 +326,8 @@ const YDOM = {
          const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
 
          if (!custom_api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
-            throw new Error('YOUTUBE_API_KEYS ' + YOUTUBE_API_KEYS);
+            console.log('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
+            throw new Error('YOUTUBE_API_KEYS is empty');
          }
          // Distribute the load over multiple APIs by selecting one randomly.
          const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
@@ -367,7 +368,10 @@ const YDOM = {
 
          } catch (error) {
             let err_text = `Request failed ${URL}:\n${error}`;
-            console.warn(err_text);
+            console.error(err_text);
+            alert('problems with the YouTube API.\n'
+            + '\n1. Disconnect the plugins that need it'
+            + '\n2. Generate and add your YouTube API KEY');
             throw new Error(err_text);
          }
       },

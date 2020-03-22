@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener(details => {
       const manifest = chrome.runtime.getManifest();
       console.log('app ' + details.reason + ' ' + details.previousVersion + ' to ' + manifest.version);
 
-      const initialStorage = {"collapse-livechat":"on","collapse-navigation-panel":"on","custom-api-key":"","dark-theme":"on","default_channel_tab":"videos","default_playback_rate":"1","default_volume_level":"75","disable-channel-trailer":"on","fixed-player-scroll":"on","global-rating-bars":"on","hide-annotations":"on","jump_hotkey":"17","jump_step":"30","livechat":"disable","normalize-video-title":"on","pause-background-tab":"on","pin_player_size_position":"top-right","pin_player_size_ratio":"2.5","player-focused-onkeydown":"on","player_rate_hotkey":"altKey","player_rate_step":"0.25","ratio_bar_height":"2","ratio_dislike_color":"#dddddd","ratio_like_color":"#3ea6ff","save_manual_quality_in_tab":"on","scroll-to-top":"on","set-default-channel-tab":"on","show-channel-video-count":"on","show_full_video_title":"on","show_volume_indicator":"text","show_volume_indicator_color":"#ff0000","tabs":"on","theater-mode":"on","thumbnail-clear":"on","thumbnail_time_stamp":"hq2","time-jump":"on","video-quality":"on","video-speed-wheel":"on","video_quality":"hd1080","volume-wheel":"on","volume_hotkey":"none","volume_step":"5"};
+      const initialStorage = { "collapse-livechat": "on", "collapse-navigation-panel": "on", "comments_filter_style": "remove", "comments_min_length": "15", "custom-api-key": "", "default_channel_tab": "videos", "default_playback_rate": "1", "default_volume_level": "100", "disable-channel-trailer": "on", "fixed-player-scroll": "on", "hide-annotations": "on", "jump_hotkey": "17", "jump_step": "30", "livechat": "disable", "normalize-video-title": "on", "pause-background-tab": "on", "pin_player_size_position": "top-right", "pin_player_size_ratio": "2.5", "player-focused-onkeydown": "on", "player_rate_hotkey": "altKey", "player_rate_step": "0.25", "ratio_bar_height": "2", "ratio_dislike_color": "#dddddd", "ratio_like_color": "#3ea6ff", "save_manual_quality_in_tab": "on", "scroll-to-top": "on", "set-default-channel-tab": "on", "show_full_video_title": "on", "show_volume_indicator": "text", "show_volume_indicator_color": "#ff0000", "tabs": "on", "theater-mode": "on", "thumbnail-clear": "on", "thumbnail_time_stamp": "hq2", "time-jump": "on", "video-quality": "on", "video-speed-wheel": "on", "video_quality": "hd1080", "volume-wheel": "on", "volume_hotkey": "none", "volume_step": "5" };
 
       console.log(details.reason);
       switch (details.reason) {
@@ -39,7 +39,10 @@ function update_YOUTUBE_API_KEYS() {
       .then(res => res.json())
       .then(data => YOUTUBE_API_KEYS = data)
       .then(() => console.log('get keys:', JSON.stringify(YOUTUBE_API_KEYS)))
-      .catch(error => console.error(error))
+      .catch(error => {
+         console.error('error get keys:', error);
+         clearInterval(interval_update_keys);
+      })
 }
 
 // init

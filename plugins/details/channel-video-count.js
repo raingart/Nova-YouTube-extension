@@ -2,53 +2,97 @@ _plugins.push({
    name: 'Show channel videos count',
    id: 'show-channel-video-count',
    section: 'details',
-   depends_page: 'watch',
+   depends_page: 'watch, channel',
+   api_key_dependent: true,
    desc: 'Total number of videos on channel',
    _runtime: user_settings => {
 
       const CACHED_PREFIX = 'channel-video-count_';
+      const regexChannelId = input => /UC([a-z0-9-_]{22})$/i.test(input);
 
+      // watch page
       YDOM.waitHTMLElement('#upload-info #channel-name a[href]', linkElement => {
-         const CHANNEL_ID = linkElement.getAttribute("href").split('/').pop();
+         // console.log('watch page');
+         const channel_id = linkElement.getAttribute("href").split('/').pop();
+         insertStatistic(document.querySelector('#upload-info #owner-sub-count'), channel_id);
+      });
+      // YDOM.waitHTMLElement('#upload-info #channel-name', htmlElement => {
+      //    // console.log('watch page');
+      //    const linkElement = htmlElement.querySelector('a[href]');
+      //    if (linkElement) {
+      //       const channel_id = linkElement.href.split('/').pop();
+      //       insertStatistic(htmlElement, channel_id);
+      //    }
+      // });
 
-         if (!CHANNEL_ID || !/UC([a-z0-9-_]{22})/i.test(CHANNEL_ID)) {
-            console.error('CHANNEL_ID is invalid', CHANNEL_ID);
-            return;
-         }
-         // cached
-         const STORAGE = sessionStorage.getItem(CACHED_PREFIX + CHANNEL_ID);
+      // channel page
+      YDOM.waitHTMLElement('#channel-header #subscriber-count', htmlElement => {
+         // console.log('channel page');
+         const channel_id = search_channel_id();
+         insertStatistic(htmlElement, channel_id);
 
-         if (STORAGE) {
-            insertToHTML(STORAGE);
+         // page onload
+         function search_channel_id() {
+            const page = location.pathname.split('/');
+            return page[1] == 'channel'
+               ? page[2]
+               : document.querySelector('link[rel="canonical"][href]')?.href.split('/').pop();
+            // let arr = [];
+            //  // link
+            // arr.push(document.querySelector('link[rel="canonical"]')?.href);
+            // // meta
+            // [...document.querySelectorAll("meta[content]")].forEach(el =>
+            //    regexChannelId(el.content) && arr.push(el.content));
 
-         } else {
-            YDOM.request.API('channels', {
-               'id': CHANNEL_ID,
-               'part': 'statistics',
-            }, user_settings['custom-api-key'])
-               .then(res => {
-                  res.items.forEach(item => {
-                     const VIDEO_COUNT = item.statistics.videoCount;
-                     // save cache in tabs
-                     sessionStorage.setItem(CACHED_PREFIX + CHANNEL_ID, VIDEO_COUNT);
-                     insertToHTML(VIDEO_COUNT);
-                  });
-               });
+            // for (let i of arr) {
+            //    if (regexChannelId(i)) return i.split('/').pop();
+            // }
          }
 
       });
 
-      function insertToHTML(text) {
-         const DIV_ID = 'video_count';
-         if (document.getElementById(DIV_ID)) {
-            document.getElementById(DIV_ID).textContent = text;
+      function insertStatistic(el_container, channel_id) {
+         console.log('channel_id', JSON.stringify(channel_id));
+         if (!regexChannelId(channel_id)) {
+            console.error('channel_id is invalid', channel_id);
+            insertToHTML(''); // erase html
+            return;
+         }
+         // cached
+         const storage = sessionStorage.getItem(CACHED_PREFIX + channel_id);
+
+         if (storage) {
+            insertToHTML(storage);
 
          } else {
-            // #owner-container
-            document.querySelector('#upload-info #channel-name')
-               .insertAdjacentHTML("beforeend", '<span class="date style-scope ytd-video-secondary-info-renderer">' +
-               `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
+            YDOM.request.API('channels', {
+               'id': channel_id,
+               'part': 'statistics',
+            }, user_settings['custom-api-key'])
+               .then(res => {
+                  res.items.forEach(item => {
+                     const videoCount = item.statistics.videoCount;
+                     // save cache in tabs
+                     sessionStorage.setItem(CACHED_PREFIX + channel_id, videoCount);
+                     insertToHTML(videoCount);
+                  });
+               });
          }
+
+         function insertToHTML(text) {
+            const DIV_ID = 'video_count';
+            const box = el_container.querySelector('#' + DIV_ID);
+            if (box) {
+               box.textContent = text;
+
+            } else {
+               el_container.insertAdjacentHTML("beforeend",
+               '<span class="date style-scope ytd-video-secondary-info-renderer">'
+               + `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
+            }
+         }
+
       }
+
    }
 });

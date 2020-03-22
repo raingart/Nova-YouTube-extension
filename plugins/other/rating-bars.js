@@ -3,6 +3,7 @@ _plugins.push({
    id: 'global-rating-bars',
    section: 'global',
    depends_page: 'all, -embed',
+   api_key_dependent: true,
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 

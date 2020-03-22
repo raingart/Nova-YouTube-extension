@@ -7,14 +7,10 @@ _plugins.push({
    _runtime: user_settings => {
 
       const cssSelector = [
-         // '[class*=annotation]',
-         // '[class^=ytp-cards-teaser]',
+         '[class^=ytp-pause-overlay]',
          '[class^=ytp-ce-element]',
          '.ytp-cards-teaser',
          '.ytp-paid-content-overlay-text',
-         // '.iv-drawer',
-         // '.ima-container',
-         // '[class*=ytp-ad]'
       ].join(',\n');
 
       YDOM.injectStyle({ display: 'none' }, cssSelector, 'important');

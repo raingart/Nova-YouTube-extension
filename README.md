@@ -3,6 +3,13 @@
 
 Combine small plugins, expanding the possibilities of YouTube.
 
+The basis of the plugin files themselves. Which are connected at the start of the YouTube page. The remaining files only serve them.
+- ease of extensibility
+- low probability of conflict with other extensions.
+
+negative effects:
+- slow initialization of code inside plugins.
+
 ![New Horizons for YouTube-extension](https://lh3.googleusercontent.com/NUJv5yIT-6NUT7YiBgkNu8kCULGkbG8YL3XXjNiB_Q3XW87rvfyYDbPj55u2RTqJihtX_94Y=w640-h400-e365)
 
 ### Installation
