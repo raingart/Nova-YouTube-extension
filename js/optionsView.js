@@ -29,7 +29,7 @@ const Opt = {
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label>` +
                   `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
-                  (plugin.api_key_dependent ? ' <b tooltip="Need Youtube API key" flow="right">API</b> ' : '') +
+                  (plugin.api_key_dependent ? ' <b tooltip="Youtube API key required" flow="right">API</b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)

@@ -34,8 +34,8 @@ let interval_update_keys = setInterval(() => {
 }, 30 * 1000); // 30 sec
 
 function update_YOUTUBE_API_KEYS() {
-   // https://gist.github.com/raingart/c685f14d7186a8c9bf009a83b41d1f66/
-   fetch('https://gist.githubusercontent.com/raingart/c685f14d7186a8c9bf009a83b41d1f66/raw/youtube_api_keys.json')
+   // https://gist.github.com/raingart/ff6711fafbc46e5646d4d251a79d1118/
+   fetch('https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json')
       .then(res => res.json())
       .then(data => YOUTUBE_API_KEYS = data)
       .then(() => console.log('get keys:', JSON.stringify(YOUTUBE_API_KEYS)))

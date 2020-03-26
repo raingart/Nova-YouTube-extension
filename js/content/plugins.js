@@ -58,8 +58,8 @@ const Plugins = {
 
             // try { // for test
             } catch (err) {
-               console.error(`plugin error: ${plugin.name}\n${err}`);
-               alert(`Critical plugin error - "${plugin.name}"!\nDetails in the console.\n\nPlease report a bug or disable the plugin.`);
+               console.error(`[PLUGIN ERROR]\n${err.stack}`);
+               alert('An error was detected in one of the "New Horizons for YouTube™" plugins!\n\nDetails in the console.\nPlease report a bug or disable the plugin');
             }
          }
          // else console.log('plugin skiping', plugin.name);
