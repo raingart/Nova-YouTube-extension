@@ -1,4 +1,4 @@
-console.log(i18n("app_name") + ": init opt.js");
+console.log(i18n("app_name") + ": init optionsView.js");
 
 let _plugins = [];
 
@@ -188,10 +188,11 @@ const Opt = {
    },
 
    apiKeyDependent_lockCheckbox: store => {
+      // console.log('store:', JSON.stringify(store));
       [...document.querySelectorAll('li.item')].forEach(li => {
          let el = li.querySelector('.info b');
-         if (el && !store['custom-api-key']) {
-            console.log('11111');
+         if (el && !store['custom-api-key'] && !JSON.parse(localStorage.getItem(APIKeysStoreName)).length) {
+            console.warn('Youtube API Key is missing');
             if (li.querySelector('input').checked) li.querySelector('input').click();
             li.querySelector('.opt').setAttribute('tooltip', "Need Youtube API key");
             li.querySelector('.opt').setAttribute('flow', "left");
@@ -209,7 +210,7 @@ const Opt = {
       Storage.getParams(Opt.apiKeyDependent_lockCheckbox, 'sync');
    },
 
-   log: function (msg) {
+   log(msg) {
       if (this.DEBUG) {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());

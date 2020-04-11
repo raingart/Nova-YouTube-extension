@@ -4,7 +4,8 @@ const YDOM = {
    // DEBUG: true,
 
    listeners: [],
-   waitHTMLElement: (selector = required(), callback = required(), isStrong) => {
+
+   waitHTMLElement(selector = required(), callback = required(), isStrong) {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -85,7 +86,7 @@ const YDOM = {
       }
    },
 
-   isInViewport: (el = required()) => {
+   isInViewport(el = required()) {
       if (el instanceof HTMLElement) {
          const bounding = el.getBoundingClientRect();
          return (
@@ -163,7 +164,7 @@ const YDOM = {
          };
       },
 
-      disconnect: (el = required()) => {
+      disconnect(el = required()) {
          if (!el.hasAttribute("dragnDrop")) return;
 
          YDOM.log('dragnDrop: disconnect');
@@ -176,7 +177,7 @@ const YDOM = {
       },
    },
 
-   doublePressListener: (callback, keyCodeFilter) => {
+   doublePressListener(callback, keyCodeFilter) {
       let pressed;
       let lastPressed = parseInt(keyCodeFilter) || null;
       let isDoublePress;
@@ -209,18 +210,18 @@ const YDOM = {
       document.addEventListener("keyup", keyPress);
    },
 
-   // uncheck: toggle => {
+   // uncheck(toggle) {
    //    toggle.hasAttribute("checked") && toggle.click();
    // },
 
-   // search_xpath: function (query, outer_dom, inner_dom) {
+   // search_xpath(query, outer_dom, inner_dom) {
    //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
    //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
    //    outer_dom = outer_dom || document;
    //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
    // },
 
-   injectStyle: (styles = required(), selector, important) => {
+   injectStyle(styles = required(), selector, important) {
       if (typeof styles === 'object') { // is json
          // if (important) {
          injectCss(selector + json2css(styles));
@@ -265,16 +266,18 @@ const YDOM = {
    },
 
    cookie: {
-      get: (name = required()) => Object.fromEntries(
-         document.cookie
-            .split(/; */)
-            .map(c => {
-               const [key, ...v] = c.split('=');
-               return [key, decodeURIComponent(v.join('='))];
-            })
-      )[name],
+      get(name = required()) {
+         Object.fromEntries(
+            document.cookie
+               .split(/; */)
+               .map(c => {
+                  const [key, ...v] = c.split('=');
+                  return [key, decodeURIComponent(v.join('='))];
+               })
+         )[name];
+      },
 
-      set: (name = required(), value) => {
+      set(name = required(), value) {
          let date = new Date();
          date.setTime(date.getTime() + (90 * 86400000)); // 90 days
 
@@ -291,7 +294,7 @@ const YDOM = {
    },
 
    request: {
-      // caching: (key, expiresHours, transitFn, callback) => {
+      // caching(key, expiresHours, transitFn, callback) {
       //    const now = new Date();
       //    const value = JSON.parse(localStorage.getItem(key));
 
@@ -320,7 +323,7 @@ const YDOM = {
       //    }
       // },
 
-      API: async (url, params, custom_api_key) => {
+      async API(url, params, custom_api_key) {
          // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
          // console.trace();
          const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
@@ -379,7 +382,7 @@ const YDOM = {
 
    getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
 
-   log: function (msg) {
+   log(msg) {
       if (this.DEBUG) {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());

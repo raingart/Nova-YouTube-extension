@@ -4,7 +4,7 @@ window.addEventListener('load', (evt) => {
 
    const Conf = {
 
-      attrDependencies: () => {
+      attrDependencies() {
          [...document.querySelectorAll("[data-dependent]")].forEach(dependentItem => {
             // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
             let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
@@ -46,7 +46,7 @@ window.addEventListener('load', (evt) => {
       },
 
       // Saves options to localStorage/chromeSync.
-      saveOptions: form => {
+      saveOptions(form) {
          var obj = {};
 
          new FormData(form).forEach((value, key) => {
@@ -121,7 +121,7 @@ window.addEventListener('load', (evt) => {
          //    });
       }()),
 
-      init: () => {
+      init() {
          let callback = obj => {
             PopulateForm.fill(obj);
 

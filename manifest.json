@@ -5,11 +5,10 @@
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
-   "version": "1.6.10",
+   "version": "1.6.11",
    "author": "raingart",
    "permissions": [
-      "storage",
-      "cookies"
+      "storage"
    ],
    "background": {
       "page": "/html/background.html",
@@ -23,6 +22,7 @@
          "/js/content/plugins-list.js",
          "/js/content/plugins.js",
          "/js/libs/storage.js",
+         "/js/ytc_api_key_bridge.js",
          "/js/content/app.js"
       ]
    }],

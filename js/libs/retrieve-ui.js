@@ -1,18 +1,26 @@
 const PopulateForm = {
    // DEBUG: true,
 
-   fill: function (obj) {
-      this.log("Load from Storage:", JSON.stringify(obj));
+   fill(obj, parent) {
+      this.log("Load from Storage: %s=>%s", form.id, JSON.stringify(obj));
 
       for (const key in obj) {
          const val = obj[key];
-         const el = document.getElementsByName(key)[0] || document.getElementById(key);
+         // const el = document.getElementsByName(key)[0] || document.getElementById(key);
+         const el = (parent || document).querySelector(`[name="${key}"]`) ||
+            (parent || document).querySelector('#' + key)
+
          if (el) {
             this.log('>opt %s[%s]: %s', key, el.tagName, val);
 
             switch (el.tagName.toLowerCase()) {
+               case 'div':
+                  // el.innerHTML += val;
+                  el.textContent = val;
+                  break;
+
                case 'textarea':
-                  el.value = val
+                  el.value = val;
                   break;
 
                case 'select':
@@ -41,7 +49,7 @@ const PopulateForm = {
       }
    },
 
-   setSelectOption: (selectObj, val) => {
+   setSelectOption(selectObj, val) {
       for (const option of selectObj.children) {
          if (option.value === val) {
             option.selected = true;
@@ -50,7 +58,7 @@ const PopulateForm = {
       }
    },
 
-   log: function (msg) {
+   log(msg) {
       if (this.DEBUG) {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());

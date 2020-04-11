@@ -1,10 +1,6 @@
 ## New Horizons for YouTube-extension
 [![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](#)
 
-# The extension was removed from the store under the pretext "because it did not comply with our policies."
-# Without directions, what exactly is wrong.
-
-
 Combine small plugins, expanding the possibilities of YouTube.
 
 The basis of the plugin files themselves. Which are connected at the start of the YouTube page. The remaining files only serve them.

@@ -52,7 +52,7 @@ _plugins.push({
       });
 
       function insertStatistic(el_container, channel_id) {
-         console.log('channel_id', JSON.stringify(channel_id));
+         // console.log('channel_id', JSON.stringify(channel_id));
          if (!regexChannelId(channel_id)) {
             console.error('channel_id is invalid', channel_id);
             insertToHTML(''); // erase html

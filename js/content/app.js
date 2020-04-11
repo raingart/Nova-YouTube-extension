@@ -17,26 +17,6 @@ const App = {
       //getEventListeners(window)
       //getEventListeners(document)
 
-      // also change "APIKeysStoreName" in file '/js/background.js', '/plugins/ytc_lib.js'
-      const APIKeysStoreName = 'YOUTUBE_API_KEYS';
-
-      // set youtubeApiKeys
-      chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-         if (chrome.runtime.id != sender.id) return;
-         App.log('onMessage request: %s', JSON.stringify(request.action || request));
-         if (request.action === APIKeysStoreName) {
-            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
-            localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
-         }
-      });
-
-      // youtubeApiKeys dont has
-      if (!Array.isArray(JSON.parse(localStorage.getItem(APIKeysStoreName) || 'null'))) {
-         // Cannot access 'App' before initialization, because 'console.log' and not the 'App.log'
-         console.log('onMessage REQUESTING_' + APIKeysStoreName);
-         chrome.runtime.sendMessage('REQUESTING_' + APIKeysStoreName);
-      }
-
       // skip first run on page load
       document.addEventListener('yt-navigate-start', () => App.isNewUrl() && App.rerun());
    }()),
@@ -136,7 +116,7 @@ const App = {
       Plugins.injectScript(`(function () { ${scriptText} })()`);
    },
 
-   log: function (msg) {
+   log(msg) {
       if (this.DEBUG) {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());

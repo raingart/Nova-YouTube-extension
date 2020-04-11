@@ -66,7 +66,7 @@ const Plugins = {
       }
    },
 
-   log: function (msg) {
+   log(msg) {
       if (this.DEBUG) {
          for (let i = 1; i < arguments.length; i++) {
             msg = msg.replace(/%s/, arguments[i].toString().trim());
