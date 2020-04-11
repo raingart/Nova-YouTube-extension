@@ -15,7 +15,7 @@ const Opt = {
 
       conteiner: '#plugins',
 
-      showTable: () => {
+      showTable() {
          Opt.log('showTable _plugins: %s', JSON.stringify(_plugins));
 
          _plugins.forEach(plugin => {
@@ -56,7 +56,7 @@ const Opt = {
    },
 
    UI: {
-      toggleListView: (hideElms, activeElm, activeClass = required()) => {
+      toggleListView(hideElms, activeElm, activeClass = required()) {
          // hide all
          if (hideElms) [...document.querySelectorAll(hideElms)].forEach(i => i.classList.remove(activeClass));
 
@@ -65,7 +65,7 @@ const Opt = {
 
       },
 
-      combine_html_opt: (tags, id) => {
+      combine_html_opt(tags, id) {
          let outHTML = document.createElement('ul');
          outHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
@@ -134,12 +134,10 @@ const Opt = {
          return outHTML;
       },
 
-      outerHTML: node => {
-         return node.outerHTML || new XMLSerializer().serializeToString(node);
-      },
+      outerHTML: node => node.outerHTML || new XMLSerializer().serializeToString(node),
    },
 
-   eventListener: () => {
+   eventListener() {
       // appearance map
       [...document.querySelectorAll(".appearance > *")].forEach(al => {
          // test plugins is empty
@@ -187,7 +185,7 @@ const Opt = {
 
    },
 
-   apiKeyDependent_lockCheckbox: store => {
+   apiKeyDependent_lockCheckbox(store) {
       // console.log('store:', JSON.stringify(store));
       [...document.querySelectorAll('li.item')].forEach(li => {
          let el = li.querySelector('.info b');
@@ -204,7 +202,7 @@ const Opt = {
 
    },
 
-   init: () => {
+   init() {
       Opt.plugins_.showTable();
       Opt.eventListener();
       Storage.getParams(Opt.apiKeyDependent_lockCheckbox, 'sync');

@@ -2,7 +2,7 @@ const PopulateForm = {
    // DEBUG: true,
 
    fill(obj, parent) {
-      this.log("Load from Storage: %s=>%s", form.id, JSON.stringify(obj));
+      this.log("Load from Storage: %s=>%s", parent?.id, JSON.stringify(obj));
 
       for (const key in obj) {
          const val = obj[key];
