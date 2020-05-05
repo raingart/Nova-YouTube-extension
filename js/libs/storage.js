@@ -3,7 +3,7 @@ const Storage = function () {
    let saveParams = {};
 
    return {
-      setParams: (x = required(), sync_type) => {
+      setParams(x = required(), sync_type) {
          let storageArea = sync_type === 'sync' ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.clear();
@@ -11,7 +11,7 @@ const Storage = function () {
          storageArea.set(saveParams, () => chrome.runtime.lastError && console.log(chrome.runtime.lastError));
       },
 
-      getParams: (callback, sync_type, x) => {
+      getParams(callback, sync_type, x) {
          let storageArea = sync_type === 'sync' ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.get(x, prefs => {

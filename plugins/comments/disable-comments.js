@@ -6,7 +6,10 @@ _plugins.push({
    desc: 'Remove comments section',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement('#comments', comments => comments.parentNode.removeChild(comments));
+      YDOM.waitHTMLElement({
+         selector: '#comments',
+         callback: comments => comments.parentNode.removeChild(comments)
+      });
 
    }
 });

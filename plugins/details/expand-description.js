@@ -6,7 +6,10 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement('.ytd-video-secondary-info-renderer > [collapsed] #more', el => el.click());
+      YDOM.waitHTMLElement({
+         selector: '.ytd-video-secondary-info-renderer > [collapsed] #more',
+         callback: el => el.click(),
+      });
 
    }
 });

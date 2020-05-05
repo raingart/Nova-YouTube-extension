@@ -29,43 +29,50 @@ _plugins.push({
          return `[${markAttrName}] ` + initStyle;
       }()));
 
-      YDOM.waitHTMLElement('#comment:not([' + markAttrName + '])', comment => {
-         const commentConteiner = comment.parentNode;
-         // if (commentConteiner.hasAttribute(markAttrName)) return;
-         // commentConteiner.setAttribute(markAttrName, true); // mark
+      function callback(comment) {
 
-         // // has heart-button
-         // if (user_settings.comments_hide_heart && comment.querySelector('#creator-heart-button')) {
-         //    commentConteiner.setAttribute(markAttrName, 'hide_heart'); // add css
-         //    return;
-         // }
-         // // no replies
-         // else if (user_settings.comments_no_replies && !comment.querySelector('#replies')) {
-         //    commentConteiner.setAttribute(markAttrName, 'no_replies'); // add css
-         //    console.log('>>', commentConteiner, comment.querySelector('#replies'));
-         //    return;
-         // }
-         // min likes
-         // else if (user_settings.comments_min_likes) {
-         //    const likesCount = getLikes(comment.querySelector('#vote-count-middle'));
+      }
 
-         //    if (likesCount < user_settings.comments_min_likes) {
-         //       commentConteiner.setAttribute(markAttrName, 'min_likes:' + likesCount); // add css
-         //       return;
-         //    }
-         // }
-         // comments length
-         if (user_settings.comments_min_length) {
-            const getLength = elm => elm && elm.textContent.length;
-            const commentLength = getLength(comment.querySelector('#content-text'));
+      YDOM.waitHTMLElement({
+         selector: '#comment:not([' + markAttrName + '])',
+         cleaning_resistant: true,
+         callback: comment => {
+            const commentConteiner = comment.parentNode;
+            // if (commentConteiner.hasAttribute(markAttrName)) return;
+            // commentConteiner.setAttribute(markAttrName, true); // mark
 
-            if (commentLength < user_settings.comments_min_length) {
-               commentConteiner.setAttribute(markAttrName, 'min_length: ' + commentLength); // add css
-               return;
+            // // has heart-button
+            // if (user_settings.comments_hide_heart && comment.querySelector('#creator-heart-button')) {
+            //    commentConteiner.setAttribute(markAttrName, 'hide_heart'); // add css
+            //    return;
+            // }
+            // // no replies
+            // else if (user_settings.comments_no_replies && !comment.querySelector('#replies')) {
+            //    commentConteiner.setAttribute(markAttrName, 'no_replies'); // add css
+            //    console.log('>>', commentConteiner, comment.querySelector('#replies'));
+            //    return;
+            // }
+            // min likes
+            // else if (user_settings.comments_min_likes) {
+            //    const likesCount = getLikes(comment.querySelector('#vote-count-middle'));
+
+            //    if (likesCount < user_settings.comments_min_likes) {
+            //       commentConteiner.setAttribute(markAttrName, 'min_likes:' + likesCount); // add css
+            //       return;
+            //    }
+            // }
+            // comments length
+            if (user_settings.comments_min_length) {
+               const getLength = elm => elm?.textContent?.length;
+               const commentLength = getLength(comment.querySelector('#content-text'));
+
+               if (commentLength < user_settings.comments_min_length) {
+                  commentConteiner.setAttribute(markAttrName, 'min_length: ' + commentLength); // add css
+                  return;
+               }
             }
-         }
-
-      }, 'hard waitHTMLElement listener');
+         },
+      });
 
       // [...document.querySelectorAll('[${markAttrName}]')]
       //    .forEach(el => el.parentNode.removeChild(bezel))
@@ -76,51 +83,49 @@ _plugins.push({
       // bezel.style.display = 'none'
 
    },
-   export_opt: (function () {
-      return {
-         'comments_filter_style': {
-            _elementType: 'select',
-            label: 'Hiding action',
-            // title: '',
-            options: [
-               { label: 'transparent', value: 'hide' },
-               { label: 'remove', value: 'remove', selected: true },
-            ]
-         },
-         // 'comments_hide_heart': {
-         //    _elementType: 'input',
-         //    label: 'Creator "heart"',
-         //    type: 'checkbox',
-         //    // checked: false,
-         // },
-         // 'comments_no_replies': {
-         //    _elementType: 'input',
-         //    label: 'no replies',
-         //    type: 'checkbox',
-         //    // checked: false,
-         // },
-         // 'comments_min_likes': {
-         //    _elementType: 'input',
-         //    label: 'Min Likes Count',
-         //    title: '0 - disable',
-         //    type: 'number',
-         //    // placeholder: '',
-         //    step: 1,
-         //    min: 0,
-         //    max: 9999,
-         //    value: 1,
-         // },
-         'comments_min_length': {
-            _elementType: 'input',
-            label: 'Min length',
-            title: '0 - disable',
-            type: 'number',
-            // placeholder: '',
-            step: 1,
-            min: 0,
-            max: 100,
-            value: 15,
-         },
-      };
-   }()),
+   export_opt: {
+      'comments_filter_style': {
+         _elementType: 'select',
+         label: 'Hiding action',
+         // title: '',
+         options: [
+            { label: 'transparent', value: 'hide' },
+            { label: 'remove', value: 'remove', selected: true },
+         ]
+      },
+      // 'comments_hide_heart': {
+      //    _elementType: 'input',
+      //    label: 'Creator "heart"',
+      //    type: 'checkbox',
+      //    // checked: false,
+      // },
+      // 'comments_no_replies': {
+      //    _elementType: 'input',
+      //    label: 'no replies',
+      //    type: 'checkbox',
+      //    // checked: false,
+      // },
+      // 'comments_min_likes': {
+      //    _elementType: 'input',
+      //    label: 'Min Likes Count',
+      //    title: '0 - disable',
+      //    type: 'number',
+      //    // placeholder: '',
+      //    step: 1,
+      //    min: 0,
+      //    max: 9999,
+      //    value: 1,
+      // },
+      'comments_min_length': {
+         _elementType: 'input',
+         label: 'Min length',
+         title: '0 - disable',
+         type: 'number',
+         // placeholder: '',
+         step: 1,
+         min: 0,
+         max: 100,
+         value: 15,
+      },
+   },
 });

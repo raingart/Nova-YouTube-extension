@@ -1,7 +1,7 @@
 const Plugins_list = {
    lib: [ 'ytc_lib.js' ],
-
-   runOnce: [ // addEventListener
+   // addEventListener
+   runOnce: [
       'player/speed.js',
       'player/volume.js',
       'player/quality.js',
@@ -12,13 +12,12 @@ const Plugins_list = {
       'player/theater-mode.js',
       'player/time-jump.js',
       // 'player/stop.js',
+      // 'player/30-fps.js',
 
       'comments/filter-comments.js',
 
       'other/scroll-to-top.js',
-      // 'other/dark-theme.js',
       'other/rating-bars.js',
-      // 'player/30-fps.js',
       'other/normalize-video-title.js',
       'other/thumbnail-clear.js',
    ],
@@ -35,7 +34,6 @@ const Plugins_list = {
 
       'other/default-tab.js',
       'other/disable-trailer.js',
-
       'other/collapse-navigation-panel.js',
    ],
 }

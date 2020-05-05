@@ -1,12 +1,10 @@
 console.log(i18n("app_name") + ": init optionsView.js");
 
+// plugins conteiner
 let _plugins = [];
 
-Plugins.load((() => {
-   let pl = [];
-   for (const i in Plugins_list) Plugins_list[i].forEach(p => pl.push(p));
-   return pl;
-})());
+// load all Plugins
+Plugins.load([].concat(...Object.values(Plugins_list)));
 
 const Opt = {
    // DEBUG: true,
@@ -16,11 +14,11 @@ const Opt = {
       conteiner: '#plugins',
 
       showTable() {
-         Opt.log('showTable _plugins: %s', JSON.stringify(_plugins));
+         Opt.log('showTable _plugins:', JSON.stringify(_plugins));
 
          _plugins.forEach(plugin => {
             try {
-               console.log('plugin load:', plugin.name);
+               Opt.log('plugin load:', plugin.name);
 
                let li = document.createElement("li");
                li.className = "item";
@@ -29,7 +27,7 @@ const Opt = {
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label>` +
                   `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
-                  (plugin.api_key_dependent ? ' <b tooltip="Youtube API key required" flow="right">API</b> ' : '') +
+                  (plugin.api_key_dependent ? ' <b tooltip="Youtube API key required" flow="left">API</b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.export_opt)
@@ -141,20 +139,20 @@ const Opt = {
       // appearance map
       [...document.querySelectorAll(".appearance > *")].forEach(al => {
          // test plugins is empty
-         if (document.querySelector(Opt.plugins_.conteiner + `>#${al.id}:empty`)) {
+         if (document.querySelector(this.plugins_.conteiner + `>#${al.id}:empty`)) {
             al.classList.add('empty');
 
          } else {
             // add click event
             al.addEventListener('click', event => {
                // event.preventDefault();
-               Opt.UI.toggleListView(
-                  Opt.plugins_.conteiner + '> *',
-                  Opt.plugins_.conteiner + '>#' + al.id, //event.target.id <- error
+               this.UI.toggleListView(
+                  this.plugins_.conteiner + '> *',
+                  this.plugins_.conteiner + '>#' + al.id, //event.target.id <- error
                   'active'
                );
-               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
-               Opt.UI.toggleListView(Opt.plugins_.conteiner + ' .item', null, 'hide');
+               this.UI.toggleListView(this.plugins_.conteiner + ' > *', null, 'collapse');
+               this.UI.toggleListView(this.plugins_.conteiner + ' .item', null, 'hide');
                document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
             });
          }
@@ -164,19 +162,19 @@ const Opt = {
       document.getElementById("show_all_plugins")
          .addEventListener('click', event => {
             event.preventDefault();
-            Opt.UI.toggleListView(
-               Opt.plugins_.conteiner + ' > *',
-               Opt.plugins_.conteiner + ' > *',
+            this.UI.toggleListView(
+               this.plugins_.conteiner + ' > *',
+               this.plugins_.conteiner + ' > *',
                'active'
             );
             // unset collapse state
-            Opt.UI.toggleListView(Opt.plugins_.conteiner + ' > *', null, 'collapse');
-            Opt.UI.toggleListView(Opt.plugins_.conteiner + ' li.item', null, 'hide');
+            this.UI.toggleListView(this.plugins_.conteiner + ' > *', null, 'collapse');
+            this.UI.toggleListView(this.plugins_.conteiner + ' li.item', null, 'hide');
             document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
          });
 
       // spoler
-      [...document.querySelectorAll(Opt.plugins_.conteiner + '> *')]
+      [...document.querySelectorAll(this.plugins_.conteiner + '> *')]
          .forEach(ul => ul.addEventListener('click', event => {
             // event.preventDefault();
             event.target.classList.toggle("collapse")
@@ -188,8 +186,9 @@ const Opt = {
    apiKeyDependent_lockCheckbox(store) {
       // console.log('store:', JSON.stringify(store));
       [...document.querySelectorAll('li.item')].forEach(li => {
+         const APIKeysStoreName = 'YOUTUBE_API_KEYS';
          let el = li.querySelector('.info b');
-         if (el && !store['custom-api-key'] && !JSON.parse(localStorage.getItem(APIKeysStoreName)).length) {
+         if (el && !store['custom-api-key'] && !JSON.parse(localStorage.getItem(APIKeysStoreName))?.length) {
             console.warn('Youtube API Key is missing');
             if (li.querySelector('input').checked) li.querySelector('input').click();
             li.querySelector('.opt').setAttribute('tooltip', "Need Youtube API key");
@@ -203,18 +202,13 @@ const Opt = {
    },
 
    init() {
-      Opt.plugins_.showTable();
-      Opt.eventListener();
-      Storage.getParams(Opt.apiKeyDependent_lockCheckbox, 'sync');
+      this.plugins_.showTable();
+      this.eventListener();
+      Storage.getParams(this.apiKeyDependent_lockCheckbox, 'local');
    },
 
-   log(msg) {
-      if (this.DEBUG) {
-         for (let i = 1; i < arguments.length; i++) {
-            msg = msg.replace(/%s/, arguments[i].toString().trim());
-         }
-         console.log('[+] %s', msg);
-      }
+   log(...agrs) {
+      this.DEBUG && agrs?.length && console.log(...agrs);
    },
 }
 
@@ -227,20 +221,20 @@ window.addEventListener('load', event => {
 
    // search
    ["change", "keyup"].forEach(event => {
-      // UI.search.addEventListener(event, () => searchFilter(UI.search.value, UI.plugins_list.children));
-      // UI.search.addEventListener(event, () => searchFilter(UI.search.value, UI.plugins_list.getElementsByTagName('li')));
-      UI.search.addEventListener(event, () => searchFilter(
-         UI.search.value,
-         UI.plugins_list.querySelectorAll('li.item'),
-         'label'
-      ));
+      UI.search.addEventListener(event, () => searchFilter({
+         'keyword': UI.search.value,
+         // 'containers': UI.plugins_list.children,
+         // 'containers':  UI.plugins_list.getElementsByTagName('li'),
+         'containers': UI.plugins_list.querySelectorAll('li.item'),
+         'filterChildTagName': 'label'
+      }));
    });
 
    Opt.init();
 });
 
 
-function searchFilter(keyword, containers, filterChildTagName) {
+function searchFilter({keyword, containers, filterChildTagName}) {
    // console.log('searchFilter', keyword);
    for (const item of containers) {
       let text = item.textContent;
@@ -257,14 +251,14 @@ function searchFilter(keyword, containers, filterChildTagName) {
          item.querySelectorAll(filterChildTagName).forEach(highlight);
       }
    }
-}
 
-function highlightSearchTerm(container, keyword, highlightClass) {
-   // fix
-   let content = container.innerHTML,
-      pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
-      replaceWith = '$1<mark ' + (highlightClass ? 'class="' + highlightClass + '"' : 'style="background-color:#afafaf"') + '>$2</mark>$3',
-      marked = content.replace(pattern, replaceWith);
+   function highlightSearchTerm(container, keyword = required(), highlightClass) {
+      // fix
+      let content = container.innerHTML,
+         pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
+         replaceWith = '$1<mark ' + (highlightClass ? 'class="' + highlightClass + '"' : 'style="background-color:#afafaf"') + '>$2</mark>$3',
+         marked = content.replace(pattern, replaceWith);
 
-   return (container.innerHTML = marked) !== content;
+      return (container.innerHTML = marked) !== content;
+   }
 }

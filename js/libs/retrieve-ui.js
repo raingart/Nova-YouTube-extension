@@ -58,12 +58,7 @@ const PopulateForm = {
       }
    },
 
-   log(msg) {
-      if (this.DEBUG) {
-         for (let i = 1; i < arguments.length; i++) {
-            msg = msg.replace(/%s/, arguments[i].toString().trim());
-         }
-         console.log('[+]', msg);
-      }
+   log(...agrs) {
+      this.DEBUG && agrs?.length && console.log(...agrs);
    },
 }

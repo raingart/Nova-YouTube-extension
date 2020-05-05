@@ -9,9 +9,7 @@ window.addEventListener('load', (evt) => {
             // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
             let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
 
-            let handler = function () {
-               showOrHide(dependentItem, dependentsJson);
-            };
+            let handler = () => showOrHide(dependentItem, dependentsJson);
             // init state
             handler();
 
@@ -47,7 +45,7 @@ window.addEventListener('load', (evt) => {
 
       // Saves options to localStorage/chromeSync.
       saveOptions(form) {
-         var obj = {};
+         let obj = {};
 
          new FormData(form).forEach((value, key) => {
             // SerializedArray
@@ -125,7 +123,7 @@ window.addEventListener('load', (evt) => {
          let callback = obj => {
             PopulateForm.fill(obj);
 
-            Conf.attrDependencies();
+            this.attrDependencies();
 
             document.querySelector("body").classList.remove("preload");
          };
@@ -136,7 +134,7 @@ window.addEventListener('load', (evt) => {
          // let form = document.forms[0];
          // let submitted = e => {
          //    e.preventDefault();
-         //    Conf.saveOptions(form);
+         //    this.saveOptions(form);
          // }
          // form.onsubmit = submitted.bind(form);
 

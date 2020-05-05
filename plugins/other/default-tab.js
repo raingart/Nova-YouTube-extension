@@ -10,38 +10,39 @@ _plugins.push({
          /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
          // HOME yab selected
-         YDOM.waitHTMLElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', () => {
-            let tab_nth;
-            switch (user_settings.default_channel_tab) {
-               case 'videos':
-                  tab_nth = 4;
-                  break;
-               case 'playlists':
-                  tab_nth = 6;
-                  break;
-               case 'about':
-                  tab_nth = 12;
-                  break;
-               default:
-                  return;
-            }
-            const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
-            if (tab) tab.click();
+         YDOM.waitHTMLElement({
+            selector: '#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]',
+            callback: () => {
+               let tab_nth;
+               switch (user_settings.default_channel_tab) {
+                  case 'videos':
+                     tab_nth = 4;
+                     break;
+                  case 'playlists':
+                     tab_nth = 6;
+                     break;
+                  case 'about':
+                     tab_nth = 12;
+                     break;
+                  default:
+                     return;
+               }
+               const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
+               if (tab) tab.click();
+            },
          });
       }
 
    },
-   export_opt: (function () {
-      return {
-         'default_channel_tab': {
-            _elementType: 'select',
-            label: 'Set default tab',
-            options: [
-               { label: 'videos', value: 'videos', selected: true },
-               { label: 'playlists', value: 'playlists' },
-               { label: 'about', value: 'about' },
-            ]
-         },
-      };
-   }()),
+   export_opt: {
+      'default_channel_tab': {
+         _elementType: 'select',
+         label: 'Set default tab',
+         options: [
+            { label: 'videos', value: 'videos', selected: true },
+            { label: 'playlists', value: 'playlists' },
+            { label: 'about', value: 'about' },
+         ]
+      },
+   },
 });

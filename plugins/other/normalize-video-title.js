@@ -8,6 +8,7 @@ _plugins.push({
 
       const VIDEO_TITLE_SELECTOR = '#video-title';
       const markAttrName = 'title-normalize';
+      const MAX_TITLE_WORDS = 2;
 
       // Letters (Lu): Upper case letter unicode
       // https://apps.timwhitlock.info/js/regex
@@ -16,7 +17,7 @@ _plugins.push({
       if (user_settings.show_full_video_title) {
          YDOM.injectStyle({
             'display': 'block',
-            'max-height': 'none',
+            'max-height': 'unset',
          }, VIDEO_TITLE_SELECTOR, 'important');
       }
 
@@ -28,46 +29,44 @@ _plugins.push({
       // }, `${VIDEO_TITLE_SELECTOR}::first-letter`, 'important');
       // }, `[title-normalize]::first-letter`, 'important');
 
-      const capitalizeFirstLetter = str => {
-         if (typeof str !== 'string') return ''
-         return str.charAt(0).toUpperCase() + str.slice(1)
-      }
+      const capitalizeFirstLetter = str => typeof str === 'string' ? str[0].toUpperCase() + str.slice(1) : '';
 
-      YDOM.waitHTMLElement(`${VIDEO_TITLE_SELECTOR}:not([${markAttrName}])`, titleElement => {
-         if (titleElement.hasAttribute(markAttrName)) return;
-         // console.log('markAttrName:', titleElement);
-         titleElement.setAttribute(markAttrName, true);
+      YDOM.waitHTMLElement({
+         selector: VIDEO_TITLE_SELECTOR + `:not([${markAttrName}])`,
+         cleaning_resistant: true,
+         callback: titleElement => {
+            if (titleElement.hasAttribute(markAttrName)) return;
+            // console.log('markAttrName:', titleElement);
+            titleElement.setAttribute(markAttrName, true);
 
-         let counterMatch = 0;
-         const normalizedText = titleElement.textContent.replace(UpperCaseLetter_regex, match => {
-            counterMatch++;
-            return match.toLowerCase();
-         });
+            let counterMatch = 0;
+            const normalizedText = titleElement.textContent.replace(UpperCaseLetter_regex, match => {
+               counterMatch++;
+               return match.toLowerCase();
+            });
 
-         // Upper case > 2 words
-         if (counterMatch > 2) {
-            // console.log('markAttrName:', titleElement.title, upperCaseArr);
-            titleElement.textContent = capitalizeFirstLetter(normalizedText);
-         }
+            // Upper case
+            if (counterMatch > MAX_TITLE_WORDS) {
+               // console.log('markAttrName:', titleElement.title, upperCaseArr);
+               titleElement.textContent = capitalizeFirstLetter(normalizedText);
+            }
 
-         // const upperCaseArr = titleElement.textContent.match(UpperCaseLetter_regex);
+            // const upperCaseArr = titleElement.textContent.match(UpperCaseLetter_regex);
 
-         // Upper case > 2 words
-         // if (upperCaseArr && upperCaseArr.length > 2) {
-         //    // console.log('markAttrName:', titleElement.title, upperCaseArr);
-         //    upperCaseArr.forEach(match => titleElement.textContent = titleElement.textContent.replace(match, match.toLowerCase()));
-         // }
-
-      }, 'hard waitHTMLElement listener');
+            // Upper case > 2 words
+            // if (upperCaseArr && upperCaseArr.length > 2) {
+            //    // console.log('markAttrName:', titleElement.title, upperCaseArr);
+            //    upperCaseArr.forEach(match => titleElement.textContent = titleElement.textContent.replace(match, match.toLowerCase()));
+            // }
+         },
+      });
 
    },
-   export_opt: (function () {
-      return {
-         'show_full_video_title': {
-            _elementType: 'input',
-            label: 'Show full title',
-            type: 'checkbox'
-         },
-      };
-   }()),
+   export_opt: {
+      'show_full_video_title': {
+         _elementType: 'input',
+         label: 'Show full title',
+         type: 'checkbox'
+      },
+   },
 });

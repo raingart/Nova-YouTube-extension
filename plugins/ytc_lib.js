@@ -3,30 +3,39 @@
 const YDOM = {
    // DEBUG: true,
 
+   // search_xpath(query, outer_dom, inner_dom) {
+   //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
+   //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
+   //    outer_dom = outer_dom || document;
+   //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
+   // },
+
    listeners: [],
 
-   waitHTMLElement(selector = required(), callback = required(), isStrong) {
+   waitHTMLElement({selector = required(), callback = required(), cleaning_resistant}) {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
-      YDOM.listeners.push({
+      this.listeners.push({
          selector: selector,
-         clear: !isStrong,
+         clear: !cleaning_resistant,
          fn: callback
       });
 
       // instantiating observer
-      if (!YDOM.Observer && YDOM.listeners.length) {
-         YDOM.Observer = true;
+      if (!this.Observer && this.listeners.length) {
+         this.Observer = true;
          createObserver();
 
          // stop
-      } else if (YDOM.Observer && !YDOM.listeners.length) {
+      } else if (YDOM.Observer && !this.listeners.length) {
          observer.disconnect();
-         YDOM.log('Observer stop');
+         this.log('Observer stop');
 
          // check
-      } else checkinlisteners();
+      } else {
+         checkinlisteners();
+      }
 
       function createObserver() {
          YDOM.log('Observer create');
@@ -74,11 +83,11 @@ const YDOM = {
 
             // Query for elements matching the specified selector
             [...document.querySelectorAll(listener.selector)].forEach(element => {
-               listener.clear && YDOM.log('element ready: %s', listener.selector);
+               listener.clear && YDOM.log('element ready:', listener.selector);
 
                if (listener.clear) {
                   YDOM.listeners.splice(i, 1); // delete element from listeners
-                  YDOM.log('element clear: %s', listener.selector);
+                  YDOM.log('element clear:', listener.selector);
                }
                listener.fn(element);
             });
@@ -99,10 +108,10 @@ const YDOM = {
    },
 
    dragnDrop: {
-      connect: (element = required(), callback) => {
+      connect(element = required(), callback) {
          if (element.hasAttribute("dragnDrop")) return;
 
-         YDOM.log('dragnDrop: connect %s', element);
+         this.log('dragnDrop: connect', element);
 
          element.setAttribute('dragnDrop', true);
 
@@ -167,7 +176,7 @@ const YDOM = {
       disconnect(el = required()) {
          if (!el.hasAttribute("dragnDrop")) return;
 
-         YDOM.log('dragnDrop: disconnect');
+         this.log('dragnDrop: disconnect');
 
          el.onmousedown = null;
          el.onmouseup = null;
@@ -191,7 +200,7 @@ const YDOM = {
 
       const keyPress = key => {
          pressed = key.keyCode;
-         YDOM.log('doublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
+         this.log('doublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
 
          if (isDoublePress && pressed === lastPressed) {
             isDoublePress = false;
@@ -201,9 +210,7 @@ const YDOM = {
             timeOut();
          }
 
-         if (!keyCodeFilter) {
-            lastPressed = pressed;
-         }
+         if (!keyCodeFilter) lastPressed = pressed;
       }
 
       // window.onkeyup = key => keyPress(key);
@@ -212,13 +219,6 @@ const YDOM = {
 
    // uncheck(toggle) {
    //    toggle.hasAttribute("checked") && toggle.click();
-   // },
-
-   // search_xpath(query, outer_dom, inner_dom) {
-   //    // document.evaluate(".//h2", document.body, null, XPathResult.ANY_TYPE, null);
-   //    //XPathResult.ORDERED_NODE_SNAPSHOT_TYPE = 7
-   //    outer_dom = outer_dom || document;
-   //    return outer_dom.evaluate(query, inner_dom || document, null, 7, null);
    // },
 
    injectStyle(styles = required(), selector, important) {
@@ -246,7 +246,7 @@ const YDOM = {
       function injectCss(source = required()) {
          let sheet;
 
-         if (source.slice(-3) === '.css') {
+         if (source.endsWith('.css')) {
             sheet = document.createElement('link');
             sheet.rel = "stylesheet";
             sheet.href = source;
@@ -259,9 +259,7 @@ const YDOM = {
 
          (document.head || document.documentElement).appendChild(sheet);
 
-         sheet.onload = function () {
-            YDOM.log('style loading: %s', sheet.src || sheet.textContent);
-         };
+         sheet.onload = () => YDOM.log('style loading:', (sheet.src || sheet.textContent));
       }
    },
 
@@ -281,17 +279,19 @@ const YDOM = {
          let date = new Date();
          date.setTime(date.getTime() + (90 * 86400000)); // 90 days
 
-         const newcookie = Object.entries({
+         document.cookie = Object.entries({
             [encodeURIComponent(name)]: encodeURIComponent(value),
-            domain: '.' + window.location.hostname.split('.').slice(-2).join('.'), // .youtube.com
+            domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
             expires: date.toUTCString(),
             path: '/', // what matters at the end
-         }).map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
+         })
+            .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
-         document.cookie = newcookie
-         return newcookie;
+         return document.cookie;
       },
    },
+
+   getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
 
    request: {
       // caching(key, expiresHours, transitFn, callback) {
@@ -323,27 +323,27 @@ const YDOM = {
       //    }
       // },
 
-      async API(url, params, custom_api_key) {
-         // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, custom_api_key=${custom_api_key}`);
+      async API({request, params, api_key}) {
+         // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, api_key=${api_key}`);
          // console.trace();
          const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
 
-         if (!custom_api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
+         if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
             console.log('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             throw new Error('YOUTUBE_API_KEYS is empty');
          }
          // Distribute the load over multiple APIs by selecting one randomly.
-         const getRandArrayItem = arr => custom_api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+         const getRandArrayItem = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 
          // combine GET
-         const query = (url == 'videos' ? 'videos' : 'channels') + '?'
-               + Object.keys(params)
+         const query = (request == 'videos' ? 'videos' : 'channels') + '?'
+            + Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                .join('&');
 
          const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + getRandArrayItem(YOUTUBE_API_KEYS);
 
-         YDOM.log('URL: %s', URL);
+         YDOM.log('URL:', URL);
 
          try {
             // fetch(URL)
@@ -363,7 +363,7 @@ const YDOM = {
                throw new Error('empty API response: ' + JSON.stringify(json));
 
             } else if (json.error) { // API error
-               let usedAPIkey = YDOM.getURLParams(URL).get('key');
+               let usedAPIkey = this.getURLParams(URL).get('key');
                throw new Error(`${json.error.message}\n${usedAPIkey}`);
             }
 
@@ -373,33 +373,14 @@ const YDOM = {
             let err_text = `Request failed ${URL}:\n${error}`;
             console.error(err_text);
             alert('problems with the YouTube API.\n'
-            + '\n1. Disconnect the plugins that need it'
-            + '\n2. Generate and add your YouTube API KEY');
+               + '\n1. Disconnect the plugins that need it'
+               + '\n2. Generate and add your YouTube API KEY');
             throw new Error(err_text);
          }
       },
    },
 
-   getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
-
-   log(msg) {
-      if (this.DEBUG) {
-         for (let i = 1; i < arguments.length; i++) {
-            msg = msg.replace(/%s/, arguments[i].toString().trim());
-         }
-         console.log('YDOM:', msg);
-      }
+   log(...agrs) {
+      this.DEBUG && agrs?.length && console.log(...agrs);
    },
-}
-
-function chunkArray(array, size) {
-   let chunked = [];
-   while (array.length) chunked.push(array.splice(0, size));
-   return chunked;
-}
-
-function timeSince(ts) {
-   let sec = Math.floor((new Date - ts) / 1e3),
-      d = Math.floor(sec / 31536e3);
-   return d > 1 ? d + " years" : (d = Math.floor(sec / 2592e3), d > 1 ? d + " months" : (d = Math.floor(sec / 86400), d > 1 ? d + " days" : (d = Math.floor(sec / 3600), d > 1 ? d + " hours" : (d = Math.floor(sec / 60), d > 1 ? d + " minutes" : d + " seconds"))))
 }

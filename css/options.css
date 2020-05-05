@@ -8,13 +8,8 @@ hr {
 }
 
 [type=submit] {
-   background-color: #3e3e3e;
    height: auto;
    line-height: normal;
-}
-
-[type=submit]:hover {
-   background-color: deepskyblue;
 }
 
 input[type=number] {
@@ -230,6 +225,8 @@ li>label+* {
 
 .info > b {
    color: red;
+   float: right;
+   margin-right: 10px;
 }
 
 .info > label+a {

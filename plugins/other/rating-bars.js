@@ -13,7 +13,7 @@ _plugins.push({
       let collectVideoIds = [];
 
       // init bars style
-      YDOM.injectStyle(`${SELECTOR_RATE} {
+      YDOM.injectStyle(SELECTOR_RATE + `{
          width: 100%;
          height: ${(+user_settings.ratio_bar_height || 5)}px;
       }
@@ -24,14 +24,17 @@ _plugins.push({
 
       const markAttrName = 'rating-bar-added';
 
-      YDOM.waitHTMLElement('a#thumbnail:not([' + markAttrName + '])', thumbnail => {
-         if (thumbnail.hasAttribute(markAttrName)) return;
-         // console.log('start gen: rateBar');
-         thumbnail.setAttribute(markAttrName, true); // lock
+      YDOM.waitHTMLElement({
+         selector: 'a#thumbnail:not([' + markAttrName + '])',
+         cleaning_resistant: true,
+         callback: thumbnail => {
+            if (thumbnail.hasAttribute(markAttrName)) return;
+            // console.log('start gen: rateBar');
+            thumbnail.setAttribute(markAttrName, true); // lock
 
-         collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
-
-      }, 'hard waitHTMLElement listener');
+            collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
+         },
+      });
 
       // chack update new thumbnail
       setInterval(() => {
@@ -39,7 +42,7 @@ _plugins.push({
 
          if (collectVideoIds.length) {
             // console.log('find new thumbnail');
-            let _collectVideoIds = collectVideoIds;
+            const _collectVideoIds = collectVideoIds;
             // clear the array to prevent repeated requests "setInterval"
             collectVideoIds = [];
 
@@ -47,15 +50,15 @@ _plugins.push({
             const newVidIds = _collectVideoIds.filter(video_id => {
                const item = JSON.parse(localStorage.getItem(CACHED_PREFIX + video_id));
 
-               if (item && item.hasOwnProperty('expires')) {
+               if (item?.hasOwnProperty('expires')) {
                   if (+item.expires > now) {
                      // console.log('cached', video_id);
                      appendRatingBars(item);
 
                   } else {
                      // clear expired storage
-                     // console.log('expired', video_id);
                      localStorage.removeItem(item);
+                     // console.log('expired', video_id);
 
                      return true; // need update
                   }
@@ -77,12 +80,23 @@ _plugins.push({
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
 
+         function chunkArray(array, size) {
+            let chunked = [];
+            while (array.length) chunked.push(array.splice(0, size));
+            return chunked;
+         }
+
          chunkArray(videoIds, YOUTUBE_API_MAX_IDS_PER_CALL)
             .forEach(ids => {
-               YDOM.request.API('videos', {
-                  'id': ids.join(','),
-                  'part': 'statistics',
-               }, user_settings['custom-api-key'])
+
+               YDOM.request.API({
+                  request: 'videos',
+                  params: {
+                     'id': ids.join(','),
+                     'part': 'statistics',
+                  },
+                  api_key: user_settings['custom-api-key']
+               })
                   .then(res => {
                      const now = new Date();  //epoch time, lets deal only with integer
                      res.items.forEach(item => {
@@ -131,31 +145,29 @@ _plugins.push({
       }
 
    },
-   export_opt: (function () {
-      return {
-         'ratio_bar_height': {
-            _elementType: 'input',
-            label: 'Bar height',
-            type: 'number',
-            placeholder: '1-9',
-            title: 'In pixels',
-            step: 1,
-            min: 1,
-            max: 9,
-            value: 2,
-         },
-         'ratio_like_color': {
-            _elementType: 'input',
-            label: 'Like color',
-            type: 'color',
-            value: '#3ea6ff',
-         },
-         'ratio_dislike_color': {
-            _elementType: 'input',
-            label: 'Dislike color',
-            type: 'color',
-            value: '#ddDDdd',
-         },
-      };
-   }()),
+   export_opt: {
+      'ratio_bar_height': {
+         _elementType: 'input',
+         label: 'Bar height',
+         type: 'number',
+         placeholder: '1-9',
+         title: 'In pixels',
+         step: 1,
+         min: 1,
+         max: 9,
+         value: 2,
+      },
+      'ratio_like_color': {
+         _elementType: 'input',
+         label: 'Like color',
+         type: 'color',
+         value: '#3ea6ff',
+      },
+      'ratio_dislike_color': {
+         _elementType: 'input',
+         label: 'Dislike color',
+         type: 'color',
+         value: '#ddDDdd',
+      },
+   },
 });

@@ -7,29 +7,36 @@ _plugins.push({
    _runtime: user_settings => {
 
       if (user_settings.livechat === 'disable') {
-         YDOM.waitHTMLElement('#chat', chat => chat.parentNode.removeChild(chat));
+         YDOM.waitHTMLElement({
+            selector: '#chat',
+            callback: chat => chat.parentNode.removeChild(chat)
+         });
 
       } else {
-         YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button', bth => bth.click());
+         YDOM.waitHTMLElement({
+            selector: '#chat:not([collapsed]) #show-hide-button paper-button',
+            callback: bth => bth.click()
+         });
          // test livechat already collapsed - https://www.youtube.com/watch?v=uyKzS_FDHTI
 
          // not working next
-         // YDOM.waitHTMLElement('#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])', bth => {
-         //    console.log('bth', bth);
+         // YDOM.waitHTMLElement({
+         //    selector: '#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])',
+         //    callback: bth => {
+         //       console.log('bth', bth);
+         //    },
          // });
       }
 
    },
-   export_opt: (function () {
-      return {
-         'livechat': {
-            _elementType: 'select',
-            label: 'Type hide',
-            options: [
-               { label: 'remove', value: 'disable', selected: true },
-               { label: 'collapse', value: 'collapse' },
-            ]
-         },
-      };
-   }()),
+   export_opt: {
+      'livechat': {
+         _elementType: 'select',
+         label: 'Type hide',
+         options: [
+            { label: 'remove', value: 'disable', selected: true },
+            { label: 'collapse', value: 'collapse' },
+         ]
+      },
+   },
 });

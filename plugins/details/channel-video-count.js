@@ -11,44 +11,52 @@ _plugins.push({
       const regexChannelId = input => /UC([a-z0-9-_]{22})$/i.test(input);
 
       // watch page
-      YDOM.waitHTMLElement('#upload-info #channel-name a[href]', linkElement => {
-         // console.log('watch page');
-         const channel_id = linkElement.getAttribute("href").split('/').pop();
-         insertStatistic(document.querySelector('#upload-info #owner-sub-count'), channel_id);
+      YDOM.waitHTMLElement({
+         selector: '#upload-info #channel-name a[href]',
+         callback: linkElement => {
+            // console.log('watch page');
+            const channel_id = linkElement.getAttribute("href").split('/').pop();
+            insertStatistic(document.querySelector('#upload-info #owner-sub-count'), channel_id);
+         },
       });
-      // YDOM.waitHTMLElement('#upload-info #channel-name', htmlElement => {
-      //    // console.log('watch page');
-      //    const linkElement = htmlElement.querySelector('a[href]');
-      //    if (linkElement) {
-      //       const channel_id = linkElement.href.split('/').pop();
-      //       insertStatistic(htmlElement, channel_id);
-      //    }
+      // YDOM.waitHTMLElement({
+      //    selector: '#upload-info #channel-name',
+      //    callback: htmlElement => {
+      //       // console.log('watch page');
+      //       const linkElement = htmlElement.querySelector('a[href]');
+      //       if (linkElement) {
+      //          const channel_id = linkElement.href.split('/').pop();
+      //          insertStatistic(htmlElement, channel_id);
+      //       }
+      //    },
       // });
 
       // channel page
-      YDOM.waitHTMLElement('#channel-header #subscriber-count', htmlElement => {
-         // console.log('channel page');
-         const channel_id = search_channel_id();
-         insertStatistic(htmlElement, channel_id);
+      YDOM.waitHTMLElement({
+         selector: '#channel-header #subscriber-count',
+         callback: htmlElement => {
+            // console.log('channel page');
+            const channel_id = search_channel_id();
+            insertStatistic(htmlElement, channel_id);
 
-         // page onload
-         function search_channel_id() {
-            const page = location.pathname.split('/');
-            return page[1] == 'channel'
-               ? page[2]
-               : document.querySelector('link[rel="canonical"][href]')?.href.split('/').pop();
-            // let arr = [];
-            //  // link
-            // arr.push(document.querySelector('link[rel="canonical"]')?.href);
-            // // meta
-            // [...document.querySelectorAll("meta[content]")].forEach(el =>
-            //    regexChannelId(el.content) && arr.push(el.content));
+            // page onload
+            function search_channel_id() {
+               const page = location.pathname.split('/');
+               return page[1] == 'channel'
+                  ? page[2]
+                  : document.querySelector('link[rel="canonical"][href]')?.href.split('/').pop();
+               // let arr = [];
+               //  // link
+               // arr.push(document.querySelector('link[rel="canonical"]')?.href);
+               // // meta
+               // [...document.querySelectorAll("meta[content]")].forEach(el =>
+               //    regexChannelId(el.content) && arr.push(el.content));
 
-            // for (let i of arr) {
-            //    if (regexChannelId(i)) return i.split('/').pop();
-            // }
-         }
-
+               // for (let i of arr) {
+               //    if (regexChannelId(i)) return i.split('/').pop();
+               // }
+            }
+         },
       });
 
       function insertStatistic(el_container, channel_id) {
@@ -65,10 +73,14 @@ _plugins.push({
             insertToHTML(storage);
 
          } else {
-            YDOM.request.API('channels', {
-               'id': channel_id,
-               'part': 'statistics',
-            }, user_settings['custom-api-key'])
+            YDOM.request.API({
+               request: 'channels',
+               params: {
+                  'id': channel_id,
+                  'part': 'statistics',
+               },
+               api_key: user_settings['custom-api-key']
+            })
                .then(res => {
                   res.items.forEach(item => {
                      const videoCount = item.statistics.videoCount;
@@ -87,8 +99,8 @@ _plugins.push({
 
             } else {
                el_container.insertAdjacentHTML("beforeend",
-               '<span class="date style-scope ytd-video-secondary-info-renderer">'
-               + `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
+                  '<span class="date style-scope ytd-video-secondary-info-renderer">'
+                  + `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
             }
          }
 

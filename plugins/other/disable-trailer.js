@@ -6,7 +6,10 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement('.ytd-page-manager[page-subtype=channels] .html5-video-player', trailerPlayer => trailerPlayer.stopVideo());
+      YDOM.waitHTMLElement({
+         selector: '.ytd-page-manager[page-subtype=channels] .html5-video-player',
+         callback: trailerPlayer => trailerPlayer.stopVideo(),
+      });
 
    },
 });
