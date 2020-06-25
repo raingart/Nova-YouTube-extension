@@ -9,6 +9,7 @@ _plugins.push({
       const cssSelector = [
          '[class^=ytp-pause-overlay]',
          '[class^=ytp-ce-element]',
+         '.ytp-ce-element',
          '.ytp-cards-teaser',
          '.ytp-paid-content-overlay-text',
       ].join(',\n');

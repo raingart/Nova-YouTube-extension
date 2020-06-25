@@ -100,7 +100,7 @@ _plugins.push({
             } else {
                el_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer">'
-                  + `&nbsp• <span id="${DIV_ID}">${text}</span> videos</span>`);
+                  + `&nbsp• <span id="${DIV_ID}">${text}</span> videos &nbsp</span> &nbsp`);
             }
          }
 

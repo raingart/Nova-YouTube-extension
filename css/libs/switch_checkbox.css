@@ -27,7 +27,7 @@ input[type="checkbox"]:after {
    height: 1.5em;
    border-radius: 50%;
    background-color: #fff;
-   /* box-shadow: 0 0 .25em rgba(0, 0, 0, .3); */
+   box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
    /* box-shadow: 0 .1em .25em #999999; */
    /* transform: scale(.8); */
 }

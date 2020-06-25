@@ -51,6 +51,7 @@ const Plugins = {
       uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
       _plugins = uniqueArray(_plugins);
 
+      // console.group('PLUGINS:')
       for (const i in _plugins) {
          const plugin = _plugins[i];
          const pluginDepends = plugin.depends_page.split(',').map(i => i.trim().toLowerCase());
@@ -67,11 +68,13 @@ const Plugins = {
                // try { // for test
             } catch (err) {
                console.error(`[PLUGIN ERROR]\n${err.stack}`);
+               console.dir(err);
                alert('An error was detected in one of the "New Horizons for YouTube™" plugins!\n\nDetails in the console.\nPlease report a bug or disable the plugin');
             }
          }
          // else console.log('plugin skiping', plugin.name);
       }
+      // console.groupCollapsed();
    },
 
    log(...agrs) {

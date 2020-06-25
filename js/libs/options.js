@@ -3,17 +3,18 @@ console.log(i18n("app_name") + ": init options.js");
 window.addEventListener('load', (evt) => {
 
    const Conf = {
+      // storageMethod: 'local',
+      storageMethod: 'sync',
 
       attrDependencies() {
          [...document.querySelectorAll("[data-dependent]")].forEach(dependentItem => {
             // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-            let dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
-
-            let handler = () => showOrHide(dependentItem, dependentsJson);
+            const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
+            const handler = () => showOrHide(dependentItem, dependentsJson);
             // init state
             handler();
 
-            let dependentTag = document.getElementById(Object.keys(dependentsJson))
+            const dependentTag = document.getElementById(Object.keys(dependentsJson))
             if (dependentTag) dependentTag.addEventListener("change", handler);
          });
 
@@ -57,7 +58,7 @@ window.addEventListener('load', (evt) => {
             } else obj[key] = value;
          });
 
-         Storage.setParams(obj, 'sync');
+         Storage.setParams(obj, this.storageMethod);
 
          chrome.extension.sendMessage({
             "action": 'setOptions',
@@ -81,70 +82,26 @@ window.addEventListener('load', (evt) => {
          },
       },
 
-      // getPermissions: (requested, event) => {
-      //    if (Array.isArray(requested) && (event.target.checked || event.target.options)) {
-      //       // Permissions must be requested
-      //       chrome.permissions.contains({
-      //          permissions: requested
-      //       }, granted => {
-      //          chrome.permissions.request({
-      //             permissions: requested,
-      //          }, granted => {
-      //             // The callback argument will be true if the user granted the permissions.
-      //             event.target.checked = granted ? true : false;
-      //             event.target.selectedIndex = granted ? event.target.selectedIndex : event.target.selectedIndex === 0 ? -1 : 0;
-      //             Conf.attrDependencies(); //fix trigger
-      //          });
-      //       });
-      //    }
-      // },
-
       // Register the event handlers.
       eventListener: (function () {
-         // Array.from(document.forms)
-         //    .forEach((form) => {
-         document.forms[0] // get form
-            .addEventListener('submit', function (event) {
-               event.preventDefault();
-               Conf.bthSubmitAnimation._process();
-               Conf.saveOptions(this);
-               Conf.bthSubmitAnimation._defaut();
+         Array.from(document.forms)
+            .forEach(form => {
+               form.addEventListener('submit', function (event) {
+                  event.preventDefault();
+                  Conf.bthSubmitAnimation._process();
+                  Conf.saveOptions(this);
+                  Conf.bthSubmitAnimation._defaut();
+               });
             });
-         // });
-
-         // document.getElementById('')
-         //    .addEventListener("change", function (event) {
-         //       // console.log('event.type:', event.type);
-         //       Conf.getPermissions(['notifications'], event);
-         //    });
       }()),
 
       init() {
-         let callback = obj => {
+         const callback = obj => {
             PopulateForm.fill(obj);
-
             this.attrDependencies();
-
             document.querySelector("body").classList.remove("preload");
          };
-         Storage.getParams(callback, 'sync');
-
-         // // Bug reload page. Need fix options.html
-         // // save callback event
-         // let form = document.forms[0];
-         // let submitted = e => {
-         //    e.preventDefault();
-         //    this.saveOptions(form);
-         // }
-         // form.onsubmit = submitted.bind(form);
-
-         // // auto submit form
-         // Array.from(form.getElementsByTagName("input"))
-         //    .forEach(input =>
-         //       input.addEventListener('change', () => {
-         //          form.submit()
-         //       })
-         //    );
+         Storage.getParams(callback, this.storageMethod);
       },
    }
 

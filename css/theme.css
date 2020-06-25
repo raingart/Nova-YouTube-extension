@@ -5,8 +5,10 @@
    --input-border: #cccccc;
    --bth-bg: silver;
    --bth-fg: #fff;
+   --li-item: #e0e0e0;
    --hr: #B7B7B7;
    --href: deepskyblue;
+
    --plugins-before: slategrey;
    --label1: inherit;
    --label1: #343a45;
@@ -18,8 +20,10 @@
       --fg: slategrey;
       --input-bg: #171717;
       --input-border: #2d2d2d;
+      --li-item: #353535;
       --hr: #3d3d3d;
       --bth-bg: #3e3e3e;
+
       --plugins-before: #D5DDE5;
       --label1: inherit;
       --label2: #8c8b8b;
@@ -59,10 +63,10 @@ button, input, select, textarea {
    border: 1px solid var(--input-border);
 }
 
-button, [type=submit], [type=reset], [type=button] {
+/* button, [type=submit], [type=reset], [type=button] {
    background-color: var(--bth-bg);
    color: var(--bth-fg);
-}
+} */
 
 button:hover, [type=submit]:hover, [type=reset]:hover, [type=button]:hover {
    background-color: var(--href);

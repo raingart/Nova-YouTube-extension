@@ -7,7 +7,7 @@ function internationalize(name) {
 		if (i18n(key) !== "undefined" && i18n(key) !== "") {
 			return i18n(key);
 		} else {
-			return '[i18n error: ' + key + ']';
+			return '{i18n: ' + key + '}';
 		}
 	});
 }

@@ -66,9 +66,9 @@ li>ul>li {
    padding-left: .5em;
 }
 
-/* li>ul>li:not(:first-child) { */
-li>ul>li {
-   border-top: 1px dashed #343a45;
+/* form>ul>li.item:not(:last-child) { */
+form>ul>li.item {
+   border-top: 1px solid var(--li-item);
 }
 
 /* .active li:nth-child(even) {

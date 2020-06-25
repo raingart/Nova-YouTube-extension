@@ -12,7 +12,7 @@ const YDOM = {
 
    listeners: [],
 
-   waitHTMLElement({selector = required(), callback = required(), cleaning_resistant}) {
+   waitHTMLElement({ selector = required(), callback = required(), cleaning_resistant }) {
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -323,60 +323,40 @@ const YDOM = {
       //    }
       // },
 
-      async API({request, params, api_key}) {
-         // console.log(`YOUTUBE API, url=${url}, params=${JSON.stringify(params)}, api_key=${api_key}`);
-         // console.trace();
+      // async requestAPI({ request, params, api_key }) {
+      async API({ request, params, api_key }) {
+         // get api key
          const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
-
          if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
-            console.log('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
+            console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             throw new Error('YOUTUBE_API_KEYS is empty');
          }
-         // Distribute the load over multiple APIs by selecting one randomly.
-         const getRandArrayItem = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+
+         const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
 
          // combine GET
-         const query = (request == 'videos' ? 'videos' : 'channels') + '?'
-            + Object.keys(params)
+         const query = (request == 'videos' ? 'videos' : 'channels')
+            + '?' + Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
                .join('&');
 
-         const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + getRandArrayItem(YOUTUBE_API_KEYS);
+         const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
+         console.log('use key:', YDOM.getURLParams(URL).get('key'));
 
-         YDOM.log('URL:', URL);
-
-         try {
-            // fetch(URL)
-            //    .then(response => response.json())
-            //    .then(json => {
-            //       if (Object.keys(json).length) return json;
-            //       else throw new Error('empty API response:', JSON.stringify(json));
-            //    })
-            //    .catch(error => {
-            //       throw new Error(`Request failed ${URL}:\n${error}`);
-            //    });
-
-            const response = await fetch(URL);
-            const json = await response.json();
-            // empty response
-            if (!Object.keys(json).length) {
-               throw new Error('empty API response: ' + JSON.stringify(json));
-
-            } else if (json.error) { // API error
-               let usedAPIkey = this.getURLParams(URL).get('key');
-               throw new Error(`${json.error.message}\n${usedAPIkey}`);
-            }
-
-            return json;
-
-         } catch (error) {
-            let err_text = `Request failed ${URL}:\n${error}`;
-            console.error(err_text);
-            alert('problems with the YouTube API.\n'
-               + '\n1. Disconnect the plugins that need it'
-               + '\n2. Generate and add your YouTube API KEY');
-            throw new Error(err_text);
-         }
+         // request
+         return await fetch(URL)
+            .then(response => response.json())
+            .then(json => {
+               if (!json.error && Object.keys(json).length) return json;
+               console.warn('key:', YDOM.getURLParams(URL).get('key'));
+               throw new Error(JSON.stringify(json?.error));
+            })
+            .catch(error => {
+               alert('problems with the YouTube API.\n'
+                  + '\n1. Disconnect the plugins that need it'
+                  + '\n2. Generate and add your YouTube API KEY');
+               console.error(`Request API failed:${URL}\n${error}`);
+            });
       },
    },
 
