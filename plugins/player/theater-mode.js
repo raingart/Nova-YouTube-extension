@@ -6,18 +6,17 @@ _plugins.push({
    desc: 'Enable player full-width mode',
    _runtime: user_settings => {
 
-      // <ytd-watch-flexy  theater-requested_="" theater="">
-      // document.getElementsByTagName('ytd-watch-flexy').item(0).theater
+      // <ytd-watch-flexy  theater-requested_="" theater=""> // enabled
 
       YDOM.waitHTMLElement({
          selector: 'ytd-watch-flexy',
          callback: tag => {
-            if (!tag.theater) {
-               // console.log('enable "Theater Mode"');
-               tag.setAttribute("theater-requested_", true);
-               YDOM.cookie.set('wide', 1);
-            }
+            // tag way
+            if (!tag.theater) tag.setAttribute("theater-requested_", true);
+            // cookie way
+            if (/wide\=1/.test(document.cookie)) YDOM.cookie.set('wide', 1);
          },
       });
+
    },
 });

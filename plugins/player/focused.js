@@ -14,7 +14,9 @@ _plugins.push({
          // console.log('captureFocus', document.activeElement);
 
          if (document.activeElement.tagName != "INPUT" // search-input
+            && document.activeElement.tagName != "TEXTAREA"
             && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
+            && !document.activeElement.isContentEditable
             // && !window.getSelection()
          ) {
             // document.activeElement.style.border = "2px solid red";

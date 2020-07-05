@@ -108,7 +108,7 @@ _plugins.push({
                         const percent = Math.floor(likes / total * 100);
 
                         const videoStatistics = {
-                           'expires': +now.setHours(now.getHours() + 1), // add 1 hour,
+                           'expires': +now.setHours(now.getHours() + 8), // add 8 hour,
                            'id': item.id, // need to selector out
                            'pt': percent,
 

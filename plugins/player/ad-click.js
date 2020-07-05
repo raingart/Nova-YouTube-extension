@@ -10,5 +10,6 @@ _plugins.push({
          selector: 'button.ytp-ad-skip-button',
          callback: el => el.click(),
       });
+
    },
 });

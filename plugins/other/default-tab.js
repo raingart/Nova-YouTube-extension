@@ -7,7 +7,8 @@ _plugins.push({
 
       // channel/user home page
       if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname) ||
-         /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)) {
+         /\/user\/([a-z0-9-_]+)$/i.test(location.pathname) ||
+         /\/c\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
          // HOME yab selected
          YDOM.waitHTMLElement({
@@ -24,8 +25,6 @@ _plugins.push({
                   case 'about':
                      tab_nth = 12;
                      break;
-                  default:
-                     return;
                }
                const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
                if (tab) tab.click();

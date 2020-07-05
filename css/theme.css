@@ -70,6 +70,7 @@ button, input, select, textarea {
 
 button:hover, [type=submit]:hover, [type=reset]:hover, [type=button]:hover {
    background-color: var(--href);
+   color: var(--bth-fg);
 }
 
 /* scrollbar */

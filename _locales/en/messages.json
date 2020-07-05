@@ -28,6 +28,12 @@
    "opt_bth_save_settings_tooltip": {
       "message": "Open tabs don't change"
    },
+   "opt_disable_in_frame": {
+      "message": "Prevent processing in iframe"
+   },
+   "opt_disable_in_frame_tooltip": {
+      "message": "All plugins will not work in iframe tag"
+   },
 
    "github_page": {
       "message": "Source Code"

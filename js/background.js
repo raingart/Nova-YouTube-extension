@@ -40,7 +40,8 @@ function update_YOUTUBE_API_KEYS() {
             clearInterval(interval_update_keys);
             // share to Opt page
             localStorage.setItem(APIKeysStoreName, JSON.stringify(YOUTUBE_API_KEYS));
-         } else {
+
+         } else if (localStorage.hasOwnProperty(APIKeysStoreName)) {
             localStorage.removeItem(APIKeysStoreName);
          }
       })

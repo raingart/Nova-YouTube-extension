@@ -44,7 +44,7 @@ const Plugins = {
       // console.log('plugins loading count:', _plugins.length);
       const pageType = (function () {
          const page = location.pathname.split('/')[1];
-         return (page == 'channel' || page == 'user') ? 'channel' : page || 'main';
+         return (page === 'channel' || page === 'c' || page === 'user') ? 'channel' : page || 'main';
       })();
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
@@ -68,7 +68,9 @@ const Plugins = {
                // try { // for test
             } catch (err) {
                console.error(`[PLUGIN ERROR]\n${err.stack}`);
-               console.dir(err);
+               // from = console.dir(err).indexOf('chrome-extension://');
+               // console.dir(err).substring(from,to);
+
                alert('An error was detected in one of the "New Horizons for YouTube™" plugins!\n\nDetails in the console.\nPlease report a bug or disable the plugin');
             }
          }

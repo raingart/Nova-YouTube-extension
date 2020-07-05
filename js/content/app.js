@@ -23,11 +23,11 @@ const App = {
       const APIKeysStoreName = 'YOUTUBE_API_KEYS';
       // set and store
       chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-         App.log('onMessage request:', JSON.stringify(request.action || request));
+         App.log('onMessage request:', request);
          if (chrome.runtime.id != sender.id) return;
 
-         if (request.action === APIKeysStoreName) {
-            // console.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
+         if (request.action === APIKeysStoreName && Array.isArray(request.options) || !request.options.length) {
+            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
             localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
          }
       });
@@ -67,6 +67,13 @@ const App = {
          // wait load setting
          if (this.sessionSettings && Object.keys(this.sessionSettings).length) {
             clearInterval(settings_loaded);
+
+            // in the iframe
+            if (this.sessionSettings?.disableInFrame && top !== self) {
+               console.warn('processed in the frame disable')
+               return;
+            }
+
             this.run(pluginsExportedCount);
          }
       }, 125); // 125ms
@@ -86,15 +93,18 @@ const App = {
 
             console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount}`);
 
+            // force run "_plugins_executor" after some time
+            let _force_plugins_connect = setTimeout(() => {
+               console.warn('force plugins connect');
+               _pluginsExportedCount = undefined;
+            }, 1000 * 6); // 6sec
+
             if (_plugins.length && (!_pluginsExportedCount || _plugins.length >= _pluginsExportedCount)) {
                clearInterval(_plugins_connect);
                _plugins_executor(_sessionSettings);
+               clearTimeout(_force_plugins_connect);
             }
-            // force run "_plugins_executor" after some time
-            // setTimeout(() => {
-            //       console.log('force plugins load');
-            //       _pluginsExportedCount = undefined;
-            // }, 1000 * 3); // 3sec
+
          }, 100); // 100ms
       };
 
@@ -114,6 +124,7 @@ const App = {
 }
 
 App.init();
+
 
 // document.addEventListener('yt-action', function (event) {
 //    console.log('yt-action', JSON.stringify(event.type));

@@ -27,7 +27,7 @@
    <!-- scripts -->
    <script src="/js/content/plugins-list.js"></script>
    <script src="/js/content/plugins.js"></script>
-   <script src="/js/optionsView.js"></script>
+   <script src="/js/optionsBilder.js"></script>
 
    <!-- <script src="/js/libs/options.js"></script> -->
 </head>
@@ -124,7 +124,7 @@
                   <div>
                      <div class="between">
                         <input type="text" name="custom-api-key" id="custom-api-key" pattern="^(AIzaSy)[\d\w]+"
-                           placeholder="custom Youtube API key">
+                        placeholder="custom Youtube API key">
                         <button type="submit" tooltip="" flow="right">__MSG_opt_bth_save_settings__</button>
                      </div>
 
@@ -133,6 +133,13 @@
                            <a href="https://console.developers.google.com/apis/credentials" target="_blank">Generate API key</a>
                         </li>
                      </ul>
+
+                     <hr />
+
+                     <div class="between">
+                        <label for="disableInFrame" tooltip="__MSG_opt_disable_in_frame_tooltip__">__MSG_opt_disable_in_frame__</label>
+                        <input type="checkbox" name="disableInFrame" id="disableInFrame" />
+                     </div>
 
                      <hr />
 

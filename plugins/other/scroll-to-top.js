@@ -10,7 +10,7 @@ _plugins.push({
          selector: 'body',
          callback: () => {
             // create button and add styleы
-            let scrollToTop_bth = (() => {
+            let scrollToTop_bth = (function () {
                const bthId = 'scrollToTop_bth';
 
                let bth = document.createElement('button');

@@ -12,6 +12,11 @@ hr {
    line-height: normal;
 }
 
+.unSaved[type=submit] {
+   background-color: crimson;
+   color: #fff;
+}
+
 input[type=number] {
    width: 3em;
 }
@@ -33,7 +38,7 @@ div.between:last-child {
 div.between:last-child {
    padding-bottom: 0;
 }
-div.between input {
+div.between input[type="text"] {
    padding: 5px;
 }
 

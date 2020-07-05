@@ -13,6 +13,7 @@ const YDOM = {
    listeners: [],
 
    waitHTMLElement({ selector = required(), callback = required(), cleaning_resistant }) {
+      YDOM.log('waitHTMLElement:', ...arguments);
       // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
 
       // Store the selector and callback to be monitored
@@ -186,7 +187,7 @@ const YDOM = {
       },
    },
 
-   doublePressListener(callback, keyCodeFilter) {
+   doubleKeyPressListener(callback, keyCodeFilter) {
       let pressed;
       let lastPressed = parseInt(keyCodeFilter) || null;
       let isDoublePress;
@@ -200,7 +201,7 @@ const YDOM = {
 
       const keyPress = key => {
          pressed = key.keyCode;
-         this.log('doublePressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
+         this.log('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
 
          if (isDoublePress && pressed === lastPressed) {
             isDoublePress = false;
@@ -323,10 +324,11 @@ const YDOM = {
       //    }
       // },
 
-      // async requestAPI({ request, params, api_key }) {
       async API({ request, params, api_key }) {
+         YDOM.log('API:', ...arguments);
+
          // get api key
-         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS') || 'null');
+         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS'));
          if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
             console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             throw new Error('YOUTUBE_API_KEYS is empty');
@@ -341,14 +343,13 @@ const YDOM = {
                .join('&');
 
          const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
-         console.log('use key:', YDOM.getURLParams(URL).get('key'));
 
          // request
          return await fetch(URL)
             .then(response => response.json())
             .then(json => {
                if (!json.error && Object.keys(json).length) return json;
-               console.warn('key:', YDOM.getURLParams(URL).get('key'));
+               console.warn('used key:', YDOM.getURLParams(URL).get('key'));
                throw new Error(JSON.stringify(json?.error));
             })
             .catch(error => {

@@ -31,7 +31,6 @@ _plugins.push({
                set: x => user_settings.player_rate_html5 ? setPlaybackRate.html5(x) : setPlaybackRate.default(x),
 
                default: playback_rate => {
-                  // if (!videoPlayer) let videoPlayer = document.getElementById('movie_player');
                   const playbackRate = videoPlayer.getPlaybackRate();
                   const inRange = delta => {
                      const rangeRate = videoPlayer.getAvailablePlaybackRates();

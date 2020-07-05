@@ -16,7 +16,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-container video[style]',
+         selector: '#movie_player',
          callback: videoElement => {
             const STORE_PREFIX = 'player-pin-position-';
             const PINNED_CLASS_NAME = "video-pinned";
@@ -29,35 +29,35 @@ _plugins.push({
                   initStyle();
 
                } else if (initedStyle) {
-                  onScreenToggle(
-                     document.getElementById('ytd-player'),
-                     // document.getElementById('movie_player'),
-                     document.getElementById("player-theater-container")
-                  );
+                  onScreenToggle({
+                     'switchElement': videoElement,
+                     'watchElement': document.getElementById("player-theater-container"),
+                  });
                }
             });
 
-            function onScreenToggle(changedElement, listeningElement) {
-               // console.log('playerId inViewport', this.inViewport);
+            function onScreenToggle({switchElement, watchElement}) {
+               // console.log('onScreenToggle:', ...arguments);
+
                // no pinned
-               if (YDOM.isInViewport(listeningElement || changedElement)) {
+               if (YDOM.isInViewport(watchElement || switchElement)) {
                   if (!this.inViewport) {
-                     // console.log('changedElement isInViewport');
-                     changedElement.classList.remove(PINNED_CLASS_NAME);
+                     // console.log('switchElement isInViewport');
+                     switchElement.classList.remove(PINNED_CLASS_NAME);
                      this.inViewport = true;
 
                      if (user_settings.pin_player_size_position == 'float') {
-                        YDOM.dragnDrop.disconnect(changedElement);
+                        YDOM.dragnDrop.disconnect(switchElement);
                      }
                   }
                   // pinned
                } else if (this.inViewport) {
-                  // console.log('changedElement isInViewport');
-                  changedElement.classList.add(PINNED_CLASS_NAME);
+                  // console.log('switchElement isInViewport');
+                  switchElement.classList.add(PINNED_CLASS_NAME);
                   this.inViewport = false;
 
                   if (user_settings.pin_player_size_position == 'float') {
-                     YDOM.dragnDrop.connect(changedElement, position => {
+                     YDOM.dragnDrop.connect(switchElement, position => {
                         localStorage.setItem(STORE_PREFIX + 'top', position.top);
                         localStorage.setItem(STORE_PREFIX + 'left', position.left);
                      });
@@ -77,11 +77,11 @@ _plugins.push({
                // set pin_player_size_position
                switch (user_settings.pin_player_size_position) {
                   case 'top-left':
-                     initcss.top = 0;
+                     initcss.top = document.getElementById('masthead-container')?.offsetHeight || 0;
                      initcss.left = 0;
                      break;
                   case 'top-right':
-                     initcss.top = 0;
+                     initcss.top = document.getElementById('masthead-container')?.offsetHeight || 0;
                      initcss.right = 0;
                      break;
                   case 'bottom-left':
@@ -97,6 +97,7 @@ _plugins.push({
                      initcss.left = localStorage.getItem(STORE_PREFIX + 'left');
                      break;
                }
+
                let size = {
                   // width: videoElement.clientWidth,
                   // height: videoElement.clientHeight,
@@ -104,7 +105,7 @@ _plugins.push({
                   height: videoElement.scrollHeight,
                };
 
-               size.calc = (() => {
+               size.calc = (function () {
                   const playerRatio = user_settings.pin_player_size_ratio;
                   const calculateAspectRatioFit = (srcWidth, srcHeight, maxWidth, maxHeight) => {
                      const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);

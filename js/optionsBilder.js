@@ -235,7 +235,8 @@ window.addEventListener('load', event => {
 
 
 function searchFilter({keyword, containers, filterChildTagName}) {
-   // console.log('searchFilter', keyword);
+   // console.log('searchFilter:', ...arguments);
+
    for (const item of containers) {
       let text = item.textContent;
       let found = text.toLowerCase().includes(keyword.toLowerCase());

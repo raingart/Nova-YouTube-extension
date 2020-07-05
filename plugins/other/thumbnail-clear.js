@@ -12,14 +12,12 @@ _plugins.push({
          selector: '#thumbnail:not([' + markAttrName + ']) img',
          cleaning_resistant: true,
          callback: imgElement => {
-            // if (imgElement.hasAttribute(markAttrName)) return; // Bug. Very strange, interrupts the replacement
-            // console.log('switchAttrUName', imgElement);
             imgElement.setAttribute(markAttrName, true);
 
             const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 
             if (re.test(imgElement.src)) {
-               imgElement.src = imgElement.src.replace(re, `${(user_settings.thumbnail_time_stamp || 'hq1')}.jpg`);
+               imgElement.src = imgElement.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
             }
          },
       });

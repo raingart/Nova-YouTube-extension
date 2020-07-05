@@ -29,13 +29,19 @@ _plugins.push({
             window.addEventListener("beforeunload", event => removeStorage());
 
             window.addEventListener('storage', event => {
-               if (event.key === storeName && event.storageArea === localStorage // checking the right item
-                  && localStorage[storeName] && localStorage[storeName] !== instanceID // has storage
-                  && videoPlayer.getPlayerState() === 1) { // this player is playing
+               if (
+                  // checking the right item
+                  event.key === storeName && event.storageArea === localStorage
+                  // has storage
+                  && localStorage[storeName] && localStorage[storeName] !== instanceID
+                  // this player is playing
+                  && videoPlayer.getPlayerState() === 1
+               ) {
                   console.log('pause player', localStorage[storeName]);
                   videoPlayer.pauseVideo();
                }
             });
+
          },
       });
 
