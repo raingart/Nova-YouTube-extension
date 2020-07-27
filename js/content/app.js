@@ -26,7 +26,7 @@ const App = {
          App.log('onMessage request:', request);
          if (chrome.runtime.id != sender.id) return;
 
-         if (request.action === APIKeysStoreName && Array.isArray(request.options) || !request.options.length) {
+         if (request.action === APIKeysStoreName && Array.isArray(request.options) && request.options.length) {
             App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
             localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
          }

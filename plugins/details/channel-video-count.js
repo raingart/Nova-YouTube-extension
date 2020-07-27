@@ -13,7 +13,7 @@ _plugins.push({
          callback: linkElement => {
             // console.log('watch page');
             insertStatistic({
-               'html_container': document.querySelector('#upload-info #owner-sub-count'),
+               'html_container': document.body.querySelector('#upload-info #owner-sub-count'),
                'channel_id': linkElement.getAttribute("href").split('/').pop(),
             });
          },
@@ -31,8 +31,14 @@ _plugins.push({
 
             function searchChannelId() {
                const page = location.pathname.split('/');
-               return page[1] === 'channel' ? page[2] :
-                  document.querySelector('link[rel="canonical"][href]')?.href.split('/').pop();
+               return page[1] === 'channel' ? page[2] : [
+                  document.querySelector('meta[itemprop="channelId"][content]'),
+                  ...document.querySelectorAll('link[itemprop="url"][href]'),
+                  ...document.querySelectorAll('meta[content]'),
+                  ...document.querySelectorAll('link[href]')
+               ]
+                  .map(el => (el?.content || el?.href))
+                  .find(i => i && /UC([a-z0-9-_]{22})$/i.test(i.split('/').pop()));
             }
          },
       });

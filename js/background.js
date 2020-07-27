@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
          break;
 
       case 'REQUESTING_YOUTUBE_API_KEYS':
-         sendMessage_({
+         YOUTUBE_API_KEYS.length && sendMessage_({
             action: APIKeysStoreName,
             options: YOUTUBE_API_KEYS,
          });
