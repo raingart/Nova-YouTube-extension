@@ -8,7 +8,7 @@ _plugins.push({
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-player',
+         selector: '#movie_player',
          callback: videoPlayer => {
             const playerArea = document.querySelector('.html5-video-container');
 
@@ -21,7 +21,7 @@ _plugins.push({
                .addEventListener("volumechange", event => showIndicator(playerArea, videoPlayer.getVolume()));
             // .addEventListener("volumechange", function (event) {
             //    let volume = parseInt(this.volume * 100);
-            //    console.log('volumechange', volume, videoPlayer.getVolume());
+            //    console.debug('volumechange', volume, videoPlayer.getVolume());
             //    showIndicator(playerArea, volume); // Error: volume this.volume is incorrect
             // });
 
@@ -61,7 +61,7 @@ _plugins.push({
             }
 
             function setVolumeLevel(volume, volumeСurrent) {
-               // console.log('volume', volume, volumeStatus);
+               // console.debug('volume', volume, volumeStatus);
                const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
                const volumeToSet = limiter(parseInt(volume));
 
@@ -73,7 +73,7 @@ _plugins.push({
                   // check is correct
                   if (volumeToSet === videoPlayer.getVolume()) {
                      saveInSession(volumeToSet);
-                     // console.log('volume saved');
+                     // console.debug('volume saved');
                   } else console.error('setVolume error. Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
                }
 
@@ -95,12 +95,12 @@ _plugins.push({
             function showIndicator(display_container, level) {
                if (!user_settings.show_volume_indicator) return;
 
-               const divId = "volume-player-info";
-               let div = document.getElementById(divId);
+               const selectorId = "volume-player-info";
+               let div = document.getElementById(selectorId);
 
                if (!div && display_container instanceof HTMLElement) {
-                  display_container.insertAdjacentHTML("afterend", `<div id="${divId}"></div>`);
-                  div = document.getElementById(divId);
+                  display_container.insertAdjacentHTML("afterend", `<div id="${selectorId}"></div>`);
+                  div = document.getElementById(selectorId);
 
                   Object.assign(div.style, {
                      'background-color': 'rgba(0,0,0,0.3)',
@@ -149,7 +149,7 @@ _plugins.push({
       });
 
    },
-   export_opt: {
+   opt_export: {
       'default_volume_level': {
          _elementType: 'input',
          label: 'Level at startup',

@@ -11,12 +11,12 @@ _plugins.push({
          callback: () => {
             // create button and add styleы
             let scrollToTop_bth = (function () {
-               const bthId = 'scrollToTop_bth';
+               const selectorId = 'scrollToTop_bth';
 
                let bth = document.createElement('button');
                let arrow = document.createElement('i');
                bth.appendChild(arrow);
-               bth.id = bthId;
+               bth.id = selectorId;
                document.body.appendChild(bth);
 
                // bth
@@ -37,10 +37,10 @@ _plugins.push({
                   'border-radius': '100% 100% 0 0',
                   'font-size': '16px',
                   'background-color': 'rgba(0,0,0,0.3)',
-               }, '#' + bthId);
+               }, '#' + selectorId);
 
                // arrow
-               YDOM.injectStyle(`#${bthId} > * {
+               YDOM.injectStyle(`#${selectorId} > * {
                   border: solid white;
                   border-width: 0 3px 3px 0;
                   display: inline-block !important;
@@ -48,24 +48,24 @@ _plugins.push({
                   vertical-align: middle;
                   transform: rotate(-135deg);
                }
-               #${bthId}:hover {
+               #${selectorId}:hover {
                   opacity: 1 !important;
                   box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
                }`);
 
-               return document.getElementById(bthId);
+               return document.getElementById(selectorId);
 
             })();
 
-            let scroll_position = {
+            let bth_position = {
                top: 0,
                left: window.pageXOffset,
                behavior: 'instant' //'smooth'
             };
 
-            if (user_settings.scroll_to_top_smooth) scroll_position.behavior = 'smooth';
+            if (user_settings.scroll_to_top_smooth) bth_position.behavior = 'smooth';
 
-            scrollToTop_bth.addEventListener('click', () => window.scrollTo(scroll_position));
+            scrollToTop_bth.addEventListener('click', () => window.scrollTo(bth_position));
 
             window.addEventListener('scroll', () => {
                if (document.documentElement.scrollTop > (window.innerHeight / 2)) {
@@ -82,7 +82,7 @@ _plugins.push({
       });
 
    },
-   export_opt: {
+   opt_export: {
       'scroll_to_top_smooth': {
          _elementType: 'input',
          label: 'Smooth',

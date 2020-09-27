@@ -3,13 +3,14 @@ _plugins.push({
    id: 'global-rating-bars',
    section: 'global',
    depends_page: 'all, -embed',
-   api_key_dependent: true,
+   api_key_dependency: true,
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 
       const SELECTOR_NAME = 'ratio-rate-line';
       const SELECTOR_RATE = '#' + SELECTOR_NAME;
       const CACHED_PREFIX = 'rate-bar_';
+      const CACHED_TIME = 8; // hours
       let collectVideoIds = [];
 
       // init bars style
@@ -26,10 +27,10 @@ _plugins.push({
 
       YDOM.waitHTMLElement({
          selector: 'a#thumbnail:not([' + markAttrName + '])',
-         cleaning_resistant: true,
+         not_removable: true,
          callback: thumbnail => {
             if (thumbnail.hasAttribute(markAttrName)) return;
-            // console.log('start gen: rateBar');
+            // console.debug('start gen: rateBar');
             thumbnail.setAttribute(markAttrName, true); // lock
 
             collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
@@ -38,10 +39,10 @@ _plugins.push({
 
       // chack update new thumbnail
       setInterval(() => {
-         // console.log('collectVideoIds', collectVideoIds);
+         // console.debug('collectVideoIds', collectVideoIds);
 
          if (collectVideoIds.length) {
-            // console.log('find new thumbnail');
+            // console.debug('find new thumbnail');
             const _collectVideoIds = collectVideoIds;
             // clear the array to prevent repeated requests "setInterval"
             collectVideoIds = [];
@@ -52,13 +53,13 @@ _plugins.push({
 
                if (item?.hasOwnProperty('expires')) {
                   if (+item.expires > now) {
-                     // console.log('cached', video_id);
+                     // console.debug('cached', video_id);
                      appendRatingBars(item);
 
                   } else {
                      // clear expired storage
                      localStorage.removeItem(item);
-                     // console.log('expired', video_id);
+                     // console.debug('expired', video_id);
 
                      return true; // need update
                   }
@@ -68,7 +69,7 @@ _plugins.push({
 
             });
             // newVidIds.forEach(k => localStorage.removeItem(k));
-            // console.log('new', newVidIds);
+            // console.debug('new', newVidIds);
             getRatingsObj(newVidIds);
          }
       }, 1000); // 1 sec
@@ -76,7 +77,7 @@ _plugins.push({
 
       function getRatingsObj(videoIds) {
          if (!videoIds.length || !Array.isArray(videoIds)) return;
-         // console.log('getRatingsObj', videoIds);
+         // console.debug('getRatingsObj', videoIds);
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
 
@@ -100,7 +101,7 @@ _plugins.push({
                   .then(res => {
                      const now = new Date();  //epoch time, lets deal only with integer
                      res.items.forEach(item => {
-                        // console.log('item', item);
+                        // console.debug('item', item);
                         const views = parseInt(item.statistics.viewCount) || 0;
                         const likes = parseInt(item.statistics.likeCount) || 0;
                         const dislikes = parseInt(item.statistics.dislikeCount) || 0;
@@ -108,7 +109,7 @@ _plugins.push({
                         const percent = Math.floor(likes / total * 100);
 
                         const videoStatistics = {
-                           'expires': +now.setHours(now.getHours() + 8), // add 8 hour,
+                           'expires': +now.setHours(now.getHours() + CACHED_TIME),
                            'id': item.id, // need to selector out
                            'pt': percent,
 
@@ -127,7 +128,7 @@ _plugins.push({
       const colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
       function appendRatingBars(thumbnailObj) {
-         // console.log('appendRatingBars start', thumbnailObj);
+         // console.debug('appendRatingBars start', thumbnailObj);
          // fix: Uncaught TypeError: is not iterable
          if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
 
@@ -135,17 +136,18 @@ _plugins.push({
             // filter small values
             if (thumb.views < 5 || thumb.total < 3) continue;
 
-            [...document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]')].forEach(a => {
-               // console.log('finded', thumb.id, a.href, thumb.pt);
-               const pt = thumb.pt;
-               // a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
-               a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
-            });
+            [...document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]')]
+               .forEach(a => {
+                  // console.debug('finded', thumb.id, a.href, thumb.pt);
+                  const pt = thumb.pt;
+                  // a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
+                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+               });
          }
       }
 
    },
-   export_opt: {
+   opt_export: {
       'ratio_bar_height': {
          _elementType: 'input',
          label: 'Bar height',

@@ -4,36 +4,21 @@ const App = {
    // Register the event handlers.
    eventListener: (function () {
       // skip first run on page load
-      document.addEventListener('yt-navigate-start', () => App.isNewUrl() && App.rerun());
+      document.addEventListener('yt-navigate-start', () => App.URL.isChange() && App.rerun());
    }()),
 
-   thisUrl: location.href, // prev state
-
-   isNewUrl: () => App.thisUrl === location.href ? false : App.thisUrl = location.href,
+   URL: {
+      current: location.href, // prev state
+      isChange: () => App.URL.current === location.href ? false : App.URL.current = location.href,
+   },
 
    rerun() {
       setTimeout(() => { // to avoid premature start. Dirty trick
          console.info('page transition');
-         Plugins.load(Plugins_list.runOnTransition);
+         Plugins.load(Plugins.list.runOnTransition);
          this.run();
       }, 500);
    },
-
-   _ytcAPIKeys: (function () {
-      const APIKeysStoreName = 'YOUTUBE_API_KEYS';
-      // set and store
-      chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-         App.log('onMessage request:', request);
-         if (chrome.runtime.id != sender.id) return;
-
-         if (request.action === APIKeysStoreName && Array.isArray(request.options) && request.options.length) {
-            App.log(`get and save ${APIKeysStoreName} in localStorage`, JSON.stringify(request.options));
-            localStorage.setItem(APIKeysStoreName, JSON.stringify(request.options));
-         }
-      });
-      // request
-      chrome.runtime.sendMessage('REQUESTING_' + APIKeysStoreName);
-   }()),
 
    // sessionSettings: null,
    storage: {
@@ -48,7 +33,8 @@ const App = {
 
    init() {
       const manifest = chrome.runtime.getManifest();
-      console.log("loading %c %s ", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:24px;color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v.' + manifest.version);
+      // console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', manifest.name + ' v.' + manifest.version);
+      console.log("loading %c %s", 'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color:#00bbee;-webkit-text-fill-color:#00bbee;-webkit-text-stroke: 1px #00bbee;', manifest.name, 'v.' + manifest.version);
 
       this.storage.load();
 
@@ -57,7 +43,7 @@ const App = {
       let pluginsExportedCount;
       // load all Plugins
       Plugins.load((function () {
-         const plugins = [].concat(...Object.values(Plugins_list));
+         const plugins = [].concat(...Object.values(Plugins.list));
          pluginsExportedCount = plugins.length - 1; // with the exception of "lib"
          return plugins;
       })());
@@ -81,28 +67,29 @@ const App = {
 
    run(pluginsExportedCount = 0) {
       this.log('App runing');
-      const preparation_execute = function () {
+      const script_lander = function () {
          'use strict';
-         let _plugins_connect = setInterval(() => {
+         let plugins_lander = setInterval(() => {
             const docLoaded = document.readyState === "complete" || document.readyState === "interactive";
 
             if (!docLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
-               console.log('waiting, page loading..');
+               console.debug('waiting, page loading..');
                return;
             }
 
-            console.log(`plugins loaded: ${_plugins.length}/${_pluginsExportedCount}`);
+            console.groupCollapsed('plugins status');
+            console.debug(`loaded: ${_plugins.length}/${_pluginsExportedCount}`);
 
             // force run "_plugins_executor" after some time
-            let _force_plugins_connect = setTimeout(() => {
-               console.warn('force plugins connect');
+            let force_plugins_lander = setTimeout(() => {
+               console.warn('force plugins lander');
                _pluginsExportedCount = undefined;
             }, 1000 * 6); // 6sec
 
             if (_plugins.length && (!_pluginsExportedCount || _plugins.length >= _pluginsExportedCount)) {
-               clearInterval(_plugins_connect);
+               clearInterval(plugins_lander);
                _plugins_executor(_sessionSettings);
-               clearTimeout(_force_plugins_connect);
+               clearTimeout(force_plugins_lander);
             }
 
          }, 100); // 100ms
@@ -112,26 +99,31 @@ const App = {
          `const _plugins_executor = ${Plugins.run};
          const _pluginsExportedCount = ${pluginsExportedCount};
          const _sessionSettings = ${JSON.stringify(this.sessionSettings)};
-         ( ${preparation_execute.toString()} ());`;
+         ( ${script_lander.toString()} ());`;
 
       Plugins.injectScript(scriptText);
+
+      // console.debug('all Property', Object.getOwnPropertyNames(this));
    },
 
-   log(...agrs) {
-      // console.log('all Property', Object.getOwnPropertyNames(this));
-      this.DEBUG && agrs?.length && console.log(...agrs);
+   log(...args) {
+      if (this.DEBUG && args?.length) {
+         console.groupCollapsed(...args);
+         console.trace();
+         console.groupEnd();
+      }
+
    },
 }
 
 App.init();
 
-
 // document.addEventListener('yt-action', function (event) {
-//    console.log('yt-action', JSON.stringify(event.type));
-//    console.log('yt-action', JSON.stringify(event.target));
-//    console.log('yt-action', JSON.stringify(event.data));
-//    console.log('yt-action', event);
-//    console.log('yt-action', event.detail?.actionName, event);
+//    console.debug('yt-action', JSON.stringify(event.type));
+//    console.debug('yt-action', JSON.stringify(event.target));
+//    console.debug('yt-action', JSON.stringify(event.data));
+//    console.debug('yt-action', event);
+//    console.debug('yt-action', event.detail?.actionName, event);
 
 //    yt-action ytd-update-mini-guide-state-action
 //    yt-action yt-miniplayer-active-changed-action

@@ -9,21 +9,21 @@ _plugins.push({
       const markAttrName = 'timestamps-updated';
 
       YDOM.waitHTMLElement({
-         selector: '#thumbnail:not([' + markAttrName + ']) img',
-         cleaning_resistant: true,
+         selector: '#thumbnail img[src]:not([' + markAttrName + '])',
+         not_removable: true,
          callback: imgElement => {
-            imgElement.setAttribute(markAttrName, true);
 
             const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 
             if (re.test(imgElement.src)) {
+               imgElement.setAttribute(markAttrName, true);
                imgElement.src = imgElement.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
             }
          },
       });
 
    },
-   export_opt: {
+   opt_export: {
       'thumbnail_time_stamp': {
          _elementType: 'select',
          label: 'Thumbnail timestamps',

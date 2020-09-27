@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-player',
+         selector: '#movie_player',
          callback: videoPlayer => {
             let selectedQuality = user_settings.video_quality;
 
@@ -18,7 +18,7 @@ _plugins.push({
                   console.error('selectedQuality unavailable', selectedQuality);
                   return;
                }
-               // console.log('onStateChange', state);
+               // console.debug('onStateChange', state);
 
                // -1: unstarted
                // 0: ended
@@ -39,7 +39,7 @@ _plugins.push({
                         const qualityToSet = availableQualityLevels[maxAvailableQuality];
 
                         // if (!qualityToSet || videoPlayer.getPlaybackQuality() == selectedQuality) {
-                        //    console.log('skip set quality');
+                        //    console.debug('skip set quality');
                         //    return;
                         // }
 
@@ -48,7 +48,7 @@ _plugins.push({
                         }
 
                         if (videoPlayer.hasOwnProperty('setPlaybackQuality')) {
-                           // console.log('use setPlaybackQuality');
+                           // console.debug('use setPlaybackQuality');
                            videoPlayer.setPlaybackQuality(qualityToSet);
                         }
 
@@ -58,7 +58,7 @@ _plugins.push({
 
                            // emulate clicked (in embed iframe)
                         } else if (document.querySelector('.ytp-settings-button:not([aria-expanded]')) { // the menu is not open
-                           // console.log('emulate clicked');
+                           // console.debug('emulate clicked');
                            document.querySelector('.ytp-settings-button').click(); // settings button
                            document.querySelector('.ytp-settings-menu [role=menuitem]:last-child').click(); // quality menu
 
@@ -66,7 +66,7 @@ _plugins.push({
                            //    .filter(menuitem => menuitem.textContent.includes(qualityToSet))[0].click();
 
                            const showQualities = document.querySelectorAll('.ytp-quality-menu [role=menuitemradio]');
-                           console.log('choosing it quality', showQualities[maxAvailableQuality].innerText);
+                           console.debug('choosing it quality', showQualities[maxAvailableQuality].innerText);
                            showQualities[maxAvailableQuality].click(); // choosing it quality
 
                            // unfocused
@@ -74,9 +74,9 @@ _plugins.push({
                            document.querySelector("video").focus();
                         }
 
-                        // console.log('availableQualityLevels:', JSON.stringify(availableQualityLevels));
-                        // console.log("try set quality:", qualityToSet);
-                        // console.log('set realy quality:', videoPlayer.getPlaybackQuality());
+                        // console.debug('availableQualityLevels:', JSON.stringify(availableQualityLevels));
+                        // console.debug("try set quality:", qualityToSet);
+                        // console.debug('set realy quality:', videoPlayer.getPlaybackQuality());
                      }
                   }, 50); // 50ms
 
@@ -87,7 +87,7 @@ _plugins.push({
                // keep quality in session
                if (user_settings.save_manual_quality_in_tab && location.pathname == '/watch') {// no sense if in the embed
                   videoPlayer.addEventListener("onPlaybackQualityChange", quality => {
-                     // console.log('document.activeElement,',document.activeElement);
+                     // console.debug('document.activeElement,',document.activeElement);
                      if (document.activeElement.getAttribute('role') == "menuitemradio" && // now focuse setting menu
                         quality !== selectedQuality && // the new quality
                         videoPlayer.hasOwnProperty('setPlaybackQuality') // not automatically changed
@@ -102,7 +102,7 @@ _plugins.push({
       });
 
    },
-   export_opt: {
+   opt_export: {
       'video_quality': {
          _elementType: 'select',
          label: 'Set prefered quality',

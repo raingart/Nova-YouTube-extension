@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement({
-         selector: '.ytd-page-manager[page-subtype=channels] .html5-video-player',
+         selector: '.ytd-page-manager[page-subtype=channels] #movie_player',
          callback: trailerPlayer => trailerPlayer.stopVideo(),
       });
 

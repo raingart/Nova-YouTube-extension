@@ -33,7 +33,7 @@ _plugins.push({
       }
 
    },
-   export_opt: {
+   opt_export: {
       'default_channel_tab': {
          _elementType: 'select',
          label: 'Set default tab',

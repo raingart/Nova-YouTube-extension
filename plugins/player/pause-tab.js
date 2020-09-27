@@ -11,7 +11,7 @@ _plugins.push({
       const instanceID = Math.random();
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-player',
+         selector: '#movie_player',
          callback: videoPlayer => {
             const removeStorage = () => localStorage.removeItem(storeName);
 
@@ -37,7 +37,7 @@ _plugins.push({
                   // this player is playing
                   && videoPlayer.getPlayerState() === 1
                ) {
-                  console.log('pause player', localStorage[storeName]);
+                  console.debug('pause player', localStorage[storeName]);
                   videoPlayer.pauseVideo();
                }
             });

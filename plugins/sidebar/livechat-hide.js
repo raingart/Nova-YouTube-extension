@@ -23,13 +23,13 @@ _plugins.push({
          // YDOM.waitHTMLElement({
          //    selector: '#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])',
          //    callback: bth => {
-         //       console.log('bth', bth);
+         //       console.debug('bth', bth);
          //    },
          // });
       }
 
    },
-   export_opt: {
+   opt_export: {
       'livechat': {
          _elementType: 'select',
          label: 'Type hide',

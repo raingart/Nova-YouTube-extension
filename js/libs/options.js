@@ -1,4 +1,4 @@
-console.log(i18n("app_name") + ": init options.js");
+console.debug(i18n("app_name") + ": init options.js");
 
 window.addEventListener('load', (evt) => {
 
@@ -7,16 +7,17 @@ window.addEventListener('load', (evt) => {
       storageMethod: 'sync',
 
       attrDependencies() {
-         [...document.querySelectorAll("[data-dependent]")].forEach(dependentItem => {
-            // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-            const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
-            const handler = () => showOrHide(dependentItem, dependentsJson);
-            // init state
-            handler();
+         [...document.querySelectorAll("[data-dependent]")]
+            .forEach(dependentItem => {
+               // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
+               const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
+               const handler = () => showOrHide(dependentItem, dependentsJson);
+               // init state
+               handler();
 
-            const dependentTag = document.getElementById(Object.keys(dependentsJson))
-            if (dependentTag) dependentTag.addEventListener("change", handler);
-         });
+               const dependentTag = document.getElementById(Object.keys(dependentsJson))
+               if (dependentTag) dependentTag.addEventListener("change", handler);
+            });
 
          function showOrHide(dependentItem, dependentsList) {
             for (const name in dependentsList)
@@ -28,17 +29,17 @@ window.addEventListener('load', (evt) => {
                   }
 
                   if (reqParent.checked && thisVal) {
-                     // console.log('reqParent.checked');
+                     // console.debug('reqParent.checked');
                      dependentItem.classList.remove("hide");
 
                   } else if (reqParent.value == thisVal) {
                      dependentItem.classList.remove("hide");
-                     // console.log(reqParent.value + '==' + thisVal);
+                     // console.debug(reqParent.value + '==' + thisVal);
                      break;
 
                   } else {
                      dependentItem.classList.add("hide");
-                     // console.log(reqParent.value + '!=' + thisVal);
+                     // console.debug(reqParent.value + '!=' + thisVal);
                   }
                }
          }
@@ -48,22 +49,24 @@ window.addEventListener('load', (evt) => {
       saveOptions(form) {
          let obj = {};
 
-         new FormData(form).forEach((value, key) => {
-            // SerializedArray
-            if (obj.hasOwnProperty(key)) {
-               // adding another val
-               obj[key] += ';' + value; // add new
-               obj[key] = obj[key].split(';'); // to key = [old, new]
+         new FormData(form)
+            .forEach((value, key) => {
+               // SerializedArray
+               if (obj.hasOwnProperty(key)) {
+                  // adding another val
+                  obj[key] += ';' + value; // add new
+                  obj[key] = obj[key].split(';'); // to key = [old, new]
 
-            } else obj[key] = value;
-         });
+               } else obj[key] = value;
+            });
 
          Storage.setParams(obj, this.storageMethod);
 
-         chrome.extension.sendMessage({
-            "action": 'setOptions',
-            "options": obj
-         });
+         // notify background page
+         // chrome.extension.sendMessage({
+         //    "action": 'setOptions',
+         //    "options": obj
+         // });
       },
 
       bthSubmitAnimation: {
@@ -85,7 +88,7 @@ window.addEventListener('load', (evt) => {
 
       // Register the event handlers.
       eventListener: (function () {
-         Array.from(document.forms)
+         [...document.forms]
             .forEach(form => {
                form.addEventListener('submit', function (event) {
                   event.preventDefault();
@@ -97,12 +100,12 @@ window.addEventListener('load', (evt) => {
       }()),
 
       init() {
-         const callback = obj => {
+         Storage.getParams(obj => {
             PopulateForm.fill(obj);
             this.attrDependencies();
             document.querySelector("body").classList.remove("preload");
 
-            Array.from(document.forms[0].elements)
+            [...document.forms[0].elements]
                .filter(i => i.type == 'checkbox')
                .forEach(i => {
                   i.addEventListener('change', event => {
@@ -111,8 +114,7 @@ window.addEventListener('load', (evt) => {
                      }
                   });
                });
-         };
-         Storage.getParams(callback, this.storageMethod);
+         }, this.storageMethod);
       },
    }
 

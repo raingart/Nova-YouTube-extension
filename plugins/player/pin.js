@@ -26,7 +26,7 @@ _plugins.push({
             window.addEventListener('scroll', () => {
                if (!initedStyle && (videoElement.scrollWidth && videoElement.scrollHeight)) {
                   initedStyle = true;
-                  initStyle();
+                  createStyle();
 
                } else if (initedStyle) {
                   onScreenToggle({
@@ -36,13 +36,13 @@ _plugins.push({
                }
             });
 
-            function onScreenToggle({switchElement, watchElement}) {
-               // console.log('onScreenToggle:', ...arguments);
+            function onScreenToggle({ switchElement, watchElement }) {
+               // console.debug('onScreenToggle:', ...arguments);
 
                // no pinned
-               if (YDOM.isInViewport(watchElement || switchElement)) {
+               if (isInViewport(watchElement || switchElement)) {
                   if (!this.inViewport) {
-                     // console.log('switchElement isInViewport');
+                     // console.debug('switchElement isInViewport');
                      switchElement.classList.remove(PINNED_CLASS_NAME);
                      this.inViewport = true;
 
@@ -52,7 +52,7 @@ _plugins.push({
                   }
                   // pinned
                } else if (this.inViewport) {
-                  // console.log('switchElement isInViewport');
+                  // console.debug('switchElement isInViewport');
                   switchElement.classList.add(PINNED_CLASS_NAME);
                   this.inViewport = false;
 
@@ -63,9 +63,21 @@ _plugins.push({
                      });
                   }
                }
+
+               function isInViewport(el = required()) {
+                  if (el instanceof HTMLElement) {
+                     const bounding = el.getBoundingClientRect();
+                     return (
+                        bounding.top >= 0 &&
+                        bounding.left >= 0 &&
+                        bounding.bottom <= window.innerHeight &&
+                        bounding.right <= window.innerWidth
+                     );
+                  }
+               }
             }
 
-            function initStyle() {
+            function createStyle() {
                let initcss = {
                   position: 'fixed',
                   'z-index': 9999,
@@ -144,19 +156,19 @@ _plugins.push({
                YDOM.injectStyle(`${PINNED_SELECTOR} .ytp-chrome-bottom {
                   width: ${initcss.width};
                   left: 0 !important;
-                  /*margin-left: -12px !important;*/
                }
                ${PINNED_SELECTOR} .ytp-preview,
                ${PINNED_SELECTOR} .ytp-scrubber-container,
-               ${PINNED_SELECTOR} .ytp-hover-progress,
-               {display:none !important;}`
-               );
+               ${PINNED_SELECTOR} .ytp-hover-progress
+               {display:none !important;}
+               ${PINNED_SELECTOR} .ytp-chapters-container {display: flex;}
+               `);
             }
          },
       });
 
    },
-   export_opt: {
+   opt_export: {
       'pin_player_size_ratio': {
          _elementType: 'input',
          label: 'Player ratio to screen size',
@@ -176,7 +188,6 @@ _plugins.push({
             { label: 'left-bottom', value: 'bottom-left' },
             { label: 'right-top', value: 'top-right', selected: true },
             { label: 'right-bottom', value: 'bottom-right' },
-            { label: 'drag&Drop', value: 'float' },
          ]
       },
    },

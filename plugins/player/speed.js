@@ -8,7 +8,7 @@ _plugins.push({
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-player',
+         selector: '#movie_player',
          callback: videoPlayer => {
             const playerArea = document.querySelector('.html5-video-container');
             const videoElm = videoPlayer.querySelector('video');
@@ -42,7 +42,7 @@ _plugins.push({
                   // set rate
                   if (rateToSet && rateToSet !== playbackRate) {
                      videoPlayer.setPlaybackRate(rateToSet);
-                     // console.log('try set rate',rateToSet);
+                     // console.debug('try set rate',rateToSet);
 
                      // check is correct
                      if (rateToSet !== videoPlayer.getPlaybackRate()) {
@@ -83,7 +83,7 @@ _plugins.push({
             }
 
             function setPlaybackRate_wheel(event) {
-               // console.log('onWheel');
+               // console.debug('onWheel');
                event.preventDefault();
 
                if (user_settings.player_rate_hotkey && (
@@ -93,7 +93,7 @@ _plugins.push({
                      !event.ctrlKey && !event.altKey && !event.shiftKey
                   )
                )) {
-                  // console.log('hotkey caught');
+                  // console.debug('hotkey caught');
 
                   if (!videoPlayer.hasOwnProperty('getPlaybackRate')) {
                      console.error('getPlaybackRate error');
@@ -108,8 +108,8 @@ _plugins.push({
             }
 
             function showIndicator(level, display_container) {
-               const divBarId = "rate-player-info";
-               let divBar = document.getElementById(divBarId);
+               const selectorId = "rate-player-info";
+               let divBar = document.getElementById(selectorId);
 
                const updateIndicator = text => {
                   if (typeof fate_rateBar !== "undefined") clearTimeout(fate_rateBar);
@@ -130,8 +130,8 @@ _plugins.push({
                   updateIndicator(level);
 
                } else if (display_container) { // create
-                  display_container.insertAdjacentHTML("afterend", `<div id="${divBarId}">${level}</div>`);
-                  divBar = document.getElementById(divBarId);
+                  display_container.insertAdjacentHTML("afterend", `<div id="${selectorId}">${level}</div>`);
+                  divBar = document.getElementById(selectorId);
 
                   Object.assign(divBar.style, {
                      'background-color': 'rgba(0,0,0,0.3)',
@@ -154,7 +154,7 @@ _plugins.push({
       });
 
    },
-   export_opt: {
+   opt_export: {
       'default_playback_rate': {
          _elementType: 'input',
          label: 'Speed at startup',

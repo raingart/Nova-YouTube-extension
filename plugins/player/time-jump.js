@@ -7,9 +7,9 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement({
-         selector: '.html5-video-player',
+         selector: '#movie_player',
          callback: videoPlayer => {
-            YDOM.doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
+            doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
 
             function jumpTime(event) {
                if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
@@ -17,15 +17,46 @@ _plugins.push({
                   // && !window.getSelection()
                ) {
                   const sec = videoPlayer.getCurrentTime() + parseInt(user_settings.jump_step);
-                  // console.log('seekTo', sec);
+                  // console.debug('seekTo', sec);
                   videoPlayer.seekTo(sec);
                }
             }
          },
       });
 
+      function doubleKeyPressListener(callback, keyCodeFilter) {
+         let pressed;
+         let lastPressed = parseInt(keyCodeFilter) || null;
+         let isDoublePress;
+
+         const handleDoublePresss = key => {
+            // console.debug(key.key, 'pressed two times');
+            if (callback && typeof (callback) === 'function') return callback(key);
+         }
+
+         const timeOut = () => setTimeout(() => isDoublePress = false, 500);
+
+         const keyPress = key => {
+            pressed = key.keyCode;
+            // console.log('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
+
+            if (isDoublePress && pressed === lastPressed) {
+               isDoublePress = false;
+               handleDoublePresss(key);
+            } else {
+               isDoublePress = true;
+               timeOut();
+            }
+
+            if (!keyCodeFilter) lastPressed = pressed;
+         }
+
+         // window.onkeyup = key => keyPress(key);
+         document.addEventListener("keyup", keyPress);
+      }
+
    },
-   export_opt: {
+   opt_export: {
       'jump_step': {
          _elementType: 'input',
          label: 'Step',

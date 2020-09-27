@@ -2,7 +2,7 @@ _plugins.push({
    name: 'Normalize video title',
    id: 'normalize-video-title',
    section: 'other',
-   depends_page: 'channel, results, playlist, main, watch',
+   depends_page: 'all, -embed',
    desc: 'Decapitalize video title',
    _runtime: user_settings => {
 
@@ -33,10 +33,10 @@ _plugins.push({
 
       YDOM.waitHTMLElement({
          selector: VIDEO_TITLE_SELECTOR + `:not([${markAttrName}])`,
-         cleaning_resistant: true,
+         not_removable: true,
          callback: titleElement => {
             if (titleElement.hasAttribute(markAttrName)) return;
-            // console.log('markAttrName:', titleElement);
+            // console.debug('markAttrName:', titleElement);
             titleElement.setAttribute(markAttrName, true);
 
             let counterMatch = 0;
@@ -47,7 +47,7 @@ _plugins.push({
 
             // Upper case
             if (counterMatch > MAX_TITLE_WORDS) {
-               // console.log('markAttrName:', titleElement.title, upperCaseArr);
+               // console.debug('markAttrName:', titleElement.title, upperCaseArr);
                titleElement.textContent = capitalizeFirstLetter(normalizedText);
             }
 
@@ -55,14 +55,14 @@ _plugins.push({
 
             // Upper case > 2 words
             // if (upperCaseArr && upperCaseArr.length > 2) {
-            //    // console.log('markAttrName:', titleElement.title, upperCaseArr);
+            //    // console.debug('markAttrName:', titleElement.title, upperCaseArr);
             //    upperCaseArr.forEach(match => titleElement.textContent = titleElement.textContent.replace(match, match.toLowerCase()));
             // }
          },
       });
 
    },
-   export_opt: {
+   opt_export: {
       'show_full_video_title': {
          _elementType: 'input',
          label: 'Show full title',
