@@ -8,7 +8,7 @@ _plugins.push({
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
       YDOM.waitHTMLElement({
-         selector: '#movie_player',
+         selector: '.html5-video-player', // replace "#movie_player" for embed page
          callback: videoPlayer => {
             const playerArea = document.querySelector('.html5-video-container');
             const videoElm = videoPlayer.querySelector('video');

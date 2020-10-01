@@ -11,7 +11,7 @@ _plugins.push({
       const instanceID = Math.random();
 
       YDOM.waitHTMLElement({
-         selector: '#movie_player',
+         selector: '.html5-video-player', // replace "#movie_player" for embed page
          callback: videoPlayer => {
             const removeStorage = () => localStorage.removeItem(storeName);
 

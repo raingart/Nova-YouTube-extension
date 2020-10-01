@@ -153,3 +153,6 @@ App.init();
 // window.dispatchEvent(new Event("resize"));
 // getEventListeners(window)
 // getEventListeners(document)
+
+// example url new embed page
+// https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1

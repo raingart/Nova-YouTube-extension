@@ -16,7 +16,7 @@ const PopulateForm = {
             switch (el.tagName.toLowerCase()) {
                case 'div':
                   // el.innerHTML += val;
-                  el.PassCode = val;
+                  el.textContent = val;
                   break;
 
                case 'textarea':

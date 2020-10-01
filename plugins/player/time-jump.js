@@ -7,7 +7,7 @@ _plugins.push({
    _runtime: user_settings => {
 
       YDOM.waitHTMLElement({
-         selector: '#movie_player',
+         selector: '.html5-video-player', // replace "#movie_player" for embed page
          callback: videoPlayer => {
             doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
 

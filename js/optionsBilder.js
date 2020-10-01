@@ -1,4 +1,4 @@
-console.debug(i18n("app_name") + ": init optionsView.js");
+console.debug("init optionsView.js");
 
 // plugins conteiner
 let _plugins = [];
@@ -45,8 +45,7 @@ const Opt = {
                document.querySelector(p).appendChild(li);
 
             } catch (err) {
-               console.warn('Plugin:', plugin?.id || JSON.stringify(plugin));
-               console.error('Error generate plugin:', err);
+               console.error('Error plugin generate:', (plugin?.id || '\n' + JSON.stringify(plugin)), '\n' + err);
                Opt.DEBUG && alert(plugin?.id + '\n' + err.slice(25));
             }
          });

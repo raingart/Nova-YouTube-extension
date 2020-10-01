@@ -1,4 +1,4 @@
-console.debug(i18n("app_name") + ": init options.js");
+console.debug("init options.js");
 
 window.addEventListener('load', (evt) => {
 
