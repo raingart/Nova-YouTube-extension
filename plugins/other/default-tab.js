@@ -6,9 +6,9 @@ _plugins.push({
    _runtime: user_settings => {
 
       // channel/user home page
-      if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname) ||
-         /\/user\/([a-z0-9-_]+)$/i.test(location.pathname) ||
-         /\/c\/([a-z0-9-_]+)$/i.test(location.pathname)) {
+      if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname)
+         || /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)
+         || /\/c\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
          // HOME yab selected
          YDOM.waitHTMLElement({
@@ -27,6 +27,7 @@ _plugins.push({
                      break;
                }
                const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
+
                if (tab) tab.click();
             },
          });

@@ -10,7 +10,6 @@ _plugins.push({
       YDOM.waitHTMLElement({
          selector: '.html5-video-player', // replace "#movie_player" for embed page
          callback: videoPlayer => {
-
             const playerArea = document.querySelector('.html5-video-container');
 
             // init default_volume_level
@@ -51,9 +50,11 @@ _plugins.push({
                      return;
                   }
 
-                  const step = user_settings.volume_step;
-                  const delta = Math.sign(event.wheelDelta) * step;
-                  const currentVolume = videoPlayer.getVolume();
+                  const
+                     step = user_settings.volume_step,
+                     delta = Math.sign(event.wheelDelta) * step,
+                     currentVolume = videoPlayer.getVolume();
+
                   // const level = setVolumeLevel(getVolume + delta, getVolume);
                   setVolumeLevel(currentVolume + delta, currentVolume);
 
@@ -96,12 +97,12 @@ _plugins.push({
             function showIndicator(display_container, level) {
                if (!user_settings.show_volume_indicator) return;
 
-               const selectorId = "volume-player-info";
-               let div = document.getElementById(selectorId);
+               const SELECTOR_ID = "volume-player-info";
+               let div = document.getElementById(SELECTOR_ID);
 
                if (!div && display_container instanceof HTMLElement) {
-                  display_container.insertAdjacentHTML("afterend", `<div id="${selectorId}"></div>`);
-                  div = document.getElementById(selectorId);
+                  display_container.insertAdjacentHTML("afterend", `<div id="${SELECTOR_ID}"></div>`);
+                  div = document.getElementById(SELECTOR_ID);
 
                   Object.assign(div.style, {
                      'background-color': 'rgba(0,0,0,0.3)',

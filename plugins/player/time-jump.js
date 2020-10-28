@@ -25,18 +25,19 @@ _plugins.push({
       });
 
       function doubleKeyPressListener(callback, keyCodeFilter) {
-         let pressed;
-         let lastPressed = parseInt(keyCodeFilter) || null;
-         let isDoublePress;
+         let
+            pressed,
+            isDoublePress,
+            lastPressed = parseInt(keyCodeFilter) || null;
 
-         const handleDoublePresss = key => {
-            // console.debug(key.key, 'pressed two times');
-            if (callback && typeof (callback) === 'function') return callback(key);
-         }
+         const
+            timeOut = () => setTimeout(() => isDoublePress = false, 500),
+            handleDoublePresss = key => {
+               // console.debug(key.key, 'pressed two times');
+               if (callback && typeof (callback) === 'function') return callback(key);
+            };
 
-         const timeOut = () => setTimeout(() => isDoublePress = false, 500);
-
-         const keyPress = key => {
+         function keyPress(key) {
             pressed = key.keyCode;
             // console.log('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
 

@@ -9,74 +9,64 @@ _plugins.push({
       YDOM.waitHTMLElement({
          selector: 'body',
          callback: () => {
-            // create button and add styleы
-            let scrollToTop_bth = (function () {
-               const selectorId = 'scrollToTop_bth';
+            const SELECTOR_ID = 'scrollToTop_bth';
 
-               let bth = document.createElement('button');
-               let arrow = document.createElement('i');
-               bth.appendChild(arrow);
-               bth.id = selectorId;
-               document.body.appendChild(bth);
-
-               // bth
-               YDOM.injectStyle({
-                  position: 'fixed',
-                  cursor: 'pointer',
-                  'z-index': -1,
-                  bottom: 0,
-                  left: '20%',
-                  // display: 'none',
-                  opacity: 0,
-                  width: '40%',
-                  height: '40px',
-                  border: 'none',
-                  // transition: 'opacity 200ms ease-in',
-
-                  outline: 'none',
-                  'border-radius': '100% 100% 0 0',
-                  'font-size': '16px',
-                  'background-color': 'rgba(0,0,0,0.3)',
-               }, '#' + selectorId);
-
-               // arrow
-               YDOM.injectStyle(`#${selectorId} > * {
-                  border: solid white;
-                  border-width: 0 3px 3px 0;
-                  display: inline-block !important;
-                  padding: 4px;
-                  vertical-align: middle;
-                  transform: rotate(-135deg);
-               }
-               #${selectorId}:hover {
-                  opacity: 1 !important;
-                  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
-               }`);
-
-               return document.getElementById(selectorId);
-
-            })();
-
-            let bth_position = {
+            // create bth
+            let bth = document.createElement('button');
+            bth.id = SELECTOR_ID;
+            Object.assign(bth.style, {
+               position: 'fixed',
+               cursor: 'pointer',
+               bottom: 0,
+               left: '20%',
+               // display: 'none',
+               visibility: 'hidden',
+               opacity: 0.5,
+               width: '40%',
+               height: '40px',
+               border: 'none',
+               // transition: 'opacity 200ms ease-in',
+               outline: 'none',
+               'border-radius': '100% 100% 0 0',
+               'font-size': '16px',
+               'background-color': 'rgba(0,0,0,0.3)',
+               'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4)',
+            });
+            bth.addEventListener('click', () => window.scrollTo({
                top: 0,
                left: window.pageXOffset,
-               behavior: 'instant' //'smooth'
-            };
+               behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
+            }));
 
-            if (user_settings.scroll_to_top_smooth) bth_position.behavior = 'smooth';
+            // create arrow
+            let arrow = document.createElement('span');
+            Object.assign(arrow.style, {
+               border: 'solid white',
+               'border-width': '0 3px 3px 0',
+               display: 'inline-block',
+               padding: '4px',
+               'vertical-align': 'middle',
+               transform: 'rotate(-135deg)',
+            });
 
-            scrollToTop_bth.addEventListener('click', () => window.scrollTo(bth_position));
+            // append
+            bth.appendChild(arrow);
+            document.body.appendChild(bth);
 
+            // bth hover style
+            YDOM.injectStyle(`#${SELECTOR_ID}:hover {
+               opacity: 1 !important;
+            }`);
+
+            // scroll event
+            const scrollToTop_bth = document.getElementById(SELECTOR_ID);
+            let sOld;
             window.addEventListener('scroll', () => {
-               if (document.documentElement.scrollTop > (window.innerHeight / 2)) {
-                  // scrollToTop_bth.style.display = "block";
-                  scrollToTop_bth.style.zIndex = 1;
-                  scrollToTop_bth.style.opacity = 0.5;
-
-               } else {
-                  // scrollToTop_bth.style.display = "none";
-                  scrollToTop_bth.style = ''
-               }
+               const sNow = document.documentElement.scrollTop > (window.innerHeight / 2);
+               if (sNow === sOld) return;
+               sOld = sNow;
+               scrollToTop_bth.style.visibility = sNow ? 'visible' : 'hidden';
+               // console.debug('visibility:', scrollToTop_bth.style.visibility);
             });
          },
       });

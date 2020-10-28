@@ -6,17 +6,16 @@ _plugins.push({
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
-      const markAttrName = 'timestamps-updated';
+      const ATTR_MARK = 'timestamps-updated';
 
       YDOM.waitHTMLElement({
-         selector: '#thumbnail img[src]:not([' + markAttrName + '])',
+         selector: '#thumbnail img[src]:not([' + ATTR_MARK + '])',
          not_removable: true,
          callback: imgElement => {
-
             const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
 
             if (re.test(imgElement.src)) {
-               imgElement.setAttribute(markAttrName, true);
+               imgElement.setAttribute(ATTR_MARK, true);
                imgElement.src = imgElement.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
             }
          },

@@ -18,8 +18,11 @@ _plugins.push({
       YDOM.waitHTMLElement({
          selector: '#movie_player',
          callback: videoElement => {
-            const STORE_PREFIX = 'player-pin-position-';
-            const PINNED_CLASS_NAME = "video-pinned";
+            const
+               CLASS_VALUE = 'video-pinned',
+               PINNED_SELECTOR = '.' + CLASS_VALUE,
+               SAVE_PREFIX = 'player-pin-position-';
+
             let initedStyle;
             // window.pageYOffset || document.documentElement.scrollTop
 
@@ -43,7 +46,7 @@ _plugins.push({
                if (isInViewport(watchElement || switchElement)) {
                   if (!this.inViewport) {
                      // console.debug('switchElement isInViewport');
-                     switchElement.classList.remove(PINNED_CLASS_NAME);
+                     switchElement.classList.remove(CLASS_VALUE);
                      this.inViewport = true;
 
                      if (user_settings.pin_player_size_position == 'float') {
@@ -53,13 +56,13 @@ _plugins.push({
                   // pinned
                } else if (this.inViewport) {
                   // console.debug('switchElement isInViewport');
-                  switchElement.classList.add(PINNED_CLASS_NAME);
+                  switchElement.classList.add(CLASS_VALUE);
                   this.inViewport = false;
 
                   if (user_settings.pin_player_size_position == 'float') {
                      YDOM.dragnDrop.connect(switchElement, position => {
-                        localStorage.setItem(STORE_PREFIX + 'top', position.top);
-                        localStorage.setItem(STORE_PREFIX + 'left', position.left);
+                        localStorage.setItem(SAVE_PREFIX + 'top', position.top);
+                        localStorage.setItem(SAVE_PREFIX + 'left', position.left);
                      });
                   }
                }
@@ -105,8 +108,8 @@ _plugins.push({
                      initcss.right = 0;
                      break;
                   case 'float':
-                     initcss.top = localStorage.getItem(STORE_PREFIX + 'top');
-                     initcss.left = localStorage.getItem(STORE_PREFIX + 'left');
+                     initcss.top = localStorage.getItem(SAVE_PREFIX + 'top');
+                     initcss.left = localStorage.getItem(SAVE_PREFIX + 'left');
                      break;
                }
 
@@ -139,8 +142,6 @@ _plugins.push({
                // add calc size
                initcss.width = size.calc.width + 'px !important;';
                initcss.height = size.calc.height + 'px !important;';
-
-               const PINNED_SELECTOR = '.' + PINNED_CLASS_NAME;
 
                // apply css
                YDOM.injectStyle(initcss, PINNED_SELECTOR, 'important');

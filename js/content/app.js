@@ -69,6 +69,12 @@ const App = {
       this.log('App runing');
       const script_lander = function () {
          'use strict';
+
+         let forceLander = setTimeout(() => {
+            console.warn('force plugins lander:', `${_plugins.length}/${_pluginsExportedCount}`);
+            processLander();
+         }, 1000 * 6); // 6sec
+
          let plugins_lander = setInterval(() => {
             const docLoaded = document.readyState === "complete" || document.readyState === "interactive";
 
@@ -77,28 +83,29 @@ const App = {
                return;
             }
 
-            console.groupCollapsed('plugins status');
-            console.debug(`loaded: ${_plugins.length}/${_pluginsExportedCount}`);
+            if (_plugins.length && _plugins.length >= _pluginsExportedCount) {
+               clearTimeout(forceLander);
+               processLander();
 
-            // force run "_plugins_executor" after some time
-            let force_plugins_lander = setTimeout(() => {
-               console.warn('force plugins lander');
-               _pluginsExportedCount = undefined;
-            }, 1000 * 6); // 6sec
-
-            if (_plugins.length && (!_pluginsExportedCount || _plugins.length >= _pluginsExportedCount)) {
-               clearInterval(plugins_lander);
-               _plugins_executor(_sessionSettings);
-               clearTimeout(force_plugins_lander);
+            } else {
+               console.debug('plugins loading:', `${_plugins.length}/${_pluginsExportedCount}`);
             }
 
          }, 100); // 100ms
+
+         function processLander () {
+            console.groupCollapsed('plugins status');
+            clearInterval(plugins_lander);
+            _plugins_executor(_sessionSettings);
+         }
       };
 
       const scriptText =
-         `const _plugins_executor = ${Plugins.run};
-         const _pluginsExportedCount = ${pluginsExportedCount};
-         const _sessionSettings = ${JSON.stringify(this.sessionSettings)};
+         `const
+            _plugins_executor = ${Plugins.run},
+            _pluginsExportedCount = ${pluginsExportedCount},
+            _sessionSettings = ${JSON.stringify(this.sessionSettings)};
+
          ( ${script_lander.toString()} ());`;
 
       Plugins.injectScript(scriptText);

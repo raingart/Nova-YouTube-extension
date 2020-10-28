@@ -15,7 +15,7 @@ _plugins.push({
 
             // [listener block]
             // mousewheel
-            playerArea.addEventListener("wheel", setPlaybackRate_wheel);
+            playerArea.addEventListener('wheel', setPlaybackRate_wheel);
 
             // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
             videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
@@ -78,7 +78,7 @@ _plugins.push({
             };
 
             // init default_playback_rate
-            if (user_settings.default_playback_rate > 1) {
+            if (user_settings.default_playback_rate !== 1 && YDOM.getURLParams().get('ismusic') === null) {
                setPlaybackRate.set(+user_settings.default_playback_rate);
             }
 
@@ -108,11 +108,11 @@ _plugins.push({
             }
 
             function showIndicator(level, display_container) {
-               const selectorId = "rate-player-info";
-               let divBar = document.getElementById(selectorId);
+               const SELECTOR_ID = 'rate-player-info';
+               let divBar = document.getElementById(SELECTOR_ID);
 
                const updateIndicator = text => {
-                  if (typeof fate_rateBar !== "undefined") clearTimeout(fate_rateBar);
+                  if (typeof fate_rateBar !== 'undefined') clearTimeout(fate_rateBar);
 
                   divBar.textContent = text;
                   divBar.style.transition = 'none';
@@ -130,8 +130,8 @@ _plugins.push({
                   updateIndicator(level);
 
                } else if (display_container) { // create
-                  display_container.insertAdjacentHTML("afterend", `<div id="${selectorId}">${level}</div>`);
-                  divBar = document.getElementById(selectorId);
+                  display_container.insertAdjacentHTML('afterend', `<div id="${SELECTOR_ID}">${level}</div>`);
+                  divBar = document.getElementById(SELECTOR_ID);
 
                   Object.assign(divBar.style, {
                      'background-color': 'rgba(0,0,0,0.3)',

@@ -1,12 +1,12 @@
 _plugins.push({
-   name: 'Theater Mode',
+   name: 'Theater mode',
    id: 'theater-mode',
    section: 'player',
    depends_page: 'watch',
    desc: 'Enable player full-width mode',
    _runtime: user_settings => {
 
-      // <ytd-watch-flexy  theater-requested_="" theater=""> // enabled
+      // <ytd-watch-flexy  theater-requested_="" theater=""> // is enabled
 
       YDOM.waitHTMLElement({
          selector: 'ytd-watch-flexy',

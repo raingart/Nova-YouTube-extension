@@ -124,17 +124,14 @@ const Plugins = {
             }
          }
          // else console.debug('plugin skiping', plugin.name);
-
-         logTableArray.push(new genLogTable({'name': plugin.name, 'status': logTableStatus, 'time': logTableTime}));
+         logTableArray.push({
+            'launched': logTableStatus,
+            'name': plugin.name,
+            'time init (ms)': logTableTime,
+         });
       }
       console.table(logTableArray);
       console.groupEnd('plugins status');
-
-      function genLogTable({name, status, time}) {
-         this.connect = status;
-         this.name = name;
-         if(time) this['time (ms)'] = time;
-      }
    },
 
    log(...args) {

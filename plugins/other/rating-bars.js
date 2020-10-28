@@ -1,5 +1,5 @@
 _plugins.push({
-   name: 'Rating Preview for Youtube',
+   name: 'Rating preview',
    id: 'global-rating-bars',
    section: 'global',
    depends_page: 'all, -embed',
@@ -7,31 +7,31 @@ _plugins.push({
    desc: 'Rating bar over video thumbnail',
    _runtime: user_settings => {
 
-      const SELECTOR_NAME = 'ratio-rate-line';
-      const SELECTOR_RATE = '#' + SELECTOR_NAME;
-      const CACHED_PREFIX = 'rate-bar_';
-      const CACHED_TIME = 8; // hours
+      const
+         CACHED_TIME = 8, // hours
+         SELECTOR_ID = 'ratio-rate-line',
+         CACHE_PREFIX = 'rate-bar_',
+         ATTR_MARK = 'rating-bar-added';
+
       let collectVideoIds = [];
 
       // init bars style
-      YDOM.injectStyle(SELECTOR_RATE + `{
+      YDOM.injectStyle(`#${SELECTOR_ID}{
          width: 100%;
          height: ${(+user_settings.ratio_bar_height || 5)}px;
       }
-      a#thumbnail > ${SELECTOR_RATE} {
+      a#thumbnail > #${SELECTOR_ID} {
          position: absolute;
          bottom: 0;
       }`);
 
-      const markAttrName = 'rating-bar-added';
-
       YDOM.waitHTMLElement({
-         selector: 'a#thumbnail:not([' + markAttrName + '])',
+         selector: 'a#thumbnail:not([' + ATTR_MARK + '])',
          not_removable: true,
          callback: thumbnail => {
-            if (thumbnail.hasAttribute(markAttrName)) return;
+            if (thumbnail.hasAttribute(ATTR_MARK)) return;
             // console.debug('start gen: rateBar');
-            thumbnail.setAttribute(markAttrName, true); // lock
+            thumbnail.setAttribute(ATTR_MARK, true); // lock
 
             collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
          },
@@ -48,26 +48,27 @@ _plugins.push({
             collectVideoIds = [];
 
             const now = new Date();  //epoch time, lets deal only with integer
-            const newVidIds = _collectVideoIds.filter(video_id => {
-               const item = JSON.parse(localStorage.getItem(CACHED_PREFIX + video_id));
+            const newVidIds = _collectVideoIds
+               .filter(video_id => {
+                  const item = JSON.parse(localStorage.getItem(CACHE_PREFIX + video_id));
 
-               if (item?.hasOwnProperty('expires')) {
-                  if (+item.expires > now) {
-                     // console.debug('cached', video_id);
-                     appendRatingBars(item);
+                  if (item?.hasOwnProperty('expires')) {
+                     if (+item.expires > now) {
+                        // console.debug('cached', video_id);
+                        appendRatingBars(item);
 
+                     } else {
+                        // clear expired storage
+                        localStorage.removeItem(item);
+                        // console.debug('expired', video_id);
+
+                        return true; // need update
+                     }
                   } else {
-                     // clear expired storage
-                     localStorage.removeItem(item);
-                     // console.debug('expired', video_id);
-
-                     return true; // need update
+                     return true; // will be created
                   }
-               } else {
-                  return true; // will be created
-               }
 
-            });
+               });
             // newVidIds.forEach(k => localStorage.removeItem(k));
             // console.debug('new', newVidIds);
             getRatingsObj(newVidIds);
@@ -96,30 +97,31 @@ _plugins.push({
                      'id': ids.join(','),
                      'part': 'statistics',
                   },
-                  api_key: user_settings['custom-api-key']
+                  api_key: user_settings['custom-api-key'],
                })
                   .then(res => {
                      const now = new Date();  //epoch time, lets deal only with integer
-                     res.items.forEach(item => {
-                        // console.debug('item', item);
-                        const views = parseInt(item.statistics.viewCount) || 0;
-                        const likes = parseInt(item.statistics.likeCount) || 0;
-                        const dislikes = parseInt(item.statistics.dislikeCount) || 0;
-                        const total = likes + dislikes;
-                        const percent = Math.floor(likes / total * 100);
+                     res.items
+                        .forEach(item => {
+                           // console.debug('item', item);
+                           const
+                              views = parseInt(item.statistics.viewCount) || 0,
+                              likes = parseInt(item.statistics.likeCount) || 0,
+                              dislikes = parseInt(item.statistics.dislikeCount) || 0,
+                              total = likes + dislikes,
+                              percent = Math.floor(likes / total * 100),
+                              videoStatistics = {
+                                 'expires': +now.setHours(now.getHours() + CACHED_TIME),
+                                 'id': item.id, // need to selector out
+                                 'pt': percent,
 
-                        const videoStatistics = {
-                           'expires': +now.setHours(now.getHours() + CACHED_TIME),
-                           'id': item.id, // need to selector out
-                           'pt': percent,
-
-                           'views': views,
-                           'total': total,
-                        }
-                        appendRatingBars(videoStatistics);
-                        // save cache
-                        localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
-                     });
+                                 'views': views,
+                                 'total': total,
+                              };
+                           appendRatingBars(videoStatistics);
+                           // save cache
+                           localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
+                        });
                   });
             })
       }
@@ -141,7 +143,7 @@ _plugins.push({
                   // console.debug('finded', thumb.id, a.href, thumb.pt);
                   const pt = thumb.pt;
                   // a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
-                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_NAME}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
                });
          }
       }

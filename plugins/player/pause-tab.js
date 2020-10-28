@@ -6,9 +6,9 @@ _plugins.push({
    desc: 'Supports frames and open browser windows',
    _runtime: user_settings => {
 
-      const storeName = 'playngInstanceIDTab';
-      // Generate a random script instance ID
-      const instanceID = Math.random();
+      const
+         storeName = 'playngInstanceIDTab',
+         instanceID = Math.random(); // Generate a random script instance ID
 
       YDOM.waitHTMLElement({
          selector: '.html5-video-player', // replace "#movie_player" for embed page

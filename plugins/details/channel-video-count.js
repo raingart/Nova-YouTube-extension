@@ -54,7 +54,7 @@ _plugins.push({
 
       function insertStatistic({ html_container, channel_id }) {
          // console.debug('insertStatistic:', ...arguments);
-         const CACHED_PREFIX = 'channel-video-count_';
+         const CACHE_PREFIX = 'channel-video-count_';
 
          if (!channel_id || !isChannelId(channel_id)) {
             console.error('channel_id is invalid', channel_id);
@@ -62,7 +62,7 @@ _plugins.push({
             return;
          }
          // cached
-         const storage = sessionStorage.getItem(CACHED_PREFIX + channel_id);
+         const storage = sessionStorage.getItem(CACHE_PREFIX + channel_id);
 
          if (storage) {
             insertToHTML(storage);
@@ -80,22 +80,22 @@ _plugins.push({
                   res.items.forEach(item => {
                      const videoCount = item.statistics.videoCount;
                      // save cache in tabs
-                     sessionStorage.setItem(CACHED_PREFIX + channel_id, videoCount);
+                     sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
                      insertToHTML(videoCount);
                   });
                });
          }
 
          function insertToHTML(text) {
-            const DIV_ID = 'video_count';
-            const box = html_container.querySelector('#' + DIV_ID);
+            const SELECTOR_ID = 'video_count';
+            const box = html_container.querySelector('#' + SELECTOR_ID);
             if (box) { // update
                box.textContent = text;
 
             } else { // create
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
-                  + ` • <span id="${DIV_ID}">${text}</span> videos</span>`);
+                  + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
             }
          }
 
