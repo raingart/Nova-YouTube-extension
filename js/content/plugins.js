@@ -42,7 +42,7 @@ const Plugins = {
    //    return filepath.split(/[\\/]/g).pop().split('.')[0];
    // },
 
-   // load: list => list.forEach(plugin => Plugins.injectScript(chrome.extension.getURL('/plugins/' + plugin))),
+   // load: list => list.forEach(plugin => this.injectScript(chrome.extension.getURL('/plugins/' + plugin))),
 
    load(list) {
       list.forEach(plugin => {
@@ -83,11 +83,11 @@ const Plugins = {
       // console.debug('plugins loading count:', _plugins.length);
       const pageType = (function () {
          const page = location.pathname.split('/')[1];
-         return (page === 'channel' || page === 'c' || page === 'user') ? 'channel' : page || 'main';
+         return (page == 'channel' || page == 'c' || page == 'user') ? 'channel' : page || 'main';
       })();
 
       // uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
-      const uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.name == y.name) < 0 ? [...x, y] : x, []);
+      const uniqueArray = a => a.reduce((x, y) => x.findIndex(e => e.id == y.id) < 0 ? [...x, y] : x, []);
       _plugins = uniqueArray(_plugins); // Important! Global store overwrite
 
       let logTableArray = [],

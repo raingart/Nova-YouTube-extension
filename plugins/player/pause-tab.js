@@ -10,11 +10,9 @@ _plugins.push({
          storeName = 'playngInstanceIDTab',
          instanceID = Math.random(); // Generate a random script instance ID
 
-      YDOM.waitHTMLElement({
-         selector: '.html5-video-player', // replace "#movie_player" for embed page
-         callback: videoPlayer => {
+      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+         .then(player => {
             const removeStorage = () => localStorage.removeItem(storeName);
-
             // -1: unstarted
             // 0: ended
             // 1: playing
@@ -23,7 +21,7 @@ _plugins.push({
             // 5: video cued
             const onPlayer = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage();
 
-            videoPlayer.addEventListener("onStateChange", onPlayer.bind(this));
+            player.addEventListener("onStateChange", onPlayer.bind(this));
 
             // remove storage if this tab closed
             window.addEventListener("beforeunload", event => removeStorage());
@@ -35,15 +33,14 @@ _plugins.push({
                   // has storage
                   && localStorage[storeName] && localStorage[storeName] !== instanceID
                   // this player is playing
-                  && videoPlayer.getPlayerState() === 1
+                  && player.getPlayerState() === 1
                ) {
                   console.debug('pause player', localStorage[storeName]);
-                  videoPlayer.pauseVideo();
+                  player.pauseVideo();
                }
             });
 
-         },
-      });
+         });
 
    },
 });

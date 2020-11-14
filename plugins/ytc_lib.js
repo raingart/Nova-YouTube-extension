@@ -3,130 +3,40 @@
 const YDOM = {
    // DEBUG: true,
 
-   waitElementStore: [],
+   HTMLElement: {
 
-   // waitHTMLElement_busy: false,
+      wait(selector = required()) {
+         YDOM.log('wait', JSON.stringify(...arguments));
+         return new Promise((resolve, reject) => {
+            const el = document.querySelector(selector);
+            if (el) return resolve(el);
 
-   waitHTMLElement({ selector = required(), callback = required(), not_removable }) {
-      this.log('waitHTMLElement:', ...arguments);
-      // http://ryanmorr.com/using-mutation-observers-to-watch-for-element-availability/
-
-      // Store the selector and callback to be monitored
-      this.waitElementStore.push({
-         selector: selector,
-         removable: !not_removable,
-         fn: callback
-      });
-
-      // Is it worth replacing "Observer" with "setInterval" for optimization?
-
-      // instantiating setInterval
-      // let interval_check = setInterval(() => hasInStore(), 1000 * 1); // 1sec
-
-      // // instantiating observer
-      // if (this.waitElementStore.length) {
-      //    hasInStore();
-
-      // } else { // stop
-      //    this.log('interval_check stop');
-      //    clearInterval(interval_check);
-      // }
-
-
-      // instantiating observer
-      if (!this.observerEnable && this.waitElementStore.length) {
-         this.observerEnable = true;
-         createObserver();
-
-         // stop
-      // } else if (this.hasOwnProperty(observerEnable) && !this.waitElementStore.length) {
-      } else if (this.observerEnable && !this.waitElementStore.length) {
-         console.debug('observerEnable.takeRecords', this.observerEnable.takeRecords());
-
-         this.log('Observer stop');
-         this.observerEnable = false;
-         this.ObserverContaiter.disconnect();
-
-         // check
-      } else {
-         hasInStore();
-      }
-
-      function createObserver() {
-         YDOM.log('Observer create');
-
-         YDOM.ObserverContaiter = new MutationObserver(mutations => {
-            // mutations.forEach(mutation => {
-            //    for (const node of mutation.addedNodes) {
-            //       if (node instanceof HTMLElement) hasInStore(node);
-            //    }
-            // });
-            const { addedNodes } = mutations[0];
-            const matches = [...addedNodes]
-               .filter(node => node instanceof HTMLElement)
-            // .filter(element => element.matches('selector'))
-            // .filter(element => {
-            //    for (const elem of node.querySelectorAll(listener.selector)) {
-            //       //
-            //    }
-            // });
-            //
-            // .filter(element => {
-            //    for (const i in YDOM.waitElementStore) {
-            //       const listener = YDOM.waitElementStore[i];
-            //       // return document.body.matches(listener.selector);
-            //       return element.matches(listener.selector);
-            //    }
-            // });
-
-            if (matches.length) {
-               // console.debug('matches node:', matches);
-               hasInStore();
-            }
-         })
-            .observe(document.body || document.documentElement, {
-               // attributes: true, // add/remove/change attributes
-               // attributeOldValue: true, // will show oldValue of attribute | on add/remove/change attributes | default: null
-               // characterData: true, // data changes will be observed | on add/remove/change characterData
-               // characterDataOldValue: true, // will show OldValue of characterData | on add/remove/change characterData | default: null
-               childList: true, // target childs will be observed | on add/remove
-               subtree: true, // target childs will be observed | on attributes/characterData changes if they observed on target
-               // attributeFilter: ['style'] // filter for attributes | array of attributes that should be observed, in this case only style
-            });
-      }
-
-      // Check if the element is currently in the DOM
-      function hasInStore() {
-         if (YDOM.waitHTMLElement_busy) return;
-         YDOM.waitHTMLElement_busy = true;
-
-         YDOM.log('waitElementStore left: %s', YDOM.waitElementStore.length, YDOM.waitElementStore);
-         // Check the DOM for elements matching a stored selector
-         for (const i in YDOM.waitElementStore) {
-            const listener = YDOM.waitElementStore[i];
-
-            // Query for elements matching the specified selector
-            YDOM.log('waitHTMLElement search:', listener.selector);
-
-            [...document.querySelectorAll(listener.selector)]
-               .forEach(element => {
-                  YDOM.log('element ready:', listener.selector);
-                  // delete element from [listeners]
-                  if (listener.removable) {
-                     YDOM.waitElementStore.splice(i, 1);
-                     YDOM.log('element erase frome waitElementStore:', listener.selector);
-                  }
-
-                  if (listener.fn && typeof (listener.fn) === 'function') {
-                     // console.count(`${listener.selector}`);
-                     // console.time(`${listener.selector}`);
-                     listener.fn(element);
-                     // console.timeEnd(`${listener.selector}`);
-                  }
+            new MutationObserver((mutations, observer) => {
+               [...document.querySelectorAll(selector)]
+                  .forEach(el => {
+                     observer.disconnect();
+                     resolve(el);
+                  });
+            })
+               .observe(document.body || document.documentElement, {
+                  childList: true,
+                  subtree: true
                });
-         };
-         YDOM.waitHTMLElement_busy = false;
-      }
+         });
+      },
+
+      watch({ selector = required(), callback = required() }) {
+         YDOM.log('watch', selector);
+         process(); // launch not wait
+
+         setInterval(process, 1000 * 1.5); // 1.5 sec
+
+         function process() {
+            YDOM.log('process', { selector, callback });
+            [...document.querySelectorAll(selector)]
+               .forEach(el => callback(el));
+         }
+      },
    },
 
    // uncheck(toggle) {
@@ -187,9 +97,9 @@ const YDOM = {
          )[name];
       },
 
-      set(name = required(), value) {
+      set(name = required(), value, days = 90) { // 90 days
          let date = new Date();
-         date.setTime(date.getTime() + (90 * 86400000)); // 90 days
+         date.setTime(date.getTime() + 3600000 * 24 * days); // m*h*d
 
          document.cookie = Object.entries({
             [encodeURIComponent(name)]: encodeURIComponent(value),
@@ -211,7 +121,7 @@ const YDOM = {
          YDOM.log('API:', ...arguments);
 
          // get API key
-         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS')) || await YDOM.request.keys();
+         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS')) || await this.keys();
          if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
             console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             throw new Error('YOUTUBE_API_KEYS is empty');

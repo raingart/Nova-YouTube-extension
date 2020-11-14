@@ -15,8 +15,8 @@ chrome.runtime.onInstalled.addListener(details => {
                console.debug('Apply initial configuration', JSON.stringify(initialStorage));
             }
             break;
-         case 'update':
-            break;
+         // case 'update':
+         //    break;
       }
    });
 });

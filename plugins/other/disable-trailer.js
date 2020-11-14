@@ -6,10 +6,8 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement({
-         selector: '.ytd-page-manager[page-subtype=channels] #movie_player',
-         callback: playerTrailer => playerTrailer.stopVideo(),
-      });
+      YDOM.HTMLElement.wait('.ytd-page-manager[page-subtype=channels] #movie_player')
+         .then(player => player.stopVideo());
 
    },
 });

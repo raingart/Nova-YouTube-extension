@@ -6,13 +6,11 @@ _plugins.push({
    desc: 'shortcuts priority [SPACE/F] etc.',
    _runtime: user_settings => {
 
-      ["keydown", "yt-navigate-start", /*, "focus"*/]
-         .forEach(event => {
-            document.addEventListener(event, captureFocus);
-         });
+      const events = ["keydown", "yt-navigate-start", /*, "focus"*/];
+      Array.from(events, e => document.addEventListener(e, setFocus));
 
-      function captureFocus(event) {
-         // console.debug('captureFocus', document.activeElement);
+      function setFocus(event) {
+         // console.debug('setFocus', document.activeElement);
 
          if (document.activeElement.tagName != "INPUT" // search-input
             && document.activeElement.tagName != "TEXTAREA"

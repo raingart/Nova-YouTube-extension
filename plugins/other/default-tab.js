@@ -11,9 +11,8 @@ _plugins.push({
          || /\/c\/([a-z0-9-_]+)$/i.test(location.pathname)) {
 
          // HOME yab selected
-         YDOM.waitHTMLElement({
-            selector: '#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]',
-            callback: () => {
+         YDOM.HTMLElement.wait('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
+            .then(() => {
                let tab_nth;
                switch (user_settings.default_channel_tab) {
                   case 'videos':
@@ -29,8 +28,7 @@ _plugins.push({
                const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
 
                if (tab) tab.click();
-            },
-         });
+            });
       }
 
    },

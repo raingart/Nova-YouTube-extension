@@ -15,70 +15,41 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement({
-         selector: '#movie_player',
-         callback: videoElement => {
+      YDOM.HTMLElement.wait('#movie_player')
+         .then(videoPlayer => {
             const
                CLASS_VALUE = 'video-pinned',
-               PINNED_SELECTOR = '.' + CLASS_VALUE,
-               SAVE_PREFIX = 'player-pin-position-';
+               PINNED_SELECTOR = '.' + CLASS_VALUE;
 
-            let initedStyle;
-            // window.pageYOffset || document.documentElement.scrollTop
-
-            window.addEventListener('scroll', () => {
-               if (!initedStyle && (videoElement.scrollWidth && videoElement.scrollHeight)) {
-                  initedStyle = true;
+            let intervalStyle = setInterval(() => {
+               if (videoPlayer.scrollWidth && videoPlayer.scrollHeight) {
+                  clearInterval(intervalStyle);
                   createStyle();
+               }
+            }, 500);
 
-               } else if (initedStyle) {
-                  onScreenToggle({
-                     'switchElement': videoElement,
-                     'watchElement': document.getElementById("player-theater-container"),
+            YDOM.HTMLElement.wait('#player-theater-container')
+               .then(el => {
+                  isInViewport({
+                     'element': el,
+                     'callback_hide': () => videoPlayer.classList.contains(CLASS_VALUE) || videoPlayer.classList.add(CLASS_VALUE),
+                     'callback_show': () => videoPlayer.classList.remove(CLASS_VALUE),
+                     // 'disconnectAfterMatch': true,
                   });
-               }
-            });
 
-            function onScreenToggle({ switchElement, watchElement }) {
-               // console.debug('onScreenToggle:', ...arguments);
-
-               // no pinned
-               if (isInViewport(watchElement || switchElement)) {
-                  if (!this.inViewport) {
-                     // console.debug('switchElement isInViewport');
-                     switchElement.classList.remove(CLASS_VALUE);
-                     this.inViewport = true;
-
-                     if (user_settings.pin_player_size_position == 'float') {
-                        YDOM.dragnDrop.disconnect(switchElement);
-                     }
+                  function isInViewport({ element = required(), callback_hide, callback_show, disconnectAfterMatch }) {
+                     // console.debug('isInViewport', ...arguments);
+                     if (!(element instanceof HTMLElement)) return;
+                     new IntersectionObserver((entries, observer) => {
+                        // if (entries.some(({ isIntersecting }) => isIntersecting)) {
+                        if (entries[0].isIntersecting) {
+                           if (disconnectAfterMatch) observer.disconnect();
+                           if (callback_show && typeof (callback_show) === 'function') return callback_show();
+                        }
+                        if (callback_hide && typeof (callback_hide) === 'function') return callback_hide();
+                     }).observe(element);
                   }
-                  // pinned
-               } else if (this.inViewport) {
-                  // console.debug('switchElement isInViewport');
-                  switchElement.classList.add(CLASS_VALUE);
-                  this.inViewport = false;
-
-                  if (user_settings.pin_player_size_position == 'float') {
-                     YDOM.dragnDrop.connect(switchElement, position => {
-                        localStorage.setItem(SAVE_PREFIX + 'top', position.top);
-                        localStorage.setItem(SAVE_PREFIX + 'left', position.left);
-                     });
-                  }
-               }
-
-               function isInViewport(el = required()) {
-                  if (el instanceof HTMLElement) {
-                     const bounding = el.getBoundingClientRect();
-                     return (
-                        bounding.top >= 0 &&
-                        bounding.left >= 0 &&
-                        bounding.bottom <= window.innerHeight &&
-                        bounding.right <= window.innerWidth
-                     );
-                  }
-               }
-            }
+               })
 
             function createStyle() {
                let initcss = {
@@ -107,17 +78,13 @@ _plugins.push({
                      initcss.bottom = 0;
                      initcss.right = 0;
                      break;
-                  case 'float':
-                     initcss.top = localStorage.getItem(SAVE_PREFIX + 'top');
-                     initcss.left = localStorage.getItem(SAVE_PREFIX + 'left');
-                     break;
                }
 
                let size = {
-                  // width: videoElement.clientWidth,
-                  // height: videoElement.clientHeight,
-                  width: videoElement.scrollWidth,
-                  height: videoElement.scrollHeight,
+                  // width: videoPlayer.clientWidth,
+                  // height: videoPlayer.clientHeight,
+                  width: videoPlayer.scrollWidth,
+                  height: videoPlayer.scrollHeight,
                };
 
                size.calc = (function () {
@@ -136,8 +103,8 @@ _plugins.push({
                })();
 
                // restore original player size. Try to fix a bug with unpin player
-               videoElement.style.width = Math.max(videoElement.clientWidth, videoElement.scrollWidth);
-               // videoElement.style.height = size.height;
+               videoPlayer.style.width = Math.max(videoPlayer.clientWidth, videoPlayer.scrollWidth);
+               // videoPlayer.style.height = size.height;
 
                // add calc size
                initcss.width = size.calc.width + 'px !important;';
@@ -154,19 +121,18 @@ _plugins.push({
                }`);
 
                // fix control-player panel
-               YDOM.injectStyle(`${PINNED_SELECTOR} .ytp-chrome-bottom {
-                  width: ${initcss.width};
-                  left: 0 !important;
-               }
-               ${PINNED_SELECTOR} .ytp-preview,
-               ${PINNED_SELECTOR} .ytp-scrubber-container,
-               ${PINNED_SELECTOR} .ytp-hover-progress
-               {display:none !important;}
-               ${PINNED_SELECTOR} .ytp-chapters-container {display: flex;}
+               YDOM.injectStyle(`
+                  ${PINNED_SELECTOR} .ytp-chrome-bottom {
+                     width: ${initcss.width};
+                     left: 0 !important;
+                  }
+                  ${PINNED_SELECTOR} .ytp-preview,
+                  ${PINNED_SELECTOR} .ytp-scrubber-container,
+                  ${PINNED_SELECTOR} .ytp-hover-progress { display:none !important }
+                  ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }
                `);
             }
-         },
-      });
+         });
 
    },
    opt_export: {

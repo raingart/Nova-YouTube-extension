@@ -9,7 +9,7 @@ const App = {
 
    URL: {
       current: location.href, // prev state
-      isChange: () => App.URL.current === location.href ? false : App.URL.current = location.href,
+      isChange: () => this.current == location.href ? false : this.current = location.href,
    },
 
    rerun() {
@@ -17,7 +17,7 @@ const App = {
          console.info('page transition');
          Plugins.load(Plugins.list.runOnTransition);
          this.run();
-      }, 500);
+      }, 600);
    },
 
    // sessionSettings: null,
@@ -86,7 +86,6 @@ const App = {
             if (_plugins.length && _plugins.length >= _pluginsExportedCount) {
                clearTimeout(forceLander);
                processLander();
-
             } else {
                console.debug('plugins loading:', `${_plugins.length}/${_pluginsExportedCount}`);
             }
@@ -119,7 +118,6 @@ const App = {
          console.trace();
          console.groupEnd();
       }
-
    },
 }
 

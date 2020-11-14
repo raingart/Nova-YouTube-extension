@@ -28,16 +28,15 @@ _plugins.push({
          // color: '#8A2BE2', // indicator
       }, `[${ATTR_MARK}]:first-letter`, 'important');
 
-      YDOM.waitHTMLElement({
+      YDOM.HTMLElement.watch({
          selector: VIDEO_TITLE_SELECTOR + `:not([${ATTR_MARK}])`,
-         not_removable: true,
-         callback: titleElement => {
-            if (titleElement.hasAttribute(ATTR_MARK)) return;
-            // console.debug('ATTR_MARK:', titleElement);
-            titleElement.setAttribute(ATTR_MARK, true);
+         callback: title => {
+            if (title.hasAttribute(ATTR_MARK)) return;
+            // console.debug('ATTR_MARK:', title);
+            title.setAttribute(ATTR_MARK, true);
 
             let counterMatch = 0;
-            const normalizedText = titleElement.textContent
+            const normalizedText = title.textContent
                .replace(UpperCaseLetter_regex, match => {
                   counterMatch++;
                   return match.toLowerCase();
@@ -45,8 +44,8 @@ _plugins.push({
 
             // Upper case
             if (counterMatch > MAX_TITLE_WORDS) {
-               // console.debug('ATTR_MARK:', titleElement.title, upperCaseArr);
-               titleElement.textContent = normalizedText;
+               // console.debug('ATTR_MARK:', title.title, upperCaseArr);
+               title.textContent = normalizedText;
             }
          },
       });

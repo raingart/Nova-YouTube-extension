@@ -6,9 +6,8 @@ _plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement({
-         selector: '.html5-video-player', // replace "#movie_player" for embed page
-         callback: videoPlayer => {
+      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+         .then(player => {
             doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
 
             function jumpTime(event) {
@@ -16,13 +15,12 @@ _plugins.push({
                   && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                   // && !window.getSelection()
                ) {
-                  const sec = videoPlayer.getCurrentTime() + parseInt(user_settings.jump_step);
+                  const sec = player.getCurrentTime() + +user_settings.jump_step;
                   // console.debug('seekTo', sec);
-                  videoPlayer.seekTo(sec);
+                  player.seekTo(sec);
                }
             }
-         },
-      });
+         });
 
       function doubleKeyPressListener(callback, keyCodeFilter) {
          let
@@ -40,7 +38,6 @@ _plugins.push({
          function keyPress(key) {
             pressed = key.keyCode;
             // console.log('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
-
             if (isDoublePress && pressed === lastPressed) {
                isDoublePress = false;
                handleDoublePresss(key);
@@ -51,7 +48,6 @@ _plugins.push({
 
             if (!keyCodeFilter) lastPressed = pressed;
          }
-
          // window.onkeyup = key => keyPress(key);
          document.addEventListener("keyup", keyPress);
       }

@@ -6,9 +6,8 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitHTMLElement({
-         selector: '.html5-video-player', // replace "#movie_player" for embed page
-         callback: videoPlayer => {
+      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+         .then(videoPlayer => {
             let selectedQuality = user_settings.video_quality;
 
             videoPlayer.addEventListener("onStateChange", setQuality.bind(this));
@@ -18,7 +17,7 @@ _plugins.push({
                   console.error('selectedQuality unavailable', selectedQuality);
                   return;
                }
-               // console.debug('onStateChange', state);
+               // console.debug('onStateChange', JSON.stringify(...arguments));
 
                // -1: unstarted
                // 0: ended
@@ -98,8 +97,7 @@ _plugins.push({
                   });
                }
             }
-         },
-      });
+         });
 
    },
    opt_export: {

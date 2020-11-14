@@ -6,26 +6,13 @@ _plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings.livechat === 'disable') {
-         YDOM.waitHTMLElement({
-            selector: '#chat',
-            callback: chat => chat.parentNode.removeChild(chat)
-         });
+      if (user_settings.livechat == 'disable') {
+         YDOM.HTMLElement.wait('#chat')
+            .then(chat => chat.remove());
 
       } else {
-         YDOM.waitHTMLElement({
-            selector: '#chat:not([collapsed]) #show-hide-button paper-button',
-            callback: bth => bth.click()
-         });
-         // test livechat already collapsed - https://www.youtube.com/watch?v=uyKzS_FDHTI
-
-         // not working next
-         // YDOM.waitHTMLElement({
-         //    selector: '#chat:not([collapsed]) #show-hide-button paper-button:not([aria-pressed])',
-         //    callback: bth => {
-         //       console.debug('bth', bth);
-         //    },
-         // });
+         YDOM.HTMLElement.wait('#chat:not([collapsed]) #show-hide-button paper-button')
+            .then(btn => btn.click());
       }
 
    },

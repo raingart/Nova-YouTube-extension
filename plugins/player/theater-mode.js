@@ -8,15 +8,13 @@ _plugins.push({
 
       // <ytd-watch-flexy  theater-requested_="" theater=""> // is enabled
 
-      YDOM.waitHTMLElement({
-         selector: 'ytd-watch-flexy',
-         callback: tag => {
+      YDOM.HTMLElement.wait('ytd-watch-flexy')
+         .then(el => {
             // tag way
-            if (!tag.theater) tag.setAttribute("theater-requested_", true);
+            if (!el.theater) el.setAttribute("theater-requested_", true);
             // cookie way
             if (/wide\=1/.test(document.cookie)) YDOM.cookie.set('wide', 1);
-         },
-      });
+         });
 
    },
 });

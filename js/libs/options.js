@@ -1,6 +1,6 @@
 console.debug("init options.js");
 
-window.addEventListener('load', (evt) => {
+window.addEventListener('load', evt => {
 
    const Conf = {
       // storageMethod: 'local',
@@ -69,19 +69,19 @@ window.addEventListener('load', (evt) => {
          // });
       },
 
-      bthSubmitAnimation: {
+      btnSubmitAnimation: {
          outputStatus: document.querySelector("[type=submit]"),
 
-         _process: () => {
-            Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings_process");
-            Conf.bthSubmitAnimation.outputStatus.setAttribute("disabled", true);
+         _process() {
+            this.outputStatus.textContent = i18n("opt_btn_save_settings_process");
+            this.outputStatus.setAttribute("disabled", true);
          },
 
-         _defaut: () => {
-            setTimeout(function () {
-               Conf.bthSubmitAnimation.outputStatus.textContent = i18n("opt_bth_save_settings");
-               Conf.bthSubmitAnimation.outputStatus.removeAttribute("disabled");
-               Conf.bthSubmitAnimation.outputStatus.classList.remove('unSaved');
+         _defaut() {
+            setTimeout(() => {
+               this.outputStatus.textContent = i18n("opt_btn_save_settings");
+               this.outputStatus.removeAttribute("disabled");
+               this.outputStatus.classList.remove('unSaved');
             }, 300);
          },
       },
@@ -92,9 +92,9 @@ window.addEventListener('load', (evt) => {
             .forEach(form => {
                form.addEventListener('submit', function (event) {
                   event.preventDefault();
-                  Conf.bthSubmitAnimation._process();
+                  Conf.btnSubmitAnimation._process();
                   Conf.saveOptions(this);
-                  Conf.bthSubmitAnimation._defaut();
+                  Conf.btnSubmitAnimation._defaut();
                });
             });
       }()),
@@ -103,14 +103,15 @@ window.addEventListener('load', (evt) => {
          Storage.getParams(obj => {
             PopulateForm.fill(obj);
             this.attrDependencies();
-            document.querySelector("body").classList.remove("preload");
+            document.body.classList.remove("preload");
 
+            // unSaved form
             [...document.forms[0].elements]
                .filter(i => i.type == 'checkbox')
                .forEach(i => {
                   i.addEventListener('change', event => {
-                     if (!Conf.bthSubmitAnimation.outputStatus.classList.contains('unSaved')) {
-                        Conf.bthSubmitAnimation.outputStatus.classList.add('unSaved');
+                     if (!Conf.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
+                        Conf.btnSubmitAnimation.outputStatus.classList.add('unSaved');
                      }
                   });
                });

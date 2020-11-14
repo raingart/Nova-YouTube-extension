@@ -10,16 +10,16 @@
       "message": "filter..."
    },
 
-   "opt_bth_save_settings": {
+   "opt_btn_save_settings": {
       "message": "Save"
    },
-   "opt_bth_save_settings_process": {
+   "opt_btn_save_settings_process": {
       "message": "Saving..."
    },
-   "opt_bth_save_settings_processed": {
+   "opt_btn_save_settings_processed": {
       "message": "Saved!"
    },
-   "opt_bth_save_settings_tooltip": {
+   "opt_btn_save_settings_tooltip": {
       "message": "Open tabs don't change"
    },
    "opt_disable_in_frame": {

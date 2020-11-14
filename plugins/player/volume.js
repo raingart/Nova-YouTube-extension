@@ -7,9 +7,8 @@ _plugins.push({
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      YDOM.waitHTMLElement({
-         selector: '.html5-video-player', // replace "#movie_player" for embed page
-         callback: videoPlayer => {
+      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+         .then(videoPlayer => {
             const playerArea = document.querySelector('.html5-video-container');
 
             // init default_volume_level
@@ -31,7 +30,7 @@ _plugins.push({
             // [bezel block]
             // hide default indicator
             [...document.querySelectorAll('[class^="ytp-bezel"]')]
-               // .forEach(bezel => bezel.parentNode.removeChild(bezel));
+               // .forEach(bezel => bezel.remove());
                .forEach(bezel => bezel.style.display = 'none');
 
             // [funcs block]
@@ -41,7 +40,7 @@ _plugins.push({
                if (user_settings.volume_hotkey && (
                   event[user_settings.volume_hotkey] ||
                   (
-                     user_settings.volume_hotkey === 'none' &&
+                     user_settings.volume_hotkey == 'none' &&
                      !event.ctrlKey && !event.altKey && !event.shiftKey)
                )) {
 
@@ -51,7 +50,7 @@ _plugins.push({
                   }
 
                   const
-                     step = user_settings.volume_step,
+                     step = parseInt(user_settings.volume_step),
                      delta = Math.sign(event.wheelDelta) * step,
                      currentVolume = videoPlayer.getVolume();
 
@@ -63,9 +62,9 @@ _plugins.push({
             }
 
             function setVolumeLevel(volume, volumeСurrent) {
-               // console.debug('volume', volume, volumeStatus);
+               // console.debug('volume', JSON.stringify(...arguments));
                const limiter = d => (d > 100 ? 100 : d < 0 ? 0 : d);
-               const volumeToSet = limiter(parseInt(volume));
+               const volumeToSet = limiter(+volume);
 
                // check is new volume level
                if (volumeToSet !== volumeСurrent) {
@@ -125,14 +124,14 @@ _plugins.push({
                function updateIndicator(pt) {
                   if (typeof fate_volumeBar !== "undefined") clearTimeout(fate_volumeBar);
 
-                  if (user_settings.show_volume_indicator === 'bar' ||
-                     user_settings.show_volume_indicator === 'full') {
+                  if (user_settings.show_volume_indicator == 'bar' ||
+                     user_settings.show_volume_indicator == 'full') {
                      let color = user_settings.show_volume_indicator_color;
                      div.style.background = `linear-gradient(to right, ${color}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
                      div.textContent = '';
                   }
-                  if (user_settings.show_volume_indicator === 'text' ||
-                     user_settings.show_volume_indicator === 'full') {
+                  if (user_settings.show_volume_indicator == 'text' ||
+                     user_settings.show_volume_indicator == 'full') {
                      div.textContent = pt;
                   }
 
@@ -147,8 +146,7 @@ _plugins.push({
                   }, 800); //200ms + 800ms = 1s
                };
             }
-         },
-      });
+         });
 
    },
    opt_export: {

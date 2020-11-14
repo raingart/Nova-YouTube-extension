@@ -10,142 +10,150 @@ _plugins.push({
       const
          CACHED_TIME = 8, // hours
          SELECTOR_ID = 'ratio-rate-line',
-         CACHE_PREFIX = 'rate-bar_',
-         ATTR_MARK = 'rating-bar-added';
-
-      let collectVideoIds = [];
+         CACHE_NAME = 'ratings',
+         ATTR_MARK = 'rating-bar-added',
+         colorLiker = user_settings.ratio_like_color || '#3ea6ff',
+         colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
       // init bars style
       YDOM.injectStyle(`#${SELECTOR_ID}{
          width: 100%;
-         height: ${(+user_settings.ratio_bar_height || 5)}px;
+         height: ${(user_settings.ratio_bar_height || 5)}px;
       }
       a#thumbnail > #${SELECTOR_ID} {
          position: absolute;
          bottom: 0;
       }`);
 
-      YDOM.waitHTMLElement({
-         selector: 'a#thumbnail:not([' + ATTR_MARK + '])',
-         not_removable: true,
+
+      let thumbnailIds = [];
+      let newCache = {};
+
+      YDOM.HTMLElement.watch({
+         selector: '#thumbnail:not([' + ATTR_MARK + '])',
          callback: thumbnail => {
+            // console.debug('stathumbnailar', thumbnail);
             if (thumbnail.hasAttribute(ATTR_MARK)) return;
             // console.debug('start gen: rateBar');
             thumbnail.setAttribute(ATTR_MARK, true); // lock
 
-            collectVideoIds.push(YDOM.getURLParams(thumbnail.href).get('v'));
+            const id = YDOM.getURLParams(thumbnail.href).get('v');
+            id && thumbnailIds.push(id);
          },
       });
 
       // chack update new thumbnail
       setInterval(() => {
-         // console.debug('collectVideoIds', collectVideoIds);
+         thumbnailPatch(thumbnailIds);
+         cacheUpdater(newCache);
+      }, 1000 * 1); // 1sec
 
-         if (collectVideoIds.length) {
-            // console.debug('find new thumbnail');
-            const _collectVideoIds = collectVideoIds;
-            // clear the array to prevent repeated requests "setInterval"
-            collectVideoIds = [];
+      function cacheUpdater(new_cache) {
+         if (!new_cache || !Object.keys(new_cache).length) return;
+         // console.debug('cacheUpdater', JSON.stringify(...arguments));
+         newCache = {}; // clear
+         let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME)) || {}; // get
+         const timeNow = new Date();
+         // delete expired
+         // console.groupCollapsed('ratingCacheExpires');
+         Object.entries(oldCache)
+            .filter(([key, value]) => {
+               const cacheDate = new Date(+value?.date);
+               const dateExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
+               if (timeNow > dateExpires) {
+                  // console.debug('dateExpires', key, value);
+                  delete oldCache[key];
+               }
+            });
+         // console.groupEnd();
+         // save
+         localStorage.setItem(CACHE_NAME, JSON.stringify(Object.assign(new_cache, oldCache)));
+      }
 
-            const now = new Date();  //epoch time, lets deal only with integer
-            const newVidIds = _collectVideoIds
-               .filter(video_id => {
-                  const item = JSON.parse(localStorage.getItem(CACHE_PREFIX + video_id));
+      function thumbnailPatch(video_ids) {
+         if (!video_ids.length) return;
+         // console.debug('find thumbnail', JSON.stringify(...arguments));
+         thumbnailIds = []; // clear
+         let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));
+         const timeNow = new Date();
 
-                  if (item?.hasOwnProperty('expires')) {
-                     if (+item.expires > now) {
-                        // console.debug('cached', video_id);
-                        appendRatingBars(item);
+         let newVidIds = video_ids.filter(id => {
+            if (oldCache?.hasOwnProperty(id)) {
+               const cacheItem = oldCache[id],
+                  cacheDate = new Date(+cacheItem?.date),
+                  dateExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
+               if (timeNow < dateExpires) {
+                  // console.debug('cached', id);
+                  appendRatingBar({ 'id': id, 'pt': cacheItem.pt });
+                  return false;
+               }
+               // else console.debug('expired', document.querySelector(`a#thumbnail[href*="${id}"]`));
+            }
+            // else console.debug('new', document.querySelector(`a#thumbnail[href*="${id}"]`));
+            return true;
+         });
+         // console.debug('newVidIds', JSON.stringify(newVidIds));
+         requestVideoData(newVidIds);
+      }
 
-                     } else {
-                        // clear expired storage
-                        localStorage.removeItem(item);
-                        // console.debug('expired', video_id);
+      function requestVideoData(arr_id) {
+         if (!arr_id.length) return;
+         // console.debug('requestVideoData', JSON.stringify(...arguments));
 
-                        return true; // need update
-                     }
-                  } else {
-                     return true; // will be created
-                  }
+         const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API max = 50
 
-               });
-            // newVidIds.forEach(k => localStorage.removeItem(k));
-            // console.debug('new', newVidIds);
-            getRatingsObj(newVidIds);
-         }
-      }, 1000); // 1 sec
+         chunkArray(arr_id, YOUTUBE_API_MAX_IDS_PER_CALL)
+            .forEach(id_part => {
+               // console.debug('id_part', JSON.stringify(id_part));
+               YDOM.request.API({
+                  request: 'videos',
+                  params: {
+                     'id': id_part.join(','),
+                     'part': 'statistics',
+                  },
+                  api_key: user_settings['custom-api-key'],
+               })
+                  .then(res => {
+                     let timeNow = new Date().getTime();
+                     res.items.forEach(item => {
+                        // console.debug('item', item);
+                        const
+                           views = parseInt(item.statistics.viewCount) || 0,
+                           likes = parseInt(item.statistics.likeCount) || 0,
+                           dislikes = parseInt(item.statistics.dislikeCount) || 0,
+                           total = likes + dislikes;
 
+                        let percent = Math.floor(likes / total * 100);
 
-      function getRatingsObj(videoIds) {
-         if (!videoIds.length || !Array.isArray(videoIds)) return;
-         // console.debug('getRatingsObj', videoIds);
-
-         const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API maximum is 50
+                        // filter small values
+                        if (views > 5 && total > 3) {
+                           appendRatingBar({ 'id': item.id, 'pt': percent });
+                           // console.debug('requestVideoData > appendRatingBar', item.id);
+                        } else {
+                           percent = undefined; // do not display
+                           timeNow = timeNow.setHours(timeNow.getHours() - CACHED_TIME + 1); // add 1 hour
+                        }
+                        // push to cache
+                        newCache[item.id] = { 'date': timeNow, 'pt': percent };
+                     });
+                  });
+            });
 
          function chunkArray(array, size) {
             let chunked = [];
             while (array.length) chunked.push(array.splice(0, size));
             return chunked;
          }
-
-         chunkArray(videoIds, YOUTUBE_API_MAX_IDS_PER_CALL)
-            .forEach(ids => {
-
-               YDOM.request.API({
-                  request: 'videos',
-                  params: {
-                     'id': ids.join(','),
-                     'part': 'statistics',
-                  },
-                  api_key: user_settings['custom-api-key'],
-               })
-                  .then(res => {
-                     const now = new Date();  //epoch time, lets deal only with integer
-                     res.items
-                        .forEach(item => {
-                           // console.debug('item', item);
-                           const
-                              views = parseInt(item.statistics.viewCount) || 0,
-                              likes = parseInt(item.statistics.likeCount) || 0,
-                              dislikes = parseInt(item.statistics.dislikeCount) || 0,
-                              total = likes + dislikes,
-                              percent = Math.floor(likes / total * 100),
-                              videoStatistics = {
-                                 'expires': +now.setHours(now.getHours() + CACHED_TIME),
-                                 'id': item.id, // need to selector out
-                                 'pt': percent,
-
-                                 'views': views,
-                                 'total': total,
-                              };
-                           appendRatingBars(videoStatistics);
-                           // save cache
-                           localStorage.setItem(CACHED_PREFIX + item.id, JSON.stringify(videoStatistics));
-                        });
-                  });
-            })
       }
 
-      const colorLiker = user_settings.ratio_like_color || '#3ea6ff';
-      const colorDislike = user_settings.ratio_dislike_color || '#ddd';
-
-      function appendRatingBars(thumbnailObj) {
-         // console.debug('appendRatingBars start', thumbnailObj);
-         // fix: Uncaught TypeError: is not iterable
-         if (!Array.isArray(thumbnailObj)) thumbnailObj = [thumbnailObj];
-
-         for (const thumb of thumbnailObj) {
-            // filter small values
-            if (thumb.views < 5 || thumb.total < 3) continue;
-
-            [...document.querySelectorAll('a#thumbnail[href*="' + thumb.id + '"]')]
-               .forEach(a => {
-                  // console.debug('finded', thumb.id, a.href, thumb.pt);
-                  const pt = thumb.pt;
-                  // a = a.parentElement.parentElement.querySelector('#metadata-line') || a;
-                  a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
-               });
-         }
+      function appendRatingBar({ id, pt }) {
+         if (!id || !pt) return
+         // console.debug('appendRatingBar', JSON.stringify(...arguments));
+         [...document.querySelectorAll(`a#thumbnail[href*="${id}"]`)]
+            .forEach(a => {
+               // console.debug('finded', a, pt);
+               a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+            });
       }
 
    },

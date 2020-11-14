@@ -8,15 +8,14 @@ _plugins.push({
 
       const ATTR_MARK = 'timestamps-updated';
 
-      YDOM.waitHTMLElement({
+      YDOM.HTMLElement.watch({
          selector: '#thumbnail img[src]:not([' + ATTR_MARK + '])',
-         not_removable: true,
-         callback: imgElement => {
-            const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
+         callback: img => {
+            img.setAttribute(ATTR_MARK, true);
 
-            if (re.test(imgElement.src)) {
-               imgElement.setAttribute(ATTR_MARK, true);
-               imgElement.src = imgElement.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
+            const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
+            if (re.test(img.src)) {
+               img.src = img.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
             }
          },
       });

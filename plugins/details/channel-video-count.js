@@ -10,47 +10,39 @@ _plugins.push({
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
       // watch page
-      YDOM.waitHTMLElement({
-         selector: '#upload-info #channel-name a[href]',
-         callback: linkElement => {
+      YDOM.HTMLElement.wait('#upload-info #channel-name a[href]')
+         .then(link => {
             // console.debug('watch page');
-
-            YDOM.waitHTMLElement({
-               selector: '#upload-info #owner-sub-count:not(:empty)',
-               callback: htmlElement => {
+            YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not(:empty)')
+               .then(el => {
                   insertStatistic({
-                     'html_container': htmlElement,
-                     'channel_id': linkElement.href.split('/').pop(),
+                     'html_container': el,
+                     'channel_id': link.href.split('/').pop(),
                   });
-               },
-            });
-
-         },
-      });
+               });
+         });
 
       // channel page
-      YDOM.waitHTMLElement({
-         selector: '#channel-header #subscriber-count:not(:empty)',
-         callback: htmlElement => {
+      YDOM.HTMLElement.wait('#channel-header #subscriber-count:not(:empty)')
+         .then(el => {
             // console.debug('channel page');
             insertStatistic({
-               'html_container': htmlElement,
+               'html_container': el,
                'channel_id': searchChannelId(),
             });
 
             function searchChannelId() {
                const page = location.pathname.split('/');
-               return page[1] === 'channel' ? page[2] : [
+               return page[1] == 'channel' ? page[2] : [
                   document.querySelector('meta[itemprop="channelId"][content]'),
                   document.querySelector('link[itemprop="url"][href]'),
                   ...document.querySelectorAll('meta[content]'),
                   ...document.querySelectorAll('link[href]')
                ]
-                  .map(e => e?.href || e?.content)
-                  .find(e => isChannelId(e?.split('/').pop()));
+                  .map(i => i?.href || i?.content)
+                  .find(i => isChannelId(i?.split('/').pop()));
             }
-         },
-      });
+         });
 
       function insertStatistic({ html_container, channel_id }) {
          // console.debug('insertStatistic:', ...arguments);

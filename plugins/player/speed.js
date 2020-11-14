@@ -7,15 +7,14 @@ _plugins.push({
    _runtime: user_settings => {
       // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
 
-      YDOM.waitHTMLElement({
-         selector: '.html5-video-player', // replace "#movie_player" for embed page
-         callback: videoPlayer => {
+      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+         .then(videoPlayer => {
             const playerArea = document.querySelector('.html5-video-container');
             const videoElm = videoPlayer.querySelector('video');
 
             // [listener block]
             // mousewheel
-            playerArea.addEventListener('wheel', setPlaybackRate_wheel);
+            playerArea.addEventListener('wheel', onWheel);
 
             // Assign a ratechange event to the <video> element, and execute a function if the playing speed of the video is changed
             videoElm.addEventListener('ratechange', event => showIndicator(videoElm.playbackRate + 'x', playerArea));
@@ -23,14 +22,16 @@ _plugins.push({
             // [bezel block]
             // hide default indicator
             [...document.querySelectorAll('[class^="ytp-bezel"]')]
-               // .forEach(bezel => bezel.parentNode.removeChild(bezel))
+               // .forEach(bezel => bezel.remove())
                .forEach(bezel => bezel.style.display = 'none');
 
             // [funcs/libs block]
             const setPlaybackRate = {
-               set: x => user_settings.player_rate_html5 ? setPlaybackRate.html5(x) : setPlaybackRate.default(x),
+               set: x => user_settings.player_rate_html5 ? setPlaybackRate.html5(+x) : setPlaybackRate.default(+x),
 
                default: playback_rate => {
+                  playback_rate = +playback_rate;
+                  // console.debug('playback_rate', playback_rate);
                   const playbackRate = videoPlayer.getPlaybackRate();
                   const inRange = delta => {
                      const rangeRate = videoPlayer.getAvailablePlaybackRates();
@@ -40,9 +41,9 @@ _plugins.push({
                   const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
 
                   // set rate
-                  if (rateToSet && rateToSet !== playbackRate) {
+                  if (rateToSet && rateToSet != playbackRate) {
+                     // console.debug('set rate',rateToSet);
                      videoPlayer.setPlaybackRate(rateToSet);
-                     // console.debug('try set rate',rateToSet);
 
                      // check is correct
                      if (rateToSet !== videoPlayer.getPlaybackRate()) {
@@ -54,16 +55,16 @@ _plugins.push({
                },
 
                html5: playback_rate => {
+                  playback_rate = +playback_rate;
                   const playbackRate = videoPlayer.querySelector('video').playbackRate;
                   const inRange = delta => {
-                     const setRateStep = playbackRate + (delta * (user_settings.player_rate_step || 0.25));
+                     const setRateStep = playbackRate + (delta * (+user_settings.player_rate_step || 0.25));
                      return (0.5 <= setRateStep && setRateStep <= 3.0) && setRateStep;
                   };
                   const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
 
                   // set rate
-                  if (rateToSet && rateToSet !== playbackRate) {
-                     // set rate
+                  if (rateToSet && rateToSet != playbackRate) {
                      // document.getElementsByTagName('video')[0].defaultPlaybackRate = rateToSet;
                      videoPlayer.querySelector('video').playbackRate = rateToSet;
 
@@ -78,18 +79,18 @@ _plugins.push({
             };
 
             // init default_playback_rate
-            if (user_settings.default_playback_rate !== 1 && YDOM.getURLParams().get('ismusic') === null) {
-               setPlaybackRate.set(+user_settings.default_playback_rate);
+            if (+user_settings.default_playback_rate != 1 && YDOM.getURLParams().get('ismusic') === null) {
+               setPlaybackRate.set(user_settings.default_playback_rate);
             }
 
-            function setPlaybackRate_wheel(event) {
+            function onWheel(event) {
                // console.debug('onWheel');
                event.preventDefault();
 
                if (user_settings.player_rate_hotkey && (
                   event[user_settings.player_rate_hotkey] ||
                   (
-                     user_settings.player_rate_hotkey === 'none' &&
+                     user_settings.player_rate_hotkey == 'none' &&
                      !event.ctrlKey && !event.altKey && !event.shiftKey
                   )
                )) {
@@ -150,8 +151,7 @@ _plugins.push({
                   updateIndicator(level);
                }
             }
-         },
-      });
+         });
 
    },
    opt_export: {

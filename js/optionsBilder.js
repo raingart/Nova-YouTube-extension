@@ -34,11 +34,11 @@ const Opt = {
                if (plugin.opt_export)
                   li.appendChild(
                      document.createElement("li")
-                        .appendChild(Opt.generate.options(plugin.opt_export, plugin.id))
+                        .appendChild(this.options(plugin.opt_export, plugin.id))
                   );
 
                const pl_selector = '>#' + plugin.section.toString().toLowerCase();
-               let p = Opt.generate.cssSelector;
+               let p = this.cssSelector;
 
                p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
 
@@ -228,7 +228,7 @@ window.addEventListener('load', event => {
 
 
 function searchFilter({keyword, container, filterChildTagName}) {
-   // console.debug('searchFilter:', ...arguments);
+   // console.debug('searchFilter:', JSON.stringify(...arguments));
 
    for (const item of container) {
       let text = item.textContent;
