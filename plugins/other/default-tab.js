@@ -1,15 +1,13 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'The default tab on the channel page',
    id: 'set-default-channel-tab',
-   section: 'channel',
-   depends_page: 'channel',
+   depends_on_pages: 'channel',
+   run_on_transition: true,
+   opt_section: 'channel',
    _runtime: user_settings => {
 
       // channel/user home page
-      if (/\/channel\/UC([a-z0-9-_]{22})$/i.test(location.pathname)
-         || /\/user\/([a-z0-9-_]+)$/i.test(location.pathname)
-         || /\/c\/([a-z0-9-_]+)$/i.test(location.pathname)) {
-
+      if (location.pathname.split('/').filter(i => i).length === 2) {
          // HOME yab selected
          YDOM.HTMLElement.wait('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
             .then(() => {
@@ -34,7 +32,7 @@ _plugins.push({
    },
    opt_export: {
       'default_channel_tab': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Set default tab',
          options: [
             { label: 'videos', value: 'videos', selected: true },

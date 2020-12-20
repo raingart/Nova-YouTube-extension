@@ -14,7 +14,8 @@
    --label1: #343a45;
 }
 
-@media (prefers-color-scheme:dark) {
+/* turn on dark mode by default */
+/* @media (prefers-color-scheme:dark) { */
    :root {
       --bg: #1c1c1c;
       --fg: slategrey;
@@ -28,7 +29,7 @@
       --label1: inherit;
       --label2: #8c8b8b;
    }
-}
+/* } */
 
 body {
    background: var(--bg);

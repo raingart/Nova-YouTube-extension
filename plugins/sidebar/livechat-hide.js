@@ -1,8 +1,9 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Hide livechat',
    id: 'collapse-livechat',
-   section: 'sidebar',
-   depends_page: 'watch',
+   depends_on_pages: 'watch',
+   run_on_transition: true,
+   opt_section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
@@ -18,7 +19,7 @@ _plugins.push({
    },
    opt_export: {
       'livechat': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Type hide',
          options: [
             { label: 'remove', value: 'disable', selected: true },

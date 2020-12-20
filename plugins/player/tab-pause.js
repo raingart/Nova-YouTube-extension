@@ -1,8 +1,8 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Pauses playing videos in other tabs',
    id: 'pause-background-tab',
-   section: 'player',
-   depends_page: 'watch, embed',
+   depends_on_pages: 'watch, embed',
+   opt_section: 'player',
    desc: 'Supports frames and open browser windows',
    _runtime: user_settings => {
 

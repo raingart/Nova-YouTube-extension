@@ -1,9 +1,10 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Show channel videos count',
-   id: 'show-channel-video-count',
-   section: 'details',
-   depends_page: 'watch, channel',
-   api_key_dependency: true,
+   id: 'show-channel-videos-count',
+   depends_on_pages: 'watch, channel',
+   run_on_transition: true,
+   opt_section: 'details',
+   opt_api_key_warn: true,
    desc: 'Total number of videos on channel',
    _runtime: user_settings => {
 
@@ -28,12 +29,12 @@ _plugins.push({
             // console.debug('channel page');
             insertStatistic({
                'html_container': el,
-               'channel_id': searchChannelId(),
+               'channel_id': getChannelId(),
             });
 
-            function searchChannelId() {
-               const page = location.pathname.split('/');
-               return page[1] == 'channel' ? page[2] : [
+            function getChannelId() {
+               return [
+                  location.pathname.split('/')[2],
                   document.querySelector('meta[itemprop="channelId"][content]'),
                   document.querySelector('link[itemprop="url"][href]'),
                   ...document.querySelectorAll('meta[content]'),
@@ -48,11 +49,12 @@ _plugins.push({
          // console.debug('insertStatistic:', ...arguments);
          const CACHE_PREFIX = 'channel-video-count_';
 
-         if (!channel_id || !isChannelId(channel_id)) {
-            console.error('channel_id is invalid', channel_id);
-            insertToHTML(''); // erase html
-            return;
-         }
+         if (!channel_id || !isChannelId(channel_id)) return;
+         // if (!channel_id || !isChannelId(channel_id)) {
+         //    console.debug('location.href', location.href);
+         //    insertToHTML(''); // erase html
+         //    return console.error('channel_id is invalid', channel_id);
+         // }
          // cached
          const storage = sessionStorage.getItem(CACHE_PREFIX + channel_id);
 
@@ -80,15 +82,13 @@ _plugins.push({
 
          function insertToHTML(text) {
             const SELECTOR_ID = 'video_count';
-            const box = html_container.querySelector('#' + SELECTOR_ID);
-            if (box) { // update
-               box.textContent = text;
-
-            } else { // create
+            const boxHTML = html_container.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
                   + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
-            }
+               return html_container.getElementById(SELECTOR_ID);
+            })();
+            if (boxHTML) boxHTML.textContent = text;
          }
 
       }

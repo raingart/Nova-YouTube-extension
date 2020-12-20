@@ -7,11 +7,11 @@
 // www.youtube.com/watch?v=v-YQUCP-J8s
 // www.youtube.com/watch?v=ctMEGAcnYjI
 
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Pin player while scrolling',
    id: 'fixed-player-scroll',
-   section: 'player',
-   depends_page: 'watch',
+   depends_on_pages: 'watch',
+   opt_section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
@@ -54,7 +54,7 @@ _plugins.push({
             function createStyle() {
                let initcss = {
                   position: 'fixed',
-                  'z-index': 9999,
+                  'z-index': 301,
                   'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14),' +
                      '0 6px 30px 5px rgba(0, 0, 0, 0.12),' +
                      '0 8px 10px -5px rgba(0, 0, 0, 0.4)',
@@ -107,37 +107,38 @@ _plugins.push({
                // videoPlayer.style.height = size.height;
 
                // add calc size
-               initcss.width = size.calc.width + 'px !important;';
-               initcss.height = size.calc.height + 'px !important;';
+               initcss.width = size.calc.width + 'px';
+               initcss.height = size.calc.height + 'px';
 
                // apply css
-               YDOM.injectStyle(initcss, PINNED_SELECTOR, 'important');
+               YDOM.HTMLElement.addStyle(initcss, PINNED_SELECTOR, 'important');
 
                // fix video tag
-               YDOM.injectStyle(`${PINNED_SELECTOR} video {
-                  width: ${initcss.width};
-                  height: ${initcss.height};
-                  left: 0 !important;
-               }`);
+               YDOM.HTMLElement.addStyle(
+                  `${PINNED_SELECTOR} video {
+                     width: ${initcss.width};
+                     height: ${initcss.height};
+                     left: 0 !important;
+                  }`);
 
                // fix control-player panel
-               YDOM.injectStyle(`
-                  ${PINNED_SELECTOR} .ytp-chrome-bottom {
+               YDOM.HTMLElement.addStyle(
+                  `${PINNED_SELECTOR} .ytp-chrome-bottom {
                      width: ${initcss.width};
                      left: 0 !important;
                   }
                   ${PINNED_SELECTOR} .ytp-preview,
                   ${PINNED_SELECTOR} .ytp-scrubber-container,
-                  ${PINNED_SELECTOR} .ytp-hover-progress { display:none !important }
-                  ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }
-               `);
+                  ${PINNED_SELECTOR} .ytp-hover-progress,
+                  ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important }
+                  ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }`);
             }
          });
 
    },
    opt_export: {
       'pin_player_size_ratio': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Player ratio to screen size',
          title: 'less - more player size',
          type: 'number',
@@ -148,7 +149,7 @@ _plugins.push({
          value: 2.5,
       },
       'pin_player_size_position': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Fixed player position',
          options: [
             { label: 'left-top', value: 'top-left' },

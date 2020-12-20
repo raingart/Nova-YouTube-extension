@@ -1,24 +1,49 @@
 console.debug("init optionsView.js");
 
 // plugins conteiner
-let _plugins = [];
-
-// load all Plugins
-Plugins.load([].concat(...Object.values(Plugins.list)));
+let _plugins_conteiner = [];
+Plugins.load();
 
 const Opt = {
    // DEBUG: true,
+
+   pluginValidator(plugin) {
+      const isValid = plugin?.id // required
+         && plugin.depends_on_pages?.split(',').length
+         && plugin._runtime && typeof plugin._runtime === 'function'
+         // optional
+         && (!plugin.opt_section       || plugin.opt_section?.split(' ').length === 1)
+         && (!plugin.run_on_transition || 'boolean' === typeof plugin.run_on_transition)
+         && (!plugin.opt_api_key_warn  || 'boolean' === typeof plugin.opt_api_key_warn)
+         && (!plugin.opt_export        || 'object' === typeof plugin.opt_export)
+         && (!plugin.desc              || 'string' === typeof plugin.desc)
+      if (!isValid) {
+         console.error('plugin invalid:\n', {
+            id: plugin.id,
+            depends_on_pages:    plugin.depends_on_pages?.split(',').length,
+            opt_section:         plugin.opt_section?.split(' ').length === 1  || undefined,
+            run_on_transition:   'boolean' === typeof plugin.run_on_transition || undefined,
+            opt_api_key_warn:    'boolean' === typeof plugin.opt_api_key_warn || undefined,
+            desc:                'string' === typeof plugin.desc              || undefined,
+            opt_export:          'object' === typeof plugin.opt_export        || undefined,
+            _runtime:            'function' === typeof plugin._runtime,
+         });
+      }
+      return isValid;
+   },
 
    generate: {
 
       cssSelector: '#plugins',
 
       list() {
-         Opt.log('list _plugins:', JSON.stringify(_plugins));
+         Opt.log('list _plugins_conteiner:', _plugins_conteiner);
 
-         _plugins.forEach(plugin => {
+         _plugins_conteiner.forEach(plugin => {
             try {
-               Opt.log('plugin load:', plugin.name);
+               if (!Opt.pluginValidator(plugin)) throw new Error('pluginInvalid!');
+
+               Opt.log('plugin load:', plugin.id);
 
                let li = document.createElement("li");
                li.className = "item";
@@ -27,97 +52,98 @@ const Opt = {
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
                   `<label for="${plugin.id}">${plugin.name}</label>` +
                   `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
-                  (plugin.api_key_dependency ?
+                  (plugin.opt_api_key_warn ?
                      ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">⚠️</span></b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
-               if (plugin.opt_export)
+               if (plugin.opt_export) {
                   li.appendChild(
                      document.createElement("li")
                         .appendChild(this.options(plugin.opt_export, plugin.id))
                   );
+               }
 
-               const pl_selector = '>#' + plugin.section.toString().toLowerCase();
+               const pl_selector = '>#' + plugin?.opt_section?.toString().toLowerCase();
                let p = this.cssSelector;
 
-               p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
+               p += plugin.opt_section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
 
                document.querySelector(p).appendChild(li);
 
-            } catch (err) {
-               console.error('Error plugin generate:', (plugin?.id || '\n' + JSON.stringify(plugin)), '\n' + err);
-               Opt.DEBUG && alert(plugin?.id + '\n' + err.slice(25));
+            } catch (error) {
+               console.error('Error plugin generate:\n', error.stack + '\n', plugin);
+               alert('Error plugin generate\n' + plugin?.id);
             }
          });
       },
 
       options(obj, id) {
-         let outHTML = document.createElement('ul');
-         outHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
+         let exportHTML = document.createElement('ul');
+         exportHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
          for (const key in obj) {
-            Opt.log('obj[name]', JSON.stringify(obj[key]));
+            Opt.log('obj[name]', obj[key]);
             let property = obj[key];
 
-            if (!property._elementType) {
-               console.warn(`tag "${property}" not has _elementType...skiping`);
+            if (!property._tagName) {
+               console.error('empty _tagName in', property);
                continue;
             }
 
-            let tagConteiner = document.createElement('li');
-            let tag_ = document.createElement(property._elementType);
+            let exportContainer = document.createElement('li');
+            let exportProperty = document.createElement(property._tagName);
 
             property.name = key;
             property.id = key;
-            delete property._elementType;
+            delete property._tagName;
 
             if (property['data-dependent']) {
-               // tagConteiner.setAttribute('data-dependent', '{\"'+ id +'\":[true]}');
-               tagConteiner.setAttribute("data-dependent", property['data-dependent']);
-               // tag_.setAttribute('data-dependent', property['data-dependent']);
+               // exportContainer.setAttribute('data-dependent', '{\"'+ id +'\":[true]}');
+               exportContainer.setAttribute("data-dependent", property['data-dependent']);
                delete property['data-dependent'];
             }
 
-            if (property.hasOwnProperty('title')) {
-               tagConteiner.setAttribute("tooltip", property.title);
+            if (property.title) {
+               exportContainer.setAttribute("tooltip", property.title);
                delete property.title;
             }
 
-            for (const attr in property) {
-               // console.debug('attr', JSON.stringify(attr));
-               // console.debug('values[attr]', JSON.stringify(values[attr]));
-               const value = property[attr];
+            Object.entries(property)
+               .filter(([attr, value]) => {
+                  Opt.log('property [%s=%s]', attr, JSON.stringify(value));
+                  switch (attr) {
+                     case 'options':
+                        value.forEach(option => {
+                           let tagOption = document.createElement('option');
+                           tagOption.setAttribute('value', option.value);
+                           tagOption.textContent = option.label;
+                           if (option.hasOwnProperty('selected')) tagOption.setAttribute('selected', true);
+                           exportProperty.appendChild(tagOption);
+                        });
+                        break;
 
-               switch (attr) {
-                  case 'options':
-                     value.forEach(option => {
-                        let optionHTML = document.createElement('option');
-                        optionHTML.setAttribute('value', option.value);
-                        optionHTML.textContent = option.label;
-                        if (option.selected) optionHTML.setAttribute('selected', true);
-                        tag_.appendChild(optionHTML);
-                     });
-                     break;
+                     case 'label':
+                        let label = document.createElement(attr);
+                        label.innerHTML = '<font>↪</font>' + value;
+                        label.htmlFor = property.name;
+                        exportContainer.appendChild(label);
+                        // exportContainer.insertAdjacentHTML("beforeend", '<label>' + value + '</label>');
+                        break;
 
-                  case 'label':
-                     let label = document.createElement(attr);
-                     label.innerHTML = '<font>↪</font>' + value;
-                     label.htmlFor = property.name;
-                     tagConteiner.appendChild(label);
-                     // tagConteiner.insertAdjacentHTML("beforeend", '<label>' + value + '</label>');
-                     break;
+                     case 'type':
+                        if (value == 'number') exportProperty.setAttribute('required', true);
+                     // break; <-- need remove!
 
-                  default:
-                     tag_.setAttribute(attr, value);
-                     break;
-               };
-            }
+                     default:
+                        exportProperty.setAttribute(attr, value);
+                  };
+               });
 
-            outHTML
-               .appendChild(tagConteiner)
-               .appendChild(tag_);
+            exportHTML
+               .appendChild(exportContainer)
+               .appendChild(exportProperty);
          }
-         return outHTML;
+         return exportHTML;
       },
 
    },
@@ -227,8 +253,8 @@ window.addEventListener('load', event => {
 });
 
 
-function searchFilter({keyword, container, filterChildTagName}) {
-   // console.debug('searchFilter:', JSON.stringify(...arguments));
+function searchFilter({ keyword, container, filterChildTagName }) {
+   // console.debug('searchFilter:', ...arguments);
 
    for (const item of container) {
       let text = item.textContent;

@@ -1,8 +1,8 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Video quality',
    id: 'video-quality',
-   section: 'player',
-   depends_page: 'watch, embed',
+   depends_on_pages: 'watch, embed',
+   opt_section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
@@ -13,11 +13,8 @@ _plugins.push({
             videoPlayer.addEventListener("onStateChange", setQuality.bind(this));
 
             function setQuality(state) {
-               if (!selectedQuality) {
-                  console.error('selectedQuality unavailable', selectedQuality);
-                  return;
-               }
-               // console.debug('onStateChange', JSON.stringify(...arguments));
+               if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
+               // console.debug('onStateChange', ...arguments);
 
                // -1: unstarted
                // 0: ended
@@ -38,8 +35,7 @@ _plugins.push({
                         const qualityToSet = availableQualityLevels[maxAvailableQuality];
 
                         // if (!qualityToSet || videoPlayer.getPlaybackQuality() == selectedQuality) {
-                        //    console.debug('skip set quality');
-                        //    return;
+                        //    return console.debug('skip set quality');
                         // }
 
                         if (!availableQualityLevels.includes(selectedQuality)) {
@@ -73,7 +69,7 @@ _plugins.push({
                            document.querySelector("video").focus();
                         }
 
-                        // console.debug('availableQualityLevels:', JSON.stringify(availableQualityLevels));
+                        // console.debug('availableQualityLevels:', availableQualityLevels);
                         // console.debug("try set quality:", qualityToSet);
                         // console.debug('set realy quality:', videoPlayer.getPlaybackQuality());
                      }
@@ -102,19 +98,19 @@ _plugins.push({
    },
    opt_export: {
       'video_quality': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Set prefered quality',
          title: 'If unavailable, set max available quality',
          // multiple: null,
          options: [
             // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'
-            { label: '4320p (8k/FUHD)', value: 'highres' },
-            { label: '2880p (5k/UHD)', value: 'hd2880' },
-            { label: '2160p (4k/QFHD)', value: 'hd2160' },
-            { label: '1440p (QHD)', value: 'hd1440' },
-            { label: '1080p (FHD)', value: 'hd1080', selected: true },
-            { label: '720p (HD)', value: 'hd720' },
-            { label: '480p (SD)', value: 'large' },
+            { label: '4320p/8k', value: 'highres' },
+            { label: '2880p/5k', value: 'hd2880' },
+            { label: '2160p/4k', value: 'hd2160' },
+            { label: '1440p/QHD', value: 'hd1440' },
+            { label: '1080p/HD', value: 'hd1080', selected: true },
+            { label: '720p', value: 'hd720' },
+            { label: '480p', value: 'large' },
             { label: '360p', value: 'medium' },
             { label: '240p', value: 'small' },
             { label: '144p', value: 'tiny' },
@@ -122,7 +118,7 @@ _plugins.push({
          ]
       },
       'save_manual_quality_in_tab': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Save manually selected quality for the same tab',
          type: 'checkbox',
       },

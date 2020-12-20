@@ -1,8 +1,8 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Player hotkeys always active',
    id: 'player-focused-onkeydown',
-   section: 'player',
-   depends_page: 'watch',
+   depends_on_pages: 'watch',
+   opt_section: 'player',
    desc: 'shortcuts priority [SPACE/F] etc.',
    _runtime: user_settings => {
 
@@ -14,7 +14,7 @@ _plugins.push({
 
          if (document.activeElement.tagName != "INPUT" // search-input
             && document.activeElement.tagName != "TEXTAREA"
-            && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
+            && !document.activeElement.parentElement.slot?.toLowerCase().includes('input') // comment-area
             && !document.activeElement.isContentEditable
             // && !window.getSelection()
          ) {

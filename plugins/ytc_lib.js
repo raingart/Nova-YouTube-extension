@@ -1,31 +1,37 @@
-'use strict';
-
 const YDOM = {
    // DEBUG: true,
 
    HTMLElement: {
+      // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
 
       wait(selector = required()) {
-         YDOM.log('wait', JSON.stringify(...arguments));
-         return new Promise((resolve, reject) => {
+         YDOM.log('wait', ...arguments);
+         return new Promise(resolve => {
             const el = document.querySelector(selector);
-            if (el) return resolve(el);
+            if (el) {
+               YDOM.log('waited(1)', selector, el);
+               return resolve(el);
+            }
 
             new MutationObserver((mutations, observer) => {
-               [...document.querySelectorAll(selector)]
-                  .forEach(el => {
-                     observer.disconnect();
-                     resolve(el);
-                  });
-            })
-               .observe(document.body || document.documentElement, {
-                  childList: true,
-                  subtree: true
+               mutations.forEach(mutation => {
+                  [...mutation.addedNodes]
+                     .filter(node => node.nodeType === 1)
+                     .forEach(node => {
+                        [...(node?.parentElement || document).querySelectorAll(selector)]
+                           .forEach(element => {
+                              YDOM.log('waited', mutation.type, selector);
+                              observer.disconnect();
+                              return resolve(element);
+                           });
+                     });
                });
+            })
+               .observe(document.body || document.documentElement, { childList: true, subtree: true });
          });
       },
 
-      watch({ selector = required(), callback = required() }) {
+      watch({ selector = required(), attr_mark, callback = required() }) {
          YDOM.log('watch', selector);
          process(); // launch not wait
 
@@ -33,56 +39,70 @@ const YDOM = {
 
          function process() {
             YDOM.log('process', { selector, callback });
-            [...document.querySelectorAll(selector)]
-               .forEach(el => callback(el));
+            [...document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))]
+               .forEach(el => {
+                  YDOM.log('viewed', selector);
+                  if (attr_mark) el.setAttribute(attr_mark, true);
+                  callback(el);
+               });
          }
       },
-   },
 
-   // uncheck(toggle) {
-   //    toggle.hasAttribute("checked") && toggle.click();
-   // },
+      addStyle(css = required(), selector, important) {
+         if (typeof css === 'object') {
+            if (!selector) {
+               return console.error('injectStyle > empty json-selector:', ...arguments);
+            }
+            // if (important) {
+            injectCss(selector + json2css(css));
+            // } else {
+            //    Object.assign(document.querySelector(selector).style, css);
+            // }
 
-   injectStyle(styles = required(), selector, important) {
-      if (typeof styles === 'object') { // is json
-         // if (important) {
-         injectCss(selector + json2css(styles));
+            function json2css(obj) {
+               let css = '';
+               Object.entries(obj)
+                  .forEach(([key, value]) => {
+                     css += key + ':' + value + (important ? ' !important' : '') + ';';
+                  });
+               return `{ ${css} }`;
+            }
 
-         // } else {
-         //    Object.assign(document.querySelector(selector).style, styles);
-         // }
+         } else injectCss(css);
 
-         function json2css(obj) {
-            let _css = '';
-            Object.entries(obj).forEach(
-               // ([key, value]) => _css += key + ':' + value + ' !important;'
-               ([key, value]) => {
-                  _css += key + ':' + value + (important ? ' !important' : '') + ';';
-               }
-            );
-            return `{ ${_css} }`;
+         function injectCss(source = required()) {
+            let sheet;
+
+            if (source.endsWith('.css')) {
+               sheet = document.createElement('link');
+               sheet.rel = "sheet";
+               sheet.href = source;
+
+            } else {
+               const sheetName = 'YDOM_style';
+               sheet = document.getElementById(sheetName) || (function () {
+                  const style = document.createElement('style');
+                  style.type = 'text/css';
+                  style.id = sheetName;
+                  document.head.appendChild(style);
+                  return style;
+               })();
+            }
+
+            sheet.textContent += '/**/\n' + source
+               .replace(/\n+\s{2,}/g, ' ') // singleline
+               // multiline
+               // .replace(/\n+\s{2,}/g, '\n\t')
+               // .replace(/\t\}/mg, '}')
+               + '\n';
+            // sheet.insertRule(css, sheet.cssRules.length);
+            // (document.head || document.documentElement).appendChild(sheet);
+
+            sheet.onload = () => YDOM.log('style loaded:', sheet.src || sheet.textContent.substr(0, 100));
          }
+      },
 
-      } else injectCss(styles);
-
-      function injectCss(source = required()) {
-         let sheet;
-
-         if (source.endsWith('.css')) {
-            sheet = document.createElement('link');
-            sheet.rel = "stylesheet";
-            sheet.href = source;
-
-         } else {
-            sheet = document.createElement('style');
-            sheet.type = 'text/css';
-            sheet.textContent = source;
-         }
-
-         (document.head || document.documentElement).appendChild(sheet);
-
-         sheet.onload = () => YDOM.log('style loading:', (sheet.src || sheet.textContent));
-      }
+      // uncheck: toggle => toggle.hasAttribute("checked") && toggle.click(),
    },
 
    cookie: {
@@ -126,9 +146,7 @@ const YDOM = {
             console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             throw new Error('YOUTUBE_API_KEYS is empty');
          }
-
          const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
-
          // combine GET
          const query = (request == 'videos' ? 'videos' : 'channels') + '?'
             + Object.keys(params)
@@ -148,7 +166,8 @@ const YDOM = {
             .catch(error => {
                localStorage.removeItem('YOUTUBE_API_KEYS');
                console.error(`Request API failed:${URL}\n${error}`);
-               alert(error?.message || 'Problems with the YouTube API.\n'
+               alert('Problems with the YouTube API.\n'
+                  + '\n' + error?.message
                   + '\n1. Disconnect the plugins that need it'
                   + '\n2. Or generate and add your YouTube API KEY');
             });

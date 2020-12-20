@@ -1,56 +1,65 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Rating preview',
    id: 'global-rating-bars',
-   section: 'global',
-   depends_page: 'all, -embed',
-   api_key_dependency: true,
-   desc: 'Rating bar over video thumbnail',
+   depends_on_pages: 'all, -embed',
+   opt_section: 'global',
+   opt_api_key_warn: true,
+   desc: 'Rating bar over videos thumbnail',
    _runtime: user_settings => {
 
       const
          CACHED_TIME = 8, // hours
          SELECTOR_ID = 'ratio-rate-line',
          CACHE_NAME = 'ratings',
-         ATTR_MARK = 'rating-bar-added',
+         ATTR_MARK = 'timestamps-rated',
          colorLiker = user_settings.ratio_like_color || '#3ea6ff',
          colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
       // init bars style
-      YDOM.injectStyle(`#${SELECTOR_ID}{
-         width: 100%;
-         height: ${(user_settings.ratio_bar_height || 5)}px;
-      }
-      a#thumbnail > #${SELECTOR_ID} {
-         position: absolute;
-         bottom: 0;
-      }`);
+      YDOM.HTMLElement.addStyle(
+         `#${SELECTOR_ID}{
+            width: 100%;
+            height: ${(user_settings.ratio_bar_height || 5)}px;
+         }
+         a#thumbnail #${SELECTOR_ID} {
+            position: absolute;
+            bottom: 0;
+         }`);
 
-
-      let thumbnailIds = [];
+      let thumbCollector = [];
       let newCache = {};
 
-      YDOM.HTMLElement.watch({
-         selector: '#thumbnail:not([' + ATTR_MARK + '])',
-         callback: thumbnail => {
-            // console.debug('stathumbnailar', thumbnail);
-            if (thumbnail.hasAttribute(ATTR_MARK)) return;
-            // console.debug('start gen: rateBar');
-            thumbnail.setAttribute(ATTR_MARK, true); // lock
+      document.addEventListener('yt-action', event => {
+         if (event.detail?.actionName != 'yt-store-grafted-ve-action') return;
 
-            const id = YDOM.getURLParams(thumbnail.href).get('v');
-            id && thumbnailIds.push(id);
-         },
+         [...document.querySelectorAll('a#thumbnail[href]:not([' + ATTR_MARK + ']')]
+            .forEach(thumbnail => {
+               if (thumbnail.hasAttribute(ATTR_MARK)) return;
+               thumbnail.setAttribute(ATTR_MARK, true);
+
+               const id = YDOM.getURLParams(thumbnail.href).get('v');
+               id && thumbCollector.push(id);
+            });
       });
+
+      // YDOM.HTMLElement.watch({
+      //    selector: 'a#thumbnail[href]',
+      //    attr_mark: 'timestamps-rated',
+      //    callback: thumbnail => {
+      //       const id = YDOM.getURLParams(thumbnail.href).get('v');
+      //       id && thumbCollector.push(id);
+      //    },
+      // });
 
       // chack update new thumbnail
       setInterval(() => {
-         thumbnailPatch(thumbnailIds);
-         cacheUpdater(newCache);
+         patchThumbnail(thumbCollector);
+         updaterCache(newCache);
       }, 1000 * 1); // 1sec
 
-      function cacheUpdater(new_cache) {
+      function updaterCache(new_cache) {
          if (!new_cache || !Object.keys(new_cache).length) return;
-         // console.debug('cacheUpdater', JSON.stringify(...arguments));
+         // console.debug('updaterCache', ...arguments);
          newCache = {}; // clear
          let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME)) || {}; // get
          const timeNow = new Date();
@@ -59,9 +68,9 @@ _plugins.push({
          Object.entries(oldCache)
             .filter(([key, value]) => {
                const cacheDate = new Date(+value?.date);
-               const dateExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
-               if (timeNow > dateExpires) {
-                  // console.debug('dateExpires', key, value);
+               const timeExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
+               if (timeNow > timeExpires) {
+                  // console.debug('timeExpires', key, value);
                   delete oldCache[key];
                }
             });
@@ -70,21 +79,21 @@ _plugins.push({
          localStorage.setItem(CACHE_NAME, JSON.stringify(Object.assign(new_cache, oldCache)));
       }
 
-      function thumbnailPatch(video_ids) {
+      function patchThumbnail(video_ids) {
          if (!video_ids.length) return;
-         // console.debug('find thumbnail', JSON.stringify(...arguments));
-         thumbnailIds = []; // clear
+         // console.debug('find thumbnail', ...arguments);
+         thumbCollector = []; // clear
          let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));
          const timeNow = new Date();
 
-         let newVidIds = video_ids.filter(id => {
+         const newIds = video_ids.filter(id => {
             if (oldCache?.hasOwnProperty(id)) {
                const cacheItem = oldCache[id],
                   cacheDate = new Date(+cacheItem?.date),
-                  dateExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
-               if (timeNow < dateExpires) {
+                  timeExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
+               if (timeNow < timeExpires) {
                   // console.debug('cached', id);
-                  appendRatingBar({ 'id': id, 'pt': cacheItem.pt });
+                  attachBar({ 'id': id, 'pt': cacheItem.pt });
                   return false;
                }
                // else console.debug('expired', document.querySelector(`a#thumbnail[href*="${id}"]`));
@@ -92,19 +101,19 @@ _plugins.push({
             // else console.debug('new', document.querySelector(`a#thumbnail[href*="${id}"]`));
             return true;
          });
-         // console.debug('newVidIds', JSON.stringify(newVidIds));
-         requestVideoData(newVidIds);
+         // console.debug('newIds', newIds);
+         requestRating(newIds);
       }
 
-      function requestVideoData(arr_id) {
-         if (!arr_id.length) return;
-         // console.debug('requestVideoData', JSON.stringify(...arguments));
+      function requestRating(arr_id) {
+         if (!arr_id?.length) return;
+         // console.debug('requestRating', ...arguments);
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API max = 50
 
          chunkArray(arr_id, YOUTUBE_API_MAX_IDS_PER_CALL)
             .forEach(id_part => {
-               // console.debug('id_part', JSON.stringify(id_part));
+               // console.debug('id_part', id_part);
                YDOM.request.API({
                   request: 'videos',
                   params: {
@@ -127,11 +136,11 @@ _plugins.push({
 
                         // filter small values
                         if (views > 5 && total > 3) {
-                           appendRatingBar({ 'id': item.id, 'pt': percent });
-                           // console.debug('requestVideoData > appendRatingBar', item.id);
+                           attachBar({ 'id': item.id, 'pt': percent });
+                           // console.debug('requestRating > attachBar', item.id);
                         } else {
                            percent = undefined; // do not display
-                           timeNow = timeNow.setHours(timeNow.getHours() - CACHED_TIME + 1); // add 1 hour
+                           timeNow = timeNow.setHours(timeNow.getHours() - CACHED_TIME + 1); // cache for 1 hour
                         }
                         // push to cache
                         newCache[item.id] = { 'date': timeNow, 'pt': percent };
@@ -146,9 +155,9 @@ _plugins.push({
          }
       }
 
-      function appendRatingBar({ id, pt }) {
+      function attachBar({ id, pt }) {
          if (!id || !pt) return
-         // console.debug('appendRatingBar', JSON.stringify(...arguments));
+         // console.debug('attachBar', ...arguments);
          [...document.querySelectorAll(`a#thumbnail[href*="${id}"]`)]
             .forEach(a => {
                // console.debug('finded', a, pt);
@@ -159,7 +168,7 @@ _plugins.push({
    },
    opt_export: {
       'ratio_bar_height': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Bar height',
          type: 'number',
          placeholder: '1-9',
@@ -170,13 +179,13 @@ _plugins.push({
          value: 2,
       },
       'ratio_like_color': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Like color',
          type: 'color',
          value: '#3ea6ff',
       },
       'ratio_dislike_color': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Dislike color',
          type: 'color',
          value: '#ddDDdd',

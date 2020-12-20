@@ -1,12 +1,12 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Scroll to top button',
    id: 'scroll-to-top',
-   section: 'global',
-   depends_page: 'all, -embed',
+   depends_on_pages: 'all, -embed',
+   opt_section: 'global',
    desc: 'Displayed on long pages',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.wait('ytd-app')
+      YDOM.HTMLElement.wait('body')
          .then(() => {
             const SELECTOR_ID = 'scrollToTop_btn';
             // create btn
@@ -53,9 +53,7 @@ _plugins.push({
             document.body.appendChild(btn);
 
             // btn hover style
-            YDOM.injectStyle(`#${SELECTOR_ID}:hover {
-               opacity: 1 !important;
-            }`);
+            YDOM.HTMLElement.addStyle(`#${SELECTOR_ID}:hover { opacity: 1 !important }`);
 
             // scroll event
             const scrollToTop_btn = document.getElementById(SELECTOR_ID);
@@ -72,7 +70,7 @@ _plugins.push({
    },
    opt_export: {
       'scroll_to_top_smooth': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Smooth',
          type: 'checkbox',
       },

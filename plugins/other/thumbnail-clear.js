@@ -1,29 +1,43 @@
-_plugins.push({
-   name: 'Clear video thumbnails',
+_plugins_conteiner.push({
+   name: 'Clear videos thumbnails',
    id: 'thumbnail-clear',
-   section: 'other',
-   depends_page: 'all, -embed',
+   depends_on_pages: 'all, -embed',
+   opt_section: 'other',
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
       const ATTR_MARK = 'timestamps-updated';
 
-      YDOM.HTMLElement.watch({
-         selector: '#thumbnail img[src]:not([' + ATTR_MARK + '])',
-         callback: img => {
-            img.setAttribute(ATTR_MARK, true);
+      document.addEventListener('yt-action', event => {
+         if (event.detail?.actionName != 'yt-store-grafted-ve-action') return;
 
-            const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
-            if (re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
-            }
-         },
+         [...document.querySelectorAll('a#thumbnail[href]:not([' + ATTR_MARK + ']')]
+            .forEach(thumbnail => {
+               if (thumbnail.hasAttribute(ATTR_MARK)) return;
+               thumbnail.setAttribute(ATTR_MARK, true);
+
+               const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
+               if (re.test(img.src)) {
+                  img.src = img.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
+               }
+            });
       });
+
+      // YDOM.HTMLElement.watch({
+      //    selector: 'a#thumbnail img[src]',
+      //    attr_mark: 'timestamps-updated',
+      //    callback: img => {
+      //       const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
+      //       if (re.test(img.src)) {
+      //          img.src = img.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
+      //       }
+      //    },
+      // });
 
    },
    opt_export: {
       'thumbnail_time_stamp': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Thumbnail timestamps',
          title: 'Thumbnail display video timestamps',
          options: [

@@ -1,8 +1,8 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Time jump',
    id: 'time-jump',
-   section: 'player',
-   depends_page: 'watch, embed',
+   depends_on_pages: 'watch, embed',
+   opt_section: 'player',
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
@@ -55,7 +55,7 @@ _plugins.push({
    },
    opt_export: {
       'jump_step': {
-         _elementType: 'input',
+         _tagName: 'input',
          label: 'Step',
          type: 'number',
          title: 'sec',
@@ -66,7 +66,7 @@ _plugins.push({
          value: 30,
       },
       'jump_hotkey': {
-         _elementType: 'select',
+         _tagName: 'select',
          label: 'Hotkey (double tap)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/

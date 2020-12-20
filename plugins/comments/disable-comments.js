@@ -1,8 +1,9 @@
-_plugins.push({
+_plugins_conteiner.push({
    name: 'Disable comments',
    id: 'disable-comments',
-   section: 'comments',
-   depends_page: 'watch',
+   depends_on_pages: 'watch',
+   run_on_transition: true,
+   opt_section: 'comments',
    desc: 'Remove comments section',
    _runtime: user_settings => {
 

@@ -23,10 +23,16 @@
       "message": "Open tabs don't change"
    },
    "opt_disable_in_frame": {
-      "message": "Prevent processing in iframe"
+      "message": "Disable processing in iframe"
    },
    "opt_disable_in_frame_tooltip": {
       "message": "All plugins will not work in iframe tag"
+   },
+   "opt_report_issues": {
+      "message": "Show prompting to report bugs"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "Allow popup on YouTube pages"
    },
 
    "github_page": {
