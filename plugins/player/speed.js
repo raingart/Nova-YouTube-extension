@@ -6,18 +6,20 @@ _plugins_conteiner.push({
    desc: 'Use mouse wheel to change speed of video',
    _runtime: user_settings => {
 
+      const SELECTOR_ID = 'rate-player-info';
+
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(videoPlayer => {
             videoPlayer.addEventListener('onPlaybackRateChange', rate => {
                // console.debug('onPlaybackRateChange', rate);
-               HUD.update(rate);
+               HUD.set(rate);
             });
             // html5 way
             // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
             // videoPlayer.querySelector('video')
             //    .addEventListener('ratechange', function (event) {
             //       console.debug('ratechange', this.playbackRate);
-            //       HUD.update(this.playbackRate)
+            //       HUD.set(this.playbackRate)
             //    });
 
             // mousewheel in player area
@@ -39,17 +41,16 @@ _plugins_conteiner.push({
                         const rateToSet = setPlaybackRate.set(delta);
                         // console.debug('rateToSet', rateToSet);
                         if (rateToSet === false) return console.error('Error rateToSet');
-                        HUD.update(rateToSet);
+                        HUD.set(rateToSet);
                      }
                   }
                });
 
             // hide default indicator
-            if (!user_settings['volume-hud'] // indicator is common
+            if (!user_settings['volume-indicator'] // indicator is common
                // default indicator does not work for html5
                && (user_settings.player_disable_bezel || user_settings.player_rate_html5)) {
-               [...document.querySelectorAll('.ytp-bezel-text-wrapper')]
-                  .forEach(bezel => bezel.style.display = 'none');
+               YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
             }
 
             const setPlaybackRate = {
@@ -114,34 +115,31 @@ _plugins_conteiner.push({
          });
 
       const HUD = {
-         get() {
-            const hudName = 'rate-player-info';
-            return document.getElementById(hudName) || (function () {
-               const div = document.createElement("div");
-               div.id = hudName;
-               Object.assign(div.style, {
-                  'background-color': 'rgba(0,0,0,0.3)',
-                  color: '#fff',
-                  opacity: 0,
-                  'font-size': '1.6em',
-                  left: 0,
-                  padding: '.4em 0',
-                  position: 'absolute',
-                  'text-align': 'center',
-                  top: 'auto',
-                  width: '100%',
-                  'z-index': '19',
-               });
-               document.getElementById('movie_player').appendChild(div);
-               return div;
-            })();
+         create() {
+            const div = document.createElement("div");
+            div.id = SELECTOR_ID;
+            Object.assign(div.style, {
+               'background-color': 'rgba(0,0,0,0.3)',
+               color: '#fff',
+               opacity: 0,
+               'font-size': '1.6em',
+               left: 0,
+               padding: '.4em 0',
+               position: 'absolute',
+               'text-align': 'center',
+               top: 'auto',
+               width: '100%',
+               'z-index': '19',
+            });
+            document.getElementById('movie_player').appendChild(div);
+            return div;
          },
 
-         update(text) {
+         set(text) {
             if (!user_settings.player_disable_bezel) return;
             if (typeof fateRateHUD !== 'undefined') clearTimeout(fateRateHUD);
 
-            const hud = this.get();
+            const hud = document.getElementById(SELECTOR_ID) || this.create();
             hud.textContent = text + 'x';
             hud.style.transition = 'none';
             hud.style.opacity = 1;

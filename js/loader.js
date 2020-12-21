@@ -44,7 +44,7 @@ const App = {
                if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
                console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose\`);
 
-               if (${options?.report_issues})
+               if (${options?.report_issues ? true : false})
                   _pluginsCaptureException({
                      'trace_name': 'unhandledrejection',
                      'err_stack': err.reason.stack,

@@ -15,12 +15,12 @@ _plugins_conteiner.push({
    // desc: '',
    _runtime: user_settings => {
 
+      const
+         CLASS_VALUE = 'video-pinned',
+         PINNED_SELECTOR = '.' + CLASS_VALUE;
+
       YDOM.HTMLElement.wait('#movie_player')
          .then(videoPlayer => {
-            const
-               CLASS_VALUE = 'video-pinned',
-               PINNED_SELECTOR = '.' + CLASS_VALUE;
-
             let intervalStyle = setInterval(() => {
                if (videoPlayer.scrollWidth && videoPlayer.scrollHeight) {
                   clearInterval(intervalStyle);

@@ -6,9 +6,10 @@ _plugins_conteiner.push({
    desc: 'Displayed on long pages',
    _runtime: user_settings => {
 
+      const SELECTOR_ID = 'scrollToTop_btn';
+
       YDOM.HTMLElement.wait('body')
          .then(() => {
-            const SELECTOR_ID = 'scrollToTop_btn';
             // create btn
             let btn = document.createElement('button');
             btn.id = SELECTOR_ID;

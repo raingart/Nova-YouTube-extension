@@ -6,23 +6,26 @@ _plugins_conteiner.push({
    // desc: '',
    _runtime: user_settings => {
 
+      const
+         SELECTOR_ID = 'volume-player-info',
+         COLOR_HUD = user_settings.volume_indicator_color || '#ddd';
+
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(videoPlayer => {
             // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
             videoPlayer.querySelector('video')
-               .addEventListener("volumechange", () => updateHUD(videoPlayer.getVolume()));
+               .addEventListener("volumechange", () => HUD.set(videoPlayer.getVolume()));
          });
 
-      // hide default indicator
-      [...document.querySelectorAll('[class^="ytp-bezel"]')] // also hide ytp-bezel-icon
-         .forEach(bezel => bezel.style.display = 'none');
+      // hide default indicator and ytp-bezel-icon
+      YDOM.HTMLElement.addStyle('[class^="ytp-bezel"] { display:none !important }');
 
-      function getHUD() {
-         const SELECTOR_ID = 'volume-player-info';
-         return document.getElementById(SELECTOR_ID) || (function () {
+      const HUD = {
+         create() {
             const div = document.createElement("div");
             div.id = SELECTOR_ID;
-            Object.assign(div.style, {
+            // init common css
+            YDOM.HTMLElement.addStyle({
                'background-color': 'rgba(0,0,0,0.3)',
                color: '#fff',
                opacity: 0,
@@ -31,75 +34,79 @@ _plugins_conteiner.push({
                right: 0,
                margin: '0 auto',
                'text-align': 'center',
-               'line-height': '1.5em',
                'z-index': '19',
-            });
-            document.getElementById('movie_player').appendChild(div);
-            return div;
-         })();
-      }
+            }, '#' + SELECTOR_ID);
 
-      function updateHUD(pt) {
-         if (typeof fateVolumeHUD !== "undefined") clearTimeout(fateVolumeHUD);
-
-         const hud = getHUD();
-
-         switch (user_settings.volume_indicator) {
-            case 'bar-smooth':
-               Object.assign(hud.style, {
-                  bottom: '20%',
-                  width: '30%',
-               });
-
-               const progressBar = hud.querySelector('span') || (function () {
+            switch (user_settings.volume_indicator) {
+               case 'bar-smooth':
+                  Object.assign(div.style, {
+                     bottom: '20%',
+                     width: '30%',
+                     'font-size': '1.2em',
+                  });
+                  // div.innerHTML = '<span></span>';
                   const span = document.createElement("span");
+                  span.innerHTML = '&nbsp;';
                   Object.assign(span.style, {
-                     'background-color': user_settings.volume_indicator_color,
+                     'background-color': COLOR_HUD,
                      transition: 'width 100ms ease-out 0s',
                      display: 'inline-block',
                      float: 'left',
                   });
-                  hud.appendChild(span);
-                  return span;
-               })();
-               progressBar.style.width = pt + '%';
-               // progressBar.textContent = Math.round(pt) + '%';
-               progressBar.innerHTML = '&nbsp;';
-               break;
+                  div.appendChild(span);
+                  break;
 
-            case 'bar-pt':
-               const color = user_settings.volume_indicator_color;
-               // hud.style.background = `linear-gradient(to right, ${color}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
-               Object.assign(hud.style, {
-                  'background': `linear-gradient(to right, ${color}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`,
-                  bottom: '20%',
-                  width: '30%',
-                  'font-size': '1.2em',
-               });
-               hud.textContent = Math.round(pt) + '%';
-               break;
+               case 'bar-pt':
+                  Object.assign(div.style, {
+                     bottom: '20%',
+                     width: '30%',
+                     'font-size': '1.2em',
+                  });
+                  break;
 
-            // case 'text':
-            default:
-               Object.assign(hud.style, {
-                  top: '0',
-                  width: '100%',
-                  'font-size': '1.5em',
-                  'line-height': '2em',
-               });
-               hud.textContent = Math.round(pt) + '%';
+               case 'text':
+                  Object.assign(div.style, {
+                     top: '0',
+                     width: '100%',
+                     'font-size': '1.5em',
+                     'line-height': '2em',
+                  });
+            }
+            document.getElementById('movie_player').appendChild(div);
+            return div;
+         },
+
+         set(pt) {
+            // console.debug('pt', pt);
+            if (typeof fateVolumeHUD !== "undefined") clearTimeout(fateVolumeHUD);
+
+            const hud = document.getElementById(SELECTOR_ID) || this.create();
+
+            switch (user_settings.volume_indicator) {
+               case 'bar-smooth':
+                  hud.querySelector('span').style.width = Math.round(pt) + '%';
+                  break;
+
+               case 'bar-pt':
+                  hud.style.background = `linear-gradient(to right, ${COLOR_HUD}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
+                  hud.textContent = Math.round(pt) + '%';
+                  break;
+
+               case 'text':
+                  hud.textContent = Math.round(pt) + '%';
+            }
+
+            // hud.textContent = Math.round(pt) + '%';
+            hud.style.transition = 'none';
+            hud.style.opacity = 1;
+            // hud.style.visibility = 'visibility';
+
+            fateVolumeHUD = setTimeout(() => {
+               hud.style.transition = 'opacity 200ms ease-in';
+               hud.style.opacity = 0;
+               // hud.style.visibility = 'hidden';
+            }, 800); //200ms(hud.style.transition) + 800ms = 1s
          }
-
-         // hud.textContent = Math.round(pt) + '%';
-         hud.style.transition = 'none';
-         hud.style.opacity = 1;
-         // hud.style.visibility = 'visibility';
-
-         fateVolumeHUD = setTimeout(() => {
-            hud.style.transition = 'opacity 200ms ease-in';
-            hud.style.opacity = 0;
-            // hud.style.visibility = 'hidden';
-         }, 800); //200ms(hud.style.transition) + 800ms = 1s
       };
 
    },

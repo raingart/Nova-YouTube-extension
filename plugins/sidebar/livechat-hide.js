@@ -22,8 +22,8 @@ _plugins_conteiner.push({
          _tagName: 'select',
          label: 'Type hide',
          options: [
-            { label: 'remove', value: 'disable', selected: true },
-            { label: 'collapse', value: 'collapse' },
+            { label: 'collapse', value: 'collapse', selected: true },
+            { label: 'remove', value: 'disable' },
          ]
       },
    },

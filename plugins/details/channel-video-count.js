@@ -8,7 +8,10 @@ _plugins_conteiner.push({
    desc: 'Total number of videos on channel',
    _runtime: user_settings => {
 
-      const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
+      const
+         CACHE_PREFIX = 'channel-video-count_',
+         SELECTOR_ID = 'video_count',
+         isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
       // watch page
       YDOM.HTMLElement.wait('#upload-info #channel-name a[href]')
@@ -47,7 +50,6 @@ _plugins_conteiner.push({
 
       function insertStatistic({ html_container, channel_id }) {
          // console.debug('insertStatistic:', ...arguments);
-         const CACHE_PREFIX = 'channel-video-count_';
 
          if (!channel_id || !isChannelId(channel_id)) return;
          // if (!channel_id || !isChannelId(channel_id)) {
@@ -73,22 +75,21 @@ _plugins_conteiner.push({
                .then(res => {
                   res.items.forEach(item => {
                      const videoCount = item.statistics.videoCount;
+                     insertToHTML(videoCount);
                      // save cache in tabs
                      sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
-                     insertToHTML(videoCount);
                   });
                });
          }
 
          function insertToHTML(text) {
-            const SELECTOR_ID = 'video_count';
-            const boxHTML = html_container.getElementById(SELECTOR_ID) || (function () {
+            const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
                   + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
-               return html_container.getElementById(SELECTOR_ID);
+               return document.getElementById(SELECTOR_ID);
             })();
-            if (boxHTML) boxHTML.textContent = text;
+            boxHTML.textContent = text;
          }
 
       }
