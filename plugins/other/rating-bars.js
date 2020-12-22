@@ -10,7 +10,7 @@ _plugins_conteiner.push({
       const
          CACHED_TIME = 8, // hours
          SELECTOR_ID = 'ratio-rate-line',
-         CACHE_NAME = 'ratings',
+         CACHE_NAME = 'ratings-thumbnail',
          ATTR_MARK = 'timestamps-rated',
          colorLiker = user_settings.ratio_like_color || '#3ea6ff',
          colorDislike = user_settings.ratio_dislike_color || '#ddd';
@@ -29,27 +29,14 @@ _plugins_conteiner.push({
       let thumbCollector = [];
       let newCache = {};
 
-      document.addEventListener('yt-action', event => {
-         if (event.detail?.actionName != 'yt-store-grafted-ve-action') return;
-
-         [...document.querySelectorAll('a#thumbnail[href]:not([' + ATTR_MARK + ']')]
-            .forEach(thumbnail => {
-               if (thumbnail.hasAttribute(ATTR_MARK)) return;
-               thumbnail.setAttribute(ATTR_MARK, true);
-
-               const id = YDOM.getURLParams(thumbnail.href).get('v');
-               id && thumbCollector.push(id);
-            });
+      YDOM.HTMLElement.watch({
+         selector: 'a#thumbnail[href]',
+         attr_mark: 'timestamps-rated',
+         callback: thumbnail => {
+            const id = YDOM.getURLParams(thumbnail.href).get('v');
+            id && thumbCollector.push(id);
+         },
       });
-
-      // YDOM.HTMLElement.watch({
-      //    selector: 'a#thumbnail[href]',
-      //    attr_mark: 'timestamps-rated',
-      //    callback: thumbnail => {
-      //       const id = YDOM.getURLParams(thumbnail.href).get('v');
-      //       id && thumbCollector.push(id);
-      //    },
-      // });
 
       // chack update new thumbnail
       setInterval(() => {
@@ -84,13 +71,14 @@ _plugins_conteiner.push({
          // console.debug('find thumbnail', ...arguments);
          thumbCollector = []; // clear
          let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));
-         const timeNow = new Date();
+         const timeNow = new Date().getTime();
 
          const newIds = video_ids.filter(id => {
             if (oldCache?.hasOwnProperty(id)) {
                const cacheItem = oldCache[id],
                   cacheDate = new Date(+cacheItem?.date),
                   timeExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
+               // console.debug(timeNow, timeExpires);
                if (timeNow < timeExpires) {
                   // console.debug('cached', id);
                   attachBar({ 'id': id, 'pt': cacheItem.pt });
@@ -123,7 +111,6 @@ _plugins_conteiner.push({
                   api_key: user_settings['custom-api-key'],
                })
                   .then(res => {
-                     let timeNow = new Date().getTime();
                      res.items.forEach(item => {
                         // console.debug('item', item);
                         const
@@ -133,17 +120,18 @@ _plugins_conteiner.push({
                            total = likes + dislikes;
 
                         let percent = Math.floor(likes / total * 100);
+                        let timeNow = new Date();
 
-                        // filter small values
+                        // show more than the min value
                         if (views > 5 && total > 3) {
                            attachBar({ 'id': item.id, 'pt': percent });
                            // console.debug('requestRating > attachBar', item.id);
                         } else {
                            percent = undefined; // do not display
-                           timeNow = timeNow.setHours(timeNow.getHours() - CACHED_TIME + 1); // cache for 1 hour
+                           timeNow = timeNow.setHours(timeNow.getHours() - (CACHED_TIME - 1)); // cache for 1 hour
                         }
                         // push to cache
-                        newCache[item.id] = { 'date': timeNow, 'pt': percent };
+                        newCache[item.id] = { 'date': new Date(timeNow).getTime(), 'pt': percent };
                      });
                   });
             });

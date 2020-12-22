@@ -98,7 +98,7 @@ _plugins_conteiner.push({
                   };
                   return calculateAspectRatioFit(
                      size.width, size.height,
-                     (window.innerWidth / playerRatio), (window.innerWidth / playerRatio)
+                     (window.innerWidth / playerRatio), (window.innerHeight / playerRatio)
                   );
                })();
 

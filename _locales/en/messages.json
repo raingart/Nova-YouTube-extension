@@ -3,13 +3,11 @@
       "message": "en"
    },
    "app_description": {
-      "message": "Combine plugins, expanding the horizons of YouTube™"
+      "message": "Combine plugins to make the YouTube™ experience better"
    },
-
    "plugins_search_placeholder": {
       "message": "filter..."
    },
-
    "opt_btn_save_settings": {
       "message": "Save"
    },
@@ -21,6 +19,12 @@
    },
    "opt_btn_save_settings_tooltip": {
       "message": "Open tabs don't change"
+   },
+   "opt_btn_api_key_input": {
+      "message": "custom Youtube API key"
+   },
+   "opt_api_key_generate": {
+      "message": "Generate API key"
    },
    "opt_disable_in_frame": {
       "message": "Disable processing in iframe"
@@ -34,7 +38,6 @@
    "opt_report_issues_tooltip": {
       "message": "Allow popup on YouTube pages"
    },
-
    "github_page": {
       "message": "Source Code"
    },
@@ -47,7 +50,6 @@
    "github_page_issues_tooltip": {
       "message": "To Report"
    },
-
    "donate_tooltip": {
       "message": "Support with Patreon"
    },

@@ -17,8 +17,9 @@ _plugins_conteiner.push({
                .addEventListener("volumechange", () => HUD.set(videoPlayer.getVolume()));
          });
 
+      YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
       // hide default indicator and ytp-bezel-icon
-      YDOM.HTMLElement.addStyle('[class^="ytp-bezel"] { display:none !important }');
+      // YDOM.HTMLElement.addStyle('[class^="ytp-bezel"] { display:none !important }');
 
       const HUD = {
          create() {

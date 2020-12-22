@@ -4,6 +4,8 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
+      // 'other/-test.js',
+
       'player/ad-skip-button.js',
       'player/speed.js',
       'player/volume.js',
@@ -23,11 +25,13 @@ const Plugins = {
       'other/rating-bars.js',
       'other/normalize-video-title.js',
       'other/thumbnail-clear.js',
+      // 'other/wake-up.js',
 
       'details/expand-description.js',
       'details/channel-video-count.js',
 
       'comments/disable-comments.js',
+      'comments/expand-comments.js',
 
       'sidebar/livechat-hide.js',
 

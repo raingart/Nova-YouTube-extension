@@ -28,13 +28,13 @@ _plugins_conteiner.push({
                   if (!videoPlayer.hasOwnProperty('getPlaybackRate')) return console.error('Error getPlaybackRate ');
                   event.preventDefault();
 
-                  if (user_settings.player_rate_hotkey && (
-                     event[user_settings.player_rate_hotkey] ||
-                     (
-                        user_settings.player_rate_hotkey == 'none' &&
-                        !event.ctrlKey && !event.altKey && !event.shiftKey
+                  if (user_settings.player_rate_hotkey
+                     && (
+                        event[user_settings.player_rate_hotkey]
+                        || (user_settings.player_rate_hotkey == 'none'
+                           && !event.ctrlKey && !event.altKey && !event.shiftKey)
                      )
-                  )) {
+                  ) {
                      // console.debug('hotkey caught');
                      if (!user_settings.player_rate_html5) {
                         const delta = Math.sign(event.wheelDelta);
@@ -158,6 +158,7 @@ _plugins_conteiner.push({
       'default_playback_rate': {
          _tagName: 'input',
          label: 'Speed at startup',
+         // label: 'Default speedup playback rate',
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',
@@ -173,7 +174,8 @@ _plugins_conteiner.push({
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
-            { label: 'wheel', value: 'none' }
+            { label: 'wheel', value: 'none' },
+            { label: 'off', value: false },
          ]
       },
       'player_rate_html5': {
