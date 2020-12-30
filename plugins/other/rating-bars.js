@@ -11,7 +11,6 @@ _plugins_conteiner.push({
          CACHED_TIME = 8, // hours
          SELECTOR_ID = 'ratio-rate-line',
          CACHE_NAME = 'ratings-thumbnail',
-         ATTR_MARK = 'timestamps-rated',
          colorLiker = user_settings.ratio_like_color || '#3ea6ff',
          colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
@@ -161,10 +160,9 @@ _plugins_conteiner.push({
          type: 'number',
          placeholder: '1-9',
          title: 'In pixels',
-         step: 1,
          min: 1,
          max: 9,
-         value: 2,
+         value: 3,
       },
       'ratio_like_color': {
          _tagName: 'input',

@@ -33,4 +33,4 @@ The extension is based on plugin files. The remaining files only serve them.
 - [/plugins/ytc_lib.js](https://github.com/raingart/New-Horizons-for-YouTube-extension/blob/master/plugins/ytc_lib.js) - library for related functions in all plugins.
 - [/plugins/](https://github.com/raingart/New-Horizons-for-YouTube-extension/tree/master/plugins) - directory of all ilagins and files available for connection to the YouTube page.
 
-![plugin file example](https://github.com/raingart/New-Horizons-for-YouTube-extension/blob/master/plugins/_blank_plugin.js)
+[plugin file example](https://github.com/raingart/New-Horizons-for-YouTube-extension/blob/master/plugins/_blank_plugin.js)

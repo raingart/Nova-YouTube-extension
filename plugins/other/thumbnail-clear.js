@@ -7,7 +7,7 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       YDOM.HTMLElement.watch({
-         selector: 'a#thumbnail img[src]',
+         selector: '#thumbnail #img[src]',
          attr_mark: 'timestamps-updated',
          callback: img => {
             const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;

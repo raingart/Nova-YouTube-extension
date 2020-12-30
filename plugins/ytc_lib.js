@@ -6,12 +6,16 @@ const YDOM = {
 
       wait(selector = required()) {
          YDOM.log('wait', ...arguments);
+
+         if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
+
          return new Promise(resolve => {
-            const el = document.querySelector(selector);
+            const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
             if (el) {
                YDOM.log('waited(1)', selector, el);
                return resolve(el);
             }
+            if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
             new MutationObserver((mutations, observer) => {
                mutations.forEach(mutation => {
@@ -33,6 +37,8 @@ const YDOM = {
 
       watch({ selector = required(), attr_mark, callback = required() }) {
          YDOM.log('watch', selector);
+         if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
+
          process(); // launch not wait
 
          setInterval(process, 1000 * 1.5); // 1.5 sec
@@ -43,6 +49,7 @@ const YDOM = {
                .forEach(el => {
                   YDOM.log('viewed', selector);
                   if (attr_mark) el.setAttribute(attr_mark, true);
+                  if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
                   callback(el);
                });
          }
@@ -68,7 +75,8 @@ const YDOM = {
                return `{ ${css} }`;
             }
 
-         } else injectCss(css);
+         } else if (typeof css === 'string') injectCss(css);
+         else console.error('addStyle > css:', typeof css);
 
          function injectCss(source = required()) {
             let sheet;
@@ -166,10 +174,11 @@ const YDOM = {
             .catch(error => {
                localStorage.removeItem('YOUTUBE_API_KEYS');
                console.error(`Request API failed:${URL}\n${error}`);
-               alert('Problems with the YouTube API.\n'
+               alert('Problems with the YouTube API:'
                   + '\n' + error?.message
-                  + '\n1. Disconnect the plugins that need it'
-                  + '\n2. Or generate and add your YouTube API KEY');
+                  + '\n\nIf this error is repeated:'
+                  + '\n - Disconnect the plugins that need it'
+                  + '\n - Update your YouTube API KEY');
             });
       },
 

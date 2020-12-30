@@ -17,9 +17,8 @@ _plugins_conteiner.push({
                .addEventListener("volumechange", () => HUD.set(videoPlayer.getVolume()));
          });
 
+      // hide default indicator
       YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
-      // hide default indicator and ytp-bezel-icon
-      // YDOM.HTMLElement.addStyle('[class^="ytp-bezel"] { display:none !important }');
 
       const HUD = {
          create() {
@@ -79,7 +78,7 @@ _plugins_conteiner.push({
 
          set(pt) {
             // console.debug('pt', pt);
-            if (typeof fateVolumeHUD !== "undefined") clearTimeout(fateVolumeHUD);
+            if (typeof fateVolumeHUD === 'number') clearTimeout(fateVolumeHUD);
 
             const hud = document.getElementById(SELECTOR_ID) || this.create();
 
@@ -106,7 +105,7 @@ _plugins_conteiner.push({
                hud.style.transition = 'opacity 200ms ease-in';
                hud.style.opacity = 0;
                // hud.style.visibility = 'hidden';
-            }, 800); //200ms(hud.style.transition) + 800ms = 1s
+            }, 800); //total 1s = 800ms + 200ms(hud.style.transition)
          }
       };
 

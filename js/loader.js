@@ -13,7 +13,7 @@ const App = {
    },
 
    rerun() {
-      App.log('page transition');
+      App.log('page transition', location.href);
       this.run(true);
    },
 
@@ -23,36 +23,10 @@ const App = {
          App.log('storage.set:', options);
          App.sessionSettings = options;
          // in the iframe
-         if (options?.disable_in_frame && top !== self) return console.warn('processed in the frame disable');
-
-         const reflectException = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
-            if (confirm(confirm_msg || 'Error in New Horizons for YouTube™. Open popup to report the bug?')) {
-               window.open(
-                  'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
-                  + '?entry.35504208=' + encodeURIComponent(trace_name)
-                  + '&entry.151125768=' + encodeURIComponent(err_stack)
-                  + '&entry.744404568=' + encodeURIComponent(location.href)
-                  + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent)
-                  , '_blank');
-            }
-         };
-
-         // capture promise exception
-         Plugins.injectScript(
-            `const _pluginsCaptureException = ${reflectException};
-            window.addEventListener('unhandledrejection', err => {
-               if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
-               console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose\`);
-
-               if (${options?.report_issues ? true : false})
-                  _pluginsCaptureException({
-                     'trace_name': 'unhandledrejection',
-                     'err_stack': err.reason.stack,
-                     'app_ver': '${chrome.runtime.getManifest().version}',
-                     'confirm_msg': \`Failure when async-call of one Horizons for YouTube™ plugin.\n\nOpen tab to report the bug?\`,
-                  });
-            });`);
-
+         if (options?.disable_in_frame && window.self !== window.top) {
+            return console.warn('processed in the frame disable');
+         }
+         App.reflectException();
          App.run();
       },
 
@@ -96,7 +70,7 @@ const App = {
          processLander();
       }, 1000 * 5); // 5sec
 
-      let plugins_lander = setInterval(() => {
+      let interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
 
          if (!domLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
@@ -114,7 +88,7 @@ const App = {
 
       function processLander() {
          console.debug('loaded:', _plugins_conteiner.length + '/' + plugins_count);
-         clearInterval(plugins_lander);
+         clearInterval(interval_lander);
          plugins_executor({
             'user_settings': user_settings,
             'app_ver': app_ver,
@@ -123,6 +97,36 @@ const App = {
             // 'plugins': _plugins_conteiner,
          });
       }
+   },
+
+   reflectException() {
+      const senderException = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
+         if (confirm(confirm_msg || 'Error in New Horizons for YouTube™. Open popup to report the bug?')) {
+            window.open(
+               'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
+               + '?entry.35504208=' + encodeURIComponent(trace_name)
+               + '&entry.151125768=' + encodeURIComponent(err_stack)
+               + '&entry.744404568=' + encodeURIComponent(location.href)
+               + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent)
+               , '_blank');
+         }
+      };
+
+      // capture promise exception
+      Plugins.injectScript(
+         `const _pluginsCaptureException = ${senderException};
+         window.addEventListener('unhandledrejection', err => {
+            if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+            console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose\`);
+
+            if (${App.sessionSettings?.report_issues ? true : false})
+               _pluginsCaptureException({
+                  'trace_name': 'unhandledrejection',
+                  'err_stack': err.reason.stack,
+                  'app_ver': '${chrome.runtime.getManifest().version}',
+                  'confirm_msg': \`Failure when async-call of one Horizons for YouTube™ plugin.\n\nOpen tab to report the bug?\`,
+               });
+         });`);
    },
 
    log(...args) {

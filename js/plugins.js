@@ -25,6 +25,7 @@ const Plugins = {
       'other/rating-bars.js',
       'other/normalize-video-title.js',
       'other/thumbnail-clear.js',
+      'other/default-tab.js',
       // 'other/wake-up.js',
 
       'details/expand-description.js',
@@ -34,8 +35,6 @@ const Plugins = {
       'comments/expand-comments.js',
 
       'sidebar/livechat-hide.js',
-
-      'other/default-tab.js',
    ],
 
    load(list) {
@@ -84,14 +83,8 @@ const Plugins = {
          logTableStatus,
          logTableTime;
 
-      // if (is_new_url) {
-      //    plugins = plugins.filter(plugin => plugin.run_on_transition);
-      // }
-
       // console.groupCollapsed('plugins status');
-      // plugins.forEach(plugin => {
-      for (const i in _plugins_conteiner) {
-         const plugin = _plugins_conteiner[i];
+      _plugins_conteiner.forEach(plugin => {
          const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());
          // reset logTable
          logTableTime = 0;
@@ -140,8 +133,7 @@ const Plugins = {
             'name': plugin?.name || plugin?.id,
             'time init (ms)': logTableTime,
          });
-      }
-      // });
+      });
       console.table(logTableArray);
       console.groupEnd('plugins status');
 

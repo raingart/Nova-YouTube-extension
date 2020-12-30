@@ -35,10 +35,10 @@ _plugins_conteiner.push({
             attr_mark: ATTR_MARK,
             callback: title => {
                let counterUpperCase = 0;
-               const normalizedText = title.textContent.replace(UpperCaseLetterRegex, word => {
-                  // console.debug('word', word);
+               const normalizedText = title.textContent.replace(UpperCaseLetterRegex, match => {
+                  // console.debug('match', match);
                   counterUpperCase++;
-                  return word.toLowerCase();
+                  return match.toLowerCase();
                });
 
                // Upper case

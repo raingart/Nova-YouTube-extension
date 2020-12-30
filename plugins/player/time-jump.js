@@ -32,7 +32,7 @@ _plugins_conteiner.push({
             timeOut = () => setTimeout(() => isDoublePress = false, 500),
             handleDoublePresss = key => {
                // console.debug(key.key, 'pressed two times');
-               if (callback && typeof (callback) === 'function') return callback(key);
+               if (callback && typeof callback === 'function') return callback(key);
             };
 
          function keyPress(key) {
@@ -60,8 +60,7 @@ _plugins_conteiner.push({
          type: 'number',
          title: 'sec',
          placeholder: 'sec',
-         step: 1,
-         min: 1,
+         min: 3,
          max: 300,
          value: 30,
       },

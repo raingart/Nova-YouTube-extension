@@ -100,6 +100,7 @@ _plugins_conteiner.push({
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'alt+wheel', value: 'altKey' },
+            { label: 'off', value: false },
          ]
       },
    },

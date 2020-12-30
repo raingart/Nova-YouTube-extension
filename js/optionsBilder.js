@@ -16,16 +16,17 @@ const Opt = {
          && (!plugin.run_on_transition || 'boolean' === typeof plugin.run_on_transition)
          && (!plugin.opt_api_key_warn  || 'boolean' === typeof plugin.opt_api_key_warn)
          && (!plugin.opt_export        || 'object' === typeof plugin.opt_export)
-         && (!plugin.desc              || 'string' === typeof plugin.desc)
+         && (!plugin.desc              || 'string' === typeof plugin.desc);
+
       if (!isValid) {
          console.error('plugin invalid:\n', {
             id: plugin.id,
             depends_on_pages:    plugin.depends_on_pages?.split(',').length,
-            opt_section:         plugin.opt_section?.split(' ').length === 1  || undefined,
+            opt_section:         plugin.opt_section?.split(' ').length === 1   || undefined,
             run_on_transition:   'boolean' === typeof plugin.run_on_transition || undefined,
-            opt_api_key_warn:    'boolean' === typeof plugin.opt_api_key_warn || undefined,
-            desc:                'string' === typeof plugin.desc              || undefined,
-            opt_export:          'object' === typeof plugin.opt_export        || undefined,
+            opt_api_key_warn:    'boolean' === typeof plugin.opt_api_key_warn  || undefined,
+            desc:                'string' === typeof plugin.desc               || undefined,
+            opt_export:          'object' === typeof plugin.opt_export         || undefined,
             _runtime:            'function' === typeof plugin._runtime,
          });
       }

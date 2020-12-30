@@ -137,7 +137,7 @@ _plugins_conteiner.push({
 
          set(text) {
             if (!user_settings.player_disable_bezel) return;
-            if (typeof fateRateHUD !== 'undefined') clearTimeout(fateRateHUD);
+            if (typeof fateRateHUD === 'number') clearTimeout(fateRateHUD);
 
             const hud = document.getElementById(SELECTOR_ID) || this.create();
             hud.textContent = text + 'x';
@@ -149,7 +149,7 @@ _plugins_conteiner.push({
                hud.style.transition = 'opacity 200ms ease-in';
                hud.style.opacity = 0;
                // hud.style.visibility = 'hidden';
-            }, 800); //200ms + 800ms = 1s
+            }, 800); //total 1s = 800ms + 200ms(hud.style.transition)
          }
       };
 
