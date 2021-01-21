@@ -174,11 +174,11 @@ const YDOM = {
             .catch(error => {
                localStorage.removeItem('YOUTUBE_API_KEYS');
                console.error(`Request API failed:${URL}\n${error}`);
-               alert('Problems with the YouTube API:'
-                  + '\n' + error?.message
-                  + '\n\nIf this error is repeated:'
-                  + '\n - Disconnect the plugins that need it'
-                  + '\n - Update your YouTube API KEY');
+               // alert('Problems with the YouTube API:'
+               //    + '\n' + error?.message
+               //    + '\n\nIf this error is repeated:'
+               //    + '\n - Disconnect the plugins that need it'
+               //    + '\n - Update your YouTube API KEY');
             });
       },
 

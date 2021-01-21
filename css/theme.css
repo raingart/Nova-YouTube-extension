@@ -1,5 +1,6 @@
 :root {
    /* --bg: #1c1c1c; */
+   /* --bg: #C5C8D9; white*/
    /* --fg: slategrey; */
    --input-bg: #fff;
    --input-border: #cccccc;
@@ -38,7 +39,7 @@ body {
 
 body:after {
    bottom: 0;
-   box-shadow: inset 0 0 378px 119px rgba(0, 0, 0, 0.10);
+   box-shadow: inset 0 0 378px 119px rgba(0, 0, 0, .10);
    content: ' ';
    display: block;
    left: 0;

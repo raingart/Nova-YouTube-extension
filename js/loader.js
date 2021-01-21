@@ -77,7 +77,7 @@ const App = {
             return console.debug('waiting, page loading..');
          }
 
-         if (_plugins_conteiner.length === plugins_count) {
+         if (YDOM && _plugins_conteiner.length === plugins_count) {
             clearTimeout(forceLander);
             processLander();
          } else {

@@ -13,7 +13,15 @@ ul {
    padding-left: 1.5em;
 }
 
-label, button, input, select {
+input[type], textarea {
+   cursor: text;
+}
+
+input[type=submit],
+input[type=button],
+input[type=reset],
+input[type=checkbox],
+label, button, select {
    cursor: pointer;
 }
 
@@ -34,28 +42,13 @@ input:invalid, textarea:invalid, select:invalid {
 }
 
 button, input[type=submit], input[type=reset], input[type=button] {
-   display: inline-block;
-   cursor: pointer;
-   line-height: normal;
-   vertical-align: bottom;
-   /* color: #555; */
-   text-align: center;
    font-size: 11px;
    font-weight: 600;
    letter-spacing: .1rem;
    text-transform: uppercase;
-   text-decoration: none;
    white-space: nowrap;
    background-color: transparent;
-   border-radius: 2px;
-   /* border: 1px solid #bbb; */
-   box-sizing: border-box;
-   height: 35px;
-   width: max-content;
    padding: 0 20px;
-   line-height: 35px;
-   /* background-color: deepskyblue; */
-   /* border-color: deepskyblue; */
 }
 
 button:focus,
@@ -83,7 +76,7 @@ textarea:not([disabled]):not([readonly]):focus {
 
 [disabled] {
    opacity: .7;
-   cursor: default;
+   cursor: not-allowed;
    pointer-events: none;
 }
 
@@ -95,11 +88,6 @@ label, legend, textarea, iframe {
 
 legend {
    cursor: default;
-}
-
-label,
-legend {
-   font-weight: normal;
 }
 
 label, legend {

@@ -1,9 +1,9 @@
 
-// for test wide
+// for testing wide-screen video
 // www.youtube.com/watch?v=B4yuZhKRW1c
 // www.youtube.com/watch?v=zEk3A1fA0gc
 
-// anomaly page url:
+// for testing square-screen
 // www.youtube.com/watch?v=v-YQUCP-J8s
 // www.youtube.com/watch?v=ctMEGAcnYjI
 
@@ -19,21 +19,23 @@ _plugins_conteiner.push({
          CLASS_VALUE = 'video-pinned',
          PINNED_SELECTOR = '.' + CLASS_VALUE;
 
-      YDOM.HTMLElement.wait('#movie_player')
+      // YDOM.HTMLElement.wait('#movie_player')
+      YDOM.HTMLElement.wait('#movie_player video')
          .then(player => {
             // init css
             let interval_initStyle = setInterval(() => {
-               if (player.scrollWidth && player.scrollHeight) {
+               if (player.clientWidth && player.clientHeight
+                  && document.getElementById('masthead-container')?.offsetHeight) {
                   clearInterval(interval_initStyle);
                   createStyle(player);
                }
-            }, 500);
+            }, 500); // 500ms
 
             YDOM.HTMLElement.wait('#player-theater-container')
                .then(playerContainer => {
                   window.addEventListener('scroll', () => {
                      onScreenToggle({
-                        'switchElement': player,
+                        'switchElement': document.getElementById('movie_player'),
                         'watchingElement': playerContainer,
                      });
                   });
@@ -57,7 +59,17 @@ _plugins_conteiner.push({
          });
 
       function createStyle(player = required()) {
+         const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
+         const miniSize = calculateAspectRatioFit({
+            'srcWidth': player.clientWidth,
+            'srcHeight': player.clientHeight,
+            'maxWidth': (window.innerWidth / user_settings.pin_player_size_ratio),
+            'maxHeight': (window.innerHeight / user_settings.pin_player_size_ratio)
+         });
+
          let initcss = {
+            width: miniSize.width + 'px',
+            height: miniSize.height + 'px',
             position: 'fixed',
             'z-index': 301,
             'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14),' +
@@ -68,12 +80,12 @@ _plugins_conteiner.push({
          // set pin_player_size_position
          switch (user_settings.pin_player_size_position) {
             case 'top-left':
-               initcss.top = document.getElementById('masthead-container')?.offsetHeight || 0;
+               initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.left = 0;
                break;
             case 'top-right':
-               initcss.top = document.getElementById('masthead-container')?.offsetHeight || 0;
-               initcss.right = 0;
+               initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
+               initcss.right = scrollbarWidth;
                break;
             case 'bottom-left':
                initcss.bottom = 0;
@@ -81,64 +93,39 @@ _plugins_conteiner.push({
                break;
             case 'bottom-right':
                initcss.bottom = 0;
-               initcss.right = 0;
+               initcss.right = scrollbarWidth;
                break;
          }
-
-         let size = {
-            // width: player.clientWidth,
-            // height: player.clientHeight,
-            width: player.scrollWidth,
-            height: player.scrollHeight,
-         };
-
-         size.calc = (function () {
-            // window.innerWidth >= window.parent.screen.width * playerRatio
-            const playerRatio = user_settings.pin_player_size_ratio;
-            const calculateAspectRatioFit = (srcWidth, srcHeight, maxWidth, maxHeight) => {
-               const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-               return {
-                  width: Math.round(srcWidth * ratio),
-                  height: Math.round(srcHeight * ratio),
-               };
-            };
-            return calculateAspectRatioFit(
-               size.width, size.height,
-               (window.innerWidth / playerRatio), (window.innerHeight / playerRatio)
-            );
-         })();
-
-         // restore original player size. Try to fix a bug with unpin player
-         player.style.width = Math.max(player.clientWidth, player.scrollWidth);
-         // player.style.height = size.height;
-
-         // add calc size
-         initcss.width = size.calc.width + 'px';
-         initcss.height = size.calc.height + 'px';
 
          // apply css
          YDOM.HTMLElement.addStyle(initcss, PINNED_SELECTOR, 'important');
 
-         // fix video tag
-         YDOM.HTMLElement.addStyle(
-            `${PINNED_SELECTOR} video {
-                  width: ${initcss.width};
-                  height: ${initcss.height};
-                  left: 0 !important;
-               }`);
-
          // fix control-player panel
          YDOM.HTMLElement.addStyle(
             `${PINNED_SELECTOR} .ytp-chrome-bottom {
-                  width: ${initcss.width};
-                  left: 0 !important;
-               }
-               ${PINNED_SELECTOR} .ytp-preview,
-               ${PINNED_SELECTOR} .ytp-scrubber-container,
-               ${PINNED_SELECTOR} .ytp-hover-progress,
-               ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important }
-               ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }`);
+               width: ${initcss.width} !important;
+            }
+            ${PINNED_SELECTOR} .ytp-preview,
+            ${PINNED_SELECTOR} .ytp-scrubber-container,
+            ${PINNED_SELECTOR} .ytp-hover-progress,
+            ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important }
+            ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }`);
+
+         // fix video size
+         YDOM.HTMLElement.addStyle(
+            `${PINNED_SELECTOR} video {
+                  width: ${initcss.width} !important;
+                  height: ${initcss.height} !important;
+               }`);
       }
+
+      function calculateAspectRatioFit({ srcWidth, srcHeight, maxWidth, maxHeight }) {
+         const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+         return {
+            width: Math.round(srcWidth * ratio),
+            height: Math.round(srcHeight * ratio),
+         };
+      };
 
       function onScreenToggle({ switchElement, watchingElement }) {
          // console.debug('onScreenToggle:', ...arguments);

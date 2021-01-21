@@ -17,7 +17,7 @@ _plugins_conteiner.push({
       YDOM.HTMLElement.wait('#upload-info #channel-name a[href]')
          .then(link => {
             // console.debug('watch page');
-            YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not(:empty)')
+            YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not([hidden]):not(:empty)')
                .then(el => {
                   insertStatistic({
                      'html_container': el,
@@ -73,7 +73,7 @@ _plugins_conteiner.push({
                api_key: user_settings['custom-api-key']
             })
                .then(res => {
-                  res.items.forEach(item => {
+                  res?.items?.forEach(item => {
                      const videoCount = item.statistics.videoCount;
                      insertToHTML(videoCount);
                      // save cache in tabs
@@ -83,6 +83,7 @@ _plugins_conteiner.push({
          }
 
          function insertToHTML(text) {
+            // console.debug('insertToHTML', ...arguments);
             const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'

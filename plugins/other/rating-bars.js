@@ -110,7 +110,7 @@ _plugins_conteiner.push({
                   api_key: user_settings['custom-api-key'],
                })
                   .then(res => {
-                     res.items.forEach(item => {
+                     res?.items?.forEach(item => {
                         // console.debug('item', item);
                         const
                            views = parseInt(item.statistics.viewCount) || 0,

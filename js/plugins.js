@@ -74,7 +74,7 @@ const Plugins = {
       if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
-      const pageCurrect = (function () {
+      const currentPage = (function () {
          const page = location.pathname.split('/')[1];
          return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
       })();
@@ -84,6 +84,8 @@ const Plugins = {
          logTableTime;
 
       // console.groupCollapsed('plugins status');
+      console.log('currentPage:', currentPage);
+
       _plugins_conteiner.forEach(plugin => {
          const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());
          // reset logTable
@@ -100,8 +102,8 @@ const Plugins = {
          } else if (!user_settings.hasOwnProperty(plugin.id)) {
             logTableStatus = 'off';
 
-         } else if (pagesAllowList && pagesAllowList.includes(pageCurrect)
-            || (pagesAllowList.includes('all') && !pagesAllowList.includes('-' + pageCurrect))) {
+         } else if (pagesAllowList && pagesAllowList.includes(currentPage)
+            || (pagesAllowList.includes('all') && !pagesAllowList.includes('-' + currentPage))) {
             try {
                const startTableTime = performance.now();
                plugin.was_init = true;
@@ -110,7 +112,6 @@ const Plugins = {
                logTableStatus = true;
 
             } catch (err) {
-               alert(' plugins catch')
                console.groupEnd('plugins status'); // out-of-group display
                console.error(`[ERROR PLUGIN] ${plugin.name}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose`);
 

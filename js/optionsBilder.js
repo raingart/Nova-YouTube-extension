@@ -55,6 +55,7 @@ const Opt = {
                   `<a href="https://github.com/raingart/New-Horizons-for-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
                   (plugin.opt_api_key_warn ?
                      ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">⚠️</span></b> ' : '') +
+                     // ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">&#128273;</span></b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.opt_export) {

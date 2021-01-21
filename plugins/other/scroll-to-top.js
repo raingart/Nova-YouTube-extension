@@ -20,7 +20,7 @@ _plugins_conteiner.push({
                left: '20%',
                // display: 'none',
                visibility: 'hidden',
-               opacity: 0.5,
+               opacity: .5,
                width: '40%',
                height: '40px',
                border: 'none',
@@ -29,8 +29,8 @@ _plugins_conteiner.push({
                'z-index': 1,
                'border-radius': '100% 100% 0 0',
                'font-size': '16px',
-               'background-color': 'rgba(0,0,0,0.3)',
-               'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4)',
+               'background-color': 'rgba(0,0,0,.3)',
+               'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .4)',
             });
             btn.addEventListener('click', () => window.scrollTo({
                top: 0,
@@ -54,7 +54,11 @@ _plugins_conteiner.push({
             document.body.appendChild(btn);
 
             // btn hover style
-            YDOM.HTMLElement.addStyle(`#${SELECTOR_ID}:hover { opacity: 1 !important }`);
+            YDOM.HTMLElement.addStyle(
+               `#${SELECTOR_ID}:hover {
+                  opacity: 1 !important;
+                  background-color: rgba(0,0,0,.6) !important;
+               }`);
 
             // scroll event
             const scrollToTop_btn = document.getElementById(SELECTOR_ID);
