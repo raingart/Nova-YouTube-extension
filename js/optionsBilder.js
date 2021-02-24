@@ -153,10 +153,10 @@ const Opt = {
    UI: {
       toggleListView(hideElms, activeElms, activeClass = required()) {
          // hide all
-         if (hideElms) [...document.querySelectorAll(hideElms)].forEach(i => i.classList.remove(activeClass));
+         if (hideElms) document.querySelectorAll(hideElms).forEach(i => i.classList.remove(activeClass));
 
          // target show
-         if (activeElms) [...document.querySelectorAll(activeElms)].forEach(i => i.classList.add(activeClass));
+         if (activeElms) document.querySelectorAll(activeElms).forEach(i => i.classList.add(activeClass));
 
       },
 
@@ -165,7 +165,7 @@ const Opt = {
 
    eventListener() {
       // appearance map
-      [...document.querySelectorAll(".appearance > *")]
+      document.querySelectorAll(".appearance > *")
          .forEach(el => {
             // group is empty
             if (document.querySelector(this.generate.cssSelector + `>#${el.id}:empty`)) {
@@ -203,12 +203,14 @@ const Opt = {
          });
 
       // spoler
-      [...document.querySelectorAll(this.generate.cssSelector + '> *')]
-         .forEach(ul => ul.addEventListener('click', event => {
-            // event.preventDefault();
-            event.target.classList.toggle("collapse")
-            event.target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
-         }));
+      if (document.body.clientWidth < 350) { // in popup
+         document.querySelectorAll(this.generate.cssSelector + '> ul')
+            .forEach(ul => ul.addEventListener('click', event => {
+               // event.preventDefault();
+               event.target.classList.toggle("collapse")
+               event.target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
+            }));
+      }
 
    },
 
@@ -218,8 +220,8 @@ const Opt = {
 
       // remove API info
       Storage.getParams(store => {
-         if (!store['custom-api-key']) return;
-         [...document.querySelectorAll('.info b')].forEach(el => el.parentNode.removeChild(el));
+         if (!store || !store['custom-api-key']) return;
+         document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
       }, 'sync');
    },
 

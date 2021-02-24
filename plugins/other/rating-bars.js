@@ -145,7 +145,7 @@ _plugins_conteiner.push({
       function attachBar({ id, pt }) {
          if (!id || !pt) return
          // console.debug('attachBar', ...arguments);
-         [...document.querySelectorAll(`a#thumbnail[href*="${id}"]`)]
+         document.querySelectorAll(`a#thumbnail[href*="${id}"]`)
             .forEach(a => {
                // console.debug('finded', a, pt);
                a.insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);

@@ -73,7 +73,7 @@ const App = {
       let interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
 
-         if (!domLoaded && document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
+         if (!domLoaded || document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
             return console.debug('waiting, page loading..');
          }
 
@@ -101,7 +101,7 @@ const App = {
 
    reflectException() {
       const senderException = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
-         if (confirm(confirm_msg || 'Error in New Horizons for YouTube™. Open popup to report the bug?')) {
+         if (confirm(confirm_msg || 'Error in New Horizons for YouTube™. Please send us this report to help us fix the error. Open popup to report the bug?')) {
             window.open(
                'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
                + '?entry.35504208=' + encodeURIComponent(trace_name)
@@ -179,3 +179,6 @@ App.init();
 
 // example url new embed page
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
+
+// abnormal page
+// https://www.youtube.com/watch?v=6Ux6SlOE9Qk

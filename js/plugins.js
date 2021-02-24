@@ -17,6 +17,7 @@ const Plugins = {
       'player/focused.js',
       'player/pin.js',
       'player/time-jump.js',
+      'player/no-sleep.js',
       // 'player/show-progress-bar.js',
       // 'player/annotations.js',
       // 'player/stop.js', // incompatible with quality.js
@@ -35,6 +36,7 @@ const Plugins = {
       'comments/expand-comments.js',
 
       'sidebar/livechat-hide.js',
+      'sidebar/playlist-duration.js',
    ],
 
    load(list) {
@@ -84,7 +86,7 @@ const Plugins = {
          logTableTime;
 
       // console.groupCollapsed('plugins status');
-      console.log('currentPage:', currentPage);
+      console.debug('currentPage:', currentPage);
 
       _plugins_conteiner.forEach(plugin => {
          const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());

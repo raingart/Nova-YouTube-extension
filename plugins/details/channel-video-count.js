@@ -9,7 +9,7 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       const
-         CACHE_PREFIX = 'channel-video-count_',
+         CACHE_PREFIX = 'channel-video-count:',
          SELECTOR_ID = 'video_count',
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
@@ -18,22 +18,17 @@ _plugins_conteiner.push({
          .then(link => {
             // console.debug('watch page');
             YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not([hidden]):not(:empty)')
-               .then(el => {
-                  insertStatistic({
-                     'html_container': el,
-                     'channel_id': link.href.split('/').pop(),
-                  });
-               });
+               .then(el => insertStatistic({
+                  'html_container': el,
+                  'channel_id': link.href.split('/').pop()
+               }));
          });
 
       // channel page
       YDOM.HTMLElement.wait('#channel-header #subscriber-count:not(:empty)')
          .then(el => {
             // console.debug('channel page');
-            insertStatistic({
-               'html_container': el,
-               'channel_id': getChannelId(),
-            });
+            insertStatistic({ 'html_container': el, 'channel_id': getChannelId() });
 
             function getChannelId() {
                return [
@@ -75,22 +70,22 @@ _plugins_conteiner.push({
                .then(res => {
                   res?.items?.forEach(item => {
                      const videoCount = item.statistics.videoCount;
-                     insertToHTML(videoCount);
+                     insertToHTML({ 'set_text': videoCount, 'html_container': html_container });
                      // save cache in tabs
                      sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
                   });
                });
          }
 
-         function insertToHTML(text) {
+         function insertToHTML({ set_text, html_container }) {
             // console.debug('insertToHTML', ...arguments);
             const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
-                  + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
+                  + ` • <span id="${SELECTOR_ID}">${set_text}</span> videos</span>`);
                return document.getElementById(SELECTOR_ID);
             })();
-            boxHTML.textContent = text;
+            boxHTML.textContent = set_text;
          }
 
       }

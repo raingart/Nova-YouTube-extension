@@ -22,7 +22,7 @@ const YDOM = {
                   [...mutation.addedNodes]
                      .filter(node => node.nodeType === 1)
                      .forEach(node => {
-                        [...(node?.parentElement || document).querySelectorAll(selector)]
+                        (node?.parentElement || document).querySelectorAll(selector)
                            .forEach(element => {
                               YDOM.log('waited', mutation.type, selector);
                               observer.disconnect();
@@ -45,7 +45,7 @@ const YDOM = {
 
          function process() {
             YDOM.log('process', { selector, callback });
-            [...document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))]
+            document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
                .forEach(el => {
                   YDOM.log('viewed', selector);
                   if (attr_mark) el.setAttribute(attr_mark, true);

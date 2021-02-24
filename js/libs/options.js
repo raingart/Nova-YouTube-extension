@@ -7,7 +7,7 @@ window.addEventListener('load', evt => {
       storageMethod: 'sync',
 
       attrDependencies() {
-         [...document.querySelectorAll("[data-dependent]")]
+         document.querySelectorAll("[data-dependent]")
             .forEach(dependentItem => {
                // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
