@@ -103,10 +103,7 @@ _plugins_conteiner.push({
                // console.debug('id_part', id_part);
                YDOM.request.API({
                   request: 'videos',
-                  params: {
-                     'id': id_part.join(','),
-                     'part': 'statistics',
-                  },
+                  params: { 'id': id_part.join(','), 'part': 'statistics' },
                   api_key: user_settings['custom-api-key'],
                })
                   .then(res => {

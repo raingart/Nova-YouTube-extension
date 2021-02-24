@@ -18,7 +18,7 @@ _plugins_conteiner.push({
          .then(link => {
             // console.debug('watch page');
             YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not([hidden]):not(:empty)')
-               .then(el => insertStatistic({
+               .then(el => insertChannelStatistic({
                   'html_container': el,
                   'channel_id': link.href.split('/').pop()
                }));
@@ -28,7 +28,7 @@ _plugins_conteiner.push({
       YDOM.HTMLElement.wait('#channel-header #subscriber-count:not(:empty)')
          .then(el => {
             // console.debug('channel page');
-            insertStatistic({ 'html_container': el, 'channel_id': getChannelId() });
+            insertChannelStatistic({ 'html_container': el, 'channel_id': getChannelId() });
 
             function getChannelId() {
                return [
@@ -43,8 +43,8 @@ _plugins_conteiner.push({
             }
          });
 
-      function insertStatistic({ html_container, channel_id }) {
-         // console.debug('insertStatistic:', ...arguments);
+      function insertChannelStatistic({ html_container, channel_id }) {
+         // console.debug('insertChannelStatistic:', ...arguments);
 
          if (!channel_id || !isChannelId(channel_id)) return;
          // if (!channel_id || !isChannelId(channel_id)) {
@@ -56,15 +56,12 @@ _plugins_conteiner.push({
          const storage = sessionStorage.getItem(CACHE_PREFIX + channel_id);
 
          if (storage) {
-            insertToHTML(storage);
+            insertToHTML({ 'set_text': storage, 'html_container': html_container });
 
          } else {
             YDOM.request.API({
                request: 'channels',
-               params: {
-                  'id': channel_id,
-                  'part': 'statistics',
-               },
+               params: { 'id': channel_id, 'part': 'statistics' },
                api_key: user_settings['custom-api-key']
             })
                .then(res => {
