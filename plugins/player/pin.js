@@ -141,9 +141,9 @@ _plugins_conteiner.push({
             this.inViewport = false;
          }
 
-         function isInViewport(element = required()) {
-            if (element instanceof HTMLElement) {
-               const bounding = element.getBoundingClientRect();
+         function isInViewport(el = required()) {
+            if (el instanceof HTMLElement) {
+               const bounding = el.getBoundingClientRect();
                return (
                   bounding.top >= 0 &&
                   bounding.left >= 0 &&

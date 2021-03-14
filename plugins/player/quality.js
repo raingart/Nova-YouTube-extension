@@ -80,12 +80,12 @@ _plugins_conteiner.push({
                }
 
                // keep quality in session
-               if (user_settings.save_manual_quality_in_tab && location.pathname == '/watch') {// no sense if in the embed
+               if (user_settings.save_manual_quality_in_tab && user_settings.currentPage === 'watch') {// no sense if in the embed
                   videoPlayer.addEventListener("onPlaybackQualityChange", quality => {
                      // console.debug('document.activeElement,',document.activeElement);
-                     if (document.activeElement.getAttribute('role') == "menuitemradio" && // now focuse setting menu
-                        quality !== selectedQuality && // the new quality
-                        videoPlayer.hasOwnProperty('setPlaybackQuality') // not automatically changed
+                     if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
+                        && quality !== selectedQuality // the new quality
+                        && videoPlayer.hasOwnProperty('setPlaybackQuality') // not automatically changed
                      ) {
                         console.info('save session new quality:', quality);
                         selectedQuality = quality;

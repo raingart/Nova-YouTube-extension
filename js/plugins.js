@@ -17,7 +17,6 @@ const Plugins = {
       'player/focused.js',
       'player/pin.js',
       'player/time-jump.js',
-      'player/no-sleep.js',
       // 'player/show-progress-bar.js',
       // 'player/annotations.js',
       // 'player/stop.js', // incompatible with quality.js
@@ -27,10 +26,11 @@ const Plugins = {
       'other/normalize-video-title.js',
       'other/thumbnail-clear.js',
       'other/default-tab.js',
-      // 'other/wake-up.js',
+      'other/wake-up.js',
 
       'details/expand-description.js',
       'details/channel-video-count.js',
+      'details/clear-redirect.js',
 
       'comments/disable-comments.js',
       'comments/expand-comments.js',
@@ -80,6 +80,7 @@ const Plugins = {
          const page = location.pathname.split('/')[1];
          return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
       })();
+      user_settings['currentPage'] = currentPage; // export info to plugin
 
       let logTableArray = [],
          logTableStatus,

@@ -28,9 +28,9 @@ _plugins_conteiner.push({
                         tab_nth = 12;
                         break;
                   }
-                  const tab = document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`);
-
-                  if (tab) tab.click();
+                  // select tab
+                  document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`)
+                     ?.click();
                });
          }
 
@@ -53,8 +53,8 @@ _plugins_conteiner.push({
          title: 'Redirect is safer but slower',
          // multiple: null,
          options: [
-            { label: 'Redirect', value: 'redirect' },
-            { label: 'Click', /*value: '',*/ selected: true },
+            { label: 'redirect', value: 'redirect' },
+            { label: 'click', /*value: '',*/ selected: true },
          ]
       },
    },

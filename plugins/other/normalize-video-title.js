@@ -69,7 +69,8 @@ _plugins_conteiner.push({
       'smart_normalize_title': {
          _tagName: 'input',
          label: 'Smart normalize',
-         type: 'checkbox'
+         type: 'checkbox',
+         label: 'Filter words by pattern',
       },
       'smart_normalize_title_max_words': {
          _tagName: 'input',

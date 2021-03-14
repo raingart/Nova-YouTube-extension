@@ -108,7 +108,7 @@ _plugins_conteiner.push({
             };
 
             // init default_playback_rate
-            if (+user_settings.default_playback_rate != 1 && YDOM.getURLParams().get('ismusic') === null) {
+            if (+user_settings.default_playback_rate != 1 && window.location.hash != '#music') {
                setPlaybackRate.set(user_settings.default_playback_rate);
             }
 
@@ -199,7 +199,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Replace default indicator',
          type: 'checkbox',
-         title: 'It is common for the volume',
+         // title: '',
       },
    },
 });

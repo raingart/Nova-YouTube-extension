@@ -146,15 +146,26 @@ const YDOM = {
 
    request: {
 
+      API_STORE_NAME: 'YOUTUBE_API_KEYS',
+
       async API({ request, params, api_key }) {
          YDOM.log('API:', ...arguments);
-
          // get API key
-         const YOUTUBE_API_KEYS = JSON.parse(localStorage.getItem('YOUTUBE_API_KEYS')) || await this.keys();
-         if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS.length)) {
+         const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
+
+         if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS?.length)) {
             console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
-            throw new Error('YOUTUBE_API_KEYS is empty');
+            localStorage.hasOwnProperty(this.API_STORE_NAME) && localStorage.removeItem(this.API_STORE_NAME);
+            // alert('I cannot access the API key.'
+            //    + '\nThe plugins that depend on it have been terminated.'
+            //    + "\n - Check your network's access to Github"
+            //    + '\n - Generate a new private key'
+            //    + '\n - Deactivate plugins that need it'
+            // );
+            // throw new Error('YOUTUBE_API_KEYS is empty:', YOUTUBE_API_KEYS);
+            return;
          }
+
          const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
          // combine GET
          const query = (request == 'videos' ? 'videos' : 'channels') + '?'
@@ -173,7 +184,7 @@ const YDOM = {
                throw new Error(JSON.stringify(json?.error));
             })
             .catch(error => {
-               localStorage.removeItem('YOUTUBE_API_KEYS');
+               localStorage.removeItem(this.API_STORE_NAME);
                console.error(`Request API failed:${URL}\n${error}`);
                // alert('Problems with the YouTube API:'
                //    + '\n' + error?.message
@@ -190,11 +201,11 @@ const YDOM = {
             .then(res => res.text())
             .then(keys => { // save
                YDOM.log(`get and save keys in localStorage`, keys);
-               localStorage.setItem('YOUTUBE_API_KEYS', keys);
+               localStorage.setItem(this.API_STORE_NAME, keys);
                return JSON.parse(keys);
             })
             .catch(error => { // clear
-               localStorage.removeItem('YOUTUBE_API_KEYS');
+               localStorage.removeItem(this.API_STORE_NAME);
                throw error;
                // throw new Error(error);
             })

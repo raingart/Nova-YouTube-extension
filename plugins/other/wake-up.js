@@ -2,7 +2,7 @@ _plugins_conteiner.push({
    name: 'Disable page sleep',
    id: 'disable-page-sleep',
    depends_on_pages: 'watch',
-   opt_section: 'player',
+   opt_section: 'other',
    desc: "prevent 'Video paused' alert",
    _runtime: user_settings => {
 

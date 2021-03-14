@@ -20,7 +20,7 @@ _plugins_conteiner.push({
    opt_export: {
       'livechat': {
          _tagName: 'select',
-         label: 'Type hide',
+         label: 'Method',
          options: [
             { label: 'collapse', value: 'collapse', selected: true },
             { label: 'remove', value: 'disable' },
