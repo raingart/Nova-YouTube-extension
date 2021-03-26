@@ -40,7 +40,7 @@ _plugins_conteiner.push({
    opt_export: {
       'default_channel_tab': {
          _tagName: 'select',
-         label: 'Set default tab',
+         label: 'Default tab',
          options: [
             { label: 'videos', value: 'videos', selected: true },
             { label: 'playlists', value: 'playlists' },
@@ -49,7 +49,7 @@ _plugins_conteiner.push({
       },
       'default_channel_tab_method': {
          _tagName: 'select',
-         label: 'Method',
+         label: 'Mode',
          title: 'Redirect is safer but slower',
          // multiple: null,
          options: [

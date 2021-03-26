@@ -54,6 +54,8 @@ const Plugins = {
 
       if (source.endsWith('.js')) {
          script.src = source;
+         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-defer:~:text=defer,-This
+         script.defer = true;
          // script.async = true;
 
       } else {

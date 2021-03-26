@@ -121,6 +121,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Save manually selected quality for the same tab',
          type: 'checkbox',
+         title: 'Affects to next videos',
       },
    },
 });

@@ -98,8 +98,8 @@ const YDOM = {
             }
 
             sheet.textContent += '/**/\n' + source
-               .replace(/\n+\s{2,}/g, ' ') // singleline
-               // multiline
+               .replace(/\n+\s{2,}/g, ' ') // singleline format
+               // multiline format
                // .replace(/\n+\s{2,}/g, '\n\t')
                // .replace(/\t\}/mg, '}')
                + '\n';

@@ -56,7 +56,7 @@ _plugins_conteiner.push({
    opt_export: {
       'jump_step': {
          _tagName: 'input',
-         label: 'Step',
+         label: 'Step time',
          type: 'number',
          title: 'sec',
          placeholder: 'sec',

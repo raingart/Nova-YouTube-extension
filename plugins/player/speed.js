@@ -192,7 +192,7 @@ _plugins_conteiner.push({
          step: 0.05,
          min: 0.1,
          max: 1,
-         value: 0.25,
+         value: 0.05,
          'data-dependent': '{"player_rate_html5":"true"}',
       },
       'player_disable_bezel': {
