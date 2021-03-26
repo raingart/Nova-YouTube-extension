@@ -162,7 +162,7 @@ _plugins_conteiner.push({
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',
-         step: 0.25,
+         step: 0.05,
          min: 1,
          max: 2,
          value: 1,
