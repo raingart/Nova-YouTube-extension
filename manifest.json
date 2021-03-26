@@ -1,7 +1,7 @@
 {
    "manifest_version": 2,
-   "name": "New Horizons for YouTube™",
-   "short_name": "Horizons for YouTube™",
+   "name": "Nova YouTube™",
+   "short_name": "Nova YouTube™",
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",

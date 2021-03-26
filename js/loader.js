@@ -101,7 +101,7 @@ const App = {
 
    reflectException() {
       const senderException = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
-         if (confirm(confirm_msg || 'Error in New Horizons for YouTube™. Please send us this report to help us fix the error. Open popup to report the bug?')) {
+         if (confirm(confirm_msg || 'Error in "Nova YouTube™". Please send us this report to help us fix the error. Open popup to report the bug?')) {
             window.open(
                'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
                + '?entry.35504208=' + encodeURIComponent(trace_name)
@@ -117,14 +117,14 @@ const App = {
          `const _pluginsCaptureException = ${senderException};
          window.addEventListener('unhandledrejection', err => {
             if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
-            console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose\`);
+            console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose\`);
 
             if (${App.sessionSettings?.report_issues ? true : false})
                _pluginsCaptureException({
                   'trace_name': 'unhandledrejection',
                   'err_stack': err.reason.stack,
                   'app_ver': '${chrome.runtime.getManifest().version}',
-                  'confirm_msg': \`Failure when async-call of one Horizons for YouTube™ plugin.\n\nOpen tab to report the bug?\`,
+                  'confirm_msg': \`Failure when async-call of one "Nova YouTube™" plugin.\n\nOpen tab to report the bug?\`,
                });
          });`);
    },

@@ -20,8 +20,10 @@ chrome.runtime.onInstalled.addListener(details => {
                chrome.runtime.openOptionsPage();
             }
             break;
-         // case 'update':
-         //    break;
+
+         case 'update':
+            Storage.getParams(data => Storage.setParams(data["Horizons for YouTube™"], 'sync'), 'sync');
+            break;
       }
    });
 });

@@ -118,14 +118,14 @@ const Plugins = {
 
             } catch (err) {
                console.groupEnd('plugins status'); // out-of-group display
-               console.error(`[ERROR PLUGIN] ${plugin.name}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/New-Horizons-for-YouTube-extension/issues/new/choose`);
+               console.error(`[ERROR PLUGIN] ${plugin.name}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose`);
 
                if (user_settings.report_issues && _pluginsCaptureException) {
                   _pluginsCaptureException({
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `New Horizons for YouTube™\n\nCrash plugin "${plugin.name}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
+                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.name}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
                   });
                }
 
