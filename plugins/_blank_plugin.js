@@ -20,7 +20,7 @@ _plugins_conteiner.push({
    /* optional GIU in options page: start */
    opt_section: 'player', // optional. Visual section in settings where the plugin belongs
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
-   desc: 'Title description', // optional. Title description in settings
+   desc: 'Title description', // optional. Title description in settings. Don't use double quotes inside the text!
    /* optional GIU in options page: end */
 
 
@@ -74,7 +74,7 @@ _plugins_conteiner.push({
             { label: 'alt', value: 18 },
             { label: 'shift', value: 16 },
             { label: 'ctrl', value: 17, selected: true },
-         ]
+         ],
       },
    },
 });

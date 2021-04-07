@@ -45,7 +45,7 @@ _plugins_conteiner.push({
             { label: 'videos', value: 'videos', selected: true },
             { label: 'playlists', value: 'playlists' },
             { label: 'about', value: 'about' },
-         ]
+         ],
       },
       'default_channel_tab_method': {
          _tagName: 'select',
@@ -55,7 +55,7 @@ _plugins_conteiner.push({
          options: [
             { label: 'redirect', value: 'redirect' },
             { label: 'click', /*value: '',*/ selected: true },
-         ]
+         ],
       },
    },
 });

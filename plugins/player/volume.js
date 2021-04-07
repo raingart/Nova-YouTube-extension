@@ -9,64 +9,77 @@ _plugins_conteiner.push({
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(videoPlayer => {
             // init default_volume_level
-            setVolumeLevel(user_settings.default_volume_level);
+            if (+user_settings.default_volume_level) {
+               setVolumeLevel(user_settings.default_volume_level);
+            }
 
-            // mousewheel in player area
-            document.querySelector('.html5-video-container')
-               .addEventListener("wheel", event => {
-                  if (!videoPlayer.hasOwnProperty('getVolume')) return console.error('Error getVolume');
-                  event.preventDefault();
-
-                  if (user_settings.volume_hotkey && (
-                     event[user_settings.volume_hotkey] ||
-                     (
-                        user_settings.volume_hotkey == 'none' &&
-                        !event.ctrlKey && !event.altKey && !event.shiftKey)
-                  )) {
-                     // console.debug('hotkey caught');
-                     const
-                        step = parseInt(user_settings.volume_step),
-                        delta = Math.sign(event.wheelDelta) * step,
-                        currentVolume = videoPlayer.getVolume();
-
-                     if (setVolumeLevel(currentVolume + delta) === false) {
-                        return console.error('Error setVolumeLevel');
-                     }
-                  }
+            // show indicator
+            videoPlayer.querySelector('video')
+               .addEventListener('volumechange', function (event) {
+                  // console.debug('volumechange', videoPlayer.getVolume(), this.volume);
+                  YDOM.bezelTrigger(videoPlayer.getVolume() + '%');
                });
 
-            function setVolumeLevel(volume) {
-               const volumeToSet = Math.max(0, Math.min(100, +volume));
+            if (user_settings.volume_hotkey) {
+               // mousewheel in player area
+               document.querySelector('.html5-video-container')
+                  .addEventListener("wheel", evt => {
+                     evt.preventDefault();
 
-               // check is new volume level
+                     if (evt[user_settings.volume_hotkey]
+                        || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                        // console.debug('hotkey caught');
+                        const step = +user_settings.volume_step * Math.sign(evt.wheelDelta);
+                        adjustVolumeBy(step);
+                     }
+                  });
+            }
+
+            function adjustVolumeBy(delta) {
+               return setVolumeLevel(videoPlayer.getVolume() + parseInt(delta));
+            }
+
+            function setVolumeLevel(level) {
+               if (!videoPlayer.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+               const volumeToSet = Math.max(0, Math.min(100, parseInt(level)));
+
+               // set new volume level
                if (volumeToSet !== videoPlayer.getVolume()) {
                   videoPlayer.isMuted() && videoPlayer.unMute();
                   videoPlayer.setVolume(volumeToSet); // 0 - 100
 
-                  // check is correct
                   if (volumeToSet === videoPlayer.getVolume()) {
                      saveInSession(volumeToSet);
 
-                  } else console.error('setVolume error. Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
+                  } else {
+                     console.error('setVolumeLevel error! Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
+                  }
                }
 
-               return volumeToSet === videoPlayer.getVolume() ? volumeToSet : false;
-            }
+               return volumeToSet === videoPlayer.getVolume() && volumeToSet;
+
+               function saveInSession(level) {
+                  if (!level) return console.error('saveInSession', level);
+
+                  const storageData = {
+                     creation: Date.now(),
+                     data: { "volume": level, "muted": (level ? "false" : "true") },
+                  };
+
+                  try {
+                     localStorage["yt-player-volume"] = JSON.stringify(
+                        Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
+                     );
+                     sessionStorage["yt-player-volume"] = JSON.stringify(storageData);
+                     // console.debug('volume saved', ...arguments);
+
+                  } catch (err) {
+                     console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                  }
+               }
+            };
+
          });
-
-      // saving state in sessions
-      function saveInSession(level) {
-         if (!level) return;
-         const timeNow = (new Date).getTime();
-         const muted = level ? "false" : "true";
-
-         try {
-            sessionStorage['yt-player-volume'] = JSON.stringify({ "data": { "volume": level, "muted": muted }, "expiration": timeNow, "creation": timeNow });
-         } catch (err) {
-            console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
-         }
-         // console.debug('volume saved');
-      }
 
    },
    opt_export: {
@@ -85,7 +98,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Step',
          type: 'number',
-         title: 'percent',
+         title: 'in percents',
          placeholder: '%',
          step: 5,
          min: 5,
@@ -100,8 +113,8 @@ _plugins_conteiner.push({
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'alt+wheel', value: 'altKey' },
-            { label: 'off', value: false },
-         ]
+            { label: 'disable', value: false },
+         ],
       },
    },
 });

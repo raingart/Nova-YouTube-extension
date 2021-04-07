@@ -115,7 +115,7 @@ _plugins_conteiner.push({
             { label: '240p', value: 'small' },
             { label: '144p', value: 'tiny' },
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
-         ]
+         ],
       },
       'save_manual_quality_in_tab': {
          _tagName: 'input',

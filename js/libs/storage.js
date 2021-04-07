@@ -15,7 +15,6 @@ const Storage = function () {
          let storageArea = sync_type == 'sync' ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.get(x, prefs => {
-            // console.debug('saveParams '+JSON.stringify(prefs));
             let item = prefs[nameApp] && prefs[nameApp][prefs] ? prefs[nameApp][prefs] : prefs[nameApp] || prefs;
             chrome.runtime.lastError ? console.debug(chrome.runtime.lastError) : callback(item);
          })

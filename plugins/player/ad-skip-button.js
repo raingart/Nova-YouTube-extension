@@ -4,7 +4,7 @@ _plugins_conteiner.push({
    depends_on_pages: 'watch',
    run_on_transition: true, // deactivate if use YDOM.HTMLElement.watch
    opt_section: 'player',
-   desc: 'Auto click on "Skip Ad" button',
+   desc: 'Auto click on [Skip Ad] button',
    _runtime: user_settings => {
 
       // YDOM.HTMLElement.watch({

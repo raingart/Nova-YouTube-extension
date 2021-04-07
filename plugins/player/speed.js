@@ -10,148 +10,113 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(videoPlayer => {
-            videoPlayer.addEventListener('onPlaybackRateChange', rate => {
-               // console.debug('onPlaybackRateChange', rate);
-               HUD.set(rate);
-            });
+            // show indicator
             // html5 way
-            // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
-            // videoPlayer.querySelector('video')
-            //    .addEventListener('ratechange', function (event) {
-            //       console.debug('ratechange', this.playbackRate);
-            //       HUD.set(this.playbackRate)
-            //    });
+            videoPlayer.querySelector('video')
+               .addEventListener('ratechange', function (event) {
+                  // console.debug('ratechange', videoPlayer.getPlaybackRate(), this.playbackRate);
+                  YDOM.bezelTrigger(this.playbackRate + 'x');
+               });
+            // Default indicator does not work for html5 way
+            // videoPlayer.addEventListener('onPlaybackRateChange', rate => {
+            //    console.debug('onPlaybackRateChange', rate);
+            // });
 
             // mousewheel in player area
-            document.querySelector('.html5-video-container')
-               .addEventListener("wheel", event => {
-                  if (!videoPlayer.hasOwnProperty('getPlaybackRate')) return console.error('Error getPlaybackRate ');
-                  event.preventDefault();
+            if (user_settings.player_rate_hotkey) {
+               document.querySelector('.html5-video-container')
+                  .addEventListener("wheel", evt => {
+                     evt.preventDefault();
 
-                  if (user_settings.player_rate_hotkey
-                     && (
-                        event[user_settings.player_rate_hotkey]
-                        || (user_settings.player_rate_hotkey == 'none'
-                           && !event.ctrlKey && !event.altKey && !event.shiftKey)
-                     )
-                  ) {
-                     // console.debug('hotkey caught');
-                     if (!user_settings.player_rate_html5) {
-                        const delta = Math.sign(event.wheelDelta);
-                        const rateToSet = setPlaybackRate.set(delta);
-                        // console.debug('rateToSet', rateToSet);
-                        if (rateToSet === false) return console.error('Error rateToSet');
-                        HUD.set(rateToSet);
+                     if (evt[user_settings.player_rate_hotkey]
+                        || (user_settings.player_rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                        // console.debug('hotkey caught');
+                        const rate = playerRate.adjust(+user_settings.player_rate_step * Math.sign(evt.wheelDelta));
+                        // console.debug('current rate:', rate);
                      }
-                  }
-               });
-
-            // hide default indicator
-            if (!user_settings['volume-indicator'] // indicator is common
-               // default indicator does not work for html5
-               && (user_settings.player_disable_bezel || user_settings.player_rate_html5)) {
-               YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
+                  });
             }
 
-            const setPlaybackRate = {
-               set(x) {
-                  return user_settings.player_rate_html5 ? this.html5(+x) : this.default(+x);
+            const playerRate = {
+               adjust(level) {
+                  // default method requires a multiplicity of 0.25
+                  return ((+level % 0.25) === 0 || +level > 1) && videoPlayer.hasOwnProperty('getPlaybackRate')
+                     ? this.default(+level)
+                     : this.html5(+level);
                },
 
-               default: playback_rate => {
-                  playback_rate = +playback_rate;
-                  // console.debug('playback_rate', playback_rate);
+               default(playback_rate) {
+                  // console.debug('playerRate:default', ...arguments);
                   const playbackRate = videoPlayer.getPlaybackRate();
                   const inRange = delta => {
                      const rangeRate = videoPlayer.getAvailablePlaybackRates();
-                     const rangeIdx = rangeRate.indexOf(playbackRate);
-                     return rangeRate[rangeIdx + delta];
+                     const playbackRateIdx = rangeRate.indexOf(playbackRate);
+                     return rangeRate[playbackRateIdx + delta];
                   };
-                  const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
+                  // if playback_rate < 1 run inRange
+                  const rateToSet = !playback_rate || playback_rate > 1 ? playback_rate || 1 : inRange(playback_rate);
 
-                  // set rate
-                  // console.debug('rateToSet',rateToSet);
+                  // set new rate
                   if (rateToSet && rateToSet != playbackRate) {
-                     // console.debug('set rate',rateToSet);
                      videoPlayer.setPlaybackRate(rateToSet);
 
-                     // check is correct
-                     if (rateToSet !== videoPlayer.getPlaybackRate()) {
-                        console.error('setPlaybackRate different: %s!=%s', rateToSet, videoPlayer.getPlaybackRate());
+                     if (rateToSet === videoPlayer.getPlaybackRate()) {
+                        this.saveInSession(rateToSet);
+
+                     } else {
+                        console.error('playerRate:default different: %s!=%s', rateToSet, videoPlayer.getPlaybackRate());
                      }
                   }
-                  return rateToSet === videoPlayer.getPlaybackRate() ? rateToSet : false;
+                  return rateToSet === videoPlayer.getPlaybackRate() && rateToSet;
                },
 
-               html5: playback_rate => {
-                  playback_rate = +playback_rate;
+               html5(playback_rate) {
+                  // console.debug('playerRate:html5', ...arguments);
                   const videoElm = videoPlayer.querySelector('video');
                   const playbackRate = videoElm.playbackRate;
-                  const inRange = delta => {
-                     const setRateStep = playbackRate + (delta * (+user_settings.player_rate_step || 0.25));
-                     return (0.5 <= setRateStep && setRateStep <= 3.0) && setRateStep;
+                  const inRange = step => {
+                     const setRateStep = playbackRate + step;
+                     return (.1 <= setRateStep && setRateStep <= 2.5) && +setRateStep.toFixed(2);
                   };
-                  const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate);
+                  const rateToSet = inRange(playback_rate);
+                  // const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate); // dont work
 
-                  // set rate
+                  // set new rate
                   if (rateToSet && rateToSet != playbackRate) {
                      // document.getElementsByTagName('video')[0].defaultPlaybackRate = rateToSet;
                      videoElm.playbackRate = rateToSet;
 
-                     // check is correct
-                     if (rateToSet !== videoElm.playbackRate) {
-                        console.error('setPlaybackRate different: %s!=%s', rateToSet, videoElm.playbackRate);
+                     if (rateToSet === videoElm.playbackRate) {
+                        this.saveInSession(rateToSet);
+
+                     } else {
+                        console.error('playerRate:html5 different: %s!=%s', rateToSet, videoElm.playbackRate);
                      }
                   }
-                  return rateToSet === videoElm.playbackRate ? rateToSet : false;
-               }
+                  return rateToSet === videoElm.playbackRate && rateToSet;
+               },
+
+               saveInSession(level) {
+                  if (!level) return console.error('saveInSession', level);
+                  try {
+                     sessionStorage["yt-player-playback-rate"] = JSON.stringify({
+                        creation: Date.now(), data: String(level),
+                     })
+                     // console.debug('playbackRate saved', ...arguments);
+
+                  } catch (err) {
+                     console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                  }
+               },
             };
 
             // init default_playback_rate
-            if (+user_settings.default_playback_rate != 1 && window.location.hash != '#music') {
-               setPlaybackRate.set(user_settings.default_playback_rate);
+            if (location.href.includes('music') || +user_settings.default_playback_rate === 1) {
+               user_settings.default_playback_rate = 0; // normal rate
             }
+            playerRate.adjust(user_settings.default_playback_rate);
 
          });
-
-      const HUD = {
-         create() {
-            const div = document.createElement("div");
-            div.id = SELECTOR_ID;
-            Object.assign(div.style, {
-               'background-color': 'rgba(0,0,0,0.3)',
-               color: '#fff',
-               opacity: 0,
-               'font-size': '1.6em',
-               left: 0,
-               padding: '.4em 0',
-               position: 'absolute',
-               'text-align': 'center',
-               top: 'auto',
-               width: '100%',
-               'z-index': '19',
-            });
-            document.getElementById('movie_player').appendChild(div);
-            return div;
-         },
-
-         set(text) {
-            if (!user_settings.player_disable_bezel) return;
-            if (typeof fateRateHUD === 'number') clearTimeout(fateRateHUD);
-
-            const hud = document.getElementById(SELECTOR_ID) || this.create();
-            hud.textContent = text + 'x';
-            hud.style.transition = 'none';
-            hud.style.opacity = 1;
-            // hud.style.visibility = 'visibility';
-
-            fateRateHUD = setTimeout(() => {
-               hud.style.transition = 'opacity 200ms ease-in';
-               hud.style.opacity = 0;
-               // hud.style.visibility = 'hidden';
-            }, 800); //total 1s = 800ms + 200ms(hud.style.transition)
-         }
-      };
 
    },
    opt_export: {
@@ -167,6 +132,17 @@ _plugins_conteiner.push({
          max: 2,
          value: 1,
       },
+      'player_rate_step': {
+         _tagName: 'input',
+         label: 'Step',
+         type: 'number',
+         title: '0.25 - default',
+         placeholder: '0.1-1',
+         step: 0.05,
+         min: 0.1,
+         max: 0.5,
+         value: 0.25,
+      },
       'player_rate_hotkey': {
          _tagName: 'select',
          label: 'Hotkey',
@@ -175,31 +151,8 @@ _plugins_conteiner.push({
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'wheel', value: 'none' },
-            { label: 'off', value: false },
-         ]
-      },
-      'player_rate_html5': {
-         _tagName: 'input',
-         label: 'HTML5 speed range',
-         type: 'checkbox',
-         title: 'Bypassing the player. Expand the range to x3',
-      },
-      'player_rate_step': {
-         _tagName: 'input',
-         label: 'Step',
-         type: 'number',
-         placeholder: '0.1-1',
-         step: 0.05,
-         min: 0.1,
-         max: 1,
-         value: 0.05,
-         'data-dependent': '{"player_rate_html5":"true"}',
-      },
-      'player_disable_bezel': {
-         _tagName: 'input',
-         label: 'Replace default indicator',
-         type: 'checkbox',
-         // title: '',
+            { label: 'disable', value: false },
+         ],
       },
    },
 });

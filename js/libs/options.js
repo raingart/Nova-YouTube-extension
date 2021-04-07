@@ -20,28 +20,23 @@ window.addEventListener('load', evt => {
             });
 
          function showOrHide(dependentItem, dependentsList) {
-            for (const name in dependentsList)
-               for (const thisVal of dependentsList[name]) {
-                  let reqParent = document.getElementsByName(name)[0];
-                  if (!reqParent) {
-                     console.error('error showOrHide:', name);
-                     continue;
-                  }
+            // console.debug('showOrHide', ...arguments);
+            for (const name in dependentsList) {
+               const reqParent = document.getElementsByName(name)[0];
+               if (!reqParent) return console.error('error showOrHide:', name);
 
-                  if (reqParent.checked && thisVal) {
-                     // console.debug('reqParent.checked');
+               for (const values of [dependentsList[name]]) {
+                  // console.debug('check', name, reqParent.value + '=' + values);
+                  if ((reqParent.checked && values) || values.includes(reqParent.value)) {
+                     // console.debug('show:', name);
                      dependentItem.classList.remove("hide");
-
-                  } else if (reqParent.value == thisVal) {
-                     dependentItem.classList.remove("hide");
-                     // console.debug(reqParent.value + '==' + thisVal);
-                     break;
 
                   } else {
+                     // console.debug('hide:', name);
                      dependentItem.classList.add("hide");
-                     // console.debug(reqParent.value + '!=' + thisVal);
                   }
                }
+            }
          }
       },
 
@@ -87,34 +82,32 @@ window.addEventListener('load', evt => {
       },
 
       // Register the event handlers.
-      eventListener: (function () {
-         [...document.forms]
-            .forEach(form => {
-               form.addEventListener('submit', function (event) {
-                  event.preventDefault();
-                  Conf.btnSubmitAnimation._process();
-                  Conf.saveOptions(this);
-                  Conf.btnSubmitAnimation._defaut();
-               });
-            });
-      }()),
+      registerEventListener() {
+         // form submit
+         document.addEventListener('submit', event => {
+            // console.debug('submit', event.target);
+            event.preventDefault();
+
+            this.btnSubmitAnimation._process();
+            this.saveOptions(event.target);
+            this.btnSubmitAnimation._defaut();
+         });
+         // form unsave
+         document.addEventListener('change', ({ target }) => {
+            // console.debug('change', target);
+            if (target.name == "tabs") return; // fix/ignore switch tabs
+            if (!this.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
+               this.btnSubmitAnimation.outputStatus.classList.add('unSaved');
+            }
+         });
+      },
 
       init() {
          Storage.getParams(obj => {
             PopulateForm.fill(obj);
             this.attrDependencies();
+            this.registerEventListener();
             document.body.classList.remove("preload");
-
-            // unSaved form
-            [...document.forms[0].elements]
-               .filter(i => i.type == 'checkbox')
-               .forEach(i => {
-                  i.addEventListener('change', event => {
-                     if (!Conf.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
-                        Conf.btnSubmitAnimation.outputStatus.classList.add('unSaved');
-                     }
-                  });
-               });
          }, this.storageMethod);
       },
    }

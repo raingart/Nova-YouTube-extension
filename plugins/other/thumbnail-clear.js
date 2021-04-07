@@ -27,7 +27,7 @@ _plugins_conteiner.push({
             { label: 'start', value: 'hq1' }, // often shows intro
             { label: 'middle', value: 'hq2', selected: true },
             { label: 'end', value: 'hq3' },
-         ]
+         ],
       },
    },
 });

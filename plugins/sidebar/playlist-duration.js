@@ -12,10 +12,7 @@ _plugins_conteiner.push({
          SELECTOR_ID = 'playlist-duration-time',
          playlistId = YDOM.getURLParams().get('list');
 
-      if (!playlistId) {
-         // console.debug('playlist not found');
-         return;
-      }
+      if (!playlistId) return console.debug('playlist not found');
 
       // playlist page
       if (user_settings.currentPage === 'playlist') {
@@ -32,7 +29,7 @@ _plugins_conteiner.push({
 
       // watch page
       if (user_settings.currentPage === 'watch') {
-         YDOM.HTMLElement.wait('#secondary #playlist #publisher-container .index-message-wrapper')
+         YDOM.HTMLElement.wait('#secondary #playlist #publisher-container')
             .then(el => {
                // console.debug('playlist: watch page');
                insertPlaylistDuration({
@@ -49,15 +46,17 @@ _plugins_conteiner.push({
          // get from cache
          const storage = sessionStorage.getItem(CACHE_PREFIX + playlistId);
          if (storage) {
-            console.debug(`get from cache [${CACHE_PREFIX}]`, storage);
+            // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
             return insertToHTML({ 'set_text': storage, 'html_container': html_container });
          }
 
          let forcePlaylistRun = false;
          let playlistItemsInterval = setInterval(() => {
-            const playlistCount = document.querySelectorAll(playlist_items_selector).length;
-            const timeStampList = (playlist_container || document)
-               .querySelectorAll(".ytd-thumbnail-overlay-time-status-renderer:not(:empty)");
+            const
+               playlistCount = document.querySelectorAll(playlist_items_selector).length,
+               timeStampList = (playlist_container || document)
+                  .querySelectorAll(".ytd-thumbnail-overlay-time-status-renderer:not(:empty)"),
+               playlistDuration = 'Duration: ' + getTotalTime(timeStampList);
 
             if ((!playlistCount || playlistCount != timeStampList.length) && !forcePlaylistRun) {
                // console.debug('loading playlist:', timeStampList.length + '/' + playlistCount);
@@ -66,10 +65,7 @@ _plugins_conteiner.push({
             }
             clearInterval(playlistItemsInterval);
 
-            const playlistDuration = 'Duration: ' + getTotalTime(timeStampList);
-
             insertToHTML({ 'set_text': playlistDuration, 'html_container': html_container });
-
             // save in sessionStorage
             sessionStorage.setItem(CACHE_PREFIX + playlistId, playlistDuration);
 
@@ -83,9 +79,10 @@ _plugins_conteiner.push({
                   .reduce((acc, time) => (60 * acc) + +time))
                .reduce((a, cv) => a + cv, 0);
 
-            const hours = Math.floor(timestamp / 60 / 60);
-            const minutes = Math.floor(timestamp / 60) - (hours * 60);
-            const seconds = timestamp % 60;
+            const
+               hours = Math.floor(timestamp / 60 / 60),
+               minutes = Math.floor(timestamp / 60) - (hours * 60),
+               seconds = timestamp % 60;
 
             return [hours, minutes, seconds] // order
                .filter(i => +i) // clear zeros
@@ -97,7 +94,7 @@ _plugins_conteiner.push({
             // console.debug('insertToHTML', ...arguments);
             const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
-                  ` •<span id="${SELECTOR_ID}" class="style-scope yt-formatted-string" style="margin: 0px 4px;">${set_text}</span>`);
+                  ` •<span id="${SELECTOR_ID}" class="style-scope yt-formatted-string publisher ytd-playlist-panel-renderer" style="margin: 0px 4px;">${set_text}</span>`);
                return document.getElementById(SELECTOR_ID);
             })();
             boxHTML.textContent = set_text;

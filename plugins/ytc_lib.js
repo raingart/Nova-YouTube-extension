@@ -75,7 +75,7 @@ const YDOM = {
                return `{ ${css} }`;
             }
 
-         } else if (typeof css === 'string') injectCss(css);
+         } else if (css && typeof css === 'string') injectCss(css);
          else console.error('addStyle > css:', typeof css);
 
          function injectCss(source = required()) {
@@ -141,6 +141,39 @@ const YDOM = {
       },
    },
 
+   bezelTrigger(text) {
+      if (typeof fateBezel === 'number') clearTimeout(fateBezel);
+      const bezelEl = document.querySelector(".ytp-bezel-text");
+      if (!bezelEl || !text) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
+
+      const
+         bezelConteiner = bezelEl.parentElement.parentElement,
+         CLASS_VALUE_TOGGLE = 'ytp-text-root';
+
+      if (!this.bezel_inited) {
+         this.bezel_inited = true;
+         this.HTMLElement.addStyle(
+            `.${CLASS_VALUE_TOGGLE} {
+               display: block !important;
+            }
+            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text-wrapper {
+               pointer-events: none;
+               z-index: 40 !important;
+            }
+            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text {
+               display: inline-block !important;
+            }
+            .${CLASS_VALUE_TOGGLE} .ytp-bezel {
+               display: none !important;
+            }`);
+      }
+
+      bezelEl.textContent = text;
+      bezelConteiner.classList.add(CLASS_VALUE_TOGGLE);
+
+      fateBezel = setTimeout(() => bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE), 600); // 600ms
+   },
+
    // YDOM.getURLParams().get('name');
    getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
 
@@ -154,7 +187,6 @@ const YDOM = {
          const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
 
          if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS?.length)) {
-            console.error('YOUTUBE_API_KEYS:', YOUTUBE_API_KEYS);
             localStorage.hasOwnProperty(this.API_STORE_NAME) && localStorage.removeItem(this.API_STORE_NAME);
             // alert('I cannot access the API key.'
             //    + '\nThe plugins that depend on it have been terminated.'
@@ -163,7 +195,7 @@ const YDOM = {
             //    + '\n - Deactivate plugins that need it'
             // );
             // throw new Error('YOUTUBE_API_KEYS is empty:', YOUTUBE_API_KEYS);
-            return;
+            return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
          }
 
          const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];

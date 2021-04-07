@@ -2,7 +2,7 @@ input[type="checkbox"] {
    appearance: none;
    -webkit-appearance: none;
    width: 3.1em;
-   height: 1.5em;
+   height: 1.4em;
    line-height: 1.6em;
    background-color: #ddd;
    border-radius: 3em;
@@ -23,8 +23,8 @@ input[type="checkbox"]:after {
    top: 0;
    left: 0;
    content: "";
-   width: 1.5em;
-   height: 1.5em;
+   width: 1.4em;
+   height: 1.4em;
    border-radius: 50%;
    background-color: #fff;
    box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
@@ -33,7 +33,7 @@ input[type="checkbox"]:after {
 }
 
 input[type="checkbox"]:checked:after {
-   left: calc(100% - 1.5em);
+   left: calc(100% - 1.4em);
 }
 
 input[type="checkbox"][disabled] {

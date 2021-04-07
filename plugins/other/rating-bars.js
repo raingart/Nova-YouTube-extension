@@ -66,7 +66,7 @@ _plugins_conteiner.push({
       }
 
       function patchThumbnail(video_ids) {
-         if (!video_ids.length) return;
+         if (!video_ids?.length) return;
          // console.debug('find thumbnail', ...arguments);
          thumbCollector = []; // clear
          let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));

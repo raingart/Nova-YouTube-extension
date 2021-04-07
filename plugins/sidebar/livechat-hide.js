@@ -24,7 +24,7 @@ _plugins_conteiner.push({
          options: [
             { label: 'collapse', value: 'collapse', selected: true },
             { label: 'remove', value: 'disable' },
-         ]
+         ],
       },
    },
 });

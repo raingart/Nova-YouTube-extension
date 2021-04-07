@@ -13,7 +13,7 @@ _plugins_conteiner.push({
             player.addEventListener("onStateChange", onPlayerStateChange.bind(this));
 
             function onPlayerStateChange(state) {
-               // console.debug('onStateChange', state);
+               // console.debug('onStateChange', ...arguments);
 
                if (user_settings.stop_autoplay_ignore_playlist && window.location.href.includes('list=')) return;
 

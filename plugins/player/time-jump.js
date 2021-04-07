@@ -15,7 +15,7 @@ _plugins_conteiner.push({
                   && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                   // && !window.getSelection()
                ) {
-                  const sec = player.getCurrentTime() + +user_settings.jump_step;
+                  const sec = player.getCurrentTime() + parseInt(user_settings.jump_step);
                   // console.debug('seekTo', sec);
                   player.seekTo(sec);
                }
@@ -58,7 +58,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Step time',
          type: 'number',
-         title: 'sec',
+         title: 'in sec',
          placeholder: 'sec',
          min: 3,
          max: 300,
@@ -72,7 +72,7 @@ _plugins_conteiner.push({
             { label: 'alt', value: 18 },
             { label: 'shift', value: 16 },
             { label: 'ctrl', value: 17, selected: true },
-         ]
+         ],
       },
    },
 });

@@ -7,14 +7,14 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       YDOM.HTMLElement.watch({
-         selector: 'ytd-comment-thread-renderer #expander[collapsed] #more',
+         selector: '#comment #expander[collapsed] #more',
          attr_mark: 'comment-expand',
          callback: btn => btn.click(),
       });
 
       if (user_settings.comments_view_reply) {
          YDOM.HTMLElement.watch({
-            selector: 'ytd-comment-thread-renderer #expander #more-replies:not([hidden])',
+            selector: '#comment #expander #more-replies:not([hidden])',
             attr_mark: 'replies-expand',
             callback: btn => btn.click(),
          });

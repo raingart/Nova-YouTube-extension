@@ -191,7 +191,7 @@ _plugins_conteiner.push({
             { label: 'left-bottom', value: 'bottom-left' },
             { label: 'right-top', value: 'top-right', selected: true },
             { label: 'right-bottom', value: 'bottom-right' },
-         ]
+         ],
       },
       'pin_player_pause_pinned_video': {
          _tagName: 'input',

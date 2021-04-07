@@ -172,6 +172,7 @@ App.init();
 
 // for inspect
 // getEventListeners(document.querySelector('#movie_player'))
+// getEventListeners(document.querySelector('.html5-video-player'))
 // getEventListeners(document.querySelector('video'));
 // window.dispatchEvent(new Event("resize"));
 // getEventListeners(window)
