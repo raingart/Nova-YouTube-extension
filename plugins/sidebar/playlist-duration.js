@@ -5,30 +5,30 @@ _plugins_conteiner.push({
    run_on_transition: true,
    opt_section: 'sidebar',
    // desc: '',
-   _runtime: user_settings => {
+   _runtime: (user_settings, current_page) => {
 
       const
          CACHE_PREFIX = 'playlist-duration-time:',
          SELECTOR_ID = 'playlist-duration-time',
          playlistId = YDOM.getURLParams().get('list');
 
-      if (!playlistId) return console.debug('playlist not found');
+      if (!playlistId) return;
 
       // playlist page
-      if (user_settings.currentPage === 'playlist') {
+      if (current_page === 'playlist') {
          YDOM.HTMLElement.wait('#stats')
             .then(el => {
                // console.debug('playlist: channel page');
                insertPlaylistDuration({
                   'html_container': el,
-                  'playlist_items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
+                  'playlist_items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer',
                });
 
             });
       }
 
       // watch page
-      if (user_settings.currentPage === 'watch') {
+      if (current_page === 'watch') {
          YDOM.HTMLElement.wait('#secondary #playlist #publisher-container')
             .then(el => {
                // console.debug('playlist: watch page');
@@ -67,27 +67,20 @@ _plugins_conteiner.push({
 
             insertToHTML({ 'set_text': playlistDuration, 'html_container': html_container });
             // save in sessionStorage
-            sessionStorage.setItem(CACHE_PREFIX + playlistId, playlistDuration);
+            if (playlistDuration) {
+               sessionStorage.setItem(CACHE_PREFIX + playlistId, playlistDuration);
+            }
 
          }, 500); // 500ms
 
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
+            const strToSec = s => s.split(':').reduce((acc, time) => parseInt(time) + 60 * acc);
             const timestamp = [...nodes]
-               .map(e => e.textContent?.toString().trim()
-                  .split(':')
-                  .reduce((acc, time) => (60 * acc) + +time))
+               .map(e => strToSec(e.textContent))
                .reduce((a, cv) => a + cv, 0);
 
-            const
-               hours = Math.floor(timestamp / 60 / 60),
-               minutes = Math.floor(timestamp / 60) - (hours * 60),
-               seconds = timestamp % 60;
-
-            return [hours, minutes, seconds] // order
-               .filter(i => +i) // clear zeros
-               .map(i => i.toString().padStart(2, '0')) // "1" => "01"
-               .join(':'); // format "0h:0m:0s"
+            return YDOM.secToStr(timestamp);
          }
 
          function insertToHTML({ set_text, html_container }) {

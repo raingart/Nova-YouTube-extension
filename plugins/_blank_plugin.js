@@ -24,7 +24,9 @@ _plugins_conteiner.push({
    /* optional GIU in options page: end */
 
 
-   _runtime: user_settings => { // user_settings - all extension settings. There is no division of settings into separate plugins
+   _runtime: (user_settings, current_page) => {
+      // user_settings - all extension settings. There is no division of settings into separate plugins
+      // current_page - optional. The current name page. One of the specified arguments "depends_on_pages"
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped

@@ -10,7 +10,7 @@ _plugins_conteiner.push({
          .then(player => {
             doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
 
-            function jumpTime(event) {
+            function jumpTime() {
                if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
                   && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                   // && !window.getSelection()

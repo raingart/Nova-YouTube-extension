@@ -100,32 +100,36 @@ _plugins_conteiner.push({
          // apply css
          YDOM.HTMLElement.addStyle(initcss, PINNED_SELECTOR, 'important');
 
-         // fix control-player panel
+         // var fix
          YDOM.HTMLElement.addStyle(
-            `${PINNED_SELECTOR} .ytp-chrome-bottom {
-               width: ${initcss.width} !important;
-            }
+            PINNED_SELECTOR + `{
+               --height: ${initcss.height} !important;
+               --width: ${initcss.width} !important;
+            }`);
+         // fix control-player panel
+         YDOM.HTMLElement.addStyle(`
             ${PINNED_SELECTOR} .ytp-preview,
             ${PINNED_SELECTOR} .ytp-scrubber-container,
             ${PINNED_SELECTOR} .ytp-hover-progress,
-            ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important }
-            ${PINNED_SELECTOR} .ytp-chapters-container { display: flex }`);
+            ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important; }
+            ${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width); }
+            ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
          // fix video size
          YDOM.HTMLElement.addStyle(
             `${PINNED_SELECTOR} video {
-                  width: ${initcss.width} !important;
-                  height: ${initcss.height} !important;
+                  width: var(--width);
+                  height: var(--height);
                }`);
-      }
 
-      function calculateAspectRatioFit({ srcWidth, srcHeight, maxWidth, maxHeight }) {
-         const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-         return {
-            width: Math.round(srcWidth * ratio),
-            height: Math.round(srcHeight * ratio),
+         function calculateAspectRatioFit({ srcWidth = 0, srcHeight = 0, maxWidth = 0, maxHeight = 0 }) {
+            const ratio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
+            return {
+               width: Math.round(+srcWidth * ratio),
+               height: Math.round(+srcHeight * ratio),
+            };
          };
-      };
+      }
 
       function onScreenToggle({ switchElement, watchingElement }) {
          // console.debug('onScreenToggle:', ...arguments);

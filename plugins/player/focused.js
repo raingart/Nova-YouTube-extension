@@ -9,7 +9,7 @@ _plugins_conteiner.push({
       const events = ["keydown", "yt-navigate-start", /*, "focus"*/];
       Array.from(events, e => document.addEventListener(e, setFocus));
 
-      function setFocus(event) {
+      function setFocus() {
          // console.debug('setFocus', document.activeElement);
 
          if (document.activeElement.tagName != "INPUT" // search-input

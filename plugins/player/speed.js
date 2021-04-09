@@ -9,16 +9,16 @@ _plugins_conteiner.push({
       const SELECTOR_ID = 'rate-player-info';
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
-         .then(videoPlayer => {
+         .then(player => {
             // show indicator
             // html5 way
-            videoPlayer.querySelector('video')
-               .addEventListener('ratechange', function (event) {
-                  // console.debug('ratechange', videoPlayer.getPlaybackRate(), this.playbackRate);
+            player.querySelector('video')
+               .addEventListener('ratechange', function () {
+                  // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
                   YDOM.bezelTrigger(this.playbackRate + 'x');
                });
             // Default indicator does not work for html5 way
-            // videoPlayer.addEventListener('onPlaybackRateChange', rate => {
+            // player.addEventListener('onPlaybackRateChange', rate => {
             //    console.debug('onPlaybackRateChange', rate);
             // });
 
@@ -38,49 +38,58 @@ _plugins_conteiner.push({
             }
 
             const playerRate = {
-               adjust(level) {
-                  // default method requires a multiplicity of 0.25
-                  return ((+level % 0.25) === 0 || +level > 1) && videoPlayer.hasOwnProperty('getPlaybackRate')
-                     ? this.default(+level)
-                     : this.html5(+level);
+               set(level) {
+                  player.setPlaybackRate(+level) && this.saveInSession(level);
+               },
+
+               // adjust(rate_step) {
+               //    // default method requires a multiplicity of 0.25
+               //    return (+rate_step % 0.25) === 0 && player.hasOwnProperty('getPlaybackRate')
+               //       ? this.default(+rate_step)
+               //       : this.html5(+rate_step);
+               // },
+
+               adjust(rate_step) {
+                  return player.hasOwnProperty('getPlaybackRate') ? this.default(+rate_step) : this.html5(+rate_step);
                },
 
                default(playback_rate) {
                   // console.debug('playerRate:default', ...arguments);
-                  const playbackRate = videoPlayer.getPlaybackRate();
-                  const inRange = delta => {
-                     const rangeRate = videoPlayer.getAvailablePlaybackRates();
-                     const playbackRateIdx = rangeRate.indexOf(playbackRate);
-                     return rangeRate[playbackRateIdx + delta];
+                  const playbackRate = player.getPlaybackRate();
+                  // const inRange = delta => {
+                  //    const rangeRate = player.getAvailablePlaybackRates();
+                  //    const playbackRateIdx = rangeRate.indexOf(playbackRate);
+                  //    return rangeRate[playbackRateIdx + delta];
+                  // };
+                  // const rateToSet = inRange(Math.sign(+playback_rate));
+                  const inRange = step => {
+                     const setRateStep = playbackRate + step;
+                     return (.1 <= setRateStep && setRateStep <= 2) && +setRateStep.toFixed(2);
                   };
-                  // if playback_rate < 1 run inRange
-                  const rateToSet = !playback_rate || playback_rate > 1 ? playback_rate || 1 : inRange(playback_rate);
-
+                  const rateToSet = inRange(+playback_rate);
                   // set new rate
                   if (rateToSet && rateToSet != playbackRate) {
-                     videoPlayer.setPlaybackRate(rateToSet);
+                     player.setPlaybackRate(rateToSet);
 
-                     if (rateToSet === videoPlayer.getPlaybackRate()) {
+                     if (rateToSet === player.getPlaybackRate()) {
                         this.saveInSession(rateToSet);
 
                      } else {
-                        console.error('playerRate:default different: %s!=%s', rateToSet, videoPlayer.getPlaybackRate());
+                        console.error('playerRate:default different: %s!=%s', rateToSet, player.getPlaybackRate());
                      }
                   }
-                  return rateToSet === videoPlayer.getPlaybackRate() && rateToSet;
+                  return rateToSet === player.getPlaybackRate() && rateToSet;
                },
 
                html5(playback_rate) {
                   // console.debug('playerRate:html5', ...arguments);
-                  const videoElm = videoPlayer.querySelector('video');
+                  const videoElm = player.querySelector('video');
                   const playbackRate = videoElm.playbackRate;
                   const inRange = step => {
                      const setRateStep = playbackRate + step;
-                     return (.1 <= setRateStep && setRateStep <= 2.5) && +setRateStep.toFixed(2);
+                     return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
                   };
-                  const rateToSet = inRange(playback_rate);
-                  // const rateToSet = playback_rate > 1 ? playback_rate : inRange(playback_rate); // dont work
-
+                  const rateToSet = inRange(+playback_rate);
                   // set new rate
                   if (rateToSet && rateToSet != playbackRate) {
                      // document.getElementsByTagName('video')[0].defaultPlaybackRate = rateToSet;
@@ -111,10 +120,8 @@ _plugins_conteiner.push({
             };
 
             // init default_playback_rate
-            if (location.href.includes('music') || +user_settings.default_playback_rate === 1) {
-               user_settings.default_playback_rate = 0; // normal rate
-            }
-            playerRate.adjust(user_settings.default_playback_rate);
+            if (location.href.includes('music')) user_settings.default_playback_rate = 1;
+            playerRate.set(user_settings.default_playback_rate);
 
          });
 
@@ -122,8 +129,8 @@ _plugins_conteiner.push({
    opt_export: {
       'default_playback_rate': {
          _tagName: 'input',
-         label: 'Speed at startup',
-         // label: 'Default speedup playback rate',
+         // label: 'Speed at startup',
+         label: 'Default speedup',
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',

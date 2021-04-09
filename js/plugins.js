@@ -17,7 +17,8 @@ const Plugins = {
       'player/focused.js',
       'player/pin.js',
       'player/time-jump.js',
-      // 'player/show-progress-bar.js',
+      'player/remaining-time.js',
+      'player/fly-progress-bar.js',
       // 'player/annotations.js',
       // 'player/stop.js', // incompatible with quality.js
 
@@ -25,7 +26,7 @@ const Plugins = {
       'other/rating-bars.js',
       'other/normalize-video-title.js',
       'other/thumbnail-clear.js',
-      'other/default-tab.js',
+      'other/channel-tab.js',
       'other/clear-redirect.js',
       'other/wake-up.js',
 
@@ -82,14 +83,13 @@ const Plugins = {
          const page = location.pathname.split('/')[1];
          return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
       })();
-      user_settings['currentPage'] = currentPage; // export info to plugin
 
       let logTableArray = [],
          logTableStatus,
          logTableTime;
 
       // console.groupCollapsed('plugins status');
-      console.debug('currentPage:', currentPage);
+      // console.debug('currentPage:', currentPage);
 
       _plugins_conteiner.forEach(plugin => {
          const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());
@@ -112,7 +112,7 @@ const Plugins = {
             try {
                const startTableTime = performance.now();
                plugin.was_init = true;
-               plugin._runtime(user_settings);
+               plugin._runtime(user_settings, currentPage);
                logTableTime = (performance.now() - startTableTime).toFixed(2);
                logTableStatus = true;
 

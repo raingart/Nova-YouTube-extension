@@ -10,107 +10,116 @@ _plugins_conteiner.push({
          SELECTOR_ID = 'player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ddd';
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
-         .then(videoPlayer => {
+      YDOM.HTMLElement.wait('video')
+         .then(player => {
             // show indicator
             // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
+
             // volume
-            videoPlayer.querySelector('video')
-               .addEventListener('volumechange', function (event) {
-                  // console.debug('volumechange', videoPlayer.getVolume(), this.volume);
-                  HUD.set(videoPlayer.getVolume(), '%');
-               });
+            player.addEventListener('volumechange', function () {
+               // console.debug('volumechange', player.getVolume(), this.volume);
+               const videoPlayer = document.querySelector('.html5-video-player');
+               HUD.set(videoPlayer.getVolume(), '%');
+            });
             // rate
-            videoPlayer.querySelector('video')
-               .addEventListener('ratechange', function (event) {
-                  // console.debug('ratechange', videoPlayer.getPlaybackRate(), this.playbackRate);
-                  HUD.set(this.playbackRate, 'x');
-               });
+            player.addEventListener('ratechange', function () {
+               // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
+               HUD.set(this.playbackRate, 'x');
+            });
          });
 
       const HUD = {
+         get() {
+            return this.div || this.create();
+         },
+
          create() {
-            const div = document.createElement("div");
-            div.id = SELECTOR_ID;
             // hide default indicator
             YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
             // init common css
-            YDOM.HTMLElement.addStyle({
-               position: 'absolute',
-               left: 0,
-               right: 0,
-               opacity: 0,
-               'background-color': 'rgba(0,0,0,0.3)',
-               color: '#fff',
-               margin: '0 auto',
-               'text-align': 'center',
-               'z-index': '19',
-            }, '#' + SELECTOR_ID);
+            YDOM.HTMLElement.addStyle(`
+                  #${SELECTOR_ID} {
+                     --color: #fff;
+                     --bg-color: rgba(0,0,0,0.3);
+                  }
+                  #${SELECTOR_ID} {
+                     position: absolute;
+                     left: 0;
+                     right: 0;
+                     z-index: 19;
+                     margin: 0 auto;
+                     text-align: center;
+                     opacity: 0;
+                     background-color: var(--bg-color);
+                     color: var(--color);
+                  }`);
 
+            document.getElementById('movie_player')
+               .insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}"><span></span></div>`);
+            this.div = document.getElementById(SELECTOR_ID);
+            this.span = this.div.querySelector('span');
+
+            // add to div user_settings.player_indicator_type style
+            // const [indicator_type, span_align] = user_settings.player_indicator_type.split('=', 2); // 2 = max param;
+            // switch (indicator_type) {
             switch (user_settings.player_indicator_type) {
-               case 'bar-smooth':
-                  Object.assign(div.style, {
+               case 'bar-center':
+                  Object.assign(this.div.style, {
                      bottom: '20%',
                      width: '30%',
                      'font-size': '1.2em',
                   });
-                  // div.innerHTML = '<span></span>';
-                  const span = document.createElement("span");
-                  span.innerHTML = '&nbsp;';
-                  Object.assign(span.style, {
+                  Object.assign(this.span.style, {
                      'background-color': COLOR_HUD,
                      transition: 'width 100ms ease-out 0s',
                      display: 'inline-block',
-                     float: 'left',
                   });
-                  div.appendChild(span);
+                  // if (span_align === 'left') {
+                  //    Object.assign(this.span.style, {
+                  //       float: 'left',
+                  //    });
+                  // }
                   break;
 
-               case 'bar-pt':
-                  Object.assign(div.style, {
-                     bottom: '20%',
-                     width: '30%',
-                     'font-size': '1.2em',
-                  });
-                  break;
-
+               // case 'text-top':
                default:
-                  Object.assign(div.style, {
+                  Object.assign(this.div.style, {
                      top: '0',
                      width: '100%',
-                     'font-size': '1.6em',
-                     padding: '.2em 0',
+                     padding: '.2em',
+                     'font-size': '1.55em',
                   });
             }
-            document.getElementById('movie_player').appendChild(div);
-            return div;
+            return this.div;
          },
 
-         set(pt, rate_suffix = '') {
+         set(pt = 0, rate_suffix = '') {
             // console.debug('HUD set', ...arguments);
             if (typeof fateHUD === 'number') clearTimeout(fateHUD);
 
-            const hud = document.getElementById(SELECTOR_ID) || this.create();
+            const hud = this.get();
             const text = pt + rate_suffix;
 
             if (rate_suffix === 'x') { // rate to pt
-               const maxPt = (+user_settings.player_rate_step % 0.25) === 0 ? 2 : 3;
-               pt = (+pt / maxPt) * 100;
+               const maxPercent = (+user_settings.player_rate_step % 0.25) === 0 ? 2 : 3;
+               pt = (+pt / maxPercent) * 100;
             }
             pt = Math.round(pt);
 
             switch (user_settings.player_indicator_type) {
-               case 'bar-smooth':
-                  hud.querySelector('span').style.width = pt + '%';
+               case 'bar-center':
+                  this.span.style.width = pt + '%';
+                  this.span.textContent = text;
                   break;
 
-               case 'bar-pt':
-                  hud.style.background = `linear-gradient(to right, ${COLOR_HUD}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
-                  hud.textContent = text;
-                  break;
+               // case 'bar-center-left':
+               //    hud.style.background = `linear-gradient(to right, ${COLOR_HUD}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
+               //    this.span.style.width = pt + '%';
+               //    this.span.textContent = text;
+               //    break;
 
                default:
-                  hud.textContent = text;
+                  this.span.textContent = text;
             }
 
             hud.style.transition = 'none';
@@ -131,9 +140,9 @@ _plugins_conteiner.push({
          _tagName: 'select',
          label: 'Indicator type',
          options: [
-            { label: 'text-top', value: 'default', selected: true },
-            { label: 'bar+smooth', value: 'bar-smooth' },
-            { label: 'bar+%', value: 'bar-pt' },
+            { label: 'text-top', value: 'text-top', selected: true },
+            { label: 'bar+center', value: 'bar-center' },
+            // { label: 'bar+center+left', value: 'bar-center=left' },
          ],
       },
       'player_indicator_color': {
@@ -141,7 +150,7 @@ _plugins_conteiner.push({
          label: 'Color',
          type: 'color',
          value: '#ff0000', // red
-         'data-dependent': '{"player_indicator_type":["bar-smooth","bar-pt"]}',
+         'data-dependent': '{"player_indicator_type":["bar-center"]}',
       },
    },
 });

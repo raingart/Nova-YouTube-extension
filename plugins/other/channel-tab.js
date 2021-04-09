@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'The default tab on the channel page',
-   id: 'set-default-channel-tab',
+   id: 'channel-default-tab',
    depends_on_pages: 'channel',
    run_on_transition: true,
    opt_section: 'channel',

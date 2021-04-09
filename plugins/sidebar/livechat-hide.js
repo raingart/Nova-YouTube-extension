@@ -12,7 +12,7 @@ _plugins_conteiner.push({
             .then(chat => chat.remove());
 
       } else {
-         YDOM.HTMLElement.wait('#chat:not([collapsed]) #show-hide-button paper-button')
+         YDOM.HTMLElement.wait('#chat:not([collapsed]) #show-hide-button #button')
             .then(btn => btn.click());
       }
 

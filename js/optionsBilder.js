@@ -88,7 +88,7 @@ const Opt = {
             let property = obj[key];
 
             if (!property._tagName) {
-               console.error('empty _tagName in', property);
+               console.error('_tagName is missing in', property);
                continue;
             }
 

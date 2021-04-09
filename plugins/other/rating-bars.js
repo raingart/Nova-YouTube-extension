@@ -17,8 +17,11 @@ _plugins_conteiner.push({
       // init bars style
       YDOM.HTMLElement.addStyle(
          `#${SELECTOR_ID}{
+            --height: ${(user_settings.ratio_bar_height || 5)}px;
+         }
+         #${SELECTOR_ID}{
             width: 100%;
-            height: ${(user_settings.ratio_bar_height || 5)}px;
+            height: var(--height);
          }
          a#thumbnail #${SELECTOR_ID} {
             position: absolute;

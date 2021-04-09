@@ -51,7 +51,7 @@ _plugins_conteiner.push({
 
       } else {
          YDOM.HTMLElement.addStyle(
-            `${VIDEO_TITLE_SELECTOR} {
+            VIDEO_TITLE_SELECTOR + `{
                text-transform: lowercase !important;
             }
             ${VIDEO_TITLE_SELECTOR}:first-letter {

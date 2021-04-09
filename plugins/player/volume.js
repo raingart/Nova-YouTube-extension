@@ -7,17 +7,17 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
-         .then(videoPlayer => {
+         .then(player => {
             // init default_volume_level
             if (+user_settings.default_volume_level) {
                setVolumeLevel(user_settings.default_volume_level);
             }
 
             // show indicator
-            videoPlayer.querySelector('video')
-               .addEventListener('volumechange', function (event) {
-                  // console.debug('volumechange', videoPlayer.getVolume(), this.volume);
-                  YDOM.bezelTrigger(videoPlayer.getVolume() + '%');
+            player.querySelector('video')
+               .addEventListener('volumechange', function () {
+                  // console.debug('volumechange', player.getVolume(), this.volume);
+                  YDOM.bezelTrigger(player.getVolume() + '%');
                });
 
             if (user_settings.volume_hotkey) {
@@ -36,27 +36,27 @@ _plugins_conteiner.push({
             }
 
             function adjustVolumeBy(delta) {
-               return setVolumeLevel(videoPlayer.getVolume() + parseInt(delta));
+               return setVolumeLevel(player.getVolume() + parseInt(delta));
             }
 
             function setVolumeLevel(level) {
-               if (!videoPlayer.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+               if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
                const volumeToSet = Math.max(0, Math.min(100, parseInt(level)));
 
                // set new volume level
-               if (volumeToSet !== videoPlayer.getVolume()) {
-                  videoPlayer.isMuted() && videoPlayer.unMute();
-                  videoPlayer.setVolume(volumeToSet); // 0 - 100
+               if (volumeToSet !== player.getVolume()) {
+                  player.isMuted() && player.unMute();
+                  player.setVolume(volumeToSet); // 0 - 100
 
-                  if (volumeToSet === videoPlayer.getVolume()) {
+                  if (volumeToSet === player.getVolume()) {
                      saveInSession(volumeToSet);
 
                   } else {
-                     console.error('setVolumeLevel error! Different: %s!=%s', volumeToSet, videoPlayer.getVolume());
+                     console.error('setVolumeLevel error! Different: %s!=%s', volumeToSet, player.getVolume());
                   }
                }
 
-               return volumeToSet === videoPlayer.getVolume() && volumeToSet;
+               return volumeToSet === player.getVolume() && volumeToSet;
 
                function saveInSession(level) {
                   if (!level) return console.error('saveInSession', level);
@@ -85,9 +85,10 @@ _plugins_conteiner.push({
    opt_export: {
       'default_volume_level': {
          _tagName: 'input',
-         label: 'Level at startup',
+         // label: 'Level at startup',
+         label: 'Default volume',
          type: 'number',
-         title: '0 - auto/disable',
+         title: '0 - auto',
          placeholder: '%',
          step: 5,
          min: 0,

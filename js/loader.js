@@ -1,19 +1,14 @@
 const App = {
    // DEBUG: true,
 
-   // Register the event handlers.
-   eventListener: (function () {
-      // skip first run on page transition
-      document.addEventListener('yt-navigate-start', () => App.url.isChange() && App.rerun());
-   }()),
+   lastUrl: location.href,
 
-   url: {
-      current: location.href, // prev state
-      isChange: () => App.url.current == location.href ? false : App.url.current = location.href,
+   isChangeUrl() {
+      return this.lastUrl === location.href ? false : this.lastUrl = location.href;
    },
 
    rerun() {
-      App.log('page transition', location.href);
+      App.log('new page', location.href);
       this.run(true);
    },
 
@@ -37,6 +32,9 @@ const App = {
    init() {
       const manifest = chrome.runtime.getManifest();
       console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', manifest.name + ' v.' + manifest.version);
+
+      // skip first run on page transition
+      document.addEventListener('yt-navigate-start', () => this.isChangeUrl() && this.rerun());
 
       this.storage.load();
       // load all Plugins

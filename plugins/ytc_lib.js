@@ -4,6 +4,9 @@ const YDOM = {
    HTMLElement: {
       // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
 
+      // There is a more correct method - transitionend.
+      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future. If YouTube replaces logic.
+
       wait(selector = required()) {
          YDOM.log('wait', ...arguments);
 
@@ -110,6 +113,12 @@ const YDOM = {
          }
       },
 
+      getCSSValue({ selector = required(), property = required() }){
+         const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
+         if (!el) return console.warn('getCSSValue:selector is empty', selector, el);
+         return window.getComputedStyle(el)[property];
+      },
+
       // uncheck: toggle => toggle.hasAttribute("checked") && toggle.click(),
    },
 
@@ -172,6 +181,18 @@ const YDOM = {
       bezelConteiner.classList.add(CLASS_VALUE_TOGGLE);
 
       fateBezel = setTimeout(() => bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE), 600); // 600ms
+   },
+
+   secToStr(timestamp, no_zeros) {
+      const
+         hours = Math.floor(timestamp / 60 / 60),
+         minutes = Math.floor(timestamp / 60) - (hours * 60),
+         seconds = timestamp % 60;
+
+      return [hours, minutes, seconds]
+         .filter(i => +i) // clear zeros
+         .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1" => "01"
+         .join(':'); // format "0h:0m:0s"
    },
 
    // YDOM.getURLParams().get('name');

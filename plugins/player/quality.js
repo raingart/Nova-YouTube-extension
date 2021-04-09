@@ -4,13 +4,13 @@ _plugins_conteiner.push({
    depends_on_pages: 'watch, embed',
    opt_section: 'player',
    // desc: '',
-   _runtime: user_settings => {
+   _runtime: (user_settings, current_page) => {
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
-         .then(videoPlayer => {
+         .then(player => {
             let selectedQuality = user_settings.video_quality;
 
-            videoPlayer.addEventListener("onStateChange", setQuality.bind(this));
+            player.addEventListener("onStateChange", setQuality.bind(this));
 
             function setQuality(state) {
                if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
@@ -26,7 +26,7 @@ _plugins_conteiner.push({
                   setQuality.allow_change = true;
 
                   let interval_quality = setInterval(() => {
-                     const availableQualityLevels = videoPlayer.getAvailableQualityLevels();
+                     const availableQualityLevels = player.getAvailableQualityLevels();
 
                      if (availableQualityLevels.length) {
                         clearInterval(interval_quality);
@@ -34,7 +34,7 @@ _plugins_conteiner.push({
                         const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
                         const qualityToSet = availableQualityLevels[maxAvailableQuality];
 
-                        // if (!qualityToSet || videoPlayer.getPlaybackQuality() == selectedQuality) {
+                        // if (!qualityToSet || player.getPlaybackQuality() == selectedQuality) {
                         //    return console.debug('skip set quality');
                         // }
 
@@ -42,14 +42,14 @@ _plugins_conteiner.push({
                            console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${qualityToSet}" of ${JSON.stringify(availableQualityLevels)}`);
                         }
 
-                        if (videoPlayer.hasOwnProperty('setPlaybackQuality')) {
+                        if (player.hasOwnProperty('setPlaybackQuality')) {
                            // console.debug('use setPlaybackQuality');
-                           videoPlayer.setPlaybackQuality(qualityToSet);
+                           player.setPlaybackQuality(qualityToSet);
                         }
 
                         // set QualityRange
-                        if (videoPlayer.hasOwnProperty('setPlaybackQualityRange')) {
-                           videoPlayer.setPlaybackQualityRange(qualityToSet, qualityToSet);
+                        if (player.hasOwnProperty('setPlaybackQualityRange')) {
+                           player.setPlaybackQualityRange(qualityToSet, qualityToSet);
 
                            // emulate clicked (in embed iframe)
                         } else if (document.querySelector('.ytp-settings-button:not([aria-expanded]')) { // the menu is not open
@@ -71,7 +71,7 @@ _plugins_conteiner.push({
 
                         // console.debug('availableQualityLevels:', availableQualityLevels);
                         // console.debug("try set quality:", qualityToSet);
-                        // console.debug('set realy quality:', videoPlayer.getPlaybackQuality());
+                        // console.debug('set realy quality:', player.getPlaybackQuality());
                      }
                   }, 50); // 50ms
 
@@ -80,12 +80,12 @@ _plugins_conteiner.push({
                }
 
                // keep quality in session
-               if (user_settings.save_manual_quality_in_tab && user_settings.currentPage === 'watch') {// no sense if in the embed
-                  videoPlayer.addEventListener("onPlaybackQualityChange", quality => {
+               if (user_settings.save_manual_quality_in_tab && current_page === 'watch') {// no sense if in the embed
+                  player.addEventListener("onPlaybackQualityChange", quality => {
                      // console.debug('document.activeElement,',document.activeElement);
                      if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
                         && quality !== selectedQuality // the new quality
-                        && videoPlayer.hasOwnProperty('setPlaybackQuality') // not automatically changed
+                        && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
                      ) {
                         console.info('save session new quality:', quality);
                         selectedQuality = quality;
