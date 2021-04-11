@@ -6,7 +6,8 @@ _plugins_conteiner.push({
    // desc: '',
    _runtime: user_settings => {
 
-      const SELECTOR_ID = 'pin-progress-bar';
+      const SELECTOR_ID = 'pin-progress-bar',
+         SELECTOR_BAR = '#' + SELECTOR_ID;
 
       YDOM.HTMLElement.wait('video')
          .then(player => {
@@ -48,48 +49,53 @@ _plugins_conteiner.push({
 
          return document.getElementById(SELECTOR_ID) || (function () {
             html_container.insertAdjacentHTML("beforeend",
-               `<div id="${SELECTOR_ID}-bar">
+               `<div id="${SELECTOR_ID}">
                   <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
                   <div id="${SELECTOR_ID}-progress" class="ytp-swatch-background-color transition"></div>
                </div>`);
 
             const
-               // zIndex = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-chrome-bottom ', property: 'z-index' }) || 60,
-               // height = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-progress-bar-container', property: 'height' }) || '3px',
+               zIndex = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
+               height = user_settings.fly_progress_bar_height || YDOM.HTMLElement.getCSSValue({ selector: '.ytp-progress-bar-container', property: 'height' }) || 3,
                bgColor = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
                bufferColor = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
-            YDOM.HTMLElement.addStyle(`
-               #${SELECTOR_ID}-bar {
-                  --opacity: .8;
-                  --height: 3px;
+            YDOM.HTMLElement.addStyle(
+               SELECTOR_BAR + `{
+                  --opacity: ${user_settings.fly_progress_bar_opacity || .7};
+                  --height: ${parseInt(height)}px;
                   --buffer-color: ${bufferColor};
                   --bg-color: ${bgColor};
-               }
-               #${SELECTOR_ID}-bar {
+                  --zindex: ${zIndex};
+
                   position: absolute;
                   bottom: 0;
                   opacity: 0;
-                  z-index: 60;
+                  z-index: var(--zindex);
                   width: 100%;
-                  height: var(--height);
                   background: var(--bg-color);
+
+                  /*margin: 0 1em;
+                  width: -webkit-fill-available;*/
                }
-               .ytp-autohide #${SELECTOR_ID}-bar {
+               .ytp-autohide ${SELECTOR_BAR} {
                   opacity: var(--opacity);
                }
-               #${SELECTOR_ID}-progress,
-               #${SELECTOR_ID}-buffer {
+               ${SELECTOR_BAR}-progress,
+               ${SELECTOR_BAR}-buffer {
                   width: 100%;
                   height: var(--height);
                   transform-origin: 0 0;
                   position: absolute;
                }
-               #${SELECTOR_ID}-progress.transition,
-               #${SELECTOR_ID}-buffer {
+               ${SELECTOR_BAR}-progress.transition,
+               ${SELECTOR_BAR}-buffer {
                   transition: transform .2s linear;
                }
-               #${SELECTOR_ID}-buffer {
+               ${SELECTOR_BAR}-progress {
+                  z-index: calc(var(--zindex) + 1);
+               }
+               ${SELECTOR_BAR}-buffer {
                   background: var(--buffer-color);
                }`);
 
@@ -98,17 +104,27 @@ _plugins_conteiner.push({
       }
 
    },
-   // opt_export: {
-   //    'progress_bar_opacity': {
-   //       _elementsTagName: 'input',
-   //       label: 'Opacity',
-   //       type: 'number',
-   //       // title: '',
-   //       placeholder: '1-10',
-   //       step: 1,
-   //       min: 1,
-   //       max: 10,
-   //       value: 7,
-   //    },
-   // },
+   opt_export: {
+      'fly_progress_bar_height': {
+         _tagName: 'input',
+         label: 'Height',
+         type: 'number',
+         title: '0 - auto',
+         placeholder: 'px',
+         min: 0,
+         max: 9,
+         value: 0,
+      },
+      'fly_progress_bar_opacity': {
+         _tagName: 'input',
+         label: 'Opacity',
+         type: 'number',
+         // title: '',
+         placeholder: '1-10',
+         step: .1,
+         min: .1,
+         max: 1,
+         value: .7,
+      },
+   },
 });

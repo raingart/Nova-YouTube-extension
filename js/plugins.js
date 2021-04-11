@@ -75,7 +75,7 @@ const Plugins = {
 
    // run: ({ user_settings, is_new_url, plugins }) => {
    run: ({ user_settings, app_ver }) => {
-      // console.log('plugins_executor', user_settings, is_new_url, plugins);
+      // console.log('plugins_executor', ...arguments);
       if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
@@ -101,7 +101,7 @@ const Plugins = {
             alert('Plugin invalid: ' + (plugin?.name || plugin?.id));
             logTableStatus = 'INVALID';
 
-         } else if (plugin.was_init && !plugin.run_on_transition) {
+         } else if (plugin.was_init && !plugin.restart_on_transition) {
             logTableStatus = 'skiped';
 
          } else if (!user_settings.hasOwnProperty(plugin.id)) {

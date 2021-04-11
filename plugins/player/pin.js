@@ -19,8 +19,7 @@ _plugins_conteiner.push({
          CLASS_VALUE = 'video-pinned',
          PINNED_SELECTOR = '.' + CLASS_VALUE;
 
-      // YDOM.HTMLElement.wait('#movie_player')
-      YDOM.HTMLElement.wait('#movie_player video')
+      YDOM.HTMLElement.wait('.html5-video-player')
          .then(player => {
             // init css
             let interval_initStyle = setInterval(() => {
@@ -112,14 +111,14 @@ _plugins_conteiner.push({
             ${PINNED_SELECTOR} .ytp-scrubber-container,
             ${PINNED_SELECTOR} .ytp-hover-progress,
             ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important; }
-            ${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width); }
+            ${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width) !important; }
             ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
          // fix video size
          YDOM.HTMLElement.addStyle(
             `${PINNED_SELECTOR} video {
-                  width: var(--width);
-                  height: var(--height);
+                  width: var(--width) !important;
+                  height: var(--height) !important;
                }`);
 
          function calculateAspectRatioFit({ srcWidth = 0, srcHeight = 0, maxWidth = 0, maxHeight = 0 }) {
@@ -179,8 +178,8 @@ _plugins_conteiner.push({
       'pin_player_size_ratio': {
          _tagName: 'input',
          label: 'Player ratio to screen size',
-         title: 'less - more player size',
          type: 'number',
+         title: 'less - more player size',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -197,10 +196,10 @@ _plugins_conteiner.push({
             { label: 'right-bottom', value: 'bottom-right' },
          ],
       },
-      'pin_player_pause_pinned_video': {
-         _tagName: 'input',
-         label: 'Pause pinned video',
-         type: 'checkbox',
-      },
+      // 'pin_player_pause_pinned_video': {
+      //    _tagName: 'input',
+      //    label: 'Pause pinned video',
+      //    type: 'checkbox',
+      // },
    },
 });

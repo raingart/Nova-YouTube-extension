@@ -115,7 +115,7 @@ const YDOM = {
 
       getCSSValue({ selector = required(), property = required() }){
          const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
-         if (!el) return console.warn('getCSSValue:selector is empty', selector, el);
+         if (!el) return console.warn('getCSSValue:selector is empty', el, ...arguments);
          return window.getComputedStyle(el)[property];
       },
 
@@ -203,7 +203,8 @@ const YDOM = {
       API_STORE_NAME: 'YOUTUBE_API_KEYS',
 
       async API({ request, params, api_key }) {
-         YDOM.log('API:', ...arguments);
+         // YDOM.log('API:', ...arguments); // err
+         // console.log('API:', ...arguments);
          // get API key
          const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
 
@@ -227,7 +228,7 @@ const YDOM = {
                .join('&');
 
          const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
-
+         // console.debug('URL', URL);
          // request
          return await fetch(URL)
             .then(response => response.json())

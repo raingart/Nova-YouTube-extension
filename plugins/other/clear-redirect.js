@@ -8,7 +8,7 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.watch({
          selector: 'a[href*="/redirect?"]',
-         attr_mark: 'redirect-clear',
+         attr_mark: 'redirect-cleared',
          callback: link => {
             const q = YDOM.getURLParams(link.href).get('q');
             if (q) link.href = decodeURIComponent(q);

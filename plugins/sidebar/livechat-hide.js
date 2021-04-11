@@ -2,7 +2,7 @@ _plugins_conteiner.push({
    name: 'Hide livechat',
    id: 'collapse-livechat',
    depends_on_pages: 'watch',
-   run_on_transition: true,
+   restart_on_transition: true,
    opt_section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {

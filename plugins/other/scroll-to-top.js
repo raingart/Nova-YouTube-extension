@@ -4,7 +4,7 @@ _plugins_conteiner.push({
    depends_on_pages: 'all, -embed',
    opt_section: 'global',
    desc: 'Displayed on long pages',
-   _runtime: user_settings => {
+   _runtime: (user_settings, current_page) => {
 
       const SELECTOR_ID = 'scrollToTop_btn';
 
@@ -32,11 +32,17 @@ _plugins_conteiner.push({
                'background-color': 'rgba(0,0,0,.3)',
                'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .4)',
             });
-            btn.addEventListener('click', () => window.scrollTo({
-               top: 0,
-               left: window.pageXOffset,
-               behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
-            }));
+            btn.addEventListener('click', event => {
+               window.scrollTo({
+                  top: 0,
+                  left: window.pageXOffset,
+                  behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
+               });
+
+               if (user_settings.scroll_to_top_autoplay && current_page === 'watch') {
+                  document.querySelector('.html5-video-player')?.playVideo();
+               }
+            });
 
             // create arrow
             let arrow = document.createElement('span');
@@ -78,6 +84,12 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Smooth',
          type: 'checkbox',
+      },
+      'scroll_to_top_autoplay': {
+         _tagName: 'input',
+         label: 'Video autoplay on click',
+         type: 'checkbox',
+         title: 'If you pause the video while scrolling',
       },
    },
 });

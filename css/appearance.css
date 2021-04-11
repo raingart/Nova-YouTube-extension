@@ -8,7 +8,12 @@
    display: grid;
    grid-gap: 10px;
    grid-template-columns: auto 20% 10%;
-   grid-template-areas: "header header other""player sidebar other""details sidebar other""comments empty other""footer footer other";
+   grid-template-areas:
+      "header header other"
+      "player sidebar other"
+      "details sidebar other"
+      "comments empty other"
+      "footer footer other";
 }
 
 .appearance>* {
@@ -77,11 +82,12 @@
 }
 
 .appearance>.other:not(.empty):hover {
-   outline-color: coral;
+   --hovercolor: coral;
+   outline-color: var(--hovercolor);
 }
 
 .appearance>.other:not(.empty):hover>* {
-   color: rgb(255, 127, 80);
+   color: var(--hovercolor);
    text-shadow: 0 0 5px rgba(255, 127, 80, .7);
 }
 

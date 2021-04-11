@@ -2,7 +2,7 @@ _plugins_conteiner.push({
    name: 'The default tab on the channel page',
    id: 'channel-default-tab',
    depends_on_pages: 'channel',
-   run_on_transition: true,
+   restart_on_transition: true,
    opt_section: 'channel',
    _runtime: user_settings => {
 

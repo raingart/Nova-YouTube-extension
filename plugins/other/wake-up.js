@@ -8,6 +8,5 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.wait('[role="dialog"] #confirm-button')
          .then(btn => btn.click());
-
    },
 });

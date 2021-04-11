@@ -2,7 +2,7 @@ _plugins_conteiner.push({
    name: 'Show channel videos count',
    id: 'show-channel-videos-count',
    depends_on_pages: 'watch, channel',
-   run_on_transition: true,
+   restart_on_transition: true,
    opt_section: 'details',
    opt_api_key_warn: true,
    desc: 'Total number of videos on channel',
@@ -11,6 +11,7 @@ _plugins_conteiner.push({
       const
          CACHE_PREFIX = 'channel-video-count:',
          SELECTOR_ID = 'video_count',
+         getChannelFromUrl = location.pathname.split('/')[2],
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
       // watch page
@@ -31,8 +32,8 @@ _plugins_conteiner.push({
             insertChannelStatistic({ 'html_container': el, 'channel_id': getChannelId() });
 
             function getChannelId() {
-               return [
-                  location.pathname.split('/')[2],
+               const id = [
+                  getChannelFromUrl,
                   document.querySelector('meta[itemprop="channelId"][content]'),
                   document.querySelector('link[itemprop="url"][href]'),
                   ...document.querySelectorAll('meta[content]'),
@@ -40,18 +41,24 @@ _plugins_conteiner.push({
                ]
                   .map(i => i?.href || i?.content)
                   .find(i => isChannelId(i?.split('/').pop()));
+
+               // TODO. insertChannelStatistic is run two times. await YDOM.request.API dont work!
+               // return id || swait YDOM.request.API({
+               return id || YDOM.request.API({
+                  request: 'channels',
+                  params: { 'forUsername': getChannelFromUrl, 'part': 'snippet' },
+                  api_key: user_settings['custom-api-key']
+               })
+                  .then(res => {
+                     insertChannelStatistic({ 'html_container': el, 'channel_id': res?.items[0]?.id });
+                  });
             }
          });
 
       function insertChannelStatistic({ html_container, channel_id }) {
          // console.debug('insertChannelStatistic:', ...arguments);
+         if (!isChannelId(channel_id)) return console.error('channel_id empty:', channel_id);
 
-         if (!channel_id || !isChannelId(channel_id)) return;
-         // if (!channel_id || !isChannelId(channel_id)) {
-         //    console.debug('location.href', location.href);
-         //    insertToHTML(''); // erase html
-         //    return console.error('channel_id is invalid', channel_id);
-         // }
          // cached
          const storage = sessionStorage.getItem(CACHE_PREFIX + channel_id);
 

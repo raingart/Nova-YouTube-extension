@@ -12,22 +12,22 @@ const Opt = {
          && plugin.depends_on_pages?.split(',').length
          && plugin._runtime && typeof plugin._runtime === 'function'
          // optional
-         && (!plugin.opt_section       || plugin.opt_section?.split(' ').length === 1)
-         && (!plugin.run_on_transition || 'boolean' === typeof plugin.run_on_transition)
-         && (!plugin.opt_api_key_warn  || 'boolean' === typeof plugin.opt_api_key_warn)
-         && (!plugin.opt_export        || 'object' === typeof plugin.opt_export)
-         && (!plugin.desc              || 'string' === typeof plugin.desc);
+         && (!plugin.opt_section || plugin.opt_section?.split(' ').length === 1)
+         && (!plugin.restart_on_transition || 'boolean' === typeof plugin.restart_on_transition)
+         && (!plugin.opt_api_key_warn || 'boolean' === typeof plugin.opt_api_key_warn)
+         && (!plugin.opt_export || 'object' === typeof plugin.opt_export)
+         && (!plugin.desc || 'string' === typeof plugin.desc);
 
       if (!isValid) {
          console.error('plugin invalid:\n', {
             id: plugin.id,
-            depends_on_pages:    plugin.depends_on_pages?.split(',').length,
-            opt_section:         plugin.opt_section?.split(' ').length === 1   || undefined,
-            run_on_transition:   'boolean' === typeof plugin.run_on_transition || undefined,
-            opt_api_key_warn:    'boolean' === typeof plugin.opt_api_key_warn  || undefined,
-            desc:                'string' === typeof plugin.desc               || undefined,
-            opt_export:          'object' === typeof plugin.opt_export         || undefined,
-            _runtime:            'function' === typeof plugin._runtime,
+            depends_on_pages: plugin.depends_on_pages?.split(',').length,
+            opt_section: plugin.opt_section?.split(' ').length === 1 || undefined,
+            restart_on_transition: 'boolean' === typeof plugin.restart_on_transition || undefined,
+            opt_api_key_warn: 'boolean' === typeof plugin.opt_api_key_warn || undefined,
+            desc: 'string' === typeof plugin.desc || undefined,
+            opt_export: 'object' === typeof plugin.opt_export || undefined,
+            _runtime: 'function' === typeof plugin._runtime,
          });
       }
       return isValid;
@@ -55,7 +55,7 @@ const Opt = {
                   `<a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
                   (plugin.opt_api_key_warn ?
                      ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">⚠️</span></b> ' : '') +
-                     // ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">&#128273;</span></b> ' : '') +
+                  // ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">&#128273;</span></b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
                if (plugin.opt_export) {

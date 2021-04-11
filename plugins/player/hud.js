@@ -41,12 +41,12 @@ _plugins_conteiner.push({
                   #${SELECTOR_ID} {
                      --color: #fff;
                      --bg-color: rgba(0,0,0,0.3);
-                  }
-                  #${SELECTOR_ID} {
+                     --zindex: ${YDOM.HTMLElement.getCSSValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
+
                      position: absolute;
                      left: 0;
                      right: 0;
-                     z-index: 19;
+                     z-index: calc(var(--zindex) + 1);
                      margin: 0 auto;
                      text-align: center;
                      opacity: 0;

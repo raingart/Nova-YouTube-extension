@@ -15,7 +15,8 @@ _plugins_conteiner.push({
    // https://www.youtube.com/embed/*** <-- -embed
    depends_on_pages: 'all, watch, channel, -embed',
 
-   run_on_transition: true, // optional. Restart plugin on every url change
+    // deactivate if use YDOM.HTMLElement.watch
+   restart_on_transition: true, // optional. Restart plugin on every url change
 
    /* optional GIU in options page: start */
    opt_section: 'player', // optional. Visual section in settings where the plugin belongs

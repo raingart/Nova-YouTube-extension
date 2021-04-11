@@ -7,15 +7,15 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       YDOM.HTMLElement.watch({
-         selector: '#comment #expander[collapsed] #more',
-         attr_mark: 'comment-expand',
+         selector: '#contents #expander[collapsed] #more',
+         attr_mark: 'comment-expanded',
          callback: btn => btn.click(),
       });
 
       if (user_settings.comments_view_reply) {
          YDOM.HTMLElement.watch({
             selector: '#comment #expander #more-replies:not([hidden])',
-            attr_mark: 'replies-expand',
+            attr_mark: 'replies-expanded',
             callback: btn => btn.click(),
          });
       }
