@@ -97,16 +97,16 @@ _plugins_conteiner.push({
          }
 
          // apply css
-         YDOM.HTMLElement.addStyle(initcss, PINNED_SELECTOR, 'important');
+         YDOM.css.add(initcss, PINNED_SELECTOR, 'important');
 
          // var fix
-         YDOM.HTMLElement.addStyle(
+         YDOM.css.add(
             PINNED_SELECTOR + `{
                --height: ${initcss.height} !important;
                --width: ${initcss.width} !important;
             }`);
          // fix control-player panel
-         YDOM.HTMLElement.addStyle(`
+         YDOM.css.add(`
             ${PINNED_SELECTOR} .ytp-preview,
             ${PINNED_SELECTOR} .ytp-scrubber-container,
             ${PINNED_SELECTOR} .ytp-hover-progress,
@@ -115,7 +115,7 @@ _plugins_conteiner.push({
             ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
          // fix video size
-         YDOM.HTMLElement.addStyle(
+         YDOM.css.add(
             `${PINNED_SELECTOR} video {
                   width: var(--width) !important;
                   height: var(--height) !important;

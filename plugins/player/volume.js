@@ -59,7 +59,7 @@ _plugins_conteiner.push({
                return volumeToSet === player.getVolume() && volumeToSet;
 
                function saveInSession(level) {
-                  if (!level) return console.error('saveInSession', level);
+                  if (!level) return;
 
                   const storageData = {
                      creation: Date.now(),

@@ -35,13 +35,13 @@ _plugins_conteiner.push({
 
          create() {
             // hide default indicator
-            YDOM.HTMLElement.addStyle('.ytp-bezel-text-wrapper { display:none !important }');
+            YDOM.css.add('.ytp-bezel-text-wrapper { display:none !important }');
             // init common css
-            YDOM.HTMLElement.addStyle(`
+            YDOM.css.add(`
                   #${SELECTOR_ID} {
                      --color: #fff;
                      --bg-color: rgba(0,0,0,0.3);
-                     --zindex: ${YDOM.HTMLElement.getCSSValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
+                     --zindex: ${YDOM.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
 
                      position: absolute;
                      left: 0;

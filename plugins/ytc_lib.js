@@ -57,8 +57,10 @@ const YDOM = {
                });
          }
       },
+   },
 
-      addStyle(css = required(), selector, important) {
+   css: {
+      add(css = required(), selector, important) {
          if (typeof css === 'object') {
             if (!selector) {
                return console.error('injectStyle > empty json-selector:', ...arguments);
@@ -113,7 +115,7 @@ const YDOM = {
          }
       },
 
-      getCSSValue({ selector = required(), property = required() }){
+      getValue({ selector = required(), property = required() }) {
          const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
          if (!el) return console.warn('getCSSValue:selector is empty', el, ...arguments);
          return window.getComputedStyle(el)[property];
@@ -161,7 +163,7 @@ const YDOM = {
 
       if (!this.bezel_inited) {
          this.bezel_inited = true;
-         this.HTMLElement.addStyle(
+         this.css.add(
             `.${CLASS_VALUE_TOGGLE} {
                display: block !important;
             }

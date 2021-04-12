@@ -60,7 +60,7 @@ _plugins_conteiner.push({
             document.body.appendChild(btn);
 
             // btn hover style
-            YDOM.HTMLElement.addStyle(
+            YDOM.css.add(
                `#${SELECTOR_ID}:hover {
                   opacity: 1 !important;
                   background-color: rgba(0,0,0,.6) !important;

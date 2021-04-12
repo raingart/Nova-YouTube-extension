@@ -55,21 +55,19 @@ _plugins_conteiner.push({
                </div>`);
 
             const
-               zIndex = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
-               height = user_settings.fly_progress_bar_height || YDOM.HTMLElement.getCSSValue({ selector: '.ytp-progress-bar-container', property: 'height' }) || 3,
-               bgColor = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
-               bufferColor = YDOM.HTMLElement.getCSSValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
+               zIndex = YDOM.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
+               height = +user_settings.fly_progress_bar_height || 3,
+               bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
+               bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
-            YDOM.HTMLElement.addStyle(
+            YDOM.css.add(
                SELECTOR_BAR + `{
-                  --opacity: ${user_settings.fly_progress_bar_opacity || .7};
-                  --height: ${parseInt(height)}px;
+                  --opacity: ${+user_settings.fly_progress_bar_opacity || .7};
+                  --height: ${height}px;
                   --buffer-color: ${bufferColor};
                   --bg-color: ${bgColor};
                   --zindex: ${zIndex};
 
-                  position: absolute;
-                  bottom: 0;
                   opacity: 0;
                   z-index: var(--zindex);
                   width: 100%;
@@ -77,6 +75,12 @@ _plugins_conteiner.push({
 
                   /*margin: 0 1em;
                   width: -webkit-fill-available;*/
+               }
+               ${SELECTOR_BAR},
+               ${SELECTOR_BAR}-progress,
+               ${SELECTOR_BAR}-buffer {
+                  position: absolute;
+                  bottom: 0;
                }
                .ytp-autohide ${SELECTOR_BAR} {
                   opacity: var(--opacity);
@@ -86,7 +90,6 @@ _plugins_conteiner.push({
                   width: 100%;
                   height: var(--height);
                   transform-origin: 0 0;
-                  position: absolute;
                }
                ${SELECTOR_BAR}-progress.transition,
                ${SELECTOR_BAR}-buffer {
@@ -109,11 +112,11 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Height',
          type: 'number',
-         title: '0 - auto',
+         title: 'In pixels',
          placeholder: 'px',
-         min: 0,
+         min: 1,
          max: 9,
-         value: 0,
+         value: 3,
       },
       'fly_progress_bar_opacity': {
          _tagName: 'input',

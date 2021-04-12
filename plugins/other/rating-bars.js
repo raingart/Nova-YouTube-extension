@@ -15,7 +15,7 @@ _plugins_conteiner.push({
          colorDislike = user_settings.ratio_dislike_color || '#ddd';
 
       // init bars style
-      YDOM.HTMLElement.addStyle(
+      YDOM.css.add(
          `#${SELECTOR_ID}{
             --height: ${(user_settings.ratio_bar_height || 5)}px;
          }
