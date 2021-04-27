@@ -50,7 +50,7 @@ _plugins_conteiner.push({
                   api_key: user_settings['custom-api-key']
                })
                   .then(res => {
-                     insertChannelStatistic({ 'html_container': el, 'channel_id': res?.items[0]?.id });
+                     res?.items?.lenght && insertChannelStatistic({ 'html_container': el, 'channel_id': res.items[0].id });
                   });
             }
          });

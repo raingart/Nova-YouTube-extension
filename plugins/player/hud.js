@@ -32,6 +32,9 @@ _plugins_conteiner.push({
          get() {
             return this.div || this.create();
          },
+         // TODO The idea of ​​copying the progress bar. To display segments of time markers
+         // a = el.cloneNode(true)
+         // document.getElementById(SELECTOR_ID).innerHTML = a.innerHTML
 
          create() {
             // hide default indicator
