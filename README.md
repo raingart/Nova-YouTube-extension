@@ -31,6 +31,6 @@ The extension is based on plugin files. The remaining files only serve them.
 - [/js/optionsBilder.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/optionsBilder.js) - generator of plugins configuration file.
 - [/js/libs/](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/libs) - directory of internal components of the extension. Not used by plugins, only by the extension itself.
 - [/plugins/ytc_lib.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/ytc_lib.js) - library for related functions in all plugins.
-- [/plugins/](https://github.com/raingart/Nova-YouTube-extension/tree/master/plugins) - directory of all ilagins and files available for connection to the YouTube page.
+- [/plugins/](https://github.com/raingart/Nova-YouTube-extension/tree/master/plugins) - directory of all plugins and files available for connection to the YouTube page.
 
 [plugin file example](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/_blank_plugin.js)
