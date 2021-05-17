@@ -83,13 +83,13 @@ _plugins_conteiner.push({
 
          function insertToHTML({ set_text, html_container }) {
             // console.debug('insertToHTML', ...arguments);
-            const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
+            (document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
                   + ` • <span id="${SELECTOR_ID}">${set_text}</span> videos</span>`);
                return document.getElementById(SELECTOR_ID);
-            })();
-            boxHTML.textContent = set_text;
+            })())
+               .textContent = set_text;
          }
 
       }

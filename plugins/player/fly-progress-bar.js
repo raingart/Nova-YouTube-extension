@@ -77,16 +77,14 @@ _plugins_conteiner.push({
                   width: -webkit-fill-available;*/
                }
                ${SELECTOR_BAR},
-               ${SELECTOR_BAR}-progress,
-               ${SELECTOR_BAR}-buffer {
+               ${SELECTOR_BAR} * {
                   position: absolute;
                   bottom: 0;
                }
                .ytp-autohide ${SELECTOR_BAR} {
                   opacity: var(--opacity);
                }
-               ${SELECTOR_BAR}-progress,
-               ${SELECTOR_BAR}-buffer {
+               ${SELECTOR_BAR} * {
                   width: 100%;
                   height: var(--height);
                   transform-origin: 0 0;
@@ -114,7 +112,7 @@ _plugins_conteiner.push({
          type: 'number',
          title: 'In pixels',
          placeholder: 'px',
-         min: 1,
+         min: 0,
          max: 9,
          value: 3,
       },

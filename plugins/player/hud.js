@@ -30,7 +30,7 @@ _plugins_conteiner.push({
 
       const HUD = {
          get() {
-            return this.div || this.create();
+            return conteiner || this.create();
          },
          // TODO The idea of ​​copying the progress bar. To display segments of time markers
          // a = el.cloneNode(true)
@@ -59,26 +59,26 @@ _plugins_conteiner.push({
 
             document.getElementById('movie_player')
                .insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}"><span></span></div>`);
-            this.div = document.getElementById(SELECTOR_ID);
-            this.span = this.div.querySelector('span');
+            const conteiner = document.getElementById(SELECTOR_ID);
+            this.el = conteiner.querySelector('span'); // export el
 
             // add to div user_settings.player_indicator_type style
             // const [indicator_type, span_align] = user_settings.player_indicator_type.split('=', 2); // 2 = max param;
             // switch (indicator_type) {
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
-                  Object.assign(this.div.style, {
+                  Object.assign(conteiner.style, {
                      bottom: '20%',
                      width: '30%',
                      'font-size': '1.2em',
                   });
-                  Object.assign(this.span.style, {
+                  Object.assign(this.el.style, {
                      'background-color': COLOR_HUD,
                      transition: 'width 100ms ease-out 0s',
                      display: 'inline-block',
                   });
                   // if (span_align === 'left') {
-                  //    Object.assign(this.span.style, {
+                  //    Object.assign(this.el.style, {
                   //       float: 'left',
                   //    });
                   // }
@@ -86,14 +86,14 @@ _plugins_conteiner.push({
 
                // case 'text-top':
                default:
-                  Object.assign(this.div.style, {
+                  Object.assign(conteiner.style, {
                      top: '0',
                      width: '100%',
                      padding: '.2em',
                      'font-size': '1.55em',
                   });
             }
-            return this.div;
+            return conteiner;
          },
 
          set(pt = 0, rate_suffix = '') {
@@ -111,18 +111,18 @@ _plugins_conteiner.push({
 
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
-                  this.span.style.width = pt + '%';
-                  this.span.textContent = text;
+                  this.el.style.width = pt + '%';
+                  this.el.textContent = text;
                   break;
 
                // case 'bar-center-left':
                //    hud.style.background = `linear-gradient(to right, ${COLOR_HUD}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
-               //    this.span.style.width = pt + '%';
-               //    this.span.textContent = text;
+               //    this.el.style.width = pt + '%';
+               //    this.el.textContent = text;
                //    break;
 
                default:
-                  this.span.textContent = text;
+                  this.el.textContent = text;
             }
 
             hud.style.transition = 'none';

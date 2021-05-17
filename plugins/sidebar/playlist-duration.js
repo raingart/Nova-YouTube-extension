@@ -85,12 +85,12 @@ _plugins_conteiner.push({
 
          function insertToHTML({ set_text, html_container }) {
             // console.debug('insertToHTML', ...arguments);
-            const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
+            (document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   ` •<span id="${SELECTOR_ID}" class="style-scope yt-formatted-string publisher ytd-playlist-panel-renderer" style="margin: 0px 4px;">${set_text}</span>`);
                return document.getElementById(SELECTOR_ID);
-            })();
-            boxHTML.textContent = set_text;
+            })())
+               .textContent = set_text;
          }
       }
 

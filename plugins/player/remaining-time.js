@@ -32,11 +32,11 @@ _plugins_conteiner.push({
 
       function insertToHTML({ set_text, html_container }) {
          // console.debug('insertToHTML', ...arguments);
-         const boxHTML = document.getElementById(SELECTOR_ID) || (function () {
+         (document.getElementById(SELECTOR_ID) || (function () {
             html_container.insertAdjacentHTML("afterend", ` • <span id="${SELECTOR_ID}">${set_text}</span>`);
             return document.getElementById(SELECTOR_ID);
-         })();
-         boxHTML.textContent = set_text;
+         })())
+            .textContent = set_text;
       }
 
    },
