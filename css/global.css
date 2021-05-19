@@ -48,7 +48,7 @@ button, input[type=submit], input[type=reset], input[type=button] {
    text-transform: uppercase;
    white-space: nowrap;
    background-color: transparent;
-   padding: 0 20px;
+   padding: 5px 20px;
 }
 
 button:focus,

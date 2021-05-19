@@ -87,9 +87,8 @@ _plugins_conteiner.push({
       },
       'scroll_to_top_autoplay': {
          _tagName: 'input',
-         label: 'Video autoplay on click',
+         label: 'Video unpause',
          type: 'checkbox',
-         title: 'If you pause the video while scrolling',
       },
    },
 });

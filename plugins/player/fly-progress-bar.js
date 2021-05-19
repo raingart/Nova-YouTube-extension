@@ -112,7 +112,7 @@ _plugins_conteiner.push({
          type: 'number',
          title: 'In pixels',
          placeholder: 'px',
-         min: 0,
+         min: 1,
          max: 9,
          value: 3,
       },

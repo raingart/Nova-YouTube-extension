@@ -6,6 +6,12 @@ _plugins_conteiner.push({
    desc: 'Replace default indicator',
    _runtime: user_settings => {
 
+      if (!user_settings.player_indicator_type) {
+         // hide default indicator
+         YDOM.css.add('.ytp-bezel-text-wrapper { display:none !important }');
+         return;
+      }
+
       const
          SELECTOR_ID = 'player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ddd';
@@ -30,7 +36,7 @@ _plugins_conteiner.push({
 
       const HUD = {
          get() {
-            return conteiner || this.create();
+            return this.conteiner || this.create();
          },
          // TODO The idea of ​​copying the progress bar. To display segments of time markers
          // a = el.cloneNode(true)
@@ -59,15 +65,16 @@ _plugins_conteiner.push({
 
             document.getElementById('movie_player')
                .insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}"><span></span></div>`);
-            const conteiner = document.getElementById(SELECTOR_ID);
-            this.el = conteiner.querySelector('span'); // export el
+
+            this.conteiner = document.getElementById(SELECTOR_ID);
+            this.el = this.conteiner.querySelector('span'); // export el
 
             // add to div user_settings.player_indicator_type style
             // const [indicator_type, span_align] = user_settings.player_indicator_type.split('=', 2); // 2 = max param;
             // switch (indicator_type) {
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
-                  Object.assign(conteiner.style, {
+                  Object.assign(this.conteiner.style, {
                      bottom: '20%',
                      width: '30%',
                      'font-size': '1.2em',
@@ -86,14 +93,14 @@ _plugins_conteiner.push({
 
                // case 'text-top':
                default:
-                  Object.assign(conteiner.style, {
+                  Object.assign(this.conteiner.style, {
                      top: '0',
                      width: '100%',
                      padding: '.2em',
                      'font-size': '1.55em',
                   });
             }
-            return conteiner;
+            return this.conteiner;
          },
 
          set(pt = 0, rate_suffix = '') {
@@ -146,6 +153,7 @@ _plugins_conteiner.push({
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar+center', value: 'bar-center' },
             // { label: 'bar+center+left', value: 'bar-center=left' },
+            { label: 'hide default', value: false },
          ],
       },
       'player_indicator_color': {

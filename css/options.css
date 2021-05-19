@@ -7,6 +7,10 @@ hr {
    border-top: 1px solid #3d3d3d;
 }
 
+fieldset {
+   border-color: #3d3d3d;
+}
+
 [type=submit] {
    height: auto;
    line-height: normal;
