@@ -199,6 +199,7 @@ const YDOM = {
 
    // YDOM.getURLParams().get('name');
    getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
+   // getQuery = (url, query) => new URLSearchParams(url).get(query),
 
    request: {
 

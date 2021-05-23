@@ -49,24 +49,8 @@ _plugins_conteiner.push({
 
                         // set QualityRange
                         if (player.hasOwnProperty('setPlaybackQualityRange')) {
+                           // console.debug('use setPlaybackQualityRange');
                            player.setPlaybackQualityRange(qualityToSet, qualityToSet);
-
-                           // emulate clicked (in embed iframe)
-                        } else if (document.querySelector('.ytp-settings-button:not([aria-expanded]')) { // the menu is not open
-                           // console.debug('emulate clicked');
-                           document.querySelector('.ytp-settings-button').click(); // settings button
-                           document.querySelector('.ytp-settings-menu [role=menuitem]:last-child').click(); // quality menu
-
-                           // [...document.querySelector(".ytp-quality-menu .ytp-panel-menu").children]
-                           //    .filter(menuitem => menuitem.textContent.includes(qualityToSet))[0].click();
-
-                           const showQualities = document.querySelectorAll('.ytp-quality-menu [role=menuitemradio]');
-                           console.debug('choosing it quality', showQualities[maxAvailableQuality].innerText);
-                           showQualities[maxAvailableQuality].click(); // choosing it quality
-
-                           // unfocused
-                           document.querySelector("body").click();
-                           document.querySelector("video").focus();
                         }
 
                         // console.debug('availableQualityLevels:', availableQualityLevels);

@@ -9,7 +9,7 @@ const Opt = {
 
    storageMethod: 'sync',
 
-   pluginValidator(plugin) {
+   pluginValidCheck(plugin) {
       const isValid = plugin?.id // required
          && plugin.depends_on_pages?.split(',').length
          && plugin._runtime && typeof plugin._runtime === 'function'
@@ -42,7 +42,7 @@ const Opt = {
 
          _plugins_conteiner.forEach(plugin => {
             try {
-               if (!Opt.pluginValidator(plugin)) throw new Error('pluginInvalid!');
+               if (!Opt.pluginValidCheck(plugin)) throw new Error('pluginInvalid!');
 
                Opt.log('plugin load:', plugin.id);
 

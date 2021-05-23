@@ -1,7 +1,7 @@
 _plugins_conteiner.push({
    name: 'Normalize videos title',
    id: 'normalize-videos-title',
-   depends_on_pages: 'all, -embed',
+   depends_on_pages: 'all, -embed, -results',
    opt_section: 'other',
    desc: 'Decapitalize videos title',
    _runtime: user_settings => {

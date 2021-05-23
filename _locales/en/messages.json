@@ -17,6 +17,9 @@
    "opt_btn_save_settings_processed": {
       "message": "Saved!"
    },
+   "opt_legend_settings_transfer": {
+      "message": "Settings transfer:"
+   },
    "opt_btn_import_settings": {
       "message": "Import"
    },

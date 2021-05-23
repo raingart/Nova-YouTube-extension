@@ -25,18 +25,18 @@ _plugins_conteiner.push({
                      text += text && ` (${currentPt()}%)`; // prevent show NaN
                }
 
-               insertToHTML({ 'set_text': text, 'html_container': document.querySelector('.ytp-time-duration') });
+               insertToHTML({ 'text_content': text, 'html_container': document.querySelector('.ytp-time-duration') });
             });
 
          });
 
-      function insertToHTML({ set_text, html_container }) {
+      function insertToHTML({ text_content, html_container }) {
          // console.debug('insertToHTML', ...arguments);
          (document.getElementById(SELECTOR_ID) || (function () {
-            html_container.insertAdjacentHTML("afterend", ` • <span id="${SELECTOR_ID}">${set_text}</span>`);
+            html_container.insertAdjacentHTML("afterend", ` • <span id="${SELECTOR_ID}">${text_content}</span>`);
             return document.getElementById(SELECTOR_ID);
          })())
-            .textContent = set_text;
+            .textContent = text_content;
       }
 
    },

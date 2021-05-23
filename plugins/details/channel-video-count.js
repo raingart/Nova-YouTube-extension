@@ -63,7 +63,7 @@ _plugins_conteiner.push({
          const storage = sessionStorage.getItem(CACHE_PREFIX + channel_id);
 
          if (storage) {
-            insertToHTML({ 'set_text': storage, 'html_container': html_container });
+            insertToHTML({ 'text_content': storage, 'html_container': html_container });
 
          } else {
             YDOM.request.API({
@@ -74,22 +74,22 @@ _plugins_conteiner.push({
                .then(res => {
                   res?.items?.forEach(item => {
                      const videoCount = item.statistics.videoCount;
-                     insertToHTML({ 'set_text': videoCount, 'html_container': html_container });
+                     insertToHTML({ 'text_content': videoCount, 'html_container': html_container });
                      // save cache in tabs
                      sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
                   });
                });
          }
 
-         function insertToHTML({ set_text, html_container }) {
+         function insertToHTML({ text_content, html_container }) {
             // console.debug('insertToHTML', ...arguments);
             (document.getElementById(SELECTOR_ID) || (function () {
                html_container.insertAdjacentHTML("beforeend",
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
-                  + ` • <span id="${SELECTOR_ID}">${set_text}</span> videos</span>`);
+                  + ` • <span id="${SELECTOR_ID}">${text_content}</span> videos</span>`);
                return document.getElementById(SELECTOR_ID);
             })())
-               .textContent = set_text;
+               .textContent = text_content;
          }
 
       }

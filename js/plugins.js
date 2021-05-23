@@ -1,6 +1,4 @@
 const Plugins = {
-   // DEBUG: true,
-
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
@@ -41,13 +39,14 @@ const Plugins = {
    ],
 
    load(list) {
-      (list || this.list).forEach(plugin => {
-         try {
-            this.injectScript(chrome.extension.getURL('/plugins/' + plugin));
-         } catch (error) {
-            console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
-         }
-      })
+      (list || this.list)
+         .forEach(plugin => {
+            try {
+               this.injectScript(chrome.extension.getURL('/plugins/' + plugin));
+            } catch (error) {
+               console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
+            }
+         })
    },
 
    injectScript(source = required()) {
@@ -68,12 +67,11 @@ const Plugins = {
       (document.head || document.documentElement).appendChild(script);
 
       script.onload = () => {
-         this.log('script loaded:', script.src || script.textContent.substr(0, 100));
+         // console.log('script loaded:', script.src || script.textContent.substr(0, 100));
          script.remove(script); // Remove <script> node after injectScript runs.
       };
    },
 
-   // run: ({ user_settings, is_new_url, plugins }) => {
    run: ({ user_settings, app_ver }) => {
       // console.log('plugins_executor', ...arguments);
       if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
@@ -89,7 +87,6 @@ const Plugins = {
          logTableTime;
 
       // console.groupCollapsed('plugins status');
-      // console.debug('currentPage:', currentPage);
 
       _plugins_conteiner.forEach(plugin => {
          const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());
@@ -97,7 +94,7 @@ const Plugins = {
          logTableTime = 0;
          logTableStatus = false;
 
-         if (!pluginIsValid(plugin)) {
+         if (!pluginValidCheck(plugin)) {
             alert('Plugin invalid: ' + (plugin?.name || plugin?.id));
             logTableStatus = 'INVALID';
 
@@ -143,7 +140,7 @@ const Plugins = {
       console.table(logTableArray);
       console.groupEnd('plugins status');
 
-      function pluginIsValid(plugin) {
+      function pluginValidCheck(plugin) {
          const result = plugin?.id && plugin.depends_on_pages && 'function' === typeof plugin._runtime;
          if (!result) {
             console.error('plugin invalid:\n', {
@@ -155,12 +152,4 @@ const Plugins = {
          return result;
       }
    },
-
-   log(...args) {
-      if (this.DEBUG && args?.length) {
-         console.groupCollapsed(...args);
-         console.trace();
-         console.groupEnd();
-      }
-   }
 }

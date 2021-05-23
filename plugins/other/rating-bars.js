@@ -28,7 +28,7 @@ _plugins_conteiner.push({
             bottom: 0;
          }`);
 
-      let thumbCollector = [];
+      let thumbsIdCollect = [];
       let newCache = {};
 
       YDOM.HTMLElement.watch({
@@ -36,13 +36,13 @@ _plugins_conteiner.push({
          attr_mark: 'timestamps-rated',
          callback: thumbnail => {
             const id = YDOM.getURLParams(thumbnail.href).get('v');
-            id && thumbCollector.push(id);
+            id && thumbsIdCollect.push(id);
          },
       });
 
       // chack update new thumbnail
       setInterval(() => {
-         patchThumbnail(thumbCollector);
+         patchThumbnail(thumbsIdCollect);
          updaterCache(newCache);
       }, 1000 * 1); // 1sec
 
@@ -68,14 +68,14 @@ _plugins_conteiner.push({
          localStorage.setItem(CACHE_NAME, JSON.stringify(Object.assign(new_cache, oldCache)));
       }
 
-      function patchThumbnail(video_ids) {
-         if (!video_ids?.length) return;
+      function patchThumbnail(vids_id) {
+         if (!vids_id?.length) return;
          // console.debug('find thumbnail', ...arguments);
-         thumbCollector = []; // clear
+         thumbsIdCollect = []; // clear
          let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));
          const timeNow = new Date().getTime();
 
-         const newIds = video_ids.filter(id => {
+         const newIds = vids_id.filter(id => {
             if (oldCache?.hasOwnProperty(id)) {
                const cacheItem = oldCache[id],
                   cacheDate = new Date(+cacheItem?.date),

@@ -25,7 +25,7 @@ _plugins_conteiner.push({
             player.addEventListener('volumechange', function () {
                // console.debug('volumechange', player.getVolume(), this.volume);
                const videoPlayer = document.querySelector('.html5-video-player');
-               HUD.set(videoPlayer.getVolume(), '%');
+               HUD.set(Math.round(videoPlayer.getVolume()), '%');
             });
             // rate
             player.addEventListener('ratechange', function () {

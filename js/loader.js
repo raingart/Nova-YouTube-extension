@@ -1,27 +1,19 @@
 const App = {
-   // DEBUG: true,
-
    lastUrl: location.href,
 
    isChangeUrl() {
       return this.lastUrl === location.href ? false : this.lastUrl = location.href;
    },
 
-   rerun() {
-      App.log('new page', location.href);
-      this.run(true);
-   },
-
    // sessionSettings: null,
    storage: {
       set(options) {
-         App.log('storage.set:', options);
          App.sessionSettings = options;
          // in the iframe
          if (options?.disable_in_frame && window.self !== window.top) {
             return console.warn('processed in the frame disable');
          }
-         App.reflectException();
+         if (options?.report_issues) App.reflectException();
          App.run();
       },
 
@@ -34,7 +26,8 @@ const App = {
       console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', manifest.name + ' v.' + manifest.version);
 
       // skip first run on page transition
-      document.addEventListener('yt-navigate-start', () => this.isChangeUrl() && this.rerun());
+      document.addEventListener('yt-navigate-start', () => this.isChangeUrl() && this.run());
+      // document.addEventListener('yt-page-data-updated', () => this.run);
 
       this.storage.load();
       // load all Plugins
@@ -43,14 +36,11 @@ const App = {
       Plugins.load(); // all
    },
 
-   run(is_new_url) {
-      this.log('App runing');
-
+   run() {
       Plugins.injectScript(
          `( ${this.lander.toString()} ({
             'plugins_executor': ${Plugins.run},
             'user_settings': ${JSON.stringify(this.sessionSettings)},
-            'is_new_url': ${is_new_url},
             'plugins_count': ${Plugins.list.length},
             'app_ver': '${chrome.runtime.getManifest().version}',
          }));`
@@ -59,7 +49,7 @@ const App = {
       // console.debug('all Property', Object.getOwnPropertyNames(this));
    },
 
-   lander: function ({ plugins_executor, user_settings, is_new_url, plugins_count, app_ver }) {
+   lander: function ({ plugins_executor, user_settings, plugins_count, app_ver }) {
       // console.debug('lander', ...arguments);
       console.groupCollapsed('plugins status');
 
@@ -70,17 +60,13 @@ const App = {
 
       let interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
-
-         if (!domLoaded || document.querySelectorAll("#progress[style*=transition-duration], yt-page-navigation-progress:not([hidden])").length) {
-            return console.debug('waiting, page loading..');
-         }
+         if (!domLoaded) return console.debug('waiting, page loading..');
 
          if (YDOM && _plugins_conteiner.length === plugins_count) {
             clearTimeout(forceLander);
             processLander();
-         } else {
-            console.debug('loading:', _plugins_conteiner.length + '/' + plugins_count);
-         }
+
+         } else console.debug('loading:', _plugins_conteiner.length + '/' + plugins_count);
 
       }, 100); // 100ms
 
@@ -90,9 +76,6 @@ const App = {
          plugins_executor({
             'user_settings': user_settings,
             'app_ver': app_ver,
-            // outdated. Replaced by "plugin.was_init"
-            // 'is_new_url': is_new_url,
-            // 'plugins': _plugins_conteiner,
          });
       }
    },
@@ -117,22 +100,13 @@ const App = {
             if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
             console.error(\`[ERROR PROMISE]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose\`);
 
-            if (${App.sessionSettings?.report_issues ? true : false})
-               _pluginsCaptureException({
-                  'trace_name': 'unhandledrejection',
-                  'err_stack': err.reason.stack,
-                  'app_ver': '${chrome.runtime.getManifest().version}',
-                  'confirm_msg': \`Failure when async-call of one "Nova YouTube™" plugin.\n\nOpen tab to report the bug?\`,
-               });
+            _pluginsCaptureException({
+               'trace_name': 'unhandledrejection',
+               'err_stack': err.reason.stack,
+               'app_ver': '${chrome.runtime.getManifest().version}',
+               'confirm_msg': \`Failure when async-call of one "Nova YouTube™" plugin.\n\nOpen tab to report the bug?\`,
+            });
          });`);
-   },
-
-   log(...args) {
-      if (this.DEBUG && args?.length) {
-         console.groupCollapsed(...args);
-         console.trace();
-         console.groupEnd();
-      }
    },
 }
 

@@ -7,6 +7,9 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       YDOM.HTMLElement.wait('[role="dialog"] #confirm-button')
-         .then(btn => btn.click());
+         .then(btn => {
+            btn.click();
+            const vid = document.querySelector('video'); vid?.paused && vid.play();
+         });
    },
 });
