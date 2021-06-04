@@ -60,7 +60,7 @@ _plugins_conteiner.push({
                bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
                bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
-            YDOM.css.add(
+            YDOM.css.push(
                SELECTOR_BAR + `{
                   --opacity: ${+user_settings.fly_progress_bar_opacity || .7};
                   --height: ${height}px;

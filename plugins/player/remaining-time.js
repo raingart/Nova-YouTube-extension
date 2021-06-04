@@ -12,7 +12,7 @@ _plugins_conteiner.push({
          .then(player => {
             player.addEventListener('timeupdate', function () {
                // console.debug('timeupdate', this.currentTime, '/', this.duration);
-               const currentPt = () => ((this.currentTime / this.duration) * 100).toFixed(2);
+               const currentPt = () => Math.round((this.currentTime / this.duration) * 100);
                const leftTime = () => YDOM.secToStr(Math.round(this.duration - this.currentTime));
                let text;
 

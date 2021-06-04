@@ -18,7 +18,7 @@ _plugins_conteiner.push({
       YDOM.HTMLElement.wait('#upload-info #channel-name a[href]')
          .then(link => {
             // console.debug('watch page');
-            YDOM.HTMLElement.wait('#upload-info #owner-sub-count:not([hidden]):not(:empty)')
+            YDOM.HTMLElement.wait('#meta #owner-sub-count:not([hidden]):not(:empty)')
                .then(el => insertChannelStatistic({
                   'html_container': el,
                   'channel_id': link.href.split('/').pop()

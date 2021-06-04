@@ -8,7 +8,7 @@ _plugins_conteiner.push({
 
       if (!user_settings.player_indicator_type) {
          // hide default indicator
-         YDOM.css.add('.ytp-bezel-text-wrapper { display:none !important }');
+         YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
          return;
       }
 
@@ -44,9 +44,9 @@ _plugins_conteiner.push({
 
          create() {
             // hide default indicator
-            YDOM.css.add('.ytp-bezel-text-wrapper { display:none !important }');
+            YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
             // init common css
-            YDOM.css.add(`
+            YDOM.css.push(`
                   #${SELECTOR_ID} {
                      --color: #fff;
                      --bg-color: rgba(0,0,0,0.3);

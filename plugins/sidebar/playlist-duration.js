@@ -100,7 +100,7 @@ _plugins_conteiner.push({
             function insertToHTML({ text_content, html_container }) {
                // console.debug('insertToHTML', ...arguments);
                (document.getElementById(SELECTOR_ID) || (function () {
-                  YDOM.css.add(`#${SELECTOR_ID} { margin: 0 .5em; }`);
+                  YDOM.css.push(`#${SELECTOR_ID} { margin: 0 .5em; }`);
                   const newEl = document.createElement("yt-formatted-string");
                   newEl.className = "style-scope ytd-playlist-sidebar-primary-info-renderer";
                   newEl.style.display = "inline-block";

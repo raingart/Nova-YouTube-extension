@@ -60,7 +60,7 @@ const YDOM = {
    },
 
    css: {
-      add(css = required(), selector, important) {
+      push(css = required(), selector, important) {
          if (typeof css === 'object') {
             if (!selector) {
                return console.error('injectStyle > empty json-selector:', ...arguments);
@@ -163,7 +163,7 @@ const YDOM = {
 
       if (!this.bezel_inited) {
          this.bezel_inited = true;
-         this.css.add(
+         this.css.push(
             `.${CLASS_VALUE_TOGGLE} {
                display: block !important;
             }

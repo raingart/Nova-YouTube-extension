@@ -7,8 +7,6 @@ Plugins.load();
 const Opt = {
    // DEBUG: true,
 
-   storageMethod: 'sync',
-
    pluginValidCheck(plugin) {
       const isValid = plugin?.id // required
          && plugin.depends_on_pages?.split(',').length
@@ -165,6 +163,8 @@ const Opt = {
    },
 
    eventListener() {
+      const transferStorageMethod = 'sync';
+
       // appearance map
       document.querySelectorAll(".appearance > *")
          .forEach(el => {
@@ -237,7 +237,7 @@ const Opt = {
                d.click();
                console.debug('Settings file exported:', d.download);
                document.body.removeChild(d);
-            }, this.storageMethod);
+            }, transferStorageMethod);
          });
 
       // import setting
@@ -252,7 +252,7 @@ const Opt = {
                let rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {
-                     Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
+                     Storage.setParams(JSON.parse(rdr.result), transferStorageMethod);
                      alert('Settings imported successfully');
                      document.location.reload();
                   }

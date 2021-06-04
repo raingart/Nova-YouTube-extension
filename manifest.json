@@ -6,7 +6,7 @@
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
    "minimum_chrome_version": "80.0",
-   "version": "1.14.6",
+   "version": "1.15.0",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",
@@ -26,7 +26,7 @@
             "https://*.youtube.com/*",
             "https://*.youtube-nocookie.com/*"
          ],
-         "exclude_matches": ["https://*.youtube.com/*/*.xml*"],
+         "exclude_matches": ["https://*.youtube.com/*/*.xml*", "https://*.youtube.com/error"],
          "run_at": "document_start",
          "all_frames": true,
          "js": [
