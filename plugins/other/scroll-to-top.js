@@ -2,7 +2,7 @@ _plugins_conteiner.push({
    name: 'Scroll to top button',
    id: 'scroll-to-top',
    depends_on_pages: 'all, -embed',
-   opt_section: 'global',
+   opt_section: 'other',
    desc: 'Displayed on long pages',
    _runtime: (user_settings, current_page) => {
 
@@ -87,7 +87,7 @@ _plugins_conteiner.push({
       },
       'scroll_to_top_autoplay': {
          _tagName: 'input',
-         label: 'Video unpause',
+         label: 'Video unPause',
          type: 'checkbox',
       },
    },

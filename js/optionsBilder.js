@@ -287,10 +287,10 @@ window.addEventListener('load', event => {
    ["change", "keyup"]
       .forEach(event => {
          document.querySelector('[type="search"]')
-            .addEventListener(event, () => {
+            .addEventListener(event, function () {
                const generatelist = document.querySelector(Opt.UI.parentSelector);
                searchFilter({
-                  'keyword': UI.search.value,
+                  'keyword': this.value,
                   // 'container': generatelist.children,
                   // 'container':  generatelist.getElementsByTagName('li'),
                   'container': generatelist.querySelectorAll('li.item'),

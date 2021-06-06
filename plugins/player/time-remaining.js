@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Remaining Time',
-   id: 'remaining-time',
+   id: 'time-remaining',
    depends_on_pages: 'watch, embed',
    opt_section: 'player',
    desc: 'Show the remaining time inside the player',
@@ -16,7 +16,7 @@ _plugins_conteiner.push({
                const leftTime = () => YDOM.secToStr(Math.round(this.duration - this.currentTime));
                let text;
 
-               switch (user_settings.remaining_time_mode) {
+               switch (user_settings.time_remaining_mode) {
                   case 'pt': text = currentPt(); break;
                   case 'time': text = leftTime(); break;
                   // case 'full':
@@ -41,7 +41,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'remaining_time_mode': {
+      'time_remaining_mode': {
          _tagName: 'select',
          label: 'Mode',
          options: [

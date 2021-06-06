@@ -8,9 +8,9 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
-            // init default_volume_level
-            if (+user_settings.default_volume_level) {
-               setVolumeLevel(user_settings.default_volume_level);
+            // init volume_level_default
+            if (+user_settings.volume_level_default) {
+               setVolumeLevel(user_settings.volume_level_default);
             }
 
             // show indicator
@@ -83,7 +83,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'default_volume_level': {
+      'volume_level_default': {
          _tagName: 'input',
          // label: 'Level at startup',
          label: 'Default volume',

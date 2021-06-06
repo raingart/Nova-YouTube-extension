@@ -1,13 +1,13 @@
 _plugins_conteiner.push({
    name: 'Hide livechat',
-   id: 'collapse-livechat',
+   id: 'livechat-collapse',
    depends_on_pages: 'watch',
    restart_on_transition: true,
    opt_section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings.livechat == 'disable') {
+      if (user_settings.livechat_collapse_mode == 'disable') {
          YDOM.HTMLElement.wait('#chat')
             .then(chat => chat.remove());
 
@@ -18,7 +18,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'livechat': {
+      'livechat_collapse_mode': {
          _tagName: 'select',
          label: 'Mode',
          options: [

@@ -64,7 +64,7 @@ _plugins_conteiner.push({
                }
 
                // keep quality in session
-               if (user_settings.save_manual_quality_in_tab && current_page === 'watch') {// no sense if in the embed
+               if (user_settings.video_quality_manual_save_tab && current_page === 'watch') {// no sense if in the embed
                   player.addEventListener("onPlaybackQualityChange", quality => {
                      // console.debug('document.activeElement,',document.activeElement);
                      if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
@@ -101,9 +101,9 @@ _plugins_conteiner.push({
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
       },
-      'save_manual_quality_in_tab': {
+      'video_quality_manual_save_tab': {
          _tagName: 'input',
-         label: 'Save manually selected quality for the same tab',
+         label: 'Save manually selected for the same tab',
          type: 'checkbox',
          title: 'Affects to next videos',
       },

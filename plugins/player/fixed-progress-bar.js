@@ -1,12 +1,12 @@
 _plugins_conteiner.push({
-   name: 'Fly player progress bar',
-   id: 'fly-video-progress-bar',
+   name: 'Fixed player progress bar',
+   id: 'player-fixed-progress-bar',
    depends_on_pages: 'watch, embed',
    opt_section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
-      const SELECTOR_ID = 'pin-progress-bar',
+      const SELECTOR_ID = 'player-fixed-progress-bar',
          SELECTOR_BAR = '#' + SELECTOR_ID;
 
       YDOM.HTMLElement.wait('video')
@@ -31,7 +31,7 @@ _plugins_conteiner.push({
             function renderBuffer() {
                for (let i = 0; i < this.buffered.length; i++) {
                   //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
-                  //    console.log(`${bufferedSeconds} seconds of video are ready to play.`);
+                  //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
                   if (this.currentTime > this.buffered.start(i)) {
                      document.getElementById(`${SELECTOR_ID}-buffer`)
                         .style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
@@ -56,13 +56,13 @@ _plugins_conteiner.push({
 
             const
                zIndex = YDOM.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
-               height = +user_settings.fly_progress_bar_height || 3,
+               height = +user_settings.player_fixed_progress_bar_height || 3,
                bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
                bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
             YDOM.css.push(
                SELECTOR_BAR + `{
-                  --opacity: ${+user_settings.fly_progress_bar_opacity || .7};
+                  --opacity: ${+user_settings.player_fixed_progress_bar_opacity || .7};
                   --height: ${height}px;
                   --buffer-color: ${bufferColor};
                   --bg-color: ${bgColor};
@@ -106,7 +106,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'fly_progress_bar_height': {
+      'player_fixed_progress_bar_height': {
          _tagName: 'input',
          label: 'Height',
          type: 'number',
@@ -116,7 +116,7 @@ _plugins_conteiner.push({
          max: 9,
          value: 3,
       },
-      'fly_progress_bar_opacity': {
+      'player_fixed_progress_bar_opacity': {
          _tagName: 'input',
          label: 'Opacity',
          type: 'number',

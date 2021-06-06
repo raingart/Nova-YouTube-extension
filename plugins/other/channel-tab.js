@@ -9,15 +9,15 @@ _plugins_conteiner.push({
       // home page channel/user
       if (location.pathname.split('/').filter(i => i).length === 2) {
 
-         if (user_settings['redirect']) {
-            location.href += '/' + user_settings.default_channel_tab;
+         if (user_settings?.channel_default_tab_method === 'redirect') {
+            location.href += '/' + user_settings.channel_default_tab;
 
          } else {
             // tab select
             YDOM.HTMLElement.wait('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
                .then(() => {
                   let tab_nth;
-                  switch (user_settings.default_channel_tab) {
+                  switch (user_settings.channel_default_tab) {
                      case 'videos':
                         tab_nth = 4;
                         break;
@@ -38,7 +38,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'default_channel_tab': {
+      'channel_default_tab': {
          _tagName: 'select',
          label: 'Default tab',
          options: [
@@ -47,7 +47,7 @@ _plugins_conteiner.push({
             { label: 'about', value: 'about' },
          ],
       },
-      'default_channel_tab_method': {
+      'channel_default_tab_mode': {
          _tagName: 'select',
          label: 'Mode',
          title: 'Redirect is safer but slower',

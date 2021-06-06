@@ -207,7 +207,7 @@ const YDOM = {
 
       async API({ request, params, api_key }) {
          // YDOM.log('API:', ...arguments); // err
-         // console.log('API:', ...arguments);
+         // console.debug('API:', ...arguments);
          // get API key
          const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
 

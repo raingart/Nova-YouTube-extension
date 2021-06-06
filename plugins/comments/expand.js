@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Expand comments',
-   id: 'expand-comments',
+   id: 'comments-expand',
    depends_on_pages: 'watch',
    opt_section: 'comments',
    // desc: '',

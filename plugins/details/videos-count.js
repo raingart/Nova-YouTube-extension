@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Show channel videos count',
-   id: 'show-channel-videos-count',
+   id: 'channel-videos-count',
    depends_on_pages: 'watch, channel',
    restart_on_transition: true,
    opt_section: 'details',
@@ -9,7 +9,7 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       const
-         CACHE_PREFIX = 'channel-video-count:',
+         CACHE_PREFIX = 'channel-videos-count:',
          SELECTOR_ID = 'video_count',
          getChannelFromUrl = location.pathname.split('/')[2],
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);

@@ -1,23 +1,23 @@
 _plugins_conteiner.push({
    name: 'Rating preview',
-   id: 'global-rating-bars',
+   id: 'thumbnails-rating',
    depends_on_pages: 'all, -embed',
-   opt_section: 'global',
+   opt_section: 'other',
    opt_api_key_warn: true,
    desc: 'Rating bar over videos thumbnail',
    _runtime: user_settings => {
 
       const
          CACHED_TIME = 8, // hours
-         SELECTOR_ID = 'ratio-rate-line',
+         SELECTOR_ID = 'rating-line',
          CACHE_NAME = 'ratings-thumbnail',
-         colorLiker = user_settings.ratio_like_color || '#3ea6ff',
-         colorDislike = user_settings.ratio_dislike_color || '#ddd';
+         colorLiker = user_settings.rating_like_color || '#3ea6ff',
+         colorDislike = user_settings.rating_dislike_color || '#ddd';
 
       // init bars style
       YDOM.css.push(
          `#${SELECTOR_ID}{
-            --height: ${(user_settings.ratio_bar_height || 5)}px;
+            --height: ${(user_settings.rating_bar_height || 5)}px;
          }
          #${SELECTOR_ID}{
             width: 100%;
@@ -155,7 +155,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'ratio_bar_height': {
+      'rating_bar_height': {
          _tagName: 'input',
          label: 'Bar height',
          type: 'number',
@@ -165,13 +165,13 @@ _plugins_conteiner.push({
          max: 9,
          value: 3,
       },
-      'ratio_like_color': {
+      'rating_like_color': {
          _tagName: 'input',
          label: 'Like color',
          type: 'color',
          value: '#3ea6ff',
       },
-      'ratio_dislike_color': {
+      'rating_dislike_color': {
          _tagName: 'input',
          label: 'Dislike color',
          type: 'color',

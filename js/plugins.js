@@ -5,41 +5,41 @@ const Plugins = {
       // 'other/-test.js',
 
       'player/ad-skip-button.js',
-      'player/speed.js',
+      'player/rate.js',
       'player/volume.js',
       'player/hud.js',
       'player/quality.js',
-      'player/pause.js', // after quality.js
+      'player/autoause.js', // after quality.js
       'player/theater-mode.js',
       'player/tab-pause.js',
-      'player/focused.js',
+      'player/hotkeys-focused.js',
       'player/pin.js',
       'player/time-jump.js',
-      'player/remaining-time.js',
-      'player/fly-progress-bar.js',
+      'player/time-remaining.js',
+      'player/fixed-progress-bar.js',
+      'player/no-sleep.js',
       // 'player/annotations.js',
       // 'player/stop.js', // incompatible with quality.js
 
-      'other/scroll-to-top.js',
-      'other/rating-bars.js',
-      'other/normalize-video-title.js',
-      'other/thumbnail-clear.js',
+      'other/thumbnails-clear.js',
+      'other/thumbnails-title-normalize.js',
+      'other/thumbnails-rating.js',
+      'other/thumbnails-watched.js',
       'other/channel-tab.js',
-      'other/clear-redirect.js',
-      'other/wake-up.js',
-      'other/mark-watched.js',
+      'other/redirect-clear.js',
+      'other/scroll-to-top.js',
 
-      'details/expand-description.js',
-      'details/channel-video-count.js',
+      'details/description.js',
+      'details/videos-count.js',
 
-      'comments/disable-comments.js',
-      'comments/expand-comments.js',
+      'comments/disable.js',
+      'comments/expand.js',
       'comments/square-avatars.js',
 
       'sidebar/playlist-duration.js',
-      'sidebar/livechat-hide.js',
+      'sidebar/livechat.js',
 
-      'header/unpin.js',
+      'header/unfixed.js',
       'header/short.js',
    ],
 
@@ -78,7 +78,7 @@ const Plugins = {
    },
 
    run: ({ user_settings, app_ver }) => {
-      // console.log('plugins_executor', ...arguments);
+      // console.debug('plugins_executor', ...arguments);
       if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 

@@ -111,7 +111,7 @@ _plugins_conteiner.push({
             const text = pt + rate_suffix;
 
             if (rate_suffix === 'x') { // rate to pt
-               const maxPercent = (+user_settings.player_rate_step % 0.25) === 0 ? 2 : 3;
+               const maxPercent = (+user_settings.rate_step % 0.25) === 0 ? 2 : 3;
                pt = (+pt / maxPercent) * 100;
             }
             pt = Math.round(pt);

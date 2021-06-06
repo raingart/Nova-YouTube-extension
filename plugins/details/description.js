@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Expands video description',
-   id: 'expand-description-video',
+   id: 'video-description-expand',
    depends_on_pages: 'watch',
    restart_on_transition: true,
    opt_section: 'details',

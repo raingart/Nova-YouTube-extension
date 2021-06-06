@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
-   name: 'unPin Header',
-   id: 'header-unpin',
+   name: 'UnFixed header',
+   id: 'header-unfixed',
    depends_on_pages: 'all',
    opt_section: 'header',
    // desc: '',

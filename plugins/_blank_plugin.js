@@ -19,7 +19,7 @@ _plugins_conteiner.push({
    restart_on_transition: true, // optional. Restart plugin on every url change
 
    /* optional GIU in options page: start */
-   opt_section: 'player', // optional. Visual section in settings where the plugin belongs
+   opt_section: 'player', // optional. Visual section in settings where the plugin belongs. Available list of values: header, player, details, comments, sidebar, other, channel
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
    desc: 'Title description', // optional. Title description in settings. Don't use double quotes inside the text!
    /* optional GIU in options page: end */

@@ -9,14 +9,14 @@
 
 _plugins_conteiner.push({
    name: 'Pin player while scrolling',
-   id: 'fixed-player-scroll',
+   id: 'player-fixed-scroll',
    depends_on_pages: 'watch',
    opt_section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
       const
-         CLASS_VALUE = 'video-pinned',
+         CLASS_VALUE = 'player-fixed',
          PINNED_SELECTOR = '.' + CLASS_VALUE;
 
       YDOM.HTMLElement.wait('.html5-video-player')
@@ -44,12 +44,12 @@ _plugins_conteiner.push({
                   //    'element': playerContainer,
                   //    'callback_show': () => {
                   //       console.debug('run callback_show');
-                  //       if (user_settings.pin_player_pause_pinned_video) player.playVideo();
+                  //       if (user_settings.player_fixed_scroll_pause_video) player.playVideo();
                   //       player.classList.remove(CLASS_VALUE);
                   //    },
                   //    'callback_hide': () => {
                   //       console.debug('run callback_hide');
-                  //       if (user_settings.pin_player_pause_pinned_video) player.pauseVideo()
+                  //       if (user_settings.player_fixed_scroll_pause_video) player.pauseVideo()
                   //       player.classList.add(CLASS_VALUE)
                   //    },
                   //    // 'disconnectAfterMatch': true,
@@ -62,8 +62,8 @@ _plugins_conteiner.push({
          const miniSize = calculateAspectRatioFit({
             'srcWidth': player.clientWidth,
             'srcHeight': player.clientHeight,
-            'maxWidth': (window.innerWidth / user_settings.pin_player_size_ratio),
-            'maxHeight': (window.innerHeight / user_settings.pin_player_size_ratio)
+            'maxWidth': (window.innerWidth / user_settings.player_fixed_scroll_size_ratio),
+            'maxHeight': (window.innerHeight / user_settings.player_fixed_scroll_size_ratio)
          });
 
          let initcss = {
@@ -76,8 +76,8 @@ _plugins_conteiner.push({
                '0 8px 10px -5px rgba(0, 0, 0, 0.4)',
          };
 
-         // set pin_player_size_position
-         switch (user_settings.pin_player_size_position) {
+         // set player_fixed_scroll_size_position
+         switch (user_settings.player_fixed_scroll_size_position) {
             case 'top-left':
                initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.left = 0;
@@ -175,7 +175,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'pin_player_size_ratio': {
+      'player_fixed_scroll_size_ratio': {
          _tagName: 'input',
          label: 'Player ratio to screen size',
          type: 'number',
@@ -186,7 +186,7 @@ _plugins_conteiner.push({
          max: 5,
          value: 2.5,
       },
-      'pin_player_size_position': {
+      'player_fixed_scroll_size_position': {
          _tagName: 'select',
          label: 'Fixed player position',
          options: [
@@ -196,7 +196,7 @@ _plugins_conteiner.push({
             { label: 'right-bottom', value: 'bottom-right' },
          ],
       },
-      // 'pin_player_pause_pinned_video': {
+      // 'player_fixed_scroll_pause_video': {
       //    _tagName: 'input',
       //    label: 'Pause pinned video',
       //    type: 'checkbox',

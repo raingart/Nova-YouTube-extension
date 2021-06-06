@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Player hotkeys always active',
-   id: 'player-focused-onkeydown',
+   id: 'player-hotkeys-focused',
    depends_on_pages: 'watch',
    opt_section: 'player',
    desc: 'shortcuts priority [SPACE/F] etc.',

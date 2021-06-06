@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Video autopause',
-   id: 'pause-autoplay',
+   id: 'video-autopause',
    depends_on_pages: 'watch, embed',
    opt_section: 'player',
    desc: 'Disables autoplay',
@@ -15,7 +15,7 @@ _plugins_conteiner.push({
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', ...arguments);
 
-               if (user_settings.stop_autoplay_ignore_playlist && window.location.href.includes('list=')) return;
+               if (user_settings.video_autoause_ignore_playlist && window.location.href.includes('list=')) return;
 
                // -1: unstarted
                // 0: ended
@@ -26,7 +26,7 @@ _plugins_conteiner.push({
                if (1 === state && !is_change_quality) {
                   is_change_quality = true;
                   player.pauseVideo();
-                  // console.log('pauseVideo', state);
+                  // console.debug('pauseVideo', state);
 
                } else if (state <= 0) is_change_quality = false;
             }
@@ -34,7 +34,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'stop_autoplay_ignore_playlist': {
+      'video_autopause_ignore_playlist': {
          _tagName: 'input',
          label: 'ignore playlist',
          type: 'checkbox',

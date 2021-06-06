@@ -8,14 +8,14 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
-            doubleKeyPressListener(jumpTime, user_settings.jump_hotkey);
+            doubleKeyPressListener(jumpTime, user_settings.time_jump_hotkey);
 
             function jumpTime() {
                if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
                   && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                   // && !window.getSelection()
                ) {
-                  const sec = player.getCurrentTime() + parseInt(user_settings.jump_step);
+                  const sec = player.getCurrentTime() + parseInt(user_settings.time_jump_step);
                   // console.debug('seekTo', sec);
                   player.seekTo(sec);
                }
@@ -37,7 +37,7 @@ _plugins_conteiner.push({
 
          function keyPress(key) {
             pressed = key.keyCode;
-            // console.log('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
+            // console.debug('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
             if (isDoublePress && pressed === lastPressed) {
                isDoublePress = false;
                handleDoublePresss(key);
@@ -54,7 +54,7 @@ _plugins_conteiner.push({
 
    },
    opt_export: {
-      'jump_step': {
+      'time_jump_step': {
          _tagName: 'input',
          label: 'Step time',
          type: 'number',
@@ -64,7 +64,7 @@ _plugins_conteiner.push({
          max: 300,
          value: 30,
       },
-      'jump_hotkey': {
+      'time_jump_hotkey': {
          _tagName: 'select',
          label: 'Hotkey (double tap)',
          options: [

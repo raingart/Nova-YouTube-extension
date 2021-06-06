@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Clear links from redirects',
-   id: 'disable-redirect-page',
+   id: 'redirect-disable',
    depends_on_pages: 'watch, channel',
    opt_section: 'other',
    desc: 'Clear external links from redirect',

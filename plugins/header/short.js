@@ -1,5 +1,5 @@
 _plugins_conteiner.push({
-   name: 'Short Header',
+   name: 'Short header',
    id: 'header-short',
    depends_on_pages: 'all',
    opt_section: 'header',

@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Clear videos thumbnails',
-   id: 'thumbnail-clear',
+   id: 'thumbnails-preview-clear',
    depends_on_pages: 'all, -embed',
    opt_section: 'other',
    desc: 'Replaces the predefined thumbnail',
@@ -8,18 +8,18 @@ _plugins_conteiner.push({
 
       YDOM.HTMLElement.watch({
          selector: '#thumbnail #img[src]',
-         attr_mark: 'timestamps-updated',
+         attr_mark: 'preview-cleared',
          callback: img => {
             const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
             if (re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnail_time_stamp || 'hq1') + '.jpg');
+               img.src = img.src.replace(re, (user_settings.thumbnail_preview_stamp || 'hq1') + '.jpg');
             }
          },
       });
 
    },
    opt_export: {
-      'thumbnail_time_stamp': {
+      'thumbnails_preview_timestamps': {
          _tagName: 'select',
          label: 'Thumbnail timestamps',
          title: 'Thumbnail display video timestamps',

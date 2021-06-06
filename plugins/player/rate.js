@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    name: 'Video playback speed with mousewheel',
-   id: 'video-speed-wheel',
+   id: 'rate-wheel',
    depends_on_pages: 'watch, embed',
    opt_section: 'player',
    desc: 'Use mouse wheel to change speed of video',
@@ -23,15 +23,15 @@ _plugins_conteiner.push({
             // });
 
             // mousewheel in player area
-            if (user_settings.player_rate_hotkey) {
+            if (user_settings.rate_hotkey) {
                document.querySelector('.html5-video-container')
                   .addEventListener("wheel", evt => {
                      evt.preventDefault();
 
-                     if (evt[user_settings.player_rate_hotkey]
-                        || (user_settings.player_rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     if (evt[user_settings.rate_hotkey]
+                        || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
                         // console.debug('hotkey caught');
-                        const rate = playerRate.adjust(+user_settings.player_rate_step * Math.sign(evt.wheelDelta));
+                        const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
                         // console.debug('current rate:', rate);
                      }
                   });
@@ -119,18 +119,18 @@ _plugins_conteiner.push({
                },
             };
 
-            // init default_playback_rate
-            if (location.href.includes('music')) user_settings.default_playback_rate = 1;
-            playerRate.set(user_settings.default_playback_rate);
+            // init rate_default
+            if (location.href.includes('music')) user_settings.rate_default = 1;
+            playerRate.set(user_settings.rate_default);
 
          });
 
    },
    opt_export: {
-      'default_playback_rate': {
+      'rate_default': {
          _tagName: 'input',
-         // label: 'Speed at startup',
-         label: 'Default speedup',
+         label: 'Speed at startup',
+         // label: 'Default rate',
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',
@@ -139,7 +139,7 @@ _plugins_conteiner.push({
          max: 2,
          value: 1,
       },
-      'player_rate_step': {
+      'rate_step': {
          _tagName: 'input',
          label: 'Step',
          type: 'number',
@@ -150,7 +150,7 @@ _plugins_conteiner.push({
          max: 0.5,
          value: 0.25,
       },
-      'player_rate_hotkey': {
+      'rate_hotkey': {
          _tagName: 'select',
          label: 'Hotkey',
          options: [
