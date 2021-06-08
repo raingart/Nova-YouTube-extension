@@ -1,14 +1,14 @@
 _plugins_conteiner.push({
-   name: 'Scroll to top button',
    id: 'scroll-to-top',
-   depends_on_pages: 'all, -embed',
-   opt_section: 'other',
+   title: 'Scroll to top button',
+   run_on_pages: 'all, -embed',
+   section: 'other',
    desc: 'Displayed on long pages',
    _runtime: (user_settings, current_page) => {
 
       const SELECTOR_ID = 'scrollToTop_btn';
 
-      YDOM.HTMLElement.wait('body')
+      YDOM.waitElement('body')
          .then(() => {
             // create btn
             let btn = document.createElement('button');
@@ -79,13 +79,13 @@ _plugins_conteiner.push({
          });
 
    },
-   opt_export: {
-      'scroll_to_top_smooth': {
+   options: {
+      scroll_to_top_smooth: {
          _tagName: 'input',
          label: 'Smooth',
          type: 'checkbox',
       },
-      'scroll_to_top_autoplay': {
+      scroll_to_top_autoplay: {
          _tagName: 'input',
          label: 'Video unPause',
          type: 'checkbox',

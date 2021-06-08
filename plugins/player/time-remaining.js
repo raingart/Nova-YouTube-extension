@@ -1,14 +1,14 @@
 _plugins_conteiner.push({
-   name: 'Remaining Time',
    id: 'time-remaining',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Remaining Time',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Show the remaining time inside the player',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'ytp-time-remaining';
 
-      YDOM.HTMLElement.wait('video')
+      YDOM.waitElement('video')
          .then(player => {
             player.addEventListener('timeupdate', function () {
                // console.debug('timeupdate', this.currentTime, '/', this.duration);
@@ -40,8 +40,8 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'time_remaining_mode': {
+   options: {
+      time_remaining_mode: {
          _tagName: 'select',
          label: 'Mode',
          options: [

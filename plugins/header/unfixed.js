@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'UnFixed header',
    id: 'header-unfixed',
-   depends_on_pages: 'all',
-   opt_section: 'header',
+   title: 'UnFixed header',
+   run_on_pages: 'all',
+   section: 'header',
    // desc: '',
    _runtime: user_settings => {
 

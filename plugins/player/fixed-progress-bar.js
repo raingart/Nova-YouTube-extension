@@ -1,15 +1,15 @@
 _plugins_conteiner.push({
-   name: 'Fixed player progress bar',
    id: 'player-fixed-progress-bar',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Fixed player progress bar',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'player-fixed-progress-bar',
          SELECTOR_BAR = '#' + SELECTOR_ID;
 
-      YDOM.HTMLElement.wait('video')
+      YDOM.waitElement('video')
          .then(player => {
             // reset render transition
             player.addEventListener('durationchange', function () {
@@ -41,7 +41,7 @@ _plugins_conteiner.push({
 
          });
 
-      YDOM.HTMLElement.wait('.html5-video-player')
+      YDOM.waitElement('.html5-video-player')
          .then(playerConteiner => createBar(playerConteiner));
 
       function createBar(html_container) {
@@ -105,8 +105,8 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'player_fixed_progress_bar_height': {
+   options: {
+      player_fixed_progress_bar_height: {
          _tagName: 'input',
          label: 'Height',
          type: 'number',
@@ -116,7 +116,7 @@ _plugins_conteiner.push({
          max: 9,
          value: 3,
       },
-      'player_fixed_progress_bar_opacity': {
+      player_fixed_progress_bar_opacity: {
          _tagName: 'input',
          label: 'Opacity',
          type: 'number',

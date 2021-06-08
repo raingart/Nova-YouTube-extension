@@ -1,22 +1,21 @@
 _plugins_conteiner.push({
-   name: 'Player indicator',
    id: 'player-indicator',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Player indicator',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Replace default indicator',
    _runtime: user_settings => {
 
       if (!user_settings.player_indicator_type) {
          // hide default indicator
-         YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
-         return;
+         return YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
       }
 
       const
          SELECTOR_ID = 'player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ddd';
 
-      YDOM.HTMLElement.wait('video')
+      YDOM.waitElement('video')
          .then(player => {
             // show indicator
             // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
@@ -145,8 +144,8 @@ _plugins_conteiner.push({
       };
 
    },
-   opt_export: {
-      'player_indicator_type': {
+   options: {
+      player_indicator_type: {
          _tagName: 'select',
          label: 'Indicator type',
          options: [
@@ -156,7 +155,7 @@ _plugins_conteiner.push({
             { label: 'hide default', value: false },
          ],
       },
-      'player_indicator_color': {
+      player_indicator_color: {
          _tagName: 'input',
          label: 'Color',
          type: 'color',

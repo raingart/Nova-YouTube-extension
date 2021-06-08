@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'Normalize videos title',
    id: 'thumbnails-title-normalize',
-   depends_on_pages: 'all, -embed, -results',
-   opt_section: 'other',
+   title: 'Normalize videos title',
+   run_on_pages: 'all, -embed, -results',
+   section: 'other',
    desc: 'Decapitalize videos title',
    _runtime: user_settings => {
 
@@ -30,7 +30,7 @@ _plugins_conteiner.push({
             // color: '#8A2BE2', // indicator
          }, `[${ATTR_MARK}]:first-letter`, 'important');
 
-         YDOM.HTMLElement.watch({
+         YDOM.watchElement({
             selector: VIDEO_TITLE_SELECTOR + ':not(:empty)',
             attr_mark: ATTR_MARK,
             callback: title => {
@@ -60,19 +60,19 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'thumbnails_title_normalize_show_full': {
+   options: {
+      thumbnails_title_normalize_show_full: {
          _tagName: 'input',
          label: 'Show full title',
          type: 'checkbox'
       },
-      'thumbnails_title_normalize_smart': {
+      thumbnails_title_normalize_smart: {
          _tagName: 'input',
          label: 'Smart mode',
          type: 'checkbox',
          title: 'Filter words by regex pattern',
       },
-      'thumbnails_title_normalize_smart_max_words': {
+      thumbnails_title_normalize_smart_max_words: {
          _tagName: 'input',
          label: 'Max words in uppercase',
          type: 'number',

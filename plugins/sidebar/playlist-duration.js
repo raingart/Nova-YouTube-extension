@@ -1,15 +1,15 @@
 _plugins_conteiner.push({
-   name: 'Show Playlist Duration',
    id: 'playlist-duration',
-   depends_on_pages: 'watch, playlist',
+   title: 'Show Playlist Duration',
+   run_on_pages: 'watch, playlist',
    restart_on_transition: true,
-   opt_section: 'sidebar',
+   section: 'sidebar',
    // desc: '',
    _runtime: (user_settings, current_page) => {
 
       const
          CACHE_PREFIX = 'playlist-duration-time:',
-         playlistId = YDOM.getURLParams().get('list'),
+         playlistId = YDOM.getQueryURL('list'),
          STORE_NAME = CACHE_PREFIX + playlistId,
          SELECTOR_ID = 'playlist-duration-time';
 
@@ -17,7 +17,7 @@ _plugins_conteiner.push({
 
       // playlist page
       if (current_page === 'playlist') {
-         YDOM.HTMLElement.wait('#stats yt-formatted-string:first-child')
+         YDOM.waitElement('#stats yt-formatted-string:first-child')
             .then(el => {
                insertToHTML({ 'text_content': getPlaylistDuration(), 'html_container': el })
             });
@@ -52,7 +52,7 @@ _plugins_conteiner.push({
 
       // watch page
       if (current_page === 'watch') {
-         YDOM.HTMLElement.wait('#secondary #playlist #publisher-container yt-formatted-string:last-child')
+         YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
             .then(el => {
                getPlaylistDuration(el);
             });

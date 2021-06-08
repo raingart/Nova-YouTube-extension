@@ -2,8 +2,6 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
-      // 'other/-test.js',
-
       'player/ad-skip-button.js',
       'player/rate.js',
       'player/volume.js',
@@ -18,7 +16,6 @@ const Plugins = {
       'player/time-remaining.js',
       'player/fixed-progress-bar.js',
       'player/no-sleep.js',
-      // 'player/annotations.js',
       // 'player/stop.js', // incompatible with quality.js
 
       'other/thumbnails-clear.js',
@@ -94,13 +91,13 @@ const Plugins = {
       // console.groupCollapsed('plugins status');
 
       _plugins_conteiner.forEach(plugin => {
-         const pagesAllowList = plugin?.depends_on_pages?.split(',').map(i => i.trim().toLowerCase());
+         const pagesAllowList = plugin?.run_on_pages?.split(',').map(i => i.trim().toLowerCase());
          // reset logTable
          logTableTime = 0;
          logTableStatus = false;
 
-         if (!pluginValidCheck(plugin)) {
-            alert('Plugin invalid: ' + (plugin?.name || plugin?.id));
+         if (!pluginChecker(plugin)) {
+            alert('Plugin invalid: ' + plugin?.id);
             logTableStatus = 'INVALID';
 
          } else if (plugin.was_init && !plugin.restart_on_transition) {
@@ -120,14 +117,14 @@ const Plugins = {
 
             } catch (err) {
                console.groupEnd('plugins status'); // out-of-group display
-               console.error(`[ERROR PLUGIN] ${plugin.name}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose`);
+               console.error(`[ERROR PLUGIN] ${plugin.id}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose`);
 
                if (user_settings.report_issues && _pluginsCaptureException) {
                   _pluginsCaptureException({
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.name}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
+                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.id}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
                   });
                }
 
@@ -138,19 +135,19 @@ const Plugins = {
 
          logTableArray.push({
             'launched': logTableStatus,
-            'name': plugin?.name || plugin?.id,
+            'name': plugin?.id,
             'time init (ms)': logTableTime,
          });
       });
       console.table(logTableArray);
       console.groupEnd('plugins status');
 
-      function pluginValidCheck(plugin) {
-         const result = plugin?.id && plugin.depends_on_pages && 'function' === typeof plugin._runtime;
+      function pluginChecker(plugin) {
+         const result = plugin?.id && plugin.run_on_pages && 'function' === typeof plugin._runtime;
          if (!result) {
             console.error('plugin invalid:\n', {
                'id': plugin?.id,
-               'depends_on_pages': plugin?.depends_on_pages,
+               'run_on_pages': plugin?.run_on_pages,
                '_runtime': 'function' === typeof plugin?._runtime,
             });
          }

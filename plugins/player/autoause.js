@@ -1,12 +1,12 @@
 _plugins_conteiner.push({
-   name: 'Video autopause',
    id: 'video-autopause',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Video autopause',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Disables autoplay',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.wait('#movie_player')
+      YDOM.waitElement('#movie_player')
          .then(player => {
             let is_change_quality;
 
@@ -33,8 +33,8 @@ _plugins_conteiner.push({
          });
 
    },
-   opt_export: {
-      'video_autopause_ignore_playlist': {
+   options: {
+      video_autopause_ignore_playlist: {
          _tagName: 'input',
          label: 'ignore playlist',
          type: 'checkbox',

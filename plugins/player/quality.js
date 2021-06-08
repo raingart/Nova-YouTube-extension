@@ -1,12 +1,12 @@
 _plugins_conteiner.push({
-   name: 'Video quality',
    id: 'video-quality',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Video quality',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    // desc: '',
    _runtime: (user_settings, current_page) => {
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
             let selectedQuality = user_settings.video_quality;
 
@@ -28,7 +28,7 @@ _plugins_conteiner.push({
                   let interval_quality = setInterval(() => {
                      const availableQualityLevels = player.getAvailableQualityLevels();
 
-                     if (availableQualityLevels.length) {
+                     if (availableQualityLevels?.length) {
                         clearInterval(interval_quality);
 
                         const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
@@ -80,10 +80,10 @@ _plugins_conteiner.push({
          });
 
    },
-   opt_export: {
-      'video_quality': {
+   options: {
+      video_quality: {
          _tagName: 'select',
-         label: 'Set prefered quality',
+         label: 'Default video quality',
          title: 'If unavailable, set max available quality',
          // multiple: null,
          options: [
@@ -101,7 +101,7 @@ _plugins_conteiner.push({
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
       },
-      'video_quality_manual_save_tab': {
+      video_quality_manual_save_tab: {
          _tagName: 'input',
          label: 'Save manually selected for the same tab',
          type: 'checkbox',

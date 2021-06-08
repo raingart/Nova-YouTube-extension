@@ -1,14 +1,14 @@
 _plugins_conteiner.push({
-   name: 'Video playback speed with mousewheel',
    id: 'rate-wheel',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Video playback speed with mousewheel',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Use mouse wheel to change speed of video',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'rate-player-info';
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
             // show indicator
             // html5 way
@@ -54,7 +54,7 @@ _plugins_conteiner.push({
                },
 
                default(playback_rate) {
-                  // console.debug('playerRate:default', ...arguments);
+                  console.debug('playerRate:default', ...arguments);
                   const playbackRate = player.getPlaybackRate();
                   // const inRange = delta => {
                   //    const rangeRate = player.getAvailablePlaybackRates();
@@ -126,8 +126,8 @@ _plugins_conteiner.push({
          });
 
    },
-   opt_export: {
-      'rate_default': {
+   options: {
+      rate_default: {
          _tagName: 'input',
          label: 'Speed at startup',
          // label: 'Default rate',
@@ -139,7 +139,7 @@ _plugins_conteiner.push({
          max: 2,
          value: 1,
       },
-      'rate_step': {
+      rate_step: {
          _tagName: 'input',
          label: 'Step',
          type: 'number',
@@ -150,7 +150,7 @@ _plugins_conteiner.push({
          max: 0.5,
          value: 0.25,
       },
-      'rate_hotkey': {
+      rate_hotkey: {
          _tagName: 'select',
          label: 'Hotkey',
          options: [

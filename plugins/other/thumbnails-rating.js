@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'Rating preview',
    id: 'thumbnails-rating',
-   depends_on_pages: 'all, -embed',
-   opt_section: 'other',
+   title: 'Rating preview',
+   run_on_pages: 'all, -embed',
+   section: 'other',
    opt_api_key_warn: true,
    desc: 'Rating bar over videos thumbnail',
    _runtime: user_settings => {
@@ -31,11 +31,11 @@ _plugins_conteiner.push({
       let thumbsIdCollect = [];
       let newCache = {};
 
-      YDOM.HTMLElement.watch({
+      YDOM.watchElement({
          selector: 'a#thumbnail[href]',
-         attr_mark: 'timestamps-rated',
+         attr_mark: 'thumbnail-rated',
          callback: thumbnail => {
-            const id = YDOM.getURLParams(thumbnail.href).get('v');
+            const id = YDOM.getQueryURL('v', thumbnail.href);
             id && thumbsIdCollect.push(id);
          },
       });
@@ -135,7 +135,7 @@ _plugins_conteiner.push({
                   });
             });
 
-         function chunkArray(array, size) {
+         function chunkArray(array = [], size) {
             let chunked = [];
             while (array.length) chunked.push(array.splice(0, size));
             return chunked;
@@ -154,8 +154,8 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'rating_bar_height': {
+   options: {
+      rating_bar_height: {
          _tagName: 'input',
          label: 'Bar height',
          type: 'number',
@@ -165,13 +165,13 @@ _plugins_conteiner.push({
          max: 9,
          value: 3,
       },
-      'rating_like_color': {
+      rating_like_color: {
          _tagName: 'input',
          label: 'Like color',
          type: 'color',
          value: '#3ea6ff',
       },
-      'rating_dislike_color': {
+      rating_dislike_color: {
          _tagName: 'input',
          label: 'Dislike color',
          type: 'color',

@@ -6,15 +6,15 @@ chrome.runtime.onInstalled.addListener(details => {
       const manifest = chrome.runtime.getManifest();
       console.debug(`app ${details.reason} ${details.previousVersion} to ` + manifest.version);
 
-      const initialStorage = {"ad-skip-button":"on","channel-default-tab":"on","channel_default_tab":"videos","channel_default_tab_mode":"undefined","custom-api-key":"","livechat_collapse_mode":"collapse","pause-background-tab":"on","player-indicator":"on","player_fixed_progress_bar_height":"3","player_fixed_progress_bar_opacity":"0.7","player_fixed_scroll_size_position":"top-right","player_fixed_scroll_size_ratio":"2.5","player_indicator_color":"#ff0000","player_indicator_type":"text-top","playlist-duration":"on","rate_default":"1","rate_hotkey":"altKey","rate_step":"0.25","rating_bar_height":"3","rating_dislike_color":"#dddddd","rating_like_color":"#3ea6ff","redirect-disable":"on","report_issues":"on","scroll-to-top":"on","scroll_to_top_autoplay":"on","square-avatars":"on","tabs":"on","thumbnails_preview_timestamps":"hq2","thumbnails_title_normalize_smart_max_words":"2","time-jump":"on","time_jump_hotkey":"17","time_jump_step":"30","time_remaining_mode":"full","video-quality":"on","video_quality":"hd1080","volume-wheel":"on","volume_hotkey":"none","volume_level_default":"100","volume_step":"15"};
+      const defaultSettings = {"ad-skip-button":"on","channel-default-tab":"on","channel_default_tab":"videos","channel_default_tab_mode":"undefined","custom-api-key":"","livechat_collapse_mode":"collapse","pause-background-tab":"on","player-indicator":"on","player_fixed_progress_bar_height":"3","player_fixed_progress_bar_opacity":"0.7","player_fixed_scroll_size_position":"top-right","player_fixed_scroll_size_ratio":"2.5","player_indicator_color":"#ff0000","player_indicator_type":"text-top","playlist-duration":"on","rate_default":"1","rate_hotkey":"altKey","rate_step":"0.25","rating_bar_height":"3","rating_dislike_color":"#dddddd","rating_like_color":"#3ea6ff","redirect-disable":"on","report_issues":"on","scroll-to-top":"on","scroll_to_top_autoplay":"on","square-avatars":"on","tabs":"on","thumbnails_preview_timestamps":"hq2","thumbnails_title_normalize_smart_max_words":"2","time-jump":"on","time_jump_hotkey":"17","time_jump_step":"30","time_remaining_mode":"full","video-quality":"on","video_quality":"hd1080","volume-wheel":"on","volume_hotkey":"none","volume_level_default":"100","volume_step":"15"};
 
       switch (details.reason) {
          case 'install':
-            if (Object.keys(storage).length) return;
+            if (storage && Object.keys(storage).length) return;
 
             if (confirm(`${manifest.short_name}: no configuration data found!\nActivate default plugins and settings?`)) {
-               Storage.setParams(initialStorage, 'sync');
-               console.debug('Apply initial configuration', initialStorage);
+               Storage.setParams(defaultSettings, 'sync');
+               console.debug('Apply initial configuration', defaultSettings);
 
             } else {
                chrome.runtime.openOptionsPage();

@@ -1,20 +1,21 @@
 _plugins_conteiner.push({
-   name: 'The default tab on the channel page',
    id: 'channel-default-tab',
-   depends_on_pages: 'channel',
+   title: 'The default tab on the channel page',
+   run_on_pages: 'channel',
    restart_on_transition: true,
-   opt_section: 'channel',
+   section: 'channel',
+   // desc: '',
    _runtime: user_settings => {
 
       // home page channel/user
       if (location.pathname.split('/').filter(i => i).length === 2) {
 
-         if (user_settings?.channel_default_tab_method === 'redirect') {
+         if (user_settings.channel_default_tab_method === 'redirect') {
             location.href += '/' + user_settings.channel_default_tab;
 
          } else {
             // tab select
-            YDOM.HTMLElement.wait('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
+            YDOM.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
                .then(() => {
                   let tab_nth;
                   switch (user_settings.channel_default_tab) {
@@ -37,8 +38,8 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'channel_default_tab': {
+   options: {
+      channel_default_tab: {
          _tagName: 'select',
          label: 'Default tab',
          options: [
@@ -47,7 +48,7 @@ _plugins_conteiner.push({
             { label: 'about', value: 'about' },
          ],
       },
-      'channel_default_tab_mode': {
+      channel_default_tab_mode: {
          _tagName: 'select',
          label: 'Mode',
          title: 'Redirect is safer but slower',

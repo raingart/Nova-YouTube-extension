@@ -1,16 +1,16 @@
 _plugins_conteiner.push({
-   name: 'Clear links from redirects',
    id: 'redirect-disable',
-   depends_on_pages: 'watch, channel',
-   opt_section: 'other',
+   title: 'Clear links from redirects',
+   run_on_pages: 'watch, channel',
+   section: 'details',
    desc: 'Clear external links from redirect',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.watch({
+      YDOM.watchElement({
          selector: 'a[href*="/redirect?"]',
          attr_mark: 'redirect-cleared',
          callback: link => {
-            const q = YDOM.getURLParams(link.href).get('q');
+            const q = YDOM.getQueryURL('q', link.href);
             if (q) link.href = decodeURIComponent(q);
          },
       });

@@ -12,11 +12,9 @@ window.addEventListener('load', evt => {
                // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
                const handler = () => showOrHide(dependentItem, dependentsJson);
+               document.getElementById(Object.keys(dependentsJson))?.addEventListener("change", handler);
                // init state
                handler();
-
-               const dependentTag = document.getElementById(Object.keys(dependentsJson))
-               if (dependentTag) dependentTag.addEventListener("change", handler);
             });
 
          function showOrHide(dependentItem, dependentsList) {

@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'Mark watched',
    id: 'thumbnails-watched',
-   depends_on_pages: 'all',
-   opt_section: 'other',
+   title: 'Mark watched',
+   run_on_pages: 'all',
+   section: 'other',
    desc: 'Need to Turn on [YouTube History]',
    _runtime: user_settings => {
 

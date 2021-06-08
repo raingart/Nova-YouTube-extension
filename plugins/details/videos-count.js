@@ -1,9 +1,9 @@
 _plugins_conteiner.push({
-   name: 'Show channel videos count',
    id: 'channel-videos-count',
-   depends_on_pages: 'watch, channel',
+   title: 'Show channel videos count',
+   run_on_pages: 'watch, channel',
    restart_on_transition: true,
-   opt_section: 'details',
+   section: 'details',
    opt_api_key_warn: true,
    desc: 'Total number of videos on channel',
    _runtime: user_settings => {
@@ -15,10 +15,10 @@ _plugins_conteiner.push({
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
       // watch page
-      YDOM.HTMLElement.wait('#upload-info #channel-name a[href]')
+      YDOM.waitElement('#upload-info #channel-name a[href]')
          .then(link => {
             // console.debug('watch page');
-            YDOM.HTMLElement.wait('#meta #owner-sub-count:not([hidden]):not(:empty)')
+            YDOM.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)')
                .then(el => insertChannelStatistic({
                   'html_container': el,
                   'channel_id': link.href.split('/').pop()
@@ -26,7 +26,7 @@ _plugins_conteiner.push({
          });
 
       // channel page
-      YDOM.HTMLElement.wait('#channel-header #subscriber-count:not(:empty)')
+      YDOM.waitElement('#channel-header #subscriber-count:not(:empty)')
          .then(el => {
             // console.debug('channel page');
             insertChannelStatistic({ 'html_container': el, 'channel_id': getChannelId() });

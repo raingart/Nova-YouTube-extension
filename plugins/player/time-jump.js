@@ -1,12 +1,12 @@
 _plugins_conteiner.push({
-   name: 'Time jump',
    id: 'time-jump',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Time jump',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
             doubleKeyPressListener(jumpTime, user_settings.time_jump_hotkey);
 
@@ -53,8 +53,8 @@ _plugins_conteiner.push({
       }
 
    },
-   opt_export: {
-      'time_jump_step': {
+   options: {
+      time_jump_step: {
          _tagName: 'input',
          label: 'Step time',
          type: 'number',
@@ -64,7 +64,7 @@ _plugins_conteiner.push({
          max: 300,
          value: 30,
       },
-      'time_jump_hotkey': {
+      time_jump_hotkey: {
          _tagName: 'select',
          label: 'Hotkey (double tap)',
          options: [

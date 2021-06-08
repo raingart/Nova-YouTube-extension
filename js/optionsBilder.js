@@ -7,26 +7,34 @@ Plugins.load();
 const Opt = {
    // DEBUG: true,
 
-   pluginValidCheck(plugin) {
+   storageMethod: 'sync',
+
+   UI: {
+      parentSelector: '#plugins',
+
+      // outerHTML: node => node.outerHTML || new XMLSerializer().serializeToString(node),
+   },
+
+   pluginChecker(plugin) {
       const isValid = plugin?.id // required
-         && plugin.depends_on_pages?.split(',').length
+         && plugin.run_on_pages?.split(',').length
          && plugin._runtime && typeof plugin._runtime === 'function'
          // optional
-         && (!plugin.opt_section || plugin.opt_section?.split(' ').length === 1)
+         && (!plugin.section || plugin.section?.split(' ').length === 1)
          && (!plugin.restart_on_transition || 'boolean' === typeof plugin.restart_on_transition)
          && (!plugin.opt_api_key_warn || 'boolean' === typeof plugin.opt_api_key_warn)
-         && (!plugin.opt_export || 'object' === typeof plugin.opt_export)
+         && (!plugin.options || 'object' === typeof plugin.options)
          && (!plugin.desc || 'string' === typeof plugin.desc);
 
       if (!isValid) {
          console.error('plugin invalid:\n', {
             id: plugin.id,
-            depends_on_pages: plugin.depends_on_pages?.split(',').length,
-            opt_section: plugin.opt_section?.split(' ').length === 1 || undefined,
+            run_on_pages: plugin.run_on_pages?.split(',').length,
+            section: plugin.section?.split(' ').length === 1 || undefined,
             restart_on_transition: 'boolean' === typeof plugin.restart_on_transition || undefined,
             opt_api_key_warn: 'boolean' === typeof plugin.opt_api_key_warn || undefined,
             desc: 'string' === typeof plugin.desc || undefined,
-            opt_export: 'object' === typeof plugin.opt_export || undefined,
+            options: 'object' === typeof plugin.options || undefined,
             _runtime: 'function' === typeof plugin._runtime,
          });
       }
@@ -40,7 +48,7 @@ const Opt = {
 
          _plugins_conteiner.forEach(plugin => {
             try {
-               if (!Opt.pluginValidCheck(plugin)) throw new Error('pluginInvalid!');
+               if (!Opt.pluginChecker(plugin)) throw new Error('pluginInvalid!');
 
                Opt.log('plugin load:', plugin.id);
 
@@ -49,24 +57,24 @@ const Opt = {
 
                li.innerHTML = '<div class="info"' +
                   (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
-                  `<label for="${plugin.id}">${plugin.name}</label>` +
-                  `<a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugin-specifications#${plugin.id}" target=”_blank” title="More info">?</a>` +
+                  `<label for="${plugin.id}">${plugin.title}</label>` +
+                  `<a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="More info">?</a>` +
                   (plugin.opt_api_key_warn ?
                      ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">⚠️</span></b> ' : '') +
                   // ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">&#128273;</span></b> ' : '') +
                   `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
 
-               if (plugin.opt_export) {
+               if (plugin.options) {
                   li.appendChild(
                      document.createElement("li")
-                        .appendChild(this.options(plugin.opt_export, plugin.id))
+                        .appendChild(this.options(plugin.options, plugin.id))
                   );
                }
 
-               const pl_selector = '>#' + plugin?.opt_section?.toString().toLowerCase();
+               const pl_selector = '>#' + plugin?.section?.toString().toLowerCase();
                let p = Opt.UI.parentSelector;
 
-               p += plugin.opt_section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
+               p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
 
                document.querySelector(p).appendChild(li);
 
@@ -131,7 +139,7 @@ const Opt = {
                         break;
 
                      case 'type':
-                        if (value == 'number') exportProperty.setAttribute('required', true);
+                        if (value === 'number') exportProperty.setAttribute('required', true);
                      // break; <-- need remove!
 
                      default:
@@ -148,23 +156,7 @@ const Opt = {
 
    },
 
-   UI: {
-      parentSelector: '#plugins',
-
-      toggleListView({ selector_hide, selector_show, active_class = required() }) {
-         // console.debug('toggleListView:', ...arguments);
-         // hide all
-         if (selector_hide) document.querySelectorAll(selector_hide).forEach(i => i.classList.remove(active_class));
-         // target show
-         if (selector_show) document.querySelectorAll(selector_show).forEach(i => i.classList.add(active_class));
-      },
-
-      // outerHTML: node => node.outerHTML || new XMLSerializer().serializeToString(node),
-   },
-
    eventListener() {
-      const transferStorageMethod = 'sync';
-
       // appearance map
       document.querySelectorAll(".appearance > *")
          .forEach(el => {
@@ -176,16 +168,16 @@ const Opt = {
                // add click event
                el.addEventListener('click', event => {
                   // event.preventDefault();
-                  this.UI.toggleListView({
+                  toggleListView({
                      'selector_hide': `${this.UI.parentSelector} > *`,
                      'selector_show': `${this.UI.parentSelector} > #${el.id}`, //event.target.id <- error
                      'active_class': 'active'
                   });
-                  this.UI.toggleListView({
+                  toggleListView({
                      'selector_hide': `${this.UI.parentSelector} > *`,
                      'active_class': 'collapse'
                   });
-                  this.UI.toggleListView({
+                  toggleListView({
                      'selector_hide': `${this.UI.parentSelector} li.item`,
                      'active_class': 'hide'
                   });
@@ -198,17 +190,17 @@ const Opt = {
       document.getElementById("show_all_plugins")
          .addEventListener('click', event => {
             event.preventDefault();
-            this.UI.toggleListView({
+            toggleListView({
                'selector_hide': `${this.UI.parentSelector} > *`,
                'selector_show': `${this.UI.parentSelector} > *`,
                'active_class': 'active'
             });
             // unset collapse state
-            this.UI.toggleListView({
+            toggleListView({
                'selector_hide': `${this.UI.parentSelector} > *`,
                'active_class': 'collapse'
             });
-            this.UI.toggleListView({
+            toggleListView({
                'selector_hide': `${this.UI.parentSelector} li.item`,
                'active_class': 'hide'
             });
@@ -237,7 +229,7 @@ const Opt = {
                d.click();
                console.debug('Settings file exported:', d.download);
                document.body.removeChild(d);
-            }, transferStorageMethod);
+            }, this.storageMethod);
          });
 
       // import setting
@@ -252,7 +244,7 @@ const Opt = {
                let rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {
-                     Storage.setParams(JSON.parse(rdr.result), transferStorageMethod);
+                     Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
                      alert('Settings imported successfully');
                      document.location.reload();
                   }
@@ -265,6 +257,14 @@ const Opt = {
             f.click();
             document.body.removeChild(f);
          });
+
+      function toggleListView({ selector_hide, selector_show, active_class = required() }) {
+         // console.debug('toggleListView:', ...arguments);
+         // hide all
+         if (selector_hide) document.querySelectorAll(selector_hide).forEach(i => i.classList.remove(active_class));
+         // target show
+         if (selector_show) document.querySelectorAll(selector_show).forEach(i => i.classList.add(active_class));
+      }
    },
 
    init() {
@@ -304,7 +304,7 @@ window.addEventListener('load', event => {
    Storage.getParams(store => {
       if (!store || !store['custom-api-key']) return;
       document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
-   }, 'sync');
+   }, Opt.storageMethod);
 });
 
 

@@ -56,14 +56,14 @@ const App = {
       let forceLander = setTimeout(() => {
          console.debug('force lander:', _plugins_conteiner.length + '/' + plugins_count);
          processLander();
-      }, 1000 * 5); // 5sec
+      }, 1000 * 3); // 3sec
 
       let interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
          if (YDOM && _plugins_conteiner.length === plugins_count) {
-            clearTimeout(forceLander);
+            clearInterval(forceLander);
             processLander();
 
          } else console.debug('loading:', _plugins_conteiner.length + '/' + plugins_count);
@@ -75,7 +75,7 @@ const App = {
          clearInterval(interval_lander);
          plugins_executor({
             'user_settings': user_settings,
-            'app_ver': app_ver,
+            'app_ver': app_ver, // need reflectException
          });
       }
    },

@@ -1,9 +1,9 @@
 _plugins_conteiner.push({
-   name: 'Square avatars',
    id: 'square-avatars',
-   depends_on_pages: 'watch, channel',
-   opt_section: 'comments',
-   // desc: '',
+   title: 'Square avatars',
+   run_on_pages: 'watch, channel',
+   section: 'comments',
+   desc: 'Make user images squared',
    _runtime: user_settings => {
 
       YDOM.css.push(`

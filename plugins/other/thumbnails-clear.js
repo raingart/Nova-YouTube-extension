@@ -1,12 +1,12 @@
 _plugins_conteiner.push({
-   name: 'Clear videos thumbnails',
    id: 'thumbnails-preview-clear',
-   depends_on_pages: 'all, -embed',
-   opt_section: 'other',
+   title: 'Clear videos thumbnails',
+   run_on_pages: 'all, -embed',
+   section: 'other',
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.watch({
+      YDOM.watchElement({
          selector: '#thumbnail #img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
@@ -18,8 +18,8 @@ _plugins_conteiner.push({
       });
 
    },
-   opt_export: {
-      'thumbnails_preview_timestamps': {
+   options: {
+      thumbnails_preview_timestamps: {
          _tagName: 'select',
          label: 'Thumbnail timestamps',
          title: 'Thumbnail display video timestamps',

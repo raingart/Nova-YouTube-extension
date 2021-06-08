@@ -57,13 +57,13 @@
 }
 
 /* <div class="tabbed">
-   <input type="radio" name="tabs" id="tab_1" checked>
+   <input type="radio" name="tabs" id="tab-1" checked>
    <label for="tab_1">One</label>
 
-   <input type="radio" name="tabs" id="tab_2">
+   <input type="radio" name="tabs" id="tab-2">
    <label for="tab_2" id="show_all_plugins">Two</label>
 
-   <input type="radio" name="tabs" id="tab_3">
+   <input type="radio" name="tabs" id="tab-3">
    <label for="tab_3">Three</label>
 
    <div class="tabs-content">

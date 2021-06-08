@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'Pauses playing videos in other tabs',
    id: 'pause-background-tab',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Pauses playing videos in other tabs',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Supports frames and open browser windows',
    _runtime: user_settings => {
 
@@ -10,7 +10,7 @@ _plugins_conteiner.push({
          storeName = 'playngInstanceIDTab',
          instanceID = Math.random(); // Generate a random script instance ID
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
             const removeStorage = () => localStorage.removeItem(storeName);
             // -1: unstarted

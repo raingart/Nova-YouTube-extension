@@ -1,8 +1,8 @@
 _plugins_conteiner.push({
-   name: 'Short header',
    id: 'header-short',
-   depends_on_pages: 'all',
-   opt_section: 'header',
+   title: 'Short header',
+   run_on_pages: 'all',
+   section: 'header',
    // desc: '',
    _runtime: user_settings => {
 

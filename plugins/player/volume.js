@@ -1,16 +1,16 @@
 _plugins_conteiner.push({
-   name: 'Mouse wheel volume control',
    id: 'volume-wheel',
-   depends_on_pages: 'watch, embed',
-   opt_section: 'player',
+   title: 'Mouse wheel volume control',
+   run_on_pages: 'watch, embed',
+   section: 'player',
    desc: 'Use mouse wheel to change volume of video',
    _runtime: user_settings => {
 
-      YDOM.HTMLElement.wait('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
          .then(player => {
             // init volume_level_default
             if (+user_settings.volume_level_default) {
-               setVolumeLevel(user_settings.volume_level_default);
+               setVolumeLevel(+user_settings.volume_level_default);
             }
 
             // show indicator
@@ -82,8 +82,8 @@ _plugins_conteiner.push({
          });
 
    },
-   opt_export: {
-      'volume_level_default': {
+   options: {
+      volume_level_default: {
          _tagName: 'input',
          // label: 'Level at startup',
          label: 'Default volume',
@@ -95,7 +95,7 @@ _plugins_conteiner.push({
          max: 100,
          value: 100,
       },
-      'volume_step': {
+      volume_step: {
          _tagName: 'input',
          label: 'Step',
          type: 'number',
@@ -106,7 +106,7 @@ _plugins_conteiner.push({
          max: 30,
          value: 10,
       },
-      'volume_hotkey': {
+      volume_hotkey: {
          _tagName: 'select',
          label: 'Hotkey',
          options: [

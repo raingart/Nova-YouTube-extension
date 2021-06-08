@@ -8,10 +8,10 @@
 // www.youtube.com/watch?v=ctMEGAcnYjI
 
 _plugins_conteiner.push({
-   name: 'Pin player while scrolling',
    id: 'player-fixed-scroll',
-   depends_on_pages: 'watch',
-   opt_section: 'player',
+   title: 'Pin player while scrolling',
+   run_on_pages: 'watch',
+   section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
@@ -19,7 +19,7 @@ _plugins_conteiner.push({
          CLASS_VALUE = 'player-fixed',
          PINNED_SELECTOR = '.' + CLASS_VALUE;
 
-      YDOM.HTMLElement.wait('.html5-video-player')
+      YDOM.waitElement('.html5-video-player')
          .then(player => {
             // init css
             let interval_initStyle = setInterval(() => {
@@ -30,7 +30,7 @@ _plugins_conteiner.push({
                }
             }, 500); // 500ms
 
-            YDOM.HTMLElement.wait('#player-theater-container')
+            YDOM.waitElement('#player-theater-container')
                .then(playerContainer => {
                   window.addEventListener('scroll', () => {
                      onScreenToggle({
@@ -174,8 +174,8 @@ _plugins_conteiner.push({
       // }
 
    },
-   opt_export: {
-      'player_fixed_scroll_size_ratio': {
+   options: {
+      player_fixed_scroll_size_ratio: {
          _tagName: 'input',
          label: 'Player ratio to screen size',
          type: 'number',
@@ -186,7 +186,7 @@ _plugins_conteiner.push({
          max: 5,
          value: 2.5,
       },
-      'player_fixed_scroll_size_position': {
+      player_fixed_scroll_size_position: {
          _tagName: 'select',
          label: 'Fixed player position',
          options: [

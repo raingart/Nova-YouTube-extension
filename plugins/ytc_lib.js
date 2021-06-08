@@ -1,62 +1,59 @@
 const YDOM = {
    // DEBUG: true,
 
-   HTMLElement: {
+   waitElement(selector = required()) {
       // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
 
       // There is a more correct method - transitionend.
       // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future. If YouTube replaces logic.
+      YDOM.log('wait', ...arguments);
 
-      wait(selector = required()) {
-         YDOM.log('wait', ...arguments);
+      if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
 
-         if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
-
-         return new Promise(resolve => {
-            const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
-            if (el) {
-               YDOM.log('waited(1)', selector, el);
-               return resolve(el);
-            }
-            if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-
-            new MutationObserver((mutations, observer) => {
-               mutations.forEach(mutation => {
-                  [...mutation.addedNodes]
-                     .filter(node => node.nodeType === 1)
-                     .forEach(node => {
-                        (node?.parentElement || document).querySelectorAll(selector)
-                           .forEach(element => {
-                              YDOM.log('waited', mutation.type, selector);
-                              observer.disconnect();
-                              return resolve(element);
-                           });
-                     });
-               });
-            })
-               .observe(document.body || document.documentElement, { childList: true, subtree: true });
-         });
-      },
-
-      watch({ selector = required(), attr_mark, callback = required() }) {
-         YDOM.log('watch', selector);
-         if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
-
-         process(); // launch not wait
-
-         setInterval(process, 1000 * 1.5); // 1.5 sec
-
-         function process() {
-            YDOM.log('process', { selector, callback });
-            document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
-               .forEach(el => {
-                  YDOM.log('viewed', selector);
-                  if (attr_mark) el.setAttribute(attr_mark, true);
-                  if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
-                  callback(el);
-               });
+      return new Promise(resolve => {
+         const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
+         if (el) {
+            YDOM.log('waited(1)', selector, el);
+            return resolve(el);
          }
-      },
+         if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+
+         new MutationObserver((mutations, observer) => {
+            mutations.forEach(mutation => {
+               [...mutation.addedNodes]
+                  .filter(node => node.nodeType === 1)
+                  .forEach(node => {
+                     (node?.parentElement || document).querySelectorAll(selector)
+                        .forEach(element => {
+                           YDOM.log('waited', mutation.type, selector);
+                           observer.disconnect();
+                           return resolve(element);
+                        });
+                  });
+            });
+         })
+            .observe(document.body || document.documentElement, { childList: true, subtree: true });
+      });
+   },
+
+   watchElement({ selector = required(), attr_mark, callback = required() }) {
+      YDOM.log('watch', selector);
+      if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
+
+      process(); // launch not wait
+
+      setInterval(process, 1000 * 1.5); // 1.5 sec
+
+      function process() {
+         YDOM.log('process', { selector, callback });
+         document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
+            .forEach(el => {
+               YDOM.log('viewed', selector);
+               if (attr_mark) el.setAttribute(attr_mark, true);
+               if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
+               callback(el);
+            });
+      }
    },
 
    css: {
@@ -197,9 +194,7 @@ const YDOM = {
          .join(':'); // format "0h:0m:0s"
    },
 
-   // YDOM.getURLParams().get('name');
-   getURLParams: url => new URLSearchParams((url ? new URL(url) : location).search),
-   // getQuery = (url, query) => new URLSearchParams(url).get(query),
+   getQueryURL: (query, url) => new URLSearchParams((url ? new URL(url) : location).search).get(query),
 
    request: {
 
@@ -237,7 +232,7 @@ const YDOM = {
             .then(response => response.json())
             .then(json => {
                if (!json.error && Object.keys(json).length) return json;
-               console.warn('used key:', YDOM.getURLParams(URL).get('key'));
+               console.warn('used key:', YDOM.getQueryURL(URL).get('key'));
                throw new Error(JSON.stringify(json?.error));
             })
             .catch(error => {
