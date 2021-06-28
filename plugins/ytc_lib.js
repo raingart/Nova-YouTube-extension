@@ -4,15 +4,17 @@ const YDOM = {
    waitElement(selector = required()) {
       // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
 
+      // document.addEventListener("yt-visibility-refresh", iniLoadStartListener, true);
+
       // There is a more correct method - transitionend.
-      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future. If YouTube replaces logic.
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
+      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
       YDOM.log('wait', ...arguments);
 
       if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
 
       return new Promise(resolve => {
-         const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
-         if (el) {
+         if (el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector)) {
             YDOM.log('waited(1)', selector, el);
             return resolve(el);
          }
@@ -45,10 +47,10 @@ const YDOM = {
       setInterval(process, 1000 * 1.5); // 1.5 sec
 
       function process() {
-         YDOM.log('process', { selector, callback });
+         YDOM.log('watch.process', { selector, callback });
          document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
             .forEach(el => {
-               YDOM.log('viewed', selector);
+               YDOM.log('watch.process.viewed', selector);
                if (attr_mark) el.setAttribute(attr_mark, true);
                if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
                callback(el);
@@ -118,7 +120,7 @@ const YDOM = {
          return window.getComputedStyle(el)[property];
       },
 
-      // uncheck: toggle => toggle.hasAttribute("checked") && toggle.click(),
+      // uncheck: toggle => toggle.hasAttribute('checked') && toggle.click(),
    },
 
    cookie: {
@@ -149,10 +151,10 @@ const YDOM = {
       },
    },
 
-   bezelTrigger(text) {
+   bezelTrigger(text = '') {
       if (typeof fateBezel === 'number') clearTimeout(fateBezel);
-      const bezelEl = document.querySelector(".ytp-bezel-text");
-      if (!bezelEl || !text) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
+      const bezelEl = document.querySelector('.ytp-bezel-text');
+      if (!bezelEl) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
 
       const
          bezelConteiner = bezelEl.parentElement.parentElement,
@@ -161,19 +163,13 @@ const YDOM = {
       if (!this.bezel_inited) {
          this.bezel_inited = true;
          this.css.push(
-            `.${CLASS_VALUE_TOGGLE} {
-               display: block !important;
-            }
+            `.${CLASS_VALUE_TOGGLE} { display: block !important; }
             .${CLASS_VALUE_TOGGLE} .ytp-bezel-text-wrapper {
                pointer-events: none;
                z-index: 40 !important;
             }
-            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text {
-               display: inline-block !important;
-            }
-            .${CLASS_VALUE_TOGGLE} .ytp-bezel {
-               display: none !important;
-            }`);
+            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text { display: inline-block !important; }
+            .${CLASS_VALUE_TOGGLE} .ytp-bezel { display: none !important; }`);
       }
 
       bezelEl.textContent = text;
@@ -184,24 +180,36 @@ const YDOM = {
 
    secToStr(timestamp, no_zeros) {
       const
-         hours = Math.floor(timestamp / 60 / 60),
+         hours = Math.floor(timestamp / 60 / 60) || null,
          minutes = Math.floor(timestamp / 60) - (hours * 60),
          seconds = timestamp % 60;
 
       return [hours, minutes, seconds]
-         .filter(i => +i) // clear zeros
-         .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1" => "01"
-         .join(':'); // format "0h:0m:0s"
+         .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
+         .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1:2:3" => "01:02:03"
+         .join(':'); // format "h:m:s"
    },
 
-   getQueryURL: (query, url) => new URLSearchParams((url ? new URL(url) : location).search).get(query),
+   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main',
+
+   queryURL: {
+      get: (query, url) => new URLSearchParams((url ? new URL(url) : location).search).get(query),
+
+      // set: (query = {}, url) => {
+      //    YDOM.log('queryURL.set:', ...arguments);
+      //    let newURL = new URLSearchParams((url ? new URL(url) : location).search);
+      //    Object.entries(query)
+      //       .forEach(([name, value]) => newURL.set(name, value));
+      //    return newURL;
+      // },
+   },
 
    request: {
 
       API_STORE_NAME: 'YOUTUBE_API_KEYS',
 
       async API({ request, params, api_key }) {
-         // YDOM.log('API:', ...arguments); // err
+         // YDOM.log('request.API:', ...arguments); // err
          // console.debug('API:', ...arguments);
          // get API key
          const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
@@ -231,8 +239,8 @@ const YDOM = {
          return await fetch(URL)
             .then(response => response.json())
             .then(json => {
-               if (!json.error && Object.keys(json).length) return json;
-               console.warn('used key:', YDOM.getQueryURL(URL).get('key'));
+               if (!json?.error && Object.keys(json).length) return json;
+               console.warn('used key:', YDOM.queryURL.get('key', URL));
                throw new Error(JSON.stringify(json?.error));
             })
             .catch(error => {
@@ -247,7 +255,7 @@ const YDOM = {
       },
 
       async keys() {
-         YDOM.log('fetch to youtube_api_keys.json');
+         YDOM.log('request.API: fetch to youtube_api_keys.json');
          // see https://gist.github.com/raingart/ff6711fafbc46e5646d4d251a79d1118/
          return await fetch('https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json')
             .then(res => res.text())

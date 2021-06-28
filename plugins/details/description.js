@@ -7,7 +7,7 @@ _plugins_conteiner.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitElement('.ytd-video-secondary-info-renderer > [collapsed] #more')
+      YDOM.waitElement('#meta [collapsed] #more')
          .then(el => el.click());
 
    }

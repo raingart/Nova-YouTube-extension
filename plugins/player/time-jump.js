@@ -6,18 +6,24 @@ _plugins_conteiner.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('#movie_player')
          .then(player => {
             doubleKeyPressListener(jumpTime, user_settings.time_jump_hotkey);
 
             function jumpTime() {
-               if (document.activeElement.tagName.toLowerCase() !== "input" // search-input
+               if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
                   && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
                   // && !window.getSelection()
                ) {
                   const sec = player.getCurrentTime() + parseInt(user_settings.time_jump_step);
                   // console.debug('seekTo', sec);
                   player.seekTo(sec);
+
+                  // show indicator
+                  if (msg = `+${user_settings.time_jump_step} sec`) {
+                     YDOM.bezelTrigger(msg); // show default indicator
+                     window?.HUD.set(msg); // if the "player-indicator" plugin is enabled
+                  }
                }
             }
          });
@@ -48,8 +54,7 @@ _plugins_conteiner.push({
 
             if (!keyCodeFilter) lastPressed = pressed;
          }
-         // window.onkeyup = key => keyPress(key);
-         document.addEventListener("keyup", keyPress);
+         document.addEventListener('keyup', keyPress);
       }
 
    },

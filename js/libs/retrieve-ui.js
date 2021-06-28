@@ -7,10 +7,8 @@ const PopulateForm = {
       for (const key in obj) {
          const val = obj[key];
          // const el = document.getElementsByName(key)[0] || document.getElementById(key);
-         const el = (parent || document).querySelector(`[name="${key}"]`) ||
-            (parent || document).querySelector('#' + key)
-
-         if (el) {
+         if (el = (parent || document).querySelector(`[name="${key}"]`)
+            || (parent || document).querySelector('#' + key)) {
             this.log('>opt %s[%s]: %s', key, el.tagName, val);
 
             switch (el.tagName.toLowerCase()) {

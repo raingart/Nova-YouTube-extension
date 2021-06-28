@@ -10,7 +10,7 @@ _plugins_conteiner.push({
       // home page channel/user
       if (location.pathname.split('/').filter(i => i).length === 2) {
 
-         if (user_settings.channel_default_tab_method === 'redirect') {
+         if (user_settings.channel_default_tab_mode === 'redirect') {
             location.href += '/' + user_settings.channel_default_tab;
 
          } else {

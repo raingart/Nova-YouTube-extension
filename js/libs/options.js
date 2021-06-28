@@ -1,6 +1,6 @@
 console.debug("init options.js");
 
-window.addEventListener('load', evt => {
+window.addEventListener('load', () => {
 
    const Conf = {
       // storageMethod: 'local',
@@ -82,18 +82,18 @@ window.addEventListener('load', evt => {
       // Register the event handlers.
       registerEventListener() {
          // form submit
-         document.addEventListener('submit', event => {
+         document.addEventListener('submit', evt => {
             // console.debug('submit', event.target);
-            event.preventDefault();
+            evt.preventDefault();
 
             this.btnSubmitAnimation._process();
-            this.saveOptions(event.target);
+            this.saveOptions(evt.target);
             this.btnSubmitAnimation._defaut();
          });
          // form unsave
          document.addEventListener('change', ({ target }) => {
             // console.debug('change', target);
-            if (target.name == "tabs") return; // fix/ignore switch tabs
+            if (target.name === 'tabs') return; // fix/ignore switch tabs
             if (!this.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
                this.btnSubmitAnimation.outputStatus.classList.add('unSaved');
             }

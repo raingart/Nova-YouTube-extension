@@ -6,34 +6,30 @@ _plugins_conteiner.push({
    desc: 'Replace default indicator',
    _runtime: user_settings => {
 
-      if (!user_settings.player_indicator_type) {
-         // hide default indicator
-         return YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
-      }
-
       const
          SELECTOR_ID = 'player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ddd';
 
       YDOM.waitElement('video')
-         .then(player => {
-            // show indicator
-            // https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
+         .then(video => {
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
+            const player = document.getElementById('movie_player');
 
             // volume
-            player.addEventListener('volumechange', function () {
+            video.addEventListener('volumechange', function () {
                // console.debug('volumechange', player.getVolume(), this.volume);
-               const videoPlayer = document.querySelector('.html5-video-player');
-               HUD.set(Math.round(videoPlayer.getVolume()), '%');
+               window.HUD.set(Math.round(player.getVolume()), '%');
             });
+
             // rate
-            player.addEventListener('ratechange', function () {
-               // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
-               HUD.set(this.playbackRate, 'x');
+            video.addEventListener('ratechange', function () {
+               // console.debug('ratechange', this.playbackRate);
+               window.HUD.set(this.playbackRate, 'x');
             });
          });
 
-      const HUD = {
+      // export to window obj. For use in other plugins
+      window.HUD = {
          get() {
             return this.conteiner || this.create();
          },
@@ -45,25 +41,25 @@ _plugins_conteiner.push({
             // hide default indicator
             YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
             // init common css
-            YDOM.css.push(`
-                  #${SELECTOR_ID} {
-                     --color: #fff;
-                     --bg-color: rgba(0,0,0,0.3);
-                     --zindex: ${YDOM.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
+            YDOM.css.push(
+               `#${SELECTOR_ID} {
+                  --color: #fff;
+                  --bg-color: rgba(0,0,0,0.3);
+                  --zindex: ${YDOM.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
 
-                     position: absolute;
-                     left: 0;
-                     right: 0;
-                     z-index: calc(var(--zindex) + 1);
-                     margin: 0 auto;
-                     text-align: center;
-                     opacity: 0;
-                     background-color: var(--bg-color);
-                     color: var(--color);
-                  }`);
-
+                  position: absolute;
+                  left: 0;
+                  right: 0;
+                  z-index: calc(var(--zindex) + 1);
+                  margin: 0 auto;
+                  text-align: center;
+                  opacity: 0;
+                  background-color: var(--bg-color);
+                  color: var(--color);
+               }`);
+            // template
             document.getElementById('movie_player')
-               .insertAdjacentHTML("beforeend", `<div id="${SELECTOR_ID}"><span></span></div>`);
+               .insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
 
             this.conteiner = document.getElementById(SELECTOR_ID);
             this.el = this.conteiner.querySelector('span'); // export el
@@ -133,7 +129,7 @@ _plugins_conteiner.push({
 
             hud.style.transition = 'none';
             hud.style.opacity = 1;
-            // hud.style.visibility = 'visibility';
+            // hud.style.visibility = 'visible';
 
             fateHUD = setTimeout(() => {
                hud.style.transition = 'opacity 200ms ease-in';
@@ -151,8 +147,6 @@ _plugins_conteiner.push({
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar+center', value: 'bar-center' },
-            // { label: 'bar+center+left', value: 'bar-center=left' },
-            { label: 'hide default', value: false },
          ],
       },
       player_indicator_color: {

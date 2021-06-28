@@ -25,13 +25,12 @@ _plugins_conteiner.push({
    /* optional GIU in options page: end */
 
 
-   _runtime: (user_settings, current_page) => {
+   _runtime: user_settings => {
       // user_settings - all extension settings. There is no division of settings into separate plugins
-      // current_page - optional. The current name page. One of the specified arguments "run_on_pages"
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped
-      YDOM.waitElement('.html5-video-player') // use css selector. Like document.querySelector
+      YDOM.waitElement('#movie_player') // use css selector. Like document.querySelector
          // wait, run the code
          .then(node => { // returns the specified selector above
             // do stuff

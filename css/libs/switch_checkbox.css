@@ -1,13 +1,50 @@
+/* template */
+/* #1 */
 input[type="checkbox"] {
+   --height: 1.2em;
+   width: 2.5em;
+}
+
+/* #2 */
+/* input[type="checkbox"] {
+   --height: 1em;
+   width: 2.2em;
+} */
+
+/* #3 */
+/* input[type="checkbox"] {
+   --height: 1em;
+   width: 2.2em;
+}
+input[type="checkbox"]:after {
+   transform: scale(1.2);
+} */
+
+/* #4 */
+/* input[type="checkbox"] {
    --height: 1.4em;
+   width: 3.1em;
+} */
+
+/* #5 */
+/* input[type="checkbox"] {
+   --height: 1.4em;
+   width: 3.1em;
+}
+input[type="checkbox"]:after {
+   transform: scale(.8);
+} */
+
+/* ================== */
+
+input[type="checkbox"] {
    --opacity: .7;
    --color: #fff;
-
-   width: 3.1em;
    height: var(--height);
    line-height: 1.6em;
    border-radius: 3em;
    background-color: #ddd;
+   /* background-color: lightslategray; */
    appearance: none;
    -webkit-appearance: none;
    position: relative;
@@ -17,7 +54,9 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked {
-   background-color: deepskyblue;
+   /* background-color: #188cc3; */
+   background-color: #27a6e5;
+   /* background-color: deepskyblue; */
    /* background-color: #4cd964; */
    /* background-color: #4CAF50; */
 }
@@ -33,7 +72,6 @@ input[type="checkbox"]:after {
    background-color: var(--color);
    box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
    /* box-shadow: 0 .1em .25em #999999; */
-   /* transform: scale(.8); */
 }
 
 input[type="checkbox"]:checked:after {
@@ -52,14 +90,13 @@ input[type="checkbox"]:checked[disabled] {
    background-color: #b0d7f5;
 }
 
-input[type="checkbox"]:focus,
-input[type="checkbox"]:focus:after {
+input[type="checkbox"]:focus, input[type="checkbox"]:focus:after {
    /*transition: all .2s ease-in-out;*/
    transition: all ease-in-out;
    transition-duration: 200ms;
 }
-
-input[type="checkbox"]:before {
+/* add status text */
+/* input[type="checkbox"]:before {
    float: right;
    content: "OFF";
    color: #767778;
@@ -73,4 +110,4 @@ input[type="checkbox"]:checked:before {
    content: "ON";
    color: var(--color);
    margin-left: 10%;
-}
+} */

@@ -6,7 +6,7 @@
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
    "minimum_chrome_version": "80.0",
-   "version": "1.15.2",
+   "version": "1.16.0",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",
@@ -39,7 +39,7 @@
    "web_accessible_resources": [
       "/plugins/*"
    ],
-   "options_page": "/html/options.html",
+   "options_page": "/html/options.html?tabs=tab-plugins",
    "browser_action": {
       "default_popup": "/html/options.html"
    }

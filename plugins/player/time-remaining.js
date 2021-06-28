@@ -3,15 +3,16 @@ _plugins_conteiner.push({
    title: 'Remaining Time',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Show the remaining time inside the player',
+   desc: 'Remaining time until the end of the video',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'ytp-time-remaining';
 
       YDOM.waitElement('video')
-         .then(player => {
-            player.addEventListener('timeupdate', function () {
+         .then(video => {
+            video.addEventListener('timeupdate', function () {
                // console.debug('timeupdate', this.currentTime, '/', this.duration);
+               if (document.querySelector('.ytp-autohide video')) return; // optimization try
                const currentPt = () => Math.round((this.currentTime / this.duration) * 100);
                const leftTime = () => YDOM.secToStr(Math.round(this.duration - this.currentTime));
                let text;
@@ -25,18 +26,30 @@ _plugins_conteiner.push({
                      text += text && ` (${currentPt()}%)`; // prevent show NaN
                }
 
-               insertToHTML({ 'text_content': text, 'html_container': document.querySelector('.ytp-time-duration') });
+               if (text) {
+                  insertToHTML({
+                     'text': '-' + text,
+                     'containerEl': document.querySelector('.ytp-time-duration')
+                  });
+               }
+
             });
 
          });
 
-      function insertToHTML({ text_content, html_container }) {
+      function insertToHTML({ text = '', containerEl = required() }) {
          // console.debug('insertToHTML', ...arguments);
+         if (!(containerEl instanceof HTMLElement)) {
+            return console.error('containerEl not HTMLElement:', containerEl);
+         }
          (document.getElementById(SELECTOR_ID) || (function () {
-            html_container.insertAdjacentHTML("afterend", ` • <span id="${SELECTOR_ID}">${text_content}</span>`);
+            // const el = document.createElement('span');
+            // el.id = SELECTOR_ID;
+            // containerEl.after(el);
+            containerEl.insertAdjacentHTML('afterend', ` <span id="${SELECTOR_ID}">${text}</span>`);
             return document.getElementById(SELECTOR_ID);
          })())
-            .textContent = text_content;
+            .textContent = text;
       }
 
    },

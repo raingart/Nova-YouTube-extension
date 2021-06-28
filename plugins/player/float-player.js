@@ -6,26 +6,27 @@
 // for testing square-screen
 // www.youtube.com/watch?v=v-YQUCP-J8s
 // www.youtube.com/watch?v=ctMEGAcnYjI
+// www.youtube.com/watch?v=yFsmUBLn8O0
 
 _plugins_conteiner.push({
-   id: 'player-fixed-scroll',
+   id: 'player-float-scroll',
    title: 'Pin player while scrolling',
    run_on_pages: 'watch',
    section: 'player',
-   // desc: '',
+   desc: 'Player stays always visible while scrolling',
    _runtime: user_settings => {
 
       const
-         CLASS_VALUE = 'player-fixed',
-         PINNED_SELECTOR = '.' + CLASS_VALUE;
+         CLASS_VALUE = 'player-float',
+         PINNED_SELECTOR = '.' + CLASS_VALUE; // for css
 
-      YDOM.waitElement('.html5-video-player')
+      YDOM.waitElement('#movie_player')
          .then(player => {
             // init css
-            let interval_initStyle = setInterval(() => {
+            const interval = setInterval(() => {
                if (player.clientWidth && player.clientHeight
                   && document.getElementById('masthead-container')?.offsetHeight) {
-                  clearInterval(interval_initStyle);
+                  clearInterval(interval);
                   createStyle(player);
                }
             }, 500); // 500ms
@@ -62,8 +63,8 @@ _plugins_conteiner.push({
          const miniSize = calculateAspectRatioFit({
             'srcWidth': player.clientWidth,
             'srcHeight': player.clientHeight,
-            'maxWidth': (window.innerWidth / user_settings.player_fixed_scroll_size_ratio),
-            'maxHeight': (window.innerHeight / user_settings.player_fixed_scroll_size_ratio)
+            'maxWidth': (window.innerWidth / user_settings.player_float_scroll_size_ratio),
+            'maxHeight': (window.innerHeight / user_settings.player_float_scroll_size_ratio)
          });
 
          let initcss = {
@@ -76,8 +77,8 @@ _plugins_conteiner.push({
                '0 8px 10px -5px rgba(0, 0, 0, 0.4)',
          };
 
-         // set player_fixed_scroll_size_position
-         switch (user_settings.player_fixed_scroll_size_position) {
+         // set player_float_scroll_size_position
+         switch (user_settings.player_float_scroll_size_position) {
             case 'top-left':
                initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.left = 0;
@@ -99,7 +100,7 @@ _plugins_conteiner.push({
          // apply css
          YDOM.css.push(initcss, PINNED_SELECTOR, 'important');
 
-         // var fix
+         // variable declaration for fix
          YDOM.css.push(
             PINNED_SELECTOR + `{
                --height: ${initcss.height} !important;
@@ -119,13 +120,18 @@ _plugins_conteiner.push({
             `${PINNED_SELECTOR} video {
                   width: var(--width) !important;
                   height: var(--height) !important;
+                  left: 0 !important;
+                  top: 0 !important;
+               }
+               .ended-mode video {
+                  visibility: hidden;
                }`);
 
          function calculateAspectRatioFit({ srcWidth = 0, srcHeight = 0, maxWidth = 0, maxHeight = 0 }) {
-            const ratio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
+            const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
             return {
-               width: Math.round(+srcWidth * ratio),
-               height: Math.round(+srcHeight * ratio),
+               width: Math.round(+srcWidth * aspectRatio),
+               height: Math.round(+srcHeight * aspectRatio),
             };
          };
       }
@@ -175,7 +181,7 @@ _plugins_conteiner.push({
 
    },
    options: {
-      player_fixed_scroll_size_ratio: {
+      player_float_scroll_size_ratio: {
          _tagName: 'input',
          label: 'Player ratio to screen size',
          type: 'number',
@@ -186,7 +192,7 @@ _plugins_conteiner.push({
          max: 5,
          value: 2.5,
       },
-      player_fixed_scroll_size_position: {
+      player_float_scroll_size_position: {
          _tagName: 'select',
          label: 'Fixed player position',
          options: [
@@ -196,7 +202,7 @@ _plugins_conteiner.push({
             { label: 'right-bottom', value: 'bottom-right' },
          ],
       },
-      // 'player_fixed_scroll_pause_video': {
+      // 'player_float_scroll_pause_video': {
       //    _tagName: 'input',
       //    label: 'Pause pinned video',
       //    type: 'checkbox',

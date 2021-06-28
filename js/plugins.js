@@ -7,23 +7,27 @@ const Plugins = {
       'player/volume.js',
       'player/hud.js',
       'player/quality.js',
-      'player/autoause.js', // after quality.js
+      'player/autopause.js', // after quality.js
       'player/theater-mode.js',
       'player/tab-pause.js',
       'player/hotkeys-focused.js',
-      'player/pin.js',
+      'player/float-player.js',
       'player/time-jump.js',
       'player/time-remaining.js',
-      'player/fixed-progress-bar.js',
+      'player/float-progress-bar.js',
+      'player/screenshot.js',
       'player/no-sleep.js',
+      'player/loop.js',
+      'player/resume-playback.js',
       // 'player/stop.js', // incompatible with quality.js
 
-      'other/thumbnails-clear.js',
-      'other/thumbnails-title-normalize.js',
-      'other/thumbnails-rating.js',
-      'other/thumbnails-watched.js',
+      'other/thumbs-clear.js',
+      'other/thumbs-title-normalize.js',
+      'other/thumbs-rating.js',
+      // 'other/thumbs-watched.js', // outdated
       'other/channel-tab.js',
       'other/redirect-clear.js',
+      'other/title-time.js',
       'other/scroll-to-top.js',
 
       'details/description.js',
@@ -38,6 +42,7 @@ const Plugins = {
 
       'header/unfixed.js',
       'header/short.js',
+      'header/logo.js',
    ],
 
    load(list) {
@@ -79,6 +84,7 @@ const Plugins = {
       if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
+      // similar - YDOM.currentPageName()
       const currentPage = (function () {
          const page = location.pathname.split('/')[1];
          return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
@@ -97,6 +103,7 @@ const Plugins = {
          logTableStatus = false;
 
          if (!pluginChecker(plugin)) {
+            console.error('Plugin invalid\n', JSON.stringify(plugin));
             alert('Plugin invalid: ' + plugin?.id);
             logTableStatus = 'INVALID';
 
@@ -111,7 +118,8 @@ const Plugins = {
             try {
                const startTableTime = performance.now();
                plugin.was_init = true;
-               plugin._runtime(user_settings, currentPage);
+               plugin._runtime(user_settings);
+               // plugin._runtime.apply(plugin, [user_settings])
                logTableTime = (performance.now() - startTableTime).toFixed(2);
                logTableStatus = true;
 
@@ -124,7 +132,7 @@ const Plugins = {
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.id}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
+                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.title}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
                   });
                }
 

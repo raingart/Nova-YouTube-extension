@@ -10,19 +10,19 @@ _plugins_conteiner.push({
          .then(player => {
             let is_change_quality;
 
-            player.addEventListener("onStateChange", onPlayerStateChange.bind(this));
+            player.addEventListener('onStateChange', onPlayerStateChange);
 
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', ...arguments);
 
-               if (user_settings.video_autoause_ignore_playlist && window.location.href.includes('list=')) return;
+               if (user_settings.video_autopause_ignore_playlist && window.location.href.includes('list=')) return;
 
                // -1: unstarted
                // 0: ended
                // 1: playing
                // 2: paused
                // 3: buffering
-               // 5: video cued
+               // 5: cued
                if (1 === state && !is_change_quality) {
                   is_change_quality = true;
                   player.pauseVideo();

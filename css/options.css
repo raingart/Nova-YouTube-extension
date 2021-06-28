@@ -39,9 +39,11 @@ div.between:first-child {
 div.between:last-child {
    padding-bottom: 0;
 }
+
 div.between:last-child {
    padding-bottom: 0;
 }
+
 div.between input[type="text"] {
    padding: 5px;
 }
@@ -51,7 +53,6 @@ div.between input[type="text"] {
    grid-gap: 15px;
    /* grid-template-columns: 300px auto; */
    grid-template-columns: [left appearance] 1fr [right opts];
-
    margin: 0 10px 5px;
 }
 
@@ -76,6 +77,7 @@ li>ul>li {
 }
 
 /* form>ul>li.item:not(:last-child) { */
+
 form>ul>li.item {
    border-top: 1px solid var(--li-item);
 }
@@ -93,8 +95,7 @@ input[type=search] {
    padding: 5px;
 }
 
-input[type=search]:focus,
-input[type=text]:focus {
+input[type=search]:focus, input[type=text]:focus {
    border: 1px solid deepskyblue;
 }
 
@@ -116,10 +117,6 @@ input[type=text]:focus {
 
 #plugins #comments:not(:empty):before {
    content: "comments";
-}
-
-#plugins #footer:not(:empty):before {
-   content: "footer";
 }
 
 #plugins #other:not(:empty):before {
@@ -145,20 +142,18 @@ input[type=text]:focus {
    justify-self: center;
 }
 
-.opt+ul,
-.info+ul {
+.opt+ul, .info+ul {
    grid-column: ul;
    /* align-self: center;
    justify-self: center; */
-    margin-bottom: 10px;
+   margin-bottom: 10px;
 }
 
 .info label a {
    padding-left: 5px;
 }
 
-#plugins>.collapse:before,
-#plugins>.collapse:after {
+#plugins>.collapse:before, #plugins>.collapse:after {
    opacity: .2;
 }
 
@@ -177,11 +172,9 @@ input[type=text]:focus {
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
    grid-gap: 15px;
-
    overflow-x: hidden;
    overflow-y: auto;
    max-height: 83vh;
-
    padding-right: 8px;
    padding-left: 5px;
 }
@@ -195,8 +188,7 @@ input[type=text]:focus {
    margin-bottom: 8px;
 }
 
-#plugins>*:empty,
-#plugins>*:not(.active) {
+#plugins>*:empty, #plugins>*:not(.active) {
    display: none;
 }
 
@@ -228,18 +220,27 @@ li>label+* {
    justify-self: center;
 }
 
-.info > label {
+.info>label {
    display: inline;
    color: var(--label1);
 }
 
-.info > b {
+.info>b {
    cursor: help;
    color: darkorange;
    float: right;
    margin-right: 10px;
 }
 
-.info > label+a {
+li.item a[href*=wiki] {
+   font-weight: bold;
    margin-left: 3px;
+   opacity: .2;
 }
+
+li.item:hover a[href*=wiki] {
+   opacity: 1;
+}
+
+/* a[href*=wiki]:hover {
+} */

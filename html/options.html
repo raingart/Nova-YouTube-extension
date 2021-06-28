@@ -43,14 +43,14 @@
          <form enctype="multipart/form-data">
 
             <div class="tabbed">
-               <input type="radio" name="tabs" id="tab-1" checked>
-               <label for="tab-1">Map</label>
+               <input type="radio" name="tabs" id="tab-map" checked>
+               <label for="tab-map">Map</label>
 
-               <input type="radio" name="tabs" id="tab-2">
-               <label for="tab-2" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
+               <input type="radio" name="tabs" id="tab-plugins">
+               <label for="tab-plugins" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
 
-               <input type="radio" name="tabs" id="tab-3">
-               <label for="tab-3">Other</label>
+               <input type="radio" name="tabs" id="tab-other">
+               <label for="tab-other">Other</label>
 
                <div class="tabs-content">
 
@@ -71,9 +71,6 @@
                         </div>
                         <div class="comments" id="comments">
                            <span>Comments</span>
-                        </div>
-                        <div class="footer" id="footer">
-                           <span>Footer</span>
                         </div>
                         <div class="other" id="other">
                            <span>Other</span>
@@ -97,7 +94,6 @@
                         <ul id="sidebar" class="active"></ul>
                         <ul id="comments" class="active"></ul>
                         <ul id="header" class="active"></ul>
-                        <ul id="footer" class="active"></ul>
                      </div>
 
                      <!-- <hr /> -->
@@ -136,6 +132,7 @@
                         <legend>__MSG_opt_legend_settings_transfer__</legend>
                         <button type="button" id="settings_import">__MSG_opt_btn_import_settings__</button>
                         <button type="button" id="settings_export">__MSG_opt_btn_export_settings__</button>
+                        <button type="button" id="settings_reset">__MSG_opt_btn_reset_settings__</button>
                      </fieldset>
 
                      <div class="between">

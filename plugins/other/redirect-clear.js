@@ -10,8 +10,7 @@ _plugins_conteiner.push({
          selector: 'a[href*="/redirect?"]',
          attr_mark: 'redirect-cleared',
          callback: link => {
-            const q = YDOM.getQueryURL('q', link.href);
-            if (q) link.href = decodeURIComponent(q);
+            if (q = YDOM.queryURL.get('q', link.href)) link.href = decodeURIComponent(q);
          },
       });
 

@@ -10,7 +10,7 @@ const Opt = {
    storageMethod: 'sync',
 
    UI: {
-      parentSelector: '#plugins',
+      pluginsContainer: '#plugins',
 
       // outerHTML: node => node.outerHTML || new XMLSerializer().serializeToString(node),
    },
@@ -43,40 +43,41 @@ const Opt = {
 
    generate: {
 
-      list() {
-         Opt.log('list _plugins_conteiner:', _plugins_conteiner);
+      list(plugins_list) {
+         this.log('list _plugins_conteiner:', plugins_list);
 
-         _plugins_conteiner.forEach(plugin => {
+         plugins_list.forEach(plugin => {
             try {
-               if (!Opt.pluginChecker(plugin)) throw new Error('pluginInvalid!');
+               if (!this.pluginChecker(plugin)) throw new Error('pluginInvalid!');
+               this.log('plugin load:', plugin.id);
 
-               Opt.log('plugin load:', plugin.id);
-
-               let li = document.createElement("li");
-               li.className = "item";
-
-               li.innerHTML = '<div class="info"' +
-                  (plugin.desc ? ' tooltip="' + plugin.desc + '" flow="up"' : '') + '>' +
-                  `<label for="${plugin.id}">${plugin.title}</label>` +
-                  `<a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="More info">?</a>` +
-                  (plugin.opt_api_key_warn ?
-                     ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">⚠️</span></b> ' : '') +
-                  // ' <b tooltip="use your [API key] for stable work" flow="left"><span style="font-size: initial;">&#128273;</span></b> ' : '') +
-                  `</div><div class="opt"><input type="checkbox" name="${plugin.id}" id="${plugin.id}" /></div>`;
+               const li = document.createElement('li');
+               li.className = 'item';
+               li.innerHTML =
+                  `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc}" flow="up"` : ''}>
+                     <label for="${plugin.id}">${plugin.title}</label>
+                     <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
+                     ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">&#128273;</span></b>` : ''}
+                  </div>
+                  <div class="opt">
+                     <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
+                  </div>`;
+               // ⚠️
 
                if (plugin.options) {
                   li.appendChild(
-                     document.createElement("li")
-                        .appendChild(this.options(plugin.options, plugin.id))
+                     document.createElement('li')
+                        .appendChild(this.generate.options.apply(this, [plugin.options, plugin.id]))
                   );
                }
 
-               const pl_selector = '>#' + plugin?.section?.toString().toLowerCase();
-               let p = Opt.UI.parentSelector;
+               let p = this.UI.pluginsContainer;
+               if (targetSection = '>#' + plugin?.section?.toString().toLowerCase()) {
+                  p += (plugin.section && document.querySelector(p + targetSection)) ? targetSection : '>#other';
+               }
 
-               p += plugin.section && document.querySelector(p + pl_selector) ? pl_selector : '>#other';
-
-               document.querySelector(p).appendChild(li);
+               document.querySelector(p)
+                  .appendChild(li); // append to section tab
 
             } catch (error) {
                console.error('Error plugin generate:\n', error.stack + '\n', plugin);
@@ -86,20 +87,20 @@ const Opt = {
       },
 
       options(obj, id) {
-         let exportHTML = document.createElement('ul');
+         const exportHTML = document.createElement('ul');
          exportHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
          for (const key in obj) {
-            Opt.log('obj[name]', obj[key]);
-            let property = obj[key];
+            const property = obj[key];
+            this.log('property', property);
 
             if (!property._tagName) {
                console.error('_tagName is missing in', property);
                continue;
             }
 
-            let exportContainer = document.createElement('li');
-            let exportProperty = document.createElement(property._tagName);
+            const exportContainer = document.createElement('li');
+            const exportProperty = document.createElement(property._tagName);
 
             property.name = key;
             property.id = key;
@@ -117,12 +118,12 @@ const Opt = {
             }
 
             Object.entries(property)
-               .filter(([attr, value]) => {
-                  Opt.log('property [%s=%s]', attr, JSON.stringify(value));
+               .forEach(([attr, value]) => {
+                  this.log('property [%s=%s]', attr, JSON.stringify(value));
                   switch (attr) {
                      case 'options':
                         value.forEach(option => {
-                           let tagOption = document.createElement('option');
+                           const tagOption = document.createElement('option');
                            tagOption.setAttribute('value', option.value);
                            tagOption.textContent = option.label;
                            if (option.hasOwnProperty('selected')) tagOption.setAttribute('selected', true);
@@ -131,7 +132,7 @@ const Opt = {
                         break;
 
                      case 'label':
-                        let label = document.createElement(attr);
+                        const label = document.createElement(attr);
                         label.innerHTML = '<font>↪</font>' + value;
                         label.htmlFor = property.name;
                         exportContainer.appendChild(label);
@@ -156,70 +157,82 @@ const Opt = {
 
    },
 
+   // tab selector
+   openTab(tabId, reset_page) {
+      // console.debug('openTab', ...arguments);
+      if (reset_page) {
+         document.location = window.location.pathname + '?tabs=' + tabId;
+      } else {
+         document.getElementById(tabId).checked = true;
+      }
+   },
+
    eventListener() {
       // appearance map
       document.querySelectorAll(".appearance > *")
-         .forEach(el => {
+         .forEach(mapZone => {
             // group is empty
-            if (document.querySelector(this.UI.parentSelector + `>#${el.id}:empty`)) {
-               el.classList.add('empty');
+            if (document.querySelector(this.UI.pluginsContainer + `>#${mapZone.id}:empty`)) {
+               mapZone.classList.add('empty');
 
             } else {
                // add click event
-               el.addEventListener('click', event => {
-                  // event.preventDefault();
-                  toggleListView({
-                     'selector_hide': `${this.UI.parentSelector} > *`,
-                     'selector_show': `${this.UI.parentSelector} > #${el.id}`, //event.target.id <- error
-                     'active_class': 'active'
+               mapZone.addEventListener('click', ({ target }) => {
+                  // show target , hide other section
+                  switchClass({
+                     'remove_to_selector': `${this.UI.pluginsContainer} > *`,
+                     'add_to_selector': `${this.UI.pluginsContainer} > #${mapZone.id}`,
+                     'class_name': 'active',
                   });
-                  toggleListView({
-                     'selector_hide': `${this.UI.parentSelector} > *`,
-                     'active_class': 'collapse'
+                  // unset collapse state in all section title
+                  switchClass({
+                     'remove_to_selector': `${this.UI.pluginsContainer} > *`,
+                     'class_name': 'collapse',
                   });
-                  toggleListView({
-                     'selector_hide': `${this.UI.parentSelector} li.item`,
-                     'active_class': 'hide'
+                  // expand collapsed section
+                  switchClass({
+                     'remove_to_selector': `${this.UI.pluginsContainer} li.item`,
+                     'class_name': 'hide',
                   });
-                  document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
+                  this.openTab('tab-plugins');
                });
             }
          });
 
       // link show_all_plugins
       document.getElementById("show_all_plugins")
-         .addEventListener('click', event => {
-            event.preventDefault();
-            toggleListView({
-               'selector_hide': `${this.UI.parentSelector} > *`,
-               'selector_show': `${this.UI.parentSelector} > *`,
-               'active_class': 'active'
+         .addEventListener('click', () => {
+            // show all section
+            switchClass({
+               'remove_to_selector': `${this.UI.pluginsContainer} > *`,
+               'add_to_selector': `${this.UI.pluginsContainer} > *`,
+               'class_name': 'active'
             });
-            // unset collapse state
-            toggleListView({
-               'selector_hide': `${this.UI.parentSelector} > *`,
-               'active_class': 'collapse'
+            // unset collapse state in all section title
+            switchClass({
+               'remove_to_selector': `${this.UI.pluginsContainer} > *`,
+               'class_name': 'collapse'
             });
-            toggleListView({
-               'selector_hide': `${this.UI.parentSelector} li.item`,
-               'active_class': 'hide'
+            // expand collapsed section
+            switchClass({
+               'remove_to_selector': `${this.UI.pluginsContainer} li.item`,
+               'class_name': 'hide'
             });
-            document.querySelector('.tabbed>input[type="radio"]:nth-child(3)').checked = true;
+            this.openTab('tab-plugins');
          });
 
       // group spoiler
       if (document.body.clientWidth < 350) { // in popup
-         document.querySelectorAll(this.UI.parentSelector + '> ul')
-            .forEach(ul => ul.addEventListener('click', event => {
-               // event.preventDefault();
-               event.target.classList.toggle("collapse")
-               event.target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
+         document.querySelectorAll(this.UI.pluginsContainer + '> ul')
+            .forEach(ul => ul.addEventListener('click', ({ target }) => {
+               target.classList.toggle("collapse")
+               target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
             }));
       }
 
       // export setting
       document.getElementById('settings_export')
-         .addEventListener('click', () => {
+         ?.addEventListener('click', () => {
             Storage.getParams(user_settings => {
                let d = document.createElement('a');
                d.style.display = 'none';
@@ -234,41 +247,60 @@ const Opt = {
 
       // import setting
       document.getElementById('settings_import')
-         .addEventListener('click', () => {
+         ?.addEventListener('click', () => {
+            if (document.body.clientWidth < 350) { // in popup
+               // if (confirm(i18n('opt_import_popup'))) chrome.runtime.openOptionsPage();
+               if (confirm(i18n('opt_prompt_import_settings'))) {
+                  // chrome.runtime.openOptionsPage();
+                  window.open(chrome.extension.getURL(chrome.runtime.getManifest().options_page) + '?tabs=tab-other');
+               }
+               return;
+            }
             let f = document.createElement('input');
             f.type = 'file';
             f.accept = 'application/JSON';
             f.style.display = 'none';
-            f.addEventListener('change', () => {
+            f.addEventListener('change', ({ target }) => {
                if (f.files.length !== 1) return;
                let rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {
                      Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
-                     alert('Settings imported successfully');
-                     document.location.reload();
+                     alert(i18n('opt_alert_import_successfully'));
+                     // document.location.reload();
+                     this.openTab('tab-plugins', 'reset_page');
                   }
-                  catch (ex) { alert('Error parsing settings\n' + ex); }
+                  catch (err) { alert('Error parsing settings\n' + err.name + ": " + err.message); }
                });
-               rdr.addEventListener('error', () => alert('Error loading file\n' + rdr.error));
-               rdr.readAsText(f.files[0]);
+               rdr.addEventListener('error', error => alert('Error loading file\n' + rdr.error));
+               rdr.readAsText(target.files[0]);
             });
             document.body.appendChild(f);
             f.click();
             document.body.removeChild(f);
          });
 
-      function toggleListView({ selector_hide, selector_show, active_class = required() }) {
-         // console.debug('toggleListView:', ...arguments);
+      // reset setting
+      document.getElementById('settings_reset')
+         ?.addEventListener('click', () => {
+            if (confirm(i18n('opt_prompt_reset_settings'))) {
+               Storage.setParams(null, this.storageMethod);
+               // document.location.reload();
+               this.openTab('tab-plugins', 'reset_page');
+            }
+         });
+
+      function switchClass({ remove_to_selector, add_to_selector, class_name = required() }) {
+         // console.debug('switchClass:', ...arguments);
          // hide all
-         if (selector_hide) document.querySelectorAll(selector_hide).forEach(i => i.classList.remove(active_class));
+         if (remove_to_selector) document.querySelectorAll(remove_to_selector).forEach(i => i.classList.remove(class_name));
          // target show
-         if (selector_show) document.querySelectorAll(selector_show).forEach(i => i.classList.add(active_class));
+         if (add_to_selector) document.querySelectorAll(add_to_selector).forEach(i => i.classList.add(class_name));
       }
    },
 
    init() {
-      this.generate.list();
+      this.generate.list.apply(this, [_plugins_conteiner]);
       this.eventListener();
    },
 
@@ -282,57 +314,65 @@ const Opt = {
 }
 
 
-window.addEventListener('load', event => {
+window.addEventListener('load', () => {
    // search bar
-   ["change", "keyup"]
-      .forEach(event => {
-         document.querySelector('[type="search"]')
-            .addEventListener(event, function () {
-               const generatelist = document.querySelector(Opt.UI.parentSelector);
-               searchFilter({
-                  'keyword': this.value,
-                  // 'container': generatelist.children,
-                  // 'container':  generatelist.getElementsByTagName('li'),
-                  'container': generatelist.querySelectorAll('li.item'),
-                  'filterChildTagName': 'label'
-               });
+   ["change", "keyup"].forEach(evt => {
+      document.querySelector('[type="search"]')
+         .addEventListener(evt, function () {
+            const generatelist = document.querySelector(Opt.UI.pluginsContainer);
+            searchFilter({
+               'keyword': this.value,
+               // 'container': generatelist.children,
+               // https://stackoverflow.com/questions/18247289/what-is-the-difference-between-queryselectorall-and-getelementsbytagname
+               'container': generatelist.getElementsByTagName('li'),
+               // 'container': generatelist.querySelectorAll('li.item'),
+               'filter_el': 'label'
             });
-      });
+         });
+   });
 
    Opt.init();
 
    Storage.getParams(store => {
-      if (!store || !store['custom-api-key']) return;
-      document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
+      // tab selector
+      if (tabId = new URLSearchParams((location).search).get('tabs')) Opt.openTab(tabId);
+
+      // remove api warn if has api
+      if (store && store['custom-api-key']) {
+         document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
+      }
    }, Opt.storageMethod);
-});
 
+   function searchFilter({ keyword, container, filter_el }) {
+      // console.debug('searchFilter:', ...arguments);
+      for (const item of container) {
+         const
+            text = item.textContent,
+            found = text.toLowerCase().includes(keyword.toLowerCase()),
+            highlight = el => {
+               el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+               if (found && keyword.toString().trim()) {
+                  highlightSearchTerm({
+                     'target': el,
+                     'keyword': keyword,
+                     // 'highlightClass':,
+                  });
+               }
+            };
 
-function searchFilter({ keyword, container, filterChildTagName }) {
-   // console.debug('searchFilter:', ...arguments);
-   for (const item of container) {
-      let text = item.textContent;
-      let found = text.toLowerCase().includes(keyword.toLowerCase());
-      let highlight = el => {
-         el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
-         if (found && keyword.toString().trim()) highlightSearchTerm(el, keyword);
-      };
+         // hide el in which are not present
+         item.style.display = found ? '' : 'none';
+         filter_el && item.querySelectorAll(filter_el).forEach(highlight);
+      }
 
-      // vision
-      item.style.display = found ? '' : 'none';
+      function highlightSearchTerm({ target, keyword = required(), highlightClass }) {
+         const
+            content = target.innerHTML,
+            pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
+            replaceWith = '$1<mark ' + (highlightClass ? 'class="' + highlightClass + '"' : 'style="background-color:#afafaf"') + '>$2</mark>$3',
+            marked = content.replace(pattern, replaceWith);
 
-      if (filterChildTagName) { // fix reset input status
-         item.querySelectorAll(filterChildTagName).forEach(highlight);
+         return (target.innerHTML = marked) !== content;
       }
    }
-
-   function highlightSearchTerm(target, keyword = required(), highlightClass) {
-      // fix
-      let content = target.innerHTML,
-         pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
-         replaceWith = '$1<mark ' + (highlightClass ? 'class="' + highlightClass + '"' : 'style="background-color:#afafaf"') + '>$2</mark>$3',
-         marked = content.replace(pattern, replaceWith);
-
-      return (target.innerHTML = marked) !== content;
-   }
-}
+});

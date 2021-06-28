@@ -4,14 +4,14 @@ _plugins_conteiner.push({
    run_on_pages: 'all, -embed',
    section: 'other',
    desc: 'Displayed on long pages',
-   _runtime: (user_settings, current_page) => {
+   _runtime: user_settings => {
 
       const SELECTOR_ID = 'scrollToTop_btn';
 
       YDOM.waitElement('body')
          .then(() => {
             // create btn
-            let btn = document.createElement('button');
+            const btn = document.createElement('button');
             btn.id = SELECTOR_ID;
             Object.assign(btn.style, {
                position: 'fixed',
@@ -32,20 +32,28 @@ _plugins_conteiner.push({
                'background-color': 'rgba(0,0,0,.3)',
                'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .4)',
             });
-            btn.addEventListener('click', event => {
+            btn.addEventListener('click', () => {
                window.scrollTo({
                   top: 0,
                   left: window.pageXOffset,
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
-
-               if (user_settings.scroll_to_top_autoplay && current_page === 'watch') {
-                  document.querySelector('.html5-video-player')?.playVideo();
+               const player = document.getElementById('movie_player');
+               if (user_settings.scroll_to_top_autoplay
+                  && YDOM.currentPageName() === 'watch'
+                  // -1: unstarted
+                  // 0: ended
+                  // 1: playing
+                  // 2: paused
+                  // 3: buffering
+                  // 5: cued
+                  && player.getPlayerState() === 2) {
+                  player.playVideo();
                }
             });
 
             // create arrow
-            let arrow = document.createElement('span');
+            const arrow = document.createElement('span');
             Object.assign(arrow.style, {
                border: 'solid white',
                'border-width': '0 3px 3px 0',
@@ -70,10 +78,10 @@ _plugins_conteiner.push({
             const scrollToTop_btn = document.getElementById(SELECTOR_ID);
             let sOld;
             window.addEventListener('scroll', () => {
-               const sNow = document.documentElement.scrollTop > (window.innerHeight / 2);
-               if (sNow == sOld) return;
-               sOld = sNow;
-               scrollToTop_btn.style.visibility = sNow ? 'visible' : 'hidden';
+               const sCurr = document.documentElement.scrollTop > (window.innerHeight / 2);
+               if (sCurr == sOld) return;
+               sOld = sCurr;
+               scrollToTop_btn.style.visibility = sCurr ? 'visible' : 'hidden';
                // console.debug('visibility:', scrollToTop_btn.style.visibility);
             });
          });

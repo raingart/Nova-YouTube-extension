@@ -6,10 +6,13 @@ _plugins_conteiner.push({
    desc: "prevent 'Video paused' alert",
    _runtime: user_settings => {
 
+      // YDOM.waitElement('yt-confirm-dialog-renderer #confirm-button')
       YDOM.waitElement('[role="dialog"] #confirm-button')
          .then(btn => {
             btn.click();
-            const vid = document.querySelector('video'); vid?.paused && vid.play();
+            if ((vid = document.querySelector('video')) && vid.paused) {
+               vid.play();
+            }
          });
    },
 });

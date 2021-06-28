@@ -1,7 +1,7 @@
 :root {
-   /* --bg: #1c1c1c; */
-   /* --bg: #C5C8D9; white*/
-   /* --fg: slategrey; */
+   /* --bg: #1c1c1c;
+   --bg: oldlace;
+   --fg: slategrey; */
    --input-bg: #fff;
    --input-border: #cccccc;
    --btn-bg: silver;
@@ -11,6 +11,7 @@
    --href: deepskyblue;
 
    --plugins-before: slategrey;
+   --plugins-section-hover: silver;
    --label1: inherit;
    --label1: #343a45;
 }
@@ -27,6 +28,7 @@
       --btn-bg: #3e3e3e;
 
       --plugins-before: #D5DDE5;
+      --plugins-section-hover: #303030;
       --label1: inherit;
       --label2: #8c8b8b;
    }

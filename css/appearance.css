@@ -13,7 +13,6 @@
       "player sidebar other"
       "details sidebar other"
       "comments empty other"
-      "footer footer other";
 }
 
 .appearance>* {
@@ -30,14 +29,15 @@
 
 .appearance>*:not(.empty):hover {
    opacity: 1;
-   outline-color: deepskyblue;
+   /* outline-color: deepskyblue; */
    /* box-shadow: 0 0 5px rgba(0, 196, 255, .7); */
+   background-color: var(--plugins-section-hover);
 }
 
-.appearance>*:not(.empty):hover>* {
+/* .appearance>*:not(.empty):hover>* {
    color: #00c4ff;
    text-shadow: 0 0 5px rgba(0, 196, 255, .7);
-}
+} */
 
 .appearance>.header {
    grid-area: header;
@@ -73,15 +73,11 @@
    height: 100px;
 }
 
-.appearance>.footer {
-   grid-area: footer;
-}
-
 .appearance>.other {
    grid-area: other;
 }
 
-.appearance>.other:not(.empty):hover {
+/* .appearance>.other:not(.empty):hover {
    --hovercolor: coral;
    outline-color: var(--hovercolor);
 }
@@ -89,7 +85,7 @@
 .appearance>.other:not(.empty):hover>* {
    color: var(--hovercolor);
    text-shadow: 0 0 5px rgba(255, 127, 80, .7);
-}
+} */
 
 .appearance>*>span {
    position: absolute;
@@ -100,6 +96,10 @@
    text-transform: uppercase;
    font-size: 1.2em;
    color: #8d9399;
+}
+
+.appearance .empty {
+   opacity: .3;
 }
 
 .appearance .empty>span {

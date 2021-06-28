@@ -3,25 +3,20 @@ _plugins_conteiner.push({
    title: 'Player hotkeys always active',
    run_on_pages: 'watch',
    section: 'player',
-   desc: 'shortcuts priority [SPACE/F] etc.',
+   desc: 'Player hotkeys always active [SPACE/F] etc.',
    _runtime: user_settings => {
 
-      const events = ["keydown", "yt-navigate-start", /*, "focus"*/];
-      Array.from(events, e => document.addEventListener(e, setFocus));
+      document.addEventListener('keydown', ({ target = document.activeElement }) => {
+         // console.debug('activePlayer', ...arguments);
 
-      function setFocus() {
-         // console.debug('setFocus', document.activeElement);
-
-         if (document.activeElement.tagName != "INPUT" // search-input
-            && document.activeElement.tagName != "TEXTAREA"
-            && !document.activeElement.parentElement.slot?.toLowerCase().includes('input') // comment-area
-            && !document.activeElement.isContentEditable
-            // && !window.getSelection()
+         if (!["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+            && !target.slot?.toLowerCase().includes('input') // comment-area
+            && !target.isContentEditable
          ) {
-            // document.activeElement.style.border = "2px solid red";
-            document.querySelector("video").focus();
+            // target.style.border = "2px solid red"; // mark for test
+            document.querySelector('video')?.focus();
          }
-      }
+      });
 
    },
 });

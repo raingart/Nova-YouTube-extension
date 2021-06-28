@@ -1,3 +1,8 @@
+// for test
+// the adjustment area depends on the video size. Problems are visible at non-standard proportions
+// https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
+// https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
+
 _plugins_conteiner.push({
    id: 'volume-wheel',
    title: 'Mouse wheel volume control',
@@ -6,7 +11,7 @@ _plugins_conteiner.push({
    desc: 'Use mouse wheel to change volume of video',
    _runtime: user_settings => {
 
-      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('#movie_player')
          .then(player => {
             // init volume_level_default
             if (+user_settings.volume_level_default) {
@@ -23,14 +28,15 @@ _plugins_conteiner.push({
             if (user_settings.volume_hotkey) {
                // mousewheel in player area
                document.querySelector('.html5-video-container')
-                  .addEventListener("wheel", evt => {
+                  .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
                      if (evt[user_settings.volume_hotkey]
                         || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
                         // console.debug('hotkey caught');
-                        const step = +user_settings.volume_step * Math.sign(evt.wheelDelta);
-                        adjustVolumeBy(step);
+                        if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
+                           adjustVolumeBy(step);
+                        }
                      }
                   });
             }
@@ -39,7 +45,7 @@ _plugins_conteiner.push({
                return setVolumeLevel(player.getVolume() + parseInt(delta));
             }
 
-            function setVolumeLevel(level) {
+            function setVolumeLevel(level = 50) {
                if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
                const volumeToSet = Math.max(0, Math.min(100, parseInt(level)));
 
@@ -58,19 +64,17 @@ _plugins_conteiner.push({
 
                return volumeToSet === player.getVolume() && volumeToSet;
 
-               function saveInSession(level) {
-                  if (!level) return;
-
+               function saveInSession(level = required()) {
                   const storageData = {
                      creation: Date.now(),
-                     data: { "volume": level, "muted": (level ? "false" : "true") },
+                     data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
                   };
 
                   try {
-                     localStorage["yt-player-volume"] = JSON.stringify(
+                     localStorage['yt-player-volume'] = JSON.stringify(
                         Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
                      );
-                     sessionStorage["yt-player-volume"] = JSON.stringify(storageData);
+                     sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
                      // console.debug('volume saved', ...arguments);
 
                   } catch (err) {

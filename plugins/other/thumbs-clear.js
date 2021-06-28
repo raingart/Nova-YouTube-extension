@@ -10,9 +10,8 @@ _plugins_conteiner.push({
          selector: '#thumbnail #img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
-            const re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i;
-            if (re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnail_preview_stamp || 'hq1') + '.jpg');
+            if ((re = /(hq1|hq2|hq3|hqdefault|mqdefault|hq720).jpg/i) && re.test(img.src)) {
+               img.src = img.src.replace(re, (user_settings.thumbnails_preview_timestamps || 'hq2') + '.jpg');
             }
          },
       });

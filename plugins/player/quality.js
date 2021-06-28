@@ -4,13 +4,13 @@ _plugins_conteiner.push({
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
-   _runtime: (user_settings, current_page) => {
+   _runtime: user_settings => {
 
-      YDOM.waitElement('.html5-video-player') // replace "#movie_player" for embed page
+      YDOM.waitElement('#movie_player')
          .then(player => {
             let selectedQuality = user_settings.video_quality;
 
-            player.addEventListener("onStateChange", setQuality.bind(this));
+            player.addEventListener('onStateChange', setQuality);
 
             function setQuality(state) {
                if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
@@ -21,15 +21,15 @@ _plugins_conteiner.push({
                // 1: playing
                // 2: paused
                // 3: buffering
-               // 5: video cued
+               // 5: cued
                if ((1 === state || 3 === state) && !setQuality.allow_change) {
                   setQuality.allow_change = true;
 
-                  let interval_quality = setInterval(() => {
+                  const interval = setInterval(() => {
                      const availableQualityLevels = player.getAvailableQualityLevels();
 
                      if (availableQualityLevels?.length) {
-                        clearInterval(interval_quality);
+                        clearInterval(interval);
 
                         const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
                         const qualityToSet = availableQualityLevels[maxAvailableQuality];
@@ -38,9 +38,9 @@ _plugins_conteiner.push({
                         //    return console.debug('skip set quality');
                         // }
 
-                        if (!availableQualityLevels.includes(selectedQuality)) {
-                           console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${qualityToSet}" of ${JSON.stringify(availableQualityLevels)}`);
-                        }
+                        // if (!availableQualityLevels.includes(selectedQuality)) {
+                        //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${qualityToSet}" of ${JSON.stringify(availableQualityLevels)}`);
+                        // }
 
                         if (player.hasOwnProperty('setPlaybackQuality')) {
                            // console.debug('use setPlaybackQuality');
@@ -64,8 +64,8 @@ _plugins_conteiner.push({
                }
 
                // keep quality in session
-               if (user_settings.video_quality_manual_save_tab && current_page === 'watch') {// no sense if in the embed
-                  player.addEventListener("onPlaybackQualityChange", quality => {
+               if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() === 'watch') {// no sense if in the embed
+                  player.addEventListener('onPlaybackQualityChange', quality => {
                      // console.debug('document.activeElement,',document.activeElement);
                      if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
                         && quality !== selectedQuality // the new quality

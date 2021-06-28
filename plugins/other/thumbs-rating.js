@@ -10,74 +10,80 @@ _plugins_conteiner.push({
       const
          CACHED_TIME = 8, // hours
          SELECTOR_ID = 'rating-line',
+         SELECTOR = '#' + SELECTOR_ID, // for css
          CACHE_NAME = 'ratings-thumbnail',
          colorLiker = user_settings.rating_like_color || '#3ea6ff',
          colorDislike = user_settings.rating_dislike_color || '#ddd';
 
       // init bars style
       YDOM.css.push(
-         `#${SELECTOR_ID}{
+         SELECTOR + `{
             --height: ${(user_settings.rating_bar_height || 5)}px;
          }
-         #${SELECTOR_ID}{
+         ${SELECTOR} {
             width: 100%;
             height: var(--height);
          }
-         a#thumbnail #${SELECTOR_ID} {
+         a#thumbnail ${SELECTOR} {
             position: absolute;
             bottom: 0;
          }`);
 
-      let thumbsIdCollect = [];
-      let newCache = {};
+      let
+         idsToProcess = [],
+         newCacheItem = {},
+         timeoutRating;
 
       YDOM.watchElement({
-         selector: 'a#thumbnail[href]',
+         selector: 'a#thumbnail[href].ytd-thumbnail',
          attr_mark: 'thumbnail-rated',
          callback: thumbnail => {
-            const id = YDOM.getQueryURL('v', thumbnail.href);
-            id && thumbsIdCollect.push(id);
+            if (id = YDOM.queryURL.get('v', thumbnail.href)) {
+               idsToProcess.push(id);
+               run_process();
+            }
          },
       });
 
-      // chack update new thumbnail
-      setInterval(() => {
-         patchThumbnail(thumbsIdCollect);
-         updaterCache(newCache);
-      }, 1000 * 1); // 1sec
+      function run_process(time = 1) {
+         clearTimeout(timeoutRating);
+         timeoutRating = setTimeout(() => {
+            refreshCache(newCacheItem);
+            patchThumbs(idsToProcess);
+         }, 1000 * time); // 1 sec
+      }
 
-      function updaterCache(new_cache) {
-         if (!new_cache || !Object.keys(new_cache).length) return;
-         // console.debug('updaterCache', ...arguments);
-         newCache = {}; // clear
-         let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME)) || {}; // get
-         const timeNow = new Date();
-         // delete expired
+      function refreshCache(new_cache = {}) {
+         // console.debug('refreshCache', ...arguments);
+         newCacheItem = {}; // clear
+         let cacheData = JSON.parse(localStorage.getItem(CACHE_NAME)) || {};
+         const timeNow = new Date().getTime();
          // console.groupCollapsed('ratingCacheExpires');
-         Object.entries(oldCache)
-            .filter(([key, value]) => {
-               const cacheDate = new Date(+value?.date);
+         // delete expired
+         Object.entries(cacheData)
+            .forEach(([id, cacheItem]) => {
+               const cacheDate = new Date(+cacheItem?.date);
                const timeExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
-               if (timeNow > timeExpires) {
-                  // console.debug('timeExpires', key, value);
-                  delete oldCache[key];
+               if (!cacheItem.hasOwnProperty('pt') || timeNow > timeExpires) {
+                  // console.debug('timeExpires', id, cacheItem);
+                  delete cacheData[id];
                }
             });
          // console.groupEnd();
-         // save
-         localStorage.setItem(CACHE_NAME, JSON.stringify(Object.assign(new_cache, oldCache)));
+         localStorage.setItem(CACHE_NAME, JSON.stringify(Object.assign(new_cache, cacheData))); // save
       }
 
-      function patchThumbnail(vids_id) {
-         if (!vids_id?.length) return;
+      function patchThumbs(ids = []) {
+         if (!ids.length) return;
          // console.debug('find thumbnail', ...arguments);
-         thumbsIdCollect = []; // clear
-         let oldCache = JSON.parse(localStorage.getItem(CACHE_NAME));
+         idsToProcess = []; // clear
+         const cacheData = JSON.parse(localStorage.getItem(CACHE_NAME));
          const timeNow = new Date().getTime();
 
-         const newIds = vids_id.filter(id => {
-            if (oldCache?.hasOwnProperty(id)) {
-               const cacheItem = oldCache[id],
+         const newIds = ids.filter(id => {
+            if (cacheData?.hasOwnProperty(id)) {
+               const
+                  cacheItem = cacheData[id],
                   cacheDate = new Date(+cacheItem?.date),
                   timeExpires = cacheDate.setHours(cacheDate.getHours() + CACHED_TIME);
                // console.debug(timeNow, timeExpires);
@@ -95,13 +101,12 @@ _plugins_conteiner.push({
          requestRating(newIds);
       }
 
-      function requestRating(arr_id) {
-         if (!arr_id?.length) return;
-         // console.debug('requestRating', ...arguments);
+      function requestRating(ids = []) {
+         // console.debug('requestRating', ids.length, ...arguments);
 
          const YOUTUBE_API_MAX_IDS_PER_CALL = 50; // API max = 50
 
-         chunkArray(arr_id, YOUTUBE_API_MAX_IDS_PER_CALL)
+         chunkArray(ids, YOUTUBE_API_MAX_IDS_PER_CALL)
             .forEach(id_part => {
                // console.debug('id_part', id_part);
                YDOM.request.API({
@@ -122,34 +127,42 @@ _plugins_conteiner.push({
                         let timeNow = new Date();
 
                         // show more than the min value
-                        if (views > 5 && total > 3) {
+                        if (+percent && views > 5 && total > 3) {
                            attachBar({ 'id': item.id, 'pt': percent });
                            // console.debug('requestRating > attachBar', item.id);
                         } else {
-                           percent = undefined; // do not display
+                           percent = null; // do not display
                            timeNow = timeNow.setHours(timeNow.getHours() - (CACHED_TIME - 1)); // cache for 1 hour
                         }
                         // push to cache
-                        newCache[item.id] = { 'date': new Date(timeNow).getTime(), 'pt': percent };
+                        newCacheItem[item.id] = { 'date': new Date(timeNow).getTime(), 'pt': percent };
                      });
+
+                     run_process(3);
                   });
             });
 
-         function chunkArray(array = [], size) {
+         function chunkArray(array = [], size = 0) {
             let chunked = [];
-            while (array.length) chunked.push(array.splice(0, size));
+            while (array.length) chunked.push(array.splice(0, +size));
             return chunked;
          }
       }
 
-      function attachBar({ id, pt }) {
-         if (!id || !pt) return
+      function attachBar({ id = required(), pt = required() }) {
          // console.debug('attachBar', ...arguments);
+         const templateBar = document.createElement('div');
+         templateBar.className = 'style-scope ytd-sentiment-bar-renderer';
+         templateBar.id = SELECTOR_ID;
+
          document.querySelectorAll(`a#thumbnail[href*="${id}"]`)
             .forEach(a => {
                // console.debug('finded', a, pt);
-               a.insertAdjacentHTML("beforeend",
-                  `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
+               templateBar.style.background = `linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)`;
+               // a.appendChild(templateBar.cloneNode(true)); // unsure and need to use - cloneNode
+               a.appendChild(templateBar);
+               // a.insertAdjacentHTML('beforeend',
+               //    `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
             });
       }
 
