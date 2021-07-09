@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      0.8.0
+// @version      0.8.1
 // @name         YouTube SuperNova
 // @namespace    https://github.com/raingart/Nova-YouTube-extension/
 // @description  Youtube extension plugins

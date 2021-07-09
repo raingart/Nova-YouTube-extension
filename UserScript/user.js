@@ -1,14 +1,38 @@
 console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', GM_info.script.name + ' v.' + GM_info.script.version);
-const configStoreName = 'user_settings';
-const fix_GM_getValue = v => v === 'undefined' ? undefined : v; // for Tampermonkey
-const user_settings = fix_GM_getValue(GM_getValue(configStoreName));
+const
+  optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
+  configStoreName = 'user_settings',
+  fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
+  user_settings = fix_GM_getValue(GM_getValue(configStoreName));
 
 if (!isOptionsPage()) return;
 landerPlugins();
+addOptionsButton();
+
+// ======
+function addOptionsButton() {
+   YDOM.waitElement('#masthead #buttons > *:first-child')
+      .then(container => {
+         const a = document.createElement('a');
+         a.title = 'Nova Settings';
+         a.href = optionsPage;
+         a.target = '_blank';
+         a.innerHTML =
+            `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
+               <svg viewBox="0 0 28 28" height="100%" width="100%" version="1.1" style="fill:deepskyblue">
+                  <polygon points='21 12 3,1.8 3 22.2' />
+                  <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+               </svg>
+            </yt-icon-button>`;
+         a.addEventListener('click', () => {
+            // fix hide <tp-yt-iron-dropdown>
+            setTimeout(() => document.body.click(), 200);
+         });
+         container.prepend(a);
+      });
+}
 // ======
 function isOptionsPage() {
-   const optionsPage = 'https://raingart.github.io/options.html'; // ?tabs=tab-plugins
-
    GM_registerMenuCommand('Settings', () => window.open(optionsPage));
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
@@ -50,7 +74,7 @@ function isOptionsPage() {
          event.preventDefault();
 
          let obj = {};
-         for (let [key, value] of new FormData(form)) {
+         for (let [key, value] of new FormData(event.target)) {
             if (obj.hasOwnProperty(key)) { // SerializedArray
                obj[key] += ',' + value; // add new
                obj[key] = obj[key].split(','); // to array [old, new]
@@ -119,17 +143,12 @@ function landerPlugins() {
    let plugins_lander = setInterval(() => {
       const domLoaded = document?.readyState !== 'loading';
       if (!domLoaded) return console.debug('waiting, page loading..');
-
-      if (_plugins_conteiner.length) {
-         clearInterval(forceLander);
-         processLander();
-      }
+      processLander();
 
    }, 100); // 100ms
 
    function processLander() {
       console.groupCollapsed('plugins status');
-      console.debug('loaded:', _plugins_conteiner.length);
       clearInterval(plugins_lander);
 
       //setTimeout(() => {

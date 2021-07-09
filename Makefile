@@ -20,3 +20,4 @@ compile:
 	cat ./UserScript/user.js >> $(compiled)
 	# isolate end
 	echo -e '})();' >> $(compiled)
+	xdg-open $(compiled)
