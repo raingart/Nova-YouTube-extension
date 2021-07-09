@@ -54,13 +54,13 @@
       "message": "Disable in iframe"
    },
    "opt_disable_in_frame_tooltip": {
-      "message": "All plugins will not work in iframe tag"
+      "message": "The extension will not work in embed video"
    },
    "opt_report_issues": {
-      "message": "Show prompting to report bugs"
+      "message": "Enable report bugs"
    },
    "opt_report_issues_tooltip": {
-      "message": "Allow popup on YouTube pages"
+      "message": "Need allow pop-up on YouTube for prompting"
    },
    "opt_api_key_warn": {
       "message": "Use your [API key] for stable work"

@@ -2,7 +2,7 @@
 
 # chmod a+x release.sh
 
-FILENAME='ytc'
+FILENAME='/tmp/nova-extensions'
 # TODAY=$(date)
 
 rm -v $FILENAME.zip

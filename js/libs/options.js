@@ -42,16 +42,15 @@ window.addEventListener('load', () => {
       saveOptions(form) {
          let obj = {};
 
-         new FormData(form)
-            .forEach((value, key) => {
-               // SerializedArray
-               if (obj.hasOwnProperty(key)) {
-                  // adding another val
-                  obj[key] += ';' + value; // add new
-                  obj[key] = obj[key].split(';'); // to key = [old, new]
+         for (let [key, value] of new FormData(form)) {
+            if (obj.hasOwnProperty(key)) { // SerializedArray
+               obj[key] += ',' + value; // add new
+               obj[key] = obj[key].split(','); // to array [old, new]
 
-               } else obj[key] = value;
-            });
+            } else {
+               obj[key] = value;
+            };
+         }
 
          Storage.setParams(obj, this.storageMethod);
 
@@ -106,6 +105,8 @@ window.addEventListener('load', () => {
             this.attrDependencies();
             this.registerEventListener();
             document.body.classList.remove("preload");
+            document.querySelectorAll('input[type]') // auto selects value on focus
+               .forEach(i => i.addEventListener('focus', i.select));
          }, this.storageMethod);
       },
    }

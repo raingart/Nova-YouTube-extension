@@ -6,78 +6,78 @@ _plugins_conteiner.push({
    // desc: '',
    _runtime: user_settings => {
 
+      let selectedQuality = user_settings.video_quality;
+
       YDOM.waitElement('#movie_player')
          .then(player => {
-            let selectedQuality = user_settings.video_quality;
-
-            player.addEventListener('onStateChange', setQuality);
-
-            function setQuality(state) {
-               if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
-               // console.debug('onStateChange', ...arguments);
-
-               // -1: unstarted
-               // 0: ended
-               // 1: playing
-               // 2: paused
-               // 3: buffering
-               // 5: cued
-               if ((1 === state || 3 === state) && !setQuality.allow_change) {
-                  setQuality.allow_change = true;
-
-                  const interval = setInterval(() => {
-                     const availableQualityLevels = player.getAvailableQualityLevels();
-
-                     if (availableQualityLevels?.length) {
-                        clearInterval(interval);
-
-                        const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
-                        const qualityToSet = availableQualityLevels[maxAvailableQuality];
-
-                        // if (!qualityToSet || player.getPlaybackQuality() == selectedQuality) {
-                        //    return console.debug('skip set quality');
-                        // }
-
-                        // if (!availableQualityLevels.includes(selectedQuality)) {
-                        //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${qualityToSet}" of ${JSON.stringify(availableQualityLevels)}`);
-                        // }
-
-                        if (player.hasOwnProperty('setPlaybackQuality')) {
-                           // console.debug('use setPlaybackQuality');
-                           player.setPlaybackQuality(qualityToSet);
-                        }
-
-                        // set QualityRange
-                        if (player.hasOwnProperty('setPlaybackQualityRange')) {
-                           // console.debug('use setPlaybackQualityRange');
-                           player.setPlaybackQualityRange(qualityToSet, qualityToSet);
-                        }
-
-                        // console.debug('availableQualityLevels:', availableQualityLevels);
-                        // console.debug("try set quality:", qualityToSet);
-                        // console.debug('set realy quality:', player.getPlaybackQuality());
-                     }
-                  }, 50); // 50ms
-
-               } else if (-1 === state || 0 === state) {
-                  setQuality.allow_change = false;
-               }
-
-               // keep quality in session
-               if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() === 'watch') {// no sense if in the embed
-                  player.addEventListener('onPlaybackQualityChange', quality => {
-                     // console.debug('document.activeElement,',document.activeElement);
-                     if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
-                        && quality !== selectedQuality // the new quality
-                        && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
-                     ) {
-                        console.info('save session new quality:', quality);
-                        selectedQuality = quality;
-                     }
-                  });
-               }
+            // keep quality in session
+            if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() === 'watch') {// no sense if in the embed
+               player.addEventListener('onPlaybackQualityChange', function (quality) {
+                  // console.debug('onPlaybackQualityChange', this); // this == window
+                  // console.debug('document.activeElement,',document.activeElement);
+                  if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
+                     && quality !== selectedQuality // the new quality
+                     && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
+                  ) {
+                     console.info('keep new qualities in the session:', quality);
+                     selectedQuality = quality;
+                  }
+               });
             }
+            player.addEventListener('onStateChange', setQuality.bind(player));
          });
+
+      function setQuality(state) {
+         if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
+         // console.debug('onStateChange', ...arguments);
+
+         // -1: unstarted
+         // 0: ended
+         // 1: playing
+         // 2: paused
+         // 3: buffering
+         // 5: cued
+         if ((1 === state || 3 === state) && !setQuality.allow_change) {
+            setQuality.allow_change = true;
+
+            const interval = setInterval(() => {
+               const availableQualityLevels = this.getAvailableQualityLevels();
+
+               if (availableQualityLevels?.length) {
+                  clearInterval(interval);
+
+                  const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
+                  const newQuality = availableQualityLevels[maxAvailableQuality];
+
+                  // if (!newQuality || this.getPlaybackQuality() == selectedQuality) {
+                  //    return console.debug('skip set quality');
+                  // }
+
+                  // if (!availableQualityLevels.includes(selectedQuality)) {
+                  //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${newQuality}" of ${JSON.stringify(availableQualityLevels)}`);
+                  // }
+
+                  if (this.hasOwnProperty('setPlaybackQuality')) {
+                     // console.debug('use setPlaybackQuality');
+                     this.setPlaybackQuality(newQuality);
+                  }
+
+                  // set QualityRange
+                  if (this.hasOwnProperty('setPlaybackQualityRange')) {
+                     // console.debug('use setPlaybackQualityRange');
+                     this.setPlaybackQualityRange(newQuality, newQuality);
+                  }
+
+                  // console.debug('availableQualityLevels:', availableQualityLevels);
+                  // console.debug("try set quality:", newQuality);
+                  // console.debug('set realy quality:', this.getPlaybackQuality());
+               }
+            }, 50); // 50ms
+
+         } else if (-1 === state || 0 === state) {
+            setQuality.allow_change = false;
+         }
+      }
 
    },
    options: {

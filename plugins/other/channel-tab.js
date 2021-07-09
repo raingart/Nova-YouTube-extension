@@ -52,7 +52,6 @@ _plugins_conteiner.push({
          _tagName: 'select',
          label: 'Mode',
          title: 'Redirect is safer but slower',
-         // multiple: null,
          options: [
             { label: 'redirect', value: 'redirect' },
             { label: 'click', /*value: '',*/ selected: true },

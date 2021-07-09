@@ -8,7 +8,7 @@ _plugins_conteiner.push({
    title: 'Video playback speed with mousewheel',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Use mouse wheel to change playback speed',
+   // desc: 'Use mouse wheel to change playback speed',
    _runtime: user_settings => {
 
       YDOM.waitElement('#movie_player')
@@ -68,25 +68,25 @@ _plugins_conteiner.push({
                   //    const playbackRateIdx = rangeRate.indexOf(playbackRate);
                   //    return rangeRate[playbackRateIdx + delta];
                   // };
-                  // const rateToSet = inRange(Math.sign(+playback_rate));
+                  // const newRate = inRange(Math.sign(+playback_rate));
                   const inRange = step => {
                      const setRateStep = playbackRate + step;
                      return (.1 <= setRateStep && setRateStep <= 2) && +setRateStep.toFixed(2);
                   };
-                  const rateToSet = inRange(+playback_rate);
+                  const newRate = inRange(+playback_rate);
                   // set new rate
-                  if (rateToSet && rateToSet != playbackRate) {
-                     player.setPlaybackRate(rateToSet);
+                  if (newRate && newRate != playbackRate) {
+                     player.setPlaybackRate(newRate);
 
-                     if (rateToSet === player.getPlaybackRate()) {
-                        this.saveInSession(rateToSet);
+                     if (newRate === player.getPlaybackRate()) {
+                        this.saveInSession(newRate);
 
                      } else {
-                        console.error('playerRate:default different: %s!=%s', rateToSet, player.getPlaybackRate());
+                        console.error('playerRate:default different: %s!=%s', newRate, player.getPlaybackRate());
                      }
                   }
-                  this.log('playerRate:default return', rateToSet);
-                  return rateToSet === player.getPlaybackRate() && rateToSet;
+                  this.log('playerRate:default return', newRate);
+                  return newRate === player.getPlaybackRate() && newRate;
                },
 
                html5(playback_rate = required()) {
@@ -97,21 +97,21 @@ _plugins_conteiner.push({
                      const setRateStep = playbackRate + step;
                      return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
                   };
-                  const rateToSet = inRange(+playback_rate);
+                  const newRate = inRange(+playback_rate);
                   // set new rate
-                  if (rateToSet && rateToSet != playbackRate) {
-                     // document.querySelector('video').defaultPlaybackRate = rateToSet;
-                     videoElm.playbackRate = rateToSet;
+                  if (newRate && newRate != playbackRate) {
+                     // document.querySelector('video').defaultPlaybackRate = newRate;
+                     videoElm.playbackRate = newRate;
 
-                     if (rateToSet === videoElm.playbackRate) {
-                        this.saveInSession(rateToSet);
+                     if (newRate === videoElm.playbackRate) {
+                        this.saveInSession(newRate);
 
                      } else {
-                        console.error('playerRate:html5 different: %s!=%s', rateToSet, videoElm.playbackRate);
+                        console.error('playerRate:html5 different: %s!=%s', newRate, videoElm.playbackRate);
                      }
                   }
-                  this.log('playerRate:html5 return', rateToSet);
-                  return rateToSet === videoElm.playbackRate && rateToSet;
+                  this.log('playerRate:html5 return', newRate);
+                  return newRate === videoElm.playbackRate && newRate;
                },
 
                saveInSession(level = required()) {
@@ -119,7 +119,7 @@ _plugins_conteiner.push({
                      sessionStorage['yt-player-playback-rate'] = JSON.stringify({
                         creation: Date.now(), data: String(+level),
                      })
-                     this.log('playbackRate saved', ...arguments);
+                     this.log('playbackRate save in session:', ...arguments);
 
                   } catch (err) {
                      console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);

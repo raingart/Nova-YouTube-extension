@@ -8,16 +8,11 @@ _plugins_conteiner.push({
    title: 'Mouse wheel volume control',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Use mouse wheel to change volume of video',
+   // desc: 'Use mouse wheel to change volume of video',
    _runtime: user_settings => {
 
       YDOM.waitElement('#movie_player')
          .then(player => {
-            // init volume_level_default
-            if (+user_settings.volume_level_default) {
-               setVolumeLevel(+user_settings.volume_level_default);
-            }
-
             // show indicator
             player.querySelector('video')
                .addEventListener('volumechange', function () {
@@ -35,53 +30,60 @@ _plugins_conteiner.push({
                         || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
                         // console.debug('hotkey caught');
                         if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
-                           adjustVolumeBy(step);
+                           playerVolume.adjust(step);
                         }
                      }
                   });
             }
 
-            function adjustVolumeBy(delta) {
-               return setVolumeLevel(player.getVolume() + parseInt(delta));
-            }
+            const playerVolume = {
+               adjust(delta) {
+                  return this.set(player.getVolume() + parseInt(delta));
+               },
 
-            function setVolumeLevel(level = 50) {
-               if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
-               const volumeToSet = Math.max(0, Math.min(100, parseInt(level)));
+               set(level = 50) {
+                  if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+                  const newLevel = Math.max(0, Math.min(100, parseInt(level)));
 
-               // set new volume level
-               if (volumeToSet !== player.getVolume()) {
-                  player.isMuted() && player.unMute();
-                  player.setVolume(volumeToSet); // 0 - 100
+                  // set new volume level
+                  if (newLevel !== player.getVolume()) {
+                     player.isMuted() && player.unMute();
+                     player.setVolume(newLevel); // 0 - 100
 
-                  if (volumeToSet === player.getVolume()) {
-                     saveInSession(volumeToSet);
+                     if (newLevel === player.getVolume()) {
+                        saveInSession(newLevel);
 
-                  } else {
-                     console.error('setVolumeLevel error! Different: %s!=%s', volumeToSet, player.getVolume());
+                     } else {
+                        console.error('setVolumeLevel error! Different: %s!=%s', newLevel, player.getVolume());
+                     }
                   }
-               }
 
-               return volumeToSet === player.getVolume() && volumeToSet;
+                  return newLevel === player.getVolume() && newLevel;
 
-               function saveInSession(level = required()) {
-                  const storageData = {
-                     creation: Date.now(),
-                     data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
-                  };
+                  function saveInSession(level = required()) {
+                     const storageData = {
+                        creation: Date.now(),
+                        data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
+                     };
 
-                  try {
-                     localStorage['yt-player-volume'] = JSON.stringify(
-                        Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
-                     );
-                     sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
-                     // console.debug('volume saved', ...arguments);
+                     try {
+                        localStorage['yt-player-volume'] = JSON.stringify(
+                           Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
+                        );
+                        sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
+                        // console.debug('volume saved', ...arguments);
 
-                  } catch (err) {
-                     console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                     } catch (err) {
+                        console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                     }
                   }
-               }
+               },
             };
+
+            // init volume_level_default
+            if (+user_settings.volume_level_default) {
+               playerVolume.set(+user_settings.volume_level_default);
+            }
 
          });
 

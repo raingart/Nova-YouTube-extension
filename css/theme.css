@@ -34,9 +34,11 @@
    }
 /* } */
 
+
 body {
    background: var(--bg);
-   color: var(--fg)
+   color: var(--fg);
+   /* -webkit-filter: invert(100%); */
 }
 
 body:after {

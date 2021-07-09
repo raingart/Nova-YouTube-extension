@@ -1,10 +1,13 @@
 _plugins_conteiner.push({
-   id: 'comments-disable',
-   title: 'Disable comments',
+   id: 'comments-visibility',
+   title: 'Hide comments',
    run_on_pages: 'watch',
+   restart_on_transition: true,
    section: 'comments',
-   desc: 'Remove comments section',
+   // desc: 'Remove comments section',
    _runtime: user_settings => {
+
+      const SELECTOR_BTN_ID = 'comments-load-btn';
 
       switch (user_settings.comments_visibility_mode) {
          case 'remove':
@@ -14,18 +17,17 @@ _plugins_conteiner.push({
 
          // case 'hide':
          default:
-            YDOM.waitElement('#comments yt-next-continuation')
-               .then(continuation => {
-                  if (!continuation.onShow) return console.warn('empty original fn.onShow', continuation.onShow);
-                  const backup_onShow = continuation.onShow;
-                  continuation.onShow = function () {
-                     // console.debug('onShow', ...arguments);
-                  };
+            if (document.getElementById(SELECTOR_BTN_ID)) return;
 
+            // https://stackoverflow.com/a/68202306
+            YDOM.waitElement('#comments')
+               .then(comments => {
+                  // stop load
+                  comments.style.visibility = 'hidden';
                   // create button
                   const btn = document.createElement('a');
                   btn.textContent = 'Load Comments';
-                  // btn.id = 'more';
+                  btn.id = SELECTOR_BTN_ID;
                   btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
                   // btn.className = 'ytd-vertical-list-renderer';
                   Object.assign(btn.style, {
@@ -37,14 +39,11 @@ _plugins_conteiner.push({
                   });
                   btn.addEventListener('click', ({ target }) => {
                      target.remove();
-                     continuation.onShow = backup_onShow;
-                     continuation.onShow(true);
+                     comments.style.visibility = 'visible';
+                     window.dispatchEvent(new Event("scroll"));
                   });
                   // append button
-                  if (comments = document.getElementById('contents')) {
-                     comments.insertBefore(btn, comments.firstChild);
-                  }
-
+                  comments.before(btn);
                });
       }
 

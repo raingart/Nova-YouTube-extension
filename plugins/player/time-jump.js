@@ -6,27 +6,56 @@ _plugins_conteiner.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitElement('#movie_player')
-         .then(player => {
-            doubleKeyPressListener(jumpTime, user_settings.time_jump_hotkey);
-
-            function jumpTime() {
-               if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
-                  && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
-                  // && !window.getSelection()
-               ) {
-                  const sec = player.getCurrentTime() + parseInt(user_settings.time_jump_step);
-                  // console.debug('seekTo', sec);
-                  player.seekTo(sec);
-
-                  // show indicator
-                  if (msg = `+${user_settings.time_jump_step} sec`) {
-                     YDOM.bezelTrigger(msg); // show default indicator
-                     window?.HUD.set(msg); // if the "player-indicator" plugin is enabled
-                  }
-               }
-            }
+      YDOM.waitElement('video')
+         .then(video => {
+            doubleKeyPressListener(jumpTime.bind(video), user_settings.time_jump_hotkey);
          });
+
+      function jumpTime() {
+         if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
+            && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
+            // && !window.getSelection()
+         ) {
+            let msg = `+${user_settings.time_jump_step} sec`;
+
+            if (sec = seekToNextChapter.apply(this)) {
+               msg = `Chapter • ${YDOM.secFormatTime(sec)}`;
+
+            } else {
+               sec = +user_settings.time_jump_step + this.currentTime;
+            }
+            // console.debug('seekTo', sec);
+            this.currentTime = sec;
+            // show indicator
+            YDOM.bezelTrigger(msg); // show default indicator
+            window?.HUD.set(msg); // if the "player-indicator" plugin is enabled
+         }
+
+         function seekToNextChapter() {
+            if ((chapterscontainer = document.querySelector('.ytp-chapters-container'))
+               && chapterscontainer?.children.length > 1
+               && (progressBarWidth = parseInt(YDOM.css.getValue({ selector: chapterscontainer, property: 'width' })))
+            ) {
+               const progressRatio = this.currentTime / this.duration;
+               let passedWidth = 0;
+               for (const chapter of chapterscontainer.children) {
+                  const
+                     chapterWidth = parseInt(YDOM.css.getValue({ selector: chapter, property: 'width' })),
+                     сhapterRatio = (passedWidth + chapterWidth) / progressBarWidth;
+
+                  // console.debug('сhapter', сhapterRatio, chapterWidth);
+                  if (сhapterRatio >= progressRatio) {
+                     return Math.floor(сhapterRatio * this.duration);
+                  }
+                  // accumulate passed
+                  passedWidth += chapterWidth
+                     + parseInt(YDOM.css.getValue({ selector: chapter, property: 'margin-left' }))
+                     + parseInt(YDOM.css.getValue({ selector: chapter, property: 'margin-right' }));
+               }
+               // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chapterscontainer?.children.length, progressBarWidth, '/', progressRatio);
+            }
+         }
+      }
 
       function doubleKeyPressListener(callback, keyCodeFilter) {
          let
@@ -63,7 +92,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Step time',
          type: 'number',
-         title: 'in sec',
+         title: 'in seconds',
          placeholder: 'sec',
          min: 3,
          max: 300,

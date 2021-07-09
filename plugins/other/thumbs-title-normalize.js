@@ -1,9 +1,9 @@
 _plugins_conteiner.push({
    id: 'thumbnails-title-normalize',
-   title: 'Normalize videos title',
+   title: 'Normalize title',
    run_on_pages: 'all, -embed, -results',
    section: 'other',
-   desc: 'Decapitalize videos title',
+   desc: 'Decapitalize thumbnails title',
    _runtime: user_settings => {
 
       const
@@ -51,9 +51,10 @@ _plugins_conteiner.push({
 
       } else {
          YDOM.css.push(
-            VIDEO_TITLE_SELECTOR + `{
+            VIDEO_TITLE_SELECTOR + ` {
                text-transform: lowercase !important;
             }
+
             ${VIDEO_TITLE_SELECTOR}:first-letter {
                text-transform: uppercase !important;
             }`);

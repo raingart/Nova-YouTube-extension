@@ -44,7 +44,7 @@ input[type="checkbox"] {
    line-height: 1.6em;
    border-radius: 3em;
    background-color: #ddd;
-   /* background-color: lightslategray; */
+   /* background-color: #8f8f8f; */
    appearance: none;
    -webkit-appearance: none;
    position: relative;
@@ -91,9 +91,7 @@ input[type="checkbox"]:checked[disabled] {
 }
 
 input[type="checkbox"]:focus, input[type="checkbox"]:focus:after {
-   /*transition: all .2s ease-in-out;*/
-   transition: all ease-in-out;
-   transition-duration: 200ms;
+   transition: all 200ms ease-in-out;
 }
 /* add status text */
 /* input[type="checkbox"]:before {

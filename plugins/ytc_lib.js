@@ -1,8 +1,10 @@
 const YDOM = {
    // DEBUG: true,
 
+   // find once
    waitElement(selector = required()) {
       // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
+      // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
 
       // document.addEventListener("yt-visibility-refresh", iniLoadStartListener, true);
 
@@ -116,8 +118,10 @@ const YDOM = {
 
       getValue({ selector = required(), property = required() }) {
          const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
-         if (!el) return console.warn('getCSSValue:selector is empty', el, ...arguments);
-         return window.getComputedStyle(el)[property];
+         return el
+            ? window.getComputedStyle(el)[property] // ok
+            : console.warn('getCSSValue:selector is empty', el, ...arguments); // err
+
       },
 
       // uncheck: toggle => toggle.hasAttribute('checked') && toggle.click(),
@@ -178,11 +182,11 @@ const YDOM = {
       fateBezel = setTimeout(() => bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE), 600); // 600ms
    },
 
-   secToStr(timestamp, no_zeros) {
+   secFormatTime(sec, no_zeros) {
       const
-         hours = Math.floor(timestamp / 60 / 60) || null,
-         minutes = Math.floor(timestamp / 60) - (hours * 60),
-         seconds = timestamp % 60;
+         hours = Math.floor(sec / 60 / 60) || null,
+         minutes = Math.floor(sec / 60) - (hours * 60),
+         seconds = sec % 60;
 
       return [hours, minutes, seconds]
          .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
@@ -193,15 +197,16 @@ const YDOM = {
    currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main',
 
    queryURL: {
-      get: (query, url) => new URLSearchParams((url ? new URL(url) : location).search).get(query),
+      // get: (query, urlString) => new URLSearchParams((urlString ? new URL(urlString) : location).search).get(query),
+      get: (query, urlString) => new URL(urlString || location).searchParams.get(query),
 
-      // set: (query = {}, url) => {
-      //    YDOM.log('queryURL.set:', ...arguments);
-      //    let newURL = new URLSearchParams((url ? new URL(url) : location).search);
-      //    Object.entries(query)
-      //       .forEach(([name, value]) => newURL.set(name, value));
-      //    return newURL;
-      // },
+      set(query = {}, urlString) {
+         // YDOM.log('queryURL.set:', ...arguments);
+         const url = new URL(urlString || location);
+         Object.entries(query)
+            .forEach(([key, value]) => url.searchParams.set(key, value));
+         return url.toString();
+      },
    },
 
    request: {

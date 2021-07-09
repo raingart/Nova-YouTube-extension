@@ -1,7 +1,7 @@
 _plugins_conteiner.push({
    id: 'square-avatars',
    title: 'Square avatars',
-   run_on_pages: 'watch, channel',
+   run_on_pages: 'all',
    section: 'comments',
    desc: 'Make user images squared',
    _runtime: user_settings => {

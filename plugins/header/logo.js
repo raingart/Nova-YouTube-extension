@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
-   id: 'page-logo-url',
-   title: 'YouTube logo URL',
+   id: 'page-logo',
+   title: 'YouTube logo',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    id: 'header-short',
-   title: 'Short header',
+   title: 'Compact header',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',
@@ -12,6 +12,7 @@ _plugins_conteiner.push({
          `#masthead #container.ytd-masthead {
             height: ${height} !important;
          }
+
          body {
             --ytd-masthead-height: ${height};
          }`);

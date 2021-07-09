@@ -26,14 +26,10 @@ chrome.runtime.onInstalled.addListener(details => {
             Storage.getParams(store => {
                const keyRenameTemplate = {
                   // oldKey: newKey,
-                  'player-fixed-scroll': 'player-float-scroll',
-                  'player_fixed_scroll_size_ratio': 'player_float_scroll_size_ratio',
-                  'player_fixed_scroll_size_position': 'player_float_scroll_size_position',
-                  'player-fixed-progress-bar': 'player-float-progress-bar',
-                  'player_fixed_progress_bar_height': 'player_float_progress_bar_height',
-                  'player_fixed_progress_bar_opacity': 'player_float_progress_bar_opacity',
-                  'livechat-collapse': 'livechat-visibility',
-                  'livechat_collapse_mode': 'livechat_visibility_mode',
+                  'comments-disable': 'comments-visibility',
+                  'page-logo-url': 'page-logo',
+                  'thumbnails-preview-clear': 'thumbnails-clear',
+                  'thumbnails_preview_timestamps': 'thumbnails_clear_timestamps',
                }
                Object.entries(store)
                   .forEach(([oldKey]) => {

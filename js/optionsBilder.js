@@ -159,9 +159,9 @@ const Opt = {
 
    // tab selector
    openTab(tabId, reset_page) {
-      // console.debug('openTab', ...arguments);
+      console.debug('openTab', ...arguments);
       if (reset_page) {
-         document.location = window.location.pathname + '?tabs=' + tabId;
+         document.location = location.pathname + '?tabs=' + tabId;
       } else {
          document.getElementById(tabId).checked = true;
       }
@@ -252,7 +252,9 @@ const Opt = {
                // if (confirm(i18n('opt_import_popup'))) chrome.runtime.openOptionsPage();
                if (confirm(i18n('opt_prompt_import_settings'))) {
                   // chrome.runtime.openOptionsPage();
-                  window.open(chrome.extension.getURL(chrome.runtime.getManifest().options_page) + '?tabs=tab-other');
+                  const urlOptionsPage = new URL(chrome.extension.getURL(chrome.runtime.getManifest().options_page))
+                     .searchParams.set('tabs', 'tab-other');
+                  window.open(urlOptionsPage.toString());
                }
                return;
             }
@@ -335,8 +337,7 @@ window.addEventListener('load', () => {
 
    Storage.getParams(store => {
       // tab selector
-      if (tabId = new URLSearchParams((location).search).get('tabs')) Opt.openTab(tabId);
-
+      if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
       // remove api warn if has api
       if (store && store['custom-api-key']) {
          document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));

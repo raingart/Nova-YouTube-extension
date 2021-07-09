@@ -10,6 +10,7 @@ _plugins_conteiner.push({
          `#movie_player.ad-showing video {
             visibility: hidden !important;
          }
+
          #movie_player:not(.ad-showing) video {
             visibility: visible;
          }`);

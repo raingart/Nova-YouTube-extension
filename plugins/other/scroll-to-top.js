@@ -39,15 +39,15 @@ _plugins_conteiner.push({
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
                const player = document.getElementById('movie_player');
-               if (user_settings.scroll_to_top_autoplay
-                  && YDOM.currentPageName() === 'watch'
+               if (user_settings.scroll_to_top_autoplay && YDOM.currentPageName() === 'watch'
                   // -1: unstarted
                   // 0: ended
                   // 1: playing
                   // 2: paused
                   // 3: buffering
                   // 5: cued
-                  && player.getPlayerState() === 2) {
+                  && player.getPlayerState() === 2
+               ) {
                   player.playVideo();
                }
             });
@@ -62,8 +62,6 @@ _plugins_conteiner.push({
                'vertical-align': 'middle',
                transform: 'rotate(-135deg)',
             });
-
-            // append
             btn.appendChild(arrow);
             document.body.appendChild(btn);
 

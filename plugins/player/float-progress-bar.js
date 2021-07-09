@@ -17,17 +17,17 @@ _plugins_conteiner.push({
             YDOM.waitElement('video')
                .then(video => {
                   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
-                  let containerEl, progressEl, bufferEl;
+                  let container, progressEl, bufferEl;
                   // reset float-bar if new video
                   video.addEventListener('loadstart', function () {
                      // console.debug('loadstart');
-                     if (!containerEl) containerEl = document.getElementById(SELECTOR_ID);
-                     containerEl.classList.remove('transition');
+                     if (!container) container = document.getElementById(SELECTOR_ID);
+                     container.classList.remove('transition');
 
                      if (bufferEl) bufferEl.style.transform = 'scaleX(0)';
                      if (progressEl) progressEl.style.transform = 'scaleX(0)';
 
-                     containerEl.classList.add('transition');
+                     container.classList.add('transition');
                   });
                   // render progress
                   video.addEventListener('timeupdate', function () {
@@ -79,6 +79,7 @@ _plugins_conteiner.push({
                   position: absolute;
                   bottom: 0;
                }
+
                ${SELECTOR} {
                   --opacity: ${+user_settings.player_float_progress_bar_opacity || .7};
                   --height: ${height}px;
@@ -92,21 +93,34 @@ _plugins_conteiner.push({
                   width: 100%;
                   visibility: hidden;
                }
-               .ytp-autohide ${SELECTOR} { visibility: visible; }
+
+               .ytp-autohide ${SELECTOR} {
+                  visibility: visible;
+               }
+
                /*${SELECTOR} .conteiner {
                   position: relative;
                   margin: 0 15px;
                }*/
-               ${SELECTOR}.transition * { transition: transform .2s linear; }
-               ${SELECTOR}-progress,
-               ${SELECTOR}-buffer {
+
+               ${SELECTOR}.transition * {
+                  transition: transform .2s linear;
+               }
+
+               ${SELECTOR}-progress, ${SELECTOR}-buffer {
                   width: 100%;
                   height: var(--height);
                   transform-origin: 0 0;
                   scaleX(0);
                }
-               ${SELECTOR}-progress { z-index: calc(var(--zindex) + 1); }
-               ${SELECTOR}-buffer { background: var(--buffer-color); }`);
+
+               ${SELECTOR}-progress {
+                  z-index: calc(var(--zindex) + 1);
+               }
+
+               ${SELECTOR}-buffer {
+                  background: var(--buffer-color);
+               }`);
 
             return document.getElementById(SELECTOR_ID);
          })();
@@ -118,7 +132,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Height',
          type: 'number',
-         title: 'In pixels',
+         title: 'in pixels',
          placeholder: 'px',
          min: 1,
          max: 9,

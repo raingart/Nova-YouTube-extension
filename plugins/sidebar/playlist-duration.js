@@ -1,5 +1,6 @@
 // for test
 // https://www.youtube.com/playlist?list=WL
+// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY // short and has [Private video]
 
 _plugins_conteiner.push({
    id: 'playlist-duration',
@@ -23,7 +24,7 @@ _plugins_conteiner.push({
          YDOM.waitElement('#stats yt-formatted-string:first-child')
             .then(el => {
                if (duration = getPlaylistDuration()) {
-                  insertToHTML({ 'containerEl': el, 'text': duration });
+                  insertToHTML({ 'container': el, 'text': duration });
 
                } else {
                   getPlaylistDurationFromThumbnails({
@@ -31,7 +32,7 @@ _plugins_conteiner.push({
                   })
                      .then(duration => {
                         if (duration) {
-                           insertToHTML({ 'containerEl': el, 'text': duration });
+                           insertToHTML({ 'container': el, 'text': duration });
                         }
                      });
                }
@@ -47,10 +48,9 @@ _plugins_conteiner.push({
                         .tabs[0].tabRenderer.content.sectionListRenderer
                         .contents[0].itemSectionRenderer
                         .contents[0].playlistVideoListRenderer.contents;
-                  const timestamp = vids?.reduce((a, cv) => a + (!isNaN(cv.playlistVideoRenderer.lengthSeconds) ? parseInt(cv.playlistVideoRenderer.lengthSeconds) : 0), 0);
-                  const duration = YDOM.secToStr(timestamp);
-                  // save in sessionStorage
-                  return duration;
+                  const sec = vids?.reduce((acc, time) => a + (!isNaN(cv.playlistVideoRenderer.lengthSeconds) ? parseInt(cv.playlistVideoRenderer.lengthSeconds) : 0), 0);
+
+                  return YDOM.secFormatTime(sec);
                }
             });
       }
@@ -59,20 +59,19 @@ _plugins_conteiner.push({
       if (YDOM.currentPageName() === 'watch') {
          YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
             .then(el => {
-
                YDOM.waitElement('#playlist-items #text:not(:empty)')
                   .then(vids => {
                      if (duration = getPlaylistDuration()) {
-                        insertToHTML({ 'containerEl': el, 'text': duration });
+                        insertToHTML({ 'container': el, 'text': duration });
 
                      } else {
                         getPlaylistDurationFromThumbnails({
-                           'containerEl': document.querySelector('#secondary #playlist'),
+                           'container': document.querySelector('#secondary #playlist'),
                            'items_selector': '#playlist-items #unplayableText[hidden]',
                         })
                            .then(duration => {
                               if (duration) {
-                                 insertToHTML({ 'containerEl': el, 'text': duration });
+                                 insertToHTML({ 'container': el, 'text': duration });
                               }
                            });
                      }
@@ -90,22 +89,22 @@ _plugins_conteiner.push({
 
                   const strToSec = s => s.split(':').reduce((acc, time) => parseInt(time) + 60 * acc);
 
-                  const timestamp = [...vids]
+                  // console.debug('[...vids]', vids);
+
+                  const sec = [...vids]
+                     .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
                      .map(e => strToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText))
-                     .reduce((a, cv) => a + cv, 0);
+                     .reduce((acc, time) => acc + time, 0);
 
-                  console.debug('timestamp', timestamp);
-
-                  return YDOM.secToStr(timestamp);
+                  return YDOM.secFormatTime(sec);
                }
-
             });
       }
 
-      function getPlaylistDurationFromThumbnails({ items_selector = required(), containerEl }) {
+      function getPlaylistDurationFromThumbnails({ items_selector = required(), container }) {
          console.log('thumbnails_method', ...arguments);
-         if (containerEl && !(containerEl instanceof HTMLElement)) {
-            return console.error('containerEl not HTMLElement:', containerEl);
+         if (container && !(container instanceof HTMLElement)) {
+            return console.error('container not HTMLElement:', container);
          }
 
          return new Promise(resolve => {
@@ -113,7 +112,7 @@ _plugins_conteiner.push({
             const interval = setInterval(() => {
                const
                   playlistCount = document.querySelectorAll(items_selector)?.length,
-                  timeStampList = (containerEl || document)
+                  timeStampList = (container || document)
                      .querySelectorAll('.ytd-thumbnail-overlay-time-status-renderer:not(:empty)'),
                   duration = getTotalTime(timeStampList);
 
@@ -130,19 +129,19 @@ _plugins_conteiner.push({
 
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
-            const strToSec = s => s.split(':').reduce((acc, time) => parseInt(time) + 60 * acc);
-            const timestamp = [...nodes]
+            const strToSec = s => s.split(':').reduce((acc, dur) => parseInt(dur) + 60 * acc);
+            const sec = [...nodes]
                .map(e => strToSec(e.textContent))
-               .reduce((a, cv) => a + cv, 0);
+               .reduce((acc, time) => acc + time, 0);
 
-            return YDOM.secToStr(timestamp);
+            return YDOM.secFormatTime(sec);
          }
       }
 
-      function insertToHTML({ text = '', containerEl = required() }) {
+      function insertToHTML({ text = '', container = required() }) {
          // console.debug('insertToHTML', ...arguments);
-         if (!(containerEl instanceof HTMLElement)) {
-            return console.error('containerEl not HTMLElement:', containerEl);
+         if (!(container instanceof HTMLElement)) {
+            return console.error('container not HTMLElement:', container);
          }
          (document.getElementById(SELECTOR_ID) || (function () {
             const el = document.createElement('yt-formatted-string');
@@ -150,7 +149,7 @@ _plugins_conteiner.push({
             el.id = SELECTOR_ID;
             el.style.display = 'inline-block';
             if (YDOM.currentPageName() === 'watch') el.style.margin = '0 .5em';
-            containerEl.after(el);
+            container.after(el);
             return document.getElementById(SELECTOR_ID);
          })())
             .textContent = text;

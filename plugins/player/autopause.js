@@ -6,31 +6,31 @@ _plugins_conteiner.push({
    desc: 'Disables autoplay',
    _runtime: user_settings => {
 
+      let is_change_quality;
+
       YDOM.waitElement('#movie_player')
          .then(player => {
-            let is_change_quality;
-
-            player.addEventListener('onStateChange', onPlayerStateChange);
-
-            function onPlayerStateChange(state) {
-               // console.debug('onStateChange', ...arguments);
-
-               if (user_settings.video_autopause_ignore_playlist && window.location.href.includes('list=')) return;
-
-               // -1: unstarted
-               // 0: ended
-               // 1: playing
-               // 2: paused
-               // 3: buffering
-               // 5: cued
-               if (1 === state && !is_change_quality) {
-                  is_change_quality = true;
-                  player.pauseVideo();
-                  // console.debug('pauseVideo', state);
-
-               } else if (state <= 0) is_change_quality = false;
-            }
+            player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
          });
+
+      function onPlayerStateChange(state) {
+         // console.debug('onStateChange', ...arguments);
+
+         if (user_settings.video_autopause_ignore_playlist && location.href.includes('list=')) return;
+
+         // -1: unstarted
+         // 0: ended
+         // 1: playing
+         // 2: paused
+         // 3: buffering
+         // 5: cued
+         if (1 === state && !is_change_quality) {
+            is_change_quality = true;
+            this.pauseVideo();
+            // console.debug('pauseVideo', state);
+
+         } else if (state <= 0) is_change_quality = false;
+      }
 
    },
    options: {

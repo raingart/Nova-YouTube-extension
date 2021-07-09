@@ -79,5 +79,11 @@ _plugins_conteiner.push({
             { label: 'ctrl', value: 17, selected: true },
          ],
       },
+      'jump_smooth': {
+         _tagName: 'input',
+         label: 'Smooth',
+         type: 'checkbox',
+         title: 'Help info',
+      },
    },
 });

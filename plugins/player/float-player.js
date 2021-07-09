@@ -123,6 +123,7 @@ _plugins_conteiner.push({
                   left: 0 !important;
                   top: 0 !important;
                }
+
                .ended-mode video {
                   visibility: hidden;
                }`);

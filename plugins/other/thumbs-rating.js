@@ -20,10 +20,12 @@ _plugins_conteiner.push({
          SELECTOR + `{
             --height: ${(user_settings.rating_bar_height || 5)}px;
          }
+
          ${SELECTOR} {
             width: 100%;
             height: var(--height);
          }
+
          a#thumbnail ${SELECTOR} {
             position: absolute;
             bottom: 0;
@@ -172,7 +174,7 @@ _plugins_conteiner.push({
          _tagName: 'input',
          label: 'Bar height',
          type: 'number',
-         title: 'In pixels',
+         title: 'in pixels',
          placeholder: '1-9',
          min: 1,
          max: 9,

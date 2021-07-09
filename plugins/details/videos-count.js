@@ -20,7 +20,7 @@ _plugins_conteiner.push({
             // console.debug('watch page');
             YDOM.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)')
                .then(el => setVideoCount({
-                  'containerEl': el,
+                  'container': el,
                   'channel_id': window.ytplayer?.config?.args?.ucid || link.href.split('/').pop()
                }));
          });
@@ -29,7 +29,7 @@ _plugins_conteiner.push({
       YDOM.waitElement('#channel-header #subscriber-count:not(:empty)')
          .then(el => {
             // console.debug('channel page');
-            setVideoCount({ 'containerEl': el, 'channel_id': getChannelId() });
+            setVideoCount({ 'container': el, 'channel_id': getChannelId() });
 
             function getChannelId() {
                return [
@@ -50,18 +50,18 @@ _plugins_conteiner.push({
                      api_key: user_settings['custom-api-key']
                   })
                      .then(res => {
-                        res?.items?.lenght && setVideoCount({ 'containerEl': el, 'channel_id': res.items[0].id });
+                        res?.items?.lenght && setVideoCount({ 'container': el, 'channel_id': res.items[0].id });
                      });
             }
          });
 
-      function setVideoCount({ containerEl = required(), channel_id = required() }) {
+      function setVideoCount({ container = required(), channel_id = required() }) {
          // console.debug('setVideoCount:', ...arguments);
          if (!isChannelId(channel_id)) return console.error('channel_id empty:', channel_id);
 
          // cached
          if (storage = sessionStorage.getItem(CACHE_PREFIX + channel_id)) {
-            insertToHTML({ 'text': storage, 'containerEl': containerEl });
+            insertToHTML({ 'text': storage, 'container': container });
 
          } else {
             YDOM.request.API({
@@ -72,20 +72,20 @@ _plugins_conteiner.push({
                .then(res => {
                   res?.items?.forEach(item => {
                      const videoCount = item.statistics.videoCount;
-                     insertToHTML({ 'text': videoCount, 'containerEl': containerEl });
+                     insertToHTML({ 'text': videoCount, 'container': container });
                      // save cache in tabs
                      sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
                   });
                });
          }
 
-         function insertToHTML({ text = '', containerEl = required() }) {
+         function insertToHTML({ text = '', container = required() }) {
             // console.debug('insertToHTML', ...arguments);
-            if (!(containerEl instanceof HTMLElement)) {
-               return console.error('containerEl not HTMLElement:', containerEl);
+            if (!(container instanceof HTMLElement)) {
+               return console.error('container not HTMLElement:', container);
             }
             (document.getElementById(SELECTOR_ID) || (function () {
-               containerEl.insertAdjacentHTML('beforeend',
+               container.insertAdjacentHTML('beforeend',
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
                   + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
                return document.getElementById(SELECTOR_ID);

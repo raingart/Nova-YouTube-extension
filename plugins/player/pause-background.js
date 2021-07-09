@@ -3,7 +3,7 @@ _plugins_conteiner.push({
    title: 'Pauses playing videos in other tabs',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Supports frames and open browser windows',
+   desc: 'Supports iframes and other windows',
    _runtime: user_settings => {
 
       const
@@ -19,9 +19,9 @@ _plugins_conteiner.push({
             // 2: paused
             // 3: buffering
             // 5: cued
-            const onPlayer = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage();
+            const onPlayerStateChange = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage();
 
-            player.addEventListener('onStateChange', onPlayer);
+            player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
 
             // remove storage if this tab closed
             window.addEventListener('beforeunload', removeStorage);
