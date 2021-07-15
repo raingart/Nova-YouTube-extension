@@ -9,7 +9,7 @@
 // www.youtube.com/watch?v=yFsmUBLn8O0
 
 _plugins_conteiner.push({
-   id: 'player-float-scroll',
+   id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
    run_on_pages: 'watch',
    section: 'player',
@@ -77,8 +77,8 @@ _plugins_conteiner.push({
                '0 8px 10px -5px rgba(0, 0, 0, 0.4)',
          };
 
-         // set player_float_scroll_size_position
-         switch (user_settings.player_float_scroll_size_position) {
+         // set pin player position
+         switch (user_settings.player_float_scroll_position) {
             case 'top-left':
                initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.left = 0;
@@ -115,7 +115,7 @@ _plugins_conteiner.push({
             ${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width) !important; }
             ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
-         // fix video size
+         // fix video size in pinned
          YDOM.css.push(
             `${PINNED_SELECTOR} video {
                   width: var(--width) !important;
@@ -144,6 +144,7 @@ _plugins_conteiner.push({
                // console.debug('switchElement unpin');
                switchElement.classList.remove(CLASS_VALUE);
                this.inViewport = true;
+               window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
             }
          } else if (this.inViewport) {
             // console.debug('switchElement pin');
@@ -193,7 +194,7 @@ _plugins_conteiner.push({
          max: 5,
          value: 2.5,
       },
-      player_float_scroll_size_position: {
+      player_float_scroll_position: {
          _tagName: 'select',
          label: 'Fixed player position',
          options: [

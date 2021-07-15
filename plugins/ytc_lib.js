@@ -1,50 +1,70 @@
 const YDOM = {
    // DEBUG: true,
 
-   // find once
+   // find once.
+   // more optimized compared to MutationObserver
    waitElement(selector = required()) {
-      // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
-      // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+      if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
-      // document.addEventListener("yt-visibility-refresh", iniLoadStartListener, true);
+      return new Promise((resolve, reject) => {
+         try {
+            let interval
+            const checkIfExists = () => {
+               if (el = document.querySelector(selector)) {
+                  if (interval !== undefined) clearInterval(interval);
+                  resolve(el);
 
-      // There is a more correct method - transitionend.
-      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
-      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
-      YDOM.log('wait', ...arguments);
-
-      if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
-
-      return new Promise(resolve => {
-         if (el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector)) {
-            YDOM.log('waited(1)', selector, el);
-            return resolve(el);
+               } else return;
+            }
+            checkIfExists();
+            interval = setInterval(checkIfExists, 50); // ms
+         } catch (err) {
+            reject(new Error('Error waitForElement', err));
          }
-         if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-
-         new MutationObserver((mutations, observer) => {
-            mutations.forEach(mutation => {
-               [...mutation.addedNodes]
-                  .filter(node => node.nodeType === 1)
-                  .forEach(node => {
-                     (node?.parentElement || document).querySelectorAll(selector)
-                        .forEach(element => {
-                           YDOM.log('waited', mutation.type, selector);
-                           observer.disconnect();
-                           return resolve(element);
-                        });
-                  });
-            });
-         })
-            .observe(document.body || document.documentElement, { childList: true, subtree: true });
-      });
+      })
    },
+
+   // waitForElement(selector = required()) {
+   //    // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
+   //    // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+
+   //    // There is a more correct method - transitionend.
+   //    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
+   //    // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
+   //    YDOM.log('wait', ...arguments);
+
+   //    if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
+
+   //    return new Promise(resolve => {
+   //       if (el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector)) {
+   //          // YDOM.log('waited(1)', selector, el);
+   //          return resolve(el);
+   //       }
+   //       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+
+   //       new MutationObserver((mutations, observer) => {
+   //          mutations.forEach(mutation => {
+   //             [...mutation.addedNodes]
+   //                .filter(node => node.nodeType === 1)
+   //                .forEach(node => {
+   //                   (node?.parentElement || document).querySelectorAll(selector)
+   //                      .forEach(element => {
+   //                         // YDOM.log('waited', mutation.type, selector);
+   //                         observer.disconnect();
+   //                         return resolve(element);
+   //                      });
+   //                });
+   //          });
+   //       })
+   //          .observe(document.body || document.documentElement, { childList: true, subtree: true });
+   //    });
+   // },
 
    watchElement({ selector = required(), attr_mark, callback = required() }) {
       YDOM.log('watch', selector);
       if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
 
-      process(); // launch not wait
+      process(); // launch without waiting
 
       setInterval(process, 1000 * 1.5); // 1.5 sec
 
@@ -123,8 +143,6 @@ const YDOM = {
             : console.warn('getCSSValue:selector is empty', el, ...arguments); // err
 
       },
-
-      // uncheck: toggle => toggle.hasAttribute('checked') && toggle.click(),
    },
 
    cookie: {
@@ -182,8 +200,9 @@ const YDOM = {
       fateBezel = setTimeout(() => bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE), 600); // 600ms
    },
 
-   secFormatTime(sec, no_zeros) {
+   formatDuration(total_seconds, no_zeros) {
       const
+         sec = Math.abs(total_seconds).toFixed(),
          hours = Math.floor(sec / 60 / 60) || null,
          minutes = Math.floor(sec / 60) - (hours * 60),
          seconds = sec % 60;

@@ -69,7 +69,7 @@ div.between input[type="text"] {
    border-bottom: 1px solid #353535;
 }
 
-.active li.item:nth-child(even) {
+.active .item:nth-child(even) {
    background: #232323;
 } */
 
@@ -81,9 +81,12 @@ li>ul>li {
    padding-left: .5em;
 }
 
-li:not(:hover)>ul {
+.item:not(:hover)>ul {
    transition: opacity 160ms !important;
    opacity: .25;
+}
+
+.item:not(:hover)>ul input[type=color] {
    filter: grayscale(100%);
 }
 
@@ -93,7 +96,7 @@ input[type=search] {
 }
 
 input[type=search]:focus, input[type=text]:focus {
-   border: 1px solid deepskyblue;
+   border: 1px solid #00b7fc;
 }
 
 #plugins #header:not(:empty):before {
@@ -231,13 +234,13 @@ li>label+* {
    margin-right: 10px;
 }
 
-li.item a[href*=wiki] {
+.item a[href*=wiki] {
    font-weight: bold;
    margin-left: 3px;
    opacity: .2;
 }
 
-li.item:hover a[href*=wiki] {
+.item:hover a[href*=wiki] {
    opacity: 1;
 }
 

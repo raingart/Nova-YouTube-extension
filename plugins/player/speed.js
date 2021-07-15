@@ -5,10 +5,11 @@
 
 _plugins_conteiner.push({
    id: 'rate-wheel',
-   title: 'Video playback speed with mousewheel',
+   title: 'Playback speed control',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
+   desc: 'with mousewheel',
    _runtime: user_settings => {
 
       YDOM.waitElement('#movie_player')
@@ -136,8 +137,9 @@ _plugins_conteiner.push({
             };
 
             // init rate_default
-            if (location.href.includes('music')) user_settings.rate_default = 1;
-            playerRate.set(user_settings.rate_default);
+            if (+user_settings.rate_default !== 1 && !location.href.includes('music')) {
+               playerRate.set(user_settings.rate_default);
+            }
 
          });
 

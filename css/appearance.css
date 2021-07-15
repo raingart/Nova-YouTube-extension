@@ -29,7 +29,7 @@
 
 .appearance>*:not(.empty):hover {
    opacity: 1;
-   /* outline-color: deepskyblue; */
+   /* outline-color: #00b7fc; */
    /* box-shadow: 0 0 5px rgba(0, 196, 255, .7); */
    background-color: var(--plugins-section-hover);
 }

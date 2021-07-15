@@ -1,9 +1,9 @@
 _plugins_conteiner.push({
    id: 'player-indicator',
-   title: 'Player indicator',
+   title: 'Replace default indicator',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Replace default indicator',
+   desc: 'bezel',
    _runtime: user_settings => {
 
       const

@@ -159,7 +159,7 @@ const Opt = {
 
    // tab selector
    openTab(tabId, reset_page) {
-      console.debug('openTab', ...arguments);
+      // console.debug('openTab', ...arguments);
       if (reset_page) {
          document.location = location.pathname + '?tabs=' + tabId;
       } else {
@@ -252,9 +252,9 @@ const Opt = {
                // if (confirm(i18n('opt_import_popup'))) chrome.runtime.openOptionsPage();
                if (confirm(i18n('opt_prompt_import_settings'))) {
                   // chrome.runtime.openOptionsPage();
-                  const urlOptionsPage = new URL(chrome.extension.getURL(chrome.runtime.getManifest().options_page))
-                     .searchParams.set('tabs', 'tab-other');
-                  window.open(urlOptionsPage.toString());
+                  const urlOptionsPage = new URL(chrome.extension.getURL(chrome.runtime.getManifest().options_page));
+                  urlOptionsPage.searchParams.set('tabs', 'tab-other');
+                  window.open(urlOptionsPage.href);
                }
                return;
             }

@@ -22,7 +22,7 @@ _plugins_conteiner.push({
          if (isNaN(this.duration)) return;
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
 
-         // save the original title template
+         // backup the original title template
          if (!originalTitleTemplate) originalTitleTemplate = document.title.replace(getVideoTitle(), '%s');
 
          let new_title = [];
@@ -46,7 +46,7 @@ _plugins_conteiner.push({
          }
          // number => round => string
          new_title = new_title
-            .map(t => typeof t === 'string' ? t : YDOM.secFormatTime(Math.round(t)))
+            .map(t => typeof t === 'string' ? t : YDOM.formatDuration(t))
             .join('');
 
          document.title = new_title + ' | ' + getVideoTitle();

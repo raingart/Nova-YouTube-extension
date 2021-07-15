@@ -19,7 +19,7 @@ _plugins_conteiner.push({
                      && quality !== selectedQuality // the new quality
                      && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
                   ) {
-                     console.info('keep new qualities in the session:', quality);
+                     console.info(`keep quality "${quality}" in the session`);
                      selectedQuality = quality;
                   }
                });
@@ -87,7 +87,7 @@ _plugins_conteiner.push({
          title: 'If unavailable, set max available quality',
          // multiple: null,
          options: [
-            // Available 'highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny'
+            // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
             { label: '4320p/8k', value: 'highres' },
             { label: '2880p/5k', value: 'hd2880' },
             { label: '2160p/4k', value: 'hd2160' },

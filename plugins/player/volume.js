@@ -5,10 +5,11 @@
 
 _plugins_conteiner.push({
    id: 'volume-wheel',
-   title: 'Mouse wheel volume control',
+   title: 'Volume control',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change volume of video',
+   desc: 'with mousewheel',
    _runtime: user_settings => {
 
       YDOM.waitElement('#movie_player')

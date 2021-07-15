@@ -1,6 +1,6 @@
 _plugins_conteiner.push({
    id: 'ad-skip-button',
-   title: 'Ad Auto Skipper',
+   title: 'Ad Video Skip',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Auto click on [Skip Ad] button',
@@ -24,18 +24,18 @@ _plugins_conteiner.push({
             // video.addEventListener('durationchange', forcePlay); // possible problems on streams
 
             function forcePlay() {
-               if (document.querySelector('#movie_player.ad-showing')
-                  && !isNaN(video.duration)
+               if (document.querySelector('#movie_player.ad-showing') && !isNaN(video.duration)
                   // 0: UNSENT
                   // 1:	OPENED
                   // 2:	HEADERS_RECEIVED
                   // 3:	LOADING
                   // 4:	DONE
                   && video.readyState === 4) {
-                  video.currentTime = video.duration; // skip ad video
-                  // click skip-ad-btn
-                  YDOM.waitElement('button.ytp-ad-skip-button')
-                     .then(btn => btn.click());
+                  video.currentTime = video.duration; // end ad video
+
+                  // YDOM.waitElement('button.ytp-ad-skip-button')
+                  YDOM.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text')
+                     .then(btn => btn.click()); // click skip-ad
                }
             }
          });

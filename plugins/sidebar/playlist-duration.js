@@ -1,6 +1,7 @@
 // for test
 // https://www.youtube.com/playlist?list=WL
-// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY // short and has [Private video]
+// short and has [Private video]:
+// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY
 
 _plugins_conteiner.push({
    id: 'playlist-duration',
@@ -47,10 +48,10 @@ _plugins_conteiner.push({
                      .tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
                         .tabs[0].tabRenderer.content.sectionListRenderer
                         .contents[0].itemSectionRenderer
-                        .contents[0].playlistVideoListRenderer.contents;
-                  const sec = vids?.reduce((acc, time) => a + (!isNaN(cv.playlistVideoRenderer.lengthSeconds) ? parseInt(cv.playlistVideoRenderer.lengthSeconds) : 0), 0);
+                        .contents[0].playlistVideoListRenderer?.contents;
+                  const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                  return YDOM.secFormatTime(sec);
+                  return YDOM.formatDuration(sec);
                }
             });
       }
@@ -87,16 +88,16 @@ _plugins_conteiner.push({
                   const vids = document.querySelector('ytd-watch, ytd-watch-flexy')
                      ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
 
-                  const strToSec = s => s.split(':').reduce((acc, time) => parseInt(time) + 60 * acc);
+                  const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
 
                   // console.debug('[...vids]', vids);
 
-                  const sec = [...vids]
+                  const duration = [...vids]
                      .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
                      .map(e => strToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText))
                      .reduce((acc, time) => acc + time, 0);
 
-                  return YDOM.secFormatTime(sec);
+                  return YDOM.formatDuration(duration);
                }
             });
       }
@@ -129,12 +130,12 @@ _plugins_conteiner.push({
 
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
-            const strToSec = s => s.split(':').reduce((acc, dur) => parseInt(dur) + 60 * acc);
-            const sec = [...nodes]
+            const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
+            const duration = [...nodes]
                .map(e => strToSec(e.textContent))
                .reduce((acc, time) => acc + time, 0);
 
-            return YDOM.secFormatTime(sec);
+            return YDOM.formatDuration(duration);
          }
       }
 

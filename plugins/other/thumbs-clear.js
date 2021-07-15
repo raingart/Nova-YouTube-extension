@@ -12,12 +12,12 @@ _plugins_conteiner.push({
          callback: img => {
             // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault excluding - maxresdefault
             if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnails_clear_amps || 'hq2') + '.jpg');
+               img.src = img.src.replace(re, (user_settings.thumbnails_clear_timestamps || 'hq2') + '.jpg');
             }
          },
       });
 
-      if (user_settings.thumbnails_clear_overlay_disable) {
+      if (user_settings.thumbnails_clear_overlay) {
          YDOM.css.push(
             `#hover-overlays {
                visibility: hidden !important;
@@ -26,7 +26,7 @@ _plugins_conteiner.push({
 
    },
    options: {
-      thumbnails_clear_timestamps: {
+      thumbnails_clear_preview_timestamps: {
          _tagName: 'select',
          label: 'Thumbnail timestamps',
          title: 'Thumbnail display video timestamps',

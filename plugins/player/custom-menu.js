@@ -41,15 +41,17 @@ _plugins_conteiner.push({
                      height = Math.round(width / (16 / 9)),
                      left = window.innerWidth, //(window.innerWidth) / 2 - (width / 2),
                      top = window.innerHeight, //(window.innerHeight / 2) - (height / 2),
-                     time = Math.floor(document.querySelector('video')?.currentTime),
+                     currentTime = Math.floor(document.querySelector('video')?.currentTime),
                      url = new URL(
                         document.querySelector('link[itemprop="embedUrl"][href]')?.href
                         || ('https://www.youtube.com/embed/' + getVidId()));
+                  // list param ex.
+                  // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
-                  if (+time) url.searchParams.append('t', time);
+                  if (+currentTime) url.searchParams.append('start', currentTime);
                   url.searchParams.append('autoplay', 1);
 
-                  window.open(url.toString(), document.title, `width=${width},height=${height},left=${left},top=${top}`);
+                  window.open(url.href, document.title, `width=${width},height=${height},left=${left},top=${top}`);
                });
                container.prepend(btnPopUp);
             }
@@ -174,7 +176,7 @@ _plugins_conteiner.push({
             if (user_settings.player_buttons_custom_items.indexOf('toggle-speed') !== -1) {
                const
                   video = document.querySelector('video'),
-                  btnSpeed = document.createElement('button');
+                  btnSpeed = document.createElement('a');
                let prevRate = {};
 
                // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
@@ -183,16 +185,16 @@ _plugins_conteiner.push({
                });
 
                btnSpeed.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+               btnSpeed.style.textAlign = 'center';
+               btnSpeed.style.fontWeight = 'bold';
                btnSpeed.title = 'Toggle speed';
-               btnSpeed.innerHTML =
-                  `<svg viewBox="0 0 16 16" height="100%" width="100%" version="1.1">
-                     <text x="40%" y="85%" style="font-size:20px;">&raquo;</text>
-                  </svg>`;
+               btnSpeed.textContent = '1x';
                btnSpeed.addEventListener('click', ({ target }) => {
                   // restore
                   if (Object.keys(prevRate).length) {
                      setRate(prevRate);
                      prevRate = {};
+                     target.textContent = '1x';
 
                   } else { // return default
                      const rate = video.playbackRate;
@@ -204,9 +206,10 @@ _plugins_conteiner.push({
                      if (resetRate.hasOwnProperty('html5')) resetRate.html5 = 1;
                      else resetRate.default = 1;
                      setRate(resetRate);
+                     target.textContent = prevRate[Object.keys(prevRate)[0]] + 'x';
                   }
-                  console.debug('prevRate', prevRate);
-
+                  btnSpeed.title = 'Switch to ' + target.textContent;
+                  // console.debug('prevRate', prevRate);
                });
 
                function btnSpeedVisibilitySwitch() {
@@ -232,7 +235,7 @@ _plugins_conteiner.push({
          _tagName: 'select',
          label: 'Items',
          title: 'Hold Ctrl+Сlick to select several',
-         multiple: null,
+         multiple: null, // dont use - selected: true
          size: 4, // = options.length
          options: [
             { label: 'toggle speed', value: 'toggle-speed' },

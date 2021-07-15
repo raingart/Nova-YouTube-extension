@@ -81,9 +81,7 @@ _plugins_conteiner.push({
 
          function insertToHTML({ text = '', container = required() }) {
             // console.debug('insertToHTML', ...arguments);
-            if (!(container instanceof HTMLElement)) {
-               return console.error('container not HTMLElement:', container);
-            }
+            if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
             (document.getElementById(SELECTOR_ID) || (function () {
                container.insertAdjacentHTML('beforeend',
                   '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'

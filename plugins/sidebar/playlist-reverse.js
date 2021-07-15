@@ -60,16 +60,12 @@ _plugins_conteiner.push({
       }
 
       function reverseElement(container) {
-         if (!(container instanceof HTMLElement)) {
-            return console.error('container not HTMLElement:', container);
-         }
+         if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
          container.append(...Array.from(container.childNodes).reverse());
       }
 
       function scrollToElement(targetEl) {
-         if (!(targetEl instanceof HTMLElement)) {
-            return console.error('targetEl not HTMLElement:', targetEl);
-         }
+         if (!(targetEl instanceof HTMLElement)) return console.error('targetEl not HTMLElement:', targetEl);
          const container = targetEl.parentNode;
          container.scrollTop = targetEl.offsetTop - container.offsetTop;
       }

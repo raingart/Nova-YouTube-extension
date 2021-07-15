@@ -57,9 +57,7 @@ _plugins_conteiner.push({
 
       function createBar(container = required()) {
          // console.debug('createBar', ...arguments);
-         if (!(container instanceof HTMLElement)) {
-            return console.error('parent not HTMLElement:', container);
-         }
+         if (!(container instanceof HTMLElement)) return console.error('parent not HTMLElement:', container);
 
          return document.getElementById(SELECTOR_ID) || (function () {
             container.insertAdjacentHTML('beforeend',
@@ -71,8 +69,8 @@ _plugins_conteiner.push({
             const
                zIndex = YDOM.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
                height = +user_settings.player_float_progress_bar_height || 3,
-               bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)',
-               bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
+               bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)';
+               // bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
             YDOM.css.push(
                `[id|=${SELECTOR_ID}] {
@@ -83,7 +81,6 @@ _plugins_conteiner.push({
                ${SELECTOR} {
                   --opacity: ${+user_settings.player_float_progress_bar_opacity || .7};
                   --height: ${height}px;
-                  --buffer-color: ${bufferColor};
                   --bg-color: ${bgColor};
                   --zindex: ${zIndex};
 
@@ -118,9 +115,9 @@ _plugins_conteiner.push({
                   z-index: calc(var(--zindex) + 1);
                }
 
-               ${SELECTOR}-buffer {
+               /*${SELECTOR}-buffer {
                   background: var(--buffer-color);
-               }`);
+               }*/`);
 
             return document.getElementById(SELECTOR_ID);
          })();

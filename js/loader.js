@@ -25,7 +25,7 @@ const App = {
 
    init() {
       const manifest = chrome.runtime.getManifest();
-      console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', manifest.name + ' v.' + manifest.version);
+      console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
       // skip first run
       document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
@@ -58,8 +58,11 @@ const App = {
 
       const forceLander = setTimeout(() => {
          console.debug('force lander:', _plugins_conteiner.length + '/' + plugins_count);
-         processLander();
-
+         clearInterval(interval_lander);
+         // if delay load domLoaded
+         if (document.body && typeof YDOM === 'object' && _plugins_conteiner.length === plugins_count) {
+            processLander();
+         }
          // show notice
          // container.insertAdjacentHTML("beforeend",
          //       `<div style="position:fixed; top:0; right:50%; transform:translateX(50%); margin-top:50px; z-index:9999; cursor:pointer; border-radius:2px; color:#fff; padding:10px; background-color:#0099ff; box-shadow:rgb(0 0 0 / 50%) 0px 0px 3px; font-size:12px;">
@@ -80,25 +83,28 @@ const App = {
             // 'margin': '50px',
             'z-index': 9999,
             'border-radius': '2px',
-            'background-color': '#0099ff',
+            'background-color': typeof YDOM === 'object' ? '#0099ff' : '#f00',
             'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
             'font-size': '12px',
             color: '#fff',
             padding: '10px',
             cursor: 'pointer',
          });
-         notice.addEventListener('click', evt => evt.target.remove());
+         // notice.addEventListener('click', ({ target }) => target.remove());
+         notice.addEventListener('click', () => notice.remove());
          notice.innerHTML =
-            `<h4>Failure on initialization ${app_name}</h4>
-            <div>plugins loaded: ${_plugins_conteiner.length + '/' + plugins_count}</div>`;
-         document.documentElement.appendChild(notice);
+            `<h4>Failure on initialization ${app_name}</h4>`
+            + (typeof YDOM === 'object'
+               ? `<div>plugins loaded: ${_plugins_conteiner.length + '/' + plugins_count}</div>`
+               : `<div>Сritical Error</div>`);
+         document.body.appendChild(notice);
       }, 1000 * 3); // 3sec
 
       const interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
-         if (YDOM && _plugins_conteiner.length === plugins_count) {
+         if (typeof YDOM === 'object' && _plugins_conteiner.length === plugins_count) {
             clearInterval(forceLander);
             processLander();
 
@@ -111,7 +117,7 @@ const App = {
          clearInterval(interval_lander);
          plugins_executor({
             'user_settings': user_settings,
-            'app_ver': app_ver, // need reflectException
+            'app_ver': app_ver, // need for reflectException
          });
       }
    },
@@ -150,3 +156,14 @@ const App = {
 }
 
 App.init();
+
+// test normal lite
+// https://www.youtube.com/watch?v=4ldjbjwim4k
+// https://www.youtube.com/watch?v=aCyGvGEtOwc
+
+// example url new embed page
+// https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
+
+// abnormal pages
+// https://www.youtube.com/watch?v=6Ux6SlOE9Qk
+// https://www.youtube.com/watch?v=DhTST3iRZyM

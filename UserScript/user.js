@@ -1,23 +1,24 @@
-console.log('%c /* %s */', 'color: #0096fa; font-weight: bold;', GM_info.script.name + ' v.' + GM_info.script.version);
+console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
 const
-  optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
-  configStoreName = 'user_settings',
-  fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
-  user_settings = fix_GM_getValue(GM_getValue(configStoreName));
+   optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
+   configStoreName = 'user_settings',
+   fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
+   user_settings = fix_GM_getValue(GM_getValue(configStoreName));
 
 if (!isOptionsPage()) return;
 landerPlugins();
 addOptionsButton();
+reflectException();
 
-// ======
 function addOptionsButton() {
    YDOM.waitElement('#masthead #buttons > *:first-child')
       .then(container => {
          const a = document.createElement('a');
          a.title = 'Nova Settings';
-         a.href = optionsPage;
+         a.href = optionsPage + '?tabs=tab-plugins';
          a.target = '_blank';
          a.innerHTML =
+            // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
                <svg viewBox="0 0 28 28" height="100%" width="100%" version="1.1" style="fill:deepskyblue">
                   <polygon points='21 12 3,1.8 3 22.2' />
@@ -31,7 +32,7 @@ function addOptionsButton() {
          container.prepend(a);
       });
 }
-// ======
+
 function isOptionsPage() {
    GM_registerMenuCommand('Settings', () => window.open(optionsPage));
    GM_registerMenuCommand('Export settings', () => {
@@ -83,6 +84,8 @@ function isOptionsPage() {
                obj[key] = value;
             };
          }
+         // fix tab reassignment
+         if (obj.tabs) delete obj.tabs;
 
          console.debug(`update ${configStoreName}:`, obj);
          GM_setValue(configStoreName, obj);
@@ -138,7 +141,6 @@ function isOptionsPage() {
    } else return true; // is not optionsPage
 }
 
-// ======
 function landerPlugins() {
    let plugins_lander = setInterval(() => {
       const domLoaded = document?.readyState !== 'loading';
@@ -163,4 +165,36 @@ function landerPlugins() {
    const isURLChanged = () => lastUrl == location.href ? false : lastUrl = location.href;
    // skip first run on page transition
    document.addEventListener('yt-navigate-start', () => isURLChanged() && landerPlugins());
+}
+
+function reflectException() {
+   function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
+      GM_notification({ text: GM_info.script.name + '\n' + err.reason, timeout: 4000, onclick: reportBug });
+
+      if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Open popup to report the bug?`)) {
+         reportBug();
+      }
+   };
+
+   function reportBug() {
+      window.open(
+         'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
+         '?entry.35504208=' + encodeURIComponent(trace_name) +
+         '&entry.151125768=' + encodeURIComponent(err_stack) +
+         '&entry.744404568=' + encodeURIComponent(location.href) +
+         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent), '_blank');
+   }
+
+   window.addEventListener('unhandledrejection', err => {
+      //if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+      console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose');
+
+      if (user_settings.report_issues)
+         _pluginsCaptureException({
+            'trace_name': 'unhandledrejection',
+            'err_stack': err.reason.stack,
+            'app_ver': GM_info.script.version,
+            'confirm_msg': 'Failure when async-call of one "Nova YouTube™" plugin.\n\nOpen tab to report the bug?',
+         });
+   });
 }

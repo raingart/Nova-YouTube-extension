@@ -18,7 +18,7 @@ _plugins_conteiner.push({
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
          if (document.querySelector('.ytp-autohide video')) return; // optimization try
          const currentPt = () => Math.round((this.currentTime / this.duration) * 100);
-         const leftTime = () => '-' + YDOM.secFormatTime(Math.round(this.duration - this.currentTime));
+         const leftTime = () => '-' + YDOM.formatDuration(this.duration - this.currentTime);
          let text;
 
          switch (user_settings.time_remaining_mode) {
@@ -39,9 +39,7 @@ _plugins_conteiner.push({
 
          function insertToHTML({ text = '', container = required() }) {
             // console.debug('insertToHTML', ...arguments);
-            if (!(container instanceof HTMLElement)) {
-               return console.error('container not HTMLElement:', container);
-            }
+            if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
             (document.getElementById(SELECTOR_ID) || (function () {
                // const el = document.createElement('span');
                // el.id = SELECTOR_ID;

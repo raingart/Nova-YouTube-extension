@@ -49,7 +49,7 @@ _plugins_conteiner.push({
 
    },
    options: {
-      comments_disable_mode: {
+      comments_visibility_mode: {
          _tagName: 'select',
          label: 'Mode',
          options: [
