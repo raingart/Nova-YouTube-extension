@@ -3,7 +3,7 @@
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'rate-wheel',
    title: 'Playback speed control',
    run_on_pages: 'watch, embed',
@@ -14,7 +14,7 @@ _plugins_conteiner.push({
 
       YDOM.waitElement('#movie_player')
          .then(player => {
-            // show indicator
+            // trigger default indicator
             // html5 way
             player.querySelector('video')
                .addEventListener('ratechange', function () {
@@ -51,7 +51,7 @@ _plugins_conteiner.push({
 
                // adjust(rate_step) {
                //    // default method requires a multiplicity of 0.25
-               //    return (+rate_step % 0.25) === 0 && player.hasOwnProperty('getPlaybackRate')
+               //    return (+rate_step % .25) === 0 && player.hasOwnProperty('getPlaybackRate')
                //       ? this.default(+rate_step)
                //       : this.html5(+rate_step);
                // },
@@ -118,7 +118,7 @@ _plugins_conteiner.push({
                saveInSession(level = required()) {
                   try {
                      sessionStorage['yt-player-playback-rate'] = JSON.stringify({
-                        creation: Date.now(), data: String(+level),
+                        creation: Date.now(), data: level.toString(),
                      })
                      this.log('playbackRate save in session:', ...arguments);
 
@@ -136,11 +136,18 @@ _plugins_conteiner.push({
                },
             };
 
+            const isMusic = [
+               location.href,
+               document.querySelector('meta[itemprop="genre"][content]')?.content,
+               window.ytplayer?.config?.args.raw_player_response.microformat.playerMicroformatRenderer.category
+            ]
+               .some(i => i?.toLowerCase() == 'music');
+
             // init rate_default
-            if (+user_settings.rate_default !== 1 && !location.href.includes('music')) {
+            if (+user_settings.rate_default !== 1 && (user_settings.rate_default_ignore_music && !isMusic)) {
+               // console.debug('update rate_default', user_settings.rate_default);
                playerRate.set(user_settings.rate_default);
             }
-
          });
 
    },
@@ -156,6 +163,12 @@ _plugins_conteiner.push({
          min: 1,
          max: 2,
          value: 1,
+      },
+      rate_default_ignore_music: {
+         _tagName: 'input',
+         label: 'Ignore music',
+         type: 'checkbox',
+         'data-dependent': '{"rate_default":"!1"}',
       },
       rate_step: {
          _tagName: 'input',

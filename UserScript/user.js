@@ -32,6 +32,25 @@ function addOptionsButton() {
          container.prepend(a);
       });
 }
+// function addOptionsButton() {
+//    YDOM.waitElement('#end:last-child')
+//    // YDOM.waitElement('#end')
+//       .then(container => {
+//          const button = document.createElement('button');
+//          button.innerHTML =
+//             `<svg width="24" height="24" viewBox="0 0 22 22" style="fill:deepskyblue">
+//                <polygon points='21 12 3,1.8 3 22.2' />
+//                <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+//             </svg>`;
+//          button.style = 'background: transparent; border: 0; color: rgb(96,96,96); outline: 0; cursor: pointer; padding-left: 24px; padding-right: 24px;';
+
+//          a.addEventListener('click', () => {
+//             // fix hide <tp-yt-iron-dropdown>
+//             setTimeout(() => document.body.click(), 200);
+//          });
+//          container.insertBefore(button, container.lastElementChild);
+//       });
+// }
 
 function isOptionsPage() {
    GM_registerMenuCommand('Settings', () => window.open(optionsPage));

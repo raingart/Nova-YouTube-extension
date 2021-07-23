@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      0.8.1
+// @version      0.8.3
 // @name         YouTube SuperNova
 // @namespace    https://github.com/raingart/Nova-YouTube-extension/
 // @description  Youtube extension plugins
@@ -27,7 +27,9 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // @grant        GM_notification
+// @grant        GM_openInTab
 // @compatible   Chrome >=80 + Violentmonkey + Tampermonkey
 // ==/UserScript==
 /*jshint esversion: 6 */

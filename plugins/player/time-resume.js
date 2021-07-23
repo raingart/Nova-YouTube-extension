@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'player-resume-playback',
    title: 'Resume playback time state',
    run_on_pages: 'watch',
@@ -7,7 +7,7 @@ _plugins_conteiner.push({
    _runtime: user_settings => {
 
       const CACHE_PREFIX = 'resume-playback-time';
-      const getCacheName = () => CACHE_PREFIX + ':' + YDOM.queryURL.get('v'); // window.ytplayer.config.args.raw_player_response.videoDetails.videoId
+      const getCacheName = () => CACHE_PREFIX + ':' + YDOM.queryURL.get('v'); // window.ytplayer?.config?.args.raw_player_response.videoDetails.videoId
       let cacheName = getCacheName(); // for optimization
 
       YDOM.waitElement('#movie_player:not(.ad-showing) video')

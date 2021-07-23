@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'player-buttons-custom',
    title: 'Custom buttons',
    run_on_pages: 'watch, embed',
@@ -10,7 +10,8 @@ _plugins_conteiner.push({
          SELECTOR_BTN_CLASS_NAME = 'custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
          player = document.getElementById('movie_player'),
-         getVidId = () => YDOM.queryURL.get('v', player?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href); // fix for embed
+         getVideoId = () => YDOM.queryURL.get('v', player?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href), // fix for embed
+         getVideoElement = () => document.querySelector('video');
 
       YDOM.waitElement('.ytp-right-controls')
          .then(container => {
@@ -41,10 +42,10 @@ _plugins_conteiner.push({
                      height = Math.round(width / (16 / 9)),
                      left = window.innerWidth, //(window.innerWidth) / 2 - (width / 2),
                      top = window.innerHeight, //(window.innerHeight / 2) - (height / 2),
-                     currentTime = Math.floor(document.querySelector('video')?.currentTime),
+                     currentTime = Math.floor(getVideoElement()?.currentTime),
                      url = new URL(
                         document.querySelector('link[itemprop="embedUrl"][href]')?.href
-                        || ('https://www.youtube.com/embed/' + getVidId()));
+                        || ('https://www.youtube.com/embed/' + getVideoId()));
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -110,7 +111,7 @@ _plugins_conteiner.push({
                   </svg>`;
                btnScreenshot.addEventListener('click', () => {
                   const
-                     video = document.querySelector('video'),
+                     video = getVideoElement(),
                      container = document.getElementById(SELECTOR_SCREENSHOT_ID) || document.createElement('a'),
                      canvas = container.querySelector('canvas') || document.createElement('canvas'),
                      context = canvas.getContext('2d'),
@@ -169,62 +170,86 @@ _plugins_conteiner.push({
                      <polygon points='17 10.9 14 7.9 9 12.9 6 9.9 3 12.9 3 15 17 15'/>
                   </svg>`;
                btnThumb.addEventListener('click', () =>
-                  window.open(`https://i.ytimg.com/vi/${getVidId()}/maxresdefault.jpg`));
+                  window.open(`https://i.ytimg.com/vi/${getVideoId()}/maxresdefault.jpg`));
                container.prepend(btnThumb);
             }
 
             if (user_settings.player_buttons_custom_items.indexOf('toggle-speed') !== -1) {
                const
-                  video = document.querySelector('video'),
-                  btnSpeed = document.createElement('a');
+                  video = getVideoElement(),
+                  btnSpeed = document.createElement('a'),
+                  hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a';
                let prevRate = {};
 
                // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
                ["ratechange", "loadeddata"].forEach(evt => {
-                  video.addEventListener(evt, btnSpeedVisibilitySwitch.bind(video));
+                  video.addEventListener(evt, visibilitySwitch.bind(video));
                });
 
                btnSpeed.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnSpeed.style.textAlign = 'center';
                btnSpeed.style.fontWeight = 'bold';
-               btnSpeed.title = 'Toggle speed';
+               btnSpeed.title = `Toggle speed (${hotkey})`;
                btnSpeed.textContent = '1x';
-               btnSpeed.addEventListener('click', ({ target }) => {
+               document.addEventListener('keyup', evt => {
+                  if (evt.key === hotkey) switchRate({ 'target': btnSpeed });
+               })
+               btnSpeed.addEventListener('click', switchRate);
+
+               function switchRate({ target }) {
                   // restore
                   if (Object.keys(prevRate).length) {
-                     setRate(prevRate);
+                     playerRate.set(prevRate);
                      prevRate = {};
                      target.textContent = '1x';
 
                   } else { // return default
                      const rate = video.playbackRate;
-                     prevRate = (rate !== 1)
-                        ? { 'html5': rate }
-                        : { 'default': player.getPlaybackRate() };
+                     prevRate = (rate % .25) === 0
+                        ? { 'default': player.getPlaybackRate() }
+                        : { 'html5': rate };
 
                      let resetRate = Object.assign({}, prevRate); // clone obj
-                     if (resetRate.hasOwnProperty('html5')) resetRate.html5 = 1;
-                     else resetRate.default = 1;
-                     setRate(resetRate);
-                     target.textContent = prevRate[Object.keys(prevRate)[0]] + 'x';
+                     if (resetRate.hasOwnProperty('html5')) {
+                        resetRate.html5 = 1;
+                     } else {
+                        resetRate.default = 1;
+                     }
+                     playerRate.set(resetRate);
+                     target.textContent = prevRate[Object.keys(prevRate)[0]] + `x (${hotkey})`;
                   }
                   btnSpeed.title = 'Switch to ' + target.textContent;
                   // console.debug('prevRate', prevRate);
-               });
+               }
 
-               function btnSpeedVisibilitySwitch() {
+               function visibilitySwitch() {
                   if (Object.keys(prevRate).length) return;
                   btnSpeed.style.visibility = this.playbackRate === 1 ? 'hidden' : 'visible';
                }
 
-               function setRate(obj) {
-                  if (obj.hasOwnProperty('html5')) {
-                     video.playbackRate = obj.html5;
+               const playerRate = {
+                  set(obj) {
+                     if (obj.hasOwnProperty('html5')) {
+                        video.playbackRate = obj.html5;
+                     } else {
+                        player.setPlaybackRate(obj.default);
+                     }
+                     this.saveInSession(obj.html5 || obj.default);
+                  },
 
-                  } else {
-                     player.setPlaybackRate(obj.default);
-                  }
+                  saveInSession(level = required()) {
+                     try {
+                        sessionStorage['yt-player-playback-rate'] = JSON.stringify({
+                           creation: Date.now(), data: level.toString(),
+                        })
+                        // console.log('playbackRate save in session:', ...arguments);
+
+                     } catch (err) {
+                        console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                     }
+                  },
                }
+
                container.prepend(btnSpeed);
             }
          });
@@ -243,6 +268,15 @@ _plugins_conteiner.push({
             { label: 'thumbnail', value: 'thumbnail' },
             { label: 'pop-up player', value: 'popup' },
          ],
+      },
+      player_buttons_custom_hotkey_toggle_speed: {
+         _tagName: 'select',
+         label: 'Hotkey toggle speed ',
+         // title: '',
+         options: [
+            { label: 'A', value: 'a', selected: true },
+            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
+         'data-dependent': '{"player_buttons_custom_items":["toggle-speed"]}',
       },
    },
 });

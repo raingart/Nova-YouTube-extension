@@ -24,16 +24,28 @@ window.addEventListener('load', () => {
                if (!reqParent) return console.error('error showOrHide:', name);
 
                for (const values of [dependentsList[name]]) {
-                  // console.debug('check', name, reqParent.value + '=' + values);
-                  if ((reqParent.checked && values) || values.includes(reqParent.value)) {
+                  if ((!values.toString().startsWith('!') && ((reqParent.checked && values) || values.includes(reqParent.value)))
+                     // reserve
+                     || (values.toString().startsWith('!') && reqParent.value !== values.toString().replace('!', ''))
+                  ) {
                      // console.debug('show:', name);
                      dependentItem.classList.remove("hide");
+                     childInputDisable(false);
 
                   } else {
                      // console.debug('hide:', name);
                      dependentItem.classList.add("hide");
+                     childInputDisable(true);
                   }
                }
+            }
+
+            function childInputDisable(status = false) {
+               dependentItem.querySelectorAll('input, textarea, select')
+                  .forEach(childItem => {
+                     childItem.disabled = status;
+                     // dependentItem.readOnly = status;
+                  });
             }
          }
       },
@@ -92,7 +104,7 @@ window.addEventListener('load', () => {
          // form unsave
          document.addEventListener('change', ({ target }) => {
             // console.debug('change', target);
-            if (target.name === 'tabs') return; // fix/ignore switch tabs
+            if (target.name == 'tabs') return; // fix/ignore switch tabs
             if (!this.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
                this.btnSubmitAnimation.outputStatus.classList.add('unSaved');
             }

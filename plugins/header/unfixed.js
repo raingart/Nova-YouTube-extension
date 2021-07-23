@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'header-unfixed',
    title: 'Header unfixed',
    run_on_pages: 'all',

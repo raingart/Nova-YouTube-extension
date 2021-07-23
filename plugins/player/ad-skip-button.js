@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'ad-skip-button',
    title: 'Ad Video Skip',
    run_on_pages: 'watch',

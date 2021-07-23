@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'disable-page-sleep',
    title: 'Disable page sleep',
    run_on_pages: 'watch',

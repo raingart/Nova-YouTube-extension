@@ -84,7 +84,7 @@ const Plugins = {
 
    run: ({ user_settings, app_ver }) => {
       // console.debug('plugins_executor', ...arguments);
-      if (!_plugins_conteiner?.length) return console.error('_plugins_conteiner empty', _plugins_conteiner);
+      if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
       // similar - YDOM.currentPageName()
@@ -99,7 +99,7 @@ const Plugins = {
 
       // console.groupCollapsed('plugins status');
 
-      _plugins_conteiner.forEach(plugin => {
+      window.nova_plugins?.forEach(plugin => {
          const pagesAllowList = plugin?.run_on_pages?.split(',').map(i => i.trim().toLowerCase());
          // reset logTable
          logTableTime = 0;

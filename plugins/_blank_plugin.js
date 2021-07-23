@@ -1,6 +1,6 @@
 // To connect the plugin, you need to add the path to the file "js/plugins.js" to the array "list: []"
 
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'time-jump', // unique identifier for the plugin. Used to store settings
    title: 'Plugin Name', // optional. Only displayed in the settings file
 
@@ -84,6 +84,7 @@ _plugins_conteiner.push({
          label: 'Smooth',
          type: 'checkbox',
          title: 'Help info',
+         'data-dependent': '{"jump_step":"true"}',
       },
    },
 });

@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'channel-videos-count',
    title: 'Show channel videos count',
    run_on_pages: 'watch, channel',
@@ -11,7 +11,6 @@ _plugins_conteiner.push({
       const
          CACHE_PREFIX = 'channel-videos-count:',
          SELECTOR_ID = 'video_count',
-         getChannelFromUrl = location.pathname.split('/')[2],
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
       // watch page
@@ -21,7 +20,10 @@ _plugins_conteiner.push({
             YDOM.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)')
                .then(el => setVideoCount({
                   'container': el,
-                  'channel_id': window.ytplayer?.config?.args?.ucid || link.href.split('/').pop()
+                  'channel_id':
+                     window.ytplayer?.config?.args.ucid
+                     || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
+                     || link.href.split('/').pop()
                }));
          });
 
@@ -33,29 +35,16 @@ _plugins_conteiner.push({
 
             function getChannelId() {
                return [
-                  getChannelFromUrl,
-                  document.querySelector('meta[itemprop="channelId"][content]'),
-                  document.querySelector('link[itemprop="url"][href]'),
-                  // (window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer?.tabs?.lenght
-                  //    && window.ytInitialData.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer?.endpoint.browseEndpoint.browseId),
+                  window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
+                  document.querySelector('meta[itemprop="channelId"][content]')?.content,
+                  document.querySelector('link[itemprop="url"][href]')?.href,
+                  location.pathname.split('/')[2],
                ]
-                  .map(i => i?.href || i?.content)
                   .find(i => isChannelId(i?.split('/').pop()))
-                  // search in ytInitialData
-                  || JSON.stringify(window.ytInitialData).match(/(UC([a-z0-9-_]{22}))/i)[1]
-                  // last option
-                  || YDOM.request.API({
-                     request: 'channels',
-                     params: { 'forUsername': getChannelFromUrl, 'part': 'snippet' },
-                     api_key: user_settings['custom-api-key']
-                  })
-                     .then(res => {
-                        res?.items?.lenght && setVideoCount({ 'container': el, 'channel_id': res.items[0].id });
-                     });
             }
          });
 
-      function setVideoCount({ container = required(), channel_id = required() }) {
+      function setVideoCount({ container = required(), channel_id }) {
          // console.debug('setVideoCount:', ...arguments);
          if (!isChannelId(channel_id)) return console.error('channel_id empty:', channel_id);
 

@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'thumbnails-rating',
    title: 'Rating preview',
    run_on_pages: 'all, -embed',

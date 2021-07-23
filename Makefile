@@ -10,7 +10,7 @@ compile:
    # header
 	cat ./UserScript/meta.js > $(compiled)
 	# plugins conteiner
-	echo -e 'let _plugins_conteiner = [];' >> $(compiled)
+	echo -e 'window.nova_plugins = [];' >> $(compiled)
 	# all plugins
 	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "_blank_plugin.js" | xargs cat >> $(compiled)
 	cat ./js/plugins.js >> $(compiled)

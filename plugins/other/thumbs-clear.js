@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'thumbnails-clear',
    title: 'Clear thumbnails',
    run_on_pages: 'all, -embed',

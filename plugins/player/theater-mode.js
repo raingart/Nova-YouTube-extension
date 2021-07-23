@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'theater-mode',
    title: 'Theater mode',
    run_on_pages: 'watch',

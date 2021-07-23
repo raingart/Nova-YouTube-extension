@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'pause-background-tab',
    title: 'Pauses playing videos in other tabs',
    run_on_pages: 'watch, embed',
@@ -8,18 +8,14 @@ _plugins_conteiner.push({
 
       const
          storeName = 'playngInstanceIDTab',
-         instanceID = Math.random(); // Generate a random script instance ID
+         instanceID = Math.random(), // Generate a random script instance ID
+         removeStorage = () => localStorage.removeItem(storeName),
+         onPlayerStateChange = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage(); // 1: playing
 
       YDOM.waitElement('#movie_player')
          .then(player => {
-            const removeStorage = () => localStorage.removeItem(storeName);
-            // -1: unstarted
-            // 0: ended
-            // 1: playing
-            // 2: paused
-            // 3: buffering
-            // 5: cued
-            const onPlayerStateChange = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage();
+            // redirection for localStorage common storage space
+            if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
 
             player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
 

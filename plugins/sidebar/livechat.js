@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'livechat-visibility',
    title: 'Hide livechat',
    run_on_pages: 'watch',

@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'thumbnails-title-normalize',
    title: 'Normalize title',
    run_on_pages: 'all, -embed, -results',

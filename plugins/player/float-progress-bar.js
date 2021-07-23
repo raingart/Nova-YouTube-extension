@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'player-float-progress-bar',
    title: 'Float player progress bar',
    run_on_pages: 'watch, embed',

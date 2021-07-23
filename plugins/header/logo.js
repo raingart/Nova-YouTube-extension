@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'page-logo',
    title: 'YouTube logo',
    run_on_pages: 'all',

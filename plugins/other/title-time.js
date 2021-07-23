@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'page-title-time',
    title: 'Show time in tab title',
    run_on_pages: 'watch',

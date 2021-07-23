@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'scroll-to-top',
    title: 'Scroll to top button',
    run_on_pages: 'all, -embed',
@@ -39,14 +39,8 @@ _plugins_conteiner.push({
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
                const player = document.getElementById('movie_player');
-               if (user_settings.scroll_to_top_autoplay && YDOM.currentPageName() === 'watch'
-                  // -1: unstarted
-                  // 0: ended
-                  // 1: playing
-                  // 2: paused
-                  // 3: buffering
-                  // 5: cued
-                  && player.getPlayerState() === 2
+               if (user_settings.scroll_to_top_autoplay && YDOM.currentPageName() == 'watch'
+                  && player.getPlayerState() === 2 // 2: paused
                ) {
                   player.playVideo();
                }

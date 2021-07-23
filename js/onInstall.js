@@ -25,20 +25,14 @@ chrome.runtime.onInstalled.addListener(details => {
             Storage.getParams(store => {
                const keyRenameTemplate = {
                   // 'oldKey': 'newKey',
-                  'player-float-scroll': 'player-pin-scroll',
-                  'player_float_scroll_size_position': 'player_float_scroll_position',
-                  'comments_disable_mode': 'comments_visibility_mode',
-                  'thumbnails_clear_amps': 'thumbnails_clear_preview_timestamps',
-                  'thumbnails_clear_overlay_disable': 'thumbnails_clear_overlay',
+                  'jump_offset': 'time_jump_title_offset',
                }
-               Object.entries(store)
-                  .forEach(([oldKey]) => {
-                     const newKey = keyRenameTemplate[oldKey];
-                     if (newKey) {
-                        console.log(oldKey, '=>', newKey);
-                        delete Object.assign(store, { [newKey]: store[oldKey] })[oldKey];
-                     }
-                  });
+               for (const oldKey in store) {
+                  if (newKey = keyRenameTemplate[oldKey]) {
+                     console.log(oldKey, '=>', newKey);
+                     delete Object.assign(store, { [newKey]: store[oldKey] })[oldKey];
+                  }
+               }
                console.debug('new updated storage:', store);
                Storage.setParams(store, 'sync');
             }, 'sync');

@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'comments-visibility',
    title: 'Hide comments',
    run_on_pages: 'watch',

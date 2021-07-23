@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'redirect-disable',
    title: 'Clear links from redirects',
    run_on_pages: 'watch, channel',

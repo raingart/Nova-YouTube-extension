@@ -8,7 +8,7 @@
 // www.youtube.com/watch?v=ctMEGAcnYjI
 // www.youtube.com/watch?v=yFsmUBLn8O0
 
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
    run_on_pages: 'watch',

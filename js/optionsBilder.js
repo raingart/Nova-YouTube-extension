@@ -1,7 +1,6 @@
 console.debug("init optionsView.js");
 
-// plugins conteiner
-let _plugins_conteiner = [];
+window.nova_plugins = [];
 Plugins.load();
 
 const Opt = {
@@ -44,7 +43,7 @@ const Opt = {
    generate: {
 
       list(plugins_list) {
-         this.log('list _plugins_conteiner:', plugins_list);
+         this.log('list nova_plugins:', plugins_list);
 
          plugins_list.forEach(plugin => {
             try {
@@ -124,9 +123,18 @@ const Opt = {
                      case 'options':
                         value.forEach(option => {
                            const tagOption = document.createElement('option');
-                           tagOption.setAttribute('value', option.value);
-                           tagOption.textContent = option.label;
-                           if (option.hasOwnProperty('selected')) tagOption.setAttribute('selected', true);
+                           switch (typeof option) {
+                              case 'object':
+                                 tagOption.setAttribute('value', option.value);
+                                 tagOption.textContent = option.label;
+                                 if (option.hasOwnProperty('selected')) tagOption.setAttribute('selected', true);
+                                 break;
+
+                              case 'string':
+                                 tagOption.setAttribute('value', option);
+                                 tagOption.textContent = option.toLocaleUpperCase();
+                                 break;
+                           }
                            exportProperty.appendChild(tagOption);
                         });
                         break;
@@ -144,7 +152,8 @@ const Opt = {
                      // break; <-- need remove!
 
                      default:
-                        exportProperty.setAttribute(attr, value);
+                        exportProperty.setAttribute(attr, value); // value:string. For safe
+                        // exportProperty[attr] = value; // apply value:function. Like - onchange: function () {
                   };
                });
 
@@ -302,7 +311,7 @@ const Opt = {
    },
 
    init() {
-      this.generate.list.apply(this, [_plugins_conteiner]);
+      this.generate.list.apply(this, [window.nova_plugins]);
       this.eventListener();
    },
 

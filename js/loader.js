@@ -33,7 +33,7 @@ const App = {
 
       this.storage.load.apply(this);
       // load all Plugins
-      Plugins.injectScript('var _plugins_conteiner = [];');
+      Plugins.injectScript('window.nova_plugins = [];');
       Plugins.load(['ytc_lib.js']);
       Plugins.load(); // all
    },
@@ -57,63 +57,66 @@ const App = {
       console.groupCollapsed('plugins status');
 
       const forceLander = setTimeout(() => {
-         console.debug('force lander:', _plugins_conteiner.length + '/' + plugins_count);
+         console.debug('force lander:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(interval_lander);
-         // if delay load domLoaded
-         if (document.body && typeof YDOM === 'object' && _plugins_conteiner.length === plugins_count) {
+
+         if (document.body && typeof YDOM === 'object' && window.nova_plugins.length) {
             processLander();
+
+            // if delay load domLoaded
+         } else if (window.nova_plugins.length !== plugins_count) {
+            // show notice
+            // container.insertAdjacentHTML("beforeend",
+            //       `<div style="position:fixed; top:0; right:50%; transform:translateX(50%); margin-top:50px; z-index:9999; cursor:pointer; border-radius:2px; color:#fff; padding:10px; background-color:#0099ff; box-shadow:rgb(0 0 0 / 50%) 0px 0px 3px; font-size:12px;">
+            //          <h4>Failure on initialization ${app_name}</h4>
+            //          <div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>
+            //       </div>`);
+            const notice = document.createElement('div');
+            Object.assign(notice.style, {
+               position: 'fixed',
+               top: 0,
+               right: '50%',
+               transform: 'translateX(50%)',
+               'margin-top': '50px',
+               // bottom-right in the corner
+               // bottom: 0,
+               // right: 0,
+               // transform: 'none',
+               // 'margin': '50px',
+               'z-index': 9999,
+               'border-radius': '2px',
+               'background-color': typeof YDOM === 'object' ? '#0099ff' : '#f00',
+               'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
+               'font-size': '12px',
+               color: '#fff',
+               padding: '10px',
+               cursor: 'pointer',
+            });
+            // notice.addEventListener('click', ({ target }) => target.remove());
+            notice.addEventListener('click', () => notice.remove());
+            notice.innerHTML =
+               `<h4>Failure on initialization ${app_name}</h4>`
+               + (typeof YDOM === 'object'
+                  ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
+                  : `<div>Сritical Error</div>`);
+            document.body.appendChild(notice);
          }
-         // show notice
-         // container.insertAdjacentHTML("beforeend",
-         //       `<div style="position:fixed; top:0; right:50%; transform:translateX(50%); margin-top:50px; z-index:9999; cursor:pointer; border-radius:2px; color:#fff; padding:10px; background-color:#0099ff; box-shadow:rgb(0 0 0 / 50%) 0px 0px 3px; font-size:12px;">
-         //          <h4>Failure on initialization ${app_name}</h4>
-         //          <div>plugins loaded: ${_plugins_conteiner.length + '/' + plugins_count}</div>
-         //       </div>`);
-         const notice = document.createElement('div');
-         Object.assign(notice.style, {
-            position: 'fixed',
-            top: 0,
-            right: '50%',
-            transform: 'translateX(50%)',
-            'margin-top': '50px',
-            // bottom-right in the corner
-            // bottom: 0,
-            // right: 0,
-            // transform: 'none',
-            // 'margin': '50px',
-            'z-index': 9999,
-            'border-radius': '2px',
-            'background-color': typeof YDOM === 'object' ? '#0099ff' : '#f00',
-            'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
-            'font-size': '12px',
-            color: '#fff',
-            padding: '10px',
-            cursor: 'pointer',
-         });
-         // notice.addEventListener('click', ({ target }) => target.remove());
-         notice.addEventListener('click', () => notice.remove());
-         notice.innerHTML =
-            `<h4>Failure on initialization ${app_name}</h4>`
-            + (typeof YDOM === 'object'
-               ? `<div>plugins loaded: ${_plugins_conteiner.length + '/' + plugins_count}</div>`
-               : `<div>Сritical Error</div>`);
-         document.body.appendChild(notice);
       }, 1000 * 3); // 3sec
 
       const interval_lander = setInterval(() => {
          const domLoaded = document?.readyState !== 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
-         if (typeof YDOM === 'object' && _plugins_conteiner.length === plugins_count) {
+         if (typeof YDOM === 'object' && window.nova_plugins.length === plugins_count) {
             clearInterval(forceLander);
             processLander();
 
-         } else console.debug('loading:', _plugins_conteiner.length + '/' + plugins_count);
+         } else console.debug('loading:', window.nova_plugins.length + '/' + plugins_count);
 
       }, 100); // 100ms
 
       function processLander() {
-         console.debug('loaded:', _plugins_conteiner.length + '/' + plugins_count);
+         console.debug('loaded:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(interval_lander);
          plugins_executor({
             'user_settings': user_settings,
@@ -157,9 +160,13 @@ const App = {
 
 App.init();
 
+// YT player API
+// https://gist.github.com/Araxeus/fc574d0f31ba71d62215c0873a7b048e
+
 // test normal lite
-// https://www.youtube.com/watch?v=4ldjbjwim4k
-// https://www.youtube.com/watch?v=aCyGvGEtOwc
+// https://www.youtube.com/watch?v=4ldjbjwim4k 240
+// https://www.youtube.com/watch?v=aCyGvGEtOwc 360
+// https://www.youtube.com/watch?v=rFeBMv98X30 1080
 
 // example url new embed page
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1

@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'video-quality',
    title: 'Video quality',
    run_on_pages: 'watch, embed',
@@ -11,11 +11,11 @@ _plugins_conteiner.push({
       YDOM.waitElement('#movie_player')
          .then(player => {
             // keep quality in session
-            if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() === 'watch') {// no sense if in the embed
+            if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() == 'watch') { // no sense if in the embed
                player.addEventListener('onPlaybackQualityChange', function (quality) {
                   // console.debug('onPlaybackQualityChange', this); // this == window
                   // console.debug('document.activeElement,',document.activeElement);
-                  if (document.activeElement.getAttribute('role') === 'menuitemradio' // now focuse setting menu
+                  if (document.activeElement.getAttribute('role') == 'menuitemradio' // now focuse setting menu
                      && quality !== selectedQuality // the new quality
                      && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
                   ) {
@@ -27,17 +27,21 @@ _plugins_conteiner.push({
             player.addEventListener('onStateChange', setQuality.bind(player));
          });
 
+      const PLAYERSTATE = {
+         '-1': 'UNSTARTED',
+         0: 'ENDED',
+         1: 'PLAYING',
+         2: 'PAUSED',
+         3: 'BUFFERING',
+         5: 'CUED'
+      };
+
       function setQuality(state) {
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
-         // console.debug('onStateChange', ...arguments);
+         // console.debug('playerState', PLAYERSTATE[state]);
 
-         // -1: unstarted
-         // 0: ended
-         // 1: playing
-         // 2: paused
-         // 3: buffering
-         // 5: cued
-         if ((1 === state || 3 === state) && !setQuality.allow_change) {
+         // if ((1 == state || 3 == state) && !setQuality.allow_change) {
+         if (('PLAYING' == PLAYERSTATE[state] || 'BUFFERING' == PLAYERSTATE[state]) && !setQuality.allow_change) {
             setQuality.allow_change = true;
 
             const interval = setInterval(() => {
@@ -74,7 +78,8 @@ _plugins_conteiner.push({
                }
             }, 50); // 50ms
 
-         } else if (-1 === state || 0 === state) {
+            // } else if ('UNSTARTED' == PLAYERSTATE[state] || 'ENDED' == PLAYERSTATE[state]) {
+         } else if (state <= 0) {
             setQuality.allow_change = false;
          }
       }

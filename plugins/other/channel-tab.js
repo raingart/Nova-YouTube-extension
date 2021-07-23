@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'channel-default-tab',
    title: 'The default tab on the channel page',
    run_on_pages: 'channel',
@@ -10,7 +10,7 @@ _plugins_conteiner.push({
       // home page channel/user
       if (location.pathname.split('/').filter(i => i).length === 2) {
 
-         if (user_settings.channel_default_tab_mode === 'redirect') {
+         if (user_settings.channel_default_tab_mode == 'redirect') {
             location.href += '/' + user_settings.channel_default_tab;
 
          } else {

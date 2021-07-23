@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'header-short',
    title: 'Compact header',
    run_on_pages: 'all',

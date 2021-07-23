@@ -3,7 +3,7 @@
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'volume-wheel',
    title: 'Volume control',
    run_on_pages: 'watch, embed',
@@ -14,7 +14,7 @@ _plugins_conteiner.push({
 
       YDOM.waitElement('#movie_player')
          .then(player => {
-            // show indicator
+            // trigger default indicator
             player.querySelector('video')
                .addEventListener('volumechange', function () {
                   // console.debug('volumechange', player.getVolume(), this.volume);

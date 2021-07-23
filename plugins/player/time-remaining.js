@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'time-remaining',
    title: 'Remaining Time',
    run_on_pages: 'watch, embed',

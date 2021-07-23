@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'comments-expand',
    title: 'Expand comments',
    run_on_pages: 'watch',

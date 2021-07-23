@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'video-description-expand',
    title: 'Expands video description',
    run_on_pages: 'watch',

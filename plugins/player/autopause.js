@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'video-autopause',
    title: 'Video autopause',
    run_on_pages: 'watch, embed',
@@ -13,23 +13,29 @@ _plugins_conteiner.push({
             player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
          });
 
-      function onPlayerStateChange(state) {
-         // console.debug('onStateChange', ...arguments);
+      const PLAYERSTATE = {
+         '-1': 'UNSTARTED',
+         0: 'ENDED',
+         1: 'PLAYING',
+         2: 'PAUSED',
+         3: 'BUFFERING',
+         5: 'CUED'
+      };
 
+      function onPlayerStateChange(state) {
+         // console.debug('playerState', PLAYERSTATE[state]);
          if (user_settings.video_autopause_ignore_playlist && location.href.includes('list=')) return;
 
-         // -1: unstarted
-         // 0: ended
-         // 1: playing
-         // 2: paused
-         // 3: buffering
-         // 5: cued
-         if (1 === state && !is_change_quality) {
+         // if (1 === state && !is_change_quality) {
+         if ('PLAYING' == PLAYERSTATE[state] && !is_change_quality) {
             is_change_quality = true;
             this.pauseVideo();
-            // console.debug('pauseVideo', state);
+            // console.debug('pauseVideo', PLAYERSTATE[state]);
 
-         } else if (state <= 0) is_change_quality = false;
+            // } else if ('UNSTARTED' == PLAYERSTATE[state] || 'ENDED' == PLAYERSTATE[state]) {
+         } else if (state <= 0) {
+            is_change_quality = false;
+         }
       }
 
    },

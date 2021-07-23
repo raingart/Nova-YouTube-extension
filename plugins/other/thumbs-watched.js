@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'thumbnails-watched',
    title: 'Mark watched',
    run_on_pages: 'all',

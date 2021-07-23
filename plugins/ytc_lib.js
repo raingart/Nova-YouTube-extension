@@ -8,16 +8,16 @@ const YDOM = {
 
       return new Promise((resolve, reject) => {
          try {
-            let interval
+            let nodeInterval
             const checkIfExists = () => {
                if (el = document.querySelector(selector)) {
-                  if (interval !== undefined) clearInterval(interval);
+                  if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
                   resolve(el);
 
                } else return;
             }
             checkIfExists();
-            interval = setInterval(checkIfExists, 50); // ms
+            nodeInterval = setInterval(checkIfExists, 50); // ms
          } catch (err) {
             reject(new Error('Error waitForElement', err));
          }
@@ -25,6 +25,7 @@ const YDOM = {
    },
 
    // waitForElement(selector = required()) {
+   //    // alternative https://git.io/waitForKeyElements.js
    //    // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
    //    // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
 
@@ -174,6 +175,7 @@ const YDOM = {
    },
 
    bezelTrigger(text = '') {
+      // console.debug('bezelTrigger', ...arguments);
       if (typeof fateBezel === 'number') clearTimeout(fateBezel);
       const bezelEl = document.querySelector('.ytp-bezel-text');
       if (!bezelEl) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
@@ -182,8 +184,8 @@ const YDOM = {
          bezelConteiner = bezelEl.parentElement.parentElement,
          CLASS_VALUE_TOGGLE = 'ytp-text-root';
 
-      if (!this.bezel_inited) {
-         this.bezel_inited = true;
+      if (!this.bezel_css_inited) {
+         this.bezel_css_inited = true;
          this.css.push(
             `.${CLASS_VALUE_TOGGLE} { display: block !important; }
             .${CLASS_VALUE_TOGGLE} .ytp-bezel-text-wrapper {
@@ -197,7 +199,10 @@ const YDOM = {
       bezelEl.textContent = text;
       bezelConteiner.classList.add(CLASS_VALUE_TOGGLE);
 
-      fateBezel = setTimeout(() => bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE), 600); // 600ms
+      fateBezel = setTimeout(() => {
+         bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE);
+         bezelEl.textContent = ''; // fix not showing bug when frequent calls
+      }, 600); // 600ms
    },
 
    formatDuration(total_seconds, no_zeros) {

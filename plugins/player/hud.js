@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'player-indicator',
    title: 'Replace default indicator',
    run_on_pages: 'watch, embed',
@@ -8,28 +8,37 @@ _plugins_conteiner.push({
 
       const
          SELECTOR_ID = 'player-indicator-info',
-         COLOR_HUD = user_settings.player_indicator_color || '#ddd';
+         COLOR_HUD = user_settings.player_indicator_color || '#ff0000';
 
       YDOM.waitElement('video')
          .then(video => {
-            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             const player = document.getElementById('movie_player');
-
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             // volume
             video.addEventListener('volumechange', function () {
                // console.debug('volumechange', player.getVolume(), this.volume); // there is a difference
-               window.HUD.set(Math.round(player.getVolume()), '%');
+               HUD.set(Math.round(player.getVolume()), '%');
             });
-
             // rate
             video.addEventListener('ratechange', function () {
                // console.debug('ratechange', this.playbackRate);
-               window.HUD.set(this.playbackRate, 'x');
+               HUD.set(this.playbackRate, 'x');
             });
          });
 
-      // export to window obj. For use in other plugins
-      window.HUD = {
+      // Listener default indicator
+      YDOM.waitElement('.ytp-bezel-text')
+         .then(target => {
+            new MutationObserver(mutations => {
+               for (const mutation of mutations) {
+                  // console.log('bezel mutation detected', mutation.type, target.textContent);
+                  if (target.textContent) HUD.set(target.textContent);
+               }
+            })
+               .observe(target, { childList: true }); // watch for textContent
+         });
+
+      const HUD = {
          get() {
             return this.conteiner || this.create();
          },
@@ -62,7 +71,7 @@ _plugins_conteiner.push({
                .insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
 
             this.conteiner = document.getElementById(SELECTOR_ID);
-            this.el = this.conteiner.querySelector('span'); // export el
+            this.hudSpan = this.conteiner.querySelector('span'); // export el
 
             // add to div user_settings.player_indicator_type style
             // const [indicator_type, span_align] = user_settings.player_indicator_type.split('=', 2); // 2 = max param;
@@ -74,13 +83,13 @@ _plugins_conteiner.push({
                      width: '30%',
                      'font-size': '1.2em',
                   });
-                  Object.assign(this.el.style, {
+                  Object.assign(this.hudSpan.style, {
                      'background-color': COLOR_HUD,
                      transition: 'width 100ms ease-out 0s',
                      display: 'inline-block',
                   });
-                  // if (span_align === 'left') {
-                  //    Object.assign(this.el.style, {
+                  // if (span_align == 'left') {
+                  //    Object.assign(this.hudSpan.style, {
                   //       float: 'left',
                   //    });
                   // }
@@ -98,14 +107,14 @@ _plugins_conteiner.push({
             return this.conteiner;
          },
 
-         set(pt = 0, rate_suffix = '') {
+         set(pt = 100, rate_suffix = '') {
             // console.debug('HUD set', ...arguments);
-            if (typeof fateHUD === 'number') clearTimeout(fateHUD);
+            if (typeof fateNovaHUD === 'number') clearTimeout(fateNovaHUD);
 
-            const hud = this.get();
+            let hudConteiner = this.get();
             const text = pt + rate_suffix;
 
-            if (rate_suffix === 'x') { // rate to pt
+            if (rate_suffix == 'x') { // rate to pt
                const maxPercent = (+user_settings.rate_step % .25) === 0 ? 2 : 3;
                pt = (+pt / maxPercent) * 100;
             }
@@ -113,29 +122,30 @@ _plugins_conteiner.push({
 
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
-                  this.el.style.width = pt + '%';
-                  this.el.textContent = text;
+                  this.hudSpan.style.width = pt + '%';
+                  this.hudSpan.textContent = text;
                   break;
 
-               // case 'bar-center-left':
-               //    hud.style.background = `linear-gradient(to right, ${COLOR_HUD}d0 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
-               //    this.el.style.width = pt + '%';
-               //    this.el.textContent = text;
+               // case 'bar-left':
+               //    hudConteiner.style.background = `linear-gradient(to right, ${COLOR_HUD}50 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
+               //    this.hudSpan.style.width = pt + '%';
+               //    this.hudSpan.textContent = text;
                //    break;
 
+               // case 'text-top':
                default:
-                  this.el.textContent = text;
+                  this.hudSpan.textContent = text;
             }
 
-            hud.style.transition = 'none';
-            hud.style.opacity = 1;
-            // hud.style.visibility = 'visible';
+            hudConteiner.style.transition = 'none';
+            hudConteiner.style.opacity = 1;
+            // hudConteiner.style.visibility = 'visible';
 
-            fateHUD = setTimeout(() => {
-               hud.style.transition = 'opacity 200ms ease-in';
-               hud.style.opacity = null;
-               // hud.style.visibility = 'hidden';
-            }, 800); //total 1s = 800ms + 200ms(hud.style.transition)
+            fateNovaHUD = setTimeout(() => {
+               hudConteiner.style.transition = 'opacity 200ms ease-in';
+               hudConteiner.style.opacity = null;
+               // hudConteiner.style.visibility = 'hidden';
+            }, 800); //total 1s = 800ms + 200ms(hudConteiner.style.transition)
          }
       };
 
@@ -147,6 +157,7 @@ _plugins_conteiner.push({
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar+center', value: 'bar-center' },
+            // { label: 'bar+center', value: 'bar-left' },
          ],
       },
       player_indicator_color: {

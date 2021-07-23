@@ -1,4 +1,4 @@
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'square-avatars',
    title: 'Square avatars',
    run_on_pages: 'all',

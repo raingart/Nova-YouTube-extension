@@ -1,4 +1,7 @@
-_plugins_conteiner.push({
+// onomal behavior. There are time markers but no chapters:
+// https://www.youtube.com/watch?v=z1gaUI9gBdk
+
+window.nova_plugins.push({
    id: 'time-jump',
    title: 'Time jump',
    run_on_pages: 'watch, embed',
@@ -6,81 +9,94 @@ _plugins_conteiner.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      YDOM.waitElement('video')
-         .then(video => {
-            doubleKeyPressListener(jumpTime.bind(video), user_settings.time_jump_hotkey);
+      YDOM.waitElement('#movie_player')
+         .then(player => {
+            doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
 
-            if (user_settings.jump_offset) {
-               YDOM.waitElement('.ytp-progress-bar')
-                  .then(progressContainer => {
-                     if (tooltipEl = document.querySelector('.ytp-tooltip-text')) {
-                        YDOM.css.push(
-                           `.ytp-tooltip-text:after {
-                              content: attr(data-before);
-                              color: #ffcc00;
-                           }`);
-                        // color: ${YDOM.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
-
-                        progressContainer.addEventListener('mousemove', function updateOffsetTime() {
-                           const
-                              cursorTime = tooltipEl.textContent.split(':').reduce((acc, time) => (60 * acc) + parseInt(time)),
-                              offsetTime = cursorTime - video.currentTime,
-                              sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
-                           // updateOffsetTime
-                           tooltipEl.setAttribute('data-before', ` ${sign + YDOM.formatDuration(offsetTime)}`);
-                        });
-                        progressContainer.addEventListener('mouseleave', function hideOffsetTime() {
-                           tooltipEl.removeAttribute('data-before');
-                        });
-                     }
-                  })
+            if (user_settings.time_jump_title_offset) {
+               addTitleOffset(player.getCurrentTime());
             }
          });
 
       function jumpTime() {
          if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
-            && !document.activeElement.parentElement.slot.toLowerCase().includes('input') // comment-area
-            // && !window.getSelection()
+            && !document.activeElement.isContentEditable // comment-area
          ) {
-            let msg = `+${user_settings.time_jump_step} sec`;
-
-            if (sec = seekToNextChapter.apply(this)) {
-               msg = `Chapter • ${YDOM.formatDuration(sec)}`;
+            let msg;
+            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 // check for chapters
+               && (chapterIndex = getNextChapterIndex(this.getCurrentTime()))
+            ) {
+               this.seekToChapterWithAnimation(chapterIndex);
+               const chapterName = document.querySelector('.ytp-chapter-title-content')?.textContent // after seek
+                  || (chapterIndex + 1);  // numbering does not start from 0
+               msg = `Chapter • ` + chapterName;
 
             } else {
-               sec = +user_settings.time_jump_step + this.currentTime;
+               this.seekBy(+user_settings.time_jump_step);
+               msg = `+${user_settings.time_jump_step} sec (${YDOM.formatDuration(this.getCurrentTime())})`;
             }
-            // console.debug('seekTo', sec);
-            this.currentTime = sec;
-            // show indicator
-            YDOM.bezelTrigger(msg); // show default indicator
-            window?.HUD.set(msg); // if the "player-indicator" plugin is enabled
+
+            YDOM.bezelTrigger(msg); // trigger default indicator
          }
 
-         function seekToNextChapter() {
-            if ((chapterscontainer = document.querySelector('.ytp-chapters-container'))
-               && chapterscontainer?.children.length > 1
-               && (progressContainerWidth = parseInt(YDOM.css.getValue({ selector: chapterscontainer, property: 'width' })))
-            ) {
-               const progressRatio = this.currentTime / this.duration;
-               let passedWidth = 0;
-               for (const chapter of chapterscontainer.children) {
-                  const
-                     chapterWidth = parseInt(YDOM.css.getValue({ selector: chapter, property: 'width' })),
-                     сhapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
-
-                  // console.debug('сhapter', сhapterRatio, chapterWidth);
-                  if (сhapterRatio >= progressRatio) {
-                     return Math.floor(сhapterRatio * this.duration);
+         function getNextChapterIndex(current_time) {
+            let prevTime = -1;
+            const chapterList = (window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription
+               || document.getElementById('description')?.textContent)
+               .match(/(\d+:\d+)/g) // get time
+               ?.map((curr, i, array) => { // controversial point. Drops time stamps without chronology
+                  // const prev = array[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+                  const currTime = hmsToSecondsOnly(curr);
+                  // console.debug('>', currTime, prevTime);
+                  if (currTime > prevTime) {
+                     prevTime = currTime;
+                     return currTime;
                   }
-                  // accumulate passed
-                  passedWidth += chapterWidth
-                     + parseInt(YDOM.css.getValue({ selector: chapter, property: 'margin-left' }))
-                     + parseInt(YDOM.css.getValue({ selector: chapter, property: 'margin-right' }));
+               }); // sec
+            console.debug('chapterList', chapterList);
+
+            nextChapterIndex = chapterList?.findIndex(c => c >= current_time);
+            // console.debug('nextChapter', current_time, ' jump to ', chapterList[nextChapterIndex], `(${nextChapterIndex})`);
+            return nextChapterIndex;
+
+            function hmsToSecondsOnly(str) {
+               const p = str.split(':');
+               let = s = 0, m = 1;
+
+               while (p.length) {
+                  s += m * parseInt(p.pop(), 10);
+                  m *= 60;
                }
-               // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chapterscontainer?.children.length, progressContainerWidth, '/', progressRatio);
+               return s;
             }
          }
+      }
+
+      function addTitleOffset(current_time) {
+         YDOM.css.push(
+            `.ytp-tooltip-text:after {
+            content: attr(data-before);
+            color: #ffcc00;
+         }`);
+         // color: ${YDOM.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
+
+         YDOM.waitElement('.ytp-progress-bar')
+            .then(progressContainer => {
+               if (tooltipEl = document.querySelector('.ytp-tooltip-text')) {
+                  progressContainer.addEventListener('mousemove', function updateOffsetTime() {
+                     const
+                        cursorTime = tooltipEl.textContent.split(':').reduce((acc, time) => (60 * acc) + parseInt(time)),
+                        offsetTime = cursorTime - +current_time,
+                        sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
+                     // updateOffsetTime
+                     tooltipEl.setAttribute('data-before', ` ${sign + YDOM.formatDuration(offsetTime)}`);
+                  });
+
+                  progressContainer.addEventListener('mouseleave', function hideOffsetTime() {
+                     tooltipEl.removeAttribute('data-before');
+                  });
+               }
+            })
       }
 
       function doubleKeyPressListener(callback, keyCodeFilter) {
@@ -134,7 +150,7 @@ _plugins_conteiner.push({
             { label: 'ctrl', value: 17, selected: true },
          ],
       },
-      jump_offset: {
+      time_jump_title_offset: {
          _tagName: 'input',
          label: 'Show time offset on progress bar',
          type: 'checkbox',

@@ -3,7 +3,7 @@
 // short and has [Private video]:
 // https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY
 
-_plugins_conteiner.push({
+window.nova_plugins.push({
    id: 'playlist-duration',
    title: 'Show Playlist Duration',
    run_on_pages: 'watch, playlist',
@@ -20,86 +20,86 @@ _plugins_conteiner.push({
 
       if (!playlistId) return;
 
-      // playlist page
-      if (YDOM.currentPageName() === 'playlist') {
-         YDOM.waitElement('#stats yt-formatted-string:first-child')
-            .then(el => {
-               if (duration = getPlaylistDuration()) {
-                  insertToHTML({ 'container': el, 'text': duration });
+      switch (YDOM.currentPageName()) {
+         case 'playlist':
+            YDOM.waitElement('#stats yt-formatted-string:first-child')
+               .then(el => {
+                  if (duration = getPlaylistDuration()) {
+                     insertToHTML({ 'container': el, 'text': duration });
 
-               } else {
-                  getPlaylistDurationFromThumbnails({
-                     'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
-                  })
-                     .then(duration => {
-                        if (duration) {
-                           insertToHTML({ 'container': el, 'text': duration });
-                        }
-                     });
-               }
-
-               function getPlaylistDuration() {
-                  const storage = sessionStorage.getItem(STORE_NAME);
-                  if (storage) {
-                     // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
-                     return storage;
+                  } else {
+                     getPlaylistDurationFromThumbnails({
+                        'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
+                     })
+                        .then(duration => {
+                           if (duration) {
+                              insertToHTML({ 'container': el, 'text': duration });
+                           }
+                        });
                   }
-                  const vids = window.ytInitialData.contents.twoColumnBrowseResultsRenderer
-                     .tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
-                        .tabs[0].tabRenderer.content.sectionListRenderer
-                        .contents[0].itemSectionRenderer
-                        .contents[0].playlistVideoListRenderer?.contents;
-                  const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                  return YDOM.formatDuration(sec);
-               }
-            });
-      }
-
-      // watch page
-      if (YDOM.currentPageName() === 'watch') {
-         YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
-            .then(el => {
-               YDOM.waitElement('#playlist-items #text:not(:empty)')
-                  .then(vids => {
-                     if (duration = getPlaylistDuration()) {
-                        insertToHTML({ 'container': el, 'text': duration });
-
-                     } else {
-                        getPlaylistDurationFromThumbnails({
-                           'container': document.querySelector('#secondary #playlist'),
-                           'items_selector': '#playlist-items #unplayableText[hidden]',
-                        })
-                           .then(duration => {
-                              if (duration) {
-                                 insertToHTML({ 'container': el, 'text': duration });
-                              }
-                           });
+                  function getPlaylistDuration() {
+                     const storage = sessionStorage.getItem(STORE_NAME);
+                     if (storage) {
+                        // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
+                        return storage;
                      }
+                     const vids = window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer
+                        .tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
+                           .tabs[0].tabRenderer.content.sectionListRenderer
+                           .contents[0].itemSectionRenderer
+                           .contents[0].playlistVideoListRenderer?.contents;
+                     const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                  });
-
-               function getPlaylistDuration() {
-                  const storage = sessionStorage.getItem(STORE_NAME);
-                  if (storage) {
-                     // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
-                     return storage;
+                     return YDOM.formatDuration(sec);
                   }
-                  const vids = document.querySelector('ytd-watch, ytd-watch-flexy')
-                     ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
+               });
+            break;
 
-                  const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
+         case 'watch':
+            YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
+               .then(el => {
+                  YDOM.waitElement('#playlist-items #text:not(:empty)')
+                     .then(vids => {
+                        if (duration = getPlaylistDuration()) {
+                           insertToHTML({ 'container': el, 'text': duration });
 
-                  // console.debug('[...vids]', vids);
+                        } else {
+                           getPlaylistDurationFromThumbnails({
+                              'container': document.querySelector('#secondary #playlist'),
+                              'items_selector': '#playlist-items #unplayableText[hidden]',
+                           })
+                              .then(duration => {
+                                 if (duration) {
+                                    insertToHTML({ 'container': el, 'text': duration });
+                                 }
+                              });
+                        }
 
-                  const duration = [...vids]
-                     .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
-                     .map(e => strToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText))
-                     .reduce((acc, time) => acc + time, 0);
+                     });
 
-                  return YDOM.formatDuration(duration);
-               }
-            });
+                  function getPlaylistDuration() {
+                     const storage = sessionStorage.getItem(STORE_NAME);
+                     if (storage) {
+                        // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
+                        return storage;
+                     }
+                     const vids = document.querySelector('ytd-watch, ytd-watch-flexy')
+                        ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
+
+                     const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
+
+                     // console.debug('[...vids]', vids);
+
+                     const duration = [...vids]
+                        .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
+                        .map(e => strToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
+                        .reduce((acc, time) => acc + time, 0);
+
+                     return YDOM.formatDuration(duration);
+                  }
+               });
+            break;
       }
 
       function getPlaylistDurationFromThumbnails({ items_selector = required(), container }) {
@@ -149,7 +149,7 @@ _plugins_conteiner.push({
             el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
             el.id = SELECTOR_ID;
             el.style.display = 'inline-block';
-            if (YDOM.currentPageName() === 'watch') el.style.margin = '0 .5em';
+            if (YDOM.currentPageName() == 'watch') el.style.margin = '0 .5em';
             container.after(el);
             return document.getElementById(SELECTOR_ID);
          })())
