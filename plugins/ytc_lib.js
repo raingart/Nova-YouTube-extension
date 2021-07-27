@@ -7,20 +7,20 @@ const YDOM = {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
       return new Promise((resolve, reject) => {
-         try {
-            let nodeInterval
-            const checkIfExists = () => {
-               if (el = document.querySelector(selector)) {
-                  if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
-                  resolve(el);
+         // try {
+         let nodeInterval
+         const checkIfExists = () => {
+            if (el = document.querySelector(selector)) {
+               if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
+               resolve(el);
 
-               } else return;
-            }
-            checkIfExists();
-            nodeInterval = setInterval(checkIfExists, 50); // ms
-         } catch (err) {
-            reject(new Error('Error waitForElement', err));
+            } else return;
          }
+         checkIfExists();
+         nodeInterval = setInterval(checkIfExists, 50); // ms
+         // } catch (err) { // does not output the reason/line to the stack
+         //    reject(new Error('Error waitElement', err));
+         // }
       })
    },
 
@@ -73,10 +73,12 @@ const YDOM = {
          YDOM.log('watch.process', { selector, callback });
          document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
             .forEach(el => {
-               YDOM.log('watch.process.viewed', selector);
-               if (attr_mark) el.setAttribute(attr_mark, true);
-               if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
-               callback(el);
+               if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
+                  YDOM.log('watch.process.viewed', selector);
+                  if (attr_mark) el.setAttribute(attr_mark, true);
+                  if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
+                  callback(el);
+               }
             });
       }
    },
@@ -227,8 +229,7 @@ const YDOM = {
       set(query = {}, urlString) {
          // YDOM.log('queryURL.set:', ...arguments);
          const url = new URL(urlString || location);
-         Object.entries(query)
-            .forEach(([key, value]) => url.searchParams.set(key, value));
+         Object.entries(query).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
       },
    },

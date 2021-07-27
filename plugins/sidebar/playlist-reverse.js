@@ -65,7 +65,7 @@ window.nova_plugins.push({
                   if (reverseEnable) {
                      location.reload(); // force apply removeEventListener
                      // does not work
-                     // player.removeEventListener('onStateChange', onPlayerStateChange.bind(player));
+                     // player.removeEventListener('onStateChange', onPlayerStateChange.bind(player), true);
                      // reverseEnable = false;
 
                   } else {

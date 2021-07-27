@@ -136,15 +136,15 @@ window.nova_plugins.push({
                },
             };
 
-            const isMusic = [
+            const isMusic = () => [
                location.href,
                document.querySelector('meta[itemprop="genre"][content]')?.content,
                window.ytplayer?.config?.args.raw_player_response.microformat.playerMicroformatRenderer.category
             ]
-               .some(i => i?.toLowerCase() == 'music');
+               .some(i => i?.toLowerCase().includes('music'));
 
             // init rate_default
-            if (+user_settings.rate_default !== 1 && (user_settings.rate_default_ignore_music && !isMusic)) {
+            if (+user_settings.rate_default !== 1 && (user_settings.rate_default_apply_music || !isMusic())) {
                // console.debug('update rate_default', user_settings.rate_default);
                playerRate.set(user_settings.rate_default);
             }
@@ -164,10 +164,11 @@ window.nova_plugins.push({
          max: 2,
          value: 1,
       },
-      rate_default_ignore_music: {
+      rate_default_apply_music: {
          _tagName: 'input',
-         label: 'Ignore music',
+         label: 'Apply to music',
          type: 'checkbox',
+         title: 'Music genre videos are ignored by default',
          'data-dependent': '{"rate_default":"!1"}',
       },
       rate_step: {

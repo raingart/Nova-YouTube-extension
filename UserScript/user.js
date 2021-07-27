@@ -7,10 +7,10 @@ const
 
 if (!isOptionsPage()) return;
 landerPlugins();
-addOptionsButton();
+renderSettingButton();
 reflectException();
 
-function addOptionsButton() {
+function renderSettingButton() {
    YDOM.waitElement('#masthead #buttons > *:first-child')
       .then(container => {
          const a = document.createElement('a');
@@ -32,7 +32,7 @@ function addOptionsButton() {
          container.prepend(a);
       });
 }
-// function addOptionsButton() {
+// function renderSettingButton() {
 //    YDOM.waitElement('#end:last-child')
 //    // YDOM.waitElement('#end')
 //       .then(container => {
@@ -119,40 +119,56 @@ function isOptionsPage() {
             PopulateForm.fill(user_settings); // fill form
             attrDependencies();
             document.body.classList.remove("preload");
+            // fix/ re-call // remove api warn if has api
+            if (user_settings && user_settings['custom-api-key']) {
+               document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
+            }
          }, 500); // 500ms
-      });
 
-      function attrDependencies() {
-         document.querySelectorAll("[data-dependent]")
-            .forEach(dependentItem => {
-               // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-               const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
-               const handler = () => showOrHide(dependentItem, dependentsJson);
-               document.getElementById(Object.keys(dependentsJson))?.addEventListener("change", handler);
-               // init state
-               handler();
-            });
+         function attrDependencies() {
+            document.querySelectorAll("[data-dependent]")
+               .forEach(dependentItem => {
+                  // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
+                  const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
+                  const handler = () => showOrHide(dependentItem, dependentsJson);
+                  document.getElementById(Object.keys(dependentsJson))?.addEventListener("change", handler);
+                  // init state
+                  handler();
+               });
 
-         function showOrHide(dependentItem, dependentsList) {
-            // console.debug('showOrHide', ...arguments);
-            for (const name in dependentsList) {
-               const reqParent = document.getElementsByName(name)[0];
-               if (!reqParent) return console.error('error showOrHide:', name);
+            function showOrHide(dependentItem, dependentsList) {
+               // console.debug('showOrHide', ...arguments);
+               for (const name in dependentsList) {
+                  const reqParent = document.getElementsByName(name)[0];
+                  if (!reqParent) return console.error('error showOrHide:', name);
 
-               for (const values of [dependentsList[name]]) {
-                  // console.debug('check', name, reqParent.value + '=' + values);
-                  if ((reqParent.checked && values) || values.includes(reqParent.value)) {
-                     // console.debug('show:', name);
-                     dependentItem.classList.remove("hide");
+                  for (const values of [dependentsList[name]]) {
+                     if ((!values.toString().startsWith('!') && ((reqParent.checked && values) || values.includes(reqParent.value)))
+                        // reserve
+                        || (values.toString().startsWith('!') && reqParent.value !== values.toString().replace('!', ''))
+                     ) {
+                        // console.debug('show:', name);
+                        dependentItem.classList.remove("hide");
+                        childInputDisable(false);
 
-                  } else {
-                     // console.debug('hide:', name);
-                     dependentItem.classList.add("hide");
+                     } else {
+                        // console.debug('hide:', name);
+                        dependentItem.classList.add("hide");
+                        childInputDisable(true);
+                     }
                   }
+               }
+
+               function childInputDisable(status = false) {
+                  dependentItem.querySelectorAll('input, textarea, select')
+                     .forEach(childItem => {
+                        childItem.disabled = status;
+                        // dependentItem.readOnly = status;
+                     });
                }
             }
          }
-      }
+      });
 
    } else if (!user_settings || !Object.keys(user_settings).length) {
       if (confirm('Active plugins undetected. Open the settings page?')) window.open(optionsPage);

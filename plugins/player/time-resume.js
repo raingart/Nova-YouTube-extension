@@ -39,7 +39,7 @@ window.nova_plugins.push({
             // url param method
             // if (!sessionStorage.hasOwnProperty(cacheName)) {
             // const urlParams = new URLSearchParams(location.search);
-            // urlParams.set('t', time);
+            // urlParams.set('t', time + 's');
             // location.search = urlParams;
          }
       }

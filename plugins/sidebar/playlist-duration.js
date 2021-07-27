@@ -1,7 +1,7 @@
-// for test
+// for test:
 // https://www.youtube.com/playlist?list=WL
-// short and has [Private video]:
-// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY
+// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
+// https://www.youtube.com/watch?v=oxqQw1o5Tuk&list=RDlaemnkfj1lo - hidden playlist conteiner
 
 window.nova_plugins.push({
    id: 'playlist-duration',
@@ -13,10 +13,11 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         CACHE_PREFIX = 'playlist-duration-time:',
+         SELECTOR_ID = 'playlist-duration-time',
+         CACHE_PREFIX = SELECTOR_ID + ':',
          playlistId = YDOM.queryURL.get('list'),
          STORE_NAME = CACHE_PREFIX + playlistId,
-         SELECTOR_ID = 'playlist-duration-time';
+         timeToSec = str => str?.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
 
       if (!playlistId) return;
 
@@ -57,6 +58,12 @@ window.nova_plugins.push({
             break;
 
          case 'watch':
+            if (!document.getElementById(SELECTOR_ID)) {
+               // fix hidden playlist conteiner
+               YDOM.css.push(
+                  `#secondary #playlist:hover #publisher-container [hidden] { display: inline !important; }`);
+            }
+
             YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
                .then(el => {
                   YDOM.waitElement('#playlist-items #text:not(:empty)')
@@ -86,14 +93,11 @@ window.nova_plugins.push({
                      }
                      const vids = document.querySelector('ytd-watch, ytd-watch-flexy')
                         ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
-
-                     const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
-
                      // console.debug('[...vids]', vids);
 
                      const duration = [...vids]
                         .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
-                        .map(e => strToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
+                        .map(e => timeToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
                         .reduce((acc, time) => acc + time, 0);
 
                      return YDOM.formatDuration(duration);
@@ -130,9 +134,8 @@ window.nova_plugins.push({
 
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
-            const strToSec = s => s.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
             const duration = [...nodes]
-               .map(e => strToSec(e.textContent))
+               .map(e => timeToSec(e.textContent))
                .reduce((acc, time) => acc + time, 0);
 
             return YDOM.formatDuration(duration);

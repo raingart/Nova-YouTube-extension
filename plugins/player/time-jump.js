@@ -1,5 +1,6 @@
-// onomal behavior. There are time markers but no chapters:
-// https://www.youtube.com/watch?v=z1gaUI9gBdk
+// for test:
+// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - There are timestamp but no chapters: Еhree-digit time
+// https://www.youtube.com/watch?v=egAB2qtVWFQ - chapter title ahead of timestamp
 
 window.nova_plugins.push({
    id: 'time-jump',
@@ -14,7 +15,7 @@ window.nova_plugins.push({
             doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
 
             if (user_settings.time_jump_title_offset) {
-               addTitleOffset(player.getCurrentTime());
+               addTitleOffset.apply(player);
             }
          });
 
@@ -22,14 +23,22 @@ window.nova_plugins.push({
          if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
             && !document.activeElement.isContentEditable // comment-area
          ) {
+            const chapterList = getChapterList();
+            console.debug('chapterList', chapterList);
             let msg;
-            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 // check for chapters
-               && (chapterIndex = getNextChapterIndex(this.getCurrentTime()))
-            ) {
-               this.seekToChapterWithAnimation(chapterIndex);
-               const chapterName = document.querySelector('.ytp-chapter-title-content')?.textContent // after seek
-                  || (chapterIndex + 1);  // numbering does not start from 0
-               msg = `Chapter • ` + chapterName;
+            // if has chapters
+            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 && chapterList?.length) {
+               const nextChapterIndex = chapterList?.findIndex(c => c?.seconds >= this.getCurrentTime());
+               this.seekToChapterWithAnimation(nextChapterIndex);
+               msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+                  || chapterList[nextChapterIndex].name) + ` (${chapterList[nextChapterIndex].time})`;
+               // console.debug(`nextChapter(1): ${this.getCurrentTime()} jump to ${chapterList[nextChapterIndex]}`);
+
+            } else if (chapterList?.length) {
+               const nextChapterData = chapterList?.find(c => c?.seconds >= this.getCurrentTime());
+               // console.debug(`nextChapter(2): jump from ${this.getCurrentTime()} to ${nextChapterData.seconds} sec`);
+               this.seekTo(nextChapterData.seconds);
+               msg = `Chapter • ${nextChapterData.name} (${nextChapterData.time})`;
 
             } else {
                this.seekBy(+user_settings.time_jump_step);
@@ -39,25 +48,23 @@ window.nova_plugins.push({
             YDOM.bezelTrigger(msg); // trigger default indicator
          }
 
-         function getNextChapterIndex(current_time) {
+         // function getNextChapterIndex() {
+         function getChapterList() {
             let prevTime = -1;
-            const chapterList = (window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription
-               || document.getElementById('description')?.textContent)
-               .match(/(\d+:\d+)/g) // get time
-               ?.map((curr, i, array) => { // controversial point. Drops time stamps without chronology
+            return [...document.getElementById('description')?.textContent.matchAll(/(\d{2,}:\d{2,}(:\d{2,})?)(.+$)?/gm)]
+               .map((curr, i, array) => {
                   // const prev = array[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-                  const currTime = hmsToSecondsOnly(curr);
-                  // console.debug('>', currTime, prevTime);
+                  const currTime = hmsToSecondsOnly(curr[1]);
                   if (currTime > prevTime) {
                      prevTime = currTime;
-                     return currTime;
+                     return {
+                        index: ++i,
+                        seconds: currTime,
+                        time: curr[1],
+                        name: curr[3]?.toString().trim(),
+                     }
                   }
-               }); // sec
-            console.debug('chapterList', chapterList);
-
-            nextChapterIndex = chapterList?.findIndex(c => c >= current_time);
-            // console.debug('nextChapter', current_time, ' jump to ', chapterList[nextChapterIndex], `(${nextChapterIndex})`);
-            return nextChapterIndex;
+               });
 
             function hmsToSecondsOnly(str) {
                const p = str.split(':');
@@ -72,7 +79,7 @@ window.nova_plugins.push({
          }
       }
 
-      function addTitleOffset(current_time) {
+      function addTitleOffset() {
          YDOM.css.push(
             `.ytp-tooltip-text:after {
             content: attr(data-before);
@@ -83,10 +90,10 @@ window.nova_plugins.push({
          YDOM.waitElement('.ytp-progress-bar')
             .then(progressContainer => {
                if (tooltipEl = document.querySelector('.ytp-tooltip-text')) {
-                  progressContainer.addEventListener('mousemove', function updateOffsetTime() {
+                  progressContainer.addEventListener('mousemove', () => {
                      const
                         cursorTime = tooltipEl.textContent.split(':').reduce((acc, time) => (60 * acc) + parseInt(time)),
-                        offsetTime = cursorTime - +current_time,
+                        offsetTime = cursorTime - this.getCurrentTime(),
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
                      tooltipEl.setAttribute('data-before', ` ${sign + YDOM.formatDuration(offsetTime)}`);

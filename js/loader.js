@@ -66,23 +66,13 @@ const App = {
             // if delay load domLoaded
          } else if (window.nova_plugins.length !== plugins_count) {
             // show notice
-            // container.insertAdjacentHTML("beforeend",
-            //       `<div style="position:fixed; top:0; right:50%; transform:translateX(50%); margin-top:50px; z-index:9999; cursor:pointer; border-radius:2px; color:#fff; padding:10px; background-color:#0099ff; box-shadow:rgb(0 0 0 / 50%) 0px 0px 3px; font-size:12px;">
-            //          <h4>Failure on initialization ${app_name}</h4>
-            //          <div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>
-            //       </div>`);
             const notice = document.createElement('div');
             Object.assign(notice.style, {
                position: 'fixed',
                top: 0,
                right: '50%',
                transform: 'translateX(50%)',
-               'margin-top': '50px',
-               // bottom-right in the corner
-               // bottom: 0,
-               // right: 0,
-               // transform: 'none',
-               // 'margin': '50px',
+               'margin': '50px',
                'z-index': 9999,
                'border-radius': '2px',
                'background-color': typeof YDOM === 'object' ? '#0099ff' : '#f00',
@@ -98,7 +88,7 @@ const App = {
                `<h4>Failure on initialization ${app_name}</h4>`
                + (typeof YDOM === 'object'
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
-                  : `<div>Сritical Error</div>`);
+                  : `<div>Сritical Error: kernel library YDOM is "${typeof YDOM}"</div>`);
             document.body.appendChild(notice);
          }
       }, 1000 * 3); // 3sec
