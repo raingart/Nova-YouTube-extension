@@ -1,6 +1,7 @@
 // for test:
 // https://www.youtube.com/watch?v=Xt2sbtvBuk8 - There are timestamp but no chapters: Еhree-digit time
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - chapter title ahead of timestamp
+// https://www.youtube.com/watch?v=-vJbpZoCaFQ - lying timestamp
 
 window.nova_plugins.push({
    id: 'time-jump',
@@ -10,52 +11,53 @@ window.nova_plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
+      let chapterList = [];
+
       YDOM.waitElement('#movie_player')
          .then(player => {
             doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
 
-            if (user_settings.time_jump_title_offset) {
-               addTitleOffset.apply(player);
-            }
+            if (user_settings.time_jump_title_offset) addTitleOffset.apply(player);
+
+            YDOM.waitElement('video') // reset chapterList
+               .then(video => video.addEventListener('loadeddata', () => chapterList = []));
          });
 
       function jumpTime() {
-         if (document.activeElement.tagName.toLowerCase() !== 'input' // search-input
-            && !document.activeElement.isContentEditable // comment-area
-         ) {
-            const chapterList = getChapterList();
-            console.debug('chapterList', chapterList);
-            let msg;
-            // if has chapters
-            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 && chapterList?.length) {
-               const nextChapterIndex = chapterList?.findIndex(c => c?.seconds >= this.getCurrentTime());
-               this.seekToChapterWithAnimation(nextChapterIndex);
-               msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
-                  || chapterList[nextChapterIndex].name) + ` (${chapterList[nextChapterIndex].time})`;
-               // console.debug(`nextChapter(1): ${this.getCurrentTime()} jump to ${chapterList[nextChapterIndex]}`);
+         if (!chapterList?.length) {
+            chapterList = getChapterList(this.getDuration());
+            // console.debug('chapterList:', chapterList);
+         }
+         let msg;
+         // if has chapters
+         if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 && chapterList?.length) {
+            const nextChapterIndex = chapterList?.findIndex(c => c?.seconds >= this.getCurrentTime());
+            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].seconds}sec`);
+            this.seekToChapterWithAnimation(nextChapterIndex);
+            msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+               || chapterList[nextChapterIndex].name) + ` (${chapterList[nextChapterIndex].time})`;
 
-            } else if (chapterList?.length) {
-               const nextChapterData = chapterList?.find(c => c?.seconds >= this.getCurrentTime());
-               // console.debug(`nextChapter(2): jump from ${this.getCurrentTime()} to ${nextChapterData.seconds} sec`);
-               this.seekTo(nextChapterData.seconds);
-               msg = `Chapter • ${nextChapterData.name} (${nextChapterData.time})`;
+         } else if (chapterList?.length) {
+            const nextChapterData = chapterList?.find(c => c?.seconds >= this.getCurrentTime());
+            // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.seconds}sec`);
+            this.seekTo(nextChapterData.seconds);
+            msg = `Chapter • ${nextChapterData.name} (${nextChapterData.time})`;
 
-            } else {
-               this.seekBy(+user_settings.time_jump_step);
-               msg = `+${user_settings.time_jump_step} sec (${YDOM.formatDuration(this.getCurrentTime())})`;
-            }
-
-            YDOM.bezelTrigger(msg); // trigger default indicator
+         } else {
+            this.seekBy(+user_settings.time_jump_step);
+            msg = `+${user_settings.time_jump_step} sec (${YDOM.formatDuration(this.getCurrentTime())})`;
          }
 
+         YDOM.bezelTrigger(msg); // trigger default indicator
+
          // function getNextChapterIndex() {
-         function getChapterList() {
+         function getChapterList(video_duration) {
             let prevTime = -1;
-            return [...document.getElementById('description')?.textContent.matchAll(/(\d{2,}:\d{2,}(:\d{2,})?)(.+$)?/gm)]
-               .map((curr, i, array) => {
-                  // const prev = array[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+            const outArr = [...document.getElementById('description')?.textContent.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
+               .map((curr, i, arr) => {
+                  // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
                   const currTime = hmsToSecondsOnly(curr[1]);
-                  if (currTime > prevTime) {
+                  if (currTime > prevTime && currTime < video_duration) {
                      prevTime = currTime;
                      return {
                         index: ++i,
@@ -64,7 +66,10 @@ window.nova_plugins.push({
                         name: curr[3]?.toString().trim(),
                      }
                   }
-               });
+               })
+               .filter((obj) => obj?.time);
+
+            return outArr?.length > 1 ? outArr : []; // clear from "lying timestamp"
 
             function hmsToSecondsOnly(str) {
                const p = str.split(':');
@@ -74,7 +79,7 @@ window.nova_plugins.push({
                   s += m * parseInt(p.pop(), 10);
                   m *= 60;
                }
-               return s;
+               return +s;
             }
          }
       }
@@ -120,6 +125,10 @@ window.nova_plugins.push({
             };
 
          function keyPress(key) {
+            if (document.activeElement.tagName.toLowerCase() === 'input' // search-input
+               || document.activeElement.isContentEditable // comment-area
+            ) return;
+
             pressed = key.keyCode;
             // console.debug('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
             if (isDoublePress && pressed === lastPressed) {

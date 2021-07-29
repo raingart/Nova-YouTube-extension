@@ -9,9 +9,9 @@ window.nova_plugins.push({
       const
          SELECTOR_BTN_CLASS_NAME = 'custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
-         player = document.getElementById('movie_player'),
-         getVideoId = () => YDOM.queryURL.get('v', player?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href), // fix for embed
-         getVideoElement = () => document.querySelector('video');
+         getVideoElement = () => document.querySelector('video'),
+         getPlayerElement = () => document.getElementById('movie_player'),
+         getVideoId = () => YDOM.queryURL.get('v', getPlayerElement()?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href); // fix for embed
 
       YDOM.waitElement('.ytp-right-controls')
          .then(container => {
@@ -35,6 +35,17 @@ window.nova_plugins.push({
                btnPopUp.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnPopUp.title = 'Autoplay is off';
                // btnPopUp.setAttribute('aria-label','');
+               // btnPopUp.innerHTML = `<svg viewBox="0 0 20 20" height="100%" width="100%" version="1.1">
+               //    <g transform="translate(0, 2)">
+               //       <polygon fill-rule="nonzero"
+               //          points="1.85008844 1.51464844 18.2421138 1.51464844 18.2421138 7.74121094 19.2421138 7.74121094 19.2421138 0.514648438 0.850088443 0.514648438 0.850088443 11.7244572 9.16539331 11.7758693 9.17157603 10.7758885 1.85008844 10.7306209"
+               //          fill="#ffffff" style="fill: rgb(255, 255, 255);"></polygon>
+               //       <rect x="10.5" y="9" width="9.5" height="6" fill="#ffffff" style="fill: rgb(255, 255, 255);"></rect>
+               //       <path
+               //          d="M8.49517931,6.9934339 L4.58268904,3.10539669 L3.87780235,3.81471662 L7.75590296,7.6685791 L5.14025649,7.6685791 L5.14025649,8.6685791 L9.49517931,8.6685791 L9.49517931,4.64446771 L8.49517931,4.64446771 L8.49517931,6.9934339 Z"
+               //          fill-rule="nonzero" fill="#ffffff" style="fill: rgb(255, 255, 255);"></path>
+               //    </g>
+               // </svg>`;
                btnPopUp.innerHTML = '<svg version="1.1" viewBox="0 0 20 20" height="100%" width="100%"><path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z"/></svg>';
                btnPopUp.addEventListener('click', () => {
                   const
@@ -177,8 +188,10 @@ window.nova_plugins.push({
             if (user_settings.player_buttons_custom_items.indexOf('toggle-speed') !== -1) {
                const
                   video = getVideoElement(),
+                  player = getPlayerElement(),
                   btnSpeed = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a';
+
                let prevRate = {};
 
                // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
@@ -192,7 +205,9 @@ window.nova_plugins.push({
                btnSpeed.title = `Toggle speed (${hotkey})`;
                btnSpeed.textContent = '1x';
                document.addEventListener('keyup', evt => {
-                  if (evt.key === hotkey) switchRate({ 'target': btnSpeed });
+                  if (evt.key === hotkey && !['input', 'textarea'].includes(evt.target.localName) && !evt.target.isContentEditable) {
+                     switchRate({ 'target': btnSpeed });
+                  }
                })
                btnSpeed.addEventListener('click', switchRate);
 
@@ -205,7 +220,7 @@ window.nova_plugins.push({
 
                   } else { // return default
                      const rate = video.playbackRate;
-                     prevRate = (rate % .25) === 0
+                     prevRate = (player && rate % .25) === 0
                         ? { 'default': player.getPlaybackRate() }
                         : { 'html5': rate };
 
@@ -248,8 +263,7 @@ window.nova_plugins.push({
                         console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
                      }
                   },
-               }
-
+               };
                container.prepend(btnSpeed);
             }
          });

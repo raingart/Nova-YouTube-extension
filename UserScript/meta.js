@@ -1,8 +1,8 @@
 // ==UserScript==
-// @version      0.8.4
-// @name         YouTube SuperNova
+// @version      0.8.5
+// @name         Nova YouTube
 // @namespace    https://github.com/raingart/Nova-YouTube-extension/
-// @description  Youtube extension plugins
+// @description  Youtube be comfortable
 // @include      http*://*.youtube.com/*
 // @include      http*://*.youtube-nocookie.com/*
 // @include      http*://raingart.github.io/options.html*
@@ -13,10 +13,10 @@
 // @homepageURL  https://github.com/raingart/Nova-YouTube-extension
 // @supportURL   https://github.com/raingart/Nova-YouTube-extension/issues
 // @contributionURL https://www.patreon.com/raingart
+// @downloadURL  https://openuserjs.org/install/raingart/Nova_YouTube.user.js
 // @copyright    raingart
 // @license      Apache-2.0
 // @run-at       document-start
-// @resource     https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL

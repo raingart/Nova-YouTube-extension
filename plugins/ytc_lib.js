@@ -176,8 +176,9 @@ const YDOM = {
       },
    },
 
-   bezelTrigger(text = '') {
+   bezelTrigger(text) {
       // console.debug('bezelTrigger', ...arguments);
+      if (!text) return;
       if (typeof fateBezel === 'number') clearTimeout(fateBezel);
       const bezelEl = document.querySelector('.ytp-bezel-text');
       if (!bezelEl) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
