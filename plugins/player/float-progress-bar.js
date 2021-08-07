@@ -8,13 +8,14 @@ window.nova_plugins.push({
 
       const
          SELECTOR_ID = 'player-float-progress-bar',
-         SELECTOR = '#' + SELECTOR_ID; // for css
+         SELECTOR = '#' + SELECTOR_ID, // for css
+         CHAPTERS_MARK_WIDTH = 2; // px
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
-            createBar(player);
+            renderFloatBar(player);
 
-            YDOM.waitElement('video')
+            NOVA.waitElement('video')
                .then(video => {
                   // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
                   let container, progressEl, bufferEl;
@@ -51,28 +52,55 @@ window.nova_plugins.push({
                         }
                      }
                   };
+                  // add chapters marks
+                  video.addEventListener('loadeddata', function () {
+                     renderChaptersMarks(this.duration);
+                     // first/pinned comment
+                     NOVA.waitElement('#contents ytd-comment-thread-renderer:first-child #content')
+                        .then(comment => renderChaptersMarks(video.duration));
+                  });
 
                });
          });
 
-      function createBar(container = required()) {
-         // console.debug('createBar', ...arguments);
+      function renderChaptersMarks(duration) {
+         // console.debug('renderChaptersMarks', ...arguments);
+         const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
+         chaptersConteiner.innerHTML = ''; // clear old
+         if (!isNaN(duration)) {
+            NOVA.getChapterList(duration)
+               ?.forEach((chapter, i, chapters_list) => {
+                  // console.debug('', (chapterEl.sec / duration) * 100 + '%');
+                  const chapterEl = document.createElement('span');
+                  const nextChapterSec = chapters_list[i + 1]?.sec || 0;
+                  chapterEl.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
+                  if (chapter.title) chapterEl.title = chapter.title;
+                  chaptersConteiner.appendChild(chapterEl);
+               });
+         }
+      };
+
+      function renderFloatBar(container = required()) {
+         // console.debug('renderFloatBar', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('parent not HTMLElement:', container);
 
          return document.getElementById(SELECTOR_ID) || (function () {
             container.insertAdjacentHTML('beforeend',
-               `<div id="${SELECTOR_ID}" class="transition"><div class="conteiner">
-                  <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
-                  <div id="${SELECTOR_ID}-progress" class="ytp-swatch-background-color"></div>
-               </div></div>`);
+               `<div id="${SELECTOR_ID}" class="transition">
+                  <div class="conteiner">
+                     <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
+                     <div id="${SELECTOR_ID}-progress" class="ytp-swatch-background-color"></div>
+                  </div>
+                  <div id="${SELECTOR_ID}-chapters"></div>
+               </div>`);
 
             const
-               zIndex = YDOM.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
+               zIndex = NOVA.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
                height = +user_settings.player_float_progress_bar_height || 3,
-               bgColor = YDOM.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)';
-               // bufferColor = YDOM.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
+               bgColor = NOVA.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)';
+            // bufferColor = NOVA.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
 
-            YDOM.css.push(
+            NOVA.css.push(
                `[id|=${SELECTOR_ID}] {
                   position: absolute;
                   bottom: 0;
@@ -108,7 +136,7 @@ window.nova_plugins.push({
                   width: 100%;
                   height: var(--height);
                   transform-origin: 0 0;
-                  scaleX(0);
+                  transform: scaleX(0);
                }
 
                ${SELECTOR}-progress {
@@ -117,7 +145,20 @@ window.nova_plugins.push({
 
                /*${SELECTOR}-buffer {
                   background: var(--buffer-color);
-               }*/`);
+               }*/
+
+               ${SELECTOR}-chapters {
+                  position: relative;
+                  width: 100%;
+                  display: flex;
+               }
+
+               ${SELECTOR}-chapters span {
+                  height: var(--height);
+                  z-index: ${+zIndex + 1};
+                  border-right: ${CHAPTERS_MARK_WIDTH}px solid rgba(255,255,255,.7);
+                  margin-left: -${CHAPTERS_MARK_WIDTH}px;
+               }`);
 
             return document.getElementById(SELECTOR_ID);
          })();

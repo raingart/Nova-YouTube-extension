@@ -11,12 +11,12 @@ window.nova_plugins.push({
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
          getVideoElement = () => document.querySelector('video'),
          getPlayerElement = () => document.getElementById('movie_player'),
-         getVideoId = () => YDOM.queryURL.get('v', getPlayerElement()?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href); // fix for embed
+         getVideoId = () => NOVA.queryURL.get('v', getPlayerElement()?.getVideoUrl() || document.querySelector('link[rel="canonical"][href]')?.href); // fix for embed
 
-      YDOM.waitElement('.ytp-right-controls')
+      NOVA.waitElement('.ytp-right-controls')
          .then(container => {
             // global
-            YDOM.css.push(
+            NOVA.css.push(
                `button${SELECTOR_BTN} {
                   padding: 0 7px;
                }
@@ -30,7 +30,7 @@ window.nova_plugins.push({
                button${SELECTOR_BTN}:active svg { fill: #2196f3; }`);
 
             // Pop-up player
-            if (user_settings.player_buttons_custom_items.indexOf('popup') !== -1) {
+            if (user_settings.player_buttons_custom_items.indexOf('popup') !== -1 && !NOVA.queryURL.get('popup')) {
                const btnPopUp = document.createElement('button');
                btnPopUp.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnPopUp.title = 'Autoplay is off';
@@ -62,6 +62,7 @@ window.nova_plugins.push({
 
                   if (+currentTime) url.searchParams.append('start', currentTime);
                   url.searchParams.append('autoplay', 1);
+                  url.searchParams.append('popup', true); // deactivate popup-button for used window
 
                   window.open(url.href, document.title, `width=${width},height=${height},left=${left},top=${top}`);
                });
@@ -74,7 +75,7 @@ window.nova_plugins.push({
                   SELECTOR_SCREENSHOT_ID = 'screenshot-result',
                   SELECTOR_SCREENSHOT = '#' + SELECTOR_SCREENSHOT_ID; // for css
 
-               YDOM.css.push(
+               NOVA.css.push(
                   SELECTOR_SCREENSHOT + ` {
                      --width: 400px;
                      --height: 400px;
@@ -83,12 +84,16 @@ window.nova_plugins.push({
                      top: 0;
                      right: 0;
                      overflow: hidden;
-                     margin: 30px;
+                     margin: 30px; /* <-- possibility out of date */
                      box-shadow: 0 0 15px #000;
                      max-width: var(--width);
                      max-height: var(--height);
-                     z-index: 300;
+                     z-index: 300; /* <-- possibility out of date */
                   }
+
+                  /*${SELECTOR_SCREENSHOT}:hover {
+                     outline: 2px dashed #f69c55;
+                  }*/
 
                   ${SELECTOR_SCREENSHOT} canvas {
                      max-width: var(--width);
@@ -96,18 +101,20 @@ window.nova_plugins.push({
                      /* object-fit: contain; */
                   }
 
-                  ${SELECTOR_SCREENSHOT} a {
+                  ${SELECTOR_SCREENSHOT} .close-btn {
+                     position: absolute;
                      bottom: 0;
                      right: 0;
                      background: rgba(0, 0, 0, .5);
                      color: #FFF;
                      cursor: pointer;
                      font-size: 12px;
-                     padding: 5px;
-                     position: absolute;
+                     display: grid;
+                     height: 100%;
+                     width: 25%;
                   }
-                  ${SELECTOR_SCREENSHOT}:hover a { background: rgba(0, 0, 0, .65); }
-                  ${SELECTOR_SCREENSHOT} a:hover { background: rgba(0, 0, 0, .8); }`);
+                  ${SELECTOR_SCREENSHOT} .close-btn:hover { background: rgba(0, 0, 0, .65); }
+                  ${SELECTOR_SCREENSHOT} .close-btn > * { margin: auto; }`);
 
                const btnScreenshot = document.createElement('button');
                btnScreenshot.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
@@ -137,9 +144,12 @@ window.nova_plugins.push({
                   canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
                   // create
                   if (!container.id) {
+                     const headerContainer = document.getElementById('masthead-container');
                      container.id = SELECTOR_SCREENSHOT_ID;
                      container.target = '_blank'; // useful link
                      container.title = 'Click to save';
+                     container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
+                     container.style.zIndex = NOVA.css.getValue({ selector: headerContainer, property: 'z-index' }); // fix header overlapping
                      canvas.addEventListener('click', evt => {
                         evt.preventDefault();
                         // document.location.href = target.toDataURL('image/png').replace('image/png', 'image/octet-stream');
@@ -149,8 +159,9 @@ window.nova_plugins.push({
                      container.appendChild(canvas);
                      const close = document.createElement('a');
                      // close.id =
-                     // close.className =
-                     close.textContent = 'CLOSE';
+                     close.className = 'close-btn'
+                     // close.textContent = 'CLOSE';
+                     close.innerHTML = '<span>CLOSE</span>';
                      close.addEventListener('click', evt => {
                         evt.preventDefault();
                         evt.target.parentNode.remove();
@@ -190,7 +201,8 @@ window.nova_plugins.push({
                   video = getVideoElement(),
                   player = getPlayerElement(),
                   btnSpeed = document.createElement('a'),
-                  hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a';
+                  hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
+                  defaultRateText = '1x';
 
                let prevRate = {};
 
@@ -203,7 +215,7 @@ window.nova_plugins.push({
                btnSpeed.style.textAlign = 'center';
                btnSpeed.style.fontWeight = 'bold';
                btnSpeed.title = `Toggle speed (${hotkey})`;
-               btnSpeed.textContent = '1x';
+               btnSpeed.textContent = defaultRateText;
                document.addEventListener('keyup', evt => {
                   if (evt.key === hotkey && !['input', 'textarea'].includes(evt.target.localName) && !evt.target.isContentEditable) {
                      switchRate({ 'target': btnSpeed });
@@ -216,7 +228,7 @@ window.nova_plugins.push({
                   if (Object.keys(prevRate).length) {
                      playerRate.set(prevRate);
                      prevRate = {};
-                     target.textContent = '1x';
+                     target.textContent = defaultRateText;
 
                   } else { // return default
                      const rate = video.playbackRate;
@@ -231,9 +243,9 @@ window.nova_plugins.push({
                         resetRate.default = 1;
                      }
                      playerRate.set(resetRate);
-                     target.textContent = prevRate[Object.keys(prevRate)[0]] + `x (${hotkey})`;
+                     target.textContent = prevRate[Object.keys(prevRate)[0]] + 'x';
                   }
-                  btnSpeed.title = 'Switch to ' + target.textContent;
+                  btnSpeed.title = `Switch to ${target.textContent}x (${hotkey})`;
                   // console.debug('prevRate', prevRate);
                }
 

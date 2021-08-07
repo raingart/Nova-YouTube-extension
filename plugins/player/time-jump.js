@@ -1,7 +1,8 @@
 // for test:
 // https://www.youtube.com/watch?v=Xt2sbtvBuk8 - There are timestamp but no chapters: Еhree-digit time
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - chapter title ahead of timestamp
-// https://www.youtube.com/watch?v=-vJbpZoCaFQ - lying timestamp
+// https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
+// https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
 
 window.nova_plugins.push({
    id: 'time-jump',
@@ -11,97 +12,66 @@ window.nova_plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      let chapterList = [];
+      let chapterList;
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
 
             if (user_settings.time_jump_title_offset) addTitleOffset.apply(player);
 
-            YDOM.waitElement('video') // reset chapterList
+            NOVA.waitElement('video') // reset chapterList
                .then(video => video.addEventListener('loadeddata', () => chapterList = []));
          });
 
       function jumpTime() {
-         if (!chapterList?.length) {
-            chapterList = getChapterList(this.getDuration());
-            // console.debug('chapterList:', chapterList);
+         if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
+            chapterList = NOVA.getChapterList(this.getDuration()) || null;
+            console.debug('chapterList:', chapterList);
          }
+         const nextChapterIndex = chapterList?.findIndex(c => c?.sec >= this.getCurrentTime());
          let msg;
-         // if has chapters
-         if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1 && chapterList?.length) {
-            const nextChapterIndex = chapterList?.findIndex(c => c?.seconds >= this.getCurrentTime());
-            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].seconds}sec`);
-            this.seekToChapterWithAnimation(nextChapterIndex);
-            msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
-               || chapterList[nextChapterIndex].name) + ` (${chapterList[nextChapterIndex].time})`;
+         if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
+            // if has chapters
+            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+               // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
+               this.seekToChapterWithAnimation(nextChapterIndex);
+               msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+                  || chapterList[nextChapterIndex].title) + ` (${chapterList[nextChapterIndex].time})`;
 
-         } else if (chapterList?.length) {
-            const nextChapterData = chapterList?.find(c => c?.seconds >= this.getCurrentTime());
-            // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.seconds}sec`);
-            this.seekTo(nextChapterData.seconds);
-            msg = `Chapter • ${nextChapterData.name} (${nextChapterData.time})`;
+            } else {
+               const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
+               // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec}sec`);
+               this.seekTo(nextChapterData.sec);
+               msg = `Chapter • ${nextChapterData.title} (${nextChapterData.time})`;
+            }
 
          } else {
             this.seekBy(+user_settings.time_jump_step);
-            msg = `+${user_settings.time_jump_step} sec (${YDOM.formatDuration(this.getCurrentTime())})`;
+            msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS(this.getCurrentTime())})`;
          }
 
-         YDOM.bezelTrigger(msg); // trigger default indicator
-
-         // function getNextChapterIndex() {
-         function getChapterList(video_duration) {
-            let prevTime = -1;
-            const outArr = [...document.getElementById('description')?.textContent.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
-               .map((curr, i, arr) => {
-                  // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-                  const currTime = hmsToSecondsOnly(curr[1]);
-                  if (currTime > prevTime && currTime < video_duration) {
-                     prevTime = currTime;
-                     return {
-                        index: ++i,
-                        seconds: currTime,
-                        time: curr[1],
-                        name: curr[3]?.toString().trim(),
-                     }
-                  }
-               })
-               .filter((obj) => obj?.time);
-
-            return outArr?.length > 1 ? outArr : []; // clear from "lying timestamp"
-
-            function hmsToSecondsOnly(str) {
-               const p = str.split(':');
-               let = s = 0, m = 1;
-
-               while (p.length) {
-                  s += m * parseInt(p.pop(), 10);
-                  m *= 60;
-               }
-               return +s;
-            }
-         }
+         NOVA.bezelTrigger(msg); // trigger default indicator
       }
 
       function addTitleOffset() {
-         YDOM.css.push(
+         NOVA.css.push(
             `.ytp-tooltip-text:after {
             content: attr(data-before);
             color: #ffcc00;
          }`);
-         // color: ${YDOM.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
+         // color: ${NOVA.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
 
-         YDOM.waitElement('.ytp-progress-bar')
+         NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {
                if (tooltipEl = document.querySelector('.ytp-tooltip-text')) {
                   progressContainer.addEventListener('mousemove', () => {
                      const
-                        cursorTime = tooltipEl.textContent.split(':').reduce((acc, time) => (60 * acc) + parseInt(time)),
+                        cursorTime = tooltipEl.textContent.split(':').reduce((a, t) => (60 * a) + parseInt(t)),
                         offsetTime = cursorTime - this.getCurrentTime(),
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
-                     tooltipEl.setAttribute('data-before', ` ${sign + YDOM.formatDuration(offsetTime)}`);
+                     tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS(offsetTime)}`);
                   });
 
                   progressContainer.addEventListener('mouseleave', function hideOffsetTime() {

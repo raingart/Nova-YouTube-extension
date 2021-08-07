@@ -20,18 +20,18 @@ window.nova_plugins.push({
          CLASS_VALUE = 'player-float',
          PINNED_SELECTOR = '.' + CLASS_VALUE; // for css
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             // init css
             const interval = setInterval(() => {
                if (player.clientWidth && player.clientHeight
                   && document.getElementById('masthead-container')?.offsetHeight) {
                   clearInterval(interval);
-                  createStyle(player);
+                  initStyles(player);
                }
             }, 500); // 500ms
 
-            YDOM.waitElement('#player-theater-container')
+            NOVA.waitElement('#player-theater-container')
                .then(playerContainer => {
                   window.addEventListener('scroll', () => {
                      onScreenToggle({
@@ -58,7 +58,7 @@ window.nova_plugins.push({
                })
          });
 
-      function createStyle(player = required()) {
+      function initStyles(player = required()) {
          const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
          const miniSize = calculateAspectRatioFit({
             'srcWidth': player.clientWidth,
@@ -98,16 +98,16 @@ window.nova_plugins.push({
          }
 
          // apply css
-         YDOM.css.push(initcss, PINNED_SELECTOR, 'important');
+         NOVA.css.push(initcss, PINNED_SELECTOR, 'important');
 
          // variable declaration for fix
-         YDOM.css.push(
+         NOVA.css.push(
             PINNED_SELECTOR + `{
                --height: ${initcss.height} !important;
                --width: ${initcss.width} !important;
             }`);
          // fix control-player panel
-         YDOM.css.push(`
+         NOVA.css.push(`
             ${PINNED_SELECTOR} .ytp-preview,
             ${PINNED_SELECTOR} .ytp-scrubber-container,
             ${PINNED_SELECTOR} .ytp-hover-progress,
@@ -116,7 +116,7 @@ window.nova_plugins.push({
             ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
          // fix video size in pinned
-         YDOM.css.push(
+         NOVA.css.push(
             `${PINNED_SELECTOR} video {
                   width: var(--width) !important;
                   height: var(--height) !important;

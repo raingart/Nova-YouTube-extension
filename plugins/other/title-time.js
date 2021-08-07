@@ -8,7 +8,7 @@ window.nova_plugins.push({
 
       let originalTitleTemplate;
 
-      YDOM.waitElement('video')
+      NOVA.waitElement('video')
          .then(video => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             video.addEventListener('timeupdate', updateTitle.bind(video));
@@ -21,7 +21,6 @@ window.nova_plugins.push({
       function updateTitle() {
          if (isNaN(this.duration)) return;
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
-
          // backup the original title template
          if (!originalTitleTemplate) originalTitleTemplate = document.title.replace(getVideoTitle(), '%s');
 
@@ -41,12 +40,10 @@ window.nova_plugins.push({
                new_title = [this.duration - this.currentTime];
          }
          // add playbackRate if it is not default
-         if (this.playbackRate !== 1) {
-            new_title.push(` (${this.playbackRate}x)`);
-         }
-         // number => round => string
+         // if (this.playbackRate !== 1) new_title.push(` (${this.playbackRate}x)`);
+
          new_title = new_title
-            .map(t => typeof t === 'string' ? t : YDOM.formatDuration(t))
+            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS(t / this.playbackRate))
             .join('');
 
          document.title = new_title + ' | ' + getVideoTitle();

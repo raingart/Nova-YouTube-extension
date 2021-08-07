@@ -6,11 +6,11 @@ window.nova_plugins.push({
    desc: 'Direct external links',
    _runtime: user_settings => {
 
-      YDOM.watchElement({
+      NOVA.watchElement({
          selector: 'a[href*="/redirect?"]',
          attr_mark: 'redirect-cleared',
          callback: link => {
-            if (q = YDOM.queryURL.get('q', link.href)) link.href = decodeURIComponent(q);
+            if (q = NOVA.queryURL.get('q', link.href)) link.href = decodeURIComponent(q);
          },
       });
 

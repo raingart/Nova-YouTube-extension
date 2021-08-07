@@ -6,8 +6,8 @@ window.nova_plugins.push({
    desc: "prevent 'Video paused' alert",
    _runtime: user_settings => {
 
-      // YDOM.waitElement('yt-confirm-dialog-renderer #confirm-button')
-      YDOM.waitElement('[role="dialog"] #confirm-button')
+      // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button')
+      NOVA.waitElement('[role="dialog"] #confirm-button')
          .then(btn => {
             btn.click();
             if ((vid = document.querySelector('video')) && vid.paused) {

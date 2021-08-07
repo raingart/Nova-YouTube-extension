@@ -6,7 +6,7 @@ window.nova_plugins.push({
    desc: 'Replaces the predefined thumbnail',
    _runtime: user_settings => {
 
-      YDOM.watchElement({
+      NOVA.watchElement({
          selector: '#thumbnail #img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
@@ -18,7 +18,7 @@ window.nova_plugins.push({
       });
 
       if (user_settings.thumbnails_clear_overlay) {
-         YDOM.css.push(
+         NOVA.css.push(
             `#hover-overlays {
                visibility: hidden !important;
             }`);

@@ -12,7 +12,7 @@ window.nova_plugins.push({
          removeStorage = () => localStorage.removeItem(storeName),
          onPlayerStateChange = state => (1 === state) ? localStorage.setItem(storeName, instanceID) : removeStorage(); // 1: playing
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             // redirection for localStorage common storage space
             if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';

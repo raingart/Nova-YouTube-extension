@@ -19,12 +19,16 @@ You can now load the extension into your browser through the browser's extension
 - Enable developer mode (checkbox)
 - Click the "Load unpacked extension" button, navigate to the build folder of your local extension instance, and click "OK".
 
+OR
+
+Userscript [openuserjs](https://openuserjs.org/scripts/raingart/Nova_YouTube).
+
 ## Bilder
-Only for Unix shell. All output will be in the `/tmp/` directory.
+**Only for Unix shell**. All output will be in the `/tmp/` directory.
 
-Chromium extensions: `$ ./package-extensions.sh`.
+**Extensions**: `$ ./package-extensions.sh`.
 
-UserScript: `$ make compile`.
+**UserScript**: `$ make compile`.
 
 ### File structure
 The extension is based on plugin files. The remaining files only serve them.

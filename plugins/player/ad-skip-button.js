@@ -6,7 +6,7 @@ window.nova_plugins.push({
    desc: 'Auto click on [Skip Ad] button',
    _runtime: user_settings => {
 
-      YDOM.css.push( // makes sense when playing a new video in a session tab
+      NOVA.css.push( // makes sense when playing a new video in a session tab
          `#movie_player.ad-showing video {
             visibility: hidden !important;
          }
@@ -15,7 +15,7 @@ window.nova_plugins.push({
             visibility: visible;
          }`);
 
-      YDOM.waitElement('#movie_player.ad-showing video')
+      NOVA.waitElement('#movie_player.ad-showing video')
          .then(video => {
             forcePlay();
 
@@ -33,8 +33,8 @@ window.nova_plugins.push({
                   && video.readyState === 4) {
                   video.currentTime = video.duration; // end ad video
 
-                  // YDOM.waitElement('button.ytp-ad-skip-button')
-                  YDOM.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text')
+                  // NOVA.waitElement('button.ytp-ad-skip-button')
+                  NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text')
                      .then(btn => btn.click()); // click skip-ad
                }
             }

@@ -15,7 +15,7 @@ window.nova_plugins.push({
 
          } else {
             // tab select
-            YDOM.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
+            NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
                .then(() => {
                   let tab_nth;
                   switch (user_settings.channel_default_tab) {

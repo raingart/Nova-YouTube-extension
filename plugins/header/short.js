@@ -8,7 +8,7 @@ window.nova_plugins.push({
 
       const height = '36px';
 
-      YDOM.css.push(
+      NOVA.css.push(
          `#masthead #container.ytd-masthead {
             height: ${height} !important;
          }

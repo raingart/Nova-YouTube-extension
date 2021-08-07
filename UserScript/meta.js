@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version      0.8.5
+// @version      0.8.6
 // @name         Nova YouTube
 // @namespace    https://github.com/raingart/Nova-YouTube-extension/
 // @description  Youtube be comfortable

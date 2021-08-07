@@ -6,7 +6,7 @@ window.nova_plugins.push({
    desc: 'Loop video playback',
    _runtime: user_settings => {
 
-      YDOM.waitElement('video')
+      NOVA.waitElement('video')
          .then(video => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             video.addEventListener('loadeddata', function () {

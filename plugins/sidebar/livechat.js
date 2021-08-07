@@ -8,11 +8,11 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       if (user_settings.livechat_visibility_mode == 'disable') {
-         YDOM.waitElement('#chat')
+         NOVA.waitElement('#chat')
             .then(chat => chat.remove());
 
       } else {
-         YDOM.waitElement('#chat:not([collapsed]) #show-hide-button #button')
+         NOVA.waitElement('#chat:not([collapsed]) #show-hide-button #button')
             .then(btn => btn.click());
       }
 

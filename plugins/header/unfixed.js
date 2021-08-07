@@ -6,7 +6,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.css.push(
+      NOVA.css.push(
          `#masthead-container, ytd-mini-guide-renderer, #guide {
             position: absolute !important;
          }`);

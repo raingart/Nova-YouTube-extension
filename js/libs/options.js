@@ -1,4 +1,4 @@
-console.debug("init options.js");
+console.debug('init options.js');
 
 window.addEventListener('load', () => {
 
@@ -7,12 +7,12 @@ window.addEventListener('load', () => {
       storageMethod: 'sync',
 
       attrDependencies() {
-         document.querySelectorAll("[data-dependent]")
+         document.querySelectorAll('[data-dependent]')
             .forEach(dependentItem => {
                // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
                const handler = () => showOrHide(dependentItem, dependentsJson);
-               document.getElementById(Object.keys(dependentsJson))?.addEventListener("change", handler);
+               document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
                // init state
                handler();
             });
@@ -29,12 +29,12 @@ window.addEventListener('load', () => {
                      || (values.toString().startsWith('!') && reqParent.value !== values.toString().replace('!', ''))
                   ) {
                      // console.debug('show:', name);
-                     dependentItem.classList.remove("hide");
+                     dependentItem.classList.remove('hide');
                      childInputDisable(false);
 
                   } else {
                      // console.debug('hide:', name);
-                     dependentItem.classList.add("hide");
+                     dependentItem.classList.add('hide');
                      childInputDisable(true);
                   }
                }
@@ -74,18 +74,22 @@ window.addEventListener('load', () => {
       },
 
       btnSubmitAnimation: {
-         outputStatus: document.querySelector("[type=submit]"),
+         outputStatus: document.querySelectorAll('[type=submit]'),
 
          _process() {
-            this.outputStatus.textContent = i18n("opt_btn_save_settings_process");
-            this.outputStatus.setAttribute("disabled", true);
+            this.outputStatus.forEach(e => {
+               e.textContent = i18n('opt_btn_save_settings_process');
+               e.setAttribute('disabled', true);
+            });
          },
 
          _defaut() {
             setTimeout(() => {
-               this.outputStatus.textContent = i18n("opt_btn_save_settings");
-               this.outputStatus.removeAttribute("disabled");
-               this.outputStatus.classList.remove('unSaved');
+               this.outputStatus.forEach(e => {
+                  e.textContent = i18n('opt_btn_save_settings');
+                  e.removeAttribute('disabled');
+                  e.classList.remove('unSaved');
+               });
             }, 300);
          },
       },
@@ -105,8 +109,8 @@ window.addEventListener('load', () => {
          document.addEventListener('change', ({ target }) => {
             // console.debug('change', target);
             if (target.name == 'tabs') return; // fix/ignore switch tabs
-            if (!this.btnSubmitAnimation.outputStatus.classList.contains('unSaved')) {
-               this.btnSubmitAnimation.outputStatus.classList.add('unSaved');
+            if (this.btnSubmitAnimation.outputStatus.length && !this.btnSubmitAnimation.outputStatus[0].classList.contains('unSaved')) {
+               this.btnSubmitAnimation.outputStatus.forEach(e => e.classList.add('unSaved'));
             }
          });
       },
@@ -116,7 +120,7 @@ window.addEventListener('load', () => {
             PopulateForm.fill(obj);
             this.attrDependencies();
             this.registerEventListener();
-            document.body.classList.remove("preload");
+            document.body.classList.remove('preload');
             document.querySelectorAll('input[type]') // auto selects value on focus
                .forEach(i => i.addEventListener('focus', i.select));
          }, this.storageMethod);

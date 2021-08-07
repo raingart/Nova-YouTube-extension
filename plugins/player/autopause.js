@@ -8,31 +8,22 @@ window.nova_plugins.push({
 
       let is_change_quality;
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
          });
 
-      const PLAYERSTATE = {
-         '-1': 'UNSTARTED',
-         0: 'ENDED',
-         1: 'PLAYING',
-         2: 'PAUSED',
-         3: 'BUFFERING',
-         5: 'CUED'
-      };
-
       function onPlayerStateChange(state) {
-         // console.debug('playerState', PLAYERSTATE[state]);
+         // console.debug('playerState', NOVA.PLAYERSTATE[state]);
          if (user_settings.video_autopause_ignore_playlist && location.href.includes('list=')) return;
 
          // if (1 === state && !is_change_quality) {
-         if ('PLAYING' == PLAYERSTATE[state] && !is_change_quality) {
+         if ('PLAYING' == NOVA.PLAYERSTATE[state] && !is_change_quality) {
             is_change_quality = true;
             this.pauseVideo();
-            // console.debug('pauseVideo', PLAYERSTATE[state]);
+            // console.debug('pauseVideo', NOVA.PLAYERSTATE[state]);
 
-            // } else if ('UNSTARTED' == PLAYERSTATE[state] || 'ENDED' == PLAYERSTATE[state]) {
+            // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
          } else if (state <= 0) {
             is_change_quality = false;
          }

@@ -12,13 +12,13 @@ window.nova_plugins.push({
    desc: 'with mousewheel',
    _runtime: user_settings => {
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             // trigger default indicator
             player.querySelector('video')
                .addEventListener('volumechange', function () {
                   // console.debug('volumechange', player.getVolume(), this.volume);
-                  YDOM.bezelTrigger(player.getVolume() + '%');
+                  NOVA.bezelTrigger(player.getVolume() + '%');
                });
 
             if (user_settings.volume_hotkey) {

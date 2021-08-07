@@ -7,7 +7,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitElement('#meta [collapsed] #more')
+      NOVA.waitElement('#meta [collapsed] #more')
          .then(el => el.click());
 
    }

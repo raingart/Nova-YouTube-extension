@@ -1,4 +1,4 @@
-console.debug("init optionsView.js");
+console.debug('init optionsView.js');
 
 window.nova_plugins = [];
 Plugins.load();
@@ -107,12 +107,12 @@ const Opt = {
 
             if (property['data-dependent']) {
                // exportContainer.setAttribute('data-dependent', '{\"'+ id +'\":[true]}');
-               exportContainer.setAttribute("data-dependent", property['data-dependent']);
+               exportContainer.setAttribute('data-dependent', property['data-dependent']);
                delete property['data-dependent'];
             }
 
             if (property.title) {
-               exportContainer.setAttribute("tooltip", property.title);
+               exportContainer.setAttribute('tooltip', property.title);
                delete property.title;
             }
 
@@ -144,7 +144,7 @@ const Opt = {
                         label.innerHTML = '<font>↪</font>' + value;
                         label.htmlFor = property.name;
                         exportContainer.appendChild(label);
-                        // exportContainer.insertAdjacentHTML("beforeend", '<label>' + value + '</label>');
+                        // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
                         break;
 
                      case 'type':
@@ -178,7 +178,7 @@ const Opt = {
 
    eventListener() {
       // appearance map
-      document.querySelectorAll(".appearance > *")
+      document.querySelectorAll('.appearance > *')
          .forEach(mapZone => {
             // group is empty
             if (document.querySelector(this.UI.pluginsContainer + `>#${mapZone.id}:empty`)) {
@@ -209,7 +209,7 @@ const Opt = {
          });
 
       // link show_all_plugins
-      document.getElementById("show_all_plugins")
+      document.getElementById('show_all_plugins')
          .addEventListener('click', () => {
             // show all section
             switchClass({
@@ -234,8 +234,8 @@ const Opt = {
       if (document.body.clientWidth < 350) { // in popup
          document.querySelectorAll(this.UI.pluginsContainer + '> ul')
             .forEach(ul => ul.addEventListener('click', ({ target }) => {
-               target.classList.toggle("collapse")
-               target.querySelectorAll("li.item").forEach(li => li.classList.toggle("hide"));
+               target.classList.toggle('collapse')
+               target.querySelectorAll('li.item').forEach(li => li.classList.toggle('hide'));
             }));
       }
 
@@ -349,7 +349,7 @@ window.addEventListener('load', () => {
       if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
       // remove api warn if has api
       if (store && store['custom-api-key']) {
-         document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
+         document.querySelectorAll('.info b').forEach(el => el.remove());
       }
    }, Opt.storageMethod);
 

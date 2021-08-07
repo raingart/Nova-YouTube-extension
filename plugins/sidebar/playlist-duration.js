@@ -15,15 +15,15 @@ window.nova_plugins.push({
       const
          SELECTOR_ID = 'playlist-duration-time',
          CACHE_PREFIX = SELECTOR_ID + ':',
-         playlistId = YDOM.queryURL.get('list'),
+         playlistId = NOVA.queryURL.get('list'),
          STORE_NAME = CACHE_PREFIX + playlistId,
          timeToSec = str => str?.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
 
       if (!playlistId) return;
 
-      switch (YDOM.currentPageName()) {
+      switch (NOVA.currentPageName()) {
          case 'playlist':
-            YDOM.waitElement('#stats yt-formatted-string:first-child')
+            NOVA.waitElement('#stats yt-formatted-string:first-child')
                .then(el => {
                   if (duration = getPlaylistDuration()) {
                      insertToHTML({ 'container': el, 'text': duration });
@@ -46,13 +46,13 @@ window.nova_plugins.push({
                         return storage;
                      }
                      const vids = window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer
-                        .tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
+                        ?.tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
                            .tabs[0].tabRenderer.content.sectionListRenderer
                            .contents[0].itemSectionRenderer
                            .contents[0].playlistVideoListRenderer?.contents;
-                     const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
+                     const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                     return YDOM.formatDuration(sec);
+                     return NOVA.timeFormatTo.HMS(sec);
                   }
                });
             break;
@@ -60,13 +60,13 @@ window.nova_plugins.push({
          case 'watch':
             if (!document.getElementById(SELECTOR_ID)) {
                // fix hidden playlist conteiner
-               YDOM.css.push(
+               NOVA.css.push(
                   `#secondary #playlist:hover #publisher-container [hidden] { display: inline !important; }`);
             }
 
-            YDOM.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
+            NOVA.waitElement('#secondary #playlist #publisher-container yt-formatted-string:last-child')
                .then(el => {
-                  YDOM.waitElement('#playlist-items #text:not(:empty)')
+                  NOVA.waitElement('#playlist-items #text:not(:empty)')
                      .then(vids => {
                         if (duration = getPlaylistDuration()) {
                            insertToHTML({ 'container': el, 'text': duration });
@@ -100,7 +100,7 @@ window.nova_plugins.push({
                         .map(e => timeToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
                         .reduce((acc, time) => acc + time, 0);
 
-                     return YDOM.formatDuration(duration);
+                     return NOVA.timeFormatTo.HMS(duration);
                   }
                });
             break;
@@ -138,7 +138,7 @@ window.nova_plugins.push({
                .map(e => timeToSec(e.textContent))
                .reduce((acc, time) => acc + time, 0);
 
-            return YDOM.formatDuration(duration);
+            return NOVA.timeFormatTo.HMS(duration);
          }
       }
 
@@ -152,7 +152,7 @@ window.nova_plugins.push({
             el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
             el.id = SELECTOR_ID;
             el.style.display = 'inline-block';
-            if (YDOM.currentPageName() == 'watch') el.style.margin = '0 .5em';
+            if (NOVA.currentPageName() == 'watch') el.style.margin = '0 .5em';
             container.after(el);
             return document.getElementById(SELECTOR_ID);
          })())

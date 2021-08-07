@@ -9,16 +9,16 @@ window.nova_plugins.push({
 
       // Only the outline/border works. Other selection methods do not work!
 
-      YDOM.css.push(
+      NOVA.css.push(
          `a#thumbnail {
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
          a#thumbnail:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
-         }`)
+         }`);
 
-      // YDOM.css.push(
+      // NOVA.css.push(
       //    `a.ytp-videowall-still.ytp-suggestion-set:visited, #thumbnail:visited {
       //       transition: all 200ms ease-in-out;
       //       opacity: .4 !important;

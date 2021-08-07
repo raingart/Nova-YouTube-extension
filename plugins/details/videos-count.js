@@ -13,36 +13,46 @@ window.nova_plugins.push({
          SELECTOR_ID = 'video_count',
          isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
 
-      // watch page
-      YDOM.waitElement('#upload-info #channel-name a[href]')
-         .then(link => {
-            // console.debug('watch page');
-            YDOM.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)')
-               .then(el => setVideoCount({
-                  'container': el,
-                  'channel_id':
-                     window.ytplayer?.config?.args.ucid
-                     || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
-                     || link.href.split('/').pop()
-               }));
-         });
+      switch (NOVA.currentPageName()) {
+         case 'watch':
+            NOVA.waitElement('#meta #upload-info #channel-name a[href]')
+               .then(link => {
+                  // console.debug('watch page');
+                  NOVA.waitElement('#meta #owner-sub-count') // possible positional problems
+                     // NOVA.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
+                     .then(el => {
+                        if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
+                        setVideoCount({
+                           'container': el,
+                           'channel_id':
+                              new URL(link.href).pathname.split('/')[2]
+                              // ytplayer - not updated on page transition!
+                              // || window.ytplayer?.config?.args.ucid
+                              // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
+                        });
+                     });
+               });
+            break;
 
-      // channel page
-      YDOM.waitElement('#channel-header #subscriber-count:not(:empty)')
-         .then(el => {
-            // console.debug('channel page');
-            setVideoCount({ 'container': el, 'channel_id': getChannelId() });
+         case 'channel':
+            NOVA.waitElement('#channel-header #subscriber-count') // possible positional problems
+               // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
+               .then(el => {
+                  // console.debug('channel page');
+                  setVideoCount({ 'container': el, 'channel_id': getChannelId() });
 
-            function getChannelId() {
-               return [
-                  window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
-                  document.querySelector('meta[itemprop="channelId"][content]')?.content,
-                  document.querySelector('link[itemprop="url"][href]')?.href,
-                  location.pathname.split('/')[2],
-               ]
-                  .find(i => isChannelId(i?.split('/').pop()))
-            }
-         });
+                  function getChannelId() {
+                     return [
+                        window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
+                        document.querySelector('meta[itemprop="channelId"][content]')?.content,
+                        document.querySelector('link[itemprop="url"][href]')?.href,
+                        location.pathname.split('/')[2],
+                     ]
+                        .find(i => isChannelId(i?.split('/')[2]))
+                  }
+               });
+            break;
+      }
 
       function setVideoCount({ container = required(), channel_id }) {
          // console.debug('setVideoCount:', ...arguments);
@@ -53,7 +63,7 @@ window.nova_plugins.push({
             insertToHTML({ 'text': storage, 'container': container });
 
          } else {
-            YDOM.request.API({
+            NOVA.request.API({
                request: 'channels',
                params: { 'id': channel_id, 'part': 'statistics' },
                api_key: user_settings['custom-api-key']

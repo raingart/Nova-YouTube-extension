@@ -87,7 +87,7 @@ const Plugins = {
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
-      // similar - YDOM.currentPageName()
+      // similar - NOVA.currentPageName()
       const currentPage = (function () {
          const page = location.pathname.split('/')[1];
          return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
@@ -100,7 +100,7 @@ const Plugins = {
       // console.groupCollapsed('plugins status');
 
       window.nova_plugins?.forEach(plugin => {
-         const pagesAllowList = plugin?.run_on_pages?.split(',').map(i => i.trim().toLowerCase());
+         const pagesAllowList = plugin?.run_on_pages?.split(',').map(p => p.trim().toLowerCase());
          // reset logTable
          logTableTime = 0;
          logTableStatus = false;

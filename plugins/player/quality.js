@@ -8,10 +8,10 @@ window.nova_plugins.push({
 
       let selectedQuality = user_settings.video_quality;
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             // keep quality in session
-            if (user_settings.video_quality_manual_save_tab && YDOM.currentPageName() == 'watch') { // no sense if in the embed
+            if (user_settings.video_quality_manual_save_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
                player.addEventListener('onPlaybackQualityChange', function (quality) {
                   // console.debug('onPlaybackQualityChange', this); // this == window
                   // console.debug('document.activeElement,',document.activeElement);
@@ -27,21 +27,12 @@ window.nova_plugins.push({
             player.addEventListener('onStateChange', setQuality.bind(player));
          });
 
-      const PLAYERSTATE = {
-         '-1': 'UNSTARTED',
-         0: 'ENDED',
-         1: 'PLAYING',
-         2: 'PAUSED',
-         3: 'BUFFERING',
-         5: 'CUED'
-      };
-
       function setQuality(state) {
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
-         // console.debug('playerState', PLAYERSTATE[state]);
+         // console.debug('playerState', NOVA.PLAYERSTATE[state]);
 
          // if ((1 == state || 3 == state) && !setQuality.allow_change) {
-         if (('PLAYING' == PLAYERSTATE[state] || 'BUFFERING' == PLAYERSTATE[state]) && !setQuality.allow_change) {
+         if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.allow_change) {
             setQuality.allow_change = true;
 
             const interval = setInterval(() => {
@@ -78,7 +69,7 @@ window.nova_plugins.push({
                }
             }, 50); // 50ms
 
-            // } else if ('UNSTARTED' == PLAYERSTATE[state] || 'ENDED' == PLAYERSTATE[state]) {
+            // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
          } else if (state <= 0) {
             setQuality.allow_change = false;
          }

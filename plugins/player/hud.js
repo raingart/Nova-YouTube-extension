@@ -10,7 +10,7 @@ window.nova_plugins.push({
          SELECTOR_ID = 'player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ff0000';
 
-      YDOM.waitElement('video')
+      NOVA.waitElement('video')
          .then(video => {
             const player = document.getElementById('movie_player');
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
@@ -27,7 +27,7 @@ window.nova_plugins.push({
          });
 
       // Listener default indicator
-      YDOM.waitElement('.ytp-bezel-text')
+      NOVA.waitElement('.ytp-bezel-text')
          .then(target => {
             new MutationObserver(mutations => {
                for (const mutation of mutations) {
@@ -48,13 +48,13 @@ window.nova_plugins.push({
 
          create() {
             // hide default indicator
-            YDOM.css.push('.ytp-bezel-text-wrapper { display:none !important }');
+            NOVA.css.push('.ytp-bezel-text-wrapper { display:none !important }');
             // init common css
-            YDOM.css.push(
+            NOVA.css.push(
                `#${SELECTOR_ID} {
                   --color: #fff;
                   --bg-color: rgba(0,0,0,0.3);
-                  --zindex: ${YDOM.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
+                  --zindex: ${NOVA.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
 
                   position: absolute;
                   left: 0;

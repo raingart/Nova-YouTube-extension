@@ -60,7 +60,7 @@ const App = {
          console.debug('force lander:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(interval_lander);
 
-         if (document.body && typeof YDOM === 'object' && window.nova_plugins.length) {
+         if (document.body && typeof NOVA === 'object' && window.nova_plugins.length) {
             processLander();
 
             // if delay load domLoaded
@@ -72,10 +72,10 @@ const App = {
                top: 0,
                right: '50%',
                transform: 'translateX(50%)',
-               'margin': '50px',
+               margin: '50px',
                'z-index': 9999,
                'border-radius': '2px',
-               'background-color': typeof YDOM === 'object' ? '#0099ff' : '#f00',
+               'background-color': typeof NOVA === 'object' ? '#0099ff' : '#f00',
                'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
                'font-size': '12px',
                color: '#fff',
@@ -86,9 +86,9 @@ const App = {
             notice.addEventListener('click', () => notice.remove());
             notice.innerHTML =
                `<h4>Failure on initialization ${app_name}</h4>`
-               + (typeof YDOM === 'object'
+               + (typeof NOVA === 'object'
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
-                  : `<div>Сritical Error: kernel library YDOM is "${typeof YDOM}"</div>`);
+                  : `<div>Сritical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
             document.body.appendChild(notice);
          }
       }, 1000 * 3); // 3sec
@@ -97,11 +97,11 @@ const App = {
          const domLoaded = document?.readyState !== 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
-         if (typeof YDOM === 'object' && window.nova_plugins.length === plugins_count) {
+         if (typeof NOVA === 'object' && window.nova_plugins.length === plugins_count) {
             clearInterval(forceLander);
             processLander();
 
-         } else console.debug('loading:', window.nova_plugins.length + '/' + plugins_count);
+         } else console.debug('loading plugins:', window.nova_plugins.length + '/' + plugins_count);
 
       }, 100); // 100ms
 

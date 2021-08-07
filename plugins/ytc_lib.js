@@ -1,4 +1,4 @@
-const YDOM = {
+const NOVA = {
    // DEBUG: true,
 
    // find once.
@@ -32,13 +32,13 @@ const YDOM = {
    //    // There is a more correct method - transitionend.
    //    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
    //    // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
-   //    YDOM.log('wait', ...arguments);
+   //    NOVA.log('wait', ...arguments);
 
    //    if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
 
    //    return new Promise(resolve => {
    //       if (el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector)) {
-   //          // YDOM.log('waited(1)', selector, el);
+   //          // NOVA.log('waited(1)', selector, el);
    //          return resolve(el);
    //       }
    //       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
@@ -50,7 +50,7 @@ const YDOM = {
    //                .forEach(node => {
    //                   (node?.parentElement || document).querySelectorAll(selector)
    //                      .forEach(element => {
-   //                         // YDOM.log('waited', mutation.type, selector);
+   //                         // NOVA.log('waited', mutation.type, selector);
    //                         observer.disconnect();
    //                         return resolve(element);
    //                      });
@@ -62,7 +62,7 @@ const YDOM = {
    // },
 
    watchElement({ selector = required(), attr_mark, callback = required() }) {
-      YDOM.log('watch', selector);
+      NOVA.log('watch', selector);
       if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
 
       process(); // launch without waiting
@@ -70,11 +70,11 @@ const YDOM = {
       setInterval(process, 1000 * 1.5); // 1.5 sec
 
       function process() {
-         YDOM.log('watch.process', { selector, callback });
+         NOVA.log('watch.process', { selector, callback });
          document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
             .forEach(el => {
                if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
-                  YDOM.log('watch.process.viewed', selector);
+                  NOVA.log('watch.process.viewed', selector);
                   if (attr_mark) el.setAttribute(attr_mark, true);
                   if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
                   callback(el);
@@ -116,7 +116,7 @@ const YDOM = {
                sheet.href = source;
 
             } else {
-               const sheetName = 'YDOM_style';
+               const sheetName = 'NOVA_style';
                sheet = document.getElementById(sheetName) || (function () {
                   const style = document.createElement('style');
                   style.type = 'text/css';
@@ -135,10 +135,11 @@ const YDOM = {
             // sheet.insertRule(css, sheet.cssRules.length);
             // (document.head || document.documentElement).appendChild(sheet);
 
-            sheet.onload = () => YDOM.log('style loaded:', sheet.src || sheet.textContent.substr(0, 100));
+            sheet.onload = () => NOVA.log('style loaded:', sheet.src || sheet.textContent.substr(0, 100));
          }
       },
 
+      // ex: NOVA.css.getValue({ selector: 'video', property: 'z-index' })
       getValue({ selector = required(), property = required() }) {
          const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
          return el
@@ -208,17 +209,67 @@ const YDOM = {
       }, 600); // 600ms
    },
 
-   formatDuration(total_seconds, no_zeros) {
-      const
-         sec = Math.abs(total_seconds).toFixed(),
-         hours = Math.floor(sec / 60 / 60) || null,
-         minutes = Math.floor(sec / 60) - (hours * 60),
-         seconds = sec % 60;
+   // getNextChapterIndex() {
+   getChapterList(video_duration = required()) {
+      // first/pinned comment
+      const timestampElList = [
+         // ytplayer - not updated on page transition!
+         // window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription ||
+         document.getElementById('description')?.textContent
+      ]
+         // first/pinned comment
+         .concat(document.querySelector('#contents ytd-comment-thread-renderer:first-child #content')?.textContent || []); // fix - Uncaught TypeError: (intermediate value) is not iterable
 
-      return [hours, minutes, seconds]
-         .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
-         .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1:2:3" => "01:02:03"
-         .join(':'); // format "h:m:s"
+      let prevTime = -1;
+
+      for (const el of timestampElList) {
+         const timestampList = [...el?.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
+            ?.map((curr, i, arr) => {
+               // console.debug('curr', curr);
+               // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+               const currTime = this.timeFormatTo.sec(curr[1]);
+               if (currTime > prevTime && currTime < video_duration) {
+                  prevTime = currTime;
+                  return {
+                     // num: ++i,
+                     sec: currTime,
+                     time: curr[1],
+                     title: curr[0]?.toString().replace(curr[1], '').trim(),
+                  };
+               }
+            })
+            .filter((obj) => obj?.time);
+
+         if (timestampList?.length > 1) return timestampList; // clear from "lying timestamp"
+      }
+   },
+
+   timeFormatTo: {
+      sec(str) {
+         const p = str.split(':');
+         let = s = 0, m = 1;
+
+         while (p.length) {
+            s += m * parseInt(p.pop(), 10);
+            m *= 60;
+         }
+         return +s;
+      },
+
+      HMS(epoch, no_zeros) {
+         const
+            sec = Math.abs(+epoch).toFixed(),
+            days = Math.floor(sec / 86400) || null,
+            hours = Math.floor(sec % 86400 / 3600) || null,
+            minutes = Math.floor(sec % 3600 / 60),
+            seconds = Math.floor(sec % 60);
+
+         return (days && !isNaN(days) ? `${days}d ` : '')
+            + [hours, minutes, seconds]
+               .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
+               .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1:2:3" => "01:02:03"
+               .join(':'); // format "h:m:s"
+      },
    },
 
    currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main',
@@ -228,7 +279,7 @@ const YDOM = {
       get: (query, urlString) => new URL(urlString || location).searchParams.get(query),
 
       set(query = {}, urlString) {
-         // YDOM.log('queryURL.set:', ...arguments);
+         // NOVA.log('queryURL.set:', ...arguments);
          const url = new URL(urlString || location);
          Object.entries(query).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
@@ -240,7 +291,7 @@ const YDOM = {
       API_STORE_NAME: 'YOUTUBE_API_KEYS',
 
       async API({ request, params, api_key }) {
-         // YDOM.log('request.API:', ...arguments); // err
+         // NOVA.log('request.API:', ...arguments); // err
          // console.debug('API:', ...arguments);
          // get API key
          const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
@@ -271,7 +322,7 @@ const YDOM = {
             .then(response => response.json())
             .then(json => {
                if (!json?.error && Object.keys(json).length) return json;
-               console.warn('used key:', YDOM.queryURL.get('key', URL));
+               console.warn('used key:', NOVA.queryURL.get('key', URL));
                throw new Error(JSON.stringify(json?.error));
             })
             .catch(error => {
@@ -286,12 +337,12 @@ const YDOM = {
       },
 
       async keys() {
-         YDOM.log('request.API: fetch to youtube_api_keys.json');
+         NOVA.log('request.API: fetch to youtube_api_keys.json');
          // see https://gist.github.com/raingart/ff6711fafbc46e5646d4d251a79d1118/
          return await fetch('https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json')
             .then(res => res.text())
             .then(keys => { // save
-               YDOM.log(`get and save keys in localStorage`, keys);
+               NOVA.log(`get and save keys in localStorage`, keys);
                localStorage.setItem(this.API_STORE_NAME, keys);
                return JSON.parse(keys);
             })
@@ -302,6 +353,15 @@ const YDOM = {
             })
             .catch(reason => console.error('Error get keys:', reason)); // warn
       },
+   },
+
+   PLAYERSTATE: {
+      '-1': 'UNSTARTED',
+      0: 'ENDED',
+      1: 'PLAYING',
+      2: 'PAUSED',
+      3: 'BUFFERING',
+      5: 'CUED'
    },
 
    log(...args) {

@@ -16,7 +16,7 @@ window.nova_plugins.push({
          colorDislike = user_settings.rating_dislike_color || '#ddd';
 
       // init bars style
-      YDOM.css.push(
+      NOVA.css.push(
          SELECTOR + `{
             --height: ${(user_settings.rating_bar_height || 5)}px;
          }
@@ -36,11 +36,11 @@ window.nova_plugins.push({
          newCacheItem = {},
          timeoutRating;
 
-      YDOM.watchElement({
+      NOVA.watchElement({
          selector: 'a#thumbnail[href].ytd-thumbnail',
          attr_mark: 'thumbnail-rated',
          callback: thumbnail => {
-            if (id = YDOM.queryURL.get('v', thumbnail.href)) {
+            if (id = NOVA.queryURL.get('v', thumbnail.href)) {
                idsToProcess.push(id);
                run_process();
             }
@@ -111,7 +111,7 @@ window.nova_plugins.push({
          chunkArray(ids, YOUTUBE_API_MAX_IDS_PER_CALL)
             .forEach(id_part => {
                // console.debug('id_part', id_part);
-               YDOM.request.API({
+               NOVA.request.API({
                   request: 'videos',
                   params: { 'id': id_part.join(','), 'part': 'statistics' },
                   api_key: user_settings['custom-api-key'],

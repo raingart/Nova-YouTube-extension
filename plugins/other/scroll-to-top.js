@@ -8,7 +8,7 @@ window.nova_plugins.push({
 
       const SELECTOR_ID = 'scrollToTop_btn';
 
-      YDOM.waitElement('body')
+      NOVA.waitElement('body')
          .then(() => {
             // create btn
             const btn = document.createElement('button');
@@ -39,7 +39,7 @@ window.nova_plugins.push({
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
                const player = document.getElementById('movie_player');
-               if (user_settings.scroll_to_top_autoplay && YDOM.currentPageName() == 'watch'
+               if (user_settings.scroll_to_top_autoplay && NOVA.currentPageName() == 'watch'
                   && player.getPlayerState() === 2 // 2: paused
                ) {
                   player.playVideo();
@@ -60,7 +60,7 @@ window.nova_plugins.push({
             document.body.appendChild(btn);
 
             // btn hover style
-            YDOM.css.push(
+            NOVA.css.push(
                `#${SELECTOR_ID}:hover {
                   opacity: 1 !important;
                   background-color: rgba(0,0,0,.6) !important;

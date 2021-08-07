@@ -7,10 +7,11 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const CACHE_PREFIX = 'resume-playback-time';
-      const getCacheName = () => CACHE_PREFIX + ':' + YDOM.queryURL.get('v'); // window.ytplayer?.config?.args.raw_player_response.videoDetails.videoId
+      // ytplayer - not updated on page transition!
+      const getCacheName = () => CACHE_PREFIX + ':' + NOVA.queryURL.get('v'); // window.ytplayer?.config?.args.raw_player_response.videoDetails.videoId
       let cacheName = getCacheName(); // for optimization
 
-      YDOM.waitElement('#movie_player:not(.ad-showing) video')
+      NOVA.waitElement('#movie_player:not(.ad-showing) video')
          .then(video => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             video.addEventListener('loadeddata', resumePlaybackTime.bind(video));
@@ -28,7 +29,7 @@ window.nova_plugins.push({
          cacheName = getCacheName();
 
          // YouTube History does the same
-         if (!YDOM.queryURL.get('t')
+         if (!NOVA.queryURL.get('t')
             && (time = JSON.parse(sessionStorage.getItem(cacheName)))
             // fix the situation where it is impossible to replay item in the playlist
             && (time + 1) < this.duration) {

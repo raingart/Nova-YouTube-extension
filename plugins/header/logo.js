@@ -6,7 +6,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      YDOM.waitElement('#masthead a#logo')
+      NOVA.waitElement('#masthead a#logo')
          .then(a => a.href = new URL(user_settings.page_logo_url_mode)?.href);
 
    },

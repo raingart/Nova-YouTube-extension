@@ -11,7 +11,7 @@ renderSettingButton();
 reflectException();
 
 function renderSettingButton() {
-   YDOM.waitElement('#masthead #buttons > *:first-child')
+   NOVA.waitElement('#masthead #buttons > *:first-child')
       .then(container => {
          const a = document.createElement('a');
          a.title = 'Nova Settings';
@@ -33,8 +33,8 @@ function renderSettingButton() {
       });
 }
 // function renderSettingButton() {
-//    YDOM.waitElement('#end:last-child')
-//    // YDOM.waitElement('#end')
+//    NOVA.waitElement('#end:last-child')
+//    // NOVA.waitElement('#end')
 //       .then(container => {
 //          const button = document.createElement('button');
 //          button.innerHTML =

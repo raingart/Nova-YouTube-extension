@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // https://www.youtube.com/embed/*** <-- -embed
    run_on_pages: 'all, watch, channel, -embed',
 
-    // deactivate if use YDOM.HTMLElement.watch
+    // deactivate if use NOVA.HTMLElement.watch
    restart_on_transition: true, // optional. Restart plugin on every url change
 
    /* optional GIU in options page: start */
@@ -30,14 +30,14 @@ window.nova_plugins.push({
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped
-      YDOM.waitElement('#movie_player') // use css selector. Like document.querySelector
+      NOVA.waitElement('#movie_player') // use css selector. Like document.querySelector
          // wait, run the code
          .then(node => { // returns the specified selector above
             // do stuff
          });
 
       // If you want the search to not be stopped, use this construction
-      YDOM.watchElement({
+      NOVA.watchElement({
          selector: 'a#thumbnail img[src]', // use css selector. Like document.querySelectorAll
          // The attribute with which the already found elements will be marked
          attr_mark: 'timestamps-updated', // delete if you want to constantly watch

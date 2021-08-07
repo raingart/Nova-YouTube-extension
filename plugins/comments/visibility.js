@@ -11,7 +11,7 @@ window.nova_plugins.push({
 
       switch (user_settings.comments_visibility_mode) {
          case 'remove':
-            YDOM.waitElement('#comments')
+            NOVA.waitElement('#comments')
                .then(comments => comments.remove());
             break;
 
@@ -20,7 +20,7 @@ window.nova_plugins.push({
             if (document.getElementById(SELECTOR_BTN_ID)) return;
 
             // https://stackoverflow.com/a/68202306
-            YDOM.waitElement('#comments')
+            NOVA.waitElement('#comments')
                .then(comments => {
                   // stop load
                   comments.style.visibility = 'hidden';

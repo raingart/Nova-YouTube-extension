@@ -8,7 +8,7 @@ window.nova_plugins.push({
 
       const SELECTOR_ID = 'ytp-time-remaining';
 
-      YDOM.waitElement('video')
+      NOVA.waitElement('video')
          .then(video => {
             video.addEventListener('timeupdate', setRemaining.bind(video));
          });
@@ -18,7 +18,7 @@ window.nova_plugins.push({
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
          if (document.querySelector('.ytp-autohide video')) return; // optimization try
          const currentPt = () => Math.round((this.currentTime / this.duration) * 100);
-         const leftTime = () => '-' + YDOM.formatDuration(this.duration - this.currentTime);
+         const leftTime = () => '-' + NOVA.timeFormatTo.HMS((this.duration - this.currentTime) / this.playbackRate);
          let text;
 
          switch (user_settings.time_remaining_mode) {

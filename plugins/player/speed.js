@@ -12,15 +12,15 @@ window.nova_plugins.push({
    desc: 'with mousewheel',
    _runtime: user_settings => {
 
-      YDOM.waitElement('#movie_player')
+      NOVA.waitElement('#movie_player')
          .then(player => {
             // trigger default indicator
             // html5 way
             player.querySelector('video')
                .addEventListener('ratechange', function () {
                   // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
-                  YDOM.bezelTrigger(this.playbackRate + 'x');
-               });
+               NOVA.bezelTrigger(this.playbackRate + 'x');
+            });
             // Default indicator does not work for html5 way
             // player.addEventListener('onPlaybackRateChange', rate => {
             //    console.debug('onPlaybackRateChange', rate);
@@ -44,7 +44,7 @@ window.nova_plugins.push({
             const playerRate = {
                // DEBUG: true,
 
-               set(level = required()) {
+               set(level = 1) {
                   this.log('set', ...arguments);
                   player.setPlaybackRate(+level) && this.saveInSession(level);
                },
@@ -136,17 +136,23 @@ window.nova_plugins.push({
                },
             };
 
-            const isMusic = () => [
-               location.href,
-               document.querySelector('meta[itemprop="genre"][content]')?.content,
-               window.ytplayer?.config?.args.raw_player_response.microformat.playerMicroformatRenderer.category
-            ]
-               .some(i => i?.toLowerCase().includes('music'));
+            setDefaultRate();
+            document.addEventListener('yt-navigate-finish', setDefaultRate); // no sense, page data not updated
 
-            // init rate_default
-            if (+user_settings.rate_default !== 1 && (user_settings.rate_default_apply_music || !isMusic())) {
-               // console.debug('update rate_default', user_settings.rate_default);
-               playerRate.set(user_settings.rate_default);
+            function setDefaultRate() {
+               const isMusic = () => [
+                  location.href,
+                  document.querySelector('meta[itemprop="genre"][content]')?.content, // not updated on page transition!
+                  // ytplayer - not updated on page transition!
+                  window.ytplayer?.config?.args.raw_player_response.microformat.playerMicroformatRenderer.category
+               ]
+                  .some(i => i?.toLowerCase().includes('music'));
+
+               // init rate_default
+               if (+user_settings.rate_default !== 1 && (user_settings.rate_default_apply_music || !isMusic())) {
+                  // console.debug('update rate_default', user_settings.rate_default);
+                  playerRate.set(user_settings.rate_default);
+               }
             }
          });
 
