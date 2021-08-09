@@ -211,36 +211,39 @@ const NOVA = {
 
    // getNextChapterIndex() {
    getChapterList(video_duration = required()) {
-      // first/pinned comment
-      const timestampElList = [
+      const timestampListConteiners = [
          // ytplayer - not updated on page transition!
          // window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription ||
-         document.getElementById('description')?.textContent
+         document.getElementById('description'),
+         document.querySelector('#contents ytd-comment-thread-renderer:first-child #content')// first/pinned comment
       ]
-         // first/pinned comment
-         .concat(document.querySelector('#contents ytd-comment-thread-renderer:first-child #content')?.textContent || []); // fix - Uncaught TypeError: (intermediate value) is not iterable
+      console.debug('timestampListConteiners', timestampListConteiners);
 
       let prevTime = -1;
 
-      for (const el of timestampElList) {
-         const timestampList = [...el?.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
-            ?.map((curr, i, arr) => {
-               // console.debug('curr', curr);
-               // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-               const currTime = this.timeFormatTo.sec(curr[1]);
-               if (currTime > prevTime && currTime < video_duration) {
-                  prevTime = currTime;
-                  return {
-                     // num: ++i,
-                     sec: currTime,
-                     time: curr[1],
-                     title: curr[0]?.toString().replace(curr[1], '').trim(),
-                  };
-               }
-            })
-            .filter((obj) => obj?.time);
+      for (const conteiner of timestampListConteiners) {
+         if (conteiner?.querySelector('a[href*="t="]')) {
+            const timestampList = [...conteiner.textContent?.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
+               ?.map((curr, i, arr) => {
+                  // console.debug('curr', curr);
+                  // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+                  const currTime = this.timeFormatTo.sec(curr[1]);
+                  if (currTime > prevTime && currTime < video_duration) {
+                     prevTime = currTime;
+                     return {
+                        // num: ++i,
+                        sec: currTime,
+                        time: curr[1],
+                        title: curr[0]?.toString().replace(curr[1], '').trim(),
+                     };
+                  }
+               })
+               .filter((obj) => obj?.time);
 
-         if (timestampList?.length > 1) return timestampList; // clear from "lying timestamp"
+            // console.debug('timestampList:', timestampList);
+            if (timestampList?.length > 1) return timestampList; // clear from "lying timestamp"
+         }
+
       }
    },
 

@@ -53,8 +53,8 @@ window.nova_plugins.push({
          label: 'Thumbnail timestamps',
          title: 'Thumbnail display video timestamps',
          options: [
-            { label: 'Always', value: 'always', selected: true },
-            { label: 'On hover', value: 'onhover' },
+            { label: 'always', value: 'always', selected: true },
+            { label: 'on hover', value: 'onhover' },
          ],
       },
       comments_view_reply: {
@@ -62,8 +62,8 @@ window.nova_plugins.push({
          label: 'Expand reply',
          // title: '',
          options: [
-            { label: 'Always', value: 'always' },
-            { label: 'On hover', value: 'onhover', selected: true },
+            { label: 'always', value: 'always' },
+            { label: 'on hover', value: 'onhover', selected: true },
          ],
       },
    },

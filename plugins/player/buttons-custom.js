@@ -7,7 +7,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         SELECTOR_BTN_CLASS_NAME = 'custom-button',
+         SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
          getVideoElement = () => document.querySelector('video'),
          getPlayerElement = () => document.getElementById('movie_player'),
@@ -49,7 +49,8 @@ window.nova_plugins.push({
                btnPopUp.innerHTML = '<svg version="1.1" viewBox="0 0 20 20" height="100%" width="100%"><path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z"/></svg>';
                btnPopUp.addEventListener('click', () => {
                   const
-                     width = 533,
+                     // width = window.innerWidth / 2,
+                     width = screen.width / (+user_settings.player_buttons_custom_popup_width || 4),
                      height = Math.round(width / (16 / 9)),
                      left = window.innerWidth, //(window.innerWidth) / 2 - (width / 2),
                      top = window.innerHeight, //(window.innerHeight / 2) - (height / 2),
@@ -294,6 +295,18 @@ window.nova_plugins.push({
             { label: 'thumbnail', value: 'thumbnail' },
             { label: 'pop-up player', value: 'popup' },
          ],
+      },
+      player_buttons_custom_popup_width: {
+         _tagName: 'input',
+         label: 'Player window size aspect ratio',
+         type: 'number',
+         title: 'less - more size',
+         placeholder: '1.5-4',
+         step: 0.1,
+         min: 1.5,
+         max: 4,
+         value: 2.5,
+         'data-dependent': '{"player_buttons_custom_items":["popup"]}',
       },
       player_buttons_custom_hotkey_toggle_speed: {
          _tagName: 'select',

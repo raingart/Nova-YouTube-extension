@@ -19,7 +19,7 @@ const Plugins = {
       'player/loop.js',
       'player/time-resume.js',
       // 'player/-thumb-pause.js',
-      'player/custom-menu.js',
+      'player/buttons-custom.js',
       // 'player/stop.js', // incompatible with quality.js
 
       'other/thumbs-clear.js',

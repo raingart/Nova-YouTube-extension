@@ -185,9 +185,9 @@ window.nova_plugins.push({
    options: {
       player_float_scroll_size_ratio: {
          _tagName: 'input',
-         label: 'Player ratio to screen size',
+         label: 'Player size aspect ratio',
          type: 'number',
-         title: 'less - more player size',
+         title: 'less - more size',
          placeholder: '2-5',
          step: 0.1,
          min: 2,

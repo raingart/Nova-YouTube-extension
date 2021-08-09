@@ -18,7 +18,7 @@ window.nova_plugins.push({
             NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
                .then(() => {
                   let tab_nth;
-                  switch (user_settings.channel_default_tab) {
+                  switch (user_settings.channel_default_tab || 'videos') {
                      case 'videos':
                         tab_nth = 4;
                         break;

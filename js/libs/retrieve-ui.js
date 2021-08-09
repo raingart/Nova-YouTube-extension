@@ -9,7 +9,7 @@ const PopulateForm = {
          // const el = document.getElementsByName(key)[0] || document.getElementById(key);
          if (el = (parent || document).querySelector(`[name="${key}"]`)
             || (parent || document).querySelector('#' + key)) {
-            this.log('>opt %s[%s]: %s', key, el.tagName, val);
+            this.log('>opt %s#%s=%s', el.tagName, key, val);
 
             switch (el.tagName.toLowerCase()) {
                case 'div':
@@ -51,7 +51,6 @@ const PopulateForm = {
       for (const option of selectObj.children) {
          if (option.value === val) {
             option.selected = true;
-            break;
          }
       }
    },

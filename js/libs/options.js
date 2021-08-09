@@ -17,16 +17,21 @@ window.addEventListener('load', () => {
                handler();
             });
 
-         function showOrHide(dependentItem, dependentsList) {
+         function showOrHide(dependentItem, dependentsJson) {
             // console.debug('showOrHide', ...arguments);
-            for (const name in dependentsList) {
-               const reqParent = document.getElementsByName(name)[0];
-               if (!reqParent) return console.error('error showOrHide:', name);
+            for (const name in dependentsJson) {
+               // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
+               if (dependentOnEl = document.getElementsByName(name)[0]) {
+                  const val = dependentsJson[name].toString();
+                  const dependentOnValues = (function () {
+                     if (options = dependentOnEl?.selectedOptions) {
+                        return Array.from(options).map(({ value }) => value);
+                     }
+                     return [dependentOnEl.value];
+                  })();
 
-               for (const values of [dependentsList[name]]) {
-                  if ((!values.toString().startsWith('!') && ((reqParent.checked && values) || values.includes(reqParent.value)))
-                     // reserve
-                     || (values.toString().startsWith('!') && reqParent.value !== values.toString().replace('!', ''))
+                  if (val && (dependentOnEl.checked || dependentOnValues.includes(val))
+                     || (val?.startsWith('!') && dependentOnEl.value !== val.replace('!', '')) // inverse
                   ) {
                      // console.debug('show:', name);
                      dependentItem.classList.remove('hide');
@@ -37,6 +42,9 @@ window.addEventListener('load', () => {
                      dependentItem.classList.add('hide');
                      childInputDisable(true);
                   }
+
+               } else {
+                  console.error('error showOrHide:', name);
                }
             }
 

@@ -54,9 +54,11 @@ window.nova_plugins.push({
                   };
                   // add chapters marks
                   video.addEventListener('loadeddata', function () {
-                     renderChaptersMarks(this.duration);
+                     NOVA.waitElement('#description a[href*="t="]')
+                        .then(comment => renderChaptersMarks(video.duration));
+
                      // first/pinned comment
-                     NOVA.waitElement('#contents ytd-comment-thread-renderer:first-child #content')
+                     NOVA.waitElement('#contents ytd-comment-thread-renderer:first-child #content a[href*="t="]')
                         .then(comment => renderChaptersMarks(video.duration));
                   });
 

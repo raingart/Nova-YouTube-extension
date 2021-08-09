@@ -159,7 +159,9 @@ App.init();
 // https://www.youtube.com/watch?v=rFeBMv98X30 1080
 
 // example url new embed page
+// https://youtu.be/JVi_e8g7K4A
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
+// https://www.youtube.com/embed/JVi_e8g7K4A?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
 
 // abnormal pages
 // https://www.youtube.com/watch?v=6Ux6SlOE9Qk

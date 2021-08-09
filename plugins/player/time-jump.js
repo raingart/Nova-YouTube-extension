@@ -12,46 +12,100 @@ window.nova_plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      let chapterList;
+      if (user_settings.time_jump_title_offset) {
+         NOVA.waitElement('#movie_player')
+            .then(player => addTitleOffset.apply(player));
+      }
 
-      NOVA.waitElement('#movie_player')
-         .then(player => {
-            doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
+      switch (NOVA.currentPageName()) {
+         case 'watch':
+            let chapterList;
 
-            if (user_settings.time_jump_title_offset) addTitleOffset.apply(player);
+            NOVA.waitElement('#movie_player')
+               .then(player => {
+                  doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
 
-            NOVA.waitElement('video') // reset chapterList
-               .then(video => video.addEventListener('loadeddata', () => chapterList = []));
-         });
+                  NOVA.waitElement('video') // reset chapterList
+                     .then(video => video.addEventListener('loadeddata', () => chapterList = []));
 
-      function jumpTime() {
-         if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
-            chapterList = NOVA.getChapterList(this.getDuration()) || null;
-            console.debug('chapterList:', chapterList);
-         }
-         const nextChapterIndex = chapterList?.findIndex(c => c?.sec >= this.getCurrentTime());
-         let msg;
-         if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
-            // if has chapters
-            if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
-               // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
-               this.seekToChapterWithAnimation(nextChapterIndex);
-               msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
-                  || chapterList[nextChapterIndex].title) + ` (${chapterList[nextChapterIndex].time})`;
+                  function jumpTime() {
+                     if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
+                        chapterList = NOVA.getChapterList(this.getDuration()) || null;
+                        console.debug('chapterList:', chapterList);
+                     }
+                     const nextChapterIndex = chapterList?.findIndex(c => c?.sec >= this.getCurrentTime());
+                     let msg;
+                     if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
+                        // if has chapters
+                        if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                           // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
+                           this.seekToChapterWithAnimation(nextChapterIndex);
+                           msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+                              || chapterList[nextChapterIndex].title) + ` (${chapterList[nextChapterIndex].time})`;
 
-            } else {
-               const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
-               // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec}sec`);
-               this.seekTo(nextChapterData.sec);
-               msg = `Chapter • ${nextChapterData.title} (${nextChapterData.time})`;
-            }
+                        } else {
+                           const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
+                           // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec}sec`);
+                           this.seekTo(nextChapterData.sec);
+                           msg = `Chapter • ${nextChapterData.title} (${nextChapterData.time})`;
+                        }
 
-         } else {
-            this.seekBy(+user_settings.time_jump_step);
-            msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS(this.getCurrentTime())})`;
-         }
+                     } else {
+                        this.seekBy(+user_settings.time_jump_step);
+                        msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS(this.getCurrentTime())})`;
+                     }
 
-         NOVA.bezelTrigger(msg); // trigger default indicator
+                     NOVA.bezelTrigger(msg); // trigger default indicator
+                  }
+               });
+            break;
+
+         case 'embed':
+            NOVA.waitElement('video')
+               .then(video => {
+                  doubleKeyPressListener(jumpTime.bind(video), user_settings.time_jump_hotkey);
+
+                  function jumpTime() {
+                     let msg = `+${user_settings.time_jump_step} sec`;
+
+                     if (sec = seekToNextChapter.apply(this)) {
+                        msg = `Chapter • ${NOVA.timeFormatTo.HMS(sec)}`;
+
+                     } else {
+                        sec = +user_settings.time_jump_step + this.currentTime;
+                     }
+                     // console.debug('seekTo', sec);
+                     this.currentTime = sec;
+
+                     NOVA.bezelTrigger(msg); // trigger default indicator
+
+                     function seekToNextChapter() {
+                        if ((chapterscontainer = document.querySelector('.ytp-chapters-container'))
+                           && chapterscontainer?.children.length > 1
+                           && (progressContainerWidth = parseInt(NOVA.css.getValue({ selector: chapterscontainer, property: 'width' })))
+                        ) {
+                           const progressRatio = this.currentTime / this.duration;
+                           let passedWidth = 0;
+                           for (const chapter of chapterscontainer.children) {
+                              const
+                                 chapterWidth = parseInt(NOVA.css.getValue({ selector: chapter, property: 'width' })),
+                                 сhapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
+
+                              // console.debug('сhapter', сhapterRatio, chapterWidth);
+                              if (сhapterRatio >= progressRatio) {
+                                 return Math.floor(сhapterRatio * this.duration);
+                              }
+                              // accumulate passed
+                              passedWidth += chapterWidth
+                                 + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-left' }))
+                                 + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-right' }));
+                           }
+                           // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chapterscontainer?.children.length, progressContainerWidth, '/', progressRatio);
+                        }
+                     }
+                  }
+               });
+            break;
       }
 
       function addTitleOffset() {
@@ -128,7 +182,7 @@ window.nova_plugins.push({
       },
       time_jump_hotkey: {
          _tagName: 'select',
-         label: 'Hotkey (double tap)',
+         label: 'Hotkey (double click)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'alt', value: 18 },
