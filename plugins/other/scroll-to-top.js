@@ -56,8 +56,8 @@ window.nova_plugins.push({
                'vertical-align': 'middle',
                transform: 'rotate(-135deg)',
             });
-            btn.appendChild(arrow);
-            document.body.appendChild(btn);
+            btn.append(arrow);
+            document.body.append(btn);
 
             // btn hover style
             NOVA.css.push(

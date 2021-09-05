@@ -74,7 +74,7 @@ const Plugins = {
          // script.src = 'data:text/javascript,' + encodeURIComponent(source)
       }
 
-      (document.head || document.documentElement).appendChild(script);
+      (document.head || document.documentElement).append(script);
 
       script.onload = () => {
          // console.log('script loaded:', script.src || script.textContent.substr(0, 100));

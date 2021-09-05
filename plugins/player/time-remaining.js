@@ -11,6 +11,10 @@ window.nova_plugins.push({
       NOVA.waitElement('video')
          .then(video => {
             video.addEventListener('timeupdate', setRemaining.bind(video));
+            video.addEventListener('ratechange', setRemaining.bind(video));
+            // ['timeupdate', 'ratechange'/*, 'progress', 'loadeddata'*/].forEach(evt => {
+            //    video.addEventListener(evt, setRemaining.bind(video));
+            // });
          });
 
       function setRemaining() {
@@ -18,7 +22,7 @@ window.nova_plugins.push({
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
          if (document.querySelector('.ytp-autohide video')) return; // optimization try
          const currentPt = () => Math.round((this.currentTime / this.duration) * 100);
-         const leftTime = () => '-' + NOVA.timeFormatTo.HMS((this.duration - this.currentTime) / this.playbackRate);
+         const leftTime = () => '-' + NOVA.timeFormatTo.HMS_digit((this.duration - this.currentTime) / this.playbackRate);
          let text;
 
          switch (user_settings.time_remaining_mode) {

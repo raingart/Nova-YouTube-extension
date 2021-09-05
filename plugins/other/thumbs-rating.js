@@ -120,9 +120,9 @@ window.nova_plugins.push({
                      res?.items?.forEach(item => {
                         // console.debug('item', item);
                         const
-                           views = parseInt(item.statistics.viewCount) || 0,
-                           likes = parseInt(item.statistics.likeCount) || 0,
-                           dislikes = parseInt(item.statistics.dislikeCount) || 0,
+                           views = +item.statistics.viewCount || 0,
+                           likes = +item.statistics.likeCount || 0,
+                           dislikes = +item.statistics.dislikeCount || 0,
                            total = likes + dislikes;
 
                         let percent = Math.floor(likes / total * 100);
@@ -161,8 +161,8 @@ window.nova_plugins.push({
             .forEach(a => {
                // console.debug('finded', a, pt);
                templateBar.style.background = `linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)`;
-               // a.appendChild(templateBar.cloneNode(true)); // unsure and need to use - cloneNode
-               a.appendChild(templateBar);
+               // a.append(templateBar.cloneNode(true)); // unsure and need to use - cloneNode
+               a.append(templateBar);
                // a.insertAdjacentHTML('beforeend',
                //    `<div id="${SELECTOR_ID}" class="style-scope ytd-sentiment-bar-renderer" style="background:linear-gradient(to right, ${colorLiker} ${pt}%, ${colorDislike} ${pt}%)"></div>`);
             });

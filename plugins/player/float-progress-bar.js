@@ -23,6 +23,9 @@ window.nova_plugins.push({
                   video.addEventListener('loadstart', function () {
                      // console.debug('loadstart');
                      if (!container) container = document.getElementById(SELECTOR_ID);
+                     // hide if is stream.
+                     container.style.display = player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
+
                      container.classList.remove('transition');
 
                      if (bufferEl) bufferEl.style.transform = 'scaleX(0)';
@@ -33,6 +36,8 @@ window.nova_plugins.push({
                   // render progress
                   video.addEventListener('timeupdate', function () {
                      // console.debug('timeupdate', this.currentTime, '/', this.duration);
+                     if (player.getVideoData().isLive) return;
+
                      if (!progressEl) progressEl = document.getElementById(`${SELECTOR_ID}-progress`)
                      if (!isNaN(this.duration)) {
                         progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
@@ -43,6 +48,8 @@ window.nova_plugins.push({
                   video.addEventListener('seeking', renderBuffer);
 
                   function renderBuffer() {
+                     if (player.getVideoData().isLive) return;
+
                      if (!bufferEl) bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`);
                      for (let i = 0; i < this.buffered.length; i++) {
                         //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
@@ -51,15 +58,29 @@ window.nova_plugins.push({
                            bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
                         }
                      }
-                  };
+                  }
+                  // renderBuffer
+                  // ['progress', 'seeking'].forEach(evt => {
+                  //    video.addEventListener(evt, function () {
+                  //       if (!bufferEl) bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`);
+                  //       for (let i = 0; i < this.buffered.length; i++) {
+                  //          //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
+                  //          //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
+                  //          if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
+                  //             bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
+                  //          }
+                  //       }
+                  //    });
+                  // });
                   // add chapters marks
                   video.addEventListener('loadeddata', function () {
-                     NOVA.waitElement('#description a[href*="t="]')
-                        .then(comment => renderChaptersMarks(video.duration));
+                     const selectorTimestampLink = 'a[href*="t="]';
+                     NOVA.waitElement(`#meta #description ${selectorTimestampLink}`)
+                        .then(() => renderChaptersMarks(video.duration));
 
                      // first/pinned comment
-                     NOVA.waitElement('#contents ytd-comment-thread-renderer:first-child #content a[href*="t="]')
-                        .then(comment => renderChaptersMarks(video.duration));
+                     NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
+                        .then(() => renderChaptersMarks(video.duration));
                   });
 
                });
@@ -77,7 +98,8 @@ window.nova_plugins.push({
                   const nextChapterSec = chapters_list[i + 1]?.sec || 0;
                   chapterEl.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
                   if (chapter.title) chapterEl.title = chapter.title;
-                  chaptersConteiner.appendChild(chapterEl);
+                  chapterEl.setAttribute('time', chapter.time);
+                  chaptersConteiner.append(chapterEl);
                });
          }
       };

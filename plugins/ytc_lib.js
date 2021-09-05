@@ -121,7 +121,7 @@ const NOVA = {
                   const style = document.createElement('style');
                   style.type = 'text/css';
                   style.id = sheetName;
-                  document.head.appendChild(style);
+                  document.head.append(style);
                   return style;
                })();
             }
@@ -133,7 +133,7 @@ const NOVA = {
                // .replace(/\t\}/mg, '}')
                + '\n';
             // sheet.insertRule(css, sheet.cssRules.length);
-            // (document.head || document.documentElement).appendChild(sheet);
+            // (document.head || document.documentElement).append(sheet);
 
             sheet.onload = () => NOVA.log('style loaded:', sheet.src || sheet.textContent.substr(0, 100));
          }
@@ -209,47 +209,92 @@ const NOVA = {
       }, 600); // 600ms
    },
 
-   // getNextChapterIndex() {
    getChapterList(video_duration = required()) {
-      const timestampListConteiners = [
-         // ytplayer - not updated on page transition!
-         // window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription ||
-         document.getElementById('description'),
-         document.querySelector('#contents ytd-comment-thread-renderer:first-child #content')// first/pinned comment
-      ]
-      console.debug('timestampListConteiners', timestampListConteiners);
+      let timestampsCollect = [];
+      let prevSec = -1;
 
-      let prevTime = -1;
-
-      for (const conteiner of timestampListConteiners) {
-         if (conteiner?.querySelector('a[href*="t="]')) {
-            const timestampList = [...conteiner.textContent?.matchAll(/(\d{1,2}:\d{2}(:\d{2})?)(.+$)?/gm)]
-               ?.map((curr, i, arr) => {
-                  // console.debug('curr', curr);
-                  // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-                  const currTime = this.timeFormatTo.sec(curr[1]);
-                  if (currTime > prevTime && currTime < video_duration) {
-                     prevTime = currTime;
-                     return {
-                        // num: ++i,
-                        sec: currTime,
-                        time: curr[1],
-                        title: curr[0]?.toString().replace(curr[1], '').trim(),
-                     };
+      // description and first(pinned) comment
+      document.querySelectorAll('#meta #description, #contents ytd-comment-thread-renderer:first-child #content')
+         .forEach(el => {
+            (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
+               ?.split('\n')
+               .forEach(line => {
+                  if (line.length > 5 && line.length < 80 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
+                     timestamp = timestamp[0];
+                     const sec = this.timeFormatTo.sec(timestamp);
+                     if (sec > prevSec && sec < +video_duration) {
+                        // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+                        prevSec = sec;
+                        timestampsCollect.push({
+                           'sec': sec,
+                           'time': timestamp,
+                           'title': line
+                              .replace(timestamp, '')
+                              .trim()
+                              .replace(/(^[:\-–—]|[:\-–—.;]$)/, '')
+                              .trim()
+                        });
+                     }
                   }
-               })
-               .filter((obj) => obj?.time);
+               });
+         });
 
-            // console.debug('timestampList:', timestampList);
-            if (timestampList?.length > 1) return timestampList; // clear from "lying timestamp"
-         }
-
+      if (timestampsCollect?.length > 1) { // clear from "lying timestamp"
+         // console.debug('timestampsCollect', timestampsCollect);
+         return timestampsCollect;
       }
    },
 
+   // there are problems with the video https://www.youtube.com/watch?v=SgQ_Jk49FRQ. Too lazy to continue testing because it is unclear which method is more optimal.
+   // getChapterList(video_duration = required()) {
+   //    const selectorLinkTimestamp = 'a[href*="t="]';
+   //    let timestampList = [];
+   //    let prevSec = -1;
+
+   //    document.querySelectorAll(`#meta #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
+   //       .forEach((link, i, arr) => {
+   //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+   //          const sec = parseInt(this.queryURL.get('t', link.href));
+   //          if (sec > prevSec && sec < +video_duration) {
+   //             prevSec = sec;
+   //             // will be skip - time: '0:00'
+   //             timestampList.push({
+   //                // num: ++i,
+   //                sec: sec,
+   //                time: link.textContent,
+   //                title: link.parentElement.textContent
+   //                   .split('\n')
+   //                   .find(line => line.includes(link.textContent))
+   //                   .replace(link.textContent, '')
+   //                   .trim()
+   //                   .replace(/(^[:\-–—]|[:\-–—.;]$)/, '')
+   //                   .trim()
+   //             });
+   //          }
+   //       });
+   //    console.debug('timestampList', timestampList);
+
+   //    if (timestampList?.length > 1) { // clear from "lying timestamp"
+   //       return timestampList.filter(i => i.title.length < 80);
+   //    }
+   // },
+
+   // findTimestamps(text) {
+   //    const result = []
+   //    const timestampPattern = /((\d?\d:){1,2}\d{2})/g
+   //    let match
+   //    while ((match = timestampPattern.exec(text))) {
+   //       result.push({
+   //          from: match.index,
+   //          to: timestampPattern.lastIndex
+   //       })
+   //    }
+   //    return result
+   // },
+
    timeFormatTo: {
-      sec(str) {
-         const p = str.split(':');
+      sec(str = required()) {
+         const p = str.toString().split(':');
          let = s = 0, m = 1;
 
          while (p.length) {
@@ -259,9 +304,9 @@ const NOVA = {
          return +s;
       },
 
-      HMS(epoch, no_zeros) {
+      HMS_digit(ts, no_zeros) {
          const
-            sec = Math.abs(+epoch).toFixed(),
+            sec = Math.abs(+ts),
             days = Math.floor(sec / 86400) || null,
             hours = Math.floor(sec % 86400 / 3600) || null,
             minutes = Math.floor(sec % 3600 / 60),
@@ -272,6 +317,18 @@ const NOVA = {
                .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
                .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1:2:3" => "01:02:03"
                .join(':'); // format "h:m:s"
+      },
+
+      HMS_abbr(ts) { // out 999h00m00s
+         const
+            sec = Math.abs(+ts),
+            h = Math.floor(sec / 3600),
+            m = Math.floor(sec % 3600 / 60),
+            s = Math.floor(sec % 60);
+
+         return (h ? h + 'h' : '')
+            + (m ? (h && m < 10 ? '0' : '') + m + 'm' : h && m === 0 ? '00m' : '0m')
+            + (s < 10 ? '0' : '') + s + 's';
       },
    },
 

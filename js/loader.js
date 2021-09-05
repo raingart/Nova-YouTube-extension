@@ -60,11 +60,13 @@ const App = {
          console.debug('force lander:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(interval_lander);
 
-         if (document.body && typeof NOVA === 'object' && window.nova_plugins.length) {
-            processLander();
+         if (!document.body) return;
 
-            // if delay load domLoaded
-         } else if (window.nova_plugins.length !== plugins_count) {
+         if (typeof NOVA === 'object' && window.nova_plugins.length) {
+            processLander();
+         }
+         // if delay load domLoaded
+         if (window.nova_plugins.length !== plugins_count) {
             // show notice
             const notice = document.createElement('div');
             Object.assign(notice.style, {
@@ -89,7 +91,7 @@ const App = {
                + (typeof NOVA === 'object'
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
                   : `<div>Сritical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
-            document.body.appendChild(notice);
+            document.body.append(notice);
          }
       }, 1000 * 3); // 3sec
 
@@ -159,10 +161,16 @@ App.init();
 // https://www.youtube.com/watch?v=rFeBMv98X30 1080
 
 // example url new embed page
-// https://youtu.be/JVi_e8g7K4A
+// https://www.youtube.com/embed/JVi_e8g7K4A
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
 // https://www.youtube.com/embed/JVi_e8g7K4A?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
 
 // abnormal pages
 // https://www.youtube.com/watch?v=6Ux6SlOE9Qk
 // https://www.youtube.com/watch?v=DhTST3iRZyM
+
+// broken channel
+// https://www.youtube.com/channel/UC4Lz
+
+// TODO
+// upgrade code to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment

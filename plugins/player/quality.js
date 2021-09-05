@@ -84,16 +84,16 @@ window.nova_plugins.push({
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
-            { label: '4320p/8k', value: 'highres' },
-            { label: '2880p/5k', value: 'hd2880' },
-            { label: '2160p/4k', value: 'hd2160' },
-            { label: '1440p/QHD', value: 'hd1440' },
-            { label: '1080p/HD', value: 'hd1080', selected: true },
-            { label: '720p', value: 'hd720' },
-            { label: '480p', value: 'large' },
-            { label: '360p', value: 'medium' },
-            { label: '240p', value: 'small' },
-            { label: '144p', value: 'tiny' },
+            { label: '8K/4320p', value: 'highres' },
+            // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            { label: '4K/2160p', value: 'hd2160' },
+            { label: 'QHD/1440p', value: 'hd1440' },
+            { label: 'FHD/1080p', value: 'hd1080', selected: true },
+            { label: 'HD/720p', value: 'hd720' },
+            { label: 'SD/480p', value: 'large' },
+            { label: 'SD/360p', value: 'medium' },
+            { label: 'SD/240p', value: 'small' },
+            { label: 'SD/144p', value: 'tiny' },
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
       },

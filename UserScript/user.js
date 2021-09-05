@@ -57,11 +57,11 @@ function isOptionsPage() {
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
       d.style.display = 'none';
-      d.setAttribute('download', 'nova-settings.json');
-      d.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings)));
-      document.body.appendChild(d);
+      d.download = 'nova-settings.json';
+      d.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings));
+      document.body.append(d);
       d.click();
-      document.body.removeChild(d);
+      d.remove();
    });
    GM_registerMenuCommand('Import settings', () => {
       let f = document.createElement('input');
@@ -77,14 +77,16 @@ function isOptionsPage() {
                alert('Settings imported');
                document.location.reload();
             }
-            catch (err) { alert('Error parsing settings\n' + err.name + ": " + err.message); }
+            catch (err) {
+               alert(`Error parsing settings\n${err.name}: ${err.message}`);
+            }
          });
          rdr.addEventListener('error', error => alert('Error loading file\n' + rdr.error));
          rdr.readAsText(f.files[0]);
       });
-      document.body.appendChild(f);
+      document.body.append(f);
       f.click();
-      document.body.removeChild(f);
+      f.remove();
    });
 
    if (location.hostname === new URL(optionsPage).hostname) {
@@ -112,50 +114,58 @@ function isOptionsPage() {
 
       window.addEventListener('load', () => {
          let interval_pagesync = setInterval(() => {
-            //if (document.body.classList.contains("preload")) return console.debug('page loading..');
-            if (!document.querySelector("[data-dependent]")) return console.debug('page loading..');
+            //if (document.body.classList.contains('preload')) return console.debug('page loading..');
+            if (!document.querySelector('[data-dependent]')) return console.debug('page loading..');
             clearInterval(interval_pagesync);
 
             PopulateForm.fill(user_settings); // fill form
             attrDependencies();
-            document.body.classList.remove("preload");
+            document.body.classList.remove('preload');
             // fix/ re-call // remove api warn if has api
             if (user_settings && user_settings['custom-api-key']) {
-               document.querySelectorAll('.info b').forEach(el => el.parentNode.removeChild(el));
+               document.querySelectorAll('.info b').forEach(el => el.parentNode.remove(el));
             }
          }, 500); // 500ms
 
          function attrDependencies() {
-            document.querySelectorAll("[data-dependent]")
+            document.querySelectorAll('[data-dependent]')
                .forEach(dependentItem => {
                   // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                   const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
                   const handler = () => showOrHide(dependentItem, dependentsJson);
-                  document.getElementById(Object.keys(dependentsJson))?.addEventListener("change", handler);
+                  document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
                   // init state
                   handler();
                });
 
-            function showOrHide(dependentItem, dependentsList) {
+            function showOrHide(dependentItem, dependentsJson) {
                // console.debug('showOrHide', ...arguments);
-               for (const name in dependentsList) {
-                  const reqParent = document.getElementsByName(name)[0];
-                  if (!reqParent) return console.error('error showOrHide:', name);
+               for (const name in dependentsJson) {
+                  // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
+                  if (dependentOnEl = document.getElementsByName(name)[0]) {
+                     const val = dependentsJson[name].toString();
+                     const dependentOnValues = (function () {
+                        if (options = dependentOnEl?.selectedOptions) {
+                           return Array.from(options).map(({ value }) => value);
+                        }
+                        return [dependentOnEl.value];
+                     })();
 
-                  for (const values of [dependentsList[name]]) {
-                     if ((!values.toString().startsWith('!') && ((reqParent.checked && values) || values.includes(reqParent.value)))
-                        // reserve
-                        || (values.toString().startsWith('!') && reqParent.value !== values.toString().replace('!', ''))
+                     if (val && (dependentOnEl.checked || dependentOnValues.includes(val))
+                        || (val?.startsWith('!') && dependentOnEl.value !== val.replace('!', '')) // inverse
                      ) {
                         // console.debug('show:', name);
-                        dependentItem.classList.remove("hide");
+                        dependentItem.classList.remove('hide');
                         childInputDisable(false);
 
                      } else {
                         // console.debug('hide:', name);
-                        dependentItem.classList.add("hide");
+                        dependentItem.classList.add('hide');
                         childInputDisable(true);
                      }
+
+                  } else {
+                     console.error('error showOrHide:', name);
                   }
                }
 

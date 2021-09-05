@@ -8,7 +8,7 @@ window.nova_plugins.push({
 
       const CACHE_PREFIX = 'resume-playback-time';
       // ytplayer - not updated on page transition!
-      const getCacheName = () => CACHE_PREFIX + ':' + NOVA.queryURL.get('v'); // window.ytplayer?.config?.args.raw_player_response.videoDetails.videoId
+      const getCacheName = () => CACHE_PREFIX + ':' + (document.getElementById('movie_player')?.getVideoData().video_id || NOVA.queryURL.get('v'));
       let cacheName = getCacheName(); // for optimization
 
       NOVA.waitElement('#movie_player:not(.ad-showing) video')

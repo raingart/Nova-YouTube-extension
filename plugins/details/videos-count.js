@@ -45,10 +45,10 @@ window.nova_plugins.push({
                      return [
                         window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
                         document.querySelector('meta[itemprop="channelId"][content]')?.content,
-                        document.querySelector('link[itemprop="url"][href]')?.href,
+                        document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
                         location.pathname.split('/')[2],
                      ]
-                        .find(i => isChannelId(i?.split('/')[2]))
+                        .find(i => isChannelId(i))
                   }
                });
             break;

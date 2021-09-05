@@ -14,7 +14,7 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // restore the original title
             ["pause", "ended"].forEach(evt => {
-               video.addEventListener(evt, () => document.title = originalTitleTemplate.replace('%s', getVideoTitle()));
+               video.addEventListener(evt, () => document.title = originalTitleTemplate?.replace('%s', getVideoTitle()));
             });
          });
 
@@ -43,14 +43,14 @@ window.nova_plugins.push({
          // if (this.playbackRate !== 1) new_title.push(` (${this.playbackRate}x)`);
 
          new_title = new_title
-            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS(t / this.playbackRate))
+            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS_digit(t / this.playbackRate))
             .join('');
 
          document.title = new_title + ' | ' + getVideoTitle();
       }
 
       function getVideoTitle() {
-         return document.querySelector('meta[name="title"][content]')?.content || document.querySelector('h1')?.textContent;
+         return document.querySelector('meta[name="title"][content]')?.content || document.getElementById('movie_player')?.getVideoData().title || document.querySelector('h1')?.textContent;
       }
 
    },

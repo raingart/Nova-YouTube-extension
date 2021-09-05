@@ -64,7 +64,7 @@ const Opt = {
                // ⚠️
 
                if (plugin.options) {
-                  li.appendChild(
+                  li.append(
                      document.createElement('li')
                         .appendChild(this.generate.options.apply(this, [plugin.options, plugin.id]))
                   );
@@ -75,8 +75,7 @@ const Opt = {
                   p += (plugin.section && document.querySelector(p + targetSection)) ? targetSection : '>#other';
                }
 
-               document.querySelector(p)
-                  .appendChild(li); // append to section tab
+               document.querySelector(p).append(li); // append to section tab
 
             } catch (error) {
                console.error('Error plugin generate:\n', error.stack + '\n', plugin);
@@ -112,7 +111,7 @@ const Opt = {
             }
 
             if (property.title) {
-               exportContainer.setAttribute('tooltip', property.title);
+               exportContainer.tooltip = property.title;
                delete property.title;
             }
 
@@ -125,17 +124,17 @@ const Opt = {
                            const tagOption = document.createElement('option');
                            switch (typeof option) {
                               case 'object':
-                                 tagOption.setAttribute('value', option.value);
+                                 tagOption.value = option.value;
                                  tagOption.textContent = option.label;
-                                 if (option.hasOwnProperty('selected')) tagOption.setAttribute('selected', true);
+                                 if (option.hasOwnProperty('selected')) tagOption.selected = true;
                                  break;
 
                               case 'string':
-                                 tagOption.setAttribute('value', option);
+                                 tagOption.value = option;
                                  tagOption.textContent = option.toLocaleUpperCase();
                                  break;
                            }
-                           exportProperty.appendChild(tagOption);
+                           exportProperty.append(tagOption);
                         });
                         break;
 
@@ -143,12 +142,12 @@ const Opt = {
                         const label = document.createElement(attr);
                         label.innerHTML = '<font>↪</font>' + value;
                         label.htmlFor = property.name;
-                        exportContainer.appendChild(label);
+                        exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
                         break;
 
                      case 'type':
-                        if (value === 'number') exportProperty.setAttribute('required', true);
+                        if (value === 'number') exportProperty.required = true;
                      // break; <-- need remove!
 
                      default:
@@ -159,7 +158,7 @@ const Opt = {
 
             exportHTML
                .appendChild(exportContainer)
-               .appendChild(exportProperty);
+               .append(exportProperty);
          }
          return exportHTML;
       },
@@ -247,7 +246,7 @@ const Opt = {
                d.style.display = 'none';
                d.setAttribute('download', 'nova-settings.json');
                d.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings)));
-               document.body.appendChild(d);
+               document.body.append(d);
                d.click();
                console.debug('Settings file exported:', d.download);
                document.body.removeChild(d);
@@ -286,7 +285,7 @@ const Opt = {
                rdr.addEventListener('error', error => alert('Error loading file\n' + rdr.error));
                rdr.readAsText(target.files[0]);
             });
-            document.body.appendChild(f);
+            document.body.append(f);
             f.click();
             document.body.removeChild(f);
          });

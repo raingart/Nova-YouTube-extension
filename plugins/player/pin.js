@@ -18,7 +18,9 @@ window.nova_plugins.push({
 
       const
          CLASS_VALUE = 'player-float',
-         PINNED_SELECTOR = '.' + CLASS_VALUE; // for css
+         PINNED_SELECTOR = '.' + CLASS_VALUE, // for css
+         CLOSE_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
+         CLOSE_BTN_SELECTOR = '.' + CLOSE_BTN_CLASS_VALUE; // for css
 
       NOVA.waitElement('#movie_player')
          .then(player => {
@@ -55,6 +57,40 @@ window.nova_plugins.push({
                   //    },
                   //    // 'disconnectAfterMatch': true,
                   // });
+
+                  // add unpin button
+                  NOVA.css.push(
+                     CLOSE_BTN_SELECTOR + ` { display: none; }
+
+                     ${PINNED_SELECTOR} ${CLOSE_BTN_SELECTOR} {
+                        display: initial !important;
+                        position: absolute;
+                        cursor: pointer;
+                        top: 10px;
+                        left: 10px;
+                        width: 28px;
+                        height: 28px;
+                        color: white;
+                        border: none;
+                        outline: none;
+                        opacity: .1;
+                        /* border-radius: 100%; */
+                        z-index: ${NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }) || 10};
+                        font-size: 24px;
+                        font-weight: bold;
+                        background-color: rgba(0, 0, 0, 0.8);
+                        /* text-transform: uppercase; */
+                     }
+
+                     ${PINNED_SELECTOR}:hover ${CLOSE_BTN_SELECTOR} { opacity: .7; }
+                     ${CLOSE_BTN_SELECTOR}:hover { opacity: 1 !important; }`);
+
+                  const btnUnpin = document.createElement('button');
+                  btnUnpin.className = CLOSE_BTN_CLASS_VALUE;
+                  btnUnpin.title = 'Unpin player';
+                  btnUnpin.textContent = '×'; // ✖
+                  btnUnpin.addEventListener('click', () => player.classList.remove(CLASS_VALUE));
+                  player.append(btnUnpin);
                })
          });
 

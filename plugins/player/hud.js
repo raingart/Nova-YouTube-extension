@@ -57,7 +57,6 @@ window.nova_plugins.push({
                   --zindex: ${NOVA.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
 
                   position: absolute;
-                  left: 0;
                   right: 0;
                   z-index: calc(var(--zindex) + 1);
                   margin: 0 auto;
@@ -79,6 +78,7 @@ window.nova_plugins.push({
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
                   Object.assign(this.conteiner.style, {
+                     left: 0,
                      bottom: '20%',
                      width: '30%',
                      'font-size': '1.2em',
@@ -95,10 +95,29 @@ window.nova_plugins.push({
                   // }
                   break;
 
+               case 'bar-vertical':
+                  Object.assign(this.conteiner.style, {
+                     top: 0,
+                     height: '100%',
+                     width: '25px',
+                     'font-size': '1.2em',
+                  });
+                  Object.assign(this.hudSpan.style, {
+                     position: 'absolute',
+                     bottom: 0,
+                     right: 0,
+                     'background-color': COLOR_HUD,
+                     transition: 'height 100ms ease-out 0s',
+                     display: 'inline-block',
+                     width: '100%',
+                     'font-weight': 'bold',
+                  });
+                  break;
+
                // case 'text-top':
                default:
                   Object.assign(this.conteiner.style, {
-                     top: '0',
+                     top: 0,
                      width: '100%',
                      padding: '.2em',
                      'font-size': '1.55em',
@@ -123,6 +142,11 @@ window.nova_plugins.push({
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
                   this.hudSpan.style.width = pt + '%';
+                  this.hudSpan.textContent = text;
+                  break;
+
+               case 'bar-vertical':
+                  this.hudSpan.style.height = pt + '%';
                   this.hudSpan.textContent = text;
                   break;
 
@@ -156,7 +180,8 @@ window.nova_plugins.push({
          label: 'Indicator type',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
-            { label: 'bar+center', value: 'bar-center' },
+            { label: 'bar-center', value: 'bar-center' },
+            { label: 'bar-vertical', value: 'bar-vertical' },
             // { label: 'bar+center', value: 'bar-left' },
          ],
       },
@@ -165,7 +190,7 @@ window.nova_plugins.push({
          label: 'Color',
          type: 'color',
          value: '#ff0000', // red
-         'data-dependent': '{"player_indicator_type":["bar-center"]}',
+         'data-dependent': '{"player_indicator_type":["!text-top"]}',
       },
    },
 });

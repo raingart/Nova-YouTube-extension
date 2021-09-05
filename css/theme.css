@@ -12,7 +12,7 @@
 
    --plugins-before: slategrey;
    --plugins-section-hover: silver;
-   --label1: inherit;
+   --label1: initial;
    --label1: #343a45;
 }
 
@@ -29,7 +29,7 @@
 
       --plugins-before: #D5DDE5;
       --plugins-section-hover: #303030;
-      --label1: inherit;
+      --label1: initial;
       --label2: #8c8b8b;
    }
 /* } */

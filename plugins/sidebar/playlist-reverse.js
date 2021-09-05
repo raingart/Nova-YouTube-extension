@@ -85,7 +85,7 @@ window.nova_plugins.push({
                   reverseControl.classList.toggle(CLASS_NAME_ACTIVE);
                });
          });
-         container.appendChild(reverseControl);
+         container.append(reverseControl);
       }
 
       function onPlayerStateChange(state) {

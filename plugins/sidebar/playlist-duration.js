@@ -52,7 +52,7 @@ window.nova_plugins.push({
                            .contents[0].playlistVideoListRenderer?.contents;
                      const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                     return NOVA.timeFormatTo.HMS(sec);
+                     return NOVA.timeFormatTo.HMS_digit(sec);
                   }
                });
             break;
@@ -100,7 +100,7 @@ window.nova_plugins.push({
                         .map(e => timeToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
                         .reduce((acc, time) => acc + time, 0);
 
-                     return NOVA.timeFormatTo.HMS(duration);
+                     return NOVA.timeFormatTo.HMS_digit(duration);
                   }
                });
             break;
@@ -138,7 +138,7 @@ window.nova_plugins.push({
                .map(e => timeToSec(e.textContent))
                .reduce((acc, time) => acc + time, 0);
 
-            return NOVA.timeFormatTo.HMS(duration);
+            return NOVA.timeFormatTo.HMS_digit(duration);
          }
       }
 

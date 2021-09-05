@@ -1,8 +1,10 @@
 // for test:
-// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - There are timestamp but no chapters: Еhree-digit time
+// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have timestamps but no chapters: Еhree-digit time
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - chapter title ahead of timestamp
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
+// https://www.youtube.com/watch?v=gaZDIQ3Zptk - lying timestamp. Filtering by channel author is possible?
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
+// https://www.youtube.com/watch?v=IR0TBQV147I = very-long Еhree-digit time
 
 window.nova_plugins.push({
    id: 'time-jump',
@@ -12,10 +14,7 @@ window.nova_plugins.push({
    desc: 'Use to skip ad inserts',
    _runtime: user_settings => {
 
-      if (user_settings.time_jump_title_offset) {
-         NOVA.waitElement('#movie_player')
-            .then(player => addTitleOffset.apply(player));
-      }
+      if (user_settings.time_jump_title_offset) addTitleOffset();
 
       switch (NOVA.currentPageName()) {
          case 'watch':
@@ -24,16 +23,17 @@ window.nova_plugins.push({
             NOVA.waitElement('#movie_player')
                .then(player => {
                   doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
-
-                  NOVA.waitElement('video') // reset chapterList
+                  // reset chapterList
+                  NOVA.waitElement('video')
                      .then(video => video.addEventListener('loadeddata', () => chapterList = []));
 
                   function jumpTime() {
                      if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
                         chapterList = NOVA.getChapterList(this.getDuration()) || null;
-                        console.debug('chapterList:', chapterList);
+                        // console.debug('chapterList:', chapterList);
                      }
-                     const nextChapterIndex = chapterList?.findIndex(c => c?.sec >= this.getCurrentTime());
+                     const nextChapterIndex = chapterList?.findIndex(c => c?.sec > this.getCurrentTime());
+                     // console.debug('nextChapterIndex', nextChapterIndex);
                      let msg;
                      if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
                         // if has chapters
@@ -52,7 +52,7 @@ window.nova_plugins.push({
 
                      } else {
                         this.seekBy(+user_settings.time_jump_step);
-                        msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS(this.getCurrentTime())})`;
+                        msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS_digit(this.getCurrentTime())})`;
                      }
 
                      NOVA.bezelTrigger(msg); // trigger default indicator
@@ -69,13 +69,18 @@ window.nova_plugins.push({
                      let msg = `+${user_settings.time_jump_step} sec`;
 
                      if (sec = seekToNextChapter.apply(this)) {
-                        msg = `Chapter • ${NOVA.timeFormatTo.HMS(sec)}`;
+                        msg = `Chapter • ` + NOVA.timeFormatTo.HMS_digit(sec);
 
                      } else {
                         sec = +user_settings.time_jump_step + this.currentTime;
                      }
                      // console.debug('seekTo', sec);
                      this.currentTime = sec;
+
+                     // querySelector after seek
+                     if (chapterTitle = document.querySelector('.ytp-chapter-title-content')) {
+                        msg = `Chapter • ` + chapterTitle?.textContent;
+                     }
 
                      NOVA.bezelTrigger(msg); // trigger default indicator
 
@@ -122,10 +127,10 @@ window.nova_plugins.push({
                   progressContainer.addEventListener('mousemove', () => {
                      const
                         cursorTime = tooltipEl.textContent.split(':').reduce((a, t) => (60 * a) + parseInt(t)),
-                        offsetTime = cursorTime - this.getCurrentTime(),
+                        offsetTime = cursorTime - document.querySelector('video').currentTime,
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
-                     tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS(offsetTime)}`);
+                     tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS_digit(offsetTime)}`);
                   });
 
                   progressContainer.addEventListener('mouseleave', function hideOffsetTime() {

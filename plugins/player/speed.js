@@ -2,6 +2,7 @@
 // the adjustment area depends on the video size. Problems are visible at non-standard proportions
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
+// https://www.youtube.com/watch?v=embed%2FJVi_e - err - TypeError: Cannot read property 'playerMicroformatRenderer' of undefined
 
 window.nova_plugins.push({
    id: 'rate-wheel',
@@ -19,8 +20,8 @@ window.nova_plugins.push({
             player.querySelector('video')
                .addEventListener('ratechange', function () {
                   // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
-               NOVA.bezelTrigger(this.playbackRate + 'x');
-            });
+                  NOVA.bezelTrigger(this.playbackRate + 'x');
+               });
             // Default indicator does not work for html5 way
             // player.addEventListener('onPlaybackRateChange', rate => {
             //    console.debug('onPlaybackRateChange', rate);
@@ -140,13 +141,19 @@ window.nova_plugins.push({
             document.addEventListener('yt-navigate-finish', setDefaultRate); // no sense, page data not updated
 
             function setDefaultRate() {
-               const isMusic = () => [
-                  location.href,
-                  document.querySelector('meta[itemprop="genre"][content]')?.content, // not updated on page transition!
-                  // ytplayer - not updated on page transition!
-                  window.ytplayer?.config?.args.raw_player_response.microformat.playerMicroformatRenderer.category
-               ]
-                  .some(i => i?.toLowerCase().includes('music'));
+               const isMusic = () => {
+                  const title = document.getElementById('movie_player')?.getVideoData().title.toUpperCase();
+                  return [
+                     location.href,
+                     document.querySelector('meta[itemprop="genre"][content]')?.content, // not updated on page transition!
+                     // ytplayer - not updated on page transition!
+                     window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category
+                  ]
+                     .some(i => i?.toLowerCase().includes('music'))
+                     // search in title
+                     || title && ['MUSIC','SONG','SOUND','THEME','AMBIENT','🎵','♫','MIX','OST','OFFICIAL VIDEO','FEAT.','MV','PV','NCS','BGM','EDM','GMV','AMV','OP','OPENING','ENDING','COVER','VOCAL','BASS','LIVE RADIO','ALBUM','PLAYLIST','DUBSTEP','DANCE VER'].some(item => title.includes(' ' + item));
+                     // 'FULL','EXTENDED,'ED','CD','8-BIT','PIANO','POP','HIP HOP','RELAX','TRAP','DNB','TRACK' - off
+               };
 
                // init rate_default
                if (+user_settings.rate_default !== 1 && (user_settings.rate_default_apply_music || !isMusic())) {

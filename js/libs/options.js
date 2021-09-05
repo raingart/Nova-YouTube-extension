@@ -87,7 +87,7 @@ window.addEventListener('load', () => {
          _process() {
             this.outputStatus.forEach(e => {
                e.textContent = i18n('opt_btn_save_settings_process');
-               e.setAttribute('disabled', true);
+               e.disabled = true;
             });
          },
 
