@@ -38,7 +38,7 @@ window.nova_plugins.push({
          ${SELECTOR_BTN}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
       // add reverse button
-       // missed work half the time
+      // missed work half the time
       document.addEventListener('yt-navigate-finish', () => {
          NOVA.waitElement('#playlist-action-menu #top-level-buttons-computed')
             .then(e => appendReverseBtn(e));
@@ -70,6 +70,30 @@ window.nova_plugins.push({
             scrollToElement(document.querySelector('#playlist-items[selected]'));
             // document.querySelector('#playlist[collapsed] #expand-icon').click(); // uncollapse. Bug with unlimited playlist
 
+            // NOVA.waitElement('video')
+            //    .then(video => {
+            //       reverseControl.classList.toggle(CLASS_NAME_ACTIVE);
+
+            //       video.addEventListener('ended', () => {
+            //          if (NOVA.queryURL.get('list')) {
+            //             player = document.getElementById('movie_player'),
+            //                player.previousVideo();
+            //          }
+            //       });
+
+            //       video.addEventListener('playing', () => {
+            //          if (!NOVA.queryURL.get('list')) return;
+
+            //          let idxNew = NOVA.queryURL.get('index');
+            //          if (idxNew !== idx) {
+            //             idx = idxNew;
+            //             reverseElement(document.querySelector('#playlist #items.playlist-items'));
+            //             scrollToElement(document.querySelector('#playlist-items[selected]'));
+            //             updateNextButton();
+            //          }
+            //       });
+            //    });
+
             NOVA.waitElement('#movie_player')
                .then(player => {
                   if (reverseEnable) {
@@ -92,7 +116,7 @@ window.nova_plugins.push({
          if (!NOVA.queryURL.get('list')) return;
          // console.debug('playerState', NOVA.PLAYERSTATE[state]);
 
-         switch (PLAYERSTATE[state]) {
+         switch (NOVA.PLAYERSTATE[state]) {
             case 'ENDED': // video ended
                this.previousVideo();
                break;

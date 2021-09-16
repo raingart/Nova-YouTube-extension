@@ -1,5 +1,5 @@
 // for test
-// the adjustment area depends on the video size. Problems are visible at non-standard proportions
+// the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 
@@ -27,8 +27,7 @@ window.nova_plugins.push({
                   .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
-                     if (evt[user_settings.volume_hotkey]
-                        || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
                         // console.debug('hotkey caught');
                         if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
                            playerVolume.adjust(step);

@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=XKa6TpPM70E
+
 window.nova_plugins.push({
    id: 'ad-skip-button',
    title: 'Ad Video Skip',
@@ -6,38 +9,25 @@ window.nova_plugins.push({
    desc: 'Auto click on [Skip Ad] button',
    _runtime: user_settings => {
 
-      NOVA.css.push( // makes sense when playing a new video in a session tab
+      NOVA.css.push( // hides the appearance when playing on the next video
          `#movie_player.ad-showing video {
             visibility: hidden !important;
-         }
-
-         #movie_player:not(.ad-showing) video {
-            visibility: visible;
          }`);
 
       NOVA.waitElement('#movie_player.ad-showing video')
          .then(video => {
-            forcePlay();
+            adSkip();
 
-            video.addEventListener('loadeddata', forcePlay);
-            // video.addEventListener('timeupdate', forcePlay); // excessive number of calls
-            // video.addEventListener('durationchange', forcePlay); // possible problems on streams
-
-            function forcePlay() {
-               if (document.querySelector('#movie_player.ad-showing') && !isNaN(video.duration)
-                  // 0: UNSENT
-                  // 1:	OPENED
-                  // 2:	HEADERS_RECEIVED
-                  // 3:	LOADING
-                  // 4:	DONE
-                  && video.readyState === 4) {
-                  video.currentTime = video.duration; // end ad video
-
-                  // NOVA.waitElement('button.ytp-ad-skip-button')
-                  NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text')
-                     .then(btn => btn.click()); // click skip-ad
-               }
-            }
+            video.addEventListener('loadeddata', adSkip.bind(video));
          });
+
+      function adSkip() {
+         if (!document.querySelector('#movie_player.ad-showing')) return;
+
+         if (!isNaN(this.duration)) this.currentTime = this.duration; // end ad video
+
+         NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text, button.ytp-ad-skip-button')
+            .then(btn => btn.click()); // click skip-ad
+      }
    },
 });

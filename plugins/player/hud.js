@@ -12,18 +12,15 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            const player = document.getElementById('movie_player');
-            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             // volume
-            video.addEventListener('volumechange', function () {
-               // console.debug('volumechange', player.getVolume(), this.volume); // there is a difference
-               HUD.set(Math.round(player.getVolume()), '%');
-            });
+            if (player = document.getElementById('movie_player')) {
+               video.addEventListener('volumechange', function () {
+                  // console.debug('volumechange', player.getVolume(), this.volume); // there is a difference
+                  HUD.set(Math.round(player.getVolume()), '%');
+               });
+            }
             // rate
-            video.addEventListener('ratechange', function () {
-               // console.debug('ratechange', this.playbackRate);
-               HUD.set(this.playbackRate, 'x');
-            });
+            video.addEventListener('ratechange', () => HUD.set(video.playbackRate, 'x'));
          });
 
       // Listener default indicator

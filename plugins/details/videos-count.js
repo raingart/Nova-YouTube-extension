@@ -24,11 +24,11 @@ window.nova_plugins.push({
                         if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
                         setVideoCount({
                            'container': el,
-                           'channel_id':
-                              new URL(link.href).pathname.split('/')[2]
-                              // ytplayer - not updated on page transition!
-                              // || window.ytplayer?.config?.args.ucid
-                              // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
+                           'channel_id': new URL(link.href).pathname.split('/')[2],
+                           // ALL BELOW - not updated on page transition!
+                           // || window.ytplayer?.config?.args.ucid
+                           // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
+                           // || document.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
                         });
                      });
                });
@@ -40,17 +40,17 @@ window.nova_plugins.push({
                .then(el => {
                   // console.debug('channel page');
                   setVideoCount({ 'container': el, 'channel_id': getChannelId() });
-
-                  function getChannelId() {
-                     return [
-                        window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
-                        document.querySelector('meta[itemprop="channelId"][content]')?.content,
-                        document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
-                        location.pathname.split('/')[2],
-                     ]
-                        .find(i => isChannelId(i))
-                  }
                });
+
+            function getChannelId() {
+               return [
+                  window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
+                  document.querySelector('meta[itemprop="channelId"][content]')?.content,
+                  document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
+                  location.pathname.split('/')[2],
+               ]
+                  .find(i => isChannelId(i))
+            }
             break;
       }
 
@@ -66,14 +66,15 @@ window.nova_plugins.push({
             NOVA.request.API({
                request: 'channels',
                params: { 'id': channel_id, 'part': 'statistics' },
-               api_key: user_settings['custom-api-key']
+               api_key: user_settings['custom-api-key'],
             })
                .then(res => {
                   res?.items?.forEach(item => {
-                     const videoCount = item.statistics.videoCount;
-                     insertToHTML({ 'text': videoCount, 'container': container });
-                     // save cache in tabs
-                     sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
+                     if (videoCount = +item.statistics.videoCount) {
+                        insertToHTML({ 'text': videoCount, 'container': container });
+                        // save cache in tabs
+                        sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
+                     }
                   });
                });
          }

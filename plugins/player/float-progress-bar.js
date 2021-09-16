@@ -8,101 +8,97 @@ window.nova_plugins.push({
 
       const
          SELECTOR_ID = 'player-float-progress-bar',
-         SELECTOR = '#' + SELECTOR_ID, // for css
-         CHAPTERS_MARK_WIDTH = 2; // px
+         SELECTOR = '#' + SELECTOR_ID,
+         CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitElement('#movie_player')
-         .then(player => {
-            renderFloatBar(player);
+      NOVA.waitElement('video')
+         .then(video => {
+            const
+               player = document.getElementById('movie_player'),
+               container = renderFloatBar(player),
+               bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
+               progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
-            NOVA.waitElement('video')
-               .then(video => {
-                  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
-                  let container, progressEl, bufferEl;
-                  // reset float-bar if new video
-                  video.addEventListener('loadstart', function () {
-                     // console.debug('loadstart');
-                     if (!container) container = document.getElementById(SELECTOR_ID);
-                     // hide if is stream.
-                     container.style.display = player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
+            // is new video
+            video.addEventListener('loadeddata', function () {
+               // hide if is stream.
+               container.style.display = player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
 
-                     container.classList.remove('transition');
+               // reset animation state
+               container.classList.remove('transition');
+               bufferEl.style.transform = 'scaleX(0)';
+               progressEl.style.transform = 'scaleX(0)';
+               container.classList.add('transition');
 
-                     if (bufferEl) bufferEl.style.transform = 'scaleX(0)';
-                     if (progressEl) progressEl.style.transform = 'scaleX(0)';
-
-                     container.classList.add('transition');
-                  });
-                  // render progress
-                  video.addEventListener('timeupdate', function () {
-                     // console.debug('timeupdate', this.currentTime, '/', this.duration);
-                     if (player.getVideoData().isLive) return;
-
-                     if (!progressEl) progressEl = document.getElementById(`${SELECTOR_ID}-progress`)
-                     if (!isNaN(this.duration)) {
-                        progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
-                     }
-                  });
-
-                  video.addEventListener('progress', renderBuffer);
-                  video.addEventListener('seeking', renderBuffer);
-
-                  function renderBuffer() {
-                     if (player.getVideoData().isLive) return;
-
-                     if (!bufferEl) bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`);
-                     for (let i = 0; i < this.buffered.length; i++) {
-                        //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
-                        //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
-                        if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
-                           bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
-                        }
-                     }
+               const waitDuration = setInterval(() => {
+                  if (!isNaN(this.duration)) {
+                     clearInterval(waitDuration);
+                     renderChapters(this);
                   }
-                  // renderBuffer
-                  // ['progress', 'seeking'].forEach(evt => {
-                  //    video.addEventListener(evt, function () {
-                  //       if (!bufferEl) bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`);
-                  //       for (let i = 0; i < this.buffered.length; i++) {
-                  //          //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
-                  //          //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
-                  //          if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
-                  //             bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
-                  //          }
-                  //       }
-                  //    });
-                  // });
-                  // add chapters marks
-                  video.addEventListener('loadeddata', function () {
-                     const selectorTimestampLink = 'a[href*="t="]';
-                     NOVA.waitElement(`#meta #description ${selectorTimestampLink}`)
-                        .then(() => renderChaptersMarks(video.duration));
+               }, 50);
+            });
 
-                     // first/pinned comment
-                     NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
-                        .then(() => renderChaptersMarks(video.duration));
-                  });
+            // render progress
+            // NOVA.waitElement(`${SELECTOR}-progress`)
+            //    .then(progressEl => {
+            video.addEventListener('timeupdate', function () {
+               if (player.getVideoData().isLive) return;
 
-               });
+               if (!isNaN(this.duration)) {
+                  progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
+               }
+            });
+            // });
+
+            // render buffer
+            // NOVA.waitElement(`${SELECTOR}-buffer`)
+            //    .then(bufferEl => {
+            video.addEventListener('progress', renderBuffer.bind(video));
+            video.addEventListener('seeking', renderBuffer.bind(video));
+
+            function renderBuffer() {
+               if (player.getVideoData().isLive) return;
+
+               for (let i = 0; i < this.buffered.length; i++) {
+                  //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
+                  //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
+                  if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
+                     bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
+                  }
+               }
+            }
+            // });
+
          });
 
-      function renderChaptersMarks(duration) {
-         // console.debug('renderChaptersMarks', ...arguments);
-         const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
-         chaptersConteiner.innerHTML = ''; // clear old
-         if (!isNaN(duration)) {
+      function renderChapters(video) {
+         const selectorTimestampLink = 'a[href*="t="]';
+         // search in description
+         NOVA.waitElement(`#description.ytd-video-secondary-info-renderer ${selectorTimestampLink}`)
+            .then(() => renderChaptersMarks(video.duration));
+
+         // search in first/pinned comment
+         NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
+            .then(() => renderChaptersMarks(video.duration));
+
+         function renderChaptersMarks(duration) {
+            // console.debug('renderChaptersMarks', ...arguments);
+            const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
+            chaptersConteiner.innerHTML = ''; // clear old
+            // if (!isNaN(duration)) {
             NOVA.getChapterList(duration)
                ?.forEach((chapter, i, chapters_list) => {
                   // console.debug('', (chapterEl.sec / duration) * 100 + '%');
                   const chapterEl = document.createElement('span');
-                  const nextChapterSec = chapters_list[i + 1]?.sec || 0;
+                  const nextChapterSec = chapters_list[i + 1]?.sec || duration;
                   chapterEl.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
                   if (chapter.title) chapterEl.title = chapter.title;
                   chapterEl.setAttribute('time', chapter.time);
                   chaptersConteiner.append(chapterEl);
                });
+            // }
          }
-      };
+      }
 
       function renderFloatBar(container = required()) {
          // console.debug('renderFloatBar', ...arguments);
@@ -152,7 +148,7 @@ window.nova_plugins.push({
                   margin: 0 15px;
                }*/
 
-               ${SELECTOR}.transition * {
+               ${SELECTOR}.transition [id|=${SELECTOR_ID}] {
                   transition: transform .2s linear;
                }
 
@@ -175,13 +171,14 @@ window.nova_plugins.push({
                   position: relative;
                   width: 100%;
                   display: flex;
+                  justify-content: flex-end;
                }
 
                ${SELECTOR}-chapters span {
                   height: var(--height);
                   z-index: ${+zIndex + 1};
-                  border-right: ${CHAPTERS_MARK_WIDTH}px solid rgba(255,255,255,.7);
-                  margin-left: -${CHAPTERS_MARK_WIDTH}px;
+                  border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
+                  margin-left: -${CHAPTERS_MARK_WIDTH_PX};
                }`);
 
             return document.getElementById(SELECTOR_ID);

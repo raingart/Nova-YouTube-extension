@@ -10,14 +10,12 @@ window.nova_plugins.push({
 
       NOVA.waitElement('#movie_player')
          .then(player => {
-            // keep quality in session
+            // keep save manual quality in the session
             if (user_settings.video_quality_manual_save_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
-               player.addEventListener('onPlaybackQualityChange', function (quality) {
-                  // console.debug('onPlaybackQualityChange', this); // this == window
+               player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
-                  if (document.activeElement.getAttribute('role') == 'menuitemradio' // now focuse setting menu
+                  if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
                      && quality !== selectedQuality // the new quality
-                     && player.hasOwnProperty('setPlaybackQuality') // not automatically changed
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
                      selectedQuality = quality;
@@ -31,15 +29,15 @@ window.nova_plugins.push({
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
          // console.debug('playerState', NOVA.PLAYERSTATE[state]);
 
-         // if ((1 == state || 3 == state) && !setQuality.allow_change) {
-         if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.allow_change) {
-            setQuality.allow_change = true;
+         // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
+         if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
+            setQuality.quality_busy = true;
 
-            const interval = setInterval(() => {
+            const waitQuality = setInterval(() => {
                const availableQualityLevels = this.getAvailableQualityLevels();
 
                if (availableQualityLevels?.length) {
-                  clearInterval(interval);
+                  clearInterval(waitQuality);
 
                   const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
                   const newQuality = availableQualityLevels[maxAvailableQuality];
@@ -65,13 +63,13 @@ window.nova_plugins.push({
 
                   // console.debug('availableQualityLevels:', availableQualityLevels);
                   // console.debug("try set quality:", newQuality);
-                  // console.debug('set realy quality:', this.getPlaybackQuality());
+                  // console.debug('current quality:', this.getPlaybackQuality());
                }
             }, 50); // 50ms
 
             // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
          } else if (state <= 0) {
-            setQuality.allow_change = false;
+            setQuality.quality_busy = false;
          }
       }
 

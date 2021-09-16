@@ -10,7 +10,6 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // restore the original title
             ["pause", "ended"].forEach(evt => {
@@ -19,7 +18,6 @@ window.nova_plugins.push({
          });
 
       function updateTitle() {
-         if (isNaN(this.duration)) return;
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
          // backup the original title template
          if (!originalTitleTemplate) originalTitleTemplate = document.title.replace(getVideoTitle(), '%s');
@@ -37,7 +35,9 @@ window.nova_plugins.push({
 
             // case 'left':
             default:
-               new_title = [this.duration - this.currentTime];
+               if (!isNaN(this.duration)) {
+                  new_title = [this.duration - this.currentTime];
+               }
          }
          // add playbackRate if it is not default
          // if (this.playbackRate !== 1) new_title.push(` (${this.playbackRate}x)`);
@@ -50,7 +50,8 @@ window.nova_plugins.push({
       }
 
       function getVideoTitle() {
-         return document.querySelector('meta[name="title"][content]')?.content || document.getElementById('movie_player')?.getVideoData().title || document.querySelector('h1')?.textContent;
+         return document.querySelector('meta[name="title"][content]')?.content
+            || document.getElementById('movie_player')?.getVideoData().title;
       }
 
    },

@@ -104,8 +104,17 @@ const NOVA = {
                return `{ ${css} }`;
             }
 
-         } else if (css && typeof css === 'string') injectCss(css);
-         else console.error('addStyle > css:', typeof css);
+         } else if (css && typeof css === 'string') {
+            if (document.head) {
+               injectCss(css);
+
+            } else {
+               document.addEventListener("DOMContentLoaded", () => injectCss(css), { capture: true, once: true });
+            }
+
+         } else {
+            console.error('addStyle > css:', typeof css);
+         }
 
          function injectCss(source = required()) {
             let sheet;
@@ -121,8 +130,7 @@ const NOVA = {
                   const style = document.createElement('style');
                   style.type = 'text/css';
                   style.id = sheetName;
-                  document.head.append(style);
-                  return style;
+                  return document.head.appendChild(style);
                })();
             }
 
@@ -214,12 +222,13 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.querySelectorAll('#meta #description, #contents ytd-comment-thread-renderer:first-child #content')
+      document.querySelectorAll('#description.ytd-video-secondary-info-renderer, #contents ytd-comment-thread-renderer:first-child #content')
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
+               // || document.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
                ?.split('\n')
                .forEach(line => {
-                  if (line.length > 5 && line.length < 80 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
+                  if (line.length > 5 && line.length < 110 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
                      timestamp = timestamp[0];
                      const sec = this.timeFormatTo.sec(timestamp);
                      if (sec > prevSec && sec < +video_duration) {
@@ -231,7 +240,7 @@ const NOVA = {
                            'title': line
                               .replace(timestamp, '')
                               .trim()
-                              .replace(/(^[:\-–—]|[:\-–—.;]$)/, '')
+                              .replace(/(^[:\-–—|]|[:\-–—.;|]$)/, '')
                               .trim()
                         });
                      }
@@ -304,32 +313,64 @@ const NOVA = {
          return +s;
       },
 
-      HMS_digit(ts, no_zeros) {
+      HMS_digit(ts) { // format out "h:m:s"
          const
             sec = Math.abs(+ts),
-            days = Math.floor(sec / 86400) || null,
-            hours = Math.floor(sec % 86400 / 3600) || null,
-            minutes = Math.floor(sec % 3600 / 60),
-            seconds = Math.floor(sec % 60);
+            d = Math.floor(sec / 86400),
+            h = Math.floor(sec % 86400 / 3600),
+            m = Math.floor(sec % 3600 / 60),
+            s = Math.floor(sec % 60);
 
-         return (days && !isNaN(days) ? `${days}d ` : '')
-            + [hours, minutes, seconds]
-               .filter(i => i !== null && !isNaN(i)) // filter - null,NaN
-               .map(i => no_zeros ? i : i.toString().padStart(2, '0')) // "1:2:3" => "01:02:03"
-               .join(':'); // format "h:m:s"
+         return (d ? `${d}d ` : '')
+            + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
+            + (h ? m.toString().padStart(2, '0') : m) + ':'
+            + s.toString().padStart(2, '0');
       },
+      // 84% slower
+      // HMS_digit(ts) { // format out "h:m:s"
+      //    const
+      //       sec = Math.abs(+ts),
+      //       days = Math.floor(sec / 86400),
+      //       hours = Math.floor(sec % 86400 / 3600),
+      //       minutes = Math.floor(sec % 3600 / 60),
+      //       seconds = Math.floor(sec % 60);
 
-      HMS_abbr(ts) { // out 999h00m00s
+      //    return (days && !isNaN(days) ? `${days}d ` : '')
+      //       + [hours, minutes, seconds]
+      //          .filter(i => +i && !isNaN(i))
+      //          .map((item, idx) => idx ? item.toString().padStart(2, '0') : item) // "1:2:3" => "1:02:03"
+      //          .join(':'); // format "h:m:s"
+      // },
+
+      HMS_abbr(ts) { // format out 999h00m00s
          const
             sec = Math.abs(+ts),
+            d = Math.floor(sec / 86400),
             h = Math.floor(sec / 3600),
             m = Math.floor(sec % 3600 / 60),
             s = Math.floor(sec % 60);
 
-         return (h ? h + 'h' : '')
-            + (m ? (h && m < 10 ? '0' : '') + m + 'm' : h && m === 0 ? '00m' : '0m')
-            + (s < 10 ? '0' : '') + s + 's';
+         return (d ? `${d}d ` : '')
+            + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
+            + (m ? (h ? m.toString().padStart(2, '0') : m) + 'm' : '')
+            + (s ? (m ? s.toString().padStart(2, '0') : s) + 's' : '');
       },
+      // 78.48% slower
+      // HMS_abbr(ts) {
+      //    const
+      //       sec = Math.abs(+ts),
+      //       days = Math.floor(sec / 86400),
+      //       hours = Math.floor(sec / 3600),
+      //       minutes = Math.floor(sec % 3600 / 60),
+      //       seconds = Math.floor(sec % 60);
+
+      //    return (days ? `${days}d ` : '')
+      //       + [seconds, minutes, hours]
+      //          .filter(i => +i && !isNaN(i))
+      //          .map((item, idx, arr) => (arr.length - 1 !== idx ? item.toString().padStart(2, '0') : item) + ['s', 'm', 'h'][idx])
+      //          .reverse()
+      //          .join(''); // format "999h00m00s"
+      // },
    },
 
    currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main',
@@ -415,6 +456,8 @@ const NOVA = {
       },
    },
 
+   // (player = document.getElementById('movie_player')) && player.getPlayerState() === 2 // 2: paused
+   // NOVA.PLAYERSTATE[player.getPlayerState()] === 'PLAYING'
    PLAYERSTATE: {
       '-1': 'UNSTARTED',
       0: 'ENDED',

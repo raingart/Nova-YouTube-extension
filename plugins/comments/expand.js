@@ -6,6 +6,31 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // comment
+      NOVA.watchElement({
+         selector: '#contents #expander[collapsed]',
+         attr_mark: 'comment-expanded',
+         callback: el => {
+            const moreExpand = () => el.querySelector('#more')?.click();
+            // on hover auto expand
+            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
+            // if (user_settings.comments_expand_mode === 'always') moreExpand();
+            if (user_settings.comments_expand_mode !== 'onhover') moreExpand();
+         },
+      });
+
+      // comment replies
+      NOVA.watchElement({
+         selector: '#more-replies',
+         attr_mark: 'replies-expanded',
+         callback: el => {
+            const moreExpand = () => el.querySelector('#button')?.click();
+            // on hover auto expand
+            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
+            if (user_settings.comments_view_reply === 'always') moreExpand();
+         },
+      });
+
       // old method. No hover
       // NOVA.watchElement({
       //    selector: '#contents #expander[collapsed] #more',
@@ -21,30 +46,6 @@ window.nova_plugins.push({
 
       //    });
       // }
-
-      NOVA.watchElement({
-         selector: '#contents #expander[collapsed]',
-         attr_mark: 'comment-expanded',
-         // callback: btn => btn.click(),
-         callback: el => {
-            const moreExpand = () => el.querySelector('#more')?.click();
-            // on hover auto expand
-            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
-            // if (user_settings.comments_expand_mode === 'always') moreExpand();
-            if (user_settings.comments_expand_mode !== 'onhover') moreExpand();
-         },
-      });
-
-      NOVA.watchElement({
-         selector: '#more-replies',
-         attr_mark: 'replies-expanded',
-         callback: el => {
-            const moreExpand = () => el.querySelector('#button')?.click();
-            // on hover auto expand
-            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
-            if (user_settings.comments_view_reply === 'always') moreExpand();
-         },
-      });
 
    },
    options: {

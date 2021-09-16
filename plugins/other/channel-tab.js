@@ -18,16 +18,11 @@ window.nova_plugins.push({
             NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
                .then(() => {
                   let tab_nth;
-                  switch (user_settings.channel_default_tab || 'videos') {
-                     case 'videos':
-                        tab_nth = 4;
-                        break;
-                     case 'playlists':
-                        tab_nth = 6;
-                        break;
-                     case 'about':
-                        tab_nth = 12;
-                        break;
+                  switch (user_settings.channel_default_tab) {
+                     case 'playlists': tab_nth = 6; break;
+                     case 'about': tab_nth = 12; break;
+                     // case 'videos':
+                     default: tab_nth = 4;
                   }
                   // select tab
                   document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`)

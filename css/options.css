@@ -77,7 +77,7 @@ li>ul>li {
    display: grid;
    /* grid-template-columns: 1fr auto; */
    grid-template-columns: [left label] 1fr [right input];
-   line-height: 25px;
+   line-height: 1.8em;
    padding-left: .5em;
 }
 

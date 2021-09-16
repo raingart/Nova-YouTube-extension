@@ -2,31 +2,22 @@ window.nova_plugins.push({
    id: 'video-autopause',
    title: 'Video autopause',
    run_on_pages: 'watch, embed',
+   restart_on_transition: true,
    section: 'player',
    desc: 'Disables autoplay',
    _runtime: user_settings => {
 
-      let is_change_quality;
-
-      NOVA.waitElement('#movie_player')
-         .then(player => {
-            player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
+      NOVA.waitElement('video')
+         .then(video => {
+            video.addEventListener('playing', setVideoPause.bind(video), { capture: true, once: true });
          });
 
-      function onPlayerStateChange(state) {
-         // console.debug('playerState', NOVA.PLAYERSTATE[state]);
+      function setVideoPause() {
          if (user_settings.video_autopause_ignore_playlist && location.href.includes('list=')) return;
+         this.pause();
 
-         // if (1 === state && !is_change_quality) {
-         if ('PLAYING' == NOVA.PLAYERSTATE[state] && !is_change_quality) {
-            is_change_quality = true;
-            this.pauseVideo();
-            // console.debug('pauseVideo', NOVA.PLAYERSTATE[state]);
-
-            // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
-         } else if (state <= 0) {
-            is_change_quality = false;
-         }
+         const forcePaused = setInterval(() => this.paused || this.pause(), 200); // 100ms
+         setTimeout(() => clearInterval(forcePaused), 1000); // 1s
       }
 
    },

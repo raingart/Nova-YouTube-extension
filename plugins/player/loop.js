@@ -8,10 +8,7 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
-            video.addEventListener('loadeddata', function () {
-               this.loop = true;
-            });
+            video.addEventListener('loadeddata', ({ target }) => target.loop = true);
          });
    },
 });

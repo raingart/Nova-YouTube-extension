@@ -37,8 +37,8 @@ window.nova_plugins.push({
                      'display': 'block',
                      'color': 'var(--yt-spec-text-secondary)',
                   });
-                  btn.addEventListener('click', ({ target }) => {
-                     target.remove();
+                  btn.addEventListener('click', () => {
+                     btn.remove();
                      comments.style.visibility = 'visible';
                      window.dispatchEvent(new Event("scroll"));
                   });

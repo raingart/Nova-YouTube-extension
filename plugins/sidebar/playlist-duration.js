@@ -32,11 +32,7 @@ window.nova_plugins.push({
                      getPlaylistDurationFromThumbnails({
                         'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
                      })
-                        .then(duration => {
-                           if (duration) {
-                              insertToHTML({ 'container': el, 'text': duration });
-                           }
-                        });
+                        .then(duration => duration && insertToHTML({ 'container': el, 'text': duration }));
                   }
 
                   function getPlaylistDuration() {
@@ -76,11 +72,7 @@ window.nova_plugins.push({
                               'container': document.querySelector('#secondary #playlist'),
                               'items_selector': '#playlist-items #unplayableText[hidden]',
                            })
-                              .then(duration => {
-                                 if (duration) {
-                                    insertToHTML({ 'container': el, 'text': duration });
-                                 }
-                              });
+                              .then(duration => duration && insertToHTML({ 'container': el, 'text': duration }));
                         }
 
                      });
@@ -114,7 +106,7 @@ window.nova_plugins.push({
 
          return new Promise(resolve => {
             let forcePlaylistRun = false;
-            const interval = setInterval(() => {
+            const waitThumbnails = setInterval(() => {
                const
                   playlistCount = document.querySelectorAll(items_selector)?.length,
                   timeStampList = (container || document)
@@ -125,7 +117,7 @@ window.nova_plugins.push({
                   console.log('loading playlist:', timeStampList.length + '/' + playlistCount);
                   return timeStampList.length && setTimeout(() => forcePlaylistRun = true, 1000 * 3); // force run after 3sec
                }
-               clearInterval(interval);
+               clearInterval(waitThumbnails);
                console.log('thumbnails_method return:', duration);
                resolve(duration);
 

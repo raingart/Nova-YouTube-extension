@@ -28,7 +28,7 @@ Userscript [openuserjs](https://openuserjs.org/scripts/raingart/Nova_YouTube).
 
 **Extensions**: `$ ./package-extensions.sh`.
 
-**UserScript**: `$ make compile`.
+**UserScript**: `$ make build`.
 
 ### File structure
 The extension is based on plugin files. The remaining files only serve them.

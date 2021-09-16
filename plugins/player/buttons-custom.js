@@ -78,7 +78,8 @@ window.nova_plugins.push({
                const
                   // bar
                   SELECTOR_SCREENSHOT_ID = 'screenshot-result',
-                  SELECTOR_SCREENSHOT = '#' + SELECTOR_SCREENSHOT_ID; // for css
+                  SELECTOR_SCREENSHOT = '#' + SELECTOR_SCREENSHOT_ID, // for css
+                  video = getVideoElement();
 
                NOVA.css.push(
                   SELECTOR_SCREENSHOT + ` {
@@ -134,7 +135,6 @@ window.nova_plugins.push({
                   </svg>`;
                btnScreenshot.addEventListener('click', () => {
                   const
-                     video = getVideoElement(),
                      container = document.getElementById(SELECTOR_SCREENSHOT_ID) || document.createElement('a'),
                      canvas = container.querySelector('canvas') || document.createElement('canvas'),
                      context = canvas.getContext('2d');
@@ -152,7 +152,7 @@ window.nova_plugins.push({
                      container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
                      container.style.zIndex = NOVA.css.getValue({ selector: headerContainer, property: 'z-index' }); // fix header overlapping
                      canvas.addEventListener('click', evt => {
-                        evt.preventDefault();
+                        evt.origentDefault();
                         // document.location.href = target.toDataURL('image/png').replace('image/png', 'image/octet-stream');
                         downloadCanvasAsImage(evt.target);
                         container.remove();
@@ -164,7 +164,7 @@ window.nova_plugins.push({
                      // btnClose.textContent = 'CLOSE';
                      btnClose.innerHTML = '<span>CLOSE</span>';
                      btnClose.addEventListener('click', evt => {
-                        evt.preventDefault();
+                        evt.origentDefault();
                         container.remove();
                      });
                      container.append(btnClose);
@@ -175,11 +175,12 @@ window.nova_plugins.push({
                function downloadCanvasAsImage(canvas) {
                   const
                      downloadLink = document.createElement('a'),
-                     player = getPlayerElement(),
                      downloadFileName =
                         [
-                           player?.getVideoData().title.replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim(),
-                           `[${NOVA.timeFormatTo.HMS_abbr(player.getCurrentTime())}]`,
+                           player?.getVideoData().title
+                              .replace(/[\\/:*?"<>|]+/g, '')
+                              .replace(/\s+/g, ' ').trim(),
+                           `[${NOVA.timeFormatTo.HMS_abbr(video.currentTime)}]`,
                         ]
                            .join(' ');
 
@@ -217,7 +218,7 @@ window.nova_plugins.push({
                //    <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
                // </svg>`;
 
-               let prevRate = {};
+               let origRate = {};
 
                btnSpeed.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnSpeed.style.textAlign = 'center';
@@ -233,25 +234,25 @@ window.nova_plugins.push({
                btnSpeed.addEventListener('click', switchRate);
 
                function switchRate() {
-                  // restore prev
-                  if (Object.keys(prevRate).length) {
-                     playerRate.set(prevRate);
-                     prevRate = {};
+                  // restore orig
+                  if (Object.keys(origRate).length) {
+                     playerRate.set(origRate);
+                     origRate = {};
                      btnSpeed.innerHTML = defaultRateText;
 
                   } else { // return default
-                     prevRate = (player && video.playbackRate % .25) === 0
+                     origRate = (player && video.playbackRate % .25) === 0
                         ? { 'default': player.getPlaybackRate() }
                         : { 'html5': video.playbackRate };
 
-                     let resetRate = Object.assign({}, prevRate); // clone obj
+                     let resetRate = Object.assign({}, origRate); // clone obj
                      resetRate[Object.keys(resetRate)[0]] = 1; // first property of object
                      playerRate.set(resetRate);
 
-                     btnSpeed.textContent = prevRate[Object.keys(prevRate)[0]] + 'x';
+                     btnSpeed.textContent = origRate[Object.keys(origRate)[0]] + 'x';
                   }
                   btnSpeed.title = `Switch to ${btnSpeed.textContent} (${hotkey})`;
-                  // console.debug('prevRate', prevRate);
+                  // console.debug('origRate', origRate);
                }
 
                const playerRate = {
@@ -261,42 +262,36 @@ window.nova_plugins.push({
                      } else {
                         player.setPlaybackRate(obj.default);
                      }
-                     this.saveInSession(obj.html5 || obj.default);
+                     // this.saveInSession(obj.html5 || obj.default);
                   },
 
-                  saveInSession(level = required()) {
-                     try {
-                        sessionStorage['yt-player-playback-rate'] = JSON.stringify({
-                           creation: Date.now(), data: level.toString(),
-                        })
-                        console.log('playbackRate save in session:', ...arguments);
+                  // saveInSession(level = required()) {
+                  //    try {
+                  //       sessionStorage['yt-player-playback-rate'] = JSON.stringify({
+                  //          creation: Date.now(), data: level.toString(),
+                  //       })
+                  //       // console.log('playbackRate save in session:', ...arguments);
 
-                     } catch (err) {
-                        console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
-                     }
-                  },
+                  //    } catch (err) {
+                  //       console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                  //    }
+                  // },
                };
 
-               // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
                video.addEventListener('ratechange', visibilitySwitch);
+               // reset btnSpeed state
                video.addEventListener('loadeddata', () => {
-                  prevRate = {};
+                  origRate = {};
                   btnSpeed.textContent = defaultRateText;
                   visibilitySwitch();
                });
 
                function visibilitySwitch() {
-                  if (Object.keys(prevRate).length) return;
-                  btnSpeed.style.visibility = video.playbackRate === 1 ? 'hidden' : 'visible';
+                  if (!Object.keys(origRate).length) {
+                     btnSpeed.style.visibility = /*player.getPlaybackRate() ===*/ video.playbackRate === 1 ? 'hidden' : 'visible';
+                  }
                }
 
-               // ['ratechange', 'loadeddata'].forEach(evt => {
-               //    // visibilitySwitch
-               //    video.addEventListener(evt, ({ target }) => {
-               //       if (Object.keys(prevRate).length) return;
-               //       btnSpeed.style.visibility = target.playbackRate === 1 ? 'hidden' : 'visible';
-               //    });
-               // });
                container.prepend(btnSpeed);
             }
          });

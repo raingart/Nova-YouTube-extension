@@ -38,11 +38,10 @@ window.nova_plugins.push({
                   left: window.pageXOffset,
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
-               const player = document.getElementById('movie_player');
                if (user_settings.scroll_to_top_autoplay && NOVA.currentPageName() == 'watch'
-                  && player.getPlayerState() === 2 // 2: paused
+                  && (video = document.querySelector('video')) && video.paused
                ) {
-                  player.playVideo();
+                  video.play();
                }
             });
 

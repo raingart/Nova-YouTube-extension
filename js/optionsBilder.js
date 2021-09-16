@@ -185,8 +185,8 @@ const Opt = {
 
             } else {
                // add click event
-               mapZone.addEventListener('click', ({ target }) => {
-                  // show target , hide other section
+               mapZone.addEventListener('click', () => {
+                  // show mapZone, hide other section
                   switchClass({
                      'remove_to_selector': `${this.UI.pluginsContainer} > *`,
                      'add_to_selector': `${this.UI.pluginsContainer} > #${mapZone.id}`,

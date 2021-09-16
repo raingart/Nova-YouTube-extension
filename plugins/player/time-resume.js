@@ -5,43 +5,29 @@ window.nova_plugins.push({
    section: 'player',
    desc: 'On page reload - resume playback',
    _runtime: user_settings => {
+      // YouTube History does the same
 
       const CACHE_PREFIX = 'resume-playback-time';
-      // ytplayer - not updated on page transition!
       const getCacheName = () => CACHE_PREFIX + ':' + (document.getElementById('movie_player')?.getVideoData().video_id || NOVA.queryURL.get('v'));
-      let cacheName = getCacheName(); // for optimization
+      let cacheName = getCacheName();
 
-      NOVA.waitElement('#movie_player:not(.ad-showing) video')
+      NOVA.waitElement('#movie_player:not(.ad-showing) video') // dont save ad
          .then(video => {
-            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video#events
+            // restore
             video.addEventListener('loadeddata', resumePlaybackTime.bind(video));
-            // video.addEventListener('durationchange', resumePlaybackTime.bind(player)); // possible problems on streams
             // save
-            video.addEventListener('timeupdate', function () {
-               // console.debug('timeupdate', this.currentTime, '/', this.duration);
-               if (!isNaN(this.duration)) {
-                  sessionStorage.setItem(cacheName, this.currentTime);
-               }
-            });
+            video.addEventListener('timeupdate', () => sessionStorage.setItem(cacheName, video.currentTime));
          });
 
       function resumePlaybackTime() {
-         cacheName = getCacheName();
+         cacheName = getCacheName(); // for optimization
 
-         // YouTube History does the same
-         if (!NOVA.queryURL.get('t')
-            && (time = JSON.parse(sessionStorage.getItem(cacheName)))
+         if (!NOVA.queryURL.get('t') && (time = +JSON.parse(sessionStorage.getItem(cacheName)))
             // fix the situation where it is impossible to replay item in the playlist
-            && (time + 1) < this.duration) {
+            && ((time + 1) < this.duration || (isNaN(this.duration) && time))
+         ) {
             // console.debug('last playback state', time, '/', this.duration);
-            // seek method
             this.currentTime = time;
-
-            // url param method
-            // if (!sessionStorage.hasOwnProperty(cacheName)) {
-            // const urlParams = new URLSearchParams(location.search);
-            // urlParams.set('t', time + 's');
-            // location.search = urlParams;
          }
       }
 

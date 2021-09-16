@@ -7,7 +7,7 @@ window.nova_plugins.push({
    // desc: 'Need to Turn on [YouTube History]',
    _runtime: user_settings => {
 
-      // Only the outline/border works. Other selection methods do not work!
+      // Only the outline/border works. Other selection methods do not work in chrome!
 
       NOVA.css.push(
          `a#thumbnail {
@@ -18,6 +18,7 @@ window.nova_plugins.push({
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
          }`);
 
+      // add blur
       // NOVA.css.push(
       //    `a.ytp-videowall-still.ytp-suggestion-set:visited, #thumbnail:visited {
       //       transition: all 200ms ease-in-out;

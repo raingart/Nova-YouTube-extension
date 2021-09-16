@@ -3,7 +3,7 @@
    display: inline-block;
    height: 0;
    user-select: none;
-   line-height: 30px;
+   line-height: 2.5em;
    text-transform: uppercase;
    opacity: .2;
    border-right: 30px solid transparent;

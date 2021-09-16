@@ -4,6 +4,7 @@
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 // https://www.youtube.com/watch?v=gaZDIQ3Zptk - lying timestamp. Filtering by channel author is possible?
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
+// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long timestamp line
 // https://www.youtube.com/watch?v=IR0TBQV147I = very-long Еhree-digit time
 
 window.nova_plugins.push({
@@ -20,12 +21,13 @@ window.nova_plugins.push({
          case 'watch':
             let chapterList;
 
+            // reset chapterList
+            NOVA.waitElement('video')
+               .then(video => video.addEventListener('loadeddata', () => chapterList = []));
+
             NOVA.waitElement('#movie_player')
                .then(player => {
                   doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
-                  // reset chapterList
-                  NOVA.waitElement('video')
-                     .then(video => video.addEventListener('loadeddata', () => chapterList = []));
 
                   function jumpTime() {
                      if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
@@ -116,9 +118,9 @@ window.nova_plugins.push({
       function addTitleOffset() {
          NOVA.css.push(
             `.ytp-tooltip-text:after {
-            content: attr(data-before);
-            color: #ffcc00;
-         }`);
+               content: attr(data-before);
+               color: #ffcc00;
+            }`);
          // color: ${NOVA.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
 
          NOVA.waitElement('.ytp-progress-bar')
@@ -132,10 +134,8 @@ window.nova_plugins.push({
                      // updateOffsetTime
                      tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS_digit(offsetTime)}`);
                   });
-
-                  progressContainer.addEventListener('mouseleave', function hideOffsetTime() {
-                     tooltipEl.removeAttribute('data-before');
-                  });
+                  // hide titleOffset
+                  progressContainer.addEventListener('mouseleave', () => tooltipEl.removeAttribute('data-before'));
                }
             })
       }
