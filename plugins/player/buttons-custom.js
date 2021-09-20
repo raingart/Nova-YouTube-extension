@@ -152,7 +152,7 @@ window.nova_plugins.push({
                      container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
                      container.style.zIndex = NOVA.css.getValue({ selector: headerContainer, property: 'z-index' }); // fix header overlapping
                      canvas.addEventListener('click', evt => {
-                        evt.origentDefault();
+                        evt.preventDefault();
                         // document.location.href = target.toDataURL('image/png').replace('image/png', 'image/octet-stream');
                         downloadCanvasAsImage(evt.target);
                         container.remove();
@@ -164,7 +164,7 @@ window.nova_plugins.push({
                      // btnClose.textContent = 'CLOSE';
                      btnClose.innerHTML = '<span>CLOSE</span>';
                      btnClose.addEventListener('click', evt => {
-                        evt.origentDefault();
+                        evt.preventDefault();
                         container.remove();
                      });
                      container.append(btnClose);

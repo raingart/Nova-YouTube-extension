@@ -313,7 +313,7 @@ const NOVA = {
          return +s;
       },
 
-      HMS_digit(ts) { // format out "h:m:s"
+      HMS_digit(ts = required()) { // format out "h:m:s"
          const
             sec = Math.abs(+ts),
             d = Math.floor(sec / 86400),
@@ -327,7 +327,7 @@ const NOVA = {
             + s.toString().padStart(2, '0');
       },
       // 84% slower
-      // HMS_digit(ts) { // format out "h:m:s"
+      // HMS_digit(ts = required()) { // format out "h:m:s"
       //    const
       //       sec = Math.abs(+ts),
       //       days = Math.floor(sec / 86400),
@@ -342,7 +342,7 @@ const NOVA = {
       //          .join(':'); // format "h:m:s"
       // },
 
-      HMS_abbr(ts) { // format out 999h00m00s
+      HMS_abbr(ts = required()) { // format out 999h00m00s
          const
             sec = Math.abs(+ts),
             d = Math.floor(sec / 86400),
@@ -356,7 +356,7 @@ const NOVA = {
             + (s ? (m ? s.toString().padStart(2, '0') : s) + 's' : '');
       },
       // 78.48% slower
-      // HMS_abbr(ts) {
+      // HMS_abbr(ts = required()) {
       //    const
       //       sec = Math.abs(+ts),
       //       days = Math.floor(sec / 86400),

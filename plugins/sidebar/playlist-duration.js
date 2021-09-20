@@ -36,19 +36,18 @@ window.nova_plugins.push({
                   }
 
                   function getPlaylistDuration() {
-                     const storage = sessionStorage.getItem(STORE_NAME);
-                     if (storage) {
+                     if (storage = sessionStorage.getItem(STORE_NAME)) {
                         // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
                         return storage;
                      }
                      const vids = window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer
                         ?.tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
-                           .tabs[0].tabRenderer.content.sectionListRenderer
+                           .tabs[0].tabRenderer?.content.sectionListRenderer
                            .contents[0].itemSectionRenderer
                            .contents[0].playlistVideoListRenderer?.contents;
-                     const sec = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
+                     const duration = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                     return NOVA.timeFormatTo.HMS_digit(sec);
+                     return +duration && NOVA.timeFormatTo.HMS_digit(duration);
                   }
                });
             break;
@@ -78,8 +77,7 @@ window.nova_plugins.push({
                      });
 
                   function getPlaylistDuration() {
-                     const storage = sessionStorage.getItem(STORE_NAME);
-                     if (storage) {
+                     if (storage = sessionStorage.getItem(STORE_NAME)) {
                         // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
                         return storage;
                      }
@@ -92,7 +90,7 @@ window.nova_plugins.push({
                         .map(e => timeToSec(e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText))
                         .reduce((acc, time) => acc + time, 0);
 
-                     return NOVA.timeFormatTo.HMS_digit(duration);
+                     return +duration && NOVA.timeFormatTo.HMS_digit(duration);
                   }
                });
             break;
@@ -130,7 +128,7 @@ window.nova_plugins.push({
                .map(e => timeToSec(e.textContent))
                .reduce((acc, time) => acc + time, 0);
 
-            return NOVA.timeFormatTo.HMS_digit(duration);
+            return +duration && NOVA.timeFormatTo.HMS_digit(duration);
          }
       }
 

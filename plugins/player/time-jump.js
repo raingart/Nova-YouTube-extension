@@ -42,19 +42,20 @@ window.nova_plugins.push({
                         if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
                            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
                            this.seekToChapterWithAnimation(nextChapterIndex);
-                           msg = `Chapter • ` + (document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
-                              || chapterList[nextChapterIndex].title) + ` (${chapterList[nextChapterIndex].time})`;
+                           msg = document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+                              || chapterList[nextChapterIndex].title;
+                           msg += ' • ' + chapterList[nextChapterIndex].time;
 
                         } else {
                            const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
                            // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec}sec`);
                            this.seekTo(nextChapterData.sec);
-                           msg = `Chapter • ${nextChapterData.title} (${nextChapterData.time})`;
+                           msg = nextChapterData.title + ' • ' + nextChapterData.time;
                         }
 
                      } else {
                         this.seekBy(+user_settings.time_jump_step);
-                        msg = `+${user_settings.time_jump_step} sec (${NOVA.timeFormatTo.HMS_digit(this.getCurrentTime())})`;
+                        msg = `+${user_settings.time_jump_step} sec • ` + NOVA.timeFormatTo.HMS_digit(this.getCurrentTime());
                      }
 
                      NOVA.bezelTrigger(msg); // trigger default indicator
@@ -71,7 +72,7 @@ window.nova_plugins.push({
                      let msg = `+${user_settings.time_jump_step} sec`;
 
                      if (sec = seekToNextChapter.apply(this)) {
-                        msg = `Chapter • ` + NOVA.timeFormatTo.HMS_digit(sec);
+                        msg = NOVA.timeFormatTo.HMS_digit(sec);
 
                      } else {
                         sec = +user_settings.time_jump_step + this.currentTime;
@@ -81,7 +82,7 @@ window.nova_plugins.push({
 
                      // querySelector after seek
                      if (chapterTitle = document.querySelector('.ytp-chapter-title-content')) {
-                        msg = `Chapter • ` + chapterTitle?.textContent;
+                        msg = chapterTitle?.textContent + ' • ' + sec;
                      }
 
                      NOVA.bezelTrigger(msg); // trigger default indicator

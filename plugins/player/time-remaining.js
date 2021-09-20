@@ -15,6 +15,9 @@ window.nova_plugins.push({
                .then(video => {
                   video.addEventListener('timeupdate', setRemaining.bind(video));
                   video.addEventListener('ratechange', setRemaining.bind(video));
+                  ['suspend', 'ended'].forEach(evt => {
+                     video.addEventListener(evt, () => insertToHTML({ 'container': container }));
+                  });
                });
 
             function setRemaining() {

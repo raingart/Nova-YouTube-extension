@@ -163,9 +163,9 @@ window.nova_plugins.push({
                      // has svg icon "🎵"
                      || document.querySelector('#meta #upload-info #channel-name svg>path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"')
                      // channelNameVIVO
-                     || /VEVO$/.test(document.querySelector('#meta #upload-info #channel-name a')?.textContent)
+                     || /(VEVO|Topic)$/.test(document.querySelector('#meta #upload-info #channel-name a')?.textContent)
                      // search in title
-                     || title && ['SONG','SOUND','LYRICS','THEME','AMBIENT','🎵','♫','MIX','OFFICIAL VIDEO','FEAT.','OPENING','ENDING','COVER','VOCAL','BASS','LIVE RADIO','ALBUM','PLAYLIST','DUBSTEP','DANCE VER'].some(i => title.toUpperCase().includes(i))
+                     || title && ['SONG','SOUND','LYRICS','THEME','AMBIENT','🎵','♫','MIX','OFFICIAL VIDEO','FEAT.','OPENING','ENDING','COVER','VOCAL','INSTRUMENTAL','BASS','BEAT','LIVE RADIO','ALBUM','PLAYLIST','DUBSTEP','DANCE VER'].some(i => title.toUpperCase().includes(i))
                      // case sensitive
                      || ['MV','PV','NCS','BGM','EDM','GMV','AMV','OST','OP'].some(i => title.includes(i));
                      // warn false finding ex: 'underCOVER','VOCALoid','write THEME','ALBUM review'

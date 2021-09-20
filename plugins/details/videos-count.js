@@ -84,8 +84,7 @@ window.nova_plugins.push({
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
             (document.getElementById(SELECTOR_ID) || (function () {
                container.insertAdjacentHTML('beforeend',
-                  '<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right: 5px;">'
-                  + ` • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
+                  `<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right:5px;"> • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);
                return document.getElementById(SELECTOR_ID);
             })())
                .textContent = text;
