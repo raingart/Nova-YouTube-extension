@@ -111,7 +111,7 @@ const Opt = {
             }
 
             if (property.title) {
-               exportContainer.tooltip = property.title;
+               exportContainer.setAttribute('tooltip', property.title);
                delete property.title;
             }
 
@@ -152,7 +152,7 @@ const Opt = {
 
                      default:
                         exportProperty.setAttribute(attr, value); // value:string. For safe
-                        // exportProperty[attr] = value; // apply value:function. Like - onchange: function () {
+                     // exportProperty[attr] = value; // apply value:function. Like - onchange: function () {
                   };
                });
 

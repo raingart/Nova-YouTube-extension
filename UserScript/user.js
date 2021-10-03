@@ -123,7 +123,7 @@ function isOptionsPage() {
             document.body.classList.remove('preload');
             // fix/ re-call // remove api warn if has api
             if (user_settings && user_settings['custom-api-key']) {
-               document.querySelectorAll('.info b').forEach(el => el.parentNode.remove(el));
+               document.querySelectorAll('.info b').forEach(el => el.remove(el));
             }
          }, 500); // 500ms
 

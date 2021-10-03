@@ -46,7 +46,7 @@ window.nova_plugins.push({
          },
       });
 
-      // A complete list of available functions can be found in the file "/plugins/ytc_lib.js"
+      // A complete list of available functions can be found in the file "/plugins/common-lib.js"
       // And examples of their use in other plugins.
       // I'm too lazy to describe them. Perhaps no one will even read what is written here.
    },

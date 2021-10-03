@@ -8,6 +8,9 @@
 // www.youtube.com/watch?v=ctMEGAcnYjI
 // www.youtube.com/watch?v=yFsmUBLn8O0
 
+// test z-index "Show chat replay" button
+// https://www.youtube.com/watch?v=9Mv1sOp0Xg8
+
 window.nova_plugins.push({
    id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
@@ -62,7 +65,14 @@ window.nova_plugins.push({
 
             // add unpin button
             NOVA.css.push(
-               CLOSE_BTN_SELECTOR + ` { display: none; }
+               PINNED_SELECTOR +` {
+                  --zIndex: ${(Math.max(
+                     NOVA.css.getValue({ selector: 'ytd-live-chat-frame', property: 'z-index' }),
+                     NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' })
+                  ) || 601) + 1};
+               }
+
+               ${CLOSE_BTN_SELECTOR} { display: none; }
 
                ${PINNED_SELECTOR} ${CLOSE_BTN_SELECTOR} {
                   display: initial !important;
@@ -77,7 +87,7 @@ window.nova_plugins.push({
                   outline: none;
                   opacity: .1;
                   /* border-radius: 100%; */
-                  z-index: ${NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }) || 10};
+                  z-index: var(--zIndex);
                   font-size: 24px;
                   font-weight: bold;
                   background-color: rgba(0, 0, 0, 0.8);
@@ -108,7 +118,7 @@ window.nova_plugins.push({
             width: miniSize.width + 'px',
             height: miniSize.height + 'px',
             position: 'fixed',
-            'z-index': 301,
+            'z-index': 'var(--zIndex)',
             'box-shadow': '0 16px 24px 2px rgba(0, 0, 0, 0.14),' +
                '0 6px 30px 5px rgba(0, 0, 0, 0.12),' +
                '0 8px 10px -5px rgba(0, 0, 0, 0.4)',

@@ -150,9 +150,10 @@ const NOVA = {
       // ex: NOVA.css.getValue({ selector: 'video', property: 'z-index' })
       getValue({ selector = required(), property = required() }) {
          const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
-         return el
-            ? window.getComputedStyle(el)[property] // ok
-            : console.warn('getCSSValue:selector is empty', el, ...arguments); // err
+         return el && window.getComputedStyle(el)[property];
+         // return el
+         //    ? window.getComputedStyle(el)[property] // ok
+         //    : console.warn('getCSSValue:selector is empty', el, ...arguments); // err
 
       },
    },

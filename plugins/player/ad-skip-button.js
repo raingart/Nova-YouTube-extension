@@ -19,12 +19,13 @@ window.nova_plugins.push({
             adSkip();
 
             video.addEventListener('loadeddata', adSkip.bind(video));
+            // video.addEventListener('durationupdate', adSkip.bind(video)); // stream
          });
 
       function adSkip() {
          if (!document.querySelector('#movie_player.ad-showing')) return;
 
-         if (!isNaN(this.duration)) this.currentTime = this.duration; // end ad video
+         this.currentTime = this.duration; // set end ad video
 
          NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text, button.ytp-ad-skip-button')
             .then(btn => btn.click()); // click skip-ad

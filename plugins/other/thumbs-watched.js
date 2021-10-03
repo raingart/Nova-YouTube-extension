@@ -18,6 +18,13 @@ window.nova_plugins.push({
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
          }`);
 
+      if (user_settings.thumbnails_watched_title) {
+         NOVA.css.push(
+            `a#video-title:visited:not(:hover) {
+                  color: ${user_settings.thumbnails_watched_title_color} !important;
+               }`);
+      }
+
       // add blur
       // NOVA.css.push(
       //    `a.ytp-videowall-still.ytp-suggestion-set:visited, #thumbnail:visited {
@@ -41,6 +48,19 @@ window.nova_plugins.push({
          label: 'Frame color',
          type: 'color',
          value: '#FF0000',
+      },
+      thumbnails_watched_title: {
+         _tagName: 'input',
+         label: 'Set title color',
+         type: 'checkbox',
+         // title: 'Link',
+      },
+      thumbnails_watched_title_color: {
+         _tagName: 'input',
+         label: 'choose title color',
+         type: 'color',
+         value: '#FF0000',
+         'data-dependent': '{"thumbnails_watched_title":"true"}',
       },
    },
 });

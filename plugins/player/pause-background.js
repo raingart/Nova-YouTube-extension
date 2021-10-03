@@ -16,19 +16,34 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            // mark active
+            // on playing set mark
             video.addEventListener('playing', () => localStorage.setItem(storeName, instanceID));
-            // remove mark
-            ['pause', 'suspend', 'ended'].forEach(evt => {
-               video.addEventListener(evt, removeStorage);
-            });
-            // remove storage if tab closed
+
+            // remove mark - video not play
+            ['pause', 'suspend', 'ended'].forEach(evt => video.addEventListener(evt, removeStorage));
+            // remove mark - on tab closed
             window.addEventListener('beforeunload', removeStorage);
 
+            // auto play on tab focus
+            if (user_settings.pause_background_tab_onfocus) {
+               const player = document.getElementById('movie_player');
+               document.addEventListener("visibilitychange", () => {
+                  //   if other tabs are not playing
+                  if (document.visibilityState === 'visible'
+                     && !localStorage.hasOwnProperty(storeName)
+                     // && video.paused  // dont see ENDED
+                     && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
+                  ) {
+                     // console.debug('play video in focus');
+                     video.play();
+                  }
+               });
+            }
+            // if tab unfocus apply pause
             window.addEventListener('storage', store => {
-               if (store.key === storeName && store.storageArea === localStorage // checking the right item
-                  // has storage
-                  && localStorage[storeName] && localStorage[storeName] !== instanceID
+               if (document.visibilityState === 'hidden' // tab unfocus
+                  && store.key === storeName && store.storageArea === localStorage // checking now store
+                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // has storage
                ) {
                   // console.debug('video pause', localStorage[storeName]);
                   video.pause();
@@ -53,7 +68,7 @@ window.nova_plugins.push({
       //             // has storage
       //             && localStorage[storeName] && localStorage[storeName] !== instanceID
       //             // this player is playing
-      //             && player.getPlayerState() === 1 // 1 = PLAYING
+      //             && NOVA.PLAYERSTATE[player.getPlayerState()] === 'PLAYING'
       //          ) {
       //             console.debug('pause player', localStorage[storeName]);
       //             player.pauseVideo();
@@ -62,5 +77,13 @@ window.nova_plugins.push({
 
       //    });
 
+   },
+   options: {
+      pause_background_tab_onfocus: {
+         _tagName: 'input',
+         label: 'Autoplay on focus tab',
+         type: 'checkbox',
+         // title: '',
+      },
    },
 });

@@ -1,9 +1,9 @@
 # Nova YouTube-extension
-[![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](#)
+[![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
 
 Combine small plugins, expanding the possibilities of YouTube.
 
-The basis of the plugin files themselves. Which are connected at of the YouTube page. The remaining files only serve them.
+The extension is based on the plugin files themselves. The rest of the files only serve them.
 - ease of extensibility
 - low probability of conflict with other extensions.
 
@@ -28,7 +28,7 @@ Userscript [openuserjs](https://openuserjs.org/scripts/raingart/Nova_YouTube).
 
 **Extensions**: `$ ./package-extensions.sh`.
 
-**UserScript**: `$ make build`.
+**Userscript**: `$ make build`.
 
 ### File structure
 The extension is based on plugin files. The remaining files only serve them.
@@ -37,6 +37,6 @@ The extension is based on plugin files. The remaining files only serve them.
 * [/js/plugins.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/plugins.js) - a list of all plugins and their module for launching them.
 * [/js/optionsBilder.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/optionsBilder.js) - generator of plugins configuration file.
 * [/js/libs/](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/libs) - directory of internal components of the extension. Not used by plugins, only by the extension itself.
-* [/plugins/ytc_lib.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/ytc_lib.js) - library for related functions in all plugins.
+* [/plugins/common-lib.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/common-lib.js) - library for related functions in all plugins.
 * [/plugins/](https://github.com/raingart/Nova-YouTube-extension/tree/master/plugins) - directory of all plugins and files available for connection to the YouTube page.
   * [plugin file example](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/_blank_plugin.js)

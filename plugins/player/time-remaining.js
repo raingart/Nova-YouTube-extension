@@ -42,20 +42,19 @@ window.nova_plugins.push({
                      'container': container,
                   });
                }
+            }
 
-               function insertToHTML({ text = '', container = required() }) {
-                  // console.debug('insertToHTML', ...arguments);
-                  if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
-                  (document.getElementById(SELECTOR_ID) || (function () {
-                     // const el = document.createElement('span');
-                     // el.id = SELECTOR_ID;
-                     // container.after(el);
-                     container.insertAdjacentHTML('afterend', ` <span id="${SELECTOR_ID}">${text}</span>`);
-                     return document.getElementById(SELECTOR_ID);
-                  })())
-                     .textContent = text;
-               }
-
+            function insertToHTML({ text = '', container = required() }) {
+               // console.debug('insertToHTML', ...arguments);
+               if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+               (document.getElementById(SELECTOR_ID) || (function () {
+                  // const el = document.createElement('span');
+                  // el.id = SELECTOR_ID;
+                  // container.after(el);
+                  container.insertAdjacentHTML('afterend', ` <span id="${SELECTOR_ID}">${text}</span>`);
+                  return document.getElementById(SELECTOR_ID);
+               })())
+                  .textContent = text;
             }
 
          });

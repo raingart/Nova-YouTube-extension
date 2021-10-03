@@ -38,8 +38,11 @@ window.nova_plugins.push({
                   left: window.pageXOffset,
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
-               if (user_settings.scroll_to_top_autoplay && NOVA.currentPageName() == 'watch'
-                  && (video = document.querySelector('video')) && video.paused
+               if (user_settings.scroll_to_top_autoplay
+                  && NOVA.currentPageName() == 'watch'
+                  //    && (video = document.querySelector('video')) && video.paused // dont see ENDED
+                  && (player = document.getElementById('movie_player'))
+                  && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
                ) {
                   video.play();
                }

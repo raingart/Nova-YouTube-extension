@@ -27,12 +27,12 @@ const Plugins = {
       'other/thumbs-rating.js',
       'other/thumbs-watched.js', // outdated
       'other/channel-tab.js',
-      'other/redirect-clear.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
 
       'details/description.js',
       'details/videos-count.js',
+      'details/redirect-clear.js',
       // 'details/quick-menu.js',
 
       'comments/visibility.js',

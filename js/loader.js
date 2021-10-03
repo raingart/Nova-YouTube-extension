@@ -27,14 +27,15 @@ const App = {
       const manifest = chrome.runtime.getManifest();
       console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
-      // skip first run
+      // skip first run on page transition
       document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
-      // document.addEventListener('yt-navigate-finish', App.run); // does not work correctly
+      // document.addEventListener('transitionend', () => this.isURLChanged() && this.run()); // not work correctly
+      // document.addEventListener('yt-navigate-finish', this.run); // does not work correctly
 
       this.storage.load.apply(this);
       // load all Plugins
       Plugins.injectScript('window.nova_plugins = [];');
-      Plugins.load(['ytc_lib.js']);
+      Plugins.load(['common-lib.js']);
       Plugins.load(); // all
    },
 
@@ -87,7 +88,7 @@ const App = {
             // notice.addEventListener('click', ({ target }) => target.remove());
             notice.addEventListener('click', () => notice.remove());
             notice.innerHTML =
-               `<h4>Failure on initialization ${app_name}</h4>`
+               `<h4 style="margin:0;">Failure on initialization ${app_name}</h4>`
                + (typeof NOVA === 'object'
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
                   : `<div>Сritical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
@@ -168,6 +169,7 @@ App.init();
 // abnormal pages
 // https://www.youtube.com/watch?v=6Ux6SlOE9Qk
 // https://www.youtube.com/watch?v=DhTST3iRZyM
+// https://www.youtube.com/channel/UCYPymLmMIXZEbPGZCep2P9A - no have sorting button
 
 // broken channel
 // https://www.youtube.com/channel/UC4Lz
