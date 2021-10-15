@@ -11,9 +11,12 @@
 window.nova_plugins.push({
    id: 'time-jump',
    title: 'Time jump',
+   'title:zh': '时间跳跃',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'Use to skip ad inserts',
+   // desc: 'Use to skip ad inserts',
+   'desc:zh': '用于跳过广告插入',
+   'desc:ja': '広告の挿入をスキップするために使用',
    _runtime: user_settings => {
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
@@ -181,6 +184,7 @@ window.nova_plugins.push({
       time_jump_step: {
          _tagName: 'input',
          label: 'Step time',
+         'label:zh': '步骤时间',
          type: 'number',
          title: 'in seconds',
          placeholder: 'sec',
@@ -191,6 +195,8 @@ window.nova_plugins.push({
       time_jump_hotkey: {
          _tagName: 'select',
          label: 'Hotkey (double click)',
+         'label:zh': '热键（双击）',
+         'label:ja': 'Hotkey (ダブルプレス)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'alt', value: 18 },
@@ -201,8 +207,12 @@ window.nova_plugins.push({
       time_jump_title_offset: {
          _tagName: 'input',
          label: 'Show time offset on progress bar',
+         'label:zh': '在进度条中显示时间偏移',
+         'label:ja': 'プログレスバーに時間オフセットを表示する',
          type: 'checkbox',
          title: 'Time offset from current playback time',
+         'title:zh': '与当前播放时间的时间偏移',
+         'title:ja': '現在の再生時間からの時間オフセット',
          // title: 'When you hover offset current playback time',
       },
    },

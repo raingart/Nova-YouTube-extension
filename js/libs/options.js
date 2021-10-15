@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
             });
 
          function showOrHide(dependentItem, dependentsJson) {
-            console.debug('showOrHide', ...arguments);
+            // console.debug('showOrHide', ...arguments);
             for (const name in dependentsJson) {
                // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
                if (dependentOnEl = document.getElementsByName(name)[0]) {

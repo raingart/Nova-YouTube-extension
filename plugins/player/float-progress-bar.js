@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
    title: 'Float player progress bar',
+   'title:zh': '浮动播放器进度条',
+   'title:ja': 'フロートプレーヤーのプログレスバー',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -190,6 +192,8 @@ window.nova_plugins.push({
       player_float_progress_bar_height: {
          _tagName: 'input',
          label: 'Height',
+         'label:zh': '高度',
+         'label:ja': '身長',
          type: 'number',
          title: 'in pixels',
          placeholder: 'px',
@@ -200,6 +204,8 @@ window.nova_plugins.push({
       player_float_progress_bar_opacity: {
          _tagName: 'input',
          label: 'Opacity',
+         'label:zh': '不透明度',
+         'label:ja': '不透明度',
          type: 'number',
          // title: '',
          placeholder: '1-10',

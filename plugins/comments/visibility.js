@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'comments-visibility',
    title: 'Hide comments',
+   'title:zh': '隐藏评论',
+   'title:ja': 'コメントを隠す',
    run_on_pages: 'watch',
    restart_on_transition: true,
    section: 'comments',
@@ -52,6 +54,8 @@ window.nova_plugins.push({
       comments_visibility_mode: {
          _tagName: 'select',
          label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
          options: [
             { label: 'Hide', value: 'hide', selected: true },
             { label: 'Remove', value: 'remove' },

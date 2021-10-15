@@ -1,9 +1,13 @@
 window.nova_plugins.push({
    id: 'time-remaining',
    title: 'Remaining Time',
+   'title:zh': '剩余时间',
+   'title:ja': '余日',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Remaining time until the end of the video',
+   'desc:zh': '距离视频结束的剩余时间',
+   'desc:ja': 'ビデオの終わりまでの残り時間',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'ytp-time-remaining';
@@ -64,6 +68,8 @@ window.nova_plugins.push({
       time_remaining_mode: {
          _tagName: 'select',
          label: 'Mode',
+         'label:zh': '如何',
+         'label:ja': '仕方',
          options: [
             { label: 'time+(%)', value: 'full', selected: true },
             { label: 'time', value: 'time' },

@@ -7,7 +7,7 @@ const
 
 if (!isOptionsPage()) return;
 landerPlugins();
-renderSettingButton();
+if (!user_settings?.disable_setting_button) renderSettingButton();
 reflectException();
 
 function renderSettingButton() {

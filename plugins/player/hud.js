@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'player-indicator',
    title: 'Replace default indicator',
+   'title:zh': '替换默认指示器',
+   'title:ja': 'デフォルトのインジケーターを置き換える',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'bezel',
@@ -175,6 +177,8 @@ window.nova_plugins.push({
       player_indicator_type: {
          _tagName: 'select',
          label: 'Indicator type',
+         'label:zh': '指标类型',
+         'label:ja': 'インジケータータイプ',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar-center', value: 'bar-center' },

@@ -14,9 +14,13 @@
 window.nova_plugins.push({
    id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
+   'title:zh': '滚动时固定播放器',
+   'title:ja': 'スクロール中にプレイヤーを固定する',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Player stays always visible while scrolling',
+   'desc:zh': '滚动时播放器始终可见',
+   'desc:ja': 'スクロール中、プレーヤーは常に表示されたままになります',
    _runtime: user_settings => {
 
       const
@@ -27,6 +31,14 @@ window.nova_plugins.push({
 
       NOVA.waitElement('#movie_player')
          .then(player => {
+            // if player fullscreen desable float mode
+            document.addEventListener("fullscreenchange", () => player.classList.remove(CLASS_VALUE), false);
+            // NOVA.waitElement('video')
+            //    .then(video => {
+            //       video.addEventListener('webkitfullscreenchange', () => player.classList.remove(CLASS_VALUE));
+            //    });
+            // document.querySelector('ytd-player')?.player_.isFullscreen();
+
             // init css
             const waitHeader = setInterval(() => {
                // awaiting positioning of elements to calculate positioning
@@ -65,11 +77,12 @@ window.nova_plugins.push({
 
             // add unpin button
             NOVA.css.push(
-               PINNED_SELECTOR +` {
+               PINNED_SELECTOR + ` {
                   --zIndex: ${(Math.max(
-                     NOVA.css.getValue({ selector: 'ytd-live-chat-frame', property: 'z-index' }),
-                     NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' })
-                  ) || 601) + 1};
+                  NOVA.css.getValue({ selector: '#chat', property: 'z-index' }),
+                  NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }),
+                  601
+               )) + 1};
                }
 
                ${CLOSE_BTN_SELECTOR} { display: none; }
@@ -126,12 +139,15 @@ window.nova_plugins.push({
 
          // set pin player position
          switch (user_settings.player_float_scroll_position) {
+            // if enable header-unfixed plugin. masthead-container is unfixed
             case 'top-left':
-               initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
+               initcss.top = user_settings['header-unfixed'] ? 0
+                  : (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.left = 0;
                break;
             case 'top-right':
-               initcss.top = (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
+               initcss.top = user_settings['header-unfixed'] ? 0
+                  : (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
                initcss.right = scrollbarWidth;
                break;
             case 'bottom-left':
@@ -233,8 +249,12 @@ window.nova_plugins.push({
       player_float_scroll_size_ratio: {
          _tagName: 'input',
          label: 'Player size aspect ratio',
+         'label:zh': '播放器尺寸纵横比',
+         'label:ja': 'プレーヤーサイズのアスペクト比',
          type: 'number',
-         title: 'less - more size',
+         title: '更少 - 更多尺寸',
+         'title:zh': 'より少ない-より多くのサイズ',
+         'title:ja': 'より少ない-より多くのサイズ',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -243,7 +263,9 @@ window.nova_plugins.push({
       },
       player_float_scroll_position: {
          _tagName: 'select',
-         label: 'Fixed player position',
+         label: 'Player fixing position',
+         'label:zh': '玩家固定位置',
+         'label:ja': 'プレーヤーの固定位置',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },

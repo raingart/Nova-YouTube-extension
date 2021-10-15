@@ -1,5 +1,10 @@
 console.debug('init optionsView.js');
 
+// https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
+const lang_code = window.navigator.language.substring(0, 2);
+// lang_code = 'ja'
+// lang_code = 'cn'
+
 window.nova_plugins = [];
 Plugins.load();
 
@@ -49,6 +54,13 @@ const Opt = {
             try {
                if (!this.pluginChecker(plugin)) throw new Error('pluginInvalid!');
                this.log('plugin load:', plugin.id);
+
+               // localize
+               if (plugin_title_local = plugin['title:' + lang_code]) {
+                  plugin.title = plugin_title_local;
+                  delete plugin[plugin_title_local];
+               }
+               // localize
 
                const li = document.createElement('li');
                li.className = 'item';
@@ -110,10 +122,22 @@ const Opt = {
                delete property['data-dependent'];
             }
 
+            // localize
             if (property.title) {
-               exportContainer.setAttribute('tooltip', property.title);
+               exportContainer.setAttribute('tooltip', property['title:' + lang_code] || property.title);
                delete property.title;
+               delete property['title:' + lang_code];
             }
+            if (label_local = property['label:' + lang_code]) {
+               property.label = label_local;
+               delete property[label_local];
+            }
+            // localize
+
+            // if (property.title) {
+            //    exportContainer.setAttribute('tooltip', property.title);
+            //    delete property.title;
+            // }
 
             Object.entries(property)
                .forEach(([attr, value]) => {
@@ -125,6 +149,11 @@ const Opt = {
                            switch (typeof option) {
                               case 'object':
                                  tagOption.value = option.value;
+                                 // localize
+                                 if (option.hasOwnProperty('label:' + lang_code)) {
+                                    option.label = option['label:' + lang_code];
+                                    delete option['label:' + lang_code];
+                                 }
                                  tagOption.textContent = option.label;
                                  if (option.hasOwnProperty('selected')) tagOption.selected = true;
                                  break;
@@ -326,7 +355,7 @@ const Opt = {
 
 window.addEventListener('load', () => {
    // search bar
-   ["change", "keyup"].forEach(evt => {
+   ['change', 'keyup'].forEach(evt => {
       document.querySelector('[type="search"]')
          .addEventListener(evt, function () {
             const generatelist = document.querySelector(Opt.UI.pluginsContainer);

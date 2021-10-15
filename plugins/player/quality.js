@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'video-quality',
    title: 'Video quality',
+   'title:zh': '视频质量',
+   'title:ja': 'ビデオ品質',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -78,7 +80,11 @@ window.nova_plugins.push({
       video_quality: {
          _tagName: 'select',
          label: 'Default video quality',
+         'label:zh': '默认视频质量',
+         'label:ja': 'デフォルトのビデオ品質',
          title: 'If unavailable, set max available quality',
+         'title:zh': '如果不可用，将选择可用的最高质量。',
+         'title:ja': '利用できない場合は、利用可能な最高の品質が選択されます。',
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
@@ -97,9 +103,14 @@ window.nova_plugins.push({
       },
       video_quality_manual_save_tab: {
          _tagName: 'input',
+         // label: 'Manually selected qualities are saved in the current tab' // too much long
          label: 'Save manually selected for the same tab',
+         'label:zh': '手动选择的质量保存在当前选项卡中',
+         'label:ja': '手動で選択した品質が現在のタブに保存されます',
          type: 'checkbox',
          title: 'Affects to next videos',
+         'title:zh': '对下一个视频的影响',
+         'title:ja': '次の動画への影響',
       },
    },
 });

@@ -21,7 +21,7 @@ const NOVA = {
          // } catch (err) { // does not output the reason/line to the stack
          //    reject(new Error('Error waitElement', err));
          // }
-      })
+      });
    },
 
    // waitForElement(selector = required()) {

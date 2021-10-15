@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'channel-default-tab',
    title: 'The default tab on the channel page',
+   'title:zh': '频道页默认选项卡',
+   'title:ja': 'チャンネルページのデフォルトタブ',
    run_on_pages: 'channel',
    restart_on_transition: true,
    section: 'channel',
@@ -37,6 +39,8 @@ window.nova_plugins.push({
       channel_default_tab: {
          _tagName: 'select',
          label: 'Default tab',
+         'label:zh': '默认标签页',
+         'label:ja': 'デフォルトのタブ',
          options: [
             { label: 'videos', value: 'videos', selected: true },
             { label: 'playlists', value: 'playlists' },
@@ -46,7 +50,11 @@ window.nova_plugins.push({
       channel_default_tab_mode: {
          _tagName: 'select',
          label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
          title: 'Redirect is safer but slower',
+         'title:zh': '重定向是安全的，但速度很慢',
+         'title:ja': 'リダイレクトは安全ですが遅くなります',
          options: [
             { label: 'redirect', value: 'redirect' },
             { label: 'click', /*value: '',*/ selected: true },

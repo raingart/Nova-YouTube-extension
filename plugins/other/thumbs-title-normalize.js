@@ -1,9 +1,11 @@
 window.nova_plugins.push({
    id: 'thumbnails-title-normalize',
-   title: 'Normalize title',
+   title: 'Decapitalize thumbnails title',
+   'title:zh': '从大写中删除缩略图标题',
+   'title:ja': 'サムネイルのタイトルを大文字から外す',
    run_on_pages: 'all, -embed, -results',
    section: 'other',
-   desc: 'Decapitalize thumbnails title',
+   // desc: '',
    _runtime: user_settings => {
 
       const
@@ -64,17 +66,24 @@ window.nova_plugins.push({
       thumbnails_title_normalize_show_full: {
          _tagName: 'input',
          label: 'Show full title',
+         'label:zh': '显示完整标题',
+         'label:ja': '完全なタイトルを表示',
          type: 'checkbox'
       },
       thumbnails_title_normalize_smart: {
          _tagName: 'input',
          label: 'Smart mode',
+         'label:zh': '智能模式',
+         'label:ja': 'Smart モード',
          type: 'checkbox',
          title: 'Filter words by regex pattern',
+         'title:ja': '正規表現パターンで単語をフィルタリングする',
       },
       thumbnails_title_normalize_smart_max_words: {
          _tagName: 'input',
          label: 'Max words in uppercase',
+         'label:zh': '最大大写单词',
+         'label:ja': '大文字の最大単語',
          type: 'number',
          // title: '',
          placeholder: '1-10',

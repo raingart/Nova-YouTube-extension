@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'page-logo',
    title: 'YouTube logo',
+   'title:zh': 'YouTube 徽标',
+   'title:ja': 'YouTubeロゴ',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

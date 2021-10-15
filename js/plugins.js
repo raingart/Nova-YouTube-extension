@@ -42,6 +42,7 @@ const Plugins = {
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',
+      'sidebar/thumbnails-mix-hide.js',
 
       'header/unfixed.js',
       'header/short.js',

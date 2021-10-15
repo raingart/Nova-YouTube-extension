@@ -1,11 +1,15 @@
 window.nova_plugins.push({
    id: 'channel-videos-count',
    title: 'Show channel videos count',
+   'title:zh': '显示频道上的视频数量',
+   'title:ja': 'チャンネルの動画数を表示する',
    run_on_pages: 'watch, channel',
    restart_on_transition: true,
    section: 'details',
    opt_api_key_warn: true,
    desc: 'Display uploaded videos on channel',
+   'desc:zh': '在频道上显示上传的视频',
+   'desc:ja': 'アップロードした動画をチャンネルに表示',
    _runtime: user_settings => {
 
       const

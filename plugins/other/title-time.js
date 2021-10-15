@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'page-title-time',
    title: 'Show time in tab title',
+   'title:zh': '在标签标题中显示时间',
+   'title:ja': 'タブタイトルに時間を表示する',
    run_on_pages: 'watch',
    section: 'other',
    // desc: 'Show the current time of the video on the title',
@@ -59,10 +61,12 @@ window.nova_plugins.push({
       page_title_time_mode: {
          _tagName: 'select',
          label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
          options: [
-            { label: 'current', value: 'current' },
-            { label: 'left', value: 'left', selected: true },
-            { label: 'current/duration', value: 'current-duration' },
+            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在'},
+            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左' },
+            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間' },
          ],
       },
    },

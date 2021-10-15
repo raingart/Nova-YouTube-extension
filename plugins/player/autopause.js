@@ -1,10 +1,12 @@
 window.nova_plugins.push({
    id: 'video-autopause',
    title: 'Video autopause',
+   'title:zh': '视频自动暂停',
+   'title:ja': 'ビデオの自動一時停止',
    run_on_pages: 'watch, embed',
    restart_on_transition: true,
    section: 'player',
-   desc: 'Disables autoplay',
+   desc: 'Disable autoplay',
    _runtime: user_settings => {
 
       NOVA.waitElement('video')
@@ -24,7 +26,9 @@ window.nova_plugins.push({
    options: {
       video_autopause_ignore_playlist: {
          _tagName: 'input',
-         label: 'ignore playlist',
+         label: 'Ignore playlist',
+         'label:zh': '忽略播放列表',
+         'label:ja': 'プレイリストを無視する',
          type: 'checkbox',
       },
    },

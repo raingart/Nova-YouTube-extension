@@ -1,9 +1,10 @@
 window.nova_plugins.push({
    id: 'thumbnails-watched',
-   title: 'Mark watched',
+   title: 'Mark watched thumbnails',
+   'title:zh': '标记您观看的缩略图',
+   'title:ja': '視聴したサムネイルにマークを付ける',
    run_on_pages: 'all',
    section: 'other',
-   desc: 'For thumbnails',
    // desc: 'Need to Turn on [YouTube History]',
    _runtime: user_settings => {
 
@@ -46,18 +47,24 @@ window.nova_plugins.push({
       thumbnails_watched_frame_color: {
          _tagName: 'input',
          label: 'Frame color',
+         'label:zh': '框架颜色',
+         'label:ja': 'フレームカラー',
          type: 'color',
          value: '#FF0000',
       },
       thumbnails_watched_title: {
          _tagName: 'input',
          label: 'Set title color',
+         'label:zh': '您要更改标题颜色吗？',
+         'label:ja': 'タイトルの色を変更しますか？',
          type: 'checkbox',
          // title: 'Link',
       },
       thumbnails_watched_title_color: {
          _tagName: 'input',
-         label: 'choose title color',
+         label: 'Сhoose title color',
+         'label:zh': '选择标题颜色',
+         'label:ja': 'タイトルの色を選択',
          type: 'color',
          value: '#FF0000',
          'data-dependent': '{"thumbnails_watched_title":"true"}',

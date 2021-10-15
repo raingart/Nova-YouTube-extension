@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'comments-expand',
    title: 'Expand comments',
+   'title:zh': '展开评论',
+   'title:ja': 'コメントを展開',
    run_on_pages: 'watch',
    section: 'comments',
    // desc: '',
@@ -51,20 +53,24 @@ window.nova_plugins.push({
    options: {
       comments_expand_mode: {
          _tagName: 'select',
-         label: 'Thumbnail timestamps',
-         title: 'Thumbnail display video timestamps',
+         label: 'Expand comment',
+         'label:zh': '展开评论',
+         'label:ja': 'コメントを展開',
+         // title: '',
          options: [
-            { label: 'always', value: 'always', selected: true },
-            { label: 'on hover', value: 'onhover' },
+            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも' },
+            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に' },
          ],
       },
       comments_view_reply: {
          _tagName: 'select',
          label: 'Expand reply',
+         'label:zh': '展开回复',
+         'label:ja': '返信を展開',
          // title: '',
          options: [
-            { label: 'always', value: 'always' },
-            { label: 'on hover', value: 'onhover', selected: true },
+            { label: 'always', value: 'always', 'label:zh': '每次', 'label:ja': 'いつも' },
+            { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に' },
          ],
       },
    },

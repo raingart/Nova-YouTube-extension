@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.8.16
+// @version         0.9.0
 // @description     Make YouTube be better
 
 // @author          raingart
@@ -33,8 +33,7 @@
 // @grant           GM_openInTab
 // @run-at          document-start
 
-// @compatible      chrome >=80 Violentmonkey
-// @compatible      chrome >=80 Tampermonkey
+// @compatible      chrome >=80 Violentmonkey,Tampermonkey
 // @compatible      firefox >=74 Tampermonkey
 // ==/UserScript==
 /*jshint esversion: 6 */

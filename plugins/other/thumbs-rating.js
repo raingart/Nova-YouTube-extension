@@ -1,10 +1,14 @@
 window.nova_plugins.push({
    id: 'thumbnails-rating',
    title: 'Rating preview',
+   'title:zh': '评分预览',
+   'title:ja': '評価プレビュー',
    run_on_pages: 'all, -embed',
    section: 'other',
    opt_api_key_warn: true,
-   desc: 'Rating bar over videos thumbnail',
+   desc: 'Rating bar over videos thumbnails',
+   'desc:zh': '视频缩略图上方的评分栏',
+   'desc:ja': '動画のサムネイルの上の評価バー',
    _runtime: user_settings => {
 
       const
@@ -173,6 +177,8 @@ window.nova_plugins.push({
       rating_bar_height: {
          _tagName: 'input',
          label: 'Bar height',
+         'label:zh': '酒吧高度',
+         'label:ja': 'バーの高さ',
          type: 'number',
          title: 'in pixels',
          placeholder: '1-9',

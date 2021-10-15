@@ -1,6 +1,8 @@
 window.nova_plugins.push({
    id: 'header-short',
-   title: 'Compact header',
+   title: 'Compact header bar',
+   'title:zh': '紧凑的标题栏',
+   'title:ja': 'コンパクトなヘッダーバー',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

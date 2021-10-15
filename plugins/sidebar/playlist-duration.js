@@ -6,6 +6,8 @@
 window.nova_plugins.push({
    id: 'playlist-duration',
    title: 'Show Playlist Duration',
+   'title:zh': '显示播放列表持续时间',
+   'title:ja': 'プレイリストの期間を表示',
    run_on_pages: 'watch, playlist',
    restart_on_transition: true,
    section: 'sidebar',
@@ -43,8 +45,9 @@ window.nova_plugins.push({
                      const vids = window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer
                         ?.tabs.length && window.ytInitialData.contents.twoColumnBrowseResultsRenderer
                            .tabs[0].tabRenderer?.content.sectionListRenderer
-                           .contents[0].itemSectionRenderer
-                           .contents[0].playlistVideoListRenderer?.contents;
+                           ?.contents[0].itemSectionRenderer
+                           .contents[0].playlistVideoListRenderer
+                           .contents;
                      const duration = vids?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
                      return +duration && NOVA.timeFormatTo.HMS_digit(duration);

@@ -1,9 +1,13 @@
 window.nova_plugins.push({
    id: 'pause-background-tab',
    title: 'Pauses playing videos in other tabs',
+   'title:zh': '在其他选项卡上暂停视频播放',
+   'title:ja': '他のタブで動画の再生を一時停止します',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',
+   'desc:zh': '支持 iframe 和其他窗口',
+   'desc:ja': 'iframeやその他のウィンドウをサポート',
    _runtime: user_settings => {
 
       // redirection for localStorage common storage space
@@ -81,7 +85,9 @@ window.nova_plugins.push({
    options: {
       pause_background_tab_onfocus: {
          _tagName: 'input',
-         label: 'Autoplay on focus tab',
+         label: 'Autoplay if tab has focus',
+         'label:zh': '如果选项卡具有焦点，则自动播放',
+         'label:ja': 'タブにフォーカスがある場合は自動再生',
          type: 'checkbox',
          // title: '',
       },
