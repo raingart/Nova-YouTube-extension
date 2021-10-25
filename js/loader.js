@@ -58,7 +58,7 @@ const App = {
       console.groupCollapsed('plugins status');
 
       const forceLander = setTimeout(() => {
-         console.debug('force lander:', window.nova_plugins.length + '/' + plugins_count);
+         console.warn('force lander:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(landerInterval);
 
          if (!document.body) return;
@@ -109,7 +109,7 @@ const App = {
       }, 100); // 100ms
 
       function processLander() {
-         console.debug('loaded:', window.nova_plugins.length + '/' + plugins_count);
+         console.assert(window.nova_plugins.length === plugins_count, 'loaded:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(landerInterval);
          plugins_executor({
             'user_settings': user_settings,

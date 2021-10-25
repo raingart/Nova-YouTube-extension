@@ -31,9 +31,9 @@ window.nova_plugins.push({
 
             NOVA.waitElement('#movie_player')
                .then(player => {
-                  doubleKeyPressListener(jumpTime.bind(player), user_settings.time_jump_hotkey);
+                  doubleKeyPressListener(timeLeap.bind(player), user_settings.time_jump_hotkey);
 
-                  function jumpTime() {
+                  function timeLeap() {
                      if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
                         chapterList = NOVA.getChapterList(this.getDuration()) || null;
                         // console.debug('chapterList:', chapterList);
@@ -73,9 +73,9 @@ window.nova_plugins.push({
          case 'embed':
             NOVA.waitElement('video')
                .then(video => {
-                  doubleKeyPressListener(jumpTime.bind(video), user_settings.time_jump_hotkey);
+                  doubleKeyPressListener(timeLeap.bind(video), user_settings.time_jump_hotkey);
 
-                  function jumpTime() {
+                  function timeLeap() {
                      let sec = +user_settings.time_jump_step + this.currentTime;
 
                      if (sec = seekToNextChapter.apply(this)) {

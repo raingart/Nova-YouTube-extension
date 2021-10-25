@@ -20,6 +20,7 @@ const Plugins = {
       'player/time-resume.js',
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
+      'player/subtitle.js',
       // 'player/stop.js', // incompatible with quality.js
 
       'other/thumbs-clear.js',
@@ -44,8 +45,8 @@ const Plugins = {
       'sidebar/livechat.js',
       'sidebar/thumbnails-mix-hide.js',
 
-      'header/unfixed.js',
       'header/short.js',
+      'header/unfixed.js',
       'header/logo.js',
    ],
 
@@ -91,8 +92,11 @@ const Plugins = {
       // similar - NOVA.currentPageName()
       const currentPage = (function () {
          const page = location.pathname.split('/')[1];
-         return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main';
+         return ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'main';
       })();
+
+      // redirect shorts page
+      // if (currentPage == 'shorts') location.href = location.href.replace('shorts/', 'watch?v=');
 
       let logTableArray = [],
          logTableStatus,

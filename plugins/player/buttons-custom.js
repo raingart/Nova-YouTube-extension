@@ -129,7 +129,7 @@ window.nova_plugins.push({
                btnScreenshot.title = 'Take screenshot';
                // btnScreenshot.setAttribute('aria-label','');
                btnScreenshot.innerHTML =
-                  `<svg version="1.1" viewBox="0 -128 512 795" height="100%" width="100%">
+                  `<svg version="1.1" viewBox="0 -155 512 860" height="100%" width="100%">
                      <g>
                         <circle cx="255.811" cy="285.309" r="75.217" />
                         <path d="M477,137H352.718L349,108c0-16.568-13.432-30-30-30H191c-16.568,0-30,13.432-30,30l-3.718,29H34 c-11.046,0-20,8.454-20,19.5v258c0,11.046,8.954,20.5,20,20.5h443c11.046,0,20-9.454,20-20.5v-258C497,145.454,488.046,137,477,137 z M255.595,408.562c-67.928,0-122.994-55.066-122.994-122.993c0-67.928,55.066-122.994,122.994-122.994 c67.928,0,122.994,55.066,122.994,122.994C378.589,353.495,323.523,408.562,255.595,408.562z M474,190H369v-31h105V190z" />
@@ -199,7 +199,7 @@ window.nova_plugins.push({
                // btnThumb.setAttribute('data-tooltip', 'Open thumbnail');
                btnThumb.title = 'Open thumbnail';
                btnThumb.innerHTML =
-                  `<svg version="1.1" viewBox="0 -8 21 38" height="100%" width="100%">
+                  `<svg version="1.1" viewBox="0 -9 21 40" height="100%" width="100%">
                      <circle cx='8' cy='7.2' r='2'/>
                      <path d='M0 2v16h20V2H0z M18 16H2V4h16V16z'/>
                      <polygon points='17 10.9 14 7.9 9 12.9 6 9.9 3 12.9 3 15 17 15' />

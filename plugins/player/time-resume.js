@@ -32,6 +32,7 @@ window.nova_plugins.push({
          if (this.currentTime > 5 && this.duration > 30 && !document.querySelector('#movie_player.ad-showing')) {
             // console.debug('save progress time', this.currentTime);
             sessionStorage.setItem(cacheName, Math.floor(this.currentTime));
+            // new URL(location.href).searchParams.set('t', Math.floor(this.currentTime)); // url way
          }
       }
       function resumePlaybackTime() {

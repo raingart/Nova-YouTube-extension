@@ -32,7 +32,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(player => {
             // if player fullscreen desable float mode
-            document.addEventListener("fullscreenchange", () => player.classList.remove(CLASS_VALUE), false);
+            document.addEventListener("fullscreenchange", () => document.fullscreenElement && player.classList.remove(CLASS_VALUE), false);
             // NOVA.waitElement('video')
             //    .then(video => {
             //       video.addEventListener('webkitfullscreenchange', () => player.classList.remove(CLASS_VALUE));
@@ -209,7 +209,9 @@ window.nova_plugins.push({
                this.inViewport = true;
                window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
             }
-         } else if (this.inViewport) {
+         } else if (this.inViewport
+            && !player.classList.contains('ytp-fullscreen') // fix bug on fullscreen in "header_scroll_after"
+         ) {
             // console.debug('switchElement pin');
             switchElement.classList.add(CLASS_VALUE);
             this.inViewport = false;

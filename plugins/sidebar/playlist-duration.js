@@ -100,7 +100,7 @@ window.nova_plugins.push({
       }
 
       function getPlaylistDurationFromThumbnails({ items_selector = required(), container }) {
-         console.log('thumbnails_method', ...arguments);
+         // console.log('thumbnails_method', ...arguments);
          if (container && !(container instanceof HTMLElement)) {
             return console.error('container not HTMLElement:', container);
          }

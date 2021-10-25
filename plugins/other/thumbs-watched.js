@@ -21,9 +21,10 @@ window.nova_plugins.push({
 
       if (user_settings.thumbnails_watched_title) {
          NOVA.css.push(
-            `a#video-title:visited:not(:hover) {
-                  color: ${user_settings.thumbnails_watched_title_color} !important;
-               }`);
+            `a#video-title:visited:not(:hover),
+            #description a:visited {
+               color: ${user_settings.thumbnails_watched_title_color} !important;
+            }`);
       }
 
       // add blur
@@ -66,7 +67,7 @@ window.nova_plugins.push({
          'label:zh': '选择标题颜色',
          'label:ja': 'タイトルの色を選択',
          type: 'color',
-         value: '#FF0000',
+         value: '#ff4500',
          'data-dependent': '{"thumbnails_watched_title":"true"}',
       },
    },

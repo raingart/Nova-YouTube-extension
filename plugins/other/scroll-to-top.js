@@ -39,7 +39,7 @@ window.nova_plugins.push({
             btn.addEventListener('click', () => {
                window.scrollTo({
                   top: 0,
-                  left: window.pageXOffset,
+                  // left: window.pageXOffset,
                   behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                });
                if (user_settings.scroll_to_top_autoplay

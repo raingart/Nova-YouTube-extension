@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.9.0
+// @version         0.10.0
 // @description     Make YouTube be better
 
 // @author          raingart
@@ -17,6 +17,7 @@
 // @include         http*://raingart.github.io/options.html*
 // @exclude         http*://www.youtube.com/*/*.xml*
 // @exclude         http*://www.youtube.com/error
+// @exclude         http*://music.youtube.com/*
 
 // @grant           GM_addStyle
 // @grant           GM_getResourceText

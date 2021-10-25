@@ -374,7 +374,7 @@ const NOVA = {
       // },
    },
 
-   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'main',
+   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'main',
 
    queryURL: {
       // get: (query, urlString) => new URLSearchParams((urlString ? new URL(urlString) : location).search).get(query),

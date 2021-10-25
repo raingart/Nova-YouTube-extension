@@ -8,13 +8,15 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
-      let originalTitleTemplate;
+      let originalTitleTemplate = document.title;
+
+      document.addEventListener('yt-navigate-start', () => originalTitleTemplate = document.title);
 
       NOVA.waitElement('video')
          .then(video => {
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // restore the original title
-            ["pause", "ended"].forEach(evt => {
+            ['pause', 'ended'].forEach(evt => {
                video.addEventListener(evt, () => document.title = originalTitleTemplate?.replace('%s', getVideoTitle()));
             });
          });
@@ -49,6 +51,7 @@ window.nova_plugins.push({
             .join('');
 
          document.title = new_title + ' | ' + getVideoTitle();
+         // document.title = new_title + ' • ' + getVideoTitle();
       }
 
       function getVideoTitle() {
@@ -64,7 +67,7 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          options: [
-            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在'},
+            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在' },
             { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左' },
             { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間' },
          ],

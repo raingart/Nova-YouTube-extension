@@ -31,6 +31,7 @@ window.nova_plugins.push({
             NOVA.waitElement('video')
                .then(video => {
                   const sliderConteiner = renderSlider();
+                  // console.debug('sliderConteiner', sliderConteiner);
 
                   // html5 way
                   video.addEventListener('ratechange', function () {
@@ -38,19 +39,24 @@ window.nova_plugins.push({
                      NOVA.bezelTrigger(this.playbackRate + 'x');
 
                      // slider update
-                     sliderConteiner.slider.value = this.playbackRate;
-                     sliderConteiner.sliderLabel.textContent = `Speed (${this.playbackRate})`;
-                     sliderConteiner.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
+                     if (Object.keys(sliderConteiner).length) {
+                        sliderConteiner.slider.value = this.playbackRate;
+                        sliderConteiner.sliderLabel.textContent = `Speed (${this.playbackRate})`;
+                        sliderConteiner.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
+                     }
                   });
 
                   video.addEventListener('loadeddata', setDefaultRate);
 
-                  sliderConteiner.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
-                  sliderConteiner.slider.addEventListener('wheel', evt => {
-                     evt.preventDefault();
-                     const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
-                  });
-                  sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
+                  if (Object.keys(sliderConteiner).length) {
+                     sliderConteiner.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
+                     sliderConteiner.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
+                     sliderConteiner.slider.addEventListener('wheel', evt => {
+                        evt.preventDefault();
+                        const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
+                     });
+                     sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
+                  }
                });
 
             // mousewheel in player area
@@ -150,7 +156,7 @@ window.nova_plugins.push({
                      this.log('playbackRate save in session:', ...arguments);
 
                   } catch (err) {
-                     console.info(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                     console.warn(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
                   }
                },
 
@@ -171,21 +177,20 @@ window.nova_plugins.push({
                }
 
                function isMusic() {
-                  const title = player.getVideoData().title;
+                  const titleStr = player.getVideoData().title;
+                  const titleList = titleStr?.match(/\w+/g);
 
                   if (user_settings.rate_default_apply_music === 'expanded') {
-                     if (title.includes(' - ')  // search for a hyphen. Ex.:"Artist - Song"
-                        || ['CD', 'AUDIO', 'FULL', 'POP', 'TRAP'].some(i => title.toUpperCase().includes(i))
+                     if (titleStr.split(' - ').length === 1  // search for a hyphen. Ex.:"Artist - Song"
+                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK'].some(i => titleList.toUpperCase().includes(i))
                      ) {
-                        // ,'TRACK'
                         return true;
                      }
                   }
-
-                  // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','photo ALBUM', 'lolyPOP', 'ascENDING'
                   return [
-                     title,
+                     titleStr,
                      location.href, // 'music.youtube.com' or 'youtube.com#music'
+
                      // ALL BELOW - not updated on page transition!
                      // document.querySelector('meta[itemprop="genre"][content]')?.content,
                      // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
@@ -195,11 +200,18 @@ window.nova_plugins.push({
                      // has svg icon "🎵"
                      || document.querySelector('#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]')
                      // channelNameVEVO
-                     || /(VEVO|Topic|Records)$/.test(document.querySelector('#meta #upload-info #channel-name a')?.textContent) // |Media
-                     // search in title
-                     || title && ['SONG', 'SOUND', 'LYRIC', 'THEME', 'AMBIENT', '🎵', '♫', 'MIX', /*'REMIX',*/  'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'AUDIO)', 'AUDIO]', 'VEVO', 'FEAT.', 'FT.', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'LIVE RADIO', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'DANCE VER', '8-BIT', 'PIANO', 'HIP HOP', 'CHILL', 'RELAX', 'EXTENDED', 'HOUR VER', 'HOURS VER'].some(i => title.toUpperCase().includes(i))
+                     || /(VEVO|Topic|Records)$/
+                        .test(document.querySelector('#meta #upload-info #channel-name a')?.textContent) // 'Media'
+                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP'
+                     || ['🎵', '♫', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', '8-BIT', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+                        .some(i => titleStr.toUpperCase().includes(i))
+                     // search word in titleStr
+                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'THEME', 'AMBIENT', 'MIX', 'REMIX', 'AUDIO', 'VEVO', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'LIVE RADIO', 'ALBUM', 'PLAYLIST', 'DUBSTEP', , 'PIANO', 'POP', 'CHILL', 'RELAX', 'EXTENDED']
+                        .some(i => titleList.map(w => w.toUpperCase()).includes(i))
+                     // words
                      // case sensitive
-                     || ['MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'OP', 'ED', 'MMD'].some(i => title.includes(i));
+                     || titleList?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD']
+                        .some(i => titleList.includes(i));
                }
             }
          });
@@ -216,6 +228,7 @@ window.nova_plugins.push({
                vertical-align: text-bottom;
                margin: '0 5px',
             }
+
             ${SELECTOR} [type="checkbox"] {
                appearance: none;
                outline: none;
@@ -257,21 +270,25 @@ window.nova_plugins.push({
          //    this.value
          // });
 
+         const out = {};
+
          // appends
          const right = document.createElement('div');
          right.className = 'ytp-menuitem-content';
-         right.append(sliderCheckbox);
-         right.append(slider);
+         out.sliderCheckbox = right.appendChild(sliderCheckbox);
+         out.slider = right.appendChild(slider);
 
          const speedMenu = document.createElement('div');
          speedMenu.className = 'ytp-menuitem';
          speedMenu.id = SELECTOR_ID;
          speedMenu.append(sliderIcon);
-         speedMenu.append(sliderLabel);
+         out.sliderLabel = speedMenu.appendChild(sliderLabel);
          speedMenu.append(right);
 
          document.querySelector('.ytp-panel-menu')
             ?.append(speedMenu);
+
+         return out;
 
          // append final
          // document.querySelector('.ytp-panel-menu')
@@ -284,12 +301,6 @@ window.nova_plugins.push({
          //             <input type="range" min="0.5" max="4" step="0.1" class="ytp-menuitem-slider">
          //          </div>
          //       </div>`);
-
-         return {
-            'sliderCheckbox': document.querySelector(`${SELECTOR} [type="checkbox"]`),
-            'slider': document.querySelector(`${SELECTOR} [type="range"]`),
-            'sliderLabel': document.querySelector(`${SELECTOR} .${sliderLabel.className}`),
-         };
       }
 
    },

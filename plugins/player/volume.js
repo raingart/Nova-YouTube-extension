@@ -77,7 +77,7 @@ window.nova_plugins.push({
                         // console.debug('volume saved', ...arguments);
 
                      } catch (err) {
-                        console.info(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+                        console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
                      }
                   }
                },

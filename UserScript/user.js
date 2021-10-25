@@ -5,7 +5,7 @@ const
    fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
    user_settings = fix_GM_getValue(GM_getValue(configStoreName));
 
-if (!isOptionsPage()) return;
+if (isOptionsPage()) return;
 landerPlugins();
 if (!user_settings?.disable_setting_button) renderSettingButton();
 reflectException();
@@ -89,6 +89,7 @@ function isOptionsPage() {
       f.remove();
    });
 
+   // is optionsPage
    if (location.hostname === new URL(optionsPage).hostname) {
       // form submit
       document.addEventListener('submit', event => {
@@ -125,6 +126,8 @@ function isOptionsPage() {
             if (user_settings && user_settings['custom-api-key']) {
                document.querySelectorAll('.info b').forEach(el => el.remove(el));
             }
+            document.querySelectorAll('input[type]') // auto selects value on focus
+               .forEach(i => i.addEventListener('focus', i.select));
          }, 500); // 500ms
 
          function attrDependencies() {
@@ -180,10 +183,14 @@ function isOptionsPage() {
          }
       });
 
-   } else if (!user_settings || !Object.keys(user_settings).length) {
+   } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       if (confirm('Active plugins undetected. Open the settings page?')) window.open(optionsPage);
 
-   } else return true; // is not optionsPage
+   } else {  // is not optionsPage
+      return false;
+   }
+
+   return true;
 }
 
 function landerPlugins() {

@@ -35,9 +35,9 @@ window.nova_plugins.push({
          label: 'Thumbnail timestamps',
          'label:zh': '缩略图时间戳',
          'label:ja': 'サムネイルのタイムスタンプ',
-         title: 'Show thumbnail from video time',
-         'title:zh': 'ビデオ時間のサムネイルを表示 display video timestamps',
-         'title:ja': 'ビデオ時間のサムネイルを表示 display video timestamps',
+         title: 'Show thumbnail from video time position',
+         'title:zh': '从视频时间位置显示缩略图',
+         'title:ja': 'ビデオの時間位置からサムネイルを表示',
          options: [
             { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり' }, // often shows intro
             { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中' },
