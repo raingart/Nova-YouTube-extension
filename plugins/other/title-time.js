@@ -9,11 +9,14 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       let originalTitleTemplate = document.title;
+      let player;
 
       document.addEventListener('yt-navigate-start', () => originalTitleTemplate = document.title);
 
       NOVA.waitElement('video')
          .then(video => {
+            player = document.getElementById('movie_player');
+
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // restore the original title
             ['pause', 'ended'].forEach(evt => {
@@ -22,6 +25,8 @@ window.nova_plugins.push({
          });
 
       function updateTitle() {
+         if (player.getVideoData().isLive) return;
+
          // console.debug('timeupdate', this.currentTime, '/', this.duration);
          // backup the original title template
          if (!originalTitleTemplate) originalTitleTemplate = document.title.replace(getVideoTitle(), '%s');

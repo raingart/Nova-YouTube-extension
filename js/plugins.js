@@ -25,7 +25,7 @@ const Plugins = {
 
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
-      'other/thumbs-rating.js',
+      // 'other/thumbs-rating.js',
       'other/thumbs-watched.js', // outdated
       'other/channel-tab.js',
       'other/title-time.js',

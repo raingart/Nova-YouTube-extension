@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.10.0
+// @version         0.10.2
 // @description     Make YouTube be better
 
 // @author          raingart
@@ -11,6 +11,9 @@
 // @homepageURL     https://github.com/raingart/Nova-YouTube-extension
 // @supportURL      https://github.com/raingart/Nova-YouTube-extension/issues
 // @contributionURL https://www.patreon.com/raingart
+
+// @updateURL       https://openuserjs.org/meta/raingart/Nova_YouTube.meta.js
+// @downloadURL     https://openuserjs.org/src/scripts/raingart/Nova_YouTube.user.js
 
 // @include         http*://*.youtube.com/*
 // @include         http*://*.youtube-nocookie.com/*

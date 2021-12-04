@@ -195,7 +195,7 @@ function isOptionsPage() {
 
 function landerPlugins() {
    let plugins_lander = setInterval(() => {
-      const domLoaded = document?.readyState !== 'loading';
+      const domLoaded = document?.readyState != 'loading';
       if (!domLoaded) return console.debug('waiting, page loading..');
       processLander();
 

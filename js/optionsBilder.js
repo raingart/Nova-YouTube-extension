@@ -176,7 +176,7 @@ const Opt = {
                         break;
 
                      case 'type':
-                        if (value === 'number') exportProperty.required = true;
+                        if (value == 'number') exportProperty.required = true;
                      // break; <-- need remove!
 
                      default:
@@ -358,14 +358,10 @@ window.addEventListener('load', () => {
    ['change', 'keyup'].forEach(evt => {
       document.querySelector('[type="search"]')
          .addEventListener(evt, function () {
-            const generatelist = document.querySelector(Opt.UI.pluginsContainer);
             searchFilter({
                'keyword': this.value,
-               // 'container': generatelist.children,
-               // https://stackoverflow.com/questions/18247289/what-is-the-difference-between-queryselectorall-and-getelementsbytagname
-               'container': generatelist.getElementsByTagName('li'),
-               // 'container': generatelist.querySelectorAll('li.item'),
-               'filter_el': 'label'
+               'in_selector': `${Opt.UI.pluginsContainer} li.item`,
+               'highlight_filter_selector': 'label'
             });
          });
    });
@@ -381,29 +377,35 @@ window.addEventListener('load', () => {
       }
    }, Opt.storageMethod);
 
-   function searchFilter({ keyword, container, filter_el }) {
+   function searchFilter({ keyword = required(), in_selector = required(), highlight_filter_selector }) {
       // console.debug('searchFilter:', ...arguments);
-      for (const item of container) {
-         const
-            text = item.textContent,
-            found = text.toLowerCase().includes(keyword.toLowerCase()),
-            highlight = el => {
-               el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
-               if (found && keyword.toString().trim()) {
-                  highlightSearchTerm({
-                     'target': el,
-                     'keyword': keyword,
-                     // 'highlightClass':,
-                  });
-               }
-            };
+      keyword = keyword.toString().trim();
 
-         // hide el in which are not present
-         item.style.display = found ? '' : 'none';
-         filter_el && item.querySelectorAll(filter_el).forEach(highlight);
-      }
+      document.querySelectorAll(in_selector)
+         .forEach(item => {
+            const
+               // text = item.textContent.toLowerCase(),
+               // text = item.getAttribute('tooltip')?.toLowerCase(),
+               hasText = text?.includes(keyword),
+               highlight = el => {
+                  el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  // hide el in which are not present
+                  item.style.display = hasText ? '' : 'none';
+                  if (hasText) {
+                     highlightTerm({
+                        'target': el,
+                        'keyword': keyword,
+                        // 'highlightClass':,
+                     });
+                  }
+               };
 
-      function highlightSearchTerm({ target, keyword = required(), highlightClass }) {
+            (highlight_filter_selector ? item.querySelectorAll(highlight_filter_selector) : [item])
+               .forEach(highlight);
+         });
+
+      function highlightTerm({ target = required(), keyword = required(), highlightClass }) {
+         // console.debug('highlightTerm:', ...arguments);
          const
             content = target.innerHTML,
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),

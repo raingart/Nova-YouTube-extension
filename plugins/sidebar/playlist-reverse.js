@@ -56,6 +56,8 @@ window.nova_plugins.push({
       // });
 
       function appendReverseBtn(container) {
+         document.getElementById(SELECTOR_BTN_ID)?.remove(); // clear old
+
          const reverseControl = document.createElement('div');
          // style="cursor: pointer; margin-left: 8px;" id="pytplir_btn"
          if (reverseEnable) reverseControl.className = CLASS_NAME_ACTIVE;

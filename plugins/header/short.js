@@ -15,6 +15,10 @@ window.nova_plugins.push({
             height: ${height} !important;
          }
 
+         #search-form, #search-icon-legacy {
+            height: ${height} !important;
+         }
+
          body {
             --ytd-masthead-height: ${height};
          }`);

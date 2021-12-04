@@ -19,19 +19,18 @@ window.nova_plugins.push({
          .then(container => {
             // global
             NOVA.css.push(
-               `button${SELECTOR_BTN} {
-                  /*padding: 5px;*/
-               }
-
+               `/* button${SELECTOR_BTN} { padding: 5px; } */
                button${SELECTOR_BTN} svg { fill: white;}
-               button${SELECTOR_BTN}:hover svg { fill: #66afe9; }
-               button${SELECTOR_BTN}:active svg { fill: #2196f3; }`);
+               button${SELECTOR_BTN}:hover svg{ fill: #66afe9; }
+               button${SELECTOR_BTN}:active svg { fill: #2196f3; }
+               a${SELECTOR_BTN}:hover{ color: #66afe9; }
+               a${SELECTOR_BTN}:active { color: #2196f3; }`);
 
             // Pop-up player
-            if (user_settings.player_buttons_custom_items.indexOf('popup') !== -1 && !NOVA.queryURL.get('popup')) {
+            if (user_settings.player_buttons_custom_items?.indexOf('popup') !== -1 && !NOVA.queryURL.get('popup')) {
                const btnPopUp = document.createElement('button');
                btnPopUp.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               btnPopUp.title = 'Autoplay is off';
+               btnPopUp.title = 'Open in popup';
                // btnPopUp.setAttribute('aria-label','');
                btnPopUp.innerHTML =
                   `<svg version="1.1" viewBox="-8 -8 36 36" height="100%" width="100%">
@@ -76,7 +75,7 @@ window.nova_plugins.push({
                }
             }
 
-            if (user_settings.player_buttons_custom_items.indexOf('screenshot') !== -1) {
+            if (user_settings.player_buttons_custom_items?.indexOf('screenshot') !== -1) {
                const
                   // bar
                   SELECTOR_SCREENSHOT_ID = 'screenshot-result',
@@ -193,7 +192,7 @@ window.nova_plugins.push({
                container.prepend(btnScreenshot);
             }
 
-            if (user_settings.player_buttons_custom_items.indexOf('thumbnail') !== -1) {
+            if (user_settings.player_buttons_custom_items?.indexOf('thumbnail') !== -1) {
                const btnThumb = document.createElement('button');
                btnThumb.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // btnThumb.setAttribute('data-tooltip', 'Open thumbnail');
@@ -209,7 +208,7 @@ window.nova_plugins.push({
                container.prepend(btnThumb);
             }
 
-            if (user_settings.player_buttons_custom_items.indexOf('toggle-speed') !== -1) {
+            if (user_settings.player_buttons_custom_items?.indexOf('toggle-speed') !== -1) {
                const
                   video = getVideoElement(),
                   player = getPlayerElement(),
@@ -309,6 +308,7 @@ window.nova_plugins.push({
          'title:zh': '按住[Ctrl + Сlick]并选择一些',
          'title:ja': '「Ctrl+Сlick」を押したままにして、いくつかを選択します',
          multiple: null, // dont use - selected: true
+         required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
             { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度' },

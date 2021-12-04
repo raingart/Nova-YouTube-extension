@@ -1,3 +1,5 @@
+// http://babruisk.com/ - test embed page
+
 window.nova_plugins.push({
    id: 'pause-background-tab',
    title: 'Pauses playing videos in other tabs',
@@ -15,6 +17,7 @@ window.nova_plugins.push({
 
       const
          storeName = 'playngInstanceIDTab',
+         currentPageName = NOVA.currentPageName(), // watch or embed. Unchanged during the transition
          instanceID = Math.random(), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 
@@ -33,7 +36,7 @@ window.nova_plugins.push({
                const player = document.getElementById('movie_player');
                document.addEventListener("visibilitychange", () => {
                   //   if other tabs are not playing
-                  if (document.visibilityState === 'visible'
+                  if (document.visibilityState == 'visible'
                      && !localStorage.hasOwnProperty(storeName)
                      // && video.paused  // dont see ENDED
                      && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
@@ -45,7 +48,7 @@ window.nova_plugins.push({
             }
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
-               if (document.visibilityState === 'hidden' // tab unfocus
+               if ((document.visibilityState == 'hidden' || currentPageName == 'embed') // tab unfocus
                   && store.key === storeName && store.storageArea === localStorage // checking now store
                   && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // has storage
                ) {

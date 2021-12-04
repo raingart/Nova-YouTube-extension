@@ -160,7 +160,7 @@ window.nova_plugins.push({
             };
 
          function keyPress(key) {
-            if (document.activeElement.tagName.toLowerCase() === 'input' // search-input
+            if (document.activeElement.tagName.toLowerCase() == 'input' // search-input
                || document.activeElement.isContentEditable // comment-area
             ) return;
 

@@ -1,6 +1,8 @@
+// https://youtu.be/Il0S8BoucSA?t=99 - subtitle alignment bug
+
 window.nova_plugins.push({
    id: 'subtitle-transparent',
-   title: 'Transparent subtitles',
+   title: 'Transparent subtitles (captions)',
    'title:zh': '透明字幕',
    'title:ja': '透明な字幕',
    run_on_pages: 'watch',

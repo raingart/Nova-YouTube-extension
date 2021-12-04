@@ -149,11 +149,11 @@ window.nova_plugins.push({
                   this.hudSpan.textContent = text;
                   break;
 
-               // case 'bar-left':
-               //    hudConteiner.style.background = `linear-gradient(to right, ${COLOR_HUD}50 ${pt}%, rgba(0,0,0,0.3) ${pt}%)`;
-               //    this.hudSpan.style.width = pt + '%';
-               //    this.hudSpan.textContent = text;
-               //    break;
+               case 'bar-top':
+                  hudConteiner.style.background = `linear-gradient(to right, ${COLOR_HUD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
+                  this.hudSpan.style.width = pt + '%';
+                  this.hudSpan.textContent = text;
+                  break;
 
                // case 'text-top':
                default:
@@ -181,9 +181,9 @@ window.nova_plugins.push({
          'label:ja': 'インジケータータイプ',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
+            { label: 'bar-top', value: 'bar-top' },
             { label: 'bar-center', value: 'bar-center' },
             { label: 'bar-vertical', value: 'bar-vertical' },
-            // { label: 'bar+center', value: 'bar-left' },
          ],
       },
       player_indicator_color: {

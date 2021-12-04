@@ -46,6 +46,7 @@ window.nova_plugins.push({
                      }
                   });
 
+                  setDefaultRate();
                   video.addEventListener('loadeddata', setDefaultRate);
 
                   if (Object.keys(sliderConteiner).length) {
@@ -177,12 +178,14 @@ window.nova_plugins.push({
                }
 
                function isMusic() {
-                  const titleStr = player.getVideoData().title;
-                  const titleList = titleStr?.match(/\w+/g);
+                  const
+                     channelName = document.querySelector('#meta #upload-info #channel-name a')?.textContent,
+                     titleStr = player.getVideoData().title,
+                     titleList = titleStr?.match(/\w+/g);
 
-                  if (user_settings.rate_default_apply_music === 'expanded') {
-                     if (titleStr.split(' - ').length === 1  // search for a hyphen. Ex.:"Artist - Song"
-                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK'].some(i => titleList.toUpperCase().includes(i))
+                  if (user_settings.rate_default_apply_music == 'expanded') {
+                     if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
+                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO'].some(i => titleList?.map(w => w.toUpperCase()).includes(i))
                      ) {
                         return true;
                      }
@@ -190,6 +193,7 @@ window.nova_plugins.push({
                   return [
                      titleStr,
                      location.href, // 'music.youtube.com' or 'youtube.com#music'
+                     channelName,
 
                      // ALL BELOW - not updated on page transition!
                      // document.querySelector('meta[itemprop="genre"][content]')?.content,
@@ -200,17 +204,17 @@ window.nova_plugins.push({
                      // has svg icon "🎵"
                      || document.querySelector('#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]')
                      // channelNameVEVO
-                     || /(VEVO|Topic|Records)$/
-                        .test(document.querySelector('#meta #upload-info #channel-name a')?.textContent) // 'Media'
-                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP'
-                     || ['🎵', '♫', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', '8-BIT', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+                     || /(VEVO|Topic|Records)$/.test(channelName) // 'Media'
+                     // 【MAD】,『MAD』,「MAD」
+                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP'
+                     || ['🎵', '♫', '【', '『', '「', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', '8-BIT', 'HIP HOP', 'HOUR VER', 'HOURS VER']
                         .some(i => titleStr.toUpperCase().includes(i))
                      // search word in titleStr
-                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'THEME', 'AMBIENT', 'MIX', 'REMIX', 'AUDIO', 'VEVO', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'LIVE RADIO', 'ALBUM', 'PLAYLIST', 'DUBSTEP', , 'PIANO', 'POP', 'CHILL', 'RELAX', 'EXTENDED']
+                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED']
                         .some(i => titleList.map(w => w.toUpperCase()).includes(i))
                      // words
                      // case sensitive
-                     || titleList?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD']
+                     || titleList?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
                         .some(i => titleList.includes(i));
                }
             }

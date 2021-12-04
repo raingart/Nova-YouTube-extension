@@ -15,7 +15,7 @@ window.nova_plugins.push({
          });
 
       function setVideoPause() {
-         if (user_settings.video_autopause_ignore_playlist && location.href.includes('list=')) return;
+         if (location.href.includes('list=') && !user_settings.video_autopause_ignore_playlist) return;
          this.pause();
 
          const forcePaused = setInterval(() => this.paused || this.pause(), 200); // 100ms

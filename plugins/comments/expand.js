@@ -17,7 +17,7 @@ window.nova_plugins.push({
             // on hover auto expand
             el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
             // if (user_settings.comments_expand_mode === 'always') moreExpand();
-            if (user_settings.comments_expand_mode !== 'onhover') moreExpand();
+            if (user_settings.comments_expand_mode != 'onhover') moreExpand();
          },
       });
 
@@ -29,7 +29,7 @@ window.nova_plugins.push({
             const moreExpand = () => el.querySelector('#button')?.click();
             // on hover auto expand
             el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
-            if (user_settings.comments_view_reply === 'always') moreExpand();
+            if (user_settings.comments_view_reply == 'always') moreExpand();
          },
       });
 

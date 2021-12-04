@@ -26,9 +26,9 @@ Userscript [openuserjs](https://openuserjs.org/scripts/raingart/Nova_YouTube).
 ## Bilder
 **Only for Unix shell**. All output will be in the `/tmp/` directory.
 
-**Extensions**: `$ ./package-extensions.sh`.
+**Extensions**: `$ ./package-extensions.sh`
 
-**Userscript**: `$ make build`.
+**Userscript**: `$ make build`
 
 ### File structure
 The extension is based on plugin files. The remaining files only serve them.

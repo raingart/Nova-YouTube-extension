@@ -8,6 +8,12 @@ const App = {
    // sessionSettings: null,
    storage: {
       set(options) {
+         for (const property in options) { // convert string to boolean
+            switch (options[property]) {
+               case 'true': options[property] = true; break;
+               case 'false': options[property] = false; break;
+            }
+         }
          this.sessionSettings = options;
          // in the iframe
          if (options?.disable_in_frame && window.self !== window.top) {
@@ -97,7 +103,7 @@ const App = {
       }, 1000 * 3); // 3sec
 
       const landerInterval = setInterval(() => {
-         const domLoaded = document?.readyState !== 'loading';
+         const domLoaded = document?.readyState != 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
          if (typeof NOVA === 'object' && window.nova_plugins.length === plugins_count) {

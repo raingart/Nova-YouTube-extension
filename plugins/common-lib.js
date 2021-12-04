@@ -231,7 +231,7 @@ const NOVA = {
                .forEach(line => {
                   if (line.length > 5 && line.length < 110 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
                      timestamp = timestamp[0];
-                     const sec = this.timeFormatTo.sec(timestamp);
+                     const sec = this.timeFormatTo.hmsToSec(timestamp);
                      if (sec > prevSec && sec < +video_duration) {
                         // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
                         prevSec = sec;
@@ -303,23 +303,16 @@ const NOVA = {
    // },
 
    timeFormatTo: {
-      sec(str = required()) {
-         const p = str.toString().split(':');
-         let = s = 0, m = 1;
-
-         while (p.length) {
-            s += m * parseInt(p.pop(), 10);
-            m *= 60;
-         }
-         return +s;
+      hmsToSec(str = required()) { // format out "h:mm:ss" > "sec"
+         return str?.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
       },
 
-      HMS_digit(ts = required()) { // format out "h:m:s"
+      HMS_digit(ts = required()) { // format out "h:mm:ss"
          const
             sec = Math.abs(+ts),
             d = Math.floor(sec / 86400),
-            h = Math.floor(sec % 86400 / 3600),
-            m = Math.floor(sec % 3600 / 60),
+            h = Math.floor((sec % 86400) / 3600),
+            m = Math.floor((sec % 3600) / 60),
             s = Math.floor(sec % 60);
 
          return (d ? `${d}d ` : '')
@@ -343,12 +336,12 @@ const NOVA = {
       //          .join(':'); // format "h:m:s"
       // },
 
-      HMS_abbr(ts = required()) { // format out 999h00m00s
+      HMS_abbr(ts = required()) { // format out "999h00m00s"
          const
             sec = Math.abs(+ts),
             d = Math.floor(sec / 86400),
             h = Math.floor(sec / 3600),
-            m = Math.floor(sec % 3600 / 60),
+            m = Math.floor((sec % 3600) / 60),
             s = Math.floor(sec % 60);
 
          return (d ? `${d}d ` : '')
