@@ -13,12 +13,14 @@ window.nova_plugins.push({
    title: 'Playback speed control',
    'title:zh': '播放速度控制',
    'title:ja': '再生速度制御',
+   'title:es': 'Controle de velocidade de reprodução',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
    desc: 'with mousewheel',
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
+   'desc:es': 'com roda do mouse',
    _runtime: user_settings => {
 
       NOVA.waitElement('#movie_player')
@@ -28,6 +30,9 @@ window.nova_plugins.push({
             // player.addEventListener('onPlaybackRateChange', rate => {
             //    console.debug('onPlaybackRateChange', rate);
             // });
+
+            const musicIconSvgSelector = '#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
+
             NOVA.waitElement('video')
                .then(video => {
                   const sliderConteiner = renderSlider();
@@ -46,7 +51,27 @@ window.nova_plugins.push({
                      }
                   });
 
-                  setDefaultRate();
+                  // during initialization, the icon can be loaded after the video
+                  if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
+                     NOVA.waitElement(musicIconSvgSelector)
+                        .then(icon => playerRate.set(1));
+
+                     NOVA.waitElement('#meta #upload-info #channel-name a[href]')
+                        .then(channelName => {
+                           // channelNameVEVO
+                           if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
+                              || channelName.textContent.toLowerCase().includes('music')) {
+                              playerRate.set(1);
+                           }
+                           // channelNameRecords:
+                           // https://www.youtube.com/channel/UCQnWm_Nnn35u3QGVkcAf87Q
+                           // https://www.youtube.com/channel/UCpDJl2EmP7Oh90Vylx0dZtA
+                           // https://www.youtube.com/channel/UCC7ElkFVK3m03gEMfaq6Ung
+                           // channelNameAMV - https://www.youtube.com/channel/UCtrt9u1luNTxXFDuYIoK2FA
+                           // special case channelNameLyrics - https://www.youtube.com/channel/UCK9HbSctHJ8n-aZmJsGD7_w
+                        });
+                  }
+
                   video.addEventListener('loadeddata', setDefaultRate);
 
                   if (Object.keys(sliderConteiner).length) {
@@ -55,6 +80,7 @@ window.nova_plugins.push({
                      sliderConteiner.slider.addEventListener('wheel', evt => {
                         evt.preventDefault();
                         const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
+                        // console.debug('current rate:', rate);
                      });
                      sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
                   }
@@ -161,9 +187,9 @@ window.nova_plugins.push({
                   }
                },
 
-               log(...args) {
-                  if (this.DEBUG && args?.length) {
-                     console.groupCollapsed(...args);
+               log() {
+                  if (this.DEBUG && arguments.length) {
+                     console.groupCollapsed(...arguments);
                      console.trace();
                      console.groupEnd();
                   }
@@ -185,7 +211,7 @@ window.nova_plugins.push({
 
                   if (user_settings.rate_default_apply_music == 'expanded') {
                      if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO'].some(i => titleList?.map(w => w.toUpperCase()).includes(i))
+                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO', '8-BIT'].some(i => titleList?.map(w => w.toUpperCase()).includes(i))
                      ) {
                         return true;
                      }
@@ -202,15 +228,15 @@ window.nova_plugins.push({
                   ]
                      .some(i => i?.toLowerCase().includes('music'))
                      // has svg icon "🎵"
-                     || document.querySelector('#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]')
+                     || document.querySelector(musicIconSvgSelector)
                      // channelNameVEVO
-                     || /(VEVO|Topic|Records)$/.test(channelName) // 'Media'
+                     || /(VEVO|Topic|Records|AMV)$/.test(channelName)
                      // 【MAD】,『MAD』,「MAD」
-                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP'
-                     || ['🎵', '♫', '【', '『', '「', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', '8-BIT', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP' 'Ambient AMBILIGHT lighting'
+                     || ['🎵', '♫', '【', '『', '「', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
                         .some(i => titleStr.toUpperCase().includes(i))
                      // search word in titleStr
-                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED']
+                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED'] // TEASER
                         .some(i => titleList.map(w => w.toUpperCase()).includes(i))
                      // words
                      // case sensitive
@@ -315,6 +341,7 @@ window.nova_plugins.push({
          label: 'Speed at startup',
          'label:zh': '启动速度',
          'label:ja': '起動時の速度',
+         'label:es': 'Velocidad al inicio',
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',
@@ -328,13 +355,15 @@ window.nova_plugins.push({
          label: 'Music genre',
          'label:zh': '音乐流派视频',
          'label:ja': '音楽ジャンルのビデオ',
+         'label:es': 'Género musical',
          title: 'extended detection - may trigger falsely',
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
+         'title:es': 'detección extendida - puede activarse falsamente',
          options: [
-            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ' },
-            { label: 'skip (extended detection)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）' },
-            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える' },
+            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:es': 'saltar' },
+            { label: 'skip (extended detection)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:es': 'omitir (detección extendida)' },
+            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:es': 'aplicar fuerza' },
          ],
          'data-dependent': '{"rate_default":"!1"}',
       },
@@ -342,6 +371,8 @@ window.nova_plugins.push({
          _tagName: 'input',
          label: 'Step',
          'label:zh': '步',
+         // 'label:ja': '',
+         'label:es': 'Paso',
          type: 'number',
          title: '0.25 - default',
          placeholder: '0.1-1',
@@ -354,6 +385,7 @@ window.nova_plugins.push({
          _tagName: 'select',
          label: 'Hotkey',
          'label:zh': '热键',
+         'label:es': 'Tecla de acceso rápido',
          options: [
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },

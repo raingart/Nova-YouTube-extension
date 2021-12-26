@@ -11,8 +11,8 @@ if (!user_settings?.disable_setting_button) renderSettingButton();
 reflectException();
 
 function renderSettingButton() {
-   NOVA.waitElement('#masthead #buttons > *:first-child')
-      .then(container => {
+   NOVA.waitElement('#masthead #end')
+      .then(menu => {
          const a = document.createElement('a');
          a.title = 'Nova Settings';
          a.href = optionsPage + '?tabs=tab-plugins';
@@ -20,37 +20,40 @@ function renderSettingButton() {
          a.innerHTML =
             // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 0 28 28" height="100%" width="100%" version="1.1" style="fill:deepskyblue">
-                  <polygon points='21 12 3,1.8 3 22.2' />
-                  <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+               <svg viewBox="0 0 28 28" height="100%" width="100%" version="1.1">
+                  <g fill="deepskyblue">
+                     <polygon points='21 12 3,1.8 3 22.2' />
+                     <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+                  </g>
                </svg>
             </yt-icon-button>`;
          a.addEventListener('click', () => {
-            // fix hide <tp-yt-iron-dropdown>
-            setTimeout(() => document.body.click(), 200);
+            setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
          });
-         container.prepend(a);
+         menu.prepend(a);
+
+         // const btn = document.createElement('button');
+         // btn.className = 'ytd-topbar-menu-button-renderer';
+         // btn.title = 'Nova Settings';
+         // btn.innerHTML =
+         //    `<svg width="24" height="24" viewBox="0 0 24 24">
+         //       <g fill="deepskyblue">
+         //          <polygon points='21 12 3,1.8 3 22.2' />
+         //          <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+         //       </g>
+         //    </svg>`;
+         // Object.assign(btn.style, {
+         //    // color: 'var(--yt-spec-text-secondary)',
+         //    padding: '0 24px',
+         //    border: 0,
+         //    outline: 0,
+         //    cursor: 'pointer',
+         // });
+         // btn.addEventListener('click', () => parent.open(optionsPage + '?tabs=tab-plugins'));
+         // // menu.insertBefore(btn, menu.lastElementChild);
+         // menu.prepend(btn);
       });
 }
-// function renderSettingButton() {
-//    NOVA.waitElement('#end:last-child')
-//    // NOVA.waitElement('#end')
-//       .then(container => {
-//          const button = document.createElement('button');
-//          button.innerHTML =
-//             `<svg width="24" height="24" viewBox="0 0 22 22" style="fill:deepskyblue">
-//                <polygon points='21 12 3,1.8 3 22.2' />
-//                <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
-//             </svg>`;
-//          button.style = 'background: transparent; border: 0; color: rgb(96,96,96); outline: 0; cursor: pointer; padding-left: 24px; padding-right: 24px;';
-
-//          a.addEventListener('click', () => {
-//             // fix hide <tp-yt-iron-dropdown>
-//             setTimeout(() => document.body.click(), 200);
-//          });
-//          container.insertBefore(button, container.lastElementChild);
-//       });
-// }
 
 function isOptionsPage() {
    GM_registerMenuCommand('Settings', () => window.open(optionsPage));

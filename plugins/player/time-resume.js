@@ -6,11 +6,13 @@ window.nova_plugins.push({
    title: 'Resume playback time state',
    'title:zh': '恢复播放时间状态',
    'title:ja': '再生時間の状態を再開します',
+   'title:es': 'Reanudar el estado de tiempo de reproducción',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'On page reload - resume playback',
    'desc:zh': '在页面重新加载 - 恢复播放',
    'desc:ja': 'ページがリロードされると、再生が復元されます',
+   'desc:es': 'En la recarga de la página - reanudar la reproducción',
    _runtime: user_settings => {
       // TODO adSkip alt. - add comparison by duration. Need streen test
       const

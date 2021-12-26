@@ -1,53 +1,20 @@
 window.nova_plugins.push({
    id: 'comments-visibility',
-   title: 'Hide comments',
+   title: 'Hide/remove comments section',
    'title:zh': '隐藏评论',
    'title:ja': 'コメントを隠す',
+   'title:es': 'Ocultar la sección de comentarios',
    run_on_pages: 'watch',
    restart_on_transition: true,
    section: 'comments',
-   // desc: 'Remove comments section',
+   // desc: '',
    _runtime: user_settings => {
 
-      const SELECTOR_BTN_ID = 'comments-load-btn';
-
-      switch (user_settings.comments_visibility_mode) {
-         case 'remove':
-            NOVA.waitElement('#comments')
-               .then(comments => comments.remove());
-            break;
-
-         // case 'hide':
-         default:
-            if (document.getElementById(SELECTOR_BTN_ID)) return;
-
-            // https://stackoverflow.com/a/68202306
-            NOVA.waitElement('#comments')
-               .then(comments => {
-                  // stop load
-                  comments.style.visibility = 'hidden';
-                  // create button
-                  const btn = document.createElement('a');
-                  btn.textContent = 'Load Comments';
-                  btn.id = SELECTOR_BTN_ID;
-                  btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
-                  // btn.className = 'ytd-vertical-list-renderer';
-                  Object.assign(btn.style, {
-                     'cursor': 'pointer',
-                     'text-align': 'center',
-                     'text-transform': 'uppercase',
-                     'display': 'block',
-                     'color': 'var(--yt-spec-text-secondary)',
-                  });
-                  btn.addEventListener('click', () => {
-                     btn.remove();
-                     comments.style.visibility = 'visible';
-                     window.dispatchEvent(new Event("scroll"));
-                  });
-                  // append button
-                  comments.before(btn);
-               });
-      }
+      NOVA.preventVisibilityElement({
+         selector: '#comments',
+         id_name: 'comments',
+         remove: user_settings.comments_visibility_mode == 'remove' ? true : false,
+      });
 
    },
    options: {
@@ -56,9 +23,10 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
+         'label:es': 'Modo',
          options: [
-            { label: 'Hide', value: 'hide', selected: true },
-            { label: 'Remove', value: 'remove' },
+            { label: 'hide', value: 'hide', selected: true },
+            { label: 'remove', value: 'remove' },
          ],
       },
    },

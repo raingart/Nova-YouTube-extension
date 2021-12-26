@@ -60,24 +60,24 @@ window.addEventListener('load', () => {
 
       // Saves options to localStorage/chromeSync.
       saveOptions(form) {
-         let obj = {};
+         let newSettings = {};
 
          for (let [key, value] of new FormData(form)) {
-            if (obj.hasOwnProperty(key)) { // SerializedArray
-               obj[key] += ',' + value; // add new
-               obj[key] = obj[key].split(','); // to array [old, new]
+            if (newSettings.hasOwnProperty(key)) { // SerializedArray
+               newSettings[key] += ',' + value; // add new
+               newSettings[key] = newSettings[key].split(','); // to array [old, new]
 
             } else {
-               obj[key] = value;
+               newSettings[key] = value;
             };
          }
 
-         Storage.setParams(obj, this.storageMethod);
+         Storage.setParams(newSettings, this.storageMethod);
 
          // notify background page
          // chrome.extension.sendMessage({
          //    "action": 'setOptions',
-         //    "options": obj
+         //    "settings": newSettings
          // });
       },
 
@@ -87,6 +87,7 @@ window.addEventListener('load', () => {
          _process() {
             this.outputStatus.forEach(e => {
                e.textContent = i18n('opt_btn_save_settings_process');
+               e.classList.remove('unSaved');
                e.disabled = true;
             });
          },
@@ -96,7 +97,6 @@ window.addEventListener('load', () => {
                this.outputStatus.forEach(e => {
                   e.textContent = i18n('opt_btn_save_settings');
                   e.removeAttribute('disabled');
-                  e.classList.remove('unSaved');
                });
             }, 300);
          },
@@ -124,8 +124,8 @@ window.addEventListener('load', () => {
       },
 
       init() {
-         Storage.getParams(obj => {
-            PopulateForm.fill(obj);
+         Storage.getParams(settings => {
+            PopulateForm.fill(settings);
             this.attrDependencies();
             this.registerEventListener();
             document.body.classList.remove('preload');

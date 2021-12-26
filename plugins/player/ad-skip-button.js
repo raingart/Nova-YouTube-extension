@@ -110,11 +110,13 @@ window.nova_plugins.push({
    title: 'Ad Video Skip',
    'title:zh': '广告视频跳过',
    'title:ja': '広告ビデオスキップ',
+   'title:es': 'Saltar vídeo del anuncio',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Auto click on【Skip Ad】button',
    'desc:zh': '自动点击“Skip Ad”按钮',
    'desc:ja': '「Skip Ad」ボタンの自動クリック',
+   'desc:es': 'Haga clic automáticamente en el botón 【Omitir anuncio】',
    _runtime: user_settings => {
 
       NOVA.css.push( // hides the appearance when playing on the next video

@@ -1,11 +1,11 @@
 const PopulateForm = {
    // DEBUG: true,
 
-   fill(obj, parent) {
-      this.log("Load from Storage: %s=>%s", parent?.id, JSON.stringify(obj));
+   fill(settings, parent) {
+      this.log("Load from Storage: %s=>%s", parent?.id, JSON.stringify(settings));
 
-      for (const key in obj) {
-         const val = obj[key];
+      for (const key in settings) {
+         const val = settings[key];
          // const el = document.getElementsByName(key)[0] || document.getElementById(key);
          if (el = (parent || document).querySelector(`[name="${key}"]`)
             || (parent || document).querySelector('#' + key)) {
@@ -55,9 +55,9 @@ const PopulateForm = {
       }
    },
 
-   log(...args) {
-      if (this.DEBUG && args?.length) {
-         console.groupCollapsed(...args);
+   log() {
+      if (this.DEBUG && arguments.length) {
+         console.groupCollapsed(...arguments);
          console.trace();
          console.groupEnd();
       }

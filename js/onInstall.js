@@ -22,18 +22,18 @@ chrome.runtime.onInstalled.addListener(details => {
 
          // case 'update':
          //    // updateKeyStorage
-         //    Storage.getParams(store => {
+         //    Storage.getParams(settings => {
          //       const keyRenameTemplate = {
          //          // 'oldKey': 'newKey',
          //       }
-         //       for (const oldKey in store) {
+         //       for (const oldKey in settings) {
          //          if (newKey = keyRenameTemplate[oldKey]) {
          //             console.log(oldKey, '=>', newKey);
-         //             delete Object.assign(store, { [newKey]: store[oldKey] })[oldKey];
+         //             delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
          //          }
          //       }
-         //       console.debug('new updated storage:', store);
-         //       Storage.setParams(store, 'sync');
+         //       console.debug('new updated settings:', settings);
+         //       Storage.setParams(settings, 'sync');
          //    }, 'sync');
 
          //    break;

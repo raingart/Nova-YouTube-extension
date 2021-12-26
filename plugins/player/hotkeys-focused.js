@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Player hotkeys always active',
    'title:zh': '播放器热键始终处于活动状态',
    'title:ja': 'プレーヤーのホットキーは常にアクティブです',
+   'title:es': 'Teclas de acceso rápido del jugador siempre activas',
    run_on_pages: 'watch',
    section: 'player',
    // desc: 'Player hotkeys always active【SPACE/F】etc.',

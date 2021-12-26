@@ -21,6 +21,7 @@ const Plugins = {
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
       'player/subtitle.js',
+      // 'player/miniplayer-disable.js',
       // 'player/stop.js', // incompatible with quality.js
 
       'other/thumbs-clear.js',
@@ -40,6 +41,7 @@ const Plugins = {
       'comments/expand.js',
       'comments/square-avatars.js',
 
+      'sidebar/related-visibility.js',
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',

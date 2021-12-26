@@ -5,21 +5,21 @@ const App = {
       return this.lastURL === location.href ? false : this.lastURL = location.href;
    },
 
-   // sessionSettings: null,
+   // settingsStore: null,
    storage: {
-      set(options) {
-         for (const property in options) { // convert string to boolean
-            switch (options[property]) {
-               case 'true': options[property] = true; break;
-               case 'false': options[property] = false; break;
+      set(settings) {
+         for (const property in settings) { // convert string to boolean
+            switch (settings[property]) {
+               case 'true': settings[property] = true; break;
+               case 'false': settings[property] = false; break;
             }
          }
-         this.sessionSettings = options;
+         this.settingsStore = settings;
          // in the iframe
-         if (options?.disable_in_frame && window.self !== window.top) {
+         if (settings?.disable_in_frame && window.self !== window.top) {
             return console.warn('processed in the frame disable');
          }
-         if (options?.report_issues) this.reflectException();
+         if (settings?.report_issues) this.reflectException();
          this.run();
       },
 
@@ -49,7 +49,7 @@ const App = {
       Plugins.injectScript(
          `( ${this.lander.toString()} ({
             'plugins_executor': ${Plugins.run},
-            'user_settings': ${JSON.stringify(this.sessionSettings)},
+            'user_settings': ${JSON.stringify(this.settingsStore)},
             'plugins_count': ${Plugins.list.length},
             'app_name': '${chrome?.runtime?.getManifest()?.name}',
             'app_ver': '${chrome?.runtime?.getManifest()?.version}',
@@ -161,6 +161,11 @@ App.init();
 
 // YT player API
 // https://gist.github.com/Araxeus/fc574d0f31ba71d62215c0873a7b048e
+
+// get YT experimental FLAGS
+// let cfg = window.ytcfg.get("EXPERIMENT_FLAGS");
+// cfg.kevlar_flexy_watch_new_dom = false;
+// window.ytcfg.set("EXPERIMENT_FLAGS", cfg);
 
 // test normal lite
 // https://www.youtube.com/watch?v=4ldjbjwim4k 240

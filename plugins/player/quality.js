@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Video quality',
    'title:zh': '视频质量',
    'title:ja': 'ビデオ品質',
+   'title:es': 'Calidad de video',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -32,7 +33,8 @@ window.nova_plugins.push({
          // console.debug('playerState', NOVA.PLAYERSTATE[state]);
 
          // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
-         if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
+         // if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
+         if (['PLAYING', 'BUFFERING'].includes(NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
             setQuality.quality_busy = true;
 
             const waitQuality = setInterval(() => {
@@ -70,6 +72,7 @@ window.nova_plugins.push({
             }, 50); // 50ms
 
             // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
+            // } else if (['UNSTARTED', 'ENDED'].includes(NOVA.PLAYERSTATE[state])) {
          } else if (state <= 0) {
             setQuality.quality_busy = false;
          }
@@ -82,9 +85,11 @@ window.nova_plugins.push({
          label: 'Default video quality',
          'label:zh': '默认视频质量',
          'label:ja': 'デフォルトのビデオ品質',
+         'label:es': 'Calidad de video predeterminada',
          title: 'If unavailable, set max available quality',
          'title:zh': '如果不可用，将选择可用的最高质量。',
          'title:ja': '利用できない場合は、利用可能な最高の品質が選択されます。',
+         'title:es': 'Si no está disponible, establezca la calidad máxima disponible',
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
@@ -107,10 +112,12 @@ window.nova_plugins.push({
          label: 'Save manually selected for the same tab',
          'label:zh': '手动选择的质量保存在当前选项卡中',
          'label:ja': '手動で選択した品質が現在のタブに保存されます',
+         'label:es': 'Guardar seleccionado manualmente para la misma pestaña',
          type: 'checkbox',
          title: 'Affects to next videos',
          'title:zh': '对下一个视频的影响',
          'title:ja': '次の動画への影響',
+         'title:es': 'Afecta a los siguientes videos',
       },
    },
 });

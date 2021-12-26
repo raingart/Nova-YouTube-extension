@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.10.2
+// @version         0.10.4
 // @description     Make YouTube be better
 
 // @author          raingart

@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Replace default indicator',
    'title:zh': '替换默认指示器',
    'title:ja': 'デフォルトのインジケーターを置き換える',
+   'title:es': 'Reemplazar indicador predeterminado',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'bezel',
@@ -179,6 +180,7 @@ window.nova_plugins.push({
          label: 'Indicator type',
          'label:zh': '指标类型',
          'label:ja': 'インジケータータイプ',
+         'label:es': 'Tipo de indicador',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar-top', value: 'bar-top' },

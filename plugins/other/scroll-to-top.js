@@ -3,11 +3,13 @@ window.nova_plugins.push({
    title: 'Scroll to top button',
    'title:zh': '滚动到顶部按钮',
    'title:ja': 'トップボタンまでスクロール',
+   'title:es': 'Desplazarse al botón superior',
    run_on_pages: 'all, -embed',
    section: 'other',
    desc: 'Displayed on long pages',
    'desc:zh': '出现在长页面上',
    'desc:ja': '長いページに表示されます',
+   'desc:es': 'Mostrado en páginas largas',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'scrollToTop_btn';
@@ -44,7 +46,7 @@ window.nova_plugins.push({
                });
                if (user_settings.scroll_to_top_autoplay
                   && NOVA.currentPageName() == 'watch'
-                  //    && (video = document.querySelector('video')) && video.paused // dont see ENDED
+                  //    && (video = document.querySelector('video')) && video.paused // restart ENDED
                   && (player = document.getElementById('movie_player'))
                   && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
                ) {
@@ -92,6 +94,7 @@ window.nova_plugins.push({
          label: 'Smooth',
          'label:zh': '光滑的',
          'label:ja': 'スムーズ',
+         'label:es': 'Suave',
          type: 'checkbox',
       },
       scroll_to_top_autoplay: {

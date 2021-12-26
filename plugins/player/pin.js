@@ -16,11 +16,13 @@ window.nova_plugins.push({
    title: 'Pin player while scrolling',
    'title:zh': '滚动时固定播放器',
    'title:ja': 'スクロール中にプレイヤーを固定する',
+   'title:es': 'Fijar jugador mientras se desplaza',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Player stays always visible while scrolling',
    'desc:zh': '滚动时播放器始终可见',
    'desc:ja': 'スクロール中、プレーヤーは常に表示されたままになります',
+   'desc:es': 'El jugador permanece siempre visible mientras se desplaza',
    _runtime: user_settings => {
 
       const
@@ -32,7 +34,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(player => {
             // if player fullscreen desable float mode
-            document.addEventListener("fullscreenchange", () => document.fullscreenElement && player.classList.remove(CLASS_VALUE), false);
+            document.addEventListener('fullscreenchange', () => document.fullscreenElement && player.classList.remove(CLASS_VALUE), false);
             // NOVA.waitElement('video')
             //    .then(video => {
             //       video.addEventListener('webkitfullscreenchange', () => player.classList.remove(CLASS_VALUE));
@@ -114,8 +116,41 @@ window.nova_plugins.push({
             btnUnpin.className = CLOSE_BTN_CLASS_VALUE;
             btnUnpin.title = 'Unpin player';
             btnUnpin.textContent = '×'; // ✖
-            btnUnpin.addEventListener('click', () => player.classList.remove(CLASS_VALUE));
+            btnUnpin.addEventListener('click', () => {
+               player.classList.remove(CLASS_VALUE);
+               drag.reset();
+               window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
+            });
             player.append(btnUnpin);
+         });
+
+      // add drag
+      NOVA.waitElement(PINNED_SELECTOR)
+         .then(player => {
+            drag.init(player);
+
+            // dont work both. Try fix preventDefault. Replace to preventDefault patch
+            // document.addEventListener('click', evt => {
+            //    evt.preventDefault()
+            //    console.debug('click', drag.active);
+            //    if (drag.active) {
+            //       evt.preventDefault()
+            //       console.debug('', 111);
+            //    };
+            // });
+            // player.addEventListener('onStateChange', state => {
+            //    if (drag.active/* && ['PLAYING', 'PAUSED'].includes(NOVA.PLAYERSTATE[state])*/) {
+            //       console.debug('onStateChange', state);
+            //       switch (NOVA.PLAYERSTATE[state]) {
+            //          case 'PLAYING':
+            //             player.pauseVideo();
+            //             break;
+            //          case 'PAUSED':
+            //             player.playVideo();
+            //             break;
+            //       }
+            //    }
+            // });
          });
 
       function initStyles(player = required()) {
@@ -208,13 +243,18 @@ window.nova_plugins.push({
                switchElement.classList.remove(CLASS_VALUE);
                this.inViewport = true;
                window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
+
+               drag.reset(); // save and clear pos
             }
          } else if (this.inViewport
             && !player.classList.contains('ytp-fullscreen') // fix bug on fullscreen in "header_scroll_after"
          ) {
             // console.debug('switchElement pin');
             switchElement.classList.add(CLASS_VALUE);
+            drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
             this.inViewport = false;
+
+            window.dispatchEvent(new Event('resize')); // fix: .ytp-chrome-bottom size if pinned
          }
 
          function isInViewport(el = required()) {
@@ -230,33 +270,141 @@ window.nova_plugins.push({
          }
       }
 
-      // function isInViewport({ element = required(), callback_show, callback_hide, disconnectAfterMatch }) {
-      //    // console.debug('isInViewport', ...arguments);
-      //    if (!(element instanceof HTMLElement)) return;
-      //    new IntersectionObserver((entries, observer) => {
-      //       console.debug('IntersectionObserver');
-      //       // if (entries.some(({ isIntersecting }) => isIntersecting)) {
-      //       if (entries[0].isIntersecting) {
-      //          if (disconnectAfterMatch) observer.disconnect();
-      //          if (callback_show && typeof callback_show === 'function') callback_show();
+      const drag = {
+         // DEBUG: true,
 
-      //       } else if (callback_hide && typeof callback_hide === 'function') callback_hide();
-      //       if (entries[0].isIntersecting) console.debug('isIntersecting ok');
-      //       else console.debug('isIntersecting false');
-      //    }).observe(element);
-      // }
+         // xOffset: 0,
+         // yOffset: 0,
+         // currentX: 0,
+         // currentY: 0,
+         // dragTarget: HTMLElement,
+         // active: false,
+         // storePos: { X, Y },
+         attrNametoLock: 'force_fix_preventDefault', // preventDefault patch
+
+         reset() {
+            // switchElement.style.transform = ''; // clear drag state
+            this.dragTarget?.style.removeProperty('transform');// clear drag state
+            this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
+            // this.xOffset = this.yOffset = 0;
+         },
+
+         init(el_target = required(), callbackExport) { // init
+            this.log('drag init', ...arguments);
+            if (!(el_target instanceof HTMLElement)) return console.error('el_target not HTMLElement:', el_target);
+
+            this.dragTarget = el_target;
+
+            // touchs
+            // document.addEventListener('touchstart', this.dragStart.bind(this), false);
+            // document.addEventListener('touchend', this.dragEnd.bind(this), false);
+            // document.addEventListener('touchmove', this.draging.bind(this), false);
+            // mouse
+            // document.addEventListener('mousedown', this.dragStart.bind(this), false);
+            // document.addEventListener('mouseup', this.dragEnd.bind(this), false);
+            // document.addEventListener('mousemove', this.draging.bind(this), false);
+            document.addEventListener('mousedown', evt => {
+               if (!el_target.classList.contains(CLASS_VALUE)) return;
+               this.dragStart.apply(this, [evt]);
+            }, false);
+            document.addEventListener('mouseup', evt => {
+               if (this.active) this.dragTarget.removeAttribute(this.attrNametoLock); // fix broken preventDefault
+               this.dragEnd.apply(this, [evt]);
+            }, false);
+            document.addEventListener('mousemove', evt => {
+               if (this.active && !this.dragTarget.hasAttribute(this.attrNametoLock)) {
+                  this.dragTarget.setAttribute(this.attrNametoLock, true); // fix broken preventDefault
+               }
+               this.draging.apply(this, [evt]);
+            }, false);
+
+            // fix broken preventDefault / preventDefault patch
+            NOVA.css.push(
+               `[${this.attrNametoLock}]:active {
+                  pointer-events: none;
+                  cursor: grab; /* <-- dont work */
+                  outline: 2px dashed #3ea6ff !important;
+               }`);
+         },
+
+         dragStart(evt) {
+            if (!this.dragTarget.contains(evt.target)) return;
+            this.log('dragStart');
+
+            switch (evt.type) {
+               case 'touchstart':
+                  this.initialX = evt.touches[0].clientX - (this.xOffset || 0);
+                  this.initialY = evt.touches[0].clientY - (this.yOffset || 0);
+                  break;
+               case 'mousedown':
+                  this.initialX = evt.clientX - (this.xOffset || 0);
+                  this.initialY = evt.clientY - (this.yOffset || 0);
+                  break;
+            }
+            this.active = true;
+         },
+
+         dragEnd(evt) {
+            if (!this.active) return;
+            this.log('dragEnd');
+
+            this.initialX = this.currentX;
+            this.initialY = this.currentY;
+            this.active = false;
+         },
+
+         draging(evt) {
+            if (!this.active) return;
+            evt.preventDefault(); // dont work. Replace to preventDefault patch
+            evt.stopImmediatePropagation(); // dont work. Replace to preventDefault patch
+            evt.stopPropagation(); // ????
+
+            this.log('draging');
+
+            switch (evt.type) {
+               case 'touchmove':
+                  this.currentX = evt.touches[0].clientX - this.initialX;
+                  this.currentY = evt.touches[0].clientY - this.initialY;
+                  break;
+               case 'mousemove':
+                  this.currentX = evt.clientX - this.initialX;
+                  this.currentY = evt.clientY - this.initialY;
+                  break;
+            }
+
+            this.xOffset = this.currentX;
+            this.yOffset = this.currentY;
+
+            this.setTranslate({ 'X': this.currentX, 'Y': this.currentY });
+         },
+
+         setTranslate({ X = required(), Y = required() }) {
+            this.log('setTranslate', ...arguments);
+            this.dragTarget.style.transform = `translate3d(${X}px, ${Y}px, 0)`;
+         },
+
+         log() {
+            if (this.DEBUG && arguments.length) {
+               console.groupCollapsed(...arguments);
+               console.trace();
+               console.groupEnd();
+            }
+         },
+      };
 
    },
    options: {
       player_float_scroll_size_ratio: {
          _tagName: 'input',
-         label: 'Player size aspect ratio',
-         'label:zh': '播放器尺寸纵横比',
-         'label:ja': 'プレーヤーサイズのアスペクト比',
+         label: 'Player size',
+         'label:zh': '播放器尺寸',
+         'label:ja': 'プレーヤーのサイズ',
+         'label:es': 'Tamaño del jugador',
          type: 'number',
-         title: '更少 - 更多尺寸',
-         'title:zh': 'より少ない-より多くのサイズ',
-         'title:ja': 'より少ない-より多くのサイズ',
+         title: 'Smaller value - larger size',
+         'title:zh': '较小的值 - 较大的尺寸',
+         'title:ja': '小さい値-大きいサイズ',
+         'title:es': 'Valor más pequeño - tamaño más grande',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -268,6 +416,7 @@ window.nova_plugins.push({
          label: 'Player fixing position',
          'label:zh': '玩家固定位置',
          'label:ja': 'プレーヤーの固定位置',
+         'label:es': 'Posición de fijación del jugador',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },

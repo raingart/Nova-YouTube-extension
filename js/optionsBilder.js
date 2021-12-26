@@ -343,9 +343,9 @@ const Opt = {
       this.eventListener();
    },
 
-   log(...args) {
-      if (this.DEBUG && args?.length) {
-         console.groupCollapsed(...args);
+   log() {
+      if (this.DEBUG && arguments.length) {
+         console.groupCollapsed(...arguments);
          console.trace();
          console.groupEnd();
       }
@@ -368,30 +368,29 @@ window.addEventListener('load', () => {
 
    Opt.init();
 
-   Storage.getParams(store => {
+   Storage.getParams(settings => {
       // tab selector
       if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
       // remove api warn if has api
-      if (store && store['custom-api-key']) {
+      if (settings && settings['custom-api-key']) {
          document.querySelectorAll('.info b').forEach(el => el.remove());
       }
    }, Opt.storageMethod);
 
    function searchFilter({ keyword = required(), in_selector = required(), highlight_filter_selector }) {
       // console.debug('searchFilter:', ...arguments);
-      keyword = keyword.toString().trim();
+      keyword = keyword.toString().toLowerCase();
 
       document.querySelectorAll(in_selector)
          .forEach(item => {
             const
-               // text = item.textContent.toLowerCase(),
-               // text = item.getAttribute('tooltip')?.toLowerCase(),
-               hasText = text?.includes(keyword),
+               text = item.textContent,
+               // text = item.getAttribute('tooltip'),
+               hasText = text?.toLowerCase().includes(keyword),
                highlight = el => {
-                  el.innerHTML = el.innerHTML.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
-                  // hide el in which are not present
-                  item.style.display = hasText ? '' : 'none';
-                  if (hasText) {
+                  el.innerHTML = el.textContent.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  item.style.display = hasText ? '' : 'none'; // hide el out of search
+                  if (hasText && keyword) {
                      highlightTerm({
                         'target': el,
                         'keyword': keyword,
@@ -409,7 +408,8 @@ window.addEventListener('load', () => {
          const
             content = target.innerHTML,
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
-            replaceWith = '$1<mark ' + (highlightClass ? 'class="' + highlightClass + '"' : 'style="background-color:#afafaf"') + '>$2</mark>$3',
+            highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
+            replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
             marked = content.replace(pattern, replaceWith);
 
          return (target.innerHTML = marked) !== content;

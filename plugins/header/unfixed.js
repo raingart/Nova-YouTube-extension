@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Header bar unfixed',
    'title:zh': '标题栏不固定',
    'title:ja': 'ヘッダーバーは固定されていません',
+   'title:es': 'Barra de encabezado sin arreglar',
    // run_on_pages: 'watch, channel',
    run_on_pages: 'all, -results',
    // restart_on_transition: true,
@@ -10,6 +11,7 @@ window.nova_plugins.push({
    desc: 'Prevents header from sticking',
    'desc:zh': '防止头部粘连',
    'desc:ja': 'ヘッダーがくっつくのを防ぎます',
+   'desc:es': 'Evita que el cabezal se pegue',
    _runtime: user_settings => {
 
       NOVA.css.push(
@@ -65,9 +67,11 @@ window.nova_plugins.push({
          label: 'Scroll after header',
          'label:zh': '在标题后滚动',
          'label:ja': 'ヘッダーの後にスクロール',
+         'label:es': 'Desplazarse después del encabezado',
          title: 'Makes sense on a small screen',
          'title:zh': '在小屏幕上有意义',
          'title:ja': '小さな画面で意味があります',
+         'title:es': 'Tiene sentido en una pantalla pequeña',
          type: 'checkbox',
       },
    },

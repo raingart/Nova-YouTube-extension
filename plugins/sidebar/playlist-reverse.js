@@ -3,12 +3,11 @@ window.nova_plugins.push({
    title: 'Reverse playlist order',
    'title:zh': '反转播放列表顺序',
    'title:ja': 'プレイリストの順序を逆にする',
+   'title:es': 'Orden inverso de la lista de reproducción',
    run_on_pages: 'watch, playlist',
    // restart_on_transition: true,
    section: 'sidebar',
-   desc: 'Unstable! Alpha ver.',
-   'desc:zh': '不稳定！ 阿尔法版',
-   'desc:ja': '不安定！アルファ版',
+   // desc: '',
    _runtime: user_settings => {
 
       const
@@ -165,7 +164,7 @@ window.nova_plugins.push({
 
       function scrollToElement(targetEl) {
          if (!(targetEl instanceof HTMLElement)) return console.error('targetEl not HTMLElement:', targetEl);
-         const container = targetEl.parentNode;
+         const container = targetEl.parentElement;
          container.scrollTop = targetEl.offsetTop - container.offsetTop;
       }
 

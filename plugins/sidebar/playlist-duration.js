@@ -8,6 +8,7 @@ window.nova_plugins.push({
    title: 'Show playlist duration',
    'title:zh': '显示播放列表持续时间',
    'title:ja': 'プレイリストの期間を表示',
+   'title:es': 'Mostrar duração da lista de reprodução',
    run_on_pages: 'watch, playlist',
    restart_on_transition: true,
    section: 'sidebar',
@@ -46,7 +47,7 @@ window.nova_plugins.push({
                         const vids_list = window.ytInitialData.contents.twoColumnBrowseResultsRenderer
                            .tabs[0].tabRenderer?.content?.sectionListRenderer
                            ?.contents[0].itemSectionRenderer
-                           .contents[0].playlistVideoListRenderer.contents;
+                           .contents[0].playlistVideoListRenderer?.contents;
                         const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
                         return outFormat(duration);
@@ -217,9 +218,10 @@ window.nova_plugins.push({
          label: 'Time display mode',
          'label:zh': '时间显示方式',
          'label:ja': '時間表示モード',
+         'label:es': 'Modo de visualización de la hora',
          options: [
-            { label: 'done', value: 'watched', 'label:zh': '结束', 'label:ja': '終わり' },
-            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り' },
+            { label: 'done', value: 'watched', 'label:zh': '结束', 'label:ja': '終わり', 'label:es': 'hecho' },
+            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:es': 'izquierda' },
             { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て' },
          ],
       },
@@ -228,6 +230,7 @@ window.nova_plugins.push({
          label: 'Add percentage',
          'label:zh': '显示百分比',
          'label:ja': 'パーセンテージを表示',
+         'label:es': 'Agregar porcentaje',
          type: 'checkbox',
       },
    },

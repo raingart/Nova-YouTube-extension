@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Custom buttons',
    'title:zh': '自定义按钮',
    'title:ja': 'カスタムボタン',
+   'title:es': 'Botones personalizados',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -34,7 +35,9 @@ window.nova_plugins.push({
                // btnPopUp.setAttribute('aria-label','');
                btnPopUp.innerHTML =
                   `<svg version="1.1" viewBox="-8 -8 36 36" height="100%" width="100%">
-                     <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
+                     <g fill="currentColor">
+                        <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
+                     </g>
                   </svg>`;
                // `<svg version="1.1" viewBox="0 -5 24 30" height="100%" width="100%">
                //    <g transform="translate(0,2)">
@@ -129,7 +132,7 @@ window.nova_plugins.push({
                // btnScreenshot.setAttribute('aria-label','');
                btnScreenshot.innerHTML =
                   `<svg version="1.1" viewBox="0 -155 512 860" height="100%" width="100%">
-                     <g>
+                     <g fill="currentColor">
                         <circle cx="255.811" cy="285.309" r="75.217" />
                         <path d="M477,137H352.718L349,108c0-16.568-13.432-30-30-30H191c-16.568,0-30,13.432-30,30l-3.718,29H34 c-11.046,0-20,8.454-20,19.5v258c0,11.046,8.954,20.5,20,20.5h443c11.046,0,20-9.454,20-20.5v-258C497,145.454,488.046,137,477,137 z M255.595,408.562c-67.928,0-122.994-55.066-122.994-122.993c0-67.928,55.066-122.994,122.994-122.994 c67.928,0,122.994,55.066,122.994,122.994C378.589,353.495,323.523,408.562,255.595,408.562z M474,190H369v-31h105V190z" />
                      </g>
@@ -143,7 +146,7 @@ window.nova_plugins.push({
                   canvas.width = video.videoWidth;
                   canvas.height = video.videoHeight;
                   context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                  canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
+                  canvas.toBlob(blob => container.href = URL.createObjectURL(blob) + '.png');
                   // create
                   if (!container.id) {
                      const headerContainer = document.getElementById('masthead-container');
@@ -199,9 +202,11 @@ window.nova_plugins.push({
                btnThumb.title = 'Open thumbnail';
                btnThumb.innerHTML =
                   `<svg version="1.1" viewBox="0 -9 21 40" height="100%" width="100%">
-                     <circle cx='8' cy='7.2' r='2'/>
-                     <path d='M0 2v16h20V2H0z M18 16H2V4h16V16z'/>
-                     <polygon points='17 10.9 14 7.9 9 12.9 6 9.9 3 12.9 3 15 17 15' />
+                     <g fill="currentColor">
+                        <circle cx='8' cy='7.2' r='2'/>
+                        <path d='M0 2v16h20V2H0z M18 16H2V4h16V16z'/>
+                        <polygon points='17 10.9 14 7.9 9 12.9 6 9.9 3 12.9 3 15 17 15' />
+                     </g>
                   </svg>`;
                btnThumb.addEventListener('click', () =>
                   window.open(`https://i.ytimg.com/vi/${getVideoId()}/maxresdefault.jpg`));
@@ -215,9 +220,11 @@ window.nova_plugins.push({
                   btnSpeed = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
                   defaultRateText = '1x';
-               // `<svg version="1.1" viewBox="0 0 36 36" height="100%" width="100%">
-               //    <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
-               // </svg>`;
+                  // `<svg version="1.1" viewBox="0 0 36 36" height="100%" width="100%">
+                  //    <g fill="currentColor">
+                  //       <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
+                  //    </g>
+                  // </svg>`;
 
                let origRate = {};
 
@@ -304,17 +311,19 @@ window.nova_plugins.push({
          label: 'Items',
          'label:zh': '元素',
          'label:ja': '要素',
+         'label:es': 'Elementos',
          title: 'Hold【Ctrl+Сlick】to select several',
-         'title:zh': '按住[Ctrl + Сlick]并选择一些',
+         'title:zh': '按住[Ctrl+Сlick]并选择一些',
          'title:ja': '「Ctrl+Сlick」を押したままにして、いくつかを選択します',
+         'title:es': 'Mantenga presionado 【Ctrl+Сlick】 para seleccionar varios',
          multiple: null, // dont use - selected: true
          required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
-            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度' },
-            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット' },
-            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル' },
-            { label: 'pop-up player', value: 'popup', 'label:zh': '弹出式播放器', },
+            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:es': 'alternar velocidad' },
+            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:es': 'captura de pantalla' },
+            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:es': 'miniatura' },
+            { label: 'pop-up player', value: 'popup', 'label:zh': '弹出式播放器' },
          ],
       },
       player_buttons_custom_popup_width: {
@@ -322,10 +331,12 @@ window.nova_plugins.push({
          label: 'Player window size aspect ratio',
          'label:zh': '播放器窗口大小纵横比',
          'label:ja': 'プレーヤーのウィンドウサイズのアスペクト比',
+         'label:es': 'Relación de aspecto del tamaño de la ventana del reproductor',
          type: 'number',
          title: 'less - more size',
          'title:zh': '小价值大尺寸',
          'title:ja': '小さい値大きいサイズ',
+         'title:es': 'menos - más tamaño',
          placeholder: '1.5-4',
          step: 0.1,
          min: 1.5,
@@ -338,6 +349,7 @@ window.nova_plugins.push({
          label: 'Hotkey toggle speed',
          'label:zh': '热键切换速度',
          'label:ja': '速度を切り替えるためのホットボタン',
+         'label:es': 'Velocidad de cambio de teclas de acceso rápido',
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },

@@ -3,6 +3,7 @@ window.nova_plugins.push({
    title: 'Compact header bar',
    'title:zh': '紧凑的标题栏',
    'title:ja': 'コンパクトなヘッダーバー',
+   'title:es': 'Barra de cabecera compacta',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

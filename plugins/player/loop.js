@@ -3,11 +3,13 @@ window.nova_plugins.push({
    title: 'Loop playback',
    'title:zh': '循环播放',
    'title:ja': 'ループ再生',
+   'title:es': 'Reproducción en bucle',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Loop video playback',
    'desc:zh': '循环播放视频',
    'desc:ja': 'ビデオ再生をループする',
+   'desc:es': 'Reproducción de video en bucle',
    _runtime: user_settings => {
 
       NOVA.waitElement('video')

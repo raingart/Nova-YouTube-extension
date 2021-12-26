@@ -3,66 +3,75 @@ const NOVA = {
 
    // find once.
    // more optimized compared to MutationObserver
-   waitElement(selector = required()) {
-      if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+   // waitElement(selector = required()) {
+   //    this.log('waitElement:', selector);
+   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
-      return new Promise((resolve, reject) => {
-         // try {
-         let nodeInterval
-         const checkIfExists = () => {
-            if (el = document.querySelector(selector)) {
-               if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
-               resolve(el);
+   //    return new Promise((resolve, reject) => {
+   //       // try {
+   //       let nodeInterval
+   //       const checkIfExists = () => {
+   //          if (el = document.querySelector(selector)) {
+   //             if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
+   //             resolve(el);
 
-            } else return;
-         }
-         checkIfExists();
-         nodeInterval = setInterval(checkIfExists, 50); // ms
-         // } catch (err) { // does not output the reason/line to the stack
-         //    reject(new Error('Error waitElement', err));
-         // }
-      });
-   },
-
-   // waitForElement(selector = required()) {
-   //    // alternative https://git.io/waitForKeyElements.js
-   //    // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
-   //    // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
-
-   //    // There is a more correct method - transitionend.
-   //    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
-   //    // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
-   //    NOVA.log('wait', ...arguments);
-
-   //    if (!('MutationObserver' in window)) throw new Error('MutationObserver not available!');
-
-   //    return new Promise(resolve => {
-   //       if (el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector)) {
-   //          // NOVA.log('waited(1)', selector, el);
-   //          return resolve(el);
+   //          } else return;
    //       }
-   //       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-
-   //       new MutationObserver((mutations, observer) => {
-   //          mutations.forEach(mutation => {
-   //             [...mutation.addedNodes]
-   //                .filter(node => node.nodeType === 1)
-   //                .forEach(node => {
-   //                   (node?.parentElement || document).querySelectorAll(selector)
-   //                      .forEach(element => {
-   //                         // NOVA.log('waited', mutation.type, selector);
-   //                         observer.disconnect();
-   //                         return resolve(element);
-   //                      });
-   //                });
-   //          });
-   //       })
-   //          .observe(document.body || document.documentElement, { childList: true, subtree: true });
+   //       checkIfExists();
+   //       nodeInterval = setInterval(checkIfExists, 50); // ms
+   //       // } catch (err) { // does not output the reason/line to the stack
+   //       //    reject(new Error('Error waitElement', err));
+   //       // }
    //    });
    // },
 
+   waitElement(selector = required()) {
+      // alternative https://git.io/waitForKeyElements.js
+      // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
+      // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+
+      // There is a more correct method - transitionend.
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
+      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
+      this.log('waitElement:', selector);
+
+      return new Promise(resolve => {
+         if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+
+         if (element = document.querySelector(selector)) {
+            NOVA.log('waited(1)', selector, element);
+            return resolve(element);
+         }
+
+         new MutationObserver((mutations, observer) => {
+            mutations.forEach(mutation => {
+               mutation.addedNodes.forEach(node => {
+                  if ((node.nodeType === 1 || node.nodeType === 3)
+                     && (element = node.parentElement?.querySelector(selector) || document.querySelector(selector))
+                  ) {
+                     observer.disconnect();
+                     // NOVA.log('waited', selector, element, mutation.type, node.nodeType);
+                     return resolve(element);
+                  }
+               });
+               // [...mutation.addedNodes]
+               // .filter(node => node.nodeType === 1)
+               // .forEach(node => {
+               //    (node?.parentElement || document).querySelectorAll(selector)
+               //       .forEach(element => {
+               //          // NOVA.log('waited', mutation.type, selector);
+               //          observer.disconnect();
+               //          return resolve(element);
+               //       });
+               // });
+            });
+         })
+            .observe(document.body || document.documentElement, { childList: true, subtree: true });
+      });
+   },
+
    watchElement({ selector = required(), attr_mark, callback = required() }) {
-      NOVA.log('watch', selector);
+      this.log('watch', selector);
       if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
 
       process(); // launch without waiting
@@ -143,7 +152,7 @@ const NOVA = {
             // sheet.insertRule(css, sheet.cssRules.length);
             // (document.head || document.documentElement).append(sheet);
 
-            sheet.onload = () => NOVA.log('style loaded:', sheet.src || sheet.textContent.substr(0, 100));
+            // sheet.onload = () => NOVA.log('style loaded:', sheet.src || sheet || sheet.textContent.substr(0, 100));
          }
       },
 
@@ -184,6 +193,45 @@ const NOVA = {
 
          return document.cookie;
       },
+   },
+
+   // NOVA.preventVisibilityElement({
+   //    selector: '#secondary #related',
+   //    id_name: 'related',// auto uppercase
+   //    remove: true,
+   //    remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
+   // });
+   preventVisibilityElement({ selector = required(), id_name = required(), remove }) {
+      // console.debug('preventVisibilityElement', ...arguments);
+      const selector_id = `${id_name}-prevent-load-btn`;
+
+      this.waitElement(selector.toString())
+         .then(el => {
+            if (remove) el.remove();
+            else {
+               if (document.getElementById(selector_id)) return;
+               el.style.visibility = 'hidden';
+               // create button
+               const btn = document.createElement('a');
+               btn.textContent = `Load ${id_name}`;
+               btn.id = selector_id;
+               btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
+               // btn.className = 'ytd-vertical-list-renderer';
+               Object.assign(btn.style, {
+                  cursor: 'pointer',
+                  'text-align': 'center',
+                  'text-transform': 'uppercase',
+                  display: 'block',
+                  color: 'var(--yt-spec-text-secondary)',
+               });
+               btn.addEventListener('click', () => {
+                  btn.remove();
+                  el.style.visibility = 'visible';
+                  window.dispatchEvent(new Event('scroll')); // need to "comments-visibility" (https://stackoverflow.com/a/68202306)
+               });
+               el.before(btn);
+            }
+         });
    },
 
    bezelTrigger(text) {
@@ -461,9 +509,9 @@ const NOVA = {
       5: 'CUED'
    },
 
-   log(...args) {
-      if (this.DEBUG && args?.length) {
-         console.groupCollapsed(...args);
+   log() {
+      if (this.DEBUG && arguments.length) {
+         console.groupCollapsed(...arguments);
          console.trace();
          console.groupEnd();
       }
