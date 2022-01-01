@@ -4,12 +4,16 @@ window.nova_plugins.push({
    'title:zh': '方形头像',
    'title:ja': '正方形のアバター',
    'title:es': 'Avatares cuadrados',
+   'title:pt': 'Avatares quadrados',
+   'title:de': 'Quadratische Avatare',
    run_on_pages: 'all',
    section: 'comments',
    desc: 'Make user images squared',
    'desc:zh': '方形用户形象',
    'desc:ja': 'ユーザー画像を二乗する',
-   'desc:es': 'Haz que las imágenes de los usuarios sean cuadradas',
+   // 'desc:es': 'Haz que las imágenes de los usuarios sean cuadradas',
+   'desc:pt': 'Torne as imagens do usuário quadradas',
+   'desc:de': 'Machen Sie Benutzerbilder quadriert',
    _runtime: user_settings => {
 
       NOVA.css.push('yt-img-shadow { border-radius: 0 !important; }');

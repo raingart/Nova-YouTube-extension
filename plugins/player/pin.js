@@ -17,12 +17,16 @@ window.nova_plugins.push({
    'title:zh': '滚动时固定播放器',
    'title:ja': 'スクロール中にプレイヤーを固定する',
    'title:es': 'Fijar jugador mientras se desplaza',
+   'title:pt': 'Fixar jogador enquanto rola',
+   'title:de': 'Pin-Player beim Scrollen',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Player stays always visible while scrolling',
    'desc:zh': '滚动时播放器始终可见',
    'desc:ja': 'スクロール中、プレーヤーは常に表示されたままになります',
-   'desc:es': 'El jugador permanece siempre visible mientras se desplaza',
+   // 'desc:es': 'El jugador permanece siempre visible mientras se desplaza',
+   'desc:pt': 'O jogador fica sempre visível enquanto rola',
+   'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    _runtime: user_settings => {
 
       const
@@ -39,7 +43,7 @@ window.nova_plugins.push({
             //    .then(video => {
             //       video.addEventListener('webkitfullscreenchange', () => player.classList.remove(CLASS_VALUE));
             //    });
-            // document.querySelector('ytd-player')?.player_.isFullscreen();
+            // document.body.querySelector('ytd-player')?.player_.isFullscreen();
 
             // init css
             const waitHeader = setInterval(() => {
@@ -118,7 +122,7 @@ window.nova_plugins.push({
             btnUnpin.textContent = '×'; // ✖
             btnUnpin.addEventListener('click', () => {
                player.classList.remove(CLASS_VALUE);
-               drag.reset();
+               drag.reset('clear_storePos');
                window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
             });
             player.append(btnUnpin);
@@ -282,11 +286,11 @@ window.nova_plugins.push({
          // storePos: { X, Y },
          attrNametoLock: 'force_fix_preventDefault', // preventDefault patch
 
-         reset() {
+         reset(clear_storePos) {
             // switchElement.style.transform = ''; // clear drag state
             this.dragTarget?.style.removeProperty('transform');// clear drag state
-            this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
-            // this.xOffset = this.yOffset = 0;
+            if (clear_storePos) this.storePos = this.xOffset = this.yOffset = 0;
+            else this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
          },
 
          init(el_target = required(), callbackExport) { // init
@@ -400,11 +404,15 @@ window.nova_plugins.push({
          'label:zh': '播放器尺寸',
          'label:ja': 'プレーヤーのサイズ',
          'label:es': 'Tamaño del jugador',
+         'label:pt': 'Tamanho do jogador',
+         'label:de': 'Spielergröße',
          type: 'number',
          title: 'Smaller value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
          'title:ja': '小さい値-大きいサイズ',
          'title:es': 'Valor más pequeño - tamaño más grande',
+         'title:pt': 'Valor menor - tamanho maior',
+         'title:de': 'Kleinerer Wert - größere Größe',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -417,6 +425,8 @@ window.nova_plugins.push({
          'label:zh': '玩家固定位置',
          'label:ja': 'プレーヤーの固定位置',
          'label:es': 'Posición de fijación del jugador',
+         'label:pt': 'Posição de fixação do jogador',
+         'label:de': 'Spielerfixierungsposition',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },

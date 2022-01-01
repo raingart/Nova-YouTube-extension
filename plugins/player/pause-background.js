@@ -6,12 +6,16 @@ window.nova_plugins.push({
    'title:zh': '在其他选项卡上暂停视频播放',
    'title:ja': '他のタブで動画の再生を一時停止します',
    'title:es': 'Pausa la reproducción de videos en otras pestañas',
+   'title:pt': 'Pausa a reprodução de vídeos em outras guias',
+   'title:de': 'Unterbricht die Wiedergabe von Videos in anderen Tabs',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',
    'desc:zh': '支持 iframe 和其他窗口',
    'desc:ja': 'iframeやその他のウィンドウをサポート',
    'desc:es': 'Soporta iframes y otras ventanas',
+   'desc:pt': 'Suporta iframes e outras janelas',
+   'desc:de': 'Unterstützt iframes und andere Fenster',
    _runtime: user_settings => {
 
       // redirection for localStorage common storage space
@@ -94,6 +98,8 @@ window.nova_plugins.push({
          'label:zh': '如果选项卡具有焦点，则自动播放',
          'label:ja': 'タブにフォーカスがある場合は自動再生',
          'label:es': 'Reproducción automática si la pestaña tiene el foco',
+         'label:pt': 'Reprodução automática se a guia estiver em foco',
+         'label:de': 'Autoplay, wenn die Registerkarte den Fokus hat',
          type: 'checkbox',
          // title: '',
       },

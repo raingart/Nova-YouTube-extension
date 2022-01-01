@@ -4,12 +4,16 @@ window.nova_plugins.push({
    'title:zh': '剩余时间',
    'title:ja': '余日',
    'title:es': 'Tiempo restante',
+   'title:pt': 'Tempo restante',
+   'title:de': 'Verbleibende Zeit',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Remaining time until the end of the video',
    'desc:zh': '距离视频结束的剩余时间',
    'desc:ja': 'ビデオの終わりまでの残り時間',
    'desc:es': 'Tiempo restante hasta el final del video',
+   'desc:pt': 'Tempo restante até o final do vídeo',
+   'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'ytp-time-remaining';
@@ -27,7 +31,7 @@ window.nova_plugins.push({
                });
 
             function setRemaining() {
-               if (isNaN(this.duration) || document.querySelector('.ytp-autohide video') || player.getVideoData().isLive) return;
+               if (isNaN(this.duration) || document.body.querySelector('.ytp-autohide video') || player.getVideoData().isLive) return;
 
                const getProgressPt = () => {
                   const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour
@@ -75,9 +79,11 @@ window.nova_plugins.push({
       time_remaining_mode: {
          _tagName: 'select',
          label: 'Mode',
-         'label:zh': '如何',
-         'label:ja': '仕方',
+         'label:zh': '模式',
+         'label:ja': 'モード',
          'label:es': 'Modo',
+         'label:pt': 'Modo',
+         'label:de': 'Modus',
          options: [
             { label: 'time+(%)', value: 'full', selected: true },
             { label: 'time', value: 'time' },

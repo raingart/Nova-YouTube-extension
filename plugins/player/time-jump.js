@@ -12,14 +12,18 @@ window.nova_plugins.push({
    id: 'time-jump',
    title: 'Time jump',
    'title:zh': '时间跳跃',
-   // 'title:ja': '',
+   // 'title:ja': 'タイムジャンプ',
    'title:es': 'Salto de tiempo',
+   'title:pt': 'Salto no tempo',
+   'title:de': 'Zeitsprung',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Use to skip ad inserts',
    'desc:zh': '用于跳过广告插入',
    'desc:ja': '広告の挿入をスキップするために使用',
    'desc:es': 'Úselo para omitir inserciones de anuncios',
+   'desc:pt': 'Use para pular inserções de anúncios',
+   // 'desc:de': 'Zum Überspringen von Anzeigeninsertionen verwenden',
    _runtime: user_settings => {
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
@@ -46,11 +50,11 @@ window.nova_plugins.push({
                      let msg;
                      if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
                         // if has chapters
-                        if (document.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                        if (document.body.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
                            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
                            this.seekToChapterWithAnimation(nextChapterIndex);
 
-                           msg = document.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
+                           msg = document.body.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
                               || chapterList[nextChapterIndex].title;
                            msg += ' • ' + chapterList[nextChapterIndex].time;
 
@@ -83,7 +87,7 @@ window.nova_plugins.push({
 
                      if (sec = seekToNextChapter.apply(this)) {
                         // wait chapter-title update
-                        document.querySelector('.ytp-chapter-title-content')
+                        document.body.querySelector('.ytp-chapter-title-content')
                            ?.addEventListener("DOMNodeInserted", ({ target }) => {
                               NOVA.bezelTrigger(
                                  target.textContent + ' • ' + NOVA.timeFormatTo.HMS_digit(video.currentTime)
@@ -96,7 +100,7 @@ window.nova_plugins.push({
                      this.currentTime = sec;
 
                      function seekToNextChapter() {
-                        if ((chapterscontainer = document.querySelector('.ytp-chapters-container'))
+                        if ((chapterscontainer = document.body.querySelector('.ytp-chapters-container'))
                            && chapterscontainer?.children.length > 1
                            && (progressContainerWidth = parseInt(NOVA.css.getValue({ selector: chapterscontainer, property: 'width' })))
                         ) {
@@ -134,11 +138,12 @@ window.nova_plugins.push({
 
          NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {
-               if (tooltipEl = document.querySelector('.ytp-tooltip-text')) {
+               if (tooltipEl = document.body.querySelector('.ytp-tooltip-text')) {
                   progressContainer.addEventListener('mousemove', () => {
+                     if (document.getElementById('movie_player')?.getVideoData().isLive) return;
                      const
                         cursorTime = tooltipEl.textContent.split(':').reduce((a, t) => (60 * a) + parseInt(t)),
-                        offsetTime = cursorTime - document.querySelector('video').currentTime,
+                        offsetTime = cursorTime - document.body.querySelector('video').currentTime,
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
                      tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS_digit(offsetTime)}`);
@@ -187,9 +192,11 @@ window.nova_plugins.push({
       time_jump_step: {
          _tagName: 'input',
          label: 'Step time',
-         // 'label:ja': '',
+         // 'label:ja': 'ステップ時間',
          'label:zh': '步骤时间',
          'label:es': 'Tiempo de paso',
+         'label:pt': 'Tempo da etapa',
+         'label:de': 'Schrittzeit',
          type: 'number',
          title: 'in seconds',
          placeholder: 'sec',
@@ -203,6 +210,8 @@ window.nova_plugins.push({
          'label:zh': '热键（双击）',
          'label:ja': 'Hotkey (ダブルプレス)',
          'label:es': 'Tecla de acceso rápido (doble clic)',
+         'label:pt': 'Atalho (duplo clique)',
+         'label:de': 'Hotkey (Doppelklick)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'alt', value: 18 },
@@ -216,12 +225,16 @@ window.nova_plugins.push({
          'label:zh': '在进度条中显示时间偏移',
          'label:ja': 'プログレスバーに時間オフセットを表示する',
          'label:es': 'Mostrar compensación de tiempo en la barra de progreso',
+         'label:pt': 'Mostrar a diferença de tempo na barra de progresso',
+         'label:de': 'Zeitverschiebung im Fortschrittsbalken anzeigen',
          type: 'checkbox',
          // title: 'When you hover offset current playback time',
          title: 'Time offset from current playback time',
          'title:zh': '与当前播放时间的时间偏移',
          'title:ja': '現在の再生時間からの時間オフセット',
          'title:es': 'Desfase de tiempo del tiempo de reproducción actual',
+         'title:pt': 'Deslocamento de tempo do tempo de reprodução atual',
+         'title:de': 'Zeitverschiebung zur aktuellen Wiedergabezeit',
       },
    },
 });

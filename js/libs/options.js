@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
       storageMethod: 'sync',
 
       attrDependencies() {
-         document.querySelectorAll('[data-dependent]')
+         document.body.querySelectorAll('[data-dependent]')
             .forEach(dependentItem => {
                // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
@@ -82,7 +82,7 @@ window.addEventListener('load', () => {
       },
 
       btnSubmitAnimation: {
-         outputStatus: document.querySelectorAll('[type=submit]'),
+         outputStatus: document.body.querySelectorAll('form [type=submit]'),
 
          _process() {
             this.outputStatus.forEach(e => {
@@ -129,7 +129,7 @@ window.addEventListener('load', () => {
             this.attrDependencies();
             this.registerEventListener();
             document.body.classList.remove('preload');
-            document.querySelectorAll('input[type]') // auto selects value on focus
+            document.body.querySelectorAll('form input[type]') // auto selects value on focus
                .forEach(i => i.addEventListener('focus', i.select));
          }, this.storageMethod);
       },

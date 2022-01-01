@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
    'title:es': 'Barra de progreso flotante del jugador',
+   'title:pt': 'Barra de progresso do jogador flutuante',
+   'title:de': 'Float-Player-Fortschrittsbalken',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -74,15 +76,15 @@ window.nova_plugins.push({
 
          });
 
-      function renderChapters(video) {
+      function renderChapters(vid) {
          const selectorTimestampLink = 'a[href*="t="]';
          // search in description
          NOVA.waitElement(`#description.ytd-video-secondary-info-renderer ${selectorTimestampLink}`)
-            .then(() => renderChaptersMarks(video.duration));
+            .then(() => renderChaptersMarks(vid.duration));
 
          // search in first/pinned comment
          NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
-            .then(() => renderChaptersMarks(video.duration));
+            .then(() => renderChaptersMarks(vid.duration));
 
          function renderChaptersMarks(duration) {
             // console.debug('renderChaptersMarks', ...arguments);
@@ -196,6 +198,8 @@ window.nova_plugins.push({
          'label:zh': '高度',
          'label:ja': '身長',
          'label:es': 'Altura',
+         'label:pt': 'Altura',
+         'label:de': 'Höhe',
          type: 'number',
          title: 'in pixels',
          placeholder: 'px',
@@ -209,6 +213,8 @@ window.nova_plugins.push({
          'label:zh': '不透明度',
          'label:ja': '不透明度',
          'label:es': 'Opacidad',
+         'label:pt': 'Opacidade',
+         'label:de': 'Opazität',
          type: 'number',
          // title: '',
          placeholder: '1-10',

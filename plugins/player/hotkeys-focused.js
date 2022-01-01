@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '播放器热键始终处于活动状态',
    'title:ja': 'プレーヤーのホットキーは常にアクティブです',
    'title:es': 'Teclas de acceso rápido del jugador siempre activas',
+   'title:pt': 'Teclas de atalho do jogador sempre ativas',
+   'title:de': 'Player-Hotkeys immer aktiv',
    run_on_pages: 'watch',
    section: 'player',
    // desc: 'Player hotkeys always active【SPACE/F】etc.',
@@ -13,7 +15,7 @@ window.nova_plugins.push({
          // document.activeElement.style.border = "2px solid red"; // mark for test
          // console.debug('activePlayer', target.localName);
          if (!['input', 'textarea'].includes(target.localName) && !target.isContentEditable ) {
-            document.querySelector('video')?.focus();
+            document.body.querySelector('video')?.focus();
          }
       });
 

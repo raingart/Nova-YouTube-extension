@@ -6,9 +6,9 @@ const PopulateForm = {
 
       for (const key in settings) {
          const val = settings[key];
-         // const el = document.getElementsByName(key)[0] || document.getElementById(key);
-         if (el = (parent || document).querySelector(`[name="${key}"]`)
-            || (parent || document).querySelector('#' + key)) {
+         // const el = document.body.getElementsByName(key)[0] || document.getElementById(key);
+         if (el = (parent || document.body).querySelector(`[name="${key}"]`)
+            || (parent || document.body).querySelector('#' + key)) {
             this.log('>opt %s#%s=%s', el.tagName, key, val);
 
             switch (el.tagName.toLowerCase()) {
@@ -51,6 +51,7 @@ const PopulateForm = {
       for (const option of selectObj.children) {
          if (option.value === val) {
             option.selected = true;
+            break;
          }
       }
    },

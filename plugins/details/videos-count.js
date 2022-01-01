@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '显示频道上的视频数量',
    'title:ja': 'チャンネルの動画数を表示する',
    'title:es': 'Mostrar recuento de videos del canal',
+   'title:pt': 'Mostrar contagem de vídeos do canal',
+   'title:de': 'Anzahl der Kanalvideos anzeigen',
    run_on_pages: 'watch, channel',
    restart_on_transition: true,
    section: 'details',
@@ -12,6 +14,8 @@ window.nova_plugins.push({
    'desc:zh': '在频道上显示上传的视频',
    'desc:ja': 'アップロードした動画をチャンネルに表示',
    'desc:es': 'Mostrar videos subidos en el canal',
+   'desc:pt': 'Exibir vídeos enviados no canal',
+   'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    _runtime: user_settings => {
 
       const
@@ -34,7 +38,7 @@ window.nova_plugins.push({
                            // ALL BELOW - not updated on page transition!
                            // || window.ytplayer?.config?.args.ucid
                            // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
-                           // || document.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
+                           // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
                         });
                      });
                });
@@ -50,9 +54,10 @@ window.nova_plugins.push({
 
             function getChannelId() {
                return [
-                  window.ytInitialData?.metadata?.channelMetadataRenderer.externalId,
-                  document.querySelector('meta[itemprop="channelId"][content]')?.content,
-                  document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
+                  (document.body.querySelector('ytd-app')?.data?.response || window.ytInitialData)
+                     ?.metadata?.channelMetadataRenderer?.externalId,
+                  document.head.querySelector('meta[itemprop="channelId"][content]')?.content,
+                  document.head.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
                   location.pathname.split('/')[2],
                ]
                   .find(i => isChannelId(i))

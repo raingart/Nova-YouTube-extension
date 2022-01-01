@@ -23,12 +23,15 @@ const Plugins = {
       'player/subtitle.js',
       // 'player/miniplayer-disable.js',
       // 'player/stop.js', // incompatible with quality.js
+      'player/unblocker.js',
+      'player/next-autoplay.js',
 
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
       // 'other/thumbs-rating.js',
       'other/thumbs-watched.js', // outdated
       'other/channel-tab.js',
+      'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
 

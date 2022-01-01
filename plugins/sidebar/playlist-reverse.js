@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '反转播放列表顺序',
    'title:ja': 'プレイリストの順序を逆にする',
    'title:es': 'Orden inverso de la lista de reproducción',
+   'title:pt': 'Ordem reversa da lista de reprodução',
+   'title:de': 'Wiedergabelistenreihenfolge umkehren',
    run_on_pages: 'watch, playlist',
    // restart_on_transition: true,
    section: 'sidebar',
@@ -71,9 +73,9 @@ window.nova_plugins.push({
                </svg>
             </yt-icon-button>`;
          reverseControl.addEventListener('click', () => {
-            reverseElement(document.querySelector('#playlist #items.playlist-items'));
-            scrollToElement(document.querySelector('#playlist-items[selected]'));
-            // document.querySelector('#playlist[collapsed] #expand-icon').click(); // uncollapse. Bug with unlimited playlist
+            reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
+            scrollToElement(document.body.querySelector('#playlist-items[selected]'));
+            // document.body.querySelector('#playlist[collapsed] #expand-icon').click(); // uncollapse. Bug with unlimited playlist
 
             // NOVA.waitElement('video')
             //    .then(video => {
@@ -92,8 +94,8 @@ window.nova_plugins.push({
             //          let idxNew = NOVA.queryURL.get('index');
             //          if (idxNew !== idx) {
             //             idx = idxNew;
-            //             reverseElement(document.querySelector('#playlist #items.playlist-items'));
-            //             scrollToElement(document.querySelector('#playlist-items[selected]'));
+            //             reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
+            //             scrollToElement(document.body.querySelector('#playlist-items[selected]'));
             //             updateNextButton();
             //          }
             //       });
@@ -130,8 +132,8 @@ window.nova_plugins.push({
                let idxNew = NOVA.queryURL.get('index');
                if (idxNew !== idx) {
                   idx = idxNew;
-                  reverseElement(document.querySelector('#playlist #items.playlist-items'));
-                  scrollToElement(document.querySelector('#playlist-items[selected]'));
+                  reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
+                  scrollToElement(document.body.querySelector('#playlist-items[selected]'));
                   updateNextButton();
                }
                break;
@@ -140,17 +142,17 @@ window.nova_plugins.push({
 
       function updateNextButton() {
          const
-            nextItem = document.querySelector('#playlist [selected] + *'),
+            nextItem = document.body.querySelector('#playlist [selected] + *'),
             nextURL = nextItem?.querySelector('a').href;
 
          if (!nextURL) return;
 
-         if (next_button = document.querySelector('.ytp-next-button')) {
+         if (next_button = document.body.querySelector('.ytp-next-button')) {
             next_button.href = nextURL;
             next_button.dataset.preview = nextItem.querySelector('img').src;
             next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
          }
-         if (playlistManager = document.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
+         if (playlistManager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
             playlistManager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');
             playlistManager.watchEndpoint.videoId = NOVA.queryURL.get('v', nextURL);
 

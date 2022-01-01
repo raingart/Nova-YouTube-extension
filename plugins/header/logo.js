@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': 'YouTube 徽标',
    'title:ja': 'YouTubeロゴ',
    'title:es': 'Logotipo de YouTube',
+   'title:pt': 'Logotipo do YouTube',
+   // 'title:de': '',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

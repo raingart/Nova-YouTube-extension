@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '频道页默认选项卡',
    'title:ja': 'チャンネルページのデフォルトタブ',
    'title:es': 'La pestaña predeterminada en la página del canal',
+   'title:pt': 'A guia padrão na página do canal',
+   'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    run_on_pages: 'channel',
    restart_on_transition: true,
    section: 'channel',
@@ -28,7 +30,7 @@ window.nova_plugins.push({
                      default: tab_nth = 4;
                   }
                   // select tab
-                  document.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`)
+                  document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`)
                      ?.click();
                });
          }
@@ -43,6 +45,8 @@ window.nova_plugins.push({
          'label:zh': '默认标签页',
          'label:ja': 'デフォルトのタブ',
          'label:es': 'Ficha predeterminada',
+         'label:pt': 'Aba padrão',
+         'label:de': 'Standard-Tab',
          options: [
             { label: 'videos', value: 'videos', selected: true },
             { label: 'playlists', value: 'playlists' },
@@ -55,10 +59,14 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          'label:es': 'Modo',
+         'label:pt': 'Modo',
+         'label:de': 'Modus',
          title: 'Redirect is safer but slower',
          'title:zh': '重定向是安全的，但速度很慢',
          'title:ja': 'リダイレクトは安全ですが遅くなります',
          'title:es': 'La redirección es más segura pero más lenta',
+         'label:pt': 'O redirecionamento é mais seguro, mas mais lento',
+         'label:de': 'Redirect ist sicherer, aber langsamer',
          options: [
             { label: 'redirect', value: 'redirect' },
             { label: 'click', /*value: '',*/ selected: true },

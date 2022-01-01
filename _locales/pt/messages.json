@@ -1,0 +1,86 @@
+{
+   "localization": {
+      "message": "pt"
+   },
+   "app_description": {
+      "message": "Make YouTube™ be better"
+   },
+   "plugins_search_placeholder": {
+      "message": "Procurar..."
+   },
+   "opt_btn_save_settings": {
+      "message": "Salve"
+   },
+   "opt_btn_save_settings_process": {
+      "message": "Salvando..."
+   },
+   "opt_btn_save_settings_processed": {
+      "message": "Salvou!"
+   },
+   "opt_legend_settings_transfer": {
+      "message": "Transferência de configurações:"
+   },
+   "opt_title_help_link": {
+      "message": "Mais informações"
+   },
+   "opt_btn_import_settings": {
+      "message": "Import"
+   },
+   "opt_prompt_import_settings": {
+      "message": "Não acesse em pop-up!\nAbrir página de configuração?"
+   },
+   "opt_alert_import_successfully": {
+      "message": "Configurações importadas com sucesso!"
+   },
+   "opt_btn_export_settings": {
+      "message": "Export"
+   },
+   "opt_btn_reset_settings": {
+      "message": "Reset"
+   },
+   "opt_prompt_reset_settings": {
+      "message": "É aconselhável fazer backup de suas configurações atuais antes de continuar.\nExcluir todas as configurações?"
+   },
+   "opt_btn_save_settings_tooltip": {
+      "message": "As guias abertas não mudam"
+   },
+   "opt_btn_api_key_input": {
+      "message": "custom Youtube API key"
+   },
+   "opt_api_key_generate": {
+      "message": "Generate API key"
+   },
+   "opt_disable_in_frame": {
+      "message": "Desativar em iframe"
+   },
+   "opt_disable_in_frame_tooltip": {
+      "message": "A extensão não funcionará em vídeo incorporado"
+   },
+   "opt_report_issues": {
+      "message": "Habilitar relatório de bugs"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "É necessário permitir pop-up no YouTube para solicitação"
+   },
+   "opt_api_key_warn": {
+      "message": "Use your [API key] for stable work"
+   },
+   "github_page": {
+      "message": "Source Code"
+   },
+   "github_page_tooltip": {
+      "message": "Aberto"
+   },
+   "github_page_issues": {
+      "message": "Report Bugs"
+   },
+   "github_page_issues_tooltip": {
+      "message": "Reportar"
+   },
+   "donate_tooltip": {
+      "message": "Suporte com Patreon"
+   },
+   "donate": {
+      "message": "Doar"
+   }
+}

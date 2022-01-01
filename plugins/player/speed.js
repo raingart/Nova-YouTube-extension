@@ -14,19 +14,23 @@ window.nova_plugins.push({
    'title:zh': '播放速度控制',
    'title:ja': '再生速度制御',
    'title:es': 'Controle de velocidade de reprodução',
+   'title:pt': 'Controle de velocidade de reprodução',
+   'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
    desc: 'with mousewheel',
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
-   'desc:es': 'com roda do mouse',
+   'desc:es': 'con rueda de ratón',
+   'desc:pt': 'com roda do mouse',
+   'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
       NOVA.waitElement('#movie_player')
          .then(player => {
             // trigger default indicator
-            // Default indicator does not work for html5 way
+            // Strategy 1. Default indicator does not work for html5 way (Strategy 2)
             // player.addEventListener('onPlaybackRateChange', rate => {
             //    console.debug('onPlaybackRateChange', rate);
             // });
@@ -38,7 +42,8 @@ window.nova_plugins.push({
                   const sliderConteiner = renderSlider();
                   // console.debug('sliderConteiner', sliderConteiner);
 
-                  // html5 way
+                  // trigger default indicator
+                  // Strategy 2
                   video.addEventListener('ratechange', function () {
                      // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
                      NOVA.bezelTrigger(this.playbackRate + 'x');
@@ -88,7 +93,7 @@ window.nova_plugins.push({
 
             // mousewheel in player area
             if (user_settings.rate_hotkey) {
-               document.querySelector('.html5-video-container')
+               document.body.querySelector('.html5-video-container')
                   .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
@@ -120,7 +125,7 @@ window.nova_plugins.push({
                   this.log('adjust', ...arguments);
                   return player.hasOwnProperty('getPlaybackRate') ? this.default(+rate_step) : this.html5(+rate_step);
                },
-
+               // Strategy 1
                default(playback_rate = required()) {
                   this.log('playerRate:default', ...arguments);
                   const playbackRate = player.getPlaybackRate();
@@ -149,7 +154,7 @@ window.nova_plugins.push({
                   this.log('playerRate:default return', newRate);
                   return newRate === player.getPlaybackRate() && newRate;
                },
-
+               // Strategy 2
                html5(playback_rate = required()) {
                   this.log('playerRate:html5', ...arguments);
                   const videoElm = player.querySelector('video');
@@ -161,7 +166,7 @@ window.nova_plugins.push({
                   const newRate = inRange(+playback_rate);
                   // set new rate
                   if (newRate && newRate != playbackRate) {
-                     // document.querySelector('video').defaultPlaybackRate = newRate;
+                     // document.body.querySelector('video').defaultPlaybackRate = newRate;
                      videoElm.playbackRate = newRate;
 
                      if (newRate === videoElm.playbackRate) {
@@ -205,7 +210,7 @@ window.nova_plugins.push({
 
                function isMusic() {
                   const
-                     channelName = document.querySelector('#meta #upload-info #channel-name a')?.textContent,
+                     channelName = document.body.querySelector('#meta #upload-info #channel-name a')?.textContent,
                      titleStr = player.getVideoData().title,
                      titleList = titleStr?.match(/\w+/g);
 
@@ -222,13 +227,13 @@ window.nova_plugins.push({
                      channelName,
 
                      // ALL BELOW - not updated on page transition!
-                     // document.querySelector('meta[itemprop="genre"][content]')?.content,
+                     // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
                      // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
-                     document.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
+                     document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
                   ]
                      .some(i => i?.toLowerCase().includes('music'))
                      // has svg icon "🎵"
-                     || document.querySelector(musicIconSvgSelector)
+                     || document.body.querySelector(musicIconSvgSelector)
                      // channelNameVEVO
                      || /(VEVO|Topic|Records|AMV)$/.test(channelName)
                      // 【MAD】,『MAD』,「MAD」
@@ -249,7 +254,7 @@ window.nova_plugins.push({
 
       function renderSlider() {
          const
-            video = document.querySelector('video'),
+            video = document.body.querySelector('video'),
             SELECTOR_ID = 'rate-slider-menu',
             SELECTOR = '#' + SELECTOR_ID; // for css
 
@@ -315,13 +320,13 @@ window.nova_plugins.push({
          out.sliderLabel = speedMenu.appendChild(sliderLabel);
          speedMenu.append(right);
 
-         document.querySelector('.ytp-panel-menu')
+         document.body.querySelector('.ytp-panel-menu')
             ?.append(speedMenu);
 
          return out;
 
          // append final
-         // document.querySelector('.ytp-panel-menu')
+         // document.body.querySelector('.ytp-panel-menu')
          //    ?.insertAdjacentHTML('beforeend',
          //       `<div class="ytp-menuitem" id="rate-slider-menu">
          //          <div class="ytp-menuitem-icon"></div>
@@ -342,6 +347,8 @@ window.nova_plugins.push({
          'label:zh': '启动速度',
          'label:ja': '起動時の速度',
          'label:es': 'Velocidad al inicio',
+         'label:pt': 'Velocidade na inicialização',
+         'label:de': 'Geschwindigkeit beim Start',
          type: 'number',
          title: '1 - default',
          placeholder: '1-2',
@@ -356,14 +363,18 @@ window.nova_plugins.push({
          'label:zh': '音乐流派视频',
          'label:ja': '音楽ジャンルのビデオ',
          'label:es': 'Género musical',
+         'label:pt': 'Gênero musical',
+         'label:de': 'Musikrichtung',
          title: 'extended detection - may trigger falsely',
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
-         'title:es': 'detección extendida - puede activarse falsamente',
+         'title:pt': 'detecção estendida - pode disparar falsamente',
+         'title:de': 'erweiterte Erkennung - kann fälschlicherweise auslösen',
+         // 'title:es': 'detección extendida - puede activarse falsamente',
          options: [
-            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:es': 'saltar' },
-            { label: 'skip (extended detection)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:es': 'omitir (detección extendida)' },
-            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:es': 'aplicar fuerza' },
+            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:es': 'saltar', 'label:pt': 'pular', 'label:de': 'überspringen' },
+            { label: 'skip (extended detection)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:de': 'überspringen (erweitert)' },
+            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:de': 'kraft anwenden' },
          ],
          'data-dependent': '{"rate_default":"!1"}',
       },
@@ -371,8 +382,10 @@ window.nova_plugins.push({
          _tagName: 'input',
          label: 'Step',
          'label:zh': '步',
-         // 'label:ja': '',
+         // 'label:ja': 'ステップ',
          'label:es': 'Paso',
+         'label:pt': 'Degrau',
+         'label:de': 'Schritt',
          type: 'number',
          title: '0.25 - default',
          placeholder: '0.1-1',
@@ -385,7 +398,10 @@ window.nova_plugins.push({
          _tagName: 'select',
          label: 'Hotkey',
          'label:zh': '热键',
+         // 'label:ja': 'ホットキー',
          'label:es': 'Tecla de acceso rápido',
+         'label:pt': 'Tecla de atalho',
+         'label:de': 'Schnelltaste',
          options: [
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },

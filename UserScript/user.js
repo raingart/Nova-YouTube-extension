@@ -3,7 +3,7 @@ const
    optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
    fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
-   user_settings = fix_GM_getValue(GM_getValue(configStoreName));
+   user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
 
 if (isOptionsPage()) return;
 landerPlugins();
@@ -127,19 +127,19 @@ function isOptionsPage() {
             document.body.classList.remove('preload');
             // fix/ re-call // remove api warn if has api
             if (user_settings && user_settings['custom-api-key']) {
-               document.querySelectorAll('.info b').forEach(el => el.remove(el));
+               document.body.querySelectorAll('.info b').forEach(el => el.remove(el));
             }
-            document.querySelectorAll('input[type]') // auto selects value on focus
+            document.body.querySelectorAll('form input[type]') // auto selects value on focus
                .forEach(i => i.addEventListener('focus', i.select));
          }, 500); // 500ms
 
          function attrDependencies() {
-            document.querySelectorAll('[data-dependent]')
+            document.body.querySelectorAll('[data-dependent]')
                .forEach(dependentItem => {
                   // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                   const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
                   const handler = () => showOrHide(dependentItem, dependentsJson);
-                  document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
+                  document.body.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
                   // init state
                   handler();
                });
@@ -148,7 +148,7 @@ function isOptionsPage() {
                // console.debug('showOrHide', ...arguments);
                for (const name in dependentsJson) {
                   // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-                  if (dependentOnEl = document.getElementsByName(name)[0]) {
+                  if (dependentOnEl = document.body.getElementsByName(name)[0]) {
                      const val = dependentsJson[name].toString();
                      const dependentOnValues = (function () {
                         if (options = dependentOnEl?.selectedOptions) {
@@ -187,7 +187,9 @@ function isOptionsPage() {
       });
 
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
-      if (confirm('Active plugins undetected. Open the settings page?')) window.open(optionsPage);
+      user_settings['report_issues'] = 'on'; // default plugins settings
+      GM_setValue(configStoreName, user_settings);
+      if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
 
    } else {  // is not optionsPage
       return false;

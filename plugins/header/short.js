@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '紧凑的标题栏',
    'title:ja': 'コンパクトなヘッダーバー',
    'title:es': 'Barra de cabecera compacta',
+   'title:pt': 'Barra de cabeçalho compacta',
+   'title:de': 'Kompakte Kopfleiste',
    run_on_pages: 'all',
    section: 'header',
    // desc: '',

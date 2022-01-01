@@ -9,6 +9,8 @@ window.nova_plugins.push({
    'title:zh': '显示播放列表持续时间',
    'title:ja': 'プレイリストの期間を表示',
    'title:es': 'Mostrar duração da lista de reprodução',
+   'title:pt': 'Mostrar duração da lista de reprodução',
+   'title:de': 'Playlist-Dauer anzeigen',
    run_on_pages: 'watch, playlist',
    restart_on_transition: true,
    section: 'sidebar',
@@ -43,15 +45,16 @@ window.nova_plugins.push({
                         // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
                         return storage;
                      }
-                     if (window.ytInitialData?.contents?.twoColumnBrowseResultsRenderer?.tabs.length) {
-                        const vids_list = window.ytInitialData.contents.twoColumnBrowseResultsRenderer
-                           .tabs[0].tabRenderer?.content?.sectionListRenderer
-                           ?.contents[0].itemSectionRenderer
-                           .contents[0].playlistVideoListRenderer?.contents;
-                        const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                        return outFormat(duration);
-                     }
+                     const vids_list = (document.body.querySelector('ytd-app')?.data?.response || window.ytInitialData)
+                        .contents.twoColumnBrowseResultsRenderer
+                        .tabs[0].tabRenderer?.content?.sectionListRenderer
+                        ?.contents[0].itemSectionRenderer
+                        .contents[0].playlistVideoListRenderer?.contents;
+
+                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
+
+                     if (duration) return outFormat(duration);
                   }
                });
             break;
@@ -61,17 +64,17 @@ window.nova_plugins.push({
                .then(el => {
                   const waitPlaylist = setInterval(() => {
                      let playlistLength;
-                     if ((ytdPl = document.querySelector('ytd-player')?.player_) && ytdPl.hasOwnProperty('getPlaylist')) {
+                     if ((ytdPl = document.body.querySelector('ytd-player')?.player_) && ytdPl.hasOwnProperty('getPlaylist')) {
                         playlistLength = ytdPl.getPlaylist()?.length;
                      }
-                     let vids_list = document.querySelector('ytd-watch, ytd-watch-flexy')
+                     let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
                         ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents
                         // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated on page transition!
                         .filter(i => i.playlistPanelVideoRenderer?.hasOwnProperty('videoId')); // filter hidden
 
-                     console.assert(vids_list.length === playlistLength, 'playlist loading:', vids_list.length + '/' + playlistLength);
+                     console.assert(vids_list?.length === playlistLength, 'playlist loading:', vids_list?.length + '/' + playlistLength);
 
-                     if (vids_list.length && playlistLength && vids_list.length === playlistLength) {
+                     if (vids_list?.length && playlistLength && vids_list?.length === playlistLength) {
                         clearInterval(waitPlaylist);
 
                         if (duration = getPlaylistDuration(vids_list)) {
@@ -79,11 +82,11 @@ window.nova_plugins.push({
 
                         } else if (!user_settings.playlist_duration_progress) { // this method ignores progress
                            getPlaylistDurationFromThumbnails({
-                              'container': document.querySelector('#secondary #playlist'),
+                              'container': document.body.querySelector('#secondary #playlist'),
                               'items_selector': '#playlist-items #unplayableText[hidden]',
                            })
                               // getPlaylistDurationFromThumbs({
-                              //    'container': document.querySelector('#secondary #playlist'),
+                              //    'container': document.body.querySelector('#secondary #playlist'),
                               // })
                               .then(duration => insertToHTML({ 'container': el, 'text': duration }));
                         }
@@ -98,7 +101,7 @@ window.nova_plugins.push({
                      //    return storage;
                      // }
 
-                     // let vids_list = document.querySelector('ytd-watch, ytd-watch-flexy')
+                     // let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
                      // ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
 
                      // alt if current "playingIdx" always one step behind
@@ -154,8 +157,8 @@ window.nova_plugins.push({
             let forcePlaylistRun = false;
             const waitThumbnails = setInterval(() => {
                const
-                  playlistLength = document.querySelector('ytd-player')?.player_?.getPlaylist()?.length || document.querySelectorAll(items_selector)?.length,
-                  timeStampList = (container || document)
+                  playlistLength = document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length || document.body.querySelectorAll(items_selector)?.length,
+                  timeStampList = (container || document.body)
                      .querySelectorAll('.ytd-thumbnail-overlay-time-status-renderer:not(:empty)'),
                   duration = getTotalTime(timeStampList);
 
@@ -219,10 +222,12 @@ window.nova_plugins.push({
          'label:zh': '时间显示方式',
          'label:ja': '時間表示モード',
          'label:es': 'Modo de visualización de la hora',
+         'label:pt': 'Modo de exibição de tempo',
+         'label:de': 'Zeitanzeigemodus',
          options: [
-            { label: 'done', value: 'watched', 'label:zh': '结束', 'label:ja': '終わり', 'label:es': 'hecho' },
-            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:es': 'izquierda' },
-            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て' },
+            { label: 'done', value: 'watched', 'label:zh': '结束', 'label:ja': '終わり', 'label:es': 'hecho', 'label:pt': 'feito', 'label:de': 'fertig' },
+            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:de': 'links' },
+            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て'/*, 'label:es': '', 'label:pt': '', 'label:de': ''*/ },
          ],
       },
       playlist_duration_percentage: {
@@ -231,6 +236,8 @@ window.nova_plugins.push({
          'label:zh': '显示百分比',
          'label:ja': 'パーセンテージを表示',
          'label:es': 'Agregar porcentaje',
+         'label:pt': 'Adicionar porcentagem',
+         'label:de': 'Prozent hinzufügen',
          type: 'checkbox',
       },
    },

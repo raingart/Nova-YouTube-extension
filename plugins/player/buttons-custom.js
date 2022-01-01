@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '自定义按钮',
    'title:ja': 'カスタムボタン',
    'title:es': 'Botones personalizados',
+   'title:pt': 'Botões personalizados',
+   'title:de': 'Benutzerdefinierte Schaltflächen',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -12,20 +14,17 @@ window.nova_plugins.push({
       const
          SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
-         getVideoElement = () => document.querySelector('video'),
+         getVideoElement = () => document.body.querySelector('video'),
          getPlayerElement = () => document.getElementById('movie_player'),
-         getVideoId = () => (p = getPlayerElement()) ? p.getVideoData().video_id || NOVA.queryURL.get('v', p.getVideoUrl()) : document.querySelector('link[rel="canonical"][href]')?.href; // use embed for testing
+         getVideoId = () => (p = getPlayerElement()) ? p.getVideoData().video_id || NOVA.queryURL.get('v', p.getVideoUrl()) : document.head.querySelector('link[rel="canonical"][href]')?.href; // use embed for testing
 
       NOVA.waitElement('.ytp-right-controls')
          .then(container => {
             // global
             NOVA.css.push(
                `/* button${SELECTOR_BTN} { padding: 5px; } */
-               button${SELECTOR_BTN} svg { fill: white;}
-               button${SELECTOR_BTN}:hover svg{ fill: #66afe9; }
-               button${SELECTOR_BTN}:active svg { fill: #2196f3; }
-               a${SELECTOR_BTN}:hover{ color: #66afe9; }
-               a${SELECTOR_BTN}:active { color: #2196f3; }`);
+               ${SELECTOR_BTN}:hover { color: #66afe9 !important; }
+               ${SELECTOR_BTN}:active { color: #2196f3 !important; }`);
 
             // Pop-up player
             if (user_settings.player_buttons_custom_items?.indexOf('popup') !== -1 && !NOVA.queryURL.get('popup')) {
@@ -55,7 +54,7 @@ window.nova_plugins.push({
                      // height = Math.round(width / aspectRatio);
                      height = Math.round(width / (16 / 9));
 
-                  url = new URL(document.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + getVideoId()));
+                  url = new URL(document.head.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + getVideoId()));
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -146,7 +145,7 @@ window.nova_plugins.push({
                   canvas.width = video.videoWidth;
                   canvas.height = video.videoHeight;
                   context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                  canvas.toBlob(blob => container.href = URL.createObjectURL(blob) + '.png');
+                  canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
                   // create
                   if (!container.id) {
                      const headerContainer = document.getElementById('masthead-container');
@@ -220,11 +219,11 @@ window.nova_plugins.push({
                   btnSpeed = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
                   defaultRateText = '1x';
-                  // `<svg version="1.1" viewBox="0 0 36 36" height="100%" width="100%">
-                  //    <g fill="currentColor">
-                  //       <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
-                  //    </g>
-                  // </svg>`;
+               // `<svg version="1.1" viewBox="0 0 36 36" height="100%" width="100%">
+               //    <g fill="currentColor">
+               //       <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
+               //    </g>
+               // </svg>`;
 
                let origRate = {};
 
@@ -312,6 +311,8 @@ window.nova_plugins.push({
          'label:zh': '元素',
          'label:ja': '要素',
          'label:es': 'Elementos',
+         'label:pt': 'Itens',
+         'label:de': 'Produkte',
          title: 'Hold【Ctrl+Сlick】to select several',
          'title:zh': '按住[Ctrl+Сlick]并选择一些',
          'title:ja': '「Ctrl+Сlick」を押したままにして、いくつかを選択します',
@@ -320,10 +321,10 @@ window.nova_plugins.push({
          required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
-            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:es': 'alternar velocidad' },
-            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:es': 'captura de pantalla' },
-            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:es': 'miniatura' },
-            { label: 'pop-up player', value: 'popup', 'label:zh': '弹出式播放器' },
+            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:de': 'geschwindigkeit umschalten' },
+            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:es': 'captura de pantalla', 'label:pt': '', 'label:de': '' },
+            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:de': 'bildschirmfoto' },
+            { label: 'pop-up player', value: 'popup', 'label:zh': '弹出式播放器', /*'label:es': '',*/ 'label:pt': 'jogador pop-up'/*, 'label:de': ''*/ },
          ],
       },
       player_buttons_custom_popup_width: {
@@ -332,6 +333,8 @@ window.nova_plugins.push({
          'label:zh': '播放器窗口大小纵横比',
          'label:ja': 'プレーヤーのウィンドウサイズのアスペクト比',
          'label:es': 'Relación de aspecto del tamaño de la ventana del reproductor',
+         'label:pt': 'Proporção do tamanho da janela do jogador',
+         'label:de': 'Seitenverhältnis der Player-Fenstergröße',
          type: 'number',
          title: 'less - more size',
          'title:zh': '小价值大尺寸',
@@ -350,6 +353,8 @@ window.nova_plugins.push({
          'label:zh': '热键切换速度',
          'label:ja': '速度を切り替えるためのホットボタン',
          'label:es': 'Velocidad de cambio de teclas de acceso rápido',
+         'label:pt': 'Velocidade de alternância da tecla de atalho',
+         'label:de': 'Hotkey-Umschaltgeschwindigkeit',
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },

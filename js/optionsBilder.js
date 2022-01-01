@@ -1,9 +1,12 @@
 console.debug('init optionsView.js');
 
 // https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
-const lang_code = window.navigator.language.substring(0, 2);
+let lang_code = window.navigator.language.substring(0, 2);
 // lang_code = 'ja'
-// lang_code = 'cn'
+// lang_code = 'zh'
+// lang_code = 'es'
+// lang_code = 'pt'
+// lang_code = 'de'
 
 window.nova_plugins = [];
 Plugins.load();
@@ -56,9 +59,13 @@ const Opt = {
                this.log('plugin load:', plugin.id);
 
                // localize
-               if (plugin_title_local = plugin['title:' + lang_code]) {
-                  plugin.title = plugin_title_local;
-                  delete plugin[plugin_title_local];
+               if (title_local = plugin['title:' + lang_code]) {
+                  plugin.title = title_local;
+                  delete plugin[title_local];
+               }
+               if (desc_local = plugin['desc:' + lang_code]) {
+                  plugin.desc = desc_local;
+                  delete plugin[desc_local];
                }
                // localize
 
@@ -84,10 +91,10 @@ const Opt = {
 
                let p = this.UI.pluginsContainer;
                if (targetSection = '>#' + plugin?.section?.toString().toLowerCase()) {
-                  p += (plugin.section && document.querySelector(p + targetSection)) ? targetSection : '>#other';
+                  p += (plugin.section && document.body.querySelector(p + targetSection)) ? targetSection : '>#other';
                }
 
-               document.querySelector(p).append(li); // append to section tab
+               document.body.querySelector(p).append(li); // append to section tab
 
             } catch (error) {
                console.error('Error plugin generate:\n', error.stack + '\n', plugin);
@@ -206,10 +213,10 @@ const Opt = {
 
    eventListener() {
       // appearance map
-      document.querySelectorAll('.appearance > *')
+      document.body.querySelectorAll('.appearance > *')
          .forEach(mapZone => {
             // group is empty
-            if (document.querySelector(this.UI.pluginsContainer + `>#${mapZone.id}:empty`)) {
+            if (document.body.querySelector(this.UI.pluginsContainer + `>#${mapZone.id}:empty`)) {
                mapZone.classList.add('empty');
 
             } else {
@@ -260,7 +267,7 @@ const Opt = {
 
       // group spoiler
       if (document.body.clientWidth < 350) { // in popup
-         document.querySelectorAll(this.UI.pluginsContainer + '> ul')
+         document.body.querySelectorAll(this.UI.pluginsContainer + '> ul')
             .forEach(ul => ul.addEventListener('click', ({ target }) => {
                target.classList.toggle('collapse')
                target.querySelectorAll('li.item').forEach(li => li.classList.toggle('hide'));
@@ -332,9 +339,9 @@ const Opt = {
       function switchClass({ remove_to_selector, add_to_selector, class_name = required() }) {
          // console.debug('switchClass:', ...arguments);
          // hide all
-         if (remove_to_selector) document.querySelectorAll(remove_to_selector).forEach(i => i.classList.remove(class_name));
+         if (remove_to_selector) document.body.querySelectorAll(remove_to_selector).forEach(i => i.classList.remove(class_name));
          // target show
-         if (add_to_selector) document.querySelectorAll(add_to_selector).forEach(i => i.classList.add(class_name));
+         if (add_to_selector) document.body.querySelectorAll(add_to_selector).forEach(i => i.classList.add(class_name));
       }
    },
 
@@ -356,7 +363,7 @@ const Opt = {
 window.addEventListener('load', () => {
    // search bar
    ['change', 'keyup'].forEach(evt => {
-      document.querySelector('[type="search"]')
+      document.body.querySelector('form input[type="search"]')
          .addEventListener(evt, function () {
             searchFilter({
                'keyword': this.value,
@@ -373,7 +380,7 @@ window.addEventListener('load', () => {
       if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
       // remove api warn if has api
       if (settings && settings['custom-api-key']) {
-         document.querySelectorAll('.info b').forEach(el => el.remove());
+         document.body.querySelectorAll('.info b').forEach(el => el.remove());
       }
    }, Opt.storageMethod);
 
@@ -381,7 +388,7 @@ window.addEventListener('load', () => {
       // console.debug('searchFilter:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
-      document.querySelectorAll(in_selector)
+      document.body.querySelectorAll(in_selector)
          .forEach(item => {
             const
                text = item.textContent,

@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '在标签标题中显示时间',
    'title:ja': 'タブタイトルに時間を表示する',
    'title:es': 'Mostrar la hora en el título de la pestaña',
+   'title:pt': 'Mostrar tempo no título da guia',
+   'title:de': 'Zeit im Tab-Titel anzeigen',
    run_on_pages: 'watch',
    section: 'other',
    // desc: 'Show the current time of the video on the title',
@@ -61,7 +63,7 @@ window.nova_plugins.push({
       }
 
       function getVideoTitle() {
-         return document.querySelector('meta[name="title"][content]')?.content
+         return document.head.querySelector('meta[name="title"][content]')?.content
             || document.getElementById('movie_player')?.getVideoData().title;
       }
 
@@ -73,10 +75,12 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          'label:es': 'Modo',
+         'label:pt': 'Modo',
+         'label:de': 'Modus',
          options: [
-            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:es': 'actual' },
-            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:es': 'izquierda' },
-            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:es': 'actual/duración' },
+            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:es': 'actual', 'label:pt': 'atual', 'label:de': 'strom' },
+            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:de': 'links' },
+            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:de': 'strom/dauer' },
          ],
       },
    },

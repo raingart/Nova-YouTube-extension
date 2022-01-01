@@ -11,7 +11,7 @@ const NOVA = {
    //       // try {
    //       let nodeInterval
    //       const checkIfExists = () => {
-   //          if (el = document.querySelector(selector)) {
+   //          if (el = document.body.querySelector(selector)) {
    //             if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
    //             resolve(el);
 
@@ -38,7 +38,7 @@ const NOVA = {
       return new Promise(resolve => {
          if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
-         if (element = document.querySelector(selector)) {
+         if (element = document.body.querySelector(selector)) {
             NOVA.log('waited(1)', selector, element);
             return resolve(element);
          }
@@ -47,7 +47,7 @@ const NOVA = {
             mutations.forEach(mutation => {
                mutation.addedNodes.forEach(node => {
                   if ((node.nodeType === 1 || node.nodeType === 3)
-                     && (element = node.parentElement?.querySelector(selector) || document.querySelector(selector))
+                     && (element = node.parentElement?.querySelector(selector) || document.body.querySelector(selector))
                   ) {
                      observer.disconnect();
                      // NOVA.log('waited', selector, element, mutation.type, node.nodeType);
@@ -57,7 +57,7 @@ const NOVA = {
                // [...mutation.addedNodes]
                // .filter(node => node.nodeType === 1)
                // .forEach(node => {
-               //    (node?.parentElement || document).querySelectorAll(selector)
+               //    (node?.parentElement || document.body).querySelectorAll(selector)
                //       .forEach(element => {
                //          // NOVA.log('waited', mutation.type, selector);
                //          observer.disconnect();
@@ -80,7 +80,7 @@ const NOVA = {
 
       function process() {
          NOVA.log('watch.process', { selector, callback });
-         document.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
+         document.body.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
             .forEach(el => {
                if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
                   NOVA.log('watch.process.viewed', selector);
@@ -101,7 +101,7 @@ const NOVA = {
             // if (important) {
             injectCss(selector + json2css(css));
             // } else {
-            //    Object.assign(document.querySelector(selector).style, css);
+            //    Object.assign(document.body.querySelector(selector).style, css);
             // }
 
             function json2css(obj) {
@@ -158,7 +158,7 @@ const NOVA = {
 
       // ex: NOVA.css.getValue({ selector: 'video', property: 'z-index' })
       getValue({ selector = required(), property = required() }) {
-         const el = (selector instanceof HTMLElement) ? selector : document.querySelector(selector);
+         const el = (selector instanceof HTMLElement) ? selector : document.body.querySelector(selector);
          return el && window.getComputedStyle(el)[property];
          // return el
          //    ? window.getComputedStyle(el)[property] // ok
@@ -169,7 +169,7 @@ const NOVA = {
 
    cookie: {
       get(name = required()) {
-         Object.fromEntries(
+         return Object.fromEntries(
             document.cookie
                .split(/; */)
                .map(c => {
@@ -184,23 +184,46 @@ const NOVA = {
          date.setTime(date.getTime() + 3600000 * 24 * days); // m*h*d
 
          document.cookie = Object.entries({
-            [encodeURIComponent(name)]: encodeURIComponent(value),
-            domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
-            expires: date.toUTCString(),
+            // [encodeURIComponent(name)]: encodeURIComponent(value),
+            [encodeURIComponent(name)]: value,
+            // domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
+            domain: '.youtube.com',
+            // expires: date.toUTCString(),
             path: '/', // what matters at the end
          })
             .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
-         return document.cookie;
+         console.assert(this.get(name) == value, 'cookie set err:', ...arguments, document.cookie);
+      },
+
+      getParamLikeObj(name = required()) {
+         return Object.fromEntries(
+            this.get(name)
+               .split(/&/)
+               .map(c => {
+                  const [key, ...v] = c.split('=');
+                  return [key, decodeURIComponent(v.join('='))];
+               })
+         );
+      },
+
+      updateParam({ key = required(), param = required(), value = required() }) {
+         let paramsObj = this.getParamLikeObj(key) || {};
+
+         if (paramsObj[param] != value) {
+            paramsObj[param] = value;
+            this.set(key, NOVA.queryURL.set(paramsObj).split('?').pop());
+            location.reload();
+         }
       },
    },
 
-   // NOVA.preventVisibilityElement({
-   //    selector: '#secondary #related',
-   //    id_name: 'related',// auto uppercase
-   //    remove: true,
-   //    remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
-   // });
+   /* NOVA.preventVisibilityElement({
+         selector: '#secondary #related',
+         id_name: 'related',// auto uppercase
+         remove: true,
+         remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
+   }); */
    preventVisibilityElement({ selector = required(), id_name = required(), remove }) {
       // console.debug('preventVisibilityElement', ...arguments);
       const selector_id = `${id_name}-prevent-load-btn`;
@@ -238,7 +261,7 @@ const NOVA = {
       // console.debug('bezelTrigger', ...arguments);
       if (!text) return;
       if (typeof fateBezel === 'number') clearTimeout(fateBezel);
-      const bezelEl = document.querySelector('.ytp-bezel-text');
+      const bezelEl = document.body.querySelector('.ytp-bezel-text');
       if (!bezelEl) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
 
       const
@@ -271,10 +294,10 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.querySelectorAll('#description.ytd-video-secondary-info-renderer, #contents ytd-comment-thread-renderer:first-child #content')
+      document.body.querySelectorAll('#description.ytd-video-secondary-info-renderer, #contents ytd-comment-thread-renderer:first-child #content')
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
-               // || document.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
+               // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
                ?.split('\n')
                .forEach(line => {
                   if (line.length > 5 && line.length < 110 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
@@ -309,7 +332,7 @@ const NOVA = {
    //    let timestampList = [];
    //    let prevSec = -1;
 
-   //    document.querySelectorAll(`#meta #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
+   //    document.body.querySelectorAll(`#meta #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
    //          const sec = parseInt(this.queryURL.get('t', link.href));
@@ -421,10 +444,11 @@ const NOVA = {
       // get: (query, urlString) => new URLSearchParams((urlString ? new URL(urlString) : location).search).get(query),
       get: (query, urlString) => new URL(urlString || location).searchParams.get(query),
 
-      set(query = {}, urlString) {
+      set(query_obj = {}, urlString) {
          // NOVA.log('queryURL.set:', ...arguments);
+         if (!Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
          const url = new URL(urlString || location);
-         Object.entries(query).forEach(([key, value]) => url.searchParams.set(key, value));
+         Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
       },
    },
@@ -499,6 +523,7 @@ const NOVA = {
    },
 
    // (player = document.getElementById('movie_player')) && player.getPlayerState() === 2 // 2: paused
+   // const onPlayerStateChange = state => ('PLAYING' == NOVA.PLAYERSTATE[state])
    // NOVA.PLAYERSTATE[player.getPlayerState()] === 'PLAYING'
    PLAYERSTATE: {
       '-1': 'UNSTARTED',

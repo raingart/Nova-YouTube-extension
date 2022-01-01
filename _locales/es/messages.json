@@ -1,0 +1,86 @@
+{
+   "localization": {
+      "message": "es"
+   },
+   "app_description": {
+      "message": "Make YouTube™ be better"
+   },
+   "plugins_search_placeholder": {
+      "message": "Búsqueda..."
+   },
+   "opt_btn_save_settings": {
+      "message": "Save"
+   },
+   "opt_btn_save_settings_process": {
+      "message": "Ahorrar..."
+   },
+   "opt_btn_save_settings_processed": {
+      "message": "Salvado!"
+   },
+   "opt_legend_settings_transfer": {
+      "message": "Transferencia de configuración:"
+   },
+   "opt_title_help_link": {
+      "message": "Más información"
+   },
+   "opt_btn_import_settings": {
+      "message": "Import"
+   },
+   "opt_prompt_import_settings": {
+      "message": "¡No tienes acceso en la ventana emergente! \n¿Abrir la página de configuración?"
+   },
+   "opt_alert_import_successfully": {
+      "message": "Configuración importada con éxito!"
+   },
+   "opt_btn_export_settings": {
+      "message": "Export"
+   },
+   "opt_btn_reset_settings": {
+      "message": "Reset"
+   },
+   "opt_prompt_reset_settings": {
+      "message": "Se recomienda hacer una copia de seguridad de su configuración actual antes de continuar.\n¿Eliminar todas las configuraciones?"
+   },
+   "opt_btn_save_settings_tooltip": {
+      "message": "Las pestañas abiertas no cambian"
+   },
+   "opt_btn_api_key_input": {
+      "message": "custom Youtube API key"
+   },
+   "opt_api_key_generate": {
+      "message": "Generate API key"
+   },
+   "opt_disable_in_frame": {
+      "message": "Desactivar en iframe"
+   },
+   "opt_disable_in_frame_tooltip": {
+      "message": "La extensión no funcionará en videos incrustados"
+   },
+   "opt_report_issues": {
+      "message": "Habilitar reportar errores"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "Need allow pop-up on YouTube for prompting"
+   },
+   "opt_api_key_warn": {
+      "message": "Utilice su [clave API] para un trabajo estable"
+   },
+   "github_page": {
+      "message": "Source Code"
+   },
+   "github_page_tooltip": {
+      "message": "Abierta"
+   },
+   "github_page_issues": {
+      "message": "Informar errores"
+   },
+   "github_page_issues_tooltip": {
+      "message": "Para reportar"
+   },
+   "donate_tooltip": {
+      "message": "Soporte con Patreon"
+   },
+   "donate": {
+      "message": "Donar"
+   }
+}

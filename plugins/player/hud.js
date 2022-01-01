@@ -4,6 +4,8 @@ window.nova_plugins.push({
    'title:zh': '替换默认指示器',
    'title:ja': 'デフォルトのインジケーターを置き換える',
    'title:es': 'Reemplazar indicador predeterminado',
+   'title:pt': 'Substituir o indicador padrão',
+   'title:de': 'Standardkennzeichen ersetzen',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'bezel',
@@ -32,7 +34,10 @@ window.nova_plugins.push({
             new MutationObserver(mutations => {
                for (const mutation of mutations) {
                   // console.log('bezel mutation detected', mutation.type, target.textContent);
-                  if (target.textContent) HUD.set(target.textContent);
+                  if (target.textContent) {
+                     HUD.set(target.textContent);
+                     break;
+                  }
                }
             })
                .observe(target, { childList: true }); // watch for textContent
@@ -181,6 +186,8 @@ window.nova_plugins.push({
          'label:zh': '指标类型',
          'label:ja': 'インジケータータイプ',
          'label:es': 'Tipo de indicador',
+         'label:pt': 'Tipo de indicador',
+         'label:de': 'Indikatortyp',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar-top', value: 'bar-top' },

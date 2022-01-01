@@ -7,8 +7,10 @@ window.nova_plugins.push({
    id: 'volume-wheel',
    title: 'Volume control',
    'title:zh': '音量控制',
-   // 'title:ja': '',
+   'title:ja': '音量調節',
    'title:es': 'Control del volumen',
+   'title:pt': 'Controle de volume',
+   'title:de': 'Lautstärkeregelung',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change volume of video',
@@ -16,6 +18,8 @@ window.nova_plugins.push({
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
    'desc:es': 'con rueda de ratón',
+   'desc:pt': 'com roda do mouse',
+   'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
       NOVA.waitElement('#movie_player')
@@ -29,7 +33,7 @@ window.nova_plugins.push({
 
             if (user_settings.volume_hotkey) {
                // mousewheel in player area
-               document.querySelector('.html5-video-container')
+               document.body.querySelector('.html5-video-container')
                   .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
@@ -46,7 +50,7 @@ window.nova_plugins.push({
                adjust(delta) {
                   return this.set(player.getVolume() + parseInt(delta));
                },
-
+               // Strategy 1
                set(level = 50) {
                   if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
                   const newLevel = Math.max(0, Math.min(100, parseInt(level)));
@@ -84,10 +88,14 @@ window.nova_plugins.push({
                      }
                   }
                },
+               // Strategy 2
+               // html5(level = 50) {
+               //    // I'm too lazy to implement it
+               // }
             };
 
             // init volume_level_default
-            if (+user_settings.volume_level_default) {
+            if (+ user_settings.volume_level_default) {
                playerVolume.set(+user_settings.volume_level_default);
             }
 
@@ -102,6 +110,8 @@ window.nova_plugins.push({
          'label:zh': '默认音量',
          'label:ja': 'デフォルトのボリューム',
          'label:es': 'Volumen predeterminado',
+         'label:pt': 'Volume padrão',
+         'label:de': 'Standardlautstärke',
          type: 'number',
          title: '0 - auto',
          placeholder: '%',
@@ -114,8 +124,10 @@ window.nova_plugins.push({
          _tagName: 'input',
          label: 'Step',
          'label:zh': '步',
-         // 'label:ja': '',
+         // 'label:ja': 'ステップ',
          'label:es': 'Paso',
+         'label:pt': 'Degrau',
+         'label:de': 'Schritt',
          type: 'number',
          title: 'in percents',
          placeholder: '%',
@@ -128,7 +140,10 @@ window.nova_plugins.push({
          _tagName: 'select',
          label: 'Hotkey',
          'label:zh': '热键',
+         // 'label:ja': 'ホットキー',
          'label:es': 'Tecla de acceso rápido',
+         'label:pt': 'Tecla de atalho',
+         'label:de': 'Schnelltaste',
          options: [
             { label: 'wheel', value: 'none', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },

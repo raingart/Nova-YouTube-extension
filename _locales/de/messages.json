@@ -1,0 +1,86 @@
+{
+   "localization": {
+      "message": "de"
+   },
+   "app_description": {
+      "message": "Make YouTube™ be better"
+   },
+   "plugins_search_placeholder": {
+      "message": "Suche..."
+   },
+   "opt_btn_save_settings": {
+      "message": "Speichern"
+   },
+   "opt_btn_save_settings_process": {
+      "message": "Sparen..."
+   },
+   "opt_btn_save_settings_processed": {
+      "message": "Gerettet!"
+   },
+   "opt_legend_settings_transfer": {
+      "message": "Einstellungen übertragen:"
+   },
+   "opt_title_help_link": {
+      "message": "Mehr Info"
+   },
+   "opt_btn_import_settings": {
+      "message": "Import"
+   },
+   "opt_prompt_import_settings": {
+      "message": "Kein Zugriff im Pop-up!\nEinstellungsseite öffnen?"
+   },
+   "opt_alert_import_successfully": {
+      "message": "Einstellungen erfolgreich importiert!"
+   },
+   "opt_btn_export_settings": {
+      "message": "Export"
+   },
+   "opt_btn_reset_settings": {
+      "message": "Reset"
+   },
+   "opt_prompt_reset_settings": {
+      "message": "Es wird empfohlen, Ihre aktuellen Einstellungen zu sichern, bevor Sie fortfahren.\nAlle Einstellungen löschen?"
+   },
+   "opt_btn_save_settings_tooltip": {
+      "message": "Geöffnete Tabs ändern sich nicht"
+   },
+   "opt_btn_api_key_input": {
+      "message": "custom Youtube API key"
+   },
+   "opt_api_key_generate": {
+      "message": "Generate API key"
+   },
+   "opt_disable_in_frame": {
+      "message": "In iframe deaktivieren"
+   },
+   "opt_disable_in_frame_tooltip": {
+      "message": "Die Erweiterung funktioniert nicht beim Einbetten von Videos"
+   },
+   "opt_report_issues": {
+      "message": "Fehler melden aktivieren"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "Pop-up auf YouTube für Aufforderungen zulassen"
+   },
+   "opt_api_key_warn": {
+      "message": "Use your [API key] for stable work"
+   },
+   "github_page": {
+      "message": "Source Code"
+   },
+   "github_page_tooltip": {
+      "message": "Offen"
+   },
+   "github_page_issues": {
+      "message": "Report Bugs"
+   },
+   "github_page_issues_tooltip": {
+      "message": "Etwas melden"
+   },
+   "donate_tooltip": {
+      "message": "Unterstützung mit Patreon"
+   },
+   "donate": {
+      "message": "Spenden"
+   }
+}

@@ -167,6 +167,8 @@ App.init();
 // cfg.kevlar_flexy_watch_new_dom = false;
 // window.ytcfg.set("EXPERIMENT_FLAGS", cfg);
 
+// window.ytInitialData === document.body.querySelector('ytd-app')?.data?.response
+
 // test normal lite
 // https://www.youtube.com/watch?v=4ldjbjwim4k 240
 // https://www.youtube.com/watch?v=aCyGvGEtOwc 360
@@ -178,12 +180,9 @@ App.init();
 // https://www.youtube.com/embed/JVi_e8g7K4A?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
 
 // abnormal pages
-// https://www.youtube.com/watch?v=6Ux6SlOE9Qk
-// https://www.youtube.com/watch?v=DhTST3iRZyM
+// https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded
 // https://www.youtube.com/channel/UCYPymLmMIXZEbPGZCep2P9A - no have sorting button
-
-// broken channel
-// https://www.youtube.com/channel/UC4Lz
+// https://www.youtube.com/watch?v=LhKT9NTH9HA - dont have 480p quality
 
 // TODO
 // upgrade code to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment
