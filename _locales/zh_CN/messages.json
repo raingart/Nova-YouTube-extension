@@ -77,10 +77,16 @@
    "github_page_issues_tooltip": {
       "message": "报告"
    },
-   "donate_tooltip": {
-      "message": "Patreon 的支持"
+   "donate_patreon_tooltip": {
+      "message": "的支持 Patreon"
    },
-   "donate": {
-      "message": "捐"
+   "donate_patreon": {
+      "message": "捐 (Patreon)"
+   },
+   "donate_buymeacoffee_tooltip": {
+      "message": "的支持 buymeacoffee"
+   },
+   "donate_buymeacoffee": {
+      "message": "捐 (buymeacoffee)"
    }
 }

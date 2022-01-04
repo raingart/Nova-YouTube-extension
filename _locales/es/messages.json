@@ -77,10 +77,16 @@
    "github_page_issues_tooltip": {
       "message": "Para reportar"
    },
-   "donate_tooltip": {
+   "donate_patreon_tooltip": {
       "message": "Soporte con Patreon"
    },
-   "donate": {
-      "message": "Donar"
+   "donate_patreon": {
+      "message": "Donar (Patreon)"
+   },
+   "donate_buymeacoffee_tooltip": {
+      "message": "Soporte con buymeacoffee"
+   },
+   "donate_buymeacoffee": {
+      "message": "Donar (buymeacoffee)"
    }
 }

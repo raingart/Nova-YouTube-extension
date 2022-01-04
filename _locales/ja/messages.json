@@ -77,10 +77,16 @@
    "github_page_issues_tooltip": {
       "message": "報告する"
    },
-   "donate_tooltip": {
+   "donate_patreon_tooltip": {
       "message": "Patreonによるサポート"
    },
-   "donate": {
-      "message": "寄付"
+   "donate_patreon": {
+      "message": "寄付【Patreon】"
+   },
+   "donate_buymeacoffee_tooltip": {
+      "message": "buymeacoffeeによるサポート"
+   },
+   "donate_buymeacoffee": {
+      "message": "寄付【buymeacoffee】"
    }
 }

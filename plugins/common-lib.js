@@ -38,7 +38,7 @@ const NOVA = {
       return new Promise(resolve => {
          if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
-         if (element = document.body.querySelector(selector)) {
+         if (element = (document?.body || document).querySelector(selector)) {
             NOVA.log('waited(1)', selector, element);
             return resolve(element);
          }
@@ -47,7 +47,7 @@ const NOVA = {
             mutations.forEach(mutation => {
                mutation.addedNodes.forEach(node => {
                   if ((node.nodeType === 1 || node.nodeType === 3)
-                     && (element = node.parentElement?.querySelector(selector) || document.body.querySelector(selector))
+                     && (element = node.parentElement?.querySelector(selector) || (document?.body || document).querySelector(selector))
                   ) {
                      observer.disconnect();
                      // NOVA.log('waited', selector, element, mutation.type, node.nodeType);
@@ -66,7 +66,7 @@ const NOVA = {
                // });
             });
          })
-            .observe(document.body || document.documentElement, { childList: true, subtree: true });
+            .observe(document?.body || document || document.documentElement, { childList: true, subtree: true });
       });
    },
 
@@ -294,7 +294,7 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.body.querySelectorAll('#description.ytd-video-secondary-info-renderer, #contents ytd-comment-thread-renderer:first-child #content')
+      document.body.querySelectorAll('#description .content, #contents ytd-comment-thread-renderer:first-child #content')
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
@@ -311,8 +311,7 @@ const NOVA = {
                            'time': timestamp,
                            'title': line
                               .replace(timestamp, '')
-                              .trim()
-                              .replace(/(^[:\-–—|]|[:\-–—.;|]$)/, '')
+                              .trim().replace(/(^[:\-–—|]|[:\-–—.;|]$)/, '')
                               .trim()
                         });
                      }

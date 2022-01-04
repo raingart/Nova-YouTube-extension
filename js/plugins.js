@@ -10,6 +10,7 @@ const Plugins = {
       'player/autopause.js', // after quality.js
       'player/theater-mode.js',
       'player/pause-background.js',
+      'player/control-autohide.js',
       'player/hotkeys-focused.js',
       'player/pin.js',
       'player/time-jump.js',

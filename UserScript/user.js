@@ -139,7 +139,7 @@ function isOptionsPage() {
                   // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                   const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
                   const handler = () => showOrHide(dependentItem, dependentsJson);
-                  document.body.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
+                  document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
                   // init state
                   handler();
                });
@@ -148,7 +148,7 @@ function isOptionsPage() {
                // console.debug('showOrHide', ...arguments);
                for (const name in dependentsJson) {
                   // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-                  if (dependentOnEl = document.body.getElementsByName(name)[0]) {
+                  if (dependentOnEl = document.getElementsByName(name)[0]) {
                      const val = dependentsJson[name].toString();
                      const dependentOnValues = (function () {
                         if (options = dependentOnEl?.selectedOptions) {

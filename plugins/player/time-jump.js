@@ -50,13 +50,19 @@ window.nova_plugins.push({
                      let msg;
                      if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
                         // if has chapters
-                        if (document.body.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                        if (player.querySelectorAll('.ytp-chapter-hover-container')?.length) {
                            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
                            this.seekToChapterWithAnimation(nextChapterIndex);
 
-                           msg = document.body.querySelector('.ytp-chapter-title-content')?.textContent // querySelector after seek
-                              || chapterList[nextChapterIndex].title;
-                           msg += ' • ' + chapterList[nextChapterIndex].time;
+                           // querySelector update after seek
+                           const chapterTitleEl = player.querySelector('.ytp-chapter-title-content');
+
+                           msg += (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
+                              + ' • ' + chapterList[nextChapterIndex].time;
+
+                           if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
+                              chapterTitleEl.click()
+                           }
 
                         } else {
                            const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
@@ -235,6 +241,16 @@ window.nova_plugins.push({
          'title:es': 'Desfase de tiempo del tiempo de reproducción actual',
          'title:pt': 'Deslocamento de tempo do tempo de reprodução atual',
          'title:de': 'Zeitverschiebung zur aktuellen Wiedergabezeit',
+      },
+      time_jump_chapters_list_show: {
+         _tagName: 'input',
+         label: 'Show chapters list',
+         'label:zh': '显示章节列表',
+         'label:ja': 'チャプターリストを表示',
+         'label:es': 'Mostrar lista de capítulos',
+         'label:pt': 'Mostrar lista de capítulos',
+         'label:de': 'Kapitelliste anzeigen',
+         type: 'checkbox',
       },
    },
 });

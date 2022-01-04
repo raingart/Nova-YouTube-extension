@@ -79,7 +79,7 @@ window.nova_plugins.push({
       function renderChapters(vid) {
          const selectorTimestampLink = 'a[href*="t="]';
          // search in description
-         NOVA.waitElement(`#description.ytd-video-secondary-info-renderer ${selectorTimestampLink}`)
+         NOVA.waitElement(`#description .content ${selectorTimestampLink}`)
             .then(() => renderChaptersMarks(vid.duration));
 
          // search in first/pinned comment
@@ -183,6 +183,7 @@ window.nova_plugins.push({
                   height: var(--height);
                   z-index: ${+zIndex + 1};
                   border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
+                  /* border-left: ${CHAPTERS_MARK_WIDTH_PX} solid #000; */
                   margin-left: -${CHAPTERS_MARK_WIDTH_PX};
                }`);
 
