@@ -16,10 +16,11 @@ window.nova_plugins.push({
    'desc:de': 'Wird auf langen Seiten angezeigt',
    _runtime: user_settings => {
 
-      const SELECTOR_ID = 'scrollToTop_btn';
+      document.addEventListener('scroll', createBtn, { capture: true, once: true });
 
-      window.addEventListener('load', () => {
-         // create btn
+      function createBtn() {
+         const SELECTOR_ID = 'scrollToTop_btn';
+
          const btn = document.createElement('button');
          btn.id = SELECTOR_ID;
          Object.assign(btn.style, {
@@ -88,7 +89,7 @@ window.nova_plugins.push({
             scrollToTop_btn.style.visibility = sCurr ? 'visible' : 'hidden';
             // console.debug('visibility:', scrollToTop_btn.style.visibility);
          });
-      });
+      }
 
    },
    options: {

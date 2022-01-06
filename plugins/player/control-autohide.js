@@ -23,7 +23,10 @@ window.nova_plugins.push({
 
       NOVA.css.push(
          `.ytp-chrome-bottom {
-            visibility: hidden !important;
+            opacity: 0;
+         }
+         .ytp-chrome-bottom:hover {
+            opacity: 1;
          }`);
 
    },

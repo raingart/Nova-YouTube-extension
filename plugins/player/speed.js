@@ -373,7 +373,7 @@ window.nova_plugins.push({
          // 'title:es': 'detección extendida - puede activarse falsamente',
          options: [
             { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:es': 'saltar', 'label:pt': 'pular', 'label:de': 'überspringen' },
-            { label: 'skip (extended detection)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:de': 'überspringen (erweitert)' },
+            { label: 'skip (extended)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:de': 'überspringen (erweitert)' },
             { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:de': 'kraft anwenden' },
          ],
          'data-dependent': '{"rate_default":"!1"}',

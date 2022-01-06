@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'comments-visibility',
-   title: 'Hide/remove comments section',
+   title: 'Hide comments section',
    'title:zh': '隐藏评论',
    'title:ja': 'コメントを隠す',
    'title:es': 'Ocultar la sección de comentarios',

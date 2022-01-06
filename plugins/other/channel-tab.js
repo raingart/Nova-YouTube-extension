@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'channel-default-tab',
-   title: 'The default tab on the channel page',
+   title: 'Default tab on channel page',
    'title:zh': '频道页默认选项卡',
    'title:ja': 'チャンネルページのデフォルトタブ',
    'title:es': 'La pestaña predeterminada en la página del canal',

@@ -83,7 +83,7 @@ li>ul>li {
 
 .item:not(:hover)>ul {
    transition: opacity 160ms !important;
-   opacity: .4;
+   /* opacity: .4; */
 }
 
 .item:not(:hover)>ul input[type=color] {

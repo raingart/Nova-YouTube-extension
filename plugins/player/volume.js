@@ -5,12 +5,12 @@
 
 window.nova_plugins.push({
    id: 'volume-wheel',
-   title: 'Volume control',
-   'title:zh': '音量控制',
-   'title:ja': '音量調節',
-   'title:es': 'Control del volumen',
-   'title:pt': 'Controle de volume',
-   'title:de': 'Lautstärkeregelung',
+   title: 'Volume',
+   'title:zh': '体积',
+   'title:ja': '音量',
+   'title:es': 'Volumen',
+   // 'title:pt': 'Volume',
+   'title:de': 'Volumen',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change volume of video',

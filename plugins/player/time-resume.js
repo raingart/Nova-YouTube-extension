@@ -44,7 +44,6 @@ window.nova_plugins.push({
          }
       }
       function resumePlaybackTime() {
-         console.debug('', 111);
          if (NOVA.queryURL.get('t')) return;
          cacheName = getCacheName(); // for optimization
 
