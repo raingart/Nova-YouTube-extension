@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // https://www.youtube.com/embed/*** <-- -embed
    run_on_pages: 'all, watch, channel, -embed',
 
-    // deactivate if use NOVA.HTMLElement.watch
+   // deactivate if use NOVA.HTMLElement.watch
    restart_on_transition: true, // optional. Restart plugin on every url change
 
    /* optional GIU in options page: start */
@@ -27,6 +27,9 @@ window.nova_plugins.push({
 
    _runtime: user_settings => {
       // user_settings - all extension settings. There is no division of settings into separate plugins
+
+      // YT API manual fuctions for player
+      // https://gist.github.com/Araxeus/fc574d0f31ba71d62215c0873a7b048e
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped
@@ -49,6 +52,15 @@ window.nova_plugins.push({
       // A complete list of available functions can be found in the file "/plugins/common-lib.js"
       // And examples of their use in other plugins.
       // I'm too lazy to describe them. Perhaps no one will even read what is written here.
+
+      // NOTE
+      // window.ytInitialData === document.body.querySelector('ytd-app')?.data?.response
+
+      // get YT experimental FLAGS
+      // let cfg = window.ytcfg.get("EXPERIMENT_FLAGS");
+      // cfg.kevlar_flexy_watch_new_dom = false;
+      // window.ytcfg.set("EXPERIMENT_FLAGS", cfg);
+
    },
 
    // Form element template for display in settings

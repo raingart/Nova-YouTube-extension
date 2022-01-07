@@ -89,6 +89,7 @@ window.addEventListener('load', () => {
                e.textContent = i18n('opt_btn_save_settings_process');
                e.classList.remove('unSaved');
                e.disabled = true;
+               document.body.style.cursor = 'wait';
             });
          },
 
@@ -97,8 +98,9 @@ window.addEventListener('load', () => {
                this.outputStatus.forEach(e => {
                   e.textContent = i18n('opt_btn_save_settings');
                   e.removeAttribute('disabled');
+                  document.body.style.cursor = 'default';
                });
-            }, 300);
+            }, 300); // 300ms
          },
       },
 

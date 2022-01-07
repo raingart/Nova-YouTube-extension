@@ -65,7 +65,7 @@ window.nova_plugins.push({
                         .then(channelName => {
                            // channelNameVEVO
                            if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
-                              || channelName.textContent.toLowerCase().includes('music')) {
+                              || channelName.textContent.toUpperCase().includes('MUSIC')) {
                               playerRate.set(1);
                            }
                            // channelNameRecords:
@@ -212,11 +212,13 @@ window.nova_plugins.push({
                   const
                      channelName = document.body.querySelector('#meta #upload-info #channel-name a')?.textContent,
                      titleStr = player.getVideoData().title,
-                     titleList = titleStr?.match(/\w+/g);
+                     titleWords = titleStr?.match(/\w+/g);
 
                   if (user_settings.rate_default_apply_music == 'expanded') {
+                     // 【MAD】,『MAD』,「MAD」
+                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP' 'Ambient AMBILIGHT lighting', TEASER
                      if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                        || ['AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO', '8-BIT'].some(i => titleList?.map(w => w.toUpperCase()).includes(i))
+                        || ['【', '『', '「', 'AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
                      ) {
                         return true;
                      }
@@ -231,22 +233,20 @@ window.nova_plugins.push({
                      // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                      document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
                   ]
-                     .some(i => i?.toLowerCase().includes('music'))
+                     .some(i => i?.toUpperCase().includes('MUSIC'))
                      // has svg icon "🎵"
                      || document.body.querySelector(musicIconSvgSelector)
                      // channelNameVEVO
                      || /(VEVO|Topic|Records|AMV)$/.test(channelName)
-                     // 【MAD】,『MAD』,「MAD」
-                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP' 'Ambient AMBILIGHT lighting'
-                     || ['🎵', '♫', '【', '『', '「', 'OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
-                        .some(i => titleStr.toUpperCase().includes(i))
-                     // search word in titleStr
-                     || titleList?.length && ['SONG', 'SOUND', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED'] // TEASER
-                        .some(i => titleList.map(w => w.toUpperCase()).includes(i))
+                     // word
+                     || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
+                        .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
                      // words
-                     // case sensitive
-                     || titleList?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
-                        .some(i => titleList.includes(i));
+                     || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+                        .some(i => titleStr.toUpperCase().includes(i))
+                     // word (case sensitive)
+                     || titleWords?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+                        .some(i => titleWords.includes(i));
                }
             }
          });

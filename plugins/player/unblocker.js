@@ -14,7 +14,7 @@ window.nova_plugins.push({
             // location.replace(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
 
             // tubeunblock.com is shut down
-            // location.replace('https://tubeunblock.com/watch' + location.search);
+            // location.replace('https://tubeunblock.com/watch' + location.search); // save time mark
          });
 
    },

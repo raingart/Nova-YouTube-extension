@@ -159,16 +159,6 @@ const App = {
 
 App.init();
 
-// YT player API
-// https://gist.github.com/Araxeus/fc574d0f31ba71d62215c0873a7b048e
-
-// get YT experimental FLAGS
-// let cfg = window.ytcfg.get("EXPERIMENT_FLAGS");
-// cfg.kevlar_flexy_watch_new_dom = false;
-// window.ytcfg.set("EXPERIMENT_FLAGS", cfg);
-
-// window.ytInitialData === document.body.querySelector('ytd-app')?.data?.response
-
 // test normal lite
 // https://www.youtube.com/watch?v=4ldjbjwim4k 240
 // https://www.youtube.com/watch?v=aCyGvGEtOwc 360

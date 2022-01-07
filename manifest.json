@@ -6,7 +6,7 @@
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
    "minimum_chrome_version": "80.0",
-   "version": "1.20.2",
+   "version": "1.20.3",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",

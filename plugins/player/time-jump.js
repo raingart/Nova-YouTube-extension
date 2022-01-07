@@ -1,11 +1,11 @@
 // for test:
-// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have timestamps but no chapters: Еhree-digit time
-// https://www.youtube.com/watch?v=egAB2qtVWFQ - chapter title ahead of timestamp
+// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have 3-digit timestamps in description, but dont have chapters
+// https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
-// https://www.youtube.com/watch?v=gaZDIQ3Zptk - lying timestamp. Filtering by channel author is possible?
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
-// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long timestamp line
-// https://www.youtube.com/watch?v=IR0TBQV147I = very-long Еhree-digit time
+// https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#2 (bug has 1 chapters blocks). Manual chapter numbering
+// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long line of timestamp
+// https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed test
 
 window.nova_plugins.push({
@@ -48,31 +48,32 @@ window.nova_plugins.push({
                      const nextChapterIndex = chapterList?.findIndex(c => c?.sec > this.getCurrentTime());
                      // console.debug('nextChapterIndex', nextChapterIndex);
                      let msg;
-                     if (chapterList?.length && nextChapterIndex !== -1) { // if chapters not ended
-                        // if has chapters
-                        if (player.querySelectorAll('.ytp-chapter-hover-container')?.length) {
-                           // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec}sec`);
+                     // has chapters and chapters not ended
+                     if (chapterList?.length && nextChapterIndex !== -1) {
+                        // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
+                        if (player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                           // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${this.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
                            this.seekToChapterWithAnimation(nextChapterIndex);
 
                            // querySelector update after seek
                            const chapterTitleEl = player.querySelector('.ytp-chapter-title-content');
 
-                           msg += (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
+                           msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
                               + ' • ' + chapterList[nextChapterIndex].time;
 
                            if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
                               chapterTitleEl.click()
                            }
 
-                        } else {
+                        } else { // chapters blocks none, but has timestamp
                            const nextChapterData = chapterList?.find(c => c?.sec >= this.getCurrentTime());
-                           // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec}sec`);
+                           // console.debug(`nextChapterData jump [${nextChapterData.index}] ${this.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
                            this.seekTo(nextChapterData.sec);
 
                            msg = nextChapterData.title + ' • ' + nextChapterData.time;
                         }
 
-                     } else {
+                     } else { // chapters none
                         this.seekBy(+user_settings.time_jump_step);
 
                         msg = `+${user_settings.time_jump_step} sec • ` + NOVA.timeFormatTo.HMS_digit(this.getCurrentTime());
@@ -167,7 +168,7 @@ window.nova_plugins.push({
             lastPressed = parseInt(keyCodeFilter) || null;
 
          const
-            timeOut = () => setTimeout(() => isDoublePress = false, 500),
+            timeOut = () => setTimeout(() => isDoublePress = false, 500), // 500ms
             handleDoublePresss = key => {
                // console.debug(key.key, 'pressed two times');
                if (callback && typeof callback === 'function') return callback(key);
@@ -244,12 +245,12 @@ window.nova_plugins.push({
       },
       time_jump_chapters_list_show: {
          _tagName: 'input',
-         label: 'Show chapters list',
-         'label:zh': '显示章节列表',
-         'label:ja': 'チャプターリストを表示',
-         'label:es': 'Mostrar lista de capítulos',
-         'label:pt': 'Mostrar lista de capítulos',
-         'label:de': 'Kapitelliste anzeigen',
+         label: 'Show chapters list block',
+         'label:zh': '显示章节列表块',
+         'label:ja': 'チャプターリストブロックを表示',
+         'label:es': 'Mostrar bloque de lista de capítulos',
+         'label:pt': 'Mostrar bloco de lista de capítulos',
+         'label:de': 'Kapitellistenblock anzeigen',
          type: 'checkbox',
       },
    },

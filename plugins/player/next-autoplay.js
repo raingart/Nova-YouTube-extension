@@ -8,12 +8,7 @@ window.nova_plugins.push({
    'title:de': 'Deaktivieren Sie die automatische Wiedergabe des nächsten Videos',
    run_on_pages: 'watch',
    section: 'player',
-   desc: 'Warn! Do not use unnecessarily',
-   'desc:zh': 'Warn! 不要不必要地使用',
-   'desc:ja': 'Warn! 不必要に使用しないでください',
-   'desc:es': 'Warn! no lo use innecesariamente',
-   'desc:pt': 'Warn! não use desnecessariamente',
-   'desc:de': 'Warn! nicht unnötig verwenden',
+   // desc: '',
    _runtime: user_settings => {
 
       // autoplay on: f5=20000

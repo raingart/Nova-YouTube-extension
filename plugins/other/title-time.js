@@ -42,7 +42,7 @@ window.nova_plugins.push({
                break;
 
             case 'current-duration':
-               new_title = [this.currentTime, ' / ', this.duration];
+               new_title = [this.currentTime, ' / ', this.duration]; // string
                break;
 
             // case 'left':
