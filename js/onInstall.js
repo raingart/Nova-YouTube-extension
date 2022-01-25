@@ -32,7 +32,8 @@ chrome.runtime.onInstalled.addListener(details => {
          //       "YouTweak has just been updated, please click here to visit the options menu & enable any new settings.",
          //       10000
          //    );
-         //    // updateKeyStorage
+
+         //    updateKeyStorage
          //    Storage.getParams(settings => {
          //       const keyRenameTemplate = {
          //          // 'oldKey': 'newKey',

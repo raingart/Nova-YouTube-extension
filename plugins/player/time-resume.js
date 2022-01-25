@@ -15,6 +15,8 @@ window.nova_plugins.push({
    'desc:pt': 'Recarregar na página - retomar a reprodução',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    _runtime: user_settings => {
+      // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
+      if (NOVA.currentPageName() == 'embed' && !window.sessionStorage) return;
 
       // TODO adSkip alt. - add comparison by duration. Need stream test
       const
@@ -31,7 +33,8 @@ window.nova_plugins.push({
 
             video.addEventListener('timeupdate', savePlaybackTime.bind(video));
 
-            if (user_settings.player_resume_playback_on_pause_update_url) {
+            // embed dont support "t=" parameter
+            if (user_settings.player_resume_playback_on_pause_update_url && NOVA.currentPageName() != 'embed') {
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.get('t')) {
                   document.addEventListener('yt-navigate-start', connectSaveStateInURL.bind(video), { capture: true, once: true });
@@ -44,7 +47,7 @@ window.nova_plugins.push({
 
       function savePlaybackTime() {
          // ad skip
-         if (this.currentTime > 5 && this.duration > 30 && !document.body.querySelector('#movie_player.ad-showing')) {
+         if (this.currentTime > 5 && this.duration > 30 && !movie_player.classList.contains('ad-showing')) {
             // console.debug('save progress time', this.currentTime);
             sessionStorage.setItem(cacheName, Math.floor(this.currentTime));
             // new URL(location.href).searchParams.set('t', Math.floor(this.currentTime)); // url way
@@ -67,7 +70,7 @@ window.nova_plugins.push({
          let delaySaveOnPauseURL; // fix glitch update url when rewinding video
          // save
          this.addEventListener('pause', () => {
-            if (this.currentTime < this.duration) { // fix video ended
+            if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) { // fix video ended
                delaySaveOnPauseURL = setTimeout(() => {
                   updateURL(NOVA.queryURL.set({ 't': parseInt(this.currentTime) + 's' }));
                }, 100); // 100ms
@@ -83,9 +86,9 @@ window.nova_plugins.push({
 
          // alt. strategy
          // NOVA.waitElement('#movie_player')
-         //    .then(player => {
-         //       player.addEventListener('onStateChange', state => {
-         //          console.debug('state', NOVA.PLAYERSTATE[state]);
+         //    .then(() => {
+         //       movie_player.addEventListener('onStateChange', state => {
+         //          console.debug('state', NOVA.getPlayerState(state));
          //       });
          //    });
       }

@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:es': 'Volumen',
    // 'title:pt': 'Volume',
    'title:de': 'Volumen',
-   run_on_pages: 'watch, embed',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: 'Use mouse wheel to change volume of video',
    desc: 'with mousewheel',
@@ -22,14 +22,13 @@ window.nova_plugins.push({
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
-      NOVA.waitElement('#movie_player')
-         .then(player => {
+      NOVA.waitElement('video')
+         .then(video => {
             // trigger default indicator
-            player.querySelector('video')
-               .addEventListener('volumechange', function () {
-                  // console.debug('volumechange', player.getVolume(), this.volume);
-                  NOVA.bezelTrigger(player.getVolume() + '%');
-               });
+            video.addEventListener('volumechange', function () {
+               // console.debug('volumechange', movie_player.getVolume(), this.volume);
+               NOVA.bezelTrigger(movie_player.getVolume() + '%');
+            });
 
             if (user_settings.volume_hotkey) {
                // mousewheel in player area
@@ -46,60 +45,61 @@ window.nova_plugins.push({
                   });
             }
 
-            const playerVolume = {
-               adjust(delta) {
-                  return this.set(player.getVolume() + parseInt(delta));
-               },
-               // Strategy 1
-               set(level = 50) {
-                  if (!player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
-                  const newLevel = Math.max(0, Math.min(100, parseInt(level)));
-
-                  // set new volume level
-                  if (newLevel !== player.getVolume()) {
-                     player.isMuted() && player.unMute();
-                     player.setVolume(newLevel); // 0 - 100
-
-                     if (newLevel === player.getVolume()) {
-                        saveInSession(newLevel);
-
-                     } else {
-                        console.error('setVolumeLevel error! Different: %s!=%s', newLevel, player.getVolume());
-                     }
-                  }
-
-                  return newLevel === player.getVolume() && newLevel;
-
-                  function saveInSession(level = required()) {
-                     const storageData = {
-                        creation: Date.now(),
-                        data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
-                     };
-
-                     try {
-                        localStorage['yt-player-volume'] = JSON.stringify(
-                           Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
-                        );
-                        sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
-                        // console.debug('volume saved', ...arguments);
-
-                     } catch (err) {
-                        console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
-                     }
-                  }
-               },
-               // Strategy 2
-               // html5(level = 50) {
-               //    // I'm too lazy to implement it
-               // }
-            };
-
             // init volume_level_default
             if (+ user_settings.volume_level_default) {
                playerVolume.set(+user_settings.volume_level_default);
             }
 
          });
+
+
+      const playerVolume = {
+         adjust(delta) {
+            return this.set(movie_player.getVolume() + parseInt(delta));
+         },
+         // Strategy 1
+         set(level = 50) {
+            if (!movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+            const newLevel = Math.max(0, Math.min(100, parseInt(level)));
+
+            // set new volume level
+            if (newLevel !== movie_player.getVolume()) {
+               movie_player.isMuted() && movie_player.unMute();
+               movie_player.setVolume(newLevel); // 0 - 100
+
+               if (newLevel === movie_player.getVolume()) {
+                  saveInSession(newLevel);
+
+               } else {
+                  console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
+               }
+            }
+
+            return newLevel === movie_player.getVolume() && newLevel;
+
+            function saveInSession(level = required()) {
+               const storageData = {
+                  creation: Date.now(),
+                  data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
+               };
+
+               try {
+                  localStorage['yt-player-volume'] = JSON.stringify(
+                     Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
+                  );
+                  sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
+                  // console.debug('volume saved', ...arguments);
+
+               } catch (err) {
+                  console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+               }
+            }
+         },
+         // Strategy 2
+         // html5(level = 50) {
+         //    // I'm too lazy to implement it
+         // }
+      };
 
    },
    options: {
@@ -152,5 +152,5 @@ window.nova_plugins.push({
             { label: 'disable', value: false },
          ],
       },
-   },
+   }
 });

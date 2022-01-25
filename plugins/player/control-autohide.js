@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:es': 'Oculta el panel de control del reproductor.',
    'title:pt': 'Esconde o painel de controle do player',
    'title:de': 'Blendet das Player-Bedienfeld aus',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Hover over it to display it',
    'desc:zh': '将鼠标悬停在它上面以显示它',

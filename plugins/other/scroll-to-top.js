@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Desplazarse al botón superior',
    'title:pt': 'Role para o botão superior',
    'title:de': 'Nach oben scrollen',
-   run_on_pages: 'all, -embed',
+   run_on_pages: 'all, -embed, -mobile',
    section: 'other',
    desc: 'Displayed on long pages',
    'desc:zh': '出现在长页面上',
@@ -48,13 +48,11 @@ window.nova_plugins.push({
                // left: window.pageXOffset,
                behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
             });
-            if (user_settings.scroll_to_top_autoplay
-               && NOVA.currentPageName() == 'watch'
+            if (user_settings.scroll_to_top_autoplay && NOVA.currentPageName() == 'watch'
                //    && (video = document.body.querySelector('video')) && video.paused // restart ENDED
-               && (player = document.getElementById('movie_player'))
-               && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
+               && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
             ) {
-               player.playVideo();
+               movie_player.playVideo();
                // video.play();
             }
          });
@@ -108,5 +106,5 @@ window.nova_plugins.push({
          label: 'Video unPause',
          type: 'checkbox',
       },
-   },
+   }
 });

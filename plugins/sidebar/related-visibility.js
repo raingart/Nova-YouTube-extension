@@ -1,18 +1,18 @@
 window.nova_plugins.push({
    id: 'related-visibility',
-   title: 'Hide/remove related section',
+   title: 'Hide related section',
    'title:zh': '隐藏相关部分',
    'title:ja': '関連セクションを非表示',
    'title:es': 'Ocultar sección relacionada',
-   'title:pt': '',
-   'title:de': '',
-   run_on_pages: 'watch',
+   'title:pt': 'Ocultar seção relacionada',
+   'title:de': 'Zugehörigen Abschnitt ausblenden',
+   run_on_pages: 'watch, -mobile',
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
       NOVA.preventVisibilityElement({
-         selector: '#secondary #related',
+         selector: '#secondary #related, ytm-item-section-renderer[section-identifier="related-items"]',
          id_name: 'related',
          remove: user_settings.related_visibility_mode == 'remove' ? true : false,
       });
@@ -32,5 +32,5 @@ window.nova_plugins.push({
             { label: 'remove', value: 'remove' },
          ],
       },
-   },
+   }
 });

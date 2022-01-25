@@ -144,7 +144,7 @@ const App = {
       Plugins.injectScript(
          `const _pluginsCaptureException = ${senderException};
          window.addEventListener('unhandledrejection', err => {
-            if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+            if (!err.reason.stack?.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
             console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose\`);
 
             _pluginsCaptureException({

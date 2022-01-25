@@ -6,13 +6,14 @@ window.nova_plugins.push({
    'title:es': 'Descapitalizar el título de las miniaturas',
    'title:pt': 'Decapitalize o título das miniaturas',
    'title:de': 'Thumbnails-Titel entfernen',
-   run_on_pages: 'all, -embed, -results',
+   run_on_pages: 'home, feed, results, channel, watch',
+   // run_on_pages: 'all, -embed, -results',
    section: 'other',
    // desc: '',
    _runtime: user_settings => {
 
       const
-         VIDEO_TITLE_SELECTOR = '#video-title', // '.title, #video-title';
+         VIDEO_TITLE_SELECTOR = '#video-title, a > h3.large-media-item-headline', // '.title, #video-title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'title-normalized';
 
@@ -108,5 +109,5 @@ window.nova_plugins.push({
          value: 2,
          'data-dependent': '{"thumbnails_title_normalize_smart":"true"}',
       },
-   },
+   }
 });

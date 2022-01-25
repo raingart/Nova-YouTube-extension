@@ -19,7 +19,7 @@ window.nova_plugins.push({
    'title:es': 'Fijar jugador mientras se desplaza',
    'title:pt': 'Fixar jogador enquanto rola',
    'title:de': 'Pin-Player beim Scrollen',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Player stays always visible while scrolling',
    'desc:zh': '滚动时播放器始终可见',
@@ -38,12 +38,8 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(player => {
             // if player fullscreen desable float mode
-            document.addEventListener('fullscreenchange', () => document.fullscreenElement && player.classList.remove(CLASS_VALUE), false);
-            // NOVA.waitElement('video')
-            //    .then(video => {
-            //       video.addEventListener('webkitfullscreenchange', () => player.classList.remove(CLASS_VALUE));
-            //    });
-            // document.body.querySelector('ytd-player')?.player_.isFullscreen();
+            document.addEventListener('fullscreenchange', () =>
+               (document.fullscreenElement || movie_player.isFullscreen()) && player.classList.remove(CLASS_VALUE), false);
 
             // init css
             const waitHeader = setInterval(() => {
@@ -51,7 +47,7 @@ window.nova_plugins.push({
                if (player.clientWidth && player.clientHeight
                   && document.getElementById('masthead-container')?.offsetHeight) {
                   clearInterval(waitHeader);
-                  initStyles(player);
+                  initStyles();
                }
             }, 500); // 500ms
 
@@ -69,12 +65,12 @@ window.nova_plugins.push({
                   //    'element': playerContainer,
                   //    'callback_show': () => {
                   //       console.debug('run callback_show');
-                  //       if (user_settings.player_fixed_scroll_pause_video) player.playVideo();
+                  //       if (user_settings.player_fixed_scroll_pause_video) movie_player.playVideo();
                   //       player.classList.remove(CLASS_VALUE);
                   //    },
                   //    'callback_hide': () => {
                   //       console.debug('run callback_hide');
-                  //       if (user_settings.player_fixed_scroll_pause_video) player.pauseVideo()
+                  //       if (user_settings.player_fixed_scroll_pause_video) movie_player.pauseVideo()
                   //       player.classList.add(CLASS_VALUE)
                   //    },
                   //    // 'disconnectAfterMatch': true,
@@ -133,7 +129,7 @@ window.nova_plugins.push({
          .then(player => {
             drag.init(player);
 
-            // dont work both. Try fix preventDefault. Replace to preventDefault patch
+            // does not work both. Try fix preventDefault. Replace to preventDefault patch
             // document.addEventListener('click', evt => {
             //    evt.preventDefault()
             //    console.debug('click', drag.active);
@@ -142,26 +138,22 @@ window.nova_plugins.push({
             //       console.debug('', 111);
             //    };
             // });
-            // player.addEventListener('onStateChange', state => {
-            //    if (drag.active/* && ['PLAYING', 'PAUSED'].includes(NOVA.PLAYERSTATE[state])*/) {
+            // movie_player.addEventListener('onStateChange', state => {
+            //    if (drag.active/* && ['PLAYING', 'PAUSED'].includes(NOVA.getPlayerState())*/) {
             //       console.debug('onStateChange', state);
-            //       switch (NOVA.PLAYERSTATE[state]) {
-            //          case 'PLAYING':
-            //             player.pauseVideo();
-            //             break;
-            //          case 'PAUSED':
-            //             player.playVideo();
-            //             break;
+            //       switch (NOVA.getPlayerState(state)) {
+            //          case 'PLAYING': movie_player.pauseVideo(); break;
+            //          case 'PAUSED': movie_player.playVideo(); break;
             //       }
             //    }
             // });
          });
 
-      function initStyles(player = required()) {
+      function initStyles() {
          const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
          const miniSize = calculateAspectRatioFit({
-            'srcWidth': player.clientWidth,
-            'srcHeight': player.clientHeight,
+            'srcWidth': movie_player.clientWidth,
+            'srcHeight': movie_player.clientHeight,
             'maxWidth': (window.innerWidth / user_settings.player_float_scroll_size_ratio),
             'maxHeight': (window.innerHeight / user_settings.player_float_scroll_size_ratio)
          });
@@ -251,7 +243,7 @@ window.nova_plugins.push({
                drag.reset(); // save and clear pos
             }
          } else if (this.inViewport
-            && !player.classList.contains('ytp-fullscreen') // fix bug on fullscreen in "header_scroll_after"
+            && !movie_player.classList.contains('ytp-fullscreen') // fix bug on fullscreen in "header_scroll_after"
          ) {
             // console.debug('switchElement pin');
             switchElement.classList.add(CLASS_VALUE);
@@ -326,7 +318,7 @@ window.nova_plugins.push({
             NOVA.css.push(
                `[${this.attrNametoLock}]:active {
                   pointer-events: none;
-                  cursor: grab; /* <-- dont work */
+                  cursor: grab; /* <-- does not work */
                   outline: 2px dashed #3ea6ff !important;
                }`);
          },
@@ -359,9 +351,9 @@ window.nova_plugins.push({
 
          draging(evt) {
             if (!this.active) return;
-            evt.preventDefault(); // dont work. Replace to preventDefault patch
-            evt.stopImmediatePropagation(); // dont work. Replace to preventDefault patch
-            evt.stopPropagation(); // ????
+            evt.preventDefault(); // does not work. Replace to preventDefault patch
+            evt.stopImmediatePropagation(); // does not work. Replace to preventDefault patch
+            evt.stopPropagation(); // is work????
 
             this.log('draging');
 
@@ -439,5 +431,5 @@ window.nova_plugins.push({
       //    label: 'Pause pinned video',
       //    type: 'checkbox',
       // },
-   },
+   }
 });

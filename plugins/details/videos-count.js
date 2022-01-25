@@ -25,10 +25,10 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPageName()) {
          case 'watch':
-            NOVA.waitElement('#meta #upload-info #channel-name a[href]')
+            NOVA.waitElement('#meta #upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
                .then(link => {
                   // console.debug('watch page');
-                  NOVA.waitElement('#meta #owner-sub-count') // possible positional problems
+                  NOVA.waitElement('#meta #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
                      // NOVA.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
                      .then(el => {
                         if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
@@ -45,7 +45,7 @@ window.nova_plugins.push({
             break;
 
          case 'channel':
-            NOVA.waitElement('#channel-header #subscriber-count') // possible positional problems
+            NOVA.waitElement('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
                // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
                .then(el => {
                   // console.debug('channel page');

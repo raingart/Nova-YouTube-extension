@@ -6,7 +6,8 @@ window.nova_plugins.push({
    'title:es': 'Mark vio miniaturas',
    'title:pt': 'Mark assistiu às miniaturas',
    'title:de': 'Angesehene Miniaturansichten markieren',
-   run_on_pages: 'all',
+   run_on_pages: 'home, feed, results, channel, watch, -mobile',
+   // run_on_pages: 'all, -embed',
    section: 'other',
    // desc: 'Need to Turn on [YouTube History]',
    _runtime: user_settings => {
@@ -14,11 +15,14 @@ window.nova_plugins.push({
       // Only the outline/border works. Other selection methods do not work in chrome!
 
       NOVA.css.push(
-         `a#thumbnail {
+         `a#thumbnail,
+         a[class*=thumbnail] {
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
-         a#thumbnail:visited {
+         /*a.ytp-videowall-still:visited, <-- does not work in embed*/
+         a#thumbnail:visited,
+         a[class*=thumbnail]:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
          }`);
 
@@ -82,5 +86,5 @@ window.nova_plugins.push({
          value: '#ff4500',
          'data-dependent': '{"thumbnails_watched_title":"true"}',
       },
-   },
+   }
 });

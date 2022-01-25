@@ -11,12 +11,12 @@ fieldset {
    border-color: #3d3d3d;
 }
 
-[type=submit] {
+input[type=submit] {
    height: auto;
    line-height: normal;
 }
 
-.unSaved[type=submit] {
+input.unSaved[type=submit] {
    background-color: crimson;
    color: #fff;
 }
@@ -40,11 +40,7 @@ div.between:last-child {
    padding-bottom: 0;
 }
 
-div.between:last-child {
-   padding-bottom: 0;
-}
-
-div.between input[type="text"] {
+div.between input[type=text] {
    padding: 5px;
 }
 

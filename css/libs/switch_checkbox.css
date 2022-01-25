@@ -1,43 +1,43 @@
 /* template */
 /* #1 */
-input[type="checkbox"] {
+input[type=checkbox] {
    --height: 1.2em;
    width: 2.5em;
 }
 
 /* #2 */
-/* input[type="checkbox"] {
+/* input[type=checkbox] {
    --height: 1em;
    width: 2.2em;
 } */
 
 /* #3 */
-/* input[type="checkbox"] {
+/* input[type=checkbox] {
    --height: 1em;
    width: 2.2em;
 }
-input[type="checkbox"]:after {
+input[type=checkbox]:after {
    transform: scale(1.2);
 } */
 
 /* #4 */
-/* input[type="checkbox"] {
+/* input[type=checkbox] {
    --height: 1.4em;
    width: 3.1em;
 } */
 
 /* #5 */
-/* input[type="checkbox"] {
+/* input[type=checkbox] {
    --height: 1.4em;
    width: 3.1em;
 }
-input[type="checkbox"]:after {
+input[type=checkbox]:after {
    transform: scale(.8);
 } */
 
 /* ================== */
 
-input[type="checkbox"] {
+input[type=checkbox] {
    --opacity: .7;
    --color: #fff;
    height: var(--height);
@@ -53,7 +53,7 @@ input[type="checkbox"] {
    border: none;
 }
 
-input[type="checkbox"]:checked {
+input[type=checkbox]:checked {
    background-color: #188cc3;
    /* background-color: #27a6e5; */
    /* background-color: #00b7fc; */
@@ -61,7 +61,7 @@ input[type="checkbox"]:checked {
    /* background-color: #4CAF50; */
 }
 
-input[type="checkbox"]:after {
+input[type=checkbox]:after {
    position: absolute;
    top: 0;
    left: 0;
@@ -74,27 +74,27 @@ input[type="checkbox"]:after {
    /* box-shadow: 0 .1em .25em #999999; */
 }
 
-input[type="checkbox"]:checked:after {
+input[type=checkbox]:checked:after {
    left: calc(100% - var(--height));
 }
 
-input[type="checkbox"][disabled] {
+input[type=checkbox][disabled] {
    cursor: not-allowed;
 }
 
-input[type="checkbox"][disabled]:after {
+input[type=checkbox][disabled]:after {
    opacity: var(--opacity);
 }
 
-input[type="checkbox"]:checked[disabled] {
+input[type=checkbox]:checked[disabled] {
    background-color: #b0d7f5;
 }
 
-input[type="checkbox"]:focus, input[type="checkbox"]:focus:after {
+input[type=checkbox]:focus, input[type=checkbox]:focus:after {
    transition: all 200ms ease-in-out;
 }
 /* add status text */
-/* input[type="checkbox"]:before {
+/* input[type=checkbox]:before {
    float: right;
    content: "OFF";
    color: #767778;
@@ -103,7 +103,7 @@ input[type="checkbox"]:focus, input[type="checkbox"]:focus:after {
    opacity: var(--opacity);
 }
 
-input[type="checkbox"]:checked:before {
+input[type=checkbox]:checked:before {
    float: left;
    content: "ON";
    color: var(--color);

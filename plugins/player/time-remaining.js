@@ -18,7 +18,7 @@ window.nova_plugins.push({
 
       const SELECTOR_ID = 'ytp-time-remaining';
 
-      NOVA.waitElement('.ytp-time-duration')
+      NOVA.waitElement('.ytp-time-duration, ytm-time-display .time-display-content')
          .then(container => {
 
             NOVA.waitElement('video')
@@ -31,7 +31,7 @@ window.nova_plugins.push({
                });
 
             function setRemaining() {
-               if (isNaN(this.duration) || document.body.querySelector('.ytp-autohide video') || player.getVideoData().isLive) return;
+               if (isNaN(this.duration) || movie_player.getVideoData().isLive || document.body.querySelector('.ytp-autohide video')) return;
 
                const getProgressPt = () => {
                   const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour
@@ -39,7 +39,7 @@ window.nova_plugins.push({
                         : Math.round(pt); // whats left
                   return floatRound((this.currentTime / this.duration) * 100) + '%';
                }
-               const getLeftTime = () => '-' + NOVA.timeFormatTo.HMS_digit((this.duration - this.currentTime) / this.playbackRate);
+               const getLeftTime = () => '-' + NOVA.timeFormatTo.HMS.digit((this.duration - this.currentTime) / this.playbackRate);
                let text;
 
                switch (user_settings.time_remaining_mode) {
@@ -60,7 +60,7 @@ window.nova_plugins.push({
             }
 
             function insertToHTML({ text = '', container = required() }) {
-               // console.debug('insertToHTML', ...arguments);
+               console.debug('insertToHTML', ...arguments);
                if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
                (document.getElementById(SELECTOR_ID) || (function () {
                   // const el = document.createElement('span');
@@ -85,10 +85,10 @@ window.nova_plugins.push({
          'label:pt': 'Modo',
          'label:de': 'Modus',
          options: [
-            { label: 'time+(%)', value: 'full', selected: true },
-            { label: 'time', value: 'time' },
+            { label: 'time+(%)', value: 'full' },
+            { label: 'time', value: 'time', selected: true },
             { label: '%', value: 'pt' },
          ],
       },
-   },
+   }
 });

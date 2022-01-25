@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Botones personalizados',
    'title:pt': 'Botões personalizados',
    'title:de': 'Benutzerdefinierte Schaltflächen',
-   run_on_pages: 'watch, embed',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {
@@ -14,9 +14,7 @@ window.nova_plugins.push({
       const
          SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME, // for css
-         getVideoElement = () => document.body.querySelector('video'),
-         getPlayerElement = () => document.getElementById('movie_player'),
-         getVideoId = () => (p = getPlayerElement()) ? p.getVideoData().video_id || NOVA.queryURL.get('v', p.getVideoUrl()) : document.head.querySelector('link[rel="canonical"][href]')?.href; // use embed for testing
+         getVideoElement = () => movie_player.querySelector('video');
 
       NOVA.waitElement('.ytp-right-controls')
          .then(container => {
@@ -54,7 +52,7 @@ window.nova_plugins.push({
                      // height = Math.round(width / aspectRatio);
                      height = Math.round(width / (16 / 9));
 
-                  url = new URL(document.head.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + getVideoId()));
+                  url = new URL(document.head.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + movie_player.getVideoData().video_id));
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -180,10 +178,10 @@ window.nova_plugins.push({
                      downloadLink = document.createElement('a'),
                      downloadFileName =
                         [
-                           player?.getVideoData().title
+                           movie_player.getVideoData().title
                               .replace(/[\\/:*?"<>|]+/g, '')
                               .replace(/\s+/g, ' ').trim(),
-                           `[${NOVA.timeFormatTo.HMS_abbr(video.currentTime)}]`,
+                           `[${NOVA.timeFormatTo.HMS.abbr(video.currentTime)}]`,
                         ]
                            .join(' ');
 
@@ -207,15 +205,36 @@ window.nova_plugins.push({
                         <polygon points='17 10.9 14 7.9 9 12.9 6 9.9 3 12.9 3 15 17 15' />
                      </g>
                   </svg>`;
-               btnThumb.addEventListener('click', () =>
-                  window.open(`https://i.ytimg.com/vi/${getVideoId()}/maxresdefault.jpg`));
+               btnThumb.addEventListener('click', () => {
+                  // https://i.ytimg.com/vi_webp/<VIDEO_ID>/maxresdefault.webp
+                  // https://i.ytimg.com/vi/<VIDEO_ID>/maxresdefault.jpg
+                  // https://i.ytimg.com/vi/<VIDEO_ID>/hqdefault.jpg
+
+                  // window.open(`https://i.ytimg.com/vi/${movie_player.getVideoData().video_id}/maxresdefault.jpg`);
+
+                  // Warn! "maxresdefault" is not available everywhere. etc:
+                  // https://i.ytimg.com/vi/cPzpTvVPTII/maxresdefault.jpg
+                  // https://i.ytimg.com/vi/cPzpTvVPTII/hqdefault.jpg
+                  // Сheck the size of an image. And then replace "maxresdefault" with "hqdefault"
+                  const
+                     tmpImg = document.createElement('img'),
+                     genImgURL = res_prefix => `https://i.ytimg.com/vi/${movie_player.getVideoData().video_id}/${res_prefix}default.jpg`;
+
+                  document.body.style.cursor = 'wait';
+                  tmpImg.src = genImgURL('maxres');
+                  tmpImg.addEventListener('load', function () {
+                     document.body.style.cursor = 'default';
+                     window.open(genImgURL(
+                        (this.naturalWidth === 120 && this.naturalHeight === 90) ? 'hq' : 'maxres')
+                     );
+                  });
+               });
                container.prepend(btnThumb);
             }
 
             if (user_settings.player_buttons_custom_items?.indexOf('toggle-speed') !== -1) {
                const
                   video = getVideoElement(),
-                  player = getPlayerElement(),
                   btnSpeed = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
                   defaultRateText = '1x';
@@ -234,7 +253,8 @@ window.nova_plugins.push({
                btnSpeed.title = `Toggle speed to ${defaultRateText} (${hotkey})`;
                // hotkey
                document.addEventListener('keyup', evt => {
-                  if (evt.key === hotkey && !['input', 'textarea'].includes(evt.target.localName) && !evt.target.isContentEditable) {
+                  if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.key === hotkey) {
                      switchRate();
                   }
                })
@@ -248,8 +268,8 @@ window.nova_plugins.push({
                      btnSpeed.innerHTML = defaultRateText;
 
                   } else { // return default
-                     origRate = (player && video.playbackRate % .25) === 0
-                        ? { 'default': player.getPlaybackRate() }
+                     origRate = (movie_player && video.playbackRate % .25) === 0
+                        ? { 'default': movie_player.getPlaybackRate() }
                         : { 'html5': video.playbackRate };
 
                      let resetRate = Object.assign({}, origRate); // clone obj
@@ -264,10 +284,11 @@ window.nova_plugins.push({
 
                const playerRate = {
                   set(obj) {
-                     if (obj.hasOwnProperty('html5')) {
+                     if (obj.hasOwnProperty('html5') || !movie_player) {
                         video.playbackRate = obj.html5;
+
                      } else {
-                        player.setPlaybackRate(obj.default);
+                        movie_player.setPlaybackRate(obj.default);
                      }
                      // this.saveInSession(obj.html5 || obj.default);
                   },
@@ -295,7 +316,7 @@ window.nova_plugins.push({
 
                function visibilitySwitch() {
                   if (!Object.keys(origRate).length) {
-                     btnSpeed.style.visibility = /*player.getPlaybackRate() ===*/ video.playbackRate === 1 ? 'hidden' : 'visible';
+                     btnSpeed.style.visibility = /*movie_player.getPlaybackRate() ===*/ video.playbackRate === 1 ? 'hidden' : 'visible';
                   }
                }
 
@@ -361,5 +382,5 @@ window.nova_plugins.push({
             'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
          'data-dependent': '{"player_buttons_custom_items":["toggle-speed"]}',
       },
-   },
+   }
 });

@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Expandir comentarios',
    'title:pt': 'Expandir comentários',
    'title:de': 'Kommentare erweitern',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'comments',
    // desc: '',
    _runtime: user_settings => {
@@ -82,5 +82,5 @@ window.nova_plugins.push({
             { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:de': 'auf schweben' },
          ],
       },
-   },
+   }
 });

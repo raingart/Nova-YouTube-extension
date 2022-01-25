@@ -14,10 +14,10 @@ window.nova_plugins.push({
       let selectedQuality = user_settings.video_quality;
 
       NOVA.waitElement('#movie_player')
-         .then(player => {
+         .then(() => {
             // keep save manual quality in the session
             if (user_settings.video_quality_manual_save_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
-               player.addEventListener('onPlaybackQualityChange', quality => {
+               movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
                   if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
                      && quality !== selectedQuality // the new quality
@@ -27,20 +27,20 @@ window.nova_plugins.push({
                   }
                });
             }
-            player.addEventListener('onStateChange', setQuality.bind(player));
+            movie_player.addEventListener('onStateChange', setQuality);
          });
 
       function setQuality(state) {
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
-         // console.debug('playerState', NOVA.PLAYERSTATE[state]);
+         // console.debug('playerState', NOVA.getPlayerState(state));
 
          // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
-         // if (('PLAYING' == NOVA.PLAYERSTATE[state] || 'BUFFERING' == NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
-         if (['PLAYING', 'BUFFERING'].includes(NOVA.PLAYERSTATE[state]) && !setQuality.quality_busy) {
+         // if (('PLAYING' == NOVA.getPlayerState(state) || 'BUFFERING' == NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
+         if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
             setQuality.quality_busy = true;
 
             const waitQuality = setInterval(() => {
-               const availableQualityLevels = this.getAvailableQualityLevels();
+               const availableQualityLevels = movie_player.getAvailableQualityLevels();
 
                if (availableQualityLevels?.length) {
                   clearInterval(waitQuality);
@@ -48,7 +48,7 @@ window.nova_plugins.push({
                   const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
                   const newQuality = availableQualityLevels[maxAvailableQuality];
 
-                  // if (!newQuality || this.getPlaybackQuality() == selectedQuality) {
+                  // if (!newQuality || movie_player.getPlaybackQuality() == selectedQuality) {
                   //    return console.debug('skip set quality');
                   // }
 
@@ -56,25 +56,25 @@ window.nova_plugins.push({
                   //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${newQuality}" of ${JSON.stringify(availableQualityLevels)}`);
                   // }
 
-                  if (this.hasOwnProperty('setPlaybackQuality')) {
+                  if (movie_player.hasOwnProperty('setPlaybackQuality')) {
                      // console.debug('use setPlaybackQuality');
-                     this.setPlaybackQuality(newQuality);
+                     movie_player.setPlaybackQuality(newQuality);
                   }
 
                   // set QualityRange
-                  if (this.hasOwnProperty('setPlaybackQualityRange')) {
+                  if (movie_player.hasOwnProperty('setPlaybackQualityRange')) {
                      // console.debug('use setPlaybackQualityRange');
-                     this.setPlaybackQualityRange(newQuality, newQuality);
+                     movie_player.setPlaybackQualityRange(newQuality, newQuality);
                   }
 
                   // console.debug('availableQualityLevels:', availableQualityLevels);
                   // console.debug("try set quality:", newQuality);
-                  // console.debug('current quality:', this.getPlaybackQuality());
+                  // console.debug('current quality:', movie_player.getPlaybackQuality());
                }
             }, 50); // 50ms
 
-            // } else if ('UNSTARTED' == NOVA.PLAYERSTATE[state] || 'ENDED' == NOVA.PLAYERSTATE[state]) {
-            // } else if (['UNSTARTED', 'ENDED'].includes(NOVA.PLAYERSTATE[state])) {
+            // } else if ('UNSTARTED' == NOVA.getPlayerState(state) || 'ENDED' == NOVA.getPlayerState(state)) {
+            // } else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
          } else if (state <= 0) {
             setQuality.quality_busy = false;
          }

@@ -1,15 +1,20 @@
 window.nova_plugins.push({
    id: 'playlist-reverse',
-   title: 'Reverse playlist order',
-   'title:zh': '反转播放列表顺序',
-   'title:ja': 'プレイリストの順序を逆にする',
-   'title:es': 'Orden inverso de la lista de reproducción',
-   'title:pt': 'Ordem reversa da lista de reprodução',
-   'title:de': 'Wiedergabelistenreihenfolge umkehren',
-   run_on_pages: 'watch, playlist',
+   title: 'Add reverse playlist order',
+   'title:zh': '添加反向播放列表顺序',
+   'title:ja': 'プレイリストの逆順を追加',
+   'title:es': 'Agregar orden de lista de reproducción inverso',
+   'title:pt': 'Adicionar ordem inversa da lista de reprodução',
+   'title:de': 'Umgekehrte Playlist-Reihenfolge hinzufügen',
+   run_on_pages: 'watch, playlist, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
-   // desc: '',
+   desc: 'Add button',
+   'desc:zh': '添加按钮',
+   'desc:ja': '追加ボタン',
+   'desc:es': 'Agregar botón',
+   'desc:pt': 'Botão Adicionar',
+   'desc:de': 'Schaltfläche hinzufügen',
    _runtime: user_settings => {
 
       const
@@ -17,8 +22,9 @@ window.nova_plugins.push({
          SELECTOR_BTN = '#' + SELECTOR_BTN_ID, // for css
          CLASS_NAME_ACTIVE = 'reverse-on';
 
-      let idx, reverseEnable;
+      let playlistReversed;
 
+      // init reverseBtn style
       NOVA.css.push(
          SELECTOR_BTN + ` {
             background: none;
@@ -42,26 +48,23 @@ window.nova_plugins.push({
          ${SELECTOR_BTN}:active svg,
          ${SELECTOR_BTN}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
-      // add reverse button
-      // missed work half the time
       document.addEventListener('yt-navigate-finish', () => {
-         NOVA.waitElement('#playlist-action-menu #top-level-buttons-computed')
+         if (!NOVA.queryURL.get('list')/* || !movie_player?.getPlaylistId()*/) return;
+         // add  button
+         // NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed, .playlist-controls-primary')
+         NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed')
             .then(e => appendReverseBtn(e));
+         // add events
+         updateNext();
       });
-      // // not optimal but stable
-      // document.addEventListener('yt-visibility-refresh', () => {
-      //    if (!document.getElementById(SELECTOR_BTN_ID)) {
-      //       NOVA.waitElement('#playlist-action-menu #top-level-buttons-computed')
-      //          .then(e => appendReverseBtn(e));
-      //    }
-      // });
 
-      function appendReverseBtn(container) {
+      function appendReverseBtn(container = required()) {
+         if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+
          document.getElementById(SELECTOR_BTN_ID)?.remove(); // clear old
 
          const reverseControl = document.createElement('div');
-         // style="cursor: pointer; margin-left: 8px;" id="pytplir_btn"
-         if (reverseEnable) reverseControl.className = CLASS_NAME_ACTIVE;
+         if (playlistReversed) reverseControl.className = CLASS_NAME_ACTIVE;
          reverseControl.id = SELECTOR_BTN_ID;
          reverseControl.title = 'Reverse playlist order';
          reverseControl.innerHTML =
@@ -73,113 +76,67 @@ window.nova_plugins.push({
                </svg>
             </yt-icon-button>`;
          reverseControl.addEventListener('click', () => {
-            reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
-            scrollToElement(document.body.querySelector('#playlist-items[selected]'));
-            // document.body.querySelector('#playlist[collapsed] #expand-icon').click(); // uncollapse. Bug with unlimited playlist
+            reverseControl.classList.toggle(CLASS_NAME_ACTIVE);
+            playlistReversed = !playlistReversed;
 
-            // NOVA.waitElement('video')
-            //    .then(video => {
-            //       reverseControl.classList.toggle(CLASS_NAME_ACTIVE);
-
-            //       video.addEventListener('ended', () => {
-            //          if (NOVA.queryURL.get('list')) {
-            //             player = document.getElementById('movie_player'),
-            //                player.previousVideo();
-            //          }
-            //       });
-
-            //       video.addEventListener('playing', () => {
-            //          if (!NOVA.queryURL.get('list')) return;
-
-            //          let idxNew = NOVA.queryURL.get('index');
-            //          if (idxNew !== idx) {
-            //             idx = idxNew;
-            //             reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
-            //             scrollToElement(document.body.querySelector('#playlist-items[selected]'));
-            //             updateNextButton();
-            //          }
-            //       });
-            //    });
-
-            NOVA.waitElement('#movie_player')
-               .then(player => {
-                  if (reverseEnable) {
-                     location.reload(); // force apply removeEventListener
-                     // does not work
-                     // player.removeEventListener('onStateChange', onPlayerStateChange.bind(player), true);
-                     // reverseEnable = false;
-
-                  } else {
-                     player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
-                     reverseEnable = true;
-                  }
-                  reverseControl.classList.toggle(CLASS_NAME_ACTIVE);
-               });
+            if (playlistReversed) {
+               updateNext();
+            } else {
+               location.reload(); // disable reverse
+            }
          });
          container.append(reverseControl);
       }
 
-      function onPlayerStateChange(state) {
-         if (!NOVA.queryURL.get('list')) return;
-         // console.debug('playerState', NOVA.PLAYERSTATE[state]);
+      function updateNext() {
+         if (!playlistReversed) return;
 
-         switch (NOVA.PLAYERSTATE[state]) {
-            case 'ENDED': // video ended
-               this.previousVideo();
-               break;
+         movie_player.querySelector('video')
+            .addEventListener('ended', () => playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
 
-            case 'PLAYING': // on hover "next button"
-               let idxNew = NOVA.queryURL.get('index');
-               if (idxNew !== idx) {
-                  idx = idxNew;
-                  reverseElement(document.body.querySelector('#playlist #items.playlist-items'));
-                  scrollToElement(document.body.querySelector('#playlist-items[selected]'));
-                  updateNextButton();
-               }
-               break;
+         // update UI
+         // Strategy 1
+         reverseElement(document.body.querySelector('#secondary #playlist #items.playlist-items, ytm-playlist lazy-list'));
+         scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
+         // Strategy 2: scroll does not work
+         // NOVA.css.push(
+         //    `#playlist #items.playlist-items {
+         //       display: flex;
+         //       flex-direction: column-reverse;
+         //    }`);
+
+         updateNextButton();
+
+
+         function updateNextButton() {
+            const
+               nextItem = document.body.querySelector('#secondary #playlist [selected] + * a'),
+               nextURL = nextItem?.querySelector('a')?.href;
+
+            if (!nextURL) return;
+
+            if (next_button = document.body.querySelector('.ytp-next-button')) {
+               next_button.href = nextURL;
+               next_button.dataset.preview = nextItem.querySelector('img').src;
+               next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
+            }
+            if (playlistManager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
+               playlistManager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');
+               playlistManager.watchEndpoint.videoId = NOVA.queryURL.get('v', nextURL);
+            }
+         }
+
+         function reverseElement(container = required()) {
+            if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+            container.append(...Array.from(container.childNodes).reverse());
+         }
+
+         function scrollToElement(targetEl = required()) {
+            if (!(targetEl instanceof HTMLElement)) return console.error('targetEl not HTMLElement:', targetEl);
+            const container = targetEl.parentElement;
+            container.scrollTop = targetEl.offsetTop - container.offsetTop;
          }
       }
 
-      function updateNextButton() {
-         const
-            nextItem = document.body.querySelector('#playlist [selected] + *'),
-            nextURL = nextItem?.querySelector('a').href;
-
-         if (!nextURL) return;
-
-         if (next_button = document.body.querySelector('.ytp-next-button')) {
-            next_button.href = nextURL;
-            next_button.dataset.preview = nextItem.querySelector('img').src;
-            next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
-         }
-         if (playlistManager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
-            playlistManager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');
-            playlistManager.watchEndpoint.videoId = NOVA.queryURL.get('v', nextURL);
-
-         }
-      }
-
-      function reverseElement(container) {
-         if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
-         container.append(...Array.from(container.childNodes).reverse());
-      }
-
-      function scrollToElement(targetEl) {
-         if (!(targetEl instanceof HTMLElement)) return console.error('targetEl not HTMLElement:', targetEl);
-         const container = targetEl.parentElement;
-         container.scrollTop = targetEl.offsetTop - container.offsetTop;
-      }
-
-      // scroll does not work
-      // NOVA.css.push(
-      //    `#playlist #items.playlist-items {
-      //       display: flex;
-      //       flex-direction: column-reverse;
-      //     }`);
-      // NOVA.waitElement('#movie_player')
-      //    .then(player => {
-      //       // 0: ended
-      //       const onPlayerStateChange = state => (state === 0) && player.previousVideo();
-      //    });
    },
 });

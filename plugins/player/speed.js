@@ -27,234 +27,240 @@ window.nova_plugins.push({
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
-      NOVA.waitElement('#movie_player')
-         .then(player => {
+      const musicIconSvgSelector = '#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
+
+      // NOVA.waitElement('#movie_player')
+      //    .then(() => {
+      //       // trigger default indicator
+      //       // Strategy 1. Default indicator does not work for html5 way (Strategy 2)
+      //       movie_player.addEventListener('onPlaybackRateChange', rate => {
+      //          console.debug('onPlaybackRateChange', rate);
+      //       });
+      //    });
+
+      NOVA.waitElement('video')
+         .then(video => {
+            const sliderConteiner = renderSlider();
+            // console.debug('sliderConteiner', sliderConteiner);
+
             // trigger default indicator
-            // Strategy 1. Default indicator does not work for html5 way (Strategy 2)
-            // player.addEventListener('onPlaybackRateChange', rate => {
-            //    console.debug('onPlaybackRateChange', rate);
-            // });
+            // Strategy 2
+            video.addEventListener('ratechange', function () {
+               // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
+               NOVA.bezelTrigger(this.playbackRate + 'x');
 
-            const musicIconSvgSelector = '#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
+               // slider update
+               if (Object.keys(sliderConteiner).length) {
+                  sliderConteiner.slider.value = this.playbackRate;
+                  sliderConteiner.sliderLabel.textContent = `Speed (${this.playbackRate})`;
+                  sliderConteiner.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
+               }
+            });
 
-            NOVA.waitElement('video')
-               .then(video => {
-                  const sliderConteiner = renderSlider();
-                  // console.debug('sliderConteiner', sliderConteiner);
+            video.addEventListener('loadeddata', setDefaultRate);
 
-                  // trigger default indicator
-                  // Strategy 2
-                  video.addEventListener('ratechange', function () {
-                     // console.debug('ratechange', player.getPlaybackRate(), this.playbackRate);
-                     NOVA.bezelTrigger(this.playbackRate + 'x');
-
-                     // slider update
-                     if (Object.keys(sliderConteiner).length) {
-                        sliderConteiner.slider.value = this.playbackRate;
-                        sliderConteiner.sliderLabel.textContent = `Speed (${this.playbackRate})`;
-                        sliderConteiner.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
-                     }
-                  });
-
-                  // during initialization, the icon can be loaded after the video
-                  if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
-                     NOVA.waitElement(musicIconSvgSelector)
-                        .then(icon => playerRate.set(1));
-
-                     NOVA.waitElement('#meta #upload-info #channel-name a[href]')
-                        .then(channelName => {
-                           // channelNameVEVO
-                           if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
-                              || channelName.textContent.toUpperCase().includes('MUSIC')) {
-                              playerRate.set(1);
-                           }
-                           // channelNameRecords:
-                           // https://www.youtube.com/channel/UCQnWm_Nnn35u3QGVkcAf87Q
-                           // https://www.youtube.com/channel/UCpDJl2EmP7Oh90Vylx0dZtA
-                           // https://www.youtube.com/channel/UCC7ElkFVK3m03gEMfaq6Ung
-                           // channelNameAMV - https://www.youtube.com/channel/UCtrt9u1luNTxXFDuYIoK2FA
-                           // special case channelNameLyrics - https://www.youtube.com/channel/UCK9HbSctHJ8n-aZmJsGD7_w
-                        });
-                  }
-
-                  video.addEventListener('loadeddata', setDefaultRate);
-
-                  if (Object.keys(sliderConteiner).length) {
-                     sliderConteiner.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
-                     sliderConteiner.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
-                     sliderConteiner.slider.addEventListener('wheel', evt => {
-                        evt.preventDefault();
-                        const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
-                        // console.debug('current rate:', rate);
-                     });
-                     sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
-                  }
+            if (Object.keys(sliderConteiner).length) {
+               sliderConteiner.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
+               sliderConteiner.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
+               sliderConteiner.slider.addEventListener('wheel', evt => {
+                  evt.preventDefault();
+                  const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
+                  // console.debug('current rate:', rate);
                });
-
-            // mousewheel in player area
-            if (user_settings.rate_hotkey) {
-               document.body.querySelector('.html5-video-container')
-                  .addEventListener('wheel', evt => {
-                     evt.preventDefault();
-
-                     if (evt[user_settings.rate_hotkey]
-                        || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
-                        // console.debug('hotkey caught');
-                        const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
-                        // console.debug('current rate:', rate);
-                     }
-                  });
-            }
-
-            const playerRate = {
-               // DEBUG: true,
-
-               set(level = 1) {
-                  this.log('set', ...arguments);
-                  player.setPlaybackRate(+level) && this.saveInSession(level);
-               },
-
-               // adjust(rate_step) {
-               //    // default method requires a multiplicity of 0.25
-               //    return (+rate_step % .25) === 0 && player.hasOwnProperty('getPlaybackRate')
-               //       ? this.default(+rate_step)
-               //       : this.html5(+rate_step);
-               // },
-
-               adjust(rate_step = required()) {
-                  this.log('adjust', ...arguments);
-                  return player.hasOwnProperty('getPlaybackRate') ? this.default(+rate_step) : this.html5(+rate_step);
-               },
-               // Strategy 1
-               default(playback_rate = required()) {
-                  this.log('playerRate:default', ...arguments);
-                  const playbackRate = player.getPlaybackRate();
-                  // const inRange = delta => {
-                  //    const rangeRate = player.getAvailablePlaybackRates();
-                  //    const playbackRateIdx = rangeRate.indexOf(playbackRate);
-                  //    return rangeRate[playbackRateIdx + delta];
-                  // };
-                  // const newRate = inRange(Math.sign(+playback_rate));
-                  const inRange = step => {
-                     const setRateStep = playbackRate + step;
-                     return (.1 <= setRateStep && setRateStep <= 2) && +setRateStep.toFixed(2);
-                  };
-                  const newRate = inRange(+playback_rate);
-                  // set new rate
-                  if (newRate && newRate != playbackRate) {
-                     player.setPlaybackRate(newRate);
-
-                     if (newRate === player.getPlaybackRate()) {
-                        this.saveInSession(newRate);
-
-                     } else {
-                        console.error('playerRate:default different: %s!=%s', newRate, player.getPlaybackRate());
-                     }
-                  }
-                  this.log('playerRate:default return', newRate);
-                  return newRate === player.getPlaybackRate() && newRate;
-               },
-               // Strategy 2
-               html5(playback_rate = required()) {
-                  this.log('playerRate:html5', ...arguments);
-                  const videoElm = player.querySelector('video');
-                  const playbackRate = videoElm.playbackRate;
-                  const inRange = step => {
-                     const setRateStep = playbackRate + step;
-                     return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
-                  };
-                  const newRate = inRange(+playback_rate);
-                  // set new rate
-                  if (newRate && newRate != playbackRate) {
-                     // document.body.querySelector('video').defaultPlaybackRate = newRate;
-                     videoElm.playbackRate = newRate;
-
-                     if (newRate === videoElm.playbackRate) {
-                        this.saveInSession(newRate);
-
-                     } else {
-                        console.error('playerRate:html5 different: %s!=%s', newRate, videoElm.playbackRate);
-                     }
-                  }
-                  this.log('playerRate:html5 return', newRate);
-                  return newRate === videoElm.playbackRate && newRate;
-               },
-
-               saveInSession(level = required()) {
-                  try {
-                     sessionStorage['yt-player-playback-rate'] = JSON.stringify({
-                        creation: Date.now(), data: level.toString(),
-                     })
-                     this.log('playbackRate save in session:', ...arguments);
-
-                  } catch (err) {
-                     console.warn(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
-                  }
-               },
-
-               log() {
-                  if (this.DEBUG && arguments.length) {
-                     console.groupCollapsed(...arguments);
-                     console.trace();
-                     console.groupEnd();
-                  }
-               },
-            };
-
-            function setDefaultRate() {
-               // init rate_default
-               if (+user_settings.rate_default !== 1 && (!user_settings.rate_default_apply_music || !isMusic())) {
-                  // console.debug('update rate_default', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
-                  playerRate.set(user_settings.rate_default);
-               }
-
-               function isMusic() {
-                  const
-                     channelName = document.body.querySelector('#meta #upload-info #channel-name a')?.textContent,
-                     titleStr = player.getVideoData().title,
-                     titleWords = titleStr?.match(/\w+/g);
-
-                  if (user_settings.rate_default_apply_music == 'expanded') {
-                     // 【MAD】,『MAD』,「MAD」
-                     // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'TOP=tOP' 'Ambient AMBILIGHT lighting', TEASER
-                     if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                        || ['【', '『', '「', 'AUDIO', 'FULL', 'TRAP', 'TRACK', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
-                     ) {
-                        return true;
-                     }
-                  }
-                  return [
-                     titleStr,
-                     location.href, // 'music.youtube.com' or 'youtube.com#music'
-                     channelName,
-
-                     // ALL BELOW - not updated on page transition!
-                     // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
-                     // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
-                     document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
-                  ]
-                     .some(i => i?.toUpperCase().includes('MUSIC'))
-                     // has svg icon "🎵"
-                     || document.body.querySelector(musicIconSvgSelector)
-                     // channelNameVEVO
-                     || /(VEVO|Topic|Records|AMV)$/.test(channelName)
-                     // word
-                     || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
-                        .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
-                     // words
-                     || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
-                        .some(i => titleStr.toUpperCase().includes(i))
-                     // word (case sensitive)
-                     || titleWords?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
-                        .some(i => titleWords.includes(i));
-               }
+               sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
             }
          });
 
+      // mousewheel in player area
+      if (user_settings.rate_hotkey) {
+         NOVA.waitElement('.html5-video-container')
+            .then(container => {
+               container.addEventListener('wheel', evt => {
+                  evt.preventDefault();
+
+                  if (evt[user_settings.rate_hotkey]
+                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     // console.debug('hotkey caught');
+                     const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
+                     // console.debug('current rate:', rate);
+                  }
+               });
+            });
+      }
+
+      // during initialization, the icon can be loaded after the video
+      if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
+         NOVA.waitElement(musicIconSvgSelector)
+            .then(icon => playerRate.set(1));
+
+         NOVA.waitElement('#meta #upload-info #channel-name a[href]')
+            .then(channelName => {
+               // channelNameVEVO
+               if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
+                  || channelName.textContent.toUpperCase().includes('MUSIC')
+               ) {
+                  playerRate.set(1);
+               }
+               // channelNameRecords:
+               // https://www.youtube.com/channel/UCQnWm_Nnn35u3QGVkcAf87Q
+               // https://www.youtube.com/channel/UCpDJl2EmP7Oh90Vylx0dZtA
+               // https://www.youtube.com/channel/UCC7ElkFVK3m03gEMfaq6Ung
+               // channelNameAMV - https://www.youtube.com/channel/UCtrt9u1luNTxXFDuYIoK2FA
+               // special case channelNameLyrics - https://www.youtube.com/channel/UCK9HbSctHJ8n-aZmJsGD7_w
+            });
+      }
+
+
+      const playerRate = {
+         // DEBUG: true,
+
+         set(level = 1) {
+            this.log('set', ...arguments);
+            movie_player.setPlaybackRate(+level) && this.saveInSession(level);
+         },
+
+         // adjust(rate_step) {
+         //    // default method requires a multiplicity of 0.25
+         //    return (+rate_step % .25) === 0 && movie_player.hasOwnProperty('getPlaybackRate')
+         //       ? this.default(+rate_step)
+         //       : this.html5(+rate_step);
+         // },
+
+         adjust(rate_step = required()) {
+            this.log('adjust', ...arguments);
+            return movie_player.hasOwnProperty('getPlaybackRate') ? this.default(+rate_step) : this.html5(+rate_step);
+         },
+         // Strategy 1
+         default(playback_rate = required()) {
+            this.log('playerRate:default', ...arguments);
+            const playbackRate = movie_player.getPlaybackRate();
+            // const inRange = delta => {
+            //    const rangeRate = movie_player.getAvailablePlaybackRates();
+            //    const playbackRateIdx = rangeRate.indexOf(playbackRate);
+            //    return rangeRate[playbackRateIdx + delta];
+            // };
+            // const newRate = inRange(Math.sign(+playback_rate));
+            const inRange = step => {
+               const setRateStep = playbackRate + step;
+               return (.1 <= setRateStep && setRateStep <= 2) && +setRateStep.toFixed(2);
+            };
+            const newRate = inRange(+playback_rate);
+            // set new rate
+            if (newRate && newRate != playbackRate) {
+               movie_player.setPlaybackRate(newRate);
+
+               if (newRate === movie_player.getPlaybackRate()) {
+                  this.saveInSession(newRate);
+
+               } else {
+                  console.error('playerRate:default different: %s!=%s', newRate, movie_player.getPlaybackRate());
+               }
+            }
+            this.log('playerRate:default return', newRate);
+            return newRate === movie_player.getPlaybackRate() && newRate;
+         },
+         // Strategy 2
+         html5(playback_rate = required()) {
+            this.log('playerRate:html5', ...arguments);
+
+            if (videoEl = document.body.querySelector('video')) {
+               const playbackRate = videoEl.playbackRate;
+               const inRange = step => {
+                  const setRateStep = playbackRate + step;
+                  return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
+               };
+               const newRate = inRange(+playback_rate);
+               // set new rate
+               if (newRate && newRate != playbackRate) {
+                  // document.body.querySelector('video').defaultPlaybackRate = newRate;
+                  videoEl.playbackRate = newRate;
+
+                  if (newRate === videoEl.playbackRate) {
+                     this.saveInSession(newRate);
+
+                  } else {
+                     console.error('playerRate:html5 different: %s!=%s', newRate, videoEl.playbackRate);
+                  }
+               }
+               this.log('playerRate:html5 return', newRate);
+               return newRate === videoEl.playbackRate && newRate;
+
+            } else return console.error('playerRate > videoEl empty:', videoEl);
+         },
+
+         saveInSession(level = required()) {
+            try {
+               sessionStorage['yt-player-playback-rate'] = JSON.stringify({
+                  creation: Date.now(), data: level.toString(),
+               })
+               this.log('playbackRate save in session:', ...arguments);
+
+            } catch (err) {
+               console.warn(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+            }
+         },
+
+         log() {
+            if (this.DEBUG && arguments.length) {
+               console.groupCollapsed(...arguments);
+               console.trace();
+               console.groupEnd();
+            }
+         },
+      };
+
+      function setDefaultRate() {
+         // init rate_default
+         if (+user_settings.rate_default !== 1 && (!user_settings.rate_default_apply_music || !isMusic())) {
+            // console.debug('update rate_default', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
+            playerRate.set(user_settings.rate_default);
+         }
+
+         function isMusic() {
+            const
+               channelName = document.body.querySelector('#meta #upload-info #channel-name a')?.textContent,
+               titleStr = movie_player.getVideoData().title,
+               titleWords = titleStr?.match(/\w+/g);
+
+            if (user_settings.rate_default_apply_music == 'expanded') {
+               // 【MAD】,『MAD』,「MAD」
+               // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', TEASER
+               if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
+                  || ['【', '『', '「', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+               ) {
+                  return true;
+               }
+            }
+            return [
+               titleStr,
+               location.href, // 'music.youtube.com' or 'youtube.com#music'
+               channelName,
+
+               // ALL BELOW - not updated on page transition!
+               // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
+               // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
+               document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
+            ]
+               .some(i => i?.toUpperCase().includes('MUSIC'))
+               // has svg icon "🎵"
+               || document.body.querySelector(musicIconSvgSelector)
+               // channelNameVEVO
+               || /(VEVO|Topic|Records|AMV)$/.test(channelName)
+               // word
+               || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
+                  .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
+               // words
+               || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+                  .some(i => titleStr.toUpperCase().includes(i))
+               // word (case sensitive)
+               || titleWords?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+                  .some(i => titleWords.includes(i));
+         }
+      }
 
       function renderSlider() {
          const
-            video = document.body.querySelector('video'),
+            video = movie_player.querySelector('video'),
             SELECTOR_ID = 'rate-slider-menu',
             SELECTOR = '#' + SELECTOR_ID; // for css
 
@@ -410,5 +416,5 @@ window.nova_plugins.push({
             { label: 'disable', value: false },
          ],
       },
-   },
+   }
 });

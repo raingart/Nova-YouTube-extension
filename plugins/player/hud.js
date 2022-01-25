@@ -18,12 +18,10 @@ window.nova_plugins.push({
       NOVA.waitElement('video')
          .then(video => {
             // volume
-            if (player = document.getElementById('movie_player')) {
-               video.addEventListener('volumechange', function () {
-                  // console.debug('volumechange', player.getVolume(), this.volume); // there is a difference
-                  HUD.set(Math.round(player.getVolume()), '%');
-               });
-            }
+            video.addEventListener('volumechange', function () {
+               // console.debug('volumechange', movie_player.getVolume(), this.volume); // there is a difference
+               HUD.set(Math.round(movie_player.getVolume()), '%');
+            });
             // rate
             video.addEventListener('ratechange', () => HUD.set(video.playbackRate, 'x'));
          });
@@ -71,8 +69,7 @@ window.nova_plugins.push({
                   color: var(--color);
                }`);
             // template
-            document.getElementById('movie_player')
-               .insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
+            movie_player.insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
 
             this.conteiner = document.getElementById(SELECTOR_ID);
             this.hudSpan = this.conteiner.querySelector('span'); // export el
@@ -202,5 +199,5 @@ window.nova_plugins.push({
          value: '#ff0000', // red
          'data-dependent': '{"player_indicator_type":["!text-top"]}',
       },
-   },
+   }
 });

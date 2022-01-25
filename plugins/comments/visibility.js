@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Ocultar la sección de comentarios',
    'title:pt': 'Ocultar seção de comentários',
    'title:de': 'Kommentarbereich ausblenden',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
    section: 'comments',
    // desc: '',
@@ -33,5 +33,5 @@ window.nova_plugins.push({
             { label: 'remove', value: 'remove' },
          ],
       },
-   },
+   }
 });

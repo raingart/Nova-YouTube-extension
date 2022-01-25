@@ -21,5 +21,10 @@ window.nova_plugins.push({
             video.loop = true;
             video.addEventListener('loadeddata', ({ target }) => target.loop = true);
          });
+
+      // does not work
+      // NOVA.waitElement('#movie_player')
+      //    .then(() => movie_player.setLoop());
+
    },
 });

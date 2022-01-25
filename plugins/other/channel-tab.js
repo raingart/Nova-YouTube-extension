@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'La pestaña predeterminada en la página del canal',
    'title:pt': 'A guia padrão na página do canal',
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
-   run_on_pages: 'channel',
+   run_on_pages: 'channel, -mobile',
    restart_on_transition: true,
    section: 'channel',
    // desc: '',
@@ -20,7 +20,7 @@ window.nova_plugins.push({
 
          } else {
             // tab select
-            NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
+            NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected=true]')
                .then(() => {
                   let tab_nth;
                   switch (user_settings.channel_default_tab) {
@@ -72,5 +72,5 @@ window.nova_plugins.push({
             { label: 'click', /*value: '',*/ selected: true },
          ],
       },
-   },
+   }
 });

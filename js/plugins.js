@@ -10,6 +10,7 @@ const Plugins = {
       'player/autopause.js', // after quality.js
       'player/theater-mode.js',
       'player/pause-background.js',
+      'player/fullscreen-mode.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
       'player/pin.js',
@@ -37,6 +38,7 @@ const Plugins = {
       'other/scroll-to-top.js',
 
       'details/description.js',
+      'details/timestamps-scroll.js',
       'details/videos-count.js',
       'details/redirect-clear.js',
       // 'details/quick-menu.js',
@@ -95,14 +97,16 @@ const Plugins = {
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
-      // similar - NOVA.currentPageName()
+      // copy fn - NOVA.currentPageName()
       const currentPage = (function () {
          const page = location.pathname.split('/')[1];
-         return ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'main';
+         return ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'home';
       })();
 
       // redirect shorts page
       // if (currentPage == 'shorts') location.href = location.href.replace('shorts/', 'watch?v=');
+
+      const isMobile = location.host == 'm.youtube.com';
 
       let logTableArray = [],
          logTableStatus,
@@ -127,8 +131,12 @@ const Plugins = {
          } else if (!user_settings.hasOwnProperty(plugin.id)) {
             logTableStatus = 'off';
 
-         } else if (pagesAllowList && pagesAllowList.includes(currentPage)
-            || (pagesAllowList.includes('all') && !pagesAllowList.includes('-' + currentPage))) {
+         } else if (
+            (pagesAllowList?.includes(currentPage)
+               || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + currentPage))
+            )
+            && (!isMobile || (isMobile && !pagesAllowList?.includes('-mobile')))
+         ) {
             try {
                const startTableTime = performance.now();
                plugin.was_init = true;

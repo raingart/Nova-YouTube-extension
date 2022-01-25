@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/channel/UCl7OsED7y9eavZJbTGnK0xg/playlists - select Albums & Singles
+
 window.nova_plugins.push({
    id: 'thumbnails-clear',
    title: 'Clear thumbnails',
@@ -6,7 +9,8 @@ window.nova_plugins.push({
    'title:es': 'Miniaturas claras',
    'title:pt': 'Limpar miniaturas',
    'title:de': 'Miniaturansichten löschen',
-   run_on_pages: 'all, -embed',
+   run_on_pages: 'home, feed, channel, watch', // broken "live now" in results
+   // run_on_pages: 'all, -embed, -results',
    section: 'other',
    desc: 'Replaces the predefined thumbnail',
    'desc:zh': '替换预定义的缩略图',
@@ -17,10 +21,23 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.watchElement({
-         selector: '#thumbnail #img[src]',
+         // selector: 'a#thumbnail:not(.ytd-playlist-thumbnail) #img[src]',
+         selector: 'a[class*=thumbnail]:not(.ytd-playlist-thumbnail) img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
-            // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault excluding - maxresdefault
+            // failed fix to exclude live thumbs from results page
+            // if ((link = img.parentElement.parentElement)
+            //    && link.getAttribute('id') == 'thumbnail'
+            //    && link.querySelector('#text.ytd-thumbnail-overlay-time-status-renderer')
+            //    // #text.ytd-thumbnail-overlay-time-status-renderer
+            //    // #overlays [overlay-style="DEFAULT"]
+            // ) {
+            //    console.debug('img.parentElement.parentElement', link);
+            //    return; // slip "live now"
+            // }
+
+            // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
+            // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
             if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(img.src)) {
                img.src = img.src.replace(re, (user_settings.thumbnails_clear_timestamps || 'hq2') + '.jpg');
             }
@@ -67,5 +84,5 @@ window.nova_plugins.push({
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',
       },
-   },
+   }
 });

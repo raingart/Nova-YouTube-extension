@@ -35,7 +35,7 @@ window.nova_plugins.push({
          });
 
       function adSkip() {
-         if (!document.body.querySelector('#movie_player.ad-showing')) return;
+         if (!movie_player.classList.contains('ad-showing')) return;
 
          this.currentTime = this.duration; // set end ad video
 

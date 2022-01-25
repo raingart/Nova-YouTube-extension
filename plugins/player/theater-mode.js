@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Modo teatro',
    'title:pt': 'Modo teatro',
    'title:de': 'Theatermodus',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Auto enable player full-width mode',
    'desc:zh': '自动为播放器启用全宽模式',

@@ -8,10 +8,10 @@ window.nova_plugins.push({
    title: 'Show playlist duration',
    'title:zh': '显示播放列表持续时间',
    'title:ja': 'プレイリストの期間を表示',
-   'title:es': 'Mostrar duração da lista de reprodução',
+   'title:es': 'Mostrar duración de la lista de reproducción',
    'title:pt': 'Mostrar duração da lista de reprodução',
-   'title:de': 'Playlist-Dauer anzeigen',
-   run_on_pages: 'watch, playlist',
+   'title:de': 'Wiedergabelistendauer anzeigen',
+   run_on_pages: 'watch, playlist, -mobile',
    restart_on_transition: true,
    section: 'sidebar',
    // desc: '',
@@ -19,9 +19,9 @@ window.nova_plugins.push({
 
       const
          SELECTOR_ID = 'playlist-duration-time',
-         CACHE_PREFIX = SELECTOR_ID + ':',
-         playlistId = NOVA.queryURL.get('list'),
-         STORE_NAME = CACHE_PREFIX + playlistId;
+         // CACHE_PREFIX = SELECTOR_ID + ':',
+         // STORE_NAME = CACHE_PREFIX + playlistId,
+         playlistId = NOVA.queryURL.get('list');
 
       if (!playlistId) return;
 
@@ -41,10 +41,10 @@ window.nova_plugins.push({
                   }
 
                   function getPlaylistDuration() {
-                     if (storage = sessionStorage.getItem(STORE_NAME)) {
-                        // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
-                        return storage;
-                     }
+                     // if (storage = sessionStorage.getItem(STORE_NAME)) {
+                     //    // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
+                     //    return storage;
+                     // }
 
                      const vids_list = (document.body.querySelector('ytd-app')?.data?.response || window.ytInitialData)
                         .contents.twoColumnBrowseResultsRenderer
@@ -63,10 +63,8 @@ window.nova_plugins.push({
             NOVA.waitElement('#secondary .index-message-wrapper')
                .then(el => {
                   const waitPlaylist = setInterval(() => {
-                     let playlistLength;
-                     if ((ytdPl = document.body.querySelector('ytd-player')?.player_) && ytdPl.hasOwnProperty('getPlaylist')) {
-                        playlistLength = ytdPl.getPlaylist()?.length;
-                     }
+                     const playlistLength = movie_player.getPlaylist()?.length;
+
                      let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
                         ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents
                         // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated on page transition!
@@ -106,14 +104,13 @@ window.nova_plugins.push({
 
                      // alt if current "playingIdx" always one step behind
                      // const
-                     //    videoId = document.getElementById('movie_player')?.getVideoData().video_id || NOVA.queryURL.get('v'),
+                     //    videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v'),
                      //    playingIdx2 = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.videoId == videoId);
                      // console.assert(playingIdx == playingIdx2, 'playingIdx diff:', playingIdx + '/' + playingIdx2);
                      // if (playingIdx !== playingIdx2) alert(1)
 
-                     const playingIdx = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
+                     const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected)
                      let total;
-
 
                      switch (user_settings.playlist_duration_progress) {
                         case 'done':
@@ -127,6 +124,8 @@ window.nova_plugins.push({
                            vids_list.splice(0, playingIdx);
                            // console.debug('left vids_list.length:', vids_list.length);
                            break;
+
+                        // case 'total': // skiping
                      }
 
                      if ((duration = getDurationFromList(vids_list)) // disallow set zero
@@ -188,7 +187,7 @@ window.nova_plugins.push({
 
       function outFormat(duration = 0, total) {
          // console.log('outFormat', ...arguments);
-         let out = NOVA.timeFormatTo.HMS_digit(duration);
+         let out = NOVA.timeFormatTo.HMS.digit(duration);
          out = `(${out})`;
 
          if (total) out += ` [${Math.floor(duration * 100 / total)}%${user_settings.playlist_duration_progress ? ' ' + user_settings.playlist_duration_progress : ''}]`;
@@ -240,5 +239,5 @@ window.nova_plugins.push({
          'label:de': 'Prozent hinzufügen',
          type: 'checkbox',
       },
-   },
+   }
 });

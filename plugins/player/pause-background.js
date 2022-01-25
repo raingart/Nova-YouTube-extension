@@ -39,13 +39,12 @@ window.nova_plugins.push({
 
             // auto play on tab focus
             if (user_settings.pause_background_tab_onfocus) {
-               const player = document.getElementById('movie_player');
                document.addEventListener("visibilitychange", () => {
                   //   if other tabs are not playing
                   if (document.visibilityState == 'visible'
                      && !localStorage.hasOwnProperty(storeName)
                      // && video.paused  // dont see ENDED
-                     && ['UNSTARTED', 'PAUSED'].includes(NOVA.PLAYERSTATE[player.getPlayerState()])
+                     && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
                   ) {
                      // console.debug('play video in focus');
                      video.play();
@@ -66,10 +65,11 @@ window.nova_plugins.push({
          });
 
       // replaced with generic HTML5 method
-      // const onPlayerStateChange = state => ('PLAYING' == NOVA.PLAYERSTATE[state]) ? localStorage.setItem(storeName, instanceID) : removeStorage();
+      // const onPlayerStateChange = state => ('PLAYING' == NOVA.getPlayerState(state)) ? localStorage.setItem(storeName, instanceID) : removeStorage();
+
       // NOVA.waitElement('#movie_player')
-      //    .then(player => {
-      //       player.addEventListener('onStateChange', onPlayerStateChange.bind(player));
+      //    .then(() => {
+      //       movie_player.addEventListener('onStateChange', onPlayerStateChange);
 
       //       // remove storage if this tab closed
       //       window.addEventListener('beforeunload', removeStorage);
@@ -81,10 +81,10 @@ window.nova_plugins.push({
       //             // has storage
       //             && localStorage[storeName] && localStorage[storeName] !== instanceID
       //             // this player is playing
-      //             && NOVA.PLAYERSTATE[player.getPlayerState()] === 'PLAYING'
+      //             && 'PLAYING' == NOVA.getPlayerState()
       //          ) {
       //             console.debug('pause player', localStorage[storeName]);
-      //             player.pauseVideo();
+      //             movie_player.pauseVideo();
       //          }
       //       });
 
@@ -103,5 +103,5 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: '',
       },
-   },
+   }
 });

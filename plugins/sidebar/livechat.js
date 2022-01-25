@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Ocultar chat en vivo',
    'title:pt': 'Ocultar livechat',
    'title:de': 'Livechat ausblenden',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
    section: 'sidebar',
    // desc: '',
@@ -36,5 +36,5 @@ window.nova_plugins.push({
             { label: 'remove', value: 'disable', 'label:zh': '消除', 'label:ja': '除く', 'label:es': 'retirar', 'label:pt': 'remover', 'label:de': 'löschen' },
          ],
       },
-   },
+   }
 });

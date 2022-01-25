@@ -20,7 +20,9 @@ window.nova_plugins.push({
          selector: 'a[href*="/redirect?"]',
          attr_mark: 'redirect-cleared',
          callback: link => {
-            if (q = NOVA.queryURL.get('q', link.href)) link.href = decodeURIComponent(q);
+            if (q = NOVA.queryURL.get('q', link.href)) {
+               link.href = decodeURIComponent(q);
+            }
          },
       });
 

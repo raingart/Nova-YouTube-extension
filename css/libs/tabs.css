@@ -25,11 +25,11 @@
 
 /* -----------*/
 
-.tabbed input[name="tabs"] {
+.tabbed input[name=tabs] {
    display: none;
 }
 
-.tabbed input[name="tabs"]:checked+label {
+.tabbed input[name=tabs]:checked+label {
    border-bottom-color: var(--hr);
    opacity: 1;
    z-index: 2;
@@ -38,7 +38,6 @@
 .tabs-content {
    clear: both;
    border-top: 2px solid var(--hr);
-   /* padding: 15px 6px; */
    padding: 10px 0px;
 }
 
@@ -47,23 +46,22 @@
    display: none;
 }
 
-.tabbed input[name="tabs"]:nth-of-type(1):checked~.tabs-content>*:nth-of-type(1),
-.tabbed input[name="tabs"]:nth-of-type(2):checked~.tabs-content>*:nth-of-type(2),
-.tabbed input[name="tabs"]:nth-of-type(3):checked~.tabs-content>*:nth-of-type(3),
-.tabbed input[name="tabs"]:nth-of-type(4):checked~.tabs-content>*:nth-of-type(4) {
+.tabbed input[name=tabs]:nth-of-type(1):checked~.tabs-content>*:nth-of-type(1),
+.tabbed input[name=tabs]:nth-of-type(2):checked~.tabs-content>*:nth-of-type(2),
+.tabbed input[name=tabs]:nth-of-type(3):checked~.tabs-content>*:nth-of-type(3),
+.tabbed input[name=tabs]:nth-of-type(4):checked~.tabs-content>*:nth-of-type(4) {
    position: relative;
-   /* transform: rotateX(0); */
    display: block;
 }
 
 /* <div class="tabbed">
-   <input type="radio" name="tabs" id="tab-1" checked>
+   <input type="radio" name=tabs id="tab-1" checked>
    <label for="tab_1">One</label>
 
-   <input type="radio" name="tabs" id="tab-2">
+   <input type="radio" name=tabs id="tab-2">
    <label for="tab_2" id="show_all_plugins">Two</label>
 
-   <input type="radio" name="tabs" id="tab-3">
+   <input type="radio" name=tabs id="tab-3">
    <label for="tab_3">Three</label>
 
    <div class="tabs-content">

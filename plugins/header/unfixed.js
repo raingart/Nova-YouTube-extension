@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:pt': 'Cabeçalho não corrigido',
    'title:de': 'Kopfleiste nicht fixiert',
    // run_on_pages: 'watch, channel',
-   run_on_pages: 'all, -results',
+   run_on_pages: 'all, -embed, -mobile',
    // restart_on_transition: true,
    section: 'header',
    desc: 'Prevent header from sticking',
@@ -82,5 +82,5 @@ window.nova_plugins.push({
          'title:de': 'Macht auf einem kleinen Bildschirm Sinn',
          type: 'checkbox',
       },
-   },
+   }
 });

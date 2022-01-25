@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Desactivar la suspensión de la página',
    'title:pt': 'Desativar página suspensa',
    'title:de': 'Seitenschlaf deaktivieren',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: "prevent 'Video paused' alert",
    'desc:zh': "防止[视频暂停]警报",
@@ -22,7 +22,7 @@ window.nova_plugins.push({
       NOVA.waitElement('[role="dialog"] #confirm-button')
          .then(btn => {
             btn.click();
-            if ((vid = document.body.querySelector('video')) && vid.paused) {
+            if ((vid = movie_player.querySelector('video')) && vid.paused) {
                vid.play();
             }
          });

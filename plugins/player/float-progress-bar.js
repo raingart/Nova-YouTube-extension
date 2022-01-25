@@ -19,15 +19,14 @@ window.nova_plugins.push({
       NOVA.waitElement('video')
          .then(video => {
             const
-               player = document.getElementById('movie_player'),
-               container = renderFloatBar(player),
+               container = renderFloatBar(),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
             // is new video
             video.addEventListener('loadeddata', function () {
                // hide if is stream.
-               container.style.display = player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
+               container.style.display = movie_player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
 
                // reset animation state
                container.classList.remove('transition');
@@ -35,19 +34,14 @@ window.nova_plugins.push({
                progressEl.style.transform = 'scaleX(0)';
                container.classList.add('transition');
 
-               const waitDuration = setInterval(() => {
-                  if (!isNaN(this.duration)) {
-                     clearInterval(waitDuration);
-                     renderChapters(this);
-                  }
-               }, 50);
+               renderChapters.init(this);
             });
 
             // render progress
             // NOVA.waitElement(`${SELECTOR}-progress`)
             //    .then(progressEl => {
             video.addEventListener('timeupdate', function () {
-               if (player.getVideoData().isLive) return;
+               if (movie_player.getVideoData().isLive) return;
 
                if (!isNaN(this.duration)) {
                   progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
@@ -62,7 +56,7 @@ window.nova_plugins.push({
             video.addEventListener('seeking', renderBuffer.bind(video));
 
             function renderBuffer() {
-               if (player.getVideoData().isLive) return;
+               if (movie_player.getVideoData().isLive) return;
 
                for (let i = 0; i < this.buffered.length; i++) {
                   //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
@@ -76,41 +70,10 @@ window.nova_plugins.push({
 
          });
 
-      function renderChapters(vid) {
-         const selectorTimestampLink = 'a[href*="t="]';
-         // search in description
-         NOVA.waitElement(`#description .content ${selectorTimestampLink}`)
-            .then(() => renderChaptersMarks(vid.duration));
-
-         // search in first/pinned comment
-         NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
-            .then(() => renderChaptersMarks(vid.duration));
-
-         function renderChaptersMarks(duration) {
-            // console.debug('renderChaptersMarks', ...arguments);
-            const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
-            chaptersConteiner.innerHTML = ''; // clear old
-            // if (!isNaN(duration)) {
-            NOVA.getChapterList(duration)
-               ?.forEach((chapter, i, chapters_list) => {
-                  // console.debug('', (chapterEl.sec / duration) * 100 + '%');
-                  const chapterEl = document.createElement('span');
-                  const nextChapterSec = chapters_list[i + 1]?.sec || duration;
-                  chapterEl.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
-                  if (chapter.title) chapterEl.title = chapter.title;
-                  chapterEl.setAttribute('time', chapter.time);
-                  chaptersConteiner.append(chapterEl);
-               });
-            // }
-         }
-      }
-
-      function renderFloatBar(container = required()) {
-         // console.debug('renderFloatBar', ...arguments);
-         if (!(container instanceof HTMLElement)) return console.error('parent not HTMLElement:', container);
+      function renderFloatBar() {
 
          return document.getElementById(SELECTOR_ID) || (function () {
-            container.insertAdjacentHTML('beforeend',
+            movie_player.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
                   <div class="conteiner">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
@@ -191,6 +154,89 @@ window.nova_plugins.push({
          })();
       }
 
+      const renderChapters = {
+         init(vid) {
+            if (NOVA.currentPageName() == 'watch' && !(vid instanceof HTMLElement)) return console.error('vid not HTMLElement:', chaptersContainer);
+
+            const waitDuration = setInterval((() => {
+               switch (NOVA.currentPageName()) {
+                  case 'watch':
+                     return () => {
+                        if (!isNaN(vid.duration)) {
+                           clearInterval(waitDuration);
+                           this.from_description(vid.duration);
+                        }
+                     };
+                     break;
+
+                  // embed dont have description
+                  case 'embed':
+                     return () => {
+                        if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
+                           && chaptersContainer?.children.length > 1
+                        ) {
+                           clearInterval(waitDuration);
+                           this.from_div(chaptersContainer);
+                        }
+                     }
+                     break;
+               }
+            })(), 1000); // panel hides for a few seconds. No need to hurry
+         },
+
+         from_description(duration = required()) {
+            if (Math.sign(duration) !== 1) return console.error('duration not positive number:', duration);
+
+            const selectorTimestampLink = 'a[href*="t="]';
+            // search in description
+            NOVA.waitElement(`#description .content ${selectorTimestampLink}`)
+               .then(() => renderChaptersMarks(duration));
+
+            // search in first/pinned comment
+            NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
+               .then(() => renderChaptersMarks(duration));
+
+            function renderChaptersMarks(duration) {
+               // console.debug('renderChaptersMarks', ...arguments);
+               const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
+               chaptersConteiner.innerHTML = ''; // clear old
+               // if (!isNaN(duration)) {
+               NOVA.getChapterList(duration)
+                  ?.forEach((chapter, i, chapters_list) => {
+                     // console.debug('', (newChapter.sec / duration) * 100 + '%');
+                     const newChapter = document.createElement('span');
+                     const nextChapterSec = chapters_list[i + 1]?.sec || duration;
+
+                     newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
+                     if (chapter.title) newChapter.title = chapter.title;
+                     newChapter.setAttribute('time', chapter.time);
+
+                     chaptersConteiner.append(newChapter);
+                  });
+               // }
+            }
+         },
+
+         from_div(chaptersContainer = required()) {
+            if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
+            const
+               progressContainerWidth = parseInt(NOVA.css.getValue({ selector: chaptersContainer, property: 'width' })),
+               chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
+
+            for (const chapter of chaptersContainer.children) {
+               const
+                  newChapter = document.createElement('span'),
+                  chapterWidth = parseInt(NOVA.css.getValue({ selector: chapter, property: 'width' })),
+                  chapterMargin = parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-left' }))
+                     + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-right' }));
+
+               newChapter.style.width = (((chapterWidth + chapterMargin) / progressContainerWidth) * 100) + '%';
+
+               chaptersConteiner.append(newChapter);
+            }
+         },
+      };
+
    },
    options: {
       player_float_progress_bar_height: {
@@ -224,5 +270,5 @@ window.nova_plugins.push({
          max: 1,
          value: .7,
       },
-   },
+   }
 });

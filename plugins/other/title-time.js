@@ -11,61 +11,67 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
-      let originalTitleTemplate = document.title;
-      let player;
+      let backupTitle = document.title;
 
-      document.addEventListener('yt-navigate-start', () => originalTitleTemplate = document.title);
+      document.addEventListener('yt-navigate-start', () => backupTitle = null); // remove saved title
 
       NOVA.waitElement('video')
          .then(video => {
-            player = document.getElementById('movie_player');
-
+            // update title
             video.addEventListener('timeupdate', updateTitle.bind(video));
+            // save title
+            video.addEventListener('loadeddata', () => {
+               if (movie_player.getVideoData().isLive || backupTitle) return;
+               backupTitle = document.title;
+            });
             // restore the original title
-            ['pause', 'ended'].forEach(evt => {
-               video.addEventListener(evt, () => document.title = originalTitleTemplate?.replace('%s', getVideoTitle()));
+            ['pause', 'ended'].forEach(evt => { // need add event "suspend" ?
+               video.addEventListener(evt, () => {
+                  if (movie_player.getVideoData().isLive || !backupTitle) return;
+                  document.title = backupTitle;
+               });
             });
          });
 
       function updateTitle() {
-         if (player.getVideoData().isLive) return;
+         if (movie_player.getVideoData().isLive || !backupTitle) return;
 
-         // console.debug('timeupdate', this.currentTime, '/', this.duration);
-         // backup the original title template
-         if (!originalTitleTemplate) originalTitleTemplate = document.title.replace(getVideoTitle(), '%s');
-
-         let new_title = [];
+         let newTitleArr = [];
 
          switch (user_settings.page_title_time_mode) {
-            case 'current':
-               new_title = [this.currentTime];
-               break;
+            // case 'current':
+            //    newTitleArr = [this.currentTime];
+            //    break;
 
             case 'current-duration':
-               new_title = [this.currentTime, ' / ', this.duration]; // string
+               if (!isNaN(this.duration)) {
+                  newTitleArr = [this.currentTime, ' / ', this.duration]; // string
+               }
                break;
 
             // case 'left':
             default:
                if (!isNaN(this.duration)) {
-                  new_title = [this.duration - this.currentTime];
+                  newTitleArr = [this.duration - this.currentTime];
                }
          }
-         // add playbackRate if it is not default
-         // if (this.playbackRate !== 1) new_title.push(` (${this.playbackRate}x)`);
 
-         new_title = new_title
-            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS_digit(t / this.playbackRate))
+         // add playbackRate if it is not default
+         // if (this.playbackRate !== 1) newTitleArr.push(` (${this.playbackRate}x)`);
+
+         newTitleArr = newTitleArr
+            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS.digit(t / this.playbackRate))
             .join('');
 
-         document.title = new_title + ' | ' + getVideoTitle();
-         // document.title = new_title + ' • ' + getVideoTitle();
+         document.title = [newTitleArr, backupTitle]
+            .filter(n => n)
+            .join(' | ');
+         // .join(' • ');
       }
 
-      function getVideoTitle() {
-         return document.head.querySelector('meta[name="title"][content]')?.content
-            || document.getElementById('movie_player')?.getVideoData().title;
-      }
+      // function getVideoTitle() {
+      //    return movie_player.getVideoData().title || document.body.querySelector('#info h1.title')?.content;
+      // }
 
    },
    options: {
@@ -78,10 +84,10 @@ window.nova_plugins.push({
          'label:pt': 'Modo',
          'label:de': 'Modus',
          options: [
-            { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:es': 'actual', 'label:pt': 'atual', 'label:de': 'strom' },
+            // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:es': 'actual', 'label:pt': 'atual', 'label:de': 'strom' },
             { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:de': 'links' },
             { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:de': 'strom/dauer' },
          ],
       },
-   },
+   }
 });

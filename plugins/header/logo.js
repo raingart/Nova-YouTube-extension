@@ -6,7 +6,7 @@ window.nova_plugins.push({
    'title:es': 'Logotipo de YouTube',
    'title:pt': 'Logotipo do YouTube',
    // 'title:de': '',
-   run_on_pages: 'all',
+   run_on_pages: 'all, -embed, -mobile',
    section: 'header',
    // desc: '',
    _runtime: user_settings => {
@@ -25,5 +25,5 @@ window.nova_plugins.push({
          placeholder: 'https://youtube.com/...',
          value: 'https://youtube.com/feed/subscriptions',
       },
-   },
+   }
 });

@@ -13,7 +13,7 @@ window.nova_plugins.push({
    // minus in front denotes an exception
    // exclude page from launch:
    // https://www.youtube.com/embed/*** <-- -embed
-   run_on_pages: 'all, watch, channel, -embed',
+   run_on_pages: 'all, home, feed, results, channel, watch, -embed',
 
    // deactivate if use NOVA.HTMLElement.watch
    restart_on_transition: true, // optional. Restart plugin on every url change
@@ -60,6 +60,19 @@ window.nova_plugins.push({
       // let cfg = window.ytcfg.get("EXPERIMENT_FLAGS");
       // cfg.kevlar_flexy_watch_new_dom = false;
       // window.ytcfg.set("EXPERIMENT_FLAGS", cfg);
+      // movie_player.getVideoData()
+      //    .video_id
+      //    .isLive
+      //    .title
+      //     ...
+
+      // movie_player != document.body.querySelector('ytd-player')?.player_
+
+      // d(ocument.body.querySelector('ytd-player')?.player_
+      //    .isFullscreen()
+      //     ...
+      // movie_player
+      //    .isFullscreen()
 
    },
 

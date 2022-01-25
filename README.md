@@ -1,4 +1,4 @@
-# Nova YouTube-extension
+# Nova YouTube
 [![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
 
 Combine small plugins, expanding the possibilities of YouTube.
@@ -10,29 +10,28 @@ The extension is based on the plugin files themselves. The rest of the files onl
 ![Nova YouTube-extension](https://lh3.googleusercontent.com/NUJv5yIT-6NUT7YiBgkNu8kCULGkbG8YL3XXjNiB_Q3XW87rvfyYDbPj55u2RTqJihtX_94Y=w640-h400-e365)
 
 ## Installation
-[Download the extension from the Chrome store.](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)(It's free.)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/miiheelkbegpkflplpmmkidaklfgjecb?style=flat-square&label=Chrome%20Web%20Store)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
+[![openuserjs](https://img.shields.io/badge/dynamic/json?style=flat-square&color=eee&amp;label=OpenUserJS&amp;query=%24.OpenUserJS.installs%5B0%5D.value&amp;suffix=%20installs&amp;url=https%3A%2F%2Fopenuserjs.org%2Fmeta%2Fraingart%2FNova_YouTube.meta.json)](https://openuserjs.org/scripts/raingart/Nova_YouTube)
+[![greasyfork](https://img.shields.io/badge/dynamic/json?style=flat-square&color=blue&amp;label=GreasyFork&amp;query=total_installs&amp;suffix=%20installs&amp;url=https%3A%2F%2Fgreasyfork.org%2Fscripts%2F433360.json)](https://greasyfork.org/en/scripts/433360-nova-youtube)
 
 OR
 
 You can now load the extension into your browser through the browser's extension tools page:
-1. Download the script
+1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script and extract
 2. Type `chrome://extensions` in your address bar to bring up the extensions page.
 3. Enable __Developer Mode__ (checkbox)
-4. Click the "Load unpacked extension" button, navigate to the build folder of your local extension instance, and click "OK". Or drag the script folder onto the extensions page.
+4. Click the "Load unpacked extension" button, navigate to extracted script folder, and click "OK". Or drag the script folder onto the extensions page.
 
-OR
-
-Userscript [openuserjs](https://openuserjs.org/scripts/raingart/Nova_YouTube).
-
-## Bilder
-**Only for Unix shell**. All output will be in the `/tmp/` directory.
+## Building
+>Only for Unix shell**. All output will be in the `/tmp/` directory.
 
 **Extensions**: `$ ./package-extensions.sh`
 
 **Userscript**: `$ make build`
 
+## Development
 ### File structure
-The extension is based on plugin files. The remaining files only serve them.
+>The extension is based on plugin files. The remaining files only serve them.
 
 * [/js/loader.js](https://github.com/raingart/Nova-YouTube-extension/tree/master/js/loader.js) - initial loading and connection of plugins.
 * [/js/plugins.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/plugins.js) - a list of all plugins and their module to run them.

@@ -363,7 +363,7 @@ const Opt = {
 window.addEventListener('load', () => {
    // search bar
    ['change', 'keyup'].forEach(evt => {
-      document.body.querySelector('form input[type="search"]')
+      document.body.querySelector('form input[type=search]')
          .addEventListener(evt, function () {
             searchFilter({
                'keyword': this.value,

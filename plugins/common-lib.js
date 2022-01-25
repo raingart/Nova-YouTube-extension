@@ -26,6 +26,10 @@ const NOVA = {
    // },
 
    waitElement(selector = required()) {
+      if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+      // this.log('waitElement:', selector);
+
+      // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
       // alternative https://git.io/waitForKeyElements.js
       // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
       // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
@@ -33,40 +37,38 @@ const NOVA = {
       // There is a more correct method - transitionend.
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
       // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
-      this.log('waitElement:', selector);
 
       return new Promise(resolve => {
-         if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-
          if (element = (document?.body || document).querySelector(selector)) {
-            NOVA.log('waited(1)', selector, element);
+            // console.debug('waited1', selector);
             return resolve(element);
          }
 
          new MutationObserver((mutations, observer) => {
             mutations.forEach(mutation => {
-               mutation.addedNodes.forEach(node => {
-                  if ((node.nodeType === 1 || node.nodeType === 3)
-                     && (element = node.parentElement?.querySelector(selector) || (document?.body || document).querySelector(selector))
-                  ) {
+               for (const node of [...mutation.addedNodes]) {
+                  if (![1, 3, 8].includes(node.nodeType)) return;
+
+                  if (node.matches && node.matches(selector)) { // in node
+                     // console.debug('waited2', mutation.type, node.nodeType, selector);
+                     // console.debug('2', selector, node.nodeType);
                      observer.disconnect();
-                     // NOVA.log('waited', selector, element, mutation.type, node.nodeType);
+                     return resolve(node);
+                  }
+                  else if (element = node?.parentElement?.querySelector(selector)) { // in parent
+                     // console.debug('3', mutation.type, node.nodeType, selector);
+                     observer.disconnect();
+                     return resolve(element);
+
+                  } else if (element = (document?.body || document).querySelector(selector)) { // inglobal
+                     // console.debug('4', mutation.type, node.nodeType, selector);
+                     observer.disconnect();
                      return resolve(element);
                   }
-               });
-               // [...mutation.addedNodes]
-               // .filter(node => node.nodeType === 1)
-               // .forEach(node => {
-               //    (node?.parentElement || document.body).querySelectorAll(selector)
-               //       .forEach(element => {
-               //          // NOVA.log('waited', mutation.type, selector);
-               //          observer.disconnect();
-               //          return resolve(element);
-               //       });
-               // });
+               }
             });
          })
-            .observe(document?.body || document || document.documentElement, { childList: true, subtree: true });
+            .observe(document?.body || document.documentElement, { childList: true/*, subtree: true*/ });
       });
    },
 
@@ -94,10 +96,10 @@ const NOVA = {
 
    css: {
       push(css = required(), selector, important) {
+         // console.debug('css\n', ...arguments);
          if (typeof css === 'object') {
-            if (!selector) {
-               return console.error('injectStyle > empty json-selector:', ...arguments);
-            }
+            if (!selector) return console.error('injectStyle > empty json-selector:', ...arguments);
+
             // if (important) {
             injectCss(selector + json2css(css));
             // } else {
@@ -130,7 +132,7 @@ const NOVA = {
 
             if (source.endsWith('.css')) {
                sheet = document.createElement('link');
-               sheet.rel = "sheet";
+               sheet.rel = 'sheet';
                sheet.href = source;
 
             } else {
@@ -199,11 +201,11 @@ const NOVA = {
       getParamLikeObj(name = required()) {
          return Object.fromEntries(
             this.get(name)
-               .split(/&/)
+               ?.split(/&/)
                .map(c => {
                   const [key, ...v] = c.split('=');
                   return [key, decodeURIComponent(v.join('='))];
-               })
+               }) || {}
          );
       },
 
@@ -262,7 +264,7 @@ const NOVA = {
       if (!text) return;
       if (typeof fateBezel === 'number') clearTimeout(fateBezel);
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
-      if (!bezelEl) return console.error(`bezelTrigger ${text}=>${bezelEl}`);
+      if (!bezelEl) return console.warn(`bezelTrigger ${text}=>${bezelEl}`);
 
       const
          bezelConteiner = bezelEl.parentElement.parentElement,
@@ -300,7 +302,7 @@ const NOVA = {
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
                ?.split('\n')
                .forEach(line => {
-                  if (line.length > 5 && line.length < 110 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
+                  if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
                      timestamp = timestamp[0];
                      const sec = this.timeFormatTo.hmsToSec(timestamp);
                      if (sec > prevSec && sec < +video_duration) {
@@ -377,71 +379,54 @@ const NOVA = {
          return str?.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
       },
 
-      HMS_digit(ts = required()) { // format out "h:mm:ss"
-         const
-            sec = Math.abs(+ts),
-            d = Math.floor(sec / 86400),
-            h = Math.floor((sec % 86400) / 3600),
-            m = Math.floor((sec % 3600) / 60),
-            s = Math.floor(sec % 60);
+      HMS: {
+         digit(ts = required()) { // format out "h:mm:ss"
+            const
+               ms = Math.abs(+ts),
+               d = Math.floor(ms / 86400),
+               h = Math.floor((ms % 86400) / 3600),
+               m = Math.floor((ms % 3600) / 60),
+               s = Math.floor(ms % 60);
 
-         return (d ? `${d}d ` : '')
-            + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
-            + (h ? m.toString().padStart(2, '0') : m) + ':'
-            + s.toString().padStart(2, '0');
+            return (d ? `${d}d ` : '')
+               + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
+               + (h ? m.toString().padStart(2, '0') : m) + ':'
+               + s.toString().padStart(2, '0');
+            // 84% slower
+            // return (days && !isNaN(days) ? `${days}d ` : '')
+            //    + [hours, minutes, seconds]
+            //       .filter(i => +i && !isNaN(i))
+            //       .map((item, idx) => idx ? item.toString().padStart(2, '0') : item) // "1:2:3" => "1:02:03"
+            //       .join(':'); // format "h:m:s"
+         },
+         abbr(ts = required()) { // format out "999h00m00s"
+            const
+               ms = Math.abs(+ts),
+               d = Math.floor(ms / 86400),
+               h = Math.floor((ms % 86400) / 3600),
+               m = Math.floor((ms % 3600) / 60),
+               s = Math.floor(ms % 60);
+
+            return (d ? `${d}d ` : '')
+               + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
+               + (m ? (h ? m.toString().padStart(2, '0') : m) + 'm' : '')
+               + (s ? (m ? s.toString().padStart(2, '0') : s) + 's' : '');
+            // 78.48% slower
+            // return (days ? `${days}d ` : '')
+            //    + [seconds, minutes, hours]
+            //       .filter(i => +i && !isNaN(i))
+            //       .map((item, idx, arr) => (arr.length - 1 !== idx ? item.toString().padStart(2, '0') : item) + ['s', 'm', 'h'][idx])
+            //       .reverse()
+            //       .join(''); // format "999h00m00s"
+         },
       },
-      // 84% slower
-      // HMS_digit(ts = required()) { // format out "h:m:s"
-      //    const
-      //       sec = Math.abs(+ts),
-      //       days = Math.floor(sec / 86400),
-      //       hours = Math.floor(sec % 86400 / 3600),
-      //       minutes = Math.floor(sec % 3600 / 60),
-      //       seconds = Math.floor(sec % 60);
-
-      //    return (days && !isNaN(days) ? `${days}d ` : '')
-      //       + [hours, minutes, seconds]
-      //          .filter(i => +i && !isNaN(i))
-      //          .map((item, idx) => idx ? item.toString().padStart(2, '0') : item) // "1:2:3" => "1:02:03"
-      //          .join(':'); // format "h:m:s"
-      // },
-
-      HMS_abbr(ts = required()) { // format out "999h00m00s"
-         const
-            sec = Math.abs(+ts),
-            d = Math.floor(sec / 86400),
-            h = Math.floor(sec / 3600),
-            m = Math.floor((sec % 3600) / 60),
-            s = Math.floor(sec % 60);
-
-         return (d ? `${d}d ` : '')
-            + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
-            + (m ? (h ? m.toString().padStart(2, '0') : m) + 'm' : '')
-            + (s ? (m ? s.toString().padStart(2, '0') : s) + 's' : '');
-      },
-      // 78.48% slower
-      // HMS_abbr(ts = required()) {
-      //    const
-      //       sec = Math.abs(+ts),
-      //       days = Math.floor(sec / 86400),
-      //       hours = Math.floor(sec / 3600),
-      //       minutes = Math.floor(sec % 3600 / 60),
-      //       seconds = Math.floor(sec % 60);
-
-      //    return (days ? `${days}d ` : '')
-      //       + [seconds, minutes, hours]
-      //          .filter(i => +i && !isNaN(i))
-      //          .map((item, idx, arr) => (arr.length - 1 !== idx ? item.toString().padStart(2, '0') : item) + ['s', 'm', 'h'][idx])
-      //          .reverse()
-      //          .join(''); // format "999h00m00s"
-      // },
    },
 
-   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'main',
+   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'home',
 
    queryURL: {
-      // get: (query, urlString) => new URLSearchParams((urlString ? new URL(urlString) : location).search).get(query),
-      get: (query, urlString) => new URL(urlString || location).searchParams.get(query),
+      // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
+      get: (query, url) => new URL(url || location).searchParams.get(query),
 
       set(query_obj = {}, urlString) {
          // NOVA.log('queryURL.set:', ...arguments);
@@ -521,16 +506,18 @@ const NOVA = {
       },
    },
 
-   // (player = document.getElementById('movie_player')) && player.getPlayerState() === 2 // 2: paused
-   // const onPlayerStateChange = state => ('PLAYING' == NOVA.PLAYERSTATE[state])
-   // NOVA.PLAYERSTATE[player.getPlayerState()] === 'PLAYING'
-   PLAYERSTATE: {
-      '-1': 'UNSTARTED',
-      0: 'ENDED',
-      1: 'PLAYING',
-      2: 'PAUSED',
-      3: 'BUFFERING',
-      5: 'CUED'
+   getPlayerState(state) {
+      // movie_player.getPlayerState() === 2 // 2: PAUSED
+      // const onPlayerStateChange = state => 'PLAYING' == NOVA.getPlayerState(state)
+      // NOVA.getPlayerState() == 'PLAYING'
+      return {
+         '-1': 'UNSTARTED',
+         0: 'ENDED',
+         1: 'PLAYING',
+         2: 'PAUSED',
+         3: 'BUFFERING',
+         5: 'CUED'
+      }[state || movie_player.getPlayerState()];
    },
 
    log() {

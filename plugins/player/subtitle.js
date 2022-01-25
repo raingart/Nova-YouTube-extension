@@ -1,4 +1,4 @@
-// https://youtu.be/Il0S8BoucSA?t=99 - subtitle alignment bug
+// https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
 
 window.nova_plugins.push({
    id: 'subtitle-transparent',
@@ -8,7 +8,7 @@ window.nova_plugins.push({
    'title:es': 'Subtítulos transparentes',
    'title:pt': 'Legendas transparentes',
    'title:de': 'Transparente Untertitel',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {
@@ -36,5 +36,5 @@ window.nova_plugins.push({
          'label:de': 'Fetter Text',
          type: 'checkbox',
       },
-   },
+   }
 });
