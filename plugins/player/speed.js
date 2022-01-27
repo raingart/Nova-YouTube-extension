@@ -114,25 +114,34 @@ window.nova_plugins.push({
       const playerRate = {
          // DEBUG: true,
 
+         // default method requires a multiplicity of 0.25
+         testDefault: rate => (+rate % .25) === 0
+            && movie_player.hasOwnProperty('getPlaybackRate')
+            && +rate <= 2
+            && +user_settings.rate_default <= 2,
+
          set(level = 1) {
             this.log('set', ...arguments);
-            movie_player.setPlaybackRate(+level) && this.saveInSession(level);
-         },
+            if (this.testDefault(level)) {
+               this.log('set:default');
+               movie_player.setPlaybackRate(+level) && this.saveInSession(level);
 
-         // adjust(rate_step) {
-         //    // default method requires a multiplicity of 0.25
-         //    return (+rate_step % .25) === 0 && movie_player.hasOwnProperty('getPlaybackRate')
-         //       ? this.default(+rate_step)
-         //       : this.html5(+rate_step);
-         // },
+            } else {
+               this.log('set:html5');
+               if (videoEl = document.body.querySelector('video')) {
+                  videoEl.playbackRate = +level;
+                  this.clearInSession();
+               }
+            }
+         },
 
          adjust(rate_step = required()) {
             this.log('adjust', ...arguments);
-            return movie_player.hasOwnProperty('getPlaybackRate') ? this.default(+rate_step) : this.html5(+rate_step);
+            return this.testDefault(rate_step) ? this.default(+rate_step) : this.html5(+rate_step);
          },
          // Strategy 1
          default(playback_rate = required()) {
-            this.log('playerRate:default', ...arguments);
+            this.log('default', ...arguments);
             const playbackRate = movie_player.getPlaybackRate();
             // const inRange = delta => {
             //    const rangeRate = movie_player.getAvailablePlaybackRates();
@@ -156,12 +165,12 @@ window.nova_plugins.push({
                   console.error('playerRate:default different: %s!=%s', newRate, movie_player.getPlaybackRate());
                }
             }
-            this.log('playerRate:default return', newRate);
+            this.log('default return', newRate);
             return newRate === movie_player.getPlaybackRate() && newRate;
          },
          // Strategy 2
          html5(playback_rate = required()) {
-            this.log('playerRate:html5', ...arguments);
+            this.log('html5', ...arguments);
 
             if (videoEl = document.body.querySelector('video')) {
                const playbackRate = videoEl.playbackRate;
@@ -176,13 +185,13 @@ window.nova_plugins.push({
                   videoEl.playbackRate = newRate;
 
                   if (newRate === videoEl.playbackRate) {
-                     this.saveInSession(newRate);
+                     this.clearInSession();
 
                   } else {
                      console.error('playerRate:html5 different: %s!=%s', newRate, videoEl.playbackRate);
                   }
                }
-               this.log('playerRate:html5 return', newRate);
+               this.log('html5 return', newRate);
                return newRate === videoEl.playbackRate && newRate;
 
             } else return console.error('playerRate > videoEl empty:', videoEl);
@@ -193,6 +202,17 @@ window.nova_plugins.push({
                sessionStorage['yt-player-playback-rate'] = JSON.stringify({
                   creation: Date.now(), data: level.toString(),
                })
+               this.log('playbackRate save in session:', ...arguments);
+
+            } catch (err) {
+               console.warn(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
+            }
+         },
+
+         clearInSession() {
+            const keyName = 'yt-player-playback-rate';
+            try {
+               sessionStorage.hasOwnProperty(keyName) && sessionStorage.removeItem(keyName);
                this.log('playbackRate save in session:', ...arguments);
 
             } catch (err) {
@@ -289,9 +309,9 @@ window.nova_plugins.push({
          const slider = document.createElement('input');
          slider.className = 'ytp-menuitem-slider';
          slider.type = 'range';
-         slider.min = .1;
-         slider.max = 2;
-         slider.step = .1;
+         slider.min = +user_settings.rate_step;
+         slider.max = Math.max(2, +user_settings.rate_default);
+         slider.step = +user_settings.rate_step;
          slider.value = video.playbackRate;
          // slider.addEventListener('change', () => playerRate.set(slider.value));
          // slider.addEventListener('wheel', () => playerRate.set(slider.value));
@@ -357,10 +377,10 @@ window.nova_plugins.push({
          'label:de': 'Geschwindigkeit beim Start',
          type: 'number',
          title: '1 - default',
-         placeholder: '1-2',
+         // placeholder: '1-3',
          step: 0.05,
          min: 1,
-         max: 2,
+         // max: 3,
          value: 1,
       },
       rate_default_apply_music: {

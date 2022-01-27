@@ -205,7 +205,7 @@ const NOVA = {
                .map(c => {
                   const [key, ...v] = c.split('=');
                   return [key, decodeURIComponent(v.join('='))];
-               }) || {}
+               }) || []
          );
       },
 

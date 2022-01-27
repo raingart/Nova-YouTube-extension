@@ -60,7 +60,7 @@ window.nova_plugins.push({
             }
 
             function insertToHTML({ text = '', container = required() }) {
-               console.debug('insertToHTML', ...arguments);
+               // console.debug('insertToHTML', ...arguments);
                if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
                (document.getElementById(SELECTOR_ID) || (function () {
                   // const el = document.createElement('span');

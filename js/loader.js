@@ -34,9 +34,15 @@ const App = {
       console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
       // skip first run on page transition
+      // Strategy 1
       document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
-      // document.addEventListener('transitionend', () => this.isURLChanged() && this.run()); // not work correctly
-      // document.addEventListener('yt-navigate-finish', this.run); // does not work correctly
+      // Strategy 2
+      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChanged() && this.run(););
+
+      // for test
+      // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
+      // document.addEventListener('yt-navigate-finish', () => console.debug('yt-navigate-finish'));
+      // document.addEventListener('transitionend', ({ target }) => target.id == 'progress' && console.debug('transitionend'));
 
       this.storage.load.apply(this);
       // load all Plugins

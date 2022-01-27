@@ -74,6 +74,9 @@ window.nova_plugins.push({
       // movie_player
       //    .isFullscreen()
 
+      // mails are equal. Similar behavior
+      // window.addEventListener('transitionend' == 'yt-page-data-updated')
+
    },
 
    // Form element template for display in settings

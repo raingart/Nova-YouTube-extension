@@ -246,7 +246,7 @@ window.nova_plugins.push({
       },
       time_jump_chapters_list_show: {
          _tagName: 'input',
-         label: 'Show chapters list block',
+         label: 'Show chapters list section',
          'label:zh': '显示章节列表块',
          'label:ja': 'チャプターリストブロックを表示',
          'label:es': 'Mostrar bloque de lista de capítulos',

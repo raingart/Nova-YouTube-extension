@@ -8,7 +8,7 @@ window.nova_plugins.push({
    'title:es': "Ocultar miniaturas de 'Mix'",
    'title:pt': "Ocultar miniaturas de 'Mix'",
    'title:de': '„Mix“-Thumbnails ausblenden',
-   run_on_pages: 'watch, results',
+   run_on_pages: 'watch, results, home',
    section: 'sidebar',
    desc: '[Mix] offers to rewatch what has already saw',
    'desc:zh': '[混合]提供重新观看已经看过的内容',
