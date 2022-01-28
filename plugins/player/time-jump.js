@@ -13,16 +13,20 @@ window.nova_plugins.push({
    title: 'Time jump',
    'title:zh': '时间跳跃',
    // 'title:ja': 'タイムジャンプ',
+   'title:ko': '시간 점프',
    'title:es': 'Salto de tiempo',
    'title:pt': 'Salto no tempo',
+   'title:fr': 'Saut dans le temps',
    'title:de': 'Zeitsprung',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: 'Use to skip ad inserts',
    'desc:zh': '用于跳过广告插入',
    'desc:ja': '広告の挿入をスキップするために使用',
+   'desc:ko': '광고 삽입을 건너뛸 때 사용',
    'desc:es': 'Úselo para omitir inserciones de anuncios',
    'desc:pt': 'Use para pular inserções de anúncios',
+   'desc:fr': 'Utiliser pour ignorer les insertions publicitaires',
    // 'desc:de': 'Zum Überspringen von Anzeigeninsertionen verwenden',
    _runtime: user_settings => {
 
@@ -117,13 +121,13 @@ window.nova_plugins.push({
                            for (const chapter of chaptersContainer.children) {
                               const
                                  chapterWidth = parseInt(NOVA.css.getValue({ selector: chapter, property: 'width' })),
-                                 сhapterRatio = (passedWidth + chapterWidth) / progressContainerWidth,
+                                 ChapterRatio = (passedWidth + chapterWidth) / progressContainerWidth,
                                  chapterMargin = parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-left' }))
                                     + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-right' }));
 
-                              // console.debug('сhapter', сhapterRatio, chapterWidth);
-                              if (сhapterRatio >= progressRatio && сhapterRatio < 1) {
-                                 return Math.floor(сhapterRatio * this.duration) + chapterMargin + 1;
+                              // console.debug('Chapter', ChapterRatio, chapterWidth);
+                              if (ChapterRatio >= progressRatio && ChapterRatio < 1) {
+                                 return Math.floor(ChapterRatio * this.duration) + chapterMargin + 1;
                               }
                               // accumulate passed
                               passedWidth += chapterWidth + chapterMargin;
@@ -202,8 +206,10 @@ window.nova_plugins.push({
          label: 'Step time',
          // 'label:ja': 'ステップ時間',
          'label:zh': '步骤时间',
+         'label:ko': '단계 시간',
          'label:es': 'Tiempo de paso',
          'label:pt': 'Tempo da etapa',
+         'label:fr': 'Temps de pas',
          'label:de': 'Schrittzeit',
          type: 'number',
          title: 'in seconds',
@@ -217,8 +223,10 @@ window.nova_plugins.push({
          label: 'Hotkey (double click)',
          'label:zh': '热键（双击）',
          'label:ja': 'Hotkey (ダブルプレス)',
+         'label:ko': '단축키(더블 클릭)',
          'label:es': 'Tecla de acceso rápido (doble clic)',
          'label:pt': 'Atalho (duplo clique)',
+         'label:fr': 'Raccourci clavier (double clic)',
          'label:de': 'Hotkey (Doppelklick)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
@@ -232,16 +240,20 @@ window.nova_plugins.push({
          label: 'Show time offset on progress bar',
          'label:zh': '在进度条中显示时间偏移',
          'label:ja': 'プログレスバーに時間オフセットを表示する',
+         'label:ko': '진행률 표시줄에 시간 오프셋 표시',
          'label:es': 'Mostrar compensación de tiempo en la barra de progreso',
          'label:pt': 'Mostrar a diferença de tempo na barra de progresso',
+         'label:fr': 'Afficher le décalage horaire sur la barre de progression',
          'label:de': 'Zeitverschiebung im Fortschrittsbalken anzeigen',
          type: 'checkbox',
          // title: 'When you hover offset current playback time',
          title: 'Time offset from current playback time',
          'title:zh': '与当前播放时间的时间偏移',
          'title:ja': '現在の再生時間からの時間オフセット',
+         'title:ko': '현재 재생 시간으로부터의 시간 오프셋',
          'title:es': 'Desfase de tiempo del tiempo de reproducción actual',
          'title:pt': 'Deslocamento de tempo do tempo de reprodução atual',
+         'title:fr': "Décalage temporel par rapport à l'heure de lecture actuelle",
          'title:de': 'Zeitverschiebung zur aktuellen Wiedergabezeit',
       },
       time_jump_chapters_list_show: {
@@ -249,8 +261,10 @@ window.nova_plugins.push({
          label: 'Show chapters list section',
          'label:zh': '显示章节列表块',
          'label:ja': 'チャプターリストブロックを表示',
+         'label:ko': '챕터 목록 섹션 표시',
          'label:es': 'Mostrar bloque de lista de capítulos',
          'label:pt': 'Mostrar bloco de lista de capítulos',
+         'label:fr': 'Afficher la section de la liste des chapitres',
          'label:de': 'Kapitellistenblock anzeigen',
          type: 'checkbox',
       },

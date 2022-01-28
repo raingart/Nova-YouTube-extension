@@ -6,8 +6,10 @@ window.nova_plugins.push({
    title: 'Clear thumbnails',
    'title:zh': '清除缩略图',
    'title:ja': 'サムネイルをクリアする',
+   'title:ko': '썸네일 지우기',
    'title:es': 'Miniaturas claras',
    'title:pt': 'Limpar miniaturas',
+   'title:fr': 'Effacer les vignettes',
    'title:de': 'Miniaturansichten löschen',
    run_on_pages: 'home, feed, channel, watch', // broken "live now" in results
    // run_on_pages: 'all, -embed, -results',
@@ -15,8 +17,10 @@ window.nova_plugins.push({
    desc: 'Replaces the predefined thumbnail',
    'desc:zh': '替换预定义的缩略图',
    'desc:ja': '事前定義されたサムネイルを置き換えます',
+   'desc:ko': '미리 정의된 축소판을 대체합니다',
    'desc:es': 'Reemplaza la miniatura predefinida',
    'desc:pt': 'Substitui a miniatura predefinida',
+   'desc:fr': 'Remplace la vignette prédéfinie',
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    _runtime: user_settings => {
 
@@ -58,8 +62,10 @@ window.nova_plugins.push({
          label: 'Thumbnail timestamps',
          'label:zh': '缩略图时间戳',
          'label:ja': 'サムネイルのタイムスタンプ',
+         'label:ko': '썸네일 타임스탬프',
          'label:es': 'Marcas de tiempo en miniatura',
          'label:pt': 'Carimbos de data e hora em miniatura',
+         'label:fr': 'Horodatages des vignettes',
          'label:de': 'Thumbnail-Zeitstempel',
          title: 'Show thumbnail from video time position',
          'title:zh': '从视频时间位置显示缩略图',
@@ -68,9 +74,9 @@ window.nova_plugins.push({
          'title:pt': 'Mostrar miniatura da posição no tempo do vídeo',
          // 'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
          options: [
-            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:de': 'anfang' }, // often shows intro
-            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:es': 'medio', 'label:pt': 'meio', 'label:de': 'mitte' },
-            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:es': 'fin', 'label:pt': 'fim', 'label:de': 'ende' }
+            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', 'label:de': 'anfang' }, // often shows intro
+            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', 'label:de': 'mitte' },
+            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', 'label:de': 'ende' }
          ],
       },
       thumbnails_clear_overlay: {
@@ -78,8 +84,10 @@ window.nova_plugins.push({
          label: 'Hide overlay buttons on a thumbnail',
          'label:zh': '隐藏覆盖在缩略图上的按钮',
          'label:ja': 'サムネイルにオーバーレイされたボタンを非表示にする',
+         'label:ko': '축소판에서 오버레이 버튼 숨기기',
          'label:es': 'Ocultar botones superpuestos en una miniatura',
          'label:pt': 'Ocultar botões de sobreposição em uma miniatura',
+         'label:fr': 'Masquer les boutons de superposition sur une vignette',
          'label:de': 'Überlagerungsschaltflächen auf einer Miniaturansicht ausblenden',
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',

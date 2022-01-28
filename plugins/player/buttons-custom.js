@@ -3,8 +3,10 @@ window.nova_plugins.push({
    title: 'Custom buttons',
    'title:zh': '自定义按钮',
    'title:ja': 'カスタムボタン',
+   'title:ko': '사용자 정의 버튼',
    'title:es': 'Botones personalizados',
    'title:pt': 'Botões personalizados',
+   'title:fr': 'Boutons personnalisés',
    'title:de': 'Benutzerdefinierte Schaltflächen',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
@@ -25,7 +27,7 @@ window.nova_plugins.push({
                ${SELECTOR_BTN}:active { color: #2196f3 !important; }`);
 
             // Pop-up player
-            if (user_settings.player_buttons_custom_items?.indexOf('popup') !== -1 && !NOVA.queryURL.get('popup')) {
+            if (user_settings.player_buttons_custom_items?.indexOf('popup') !== -1 && !NOVA.queryURL.has('popup')) {
                const btnPopUp = document.createElement('button');
                btnPopUp.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnPopUp.title = 'Open in popup';
@@ -215,7 +217,7 @@ window.nova_plugins.push({
                   // Warn! "maxresdefault" is not available everywhere. etc:
                   // https://i.ytimg.com/vi/cPzpTvVPTII/maxresdefault.jpg
                   // https://i.ytimg.com/vi/cPzpTvVPTII/hqdefault.jpg
-                  // Сheck the size of an image. And then replace "maxresdefault" with "hqdefault"
+                  // Check the size of an image. And then replace "maxresdefault" with "hqdefault"
                   const
                      tmpImg = document.createElement('img'),
                      genImgURL = res_prefix => `https://i.ytimg.com/vi/${movie_player.getVideoData().video_id}/${res_prefix}default.jpg`;
@@ -331,21 +333,26 @@ window.nova_plugins.push({
          label: 'Items',
          'label:zh': '元素',
          'label:ja': '要素',
+         'label:ko': '아이템',
          'label:es': 'Elementos',
          'label:pt': 'Itens',
+         'label:fr': 'Articles',
          'label:de': 'Produkte',
-         title: 'Hold【Ctrl+Сlick】to select several',
-         'title:zh': '按住[Ctrl+Сlick]并选择一些',
-         'title:ja': '「Ctrl+Сlick」を押したままにして、いくつかを選択します',
-         'title:es': 'Mantenga presionado 【Ctrl+Сlick】 para seleccionar varios',
+         title: 'Hold [Ctrl+Click] to select several',
+         'title:zh': '按住[Ctrl+Click]并选择一些',
+         'title:ja': '「Ctrl+Click」を押したままにして、いくつかを選択します',
+         'title:ko': '[Ctrl+Click]을 길게 눌러 여러 개 선택',
+         // 'title:es': 'Mantenga presionado  [Ctrl+Click] para seleccionar varios',
+         'title:fr': 'Maintenez [Ctrl+Click]pour sélectionner plusieurs',
+         // 'title:de': 'Halten Sie [Ctrl+Click] gedrückt, um mehrere auszuwählen',
          multiple: null, // dont use - selected: true
          required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
-            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:de': 'geschwindigkeit umschalten' },
-            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:es': 'captura de pantalla', 'label:pt': '', 'label:de': '' },
-            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:de': 'bildschirmfoto' },
-            { label: 'pop-up player', value: 'popup', 'label:zh': '弹出式播放器', /*'label:es': '',*/ 'label:pt': 'jogador pop-up'/*, 'label:de': ''*/ },
+            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:ko': '토글 속도', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:fr': 'basculer la vitesse', 'label:de': 'geschwindigkeit umschalten' },
+            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:ko': '스크린샷', 'label:es': 'captura de pantalla', 'label:pt': 'captura de tela', 'label:fr': "capture d'écran", 'label:de': 'bildschirmfoto' },
+            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:ko': '썸네일', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:fr': 'la vignette', 'label:de': 'bildschirmfoto' },
+            { label: 'popup player', value: 'popup', 'label:zh': '弹出式播放器', 'label:ja': 'ポップアッププレーヤー', 'label:ko': '썸네일', /*'label:es': 'jugadora emergente',*/ 'label:pt': 'jogador pop-up', 'label:fr': 'lecteur contextuel'/*, 'label:de': ''*/ },
          ],
       },
       player_buttons_custom_popup_width: {
@@ -353,14 +360,21 @@ window.nova_plugins.push({
          label: 'Player window size aspect ratio',
          'label:zh': '播放器窗口大小纵横比',
          'label:ja': 'プレーヤーのウィンドウサイズのアスペクト比',
+         'label:ko': '플레이어 창 크기 종횡비',
          'label:es': 'Relación de aspecto del tamaño de la ventana del reproductor',
          'label:pt': 'Proporção do tamanho da janela do jogador',
+         'label:fr': "Rapport d'aspect de la taille de la fenêtre du lecteur",
          'label:de': 'Seitenverhältnis der Player-Fenstergröße',
          type: 'number',
-         title: 'less - more size',
-         'title:zh': '小价值大尺寸',
-         'title:ja': '小さい値大きいサイズ',
-         'title:es': 'menos - más tamaño',
+         title: 'less value - larger size',
+         'title:zh': '较小的值 - 较大的尺寸',
+         'title:ja': '小さい値-大きいサイズ',
+         'title:ko': '더 작은 값 - 더 큰 크기',
+         'title:es': 'Valor más pequeño - tamaño más grande',
+         'title:pt': 'Valor menor - tamanho maior',
+         'title:fr': 'Plus petite valeur - plus grande taille',
+         'title:de': 'Kleiner Wert - größere Größe',
+         // title: '',
          placeholder: '1.5-4',
          step: 0.1,
          min: 1.5,
@@ -373,8 +387,10 @@ window.nova_plugins.push({
          label: 'Hotkey toggle speed',
          'label:zh': '热键切换速度',
          'label:ja': '速度を切り替えるためのホットボタン',
+         'label:ko': '단축키 토글 속도',
          'label:es': 'Velocidad de cambio de teclas de acceso rápido',
          'label:pt': 'Velocidade de alternância da tecla de atalho',
+         'label:fr': 'Vitesse de basculement des raccourcis clavier',
          'label:de': 'Hotkey-Umschaltgeschwindigkeit',
          // title: '',
          options: [

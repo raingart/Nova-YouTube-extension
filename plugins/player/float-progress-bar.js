@@ -3,8 +3,10 @@ window.nova_plugins.push({
    title: 'Float player progress bar',
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
+   'title:ko': '플로팅 플레이어 진행률 표시줄',
    'title:es': 'Barra de progreso flotante del jugador',
    'title:pt': 'Barra de progresso do jogador flutuante',
+   'title:fr': 'Barre de progression du joueur flottant',
    'title:de': 'Float-Player-Fortschrittsbalken',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -189,11 +191,11 @@ window.nova_plugins.push({
 
             const selectorTimestampLink = 'a[href*="t="]';
             // search in description
-            NOVA.waitElement(`#description .content ${selectorTimestampLink}`)
+            NOVA.waitElement(`#meta #description ${selectorTimestampLink}`)
                .then(() => renderChaptersMarks(duration));
 
             // search in first/pinned comment
-            NOVA.waitElement(`#contents ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
+            NOVA.waitElement(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
                .then(() => renderChaptersMarks(duration));
 
             function renderChaptersMarks(duration) {
@@ -244,8 +246,10 @@ window.nova_plugins.push({
          label: 'Height',
          'label:zh': '高度',
          'label:ja': '身長',
+         'label:ko': '키',
          'label:es': 'Altura',
          'label:pt': 'Altura',
+         'label:fr': 'Hauteur',
          'label:de': 'Höhe',
          type: 'number',
          title: 'in pixels',
@@ -259,8 +263,10 @@ window.nova_plugins.push({
          label: 'Opacity',
          'label:zh': '不透明度',
          'label:ja': '不透明度',
+         'label:ko': '불투명',
          'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
+         'label:fr': 'Opacité',
          'label:de': 'Opazität',
          type: 'number',
          // title: '',

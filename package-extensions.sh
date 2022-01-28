@@ -29,7 +29,7 @@ zip -q -r $filename \
 #  -x \*.DS_Store
 # -z $TODAY
 
-echo "Сompressed $filename"
+echo "Compressed $filename"
 
 pause 'Press [Enter] to pushing the repository...'
 git add --all

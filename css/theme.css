@@ -70,15 +70,15 @@ button, input, select, textarea {
    border: 1px solid var(--input-border);
 }
 
-/* button, input[type=submit], input[type=reset], input[type=button] {
+/* button, [type=submit], [type=reset], input[type=button] {
    background-color: var(--btn-bg);
    color: var(--btn-fg);
 } */
 
-/* :is(button, input[type=submit], input[type=reset], input[type=button]):hover { chrome >=88 */
+/* :is(button, [type=submit], [type=reset], input[type=button]):hover { chrome >=88 */
 button:hover,
-input[type=submit]:hover,
-input[type=reset]:hover,
+[type=submit]:hover,
+[type=reset]:hover,
 input[type=button]:hover {
    background-color: var(--href);
    color: var(--btn-fg);

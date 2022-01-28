@@ -3,8 +3,10 @@ window.nova_plugins.push({
    title: 'Hide related section',
    'title:zh': '隐藏相关部分',
    'title:ja': '関連セクションを非表示',
+   'title:ko': '관련 섹션 숨기기',
    'title:es': 'Ocultar sección relacionada',
    'title:pt': 'Ocultar seção relacionada',
+   'title:fr': 'Masquer la section associée',
    'title:de': 'Zugehörigen Abschnitt ausblenden',
    run_on_pages: 'watch, -mobile',
    section: 'sidebar',
@@ -14,7 +16,7 @@ window.nova_plugins.push({
       NOVA.preventVisibilityElement({
          selector: '#secondary #related, ytm-item-section-renderer[section-identifier="related-items"]',
          id_name: 'related',
-         remove: user_settings.related_visibility_mode == 'remove' ? true : false,
+         remove: user_settings.related_visibility_mode == 'disable' ? true : false,
       });
 
    },
@@ -24,12 +26,14 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
+         'label:ko': '방법',
          'label:es': 'Modo',
          'label:pt': 'Modo',
+         // 'label:fr': '',
          'label:de': 'Modus',
          options: [
-            { label: 'hide', value: 'hide', selected: true },
-            { label: 'remove', value: 'remove' },
+            { label: 'collapse', value: 'hide', selected: true },
+            { label: 'remove', value: 'disable' },
          ],
       },
    }

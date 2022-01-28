@@ -13,14 +13,21 @@ ul {
    padding-left: 1.5em;
 }
 
-input[type], textarea {
+/* input:is([type=submit], [type=reset], [type=button], textarea) */
+input[type=search],
+input[type=text],
+input[type=number],
+input[type=color],
+textarea {
    cursor: text;
 }
 
-input[type=submit],
+[type=submit],
+[type=reset],
 input[type=button],
-input[type=reset],
 input[type=checkbox],
+input[type=radio],
+input[type=range],
 label, button, select {
    cursor: pointer;
 }
@@ -41,7 +48,7 @@ input:invalid, textarea:invalid, select:invalid {
    outline: 1px solid red;
 }
 
-button, input[type=submit], input[type=reset], input[type=button] {
+button, [type=submit], [type=reset], input[type=button] {
    font-size: 11px;
    font-weight: 600;
    letter-spacing: .1rem;
@@ -51,10 +58,10 @@ button, input[type=submit], input[type=reset], input[type=button] {
    padding: 5px 20px;
 }
 
-/* :is(button, input[type=submit], input[type=reset], input[type=button]):hover { chrome >=88 */
+/* :is(button, [type=submit], [type=reset], input[type=button], select, textarea):hover { chrome >=88 */
 button:hover,
-input[type=submit]:hover,
-input[type=reset]:hover,
+[type=submit]:hover,
+[type=reset]:hover,
 input[type=button]:hover,
 select:hover,
 textarea:hover {
@@ -94,6 +101,7 @@ label, legend {
 }
 
 .hide {
+   /* display: none !important; */
    visibility: collapse !important;
    height: 0 !important;
    margin: 0 !important;

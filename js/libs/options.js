@@ -122,6 +122,8 @@ window.addEventListener('load', () => {
             if (this.btnSubmitAnimation.outputStatus.length && !this.btnSubmitAnimation.outputStatus[0].classList.contains('unSaved')) {
                this.btnSubmitAnimation.outputStatus.forEach(e => e.classList.add('unSaved'));
             }
+            // textarea trim value
+            if (target.tagName.toLowerCase() == 'textarea') target.value = target.value.trim();
          });
       },
 

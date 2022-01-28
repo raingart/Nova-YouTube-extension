@@ -103,7 +103,7 @@ const App = {
                `<h4 style="margin:0;">Failure on initialization ${app_name}</h4>`
                + (typeof NOVA === 'object'
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
-                  : `<div>Сritical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
+                  : `<div>Critical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
             document.body.append(notice);
          }
       }, 1000 * 3); // 3sec

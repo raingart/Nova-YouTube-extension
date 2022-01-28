@@ -30,9 +30,11 @@ const NOVA = {
       // this.log('waitElement:', selector);
 
       // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
-      // alternative https://git.io/waitForKeyElements.js
-      // alternative https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
-      // alternative https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+      // alternatives:
+      // https://git.io/waitForKeyElements.js
+      // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
+      // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+      // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
 
       // There is a more correct method - transitionend.
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
@@ -40,7 +42,7 @@ const NOVA = {
 
       return new Promise(resolve => {
          if (element = (document?.body || document).querySelector(selector)) {
-            // console.debug('waited1', selector);
+            // console.debug('[1]', selector);
             return resolve(element);
          }
 
@@ -50,25 +52,24 @@ const NOVA = {
                   if (![1, 3, 8].includes(node.nodeType)) return;
 
                   if (node.matches && node.matches(selector)) { // in node
-                     // console.debug('waited2', mutation.type, node.nodeType, selector);
-                     // console.debug('2', selector, node.nodeType);
+                     // console.debug('[2]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(node);
-                  }
-                  else if (element = node?.parentElement?.querySelector(selector)) { // in parent
-                     // console.debug('3', mutation.type, node.nodeType, selector);
+
+                  } else if (element = node?.parentElement?.querySelector(selector)) { // in parent
+                     // console.debug('[3]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
 
                   } else if (element = (document?.body || document).querySelector(selector)) { // inglobal
-                     // console.debug('4', mutation.type, node.nodeType, selector);
+                     // console.debug('[4]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
                   }
                }
             });
          })
-            .observe(document?.body || document.documentElement, { childList: true/*, subtree: true*/ });
+            .observe(document?.body || document.documentElement, { childList: true, subtree: true });
       });
    },
 
@@ -296,7 +297,7 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.body.querySelectorAll('#description .content, #contents ytd-comment-thread-renderer:first-child #content')
+      document.body.querySelectorAll('#meta #description, #comments ytd-comment-thread-renderer:first-child #content')
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
@@ -426,13 +427,18 @@ const NOVA = {
 
    queryURL: {
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
-      get: (query, url) => new URL(url || location).searchParams.get(query),
-
-      set(query_obj = {}, urlString) {
+      // has: (query = required()) => new URLSearchParams(location.search).has(query),
+      has: (query = required(), url_string) => new URL(url_string || location).searchParams.has(query.toString()),
+      get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
+      set(query_obj = {}, url_string) {
          // NOVA.log('queryURL.set:', ...arguments);
          if (!Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
-         const url = new URL(urlString || location);
-         Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
+         const url = new URL(url_string || location).searchParams;
+         Object.entries(query_obj).forEach(([key, value]) => url.set(key, value));
+         return url.toString();
+      },
+      remove(query = required(), url_string) {
+         const url = new URL(url_string || location).searchParams.delete(query.toString());
          return url.toString();
       },
    },

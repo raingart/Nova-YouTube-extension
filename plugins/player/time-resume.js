@@ -3,16 +3,20 @@ window.nova_plugins.push({
    title: 'Resume playback time state',
    'title:zh': '恢复播放时间状态',
    'title:ja': '再生時間の状態を再開します',
+   'title:ko': '재생 시간 상태 재개',
    'title:es': 'Reanudar el estado de tiempo de reproducción',
    'title:pt': 'Retomar o estado do tempo de reprodução',
+   'title:fr': "Reprendre l'état de l'heure de lecture",
    'title:de': 'Wiedergabezeitstatus fortsetzen',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'On page reload - resume playback',
    'desc:zh': '在页面重新加载 - 恢复播放',
    'desc:ja': 'ページがリロードされると、再生が復元されます',
+   'desc:ko': '페이지 새로고침 시 - 재생 재개',
    'desc:es': 'En la recarga de la página - reanudar la reproducción',
    'desc:pt': 'Recarregar na página - retomar a reprodução',
+   'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
@@ -36,7 +40,7 @@ window.nova_plugins.push({
             // embed dont support "t=" parameter
             if (user_settings.player_resume_playback_on_pause_update_url && NOVA.currentPageName() != 'embed') {
                // ignore if initialized with a "t=" parameter
-               if (NOVA.queryURL.get('t')) {
+               if (NOVA.queryURL.has('t')) {
                   document.addEventListener('yt-navigate-start', connectSaveStateInURL.bind(video), { capture: true, once: true });
 
                } else {
@@ -54,7 +58,7 @@ window.nova_plugins.push({
          }
       }
       function resumePlaybackTime() {
-         if (NOVA.queryURL.get('t')) return;
+         if (NOVA.queryURL.has('t')) return;
          cacheName = getCacheName(); // for optimization
 
          if ((time = +sessionStorage.getItem(cacheName))
@@ -79,9 +83,8 @@ window.nova_plugins.push({
          // clear
          this.addEventListener('play', () => {
             if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL);
-            if (NOVA.queryURL.get('t')) {
-               updateURL(NOVA.queryURL.set({ 't': '' }).replace(/\&t=$/, ''));
-            }
+
+            if (NOVA.queryURL.has('t')) updateURL(NOVA.queryURL.remove('t'));
          });
 
          // alt. strategy
@@ -100,8 +103,10 @@ window.nova_plugins.push({
          label: 'Mark time in url when paused',
          'label:zh': '暂停时在 url 中节省时间',
          'label:ja': '一時停止したときにURLで時間を節約する',
+         'label:ko': '일시 중지 시 URL에 시간 표시',
          'label:es': 'Marcar tiempo en url cuando está en pausa',
          'label:pt': 'Marcar tempo no URL quando pausado',
+         'label:fr': "Marquer l'heure dans l'url en pause",
          'label:de': 'Zeit in URL markieren, wenn pausiert',
          type: 'checkbox',
          title: 'update ?t=',

@@ -3,8 +3,10 @@ window.nova_plugins.push({
    title: 'Show channel videos count',
    'title:zh': '显示频道上的视频数量',
    'title:ja': 'チャンネルの動画数を表示する',
+   'title:ko': '채널 동영상 수 표시',
    'title:es': 'Mostrar recuento de videos del canal',
    'title:pt': 'Mostrar contagem de vídeos do canal',
+   'title:fr': 'Afficher le nombre de vidéos de la chaîne',
    'title:de': 'Anzahl der Kanalvideos anzeigen',
    run_on_pages: 'watch, channel',
    restart_on_transition: true,
@@ -13,8 +15,10 @@ window.nova_plugins.push({
    desc: 'Display uploaded videos on channel',
    'desc:zh': '在频道上显示上传的视频',
    'desc:ja': 'アップロードした動画をチャンネルに表示',
+   'desc:ko': '채널에 업로드된 동영상 표시',
    'desc:es': 'Mostrar videos subidos en el canal',
    'desc:pt': 'Exibir vídeos enviados no canal',
+   'desc:fr': 'Afficher les vidéos mises en ligne sur la chaîne',
    'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    _runtime: user_settings => {
 

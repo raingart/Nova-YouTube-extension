@@ -36,16 +36,19 @@ const Plugins = {
       'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
+      'other/search-filter.js',
 
-      'details/description.js',
-      'details/timestamps-scroll.js',
       'details/videos-count.js',
+      'details/description-expand.js',
+      'details/description-popup.js',
+      'details/timestamps-scroll.js',
       'details/redirect-clear.js',
       // 'details/quick-menu.js',
 
       'comments/visibility.js',
-      'comments/expand.js',
       'comments/square-avatars.js',
+      'comments/popup.js',
+      'comments/expand.js',
 
       'sidebar/related-visibility.js',
       'sidebar/playlist-duration.js',

@@ -3,9 +3,23 @@
 window.nova_plugins.push({
    id: 'video-unblocker',
    title: 'Unblock video',
+   'title:zh': '解锁视频',
+   'title:ja': 'ビデオのブロックを解除する',
+   'title:ko': '비디오 차단 해제',
+   'title:es': 'Desbloquear vídeo',
+   'title:pt': 'Desbloquear vídeo',
+   'title:fr': 'Débloquer la vidéo',
+   'title:de': 'Video entsperren',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: "attempt fix 'is not available in your country'",
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:de': '',
    _runtime: user_settings => {
 
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')

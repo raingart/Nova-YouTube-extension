@@ -1,19 +1,23 @@
 window.nova_plugins.push({
    id: 'playlist-reverse',
-   title: 'Add reverse playlist order',
-   'title:zh': '添加反向播放列表顺序',
-   'title:ja': 'プレイリストの逆順を追加',
+   title: 'Add button reverse playlist order',
+   'title:zh': '添加按钮反向播放列表顺序',
+   'title:ja': 'ボタンの逆プレイリストの順序を追加',
+   'title:ko': '버튼 역 재생 목록 순서 추가',
    'title:es': 'Agregar orden de lista de reproducción inverso',
    'title:pt': 'Adicionar ordem inversa da lista de reprodução',
+   'title:fr': 'Ajouter un ordre de lecture inversé',
    'title:de': 'Umgekehrte Playlist-Reihenfolge hinzufügen',
    run_on_pages: 'watch, playlist, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
-   desc: 'Add button',
-   'desc:zh': '添加按钮',
-   'desc:ja': '追加ボタン',
+   // desc: '',
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
    'desc:es': 'Agregar botón',
    'desc:pt': 'Botão Adicionar',
+   'desc:fr': 'Ajouter un bouton',
    'desc:de': 'Schaltfläche hinzufügen',
    _runtime: user_settings => {
 
@@ -49,7 +53,7 @@ window.nova_plugins.push({
          ${SELECTOR_BTN}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
       document.addEventListener('yt-navigate-finish', () => {
-         if (!NOVA.queryURL.get('list')/* || !movie_player?.getPlaylistId()*/) return;
+         if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
          // add  button
          // NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed, .playlist-controls-primary')
          NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed')

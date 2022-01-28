@@ -2,10 +2,12 @@ console.debug('init optionsView.js');
 
 // https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
 let lang_code = window.navigator.language.substring(0, 2);
-// lang_code = 'ja'
 // lang_code = 'zh'
+// lang_code = 'ja'
+// lang_code = 'ko'
 // lang_code = 'es'
 // lang_code = 'pt'
+// lang_code = 'fr'
 // lang_code = 'de'
 
 window.nova_plugins = [];
