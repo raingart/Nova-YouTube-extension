@@ -15,7 +15,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         VIDEO_TITLE_SELECTOR = '#video-title, a > h3.large-media-item-headline', // '.title, #video-title';
+         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty), a > h3.large-media-item-headline:not(:empty)', // '.title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'title-normalized';
 
@@ -38,7 +38,7 @@ window.nova_plugins.push({
          }, `[${ATTR_MARK}]:first-letter`, 'important');
 
          NOVA.watchElement({
-            selector: VIDEO_TITLE_SELECTOR + ':not(:empty)',
+            selector: VIDEO_TITLE_SELECTOR,
             attr_mark: ATTR_MARK,
             callback: title => {
                let counterUpperCase = 0;

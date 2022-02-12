@@ -65,7 +65,7 @@ window.nova_plugins.push({
          'label:ko': '방법',
          'label:es': 'Modo',
          'label:pt': 'Modo',
-         // 'label:fr': '',
+         // 'label:fr': 'Mode',
          'label:de': 'Modus',
          title: 'Redirect is safer but slower',
          'title:zh': '重定向是安全的，但速度很慢',

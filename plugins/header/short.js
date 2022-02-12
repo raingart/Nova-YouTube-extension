@@ -26,6 +26,10 @@ window.nova_plugins.push({
 
          body {
             --ytd-masthead-height: ${height};
+         }
+
+         #chips-wrapper.ytd-feed-filter-chip-bar-renderer {
+            --ytd-rich-grid-chips-bar-top: ${height};
          }`);
 
    },

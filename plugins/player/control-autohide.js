@@ -5,12 +5,12 @@
 
 window.nova_plugins.push({
    id: 'player-control-autohide',
-   title: 'Hides the player control panel',
-   'title:zh': '隱藏進度條(滑鼠移入才會顯示',
-   'title:ja': 'プレーヤーのコントロールパネルを非表示にします',
-   'title:ko': '플레이어 제어판을 숨깁니다',
-   'title:es': 'Oculta el panel de control del reproductor',
-   'title:pt': 'Esconde o painel de controle do player',
+   title: 'Autohide controls on player',
+   'title:zh': '播放器上的自动隐藏控件',
+   'title:ja': 'プレーヤーのコントロールを自動非表示',
+   'title:ko': '플레이어의 자동 숨기기 컨트롤',
+   'title:es': 'Ocultar automáticamente los controles en el reproductor',
+   'title:pt': 'Auto-ocultar controles no player',
    'title:fr': 'Masque le panneau de contrôle du lecteur',
    'title:de': 'Blendet das Player-Bedienfeld aus',
    run_on_pages: 'watch, -mobile',

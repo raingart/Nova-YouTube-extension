@@ -2,6 +2,7 @@
 // https://www.youtube.com/playlist?list=WL
 // https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
 // https://www.youtube.com/watch?v=oxqQw1o5Tuk&list=RDlaemnkfj1lo - hidden playlist conteiner
+// https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 
 window.nova_plugins.push({
    id: 'playlist-duration',
@@ -203,14 +204,14 @@ window.nova_plugins.push({
             return console.error('container not HTMLElement:', container);
          }
          (document.getElementById(SELECTOR_ID) || (function () {
-            const el = document.createElement('yt-formatted-string');
-            el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
+            const el = document.createElement('span');
             el.id = SELECTOR_ID;
-            el.style.display = 'inline-block';
-            el.style.margin = '0 .5em';
+            // el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
+            // el.style.display = 'inline-block';
+            // el.style.margin = '0 .5em';
             return container.appendChild(el);
          })())
-            .textContent = text;
+            .textContent = ' ' + text;
 
          // sessionStorage.setItem(STORE_NAME, text); // save in sessionStorage
       }

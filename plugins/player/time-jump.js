@@ -151,13 +151,13 @@ window.nova_plugins.push({
          NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {
                if ((tooltipEl = document.body.querySelector('.ytp-tooltip-text'))
-                  && (videoEl = movie_player.querySelector('video'))
+                  && (video = document.body.querySelector('video'))
                ) {
                   progressContainer.addEventListener('mousemove', () => {
                      if (movie_player.getVideoData().isLive) return;
                      const
                         cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
-                        offsetTime = cursorTime - videoEl.currentTime,
+                        offsetTime = cursorTime - video.currentTime,
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
                      tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS.digit(offsetTime)}`);

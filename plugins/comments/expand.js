@@ -47,7 +47,7 @@ window.nova_plugins.push({
 
       // if (user_settings.comments_view_reply) {
       //    NOVA.watchElement({
-      //       selector: '#comment #expander #more-replies:not([hidden])',
+      //       selector: '#comment #expander #more-replies',
       //       attr_mark: 'replies-expanded',
       //       callback: btn => btn.click(),
 

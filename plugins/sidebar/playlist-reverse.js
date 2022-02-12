@@ -95,14 +95,14 @@ window.nova_plugins.push({
       function updateNext() {
          if (!playlistReversed) return;
 
-         movie_player.querySelector('video')
+         document.body.querySelector('video')
             .addEventListener('ended', () => playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
 
          // update UI
          // Strategy 1
          reverseElement(document.body.querySelector('#secondary #playlist #items.playlist-items, ytm-playlist lazy-list'));
          scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
-         // Strategy 2: scroll does not work
+         // Strategy 2: scroll doesn't work
          // NOVA.css.push(
          //    `#playlist #items.playlist-items {
          //       display: flex;

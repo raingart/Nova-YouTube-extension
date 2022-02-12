@@ -36,13 +36,14 @@ const App = {
       // skip first run on page transition
       // Strategy 1
       document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
+      // document.addEventListener('yt-navigate-finish', () => this.isURLChanged() && this.run());
       // Strategy 2
-      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChanged() && this.run(););
+      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChanged() && this.run());
 
       // for test
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
       // document.addEventListener('yt-navigate-finish', () => console.debug('yt-navigate-finish'));
-      // document.addEventListener('transitionend', ({ target }) => target.id == 'progress' && console.debug('transitionend'));
+      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && console.debug('transitionend'));
 
       this.storage.load.apply(this);
       // load all Plugins
@@ -168,7 +169,10 @@ App.init();
 // test normal lite
 // https://www.youtube.com/watch?v=4ldjbjwim4k 240
 // https://www.youtube.com/watch?v=aCyGvGEtOwc 360
+// https://www.youtube.com/watch?v=668nUCeBHyY 720
+// https://www.youtube.com/watch?v=b6At_bb1PNU 1080
 // https://www.youtube.com/watch?v=rFeBMv98X30 1080
+// https://www.youtube.com/watch?v=s-yflRFexPc 4k
 
 // example url new embed page
 // https://www.youtube.com/embed/JVi_e8g7K4A
@@ -178,7 +182,6 @@ App.init();
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded
 // https://www.youtube.com/channel/UCYPymLmMIXZEbPGZCep2P9A - no have sorting button
-// https://www.youtube.com/watch?v=LhKT9NTH9HA - dont have 480p quality
 
 // TODO
 // upgrade code to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment

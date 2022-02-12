@@ -13,6 +13,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // contents is empty
+      // #comments:not([hidden]) > #sections > #contents:not(:empty)
+
       const COMMENTS_SELECTOR = '#comments:not([hidden])';
 
       NOVA.waitElement('#masthead-container')

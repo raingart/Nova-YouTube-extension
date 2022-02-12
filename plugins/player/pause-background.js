@@ -2,14 +2,17 @@
 
 window.nova_plugins.push({
    id: 'pause-background-tab',
-   title: 'Pauses playing videos in other tabs',
-   'title:zh': '在其他选项卡上暂停视频播放',
-   'title:ja': '他のタブで動画の再生を一時停止します',
-   'title:ko': '다른 탭에서 비디오 재생 일시 중지',
-   'title:es': 'Pausa la reproducción de videos en otras pestañas',
-   'title:pt': 'Pausa a reprodução de vídeos em outras guias',
+   // title: 'only one player instance playing',
+   // title: 'Autopause when switching tabs',
+   // title: 'Pauses playing videos in other tabs',
+   title: 'Autopause all tabs except the active one',
+   'title:zh': '自动暂停除活动选项卡以外的所有选项卡',
+   'title:ja': 'アクティブなタブを除くすべてのタブを自動一時停止',
+   'title:ko': '활성 탭을 제외한 모든 탭 자동 일시 중지',
+   'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
+   'title:pt': 'Pausar automaticamente todas as guias, exceto a ativa',
    'title:fr': "Interrompt la lecture des vidéos dans d'autres onglets",
-   'title:de': 'Unterbricht die Wiedergabe von Videos in anderen Tabs',
+   'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',
@@ -43,7 +46,7 @@ window.nova_plugins.push({
 
             // auto play on tab focus
             if (user_settings.pause_background_tab_onfocus) {
-               document.addEventListener("visibilitychange", () => {
+               document.addEventListener('visibilitychange', () => {
                   //   if other tabs are not playing
                   if (document.visibilityState == 'visible'
                      && !localStorage.hasOwnProperty(storeName)
@@ -98,14 +101,14 @@ window.nova_plugins.push({
    options: {
       pause_background_tab_onfocus: {
          _tagName: 'input',
-         label: 'Autoplay if tab has focus',
-         'label:zh': '如果选项卡具有焦点，则自动播放',
-         'label:ja': 'タブにフォーカスがある場合は自動再生',
-         'label:ko': '탭에 포커스가 있으면 자동 재생',
-         'label:es': 'Reproducción automática si la pestaña tiene el foco',
-         'label:pt': 'Reprodução automática se a guia estiver em foco',
-         'label:fr': "Lecture automatique si l'onglet a le focus",
-         'label:de': 'Autoplay, wenn die Registerkarte den Fokus hat',
+         label: 'Autoplay on tab focus',
+         'label:zh': '在标签焦点上自动播放',
+         'label:ja': 'タブフォーカスでの自動再生',
+         'label:ko': '탭 포커스에서 자동 재생',
+         'label:es': 'Reproducción automática en el enfoque de la pestaña',
+         'label:pt': 'Reprodução automática no foco da guia',
+         'label:fr': "Lecture automatique sur le focus de l'onglet",
+         'label:de': 'Autoplay bei Tab-Fokus',
          type: 'checkbox',
          // title: '',
       },

@@ -1,32 +1,66 @@
+// for test
+// https://www.youtube.com/watch?v=ig2b_obsCQ8 - has chapters
+
 window.nova_plugins.push({
    id: 'player-loop',
-   title: 'Loop playback',
-   'title:zh': '循环播放',
-   'title:ja': 'ループ再生',
-   'title:ko': '루프 재생',
-   'title:es': 'Reproducción en bucle',
-   'title:pt': 'Reprodução em loop',
-   'title:fr': 'Lecture en boucle',
-   'title:de': 'Loop-Wiedergabe',
+   title: 'Add loop playback button',
+   'title:zh': '添加循环播放按钮',
+   'title:ja': 'ループ再生ボタンを追加',
+   'title:ko': '루프 재생 버튼 추가',
+   'title:es': 'Agregar botón de reproducción en bucle',
+   'title:pt': 'Adicionar botão de reprodução em loop',
+   'title:fr': 'Ajouter un bouton de lecture en boucle',
+   'title:de': 'Loop-Wiedergabe-Schaltfläche hinzufügen',
    run_on_pages: 'watch',
    section: 'player',
-   desc: 'Loop video playback',
-   'desc:zh': '循环播放视频',
-   'desc:ja': 'ビデオ再生をループする',
-   'desc:ko': '루프 비디오 재생',
-   'desc:es': 'Reproducción de video en bucle',
-   'desc:pt': 'Reprodução de vídeo em loop',
-   'desc:fr': 'Lecture vidéo en boucle',
-   'desc:de': 'Loop-Videowiedergabe',
+   // desc: 'Loop video playback',
+   // 'desc:zh': '循环播放视频',
+   // 'desc:ja': 'ビデオ再生をループする',
+   // 'desc:ko': '루프 비디오 재생',
+   // 'desc:es': 'Reproducción de video en bucle',
+   // 'desc:pt': 'Reprodução de vídeo em loop',
+   // 'desc:fr': 'Lecture vidéo en boucle',
+   // 'desc:de': 'Loop-Videowiedergabe',
    _runtime: user_settings => {
 
-      NOVA.waitElement('video')
-         .then(video => {
-            video.loop = true;
-            video.addEventListener('loadeddata', ({ target }) => target.loop = true);
+      // createPlayerButton
+      NOVA.waitElement('.ytp-left-controls .ytp-play-button')
+         .then(container => {
+            const
+               SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
+               btnPiP = document.createElement('button'),
+               video = document.querySelector('video');
+
+            // "ye-repeat-button"
+            btnPiP.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+            btnPiP.style.opacity = .5;
+            btnPiP.style.minWidth = NOVA.css.getValue({ selector: container, property: 'width' }) || '48px'; // fix if has chapters
+            btnPiP.title = 'Repeat';
+            // btnPopup.setAttribute('aria-label','');
+            btnPiP.innerHTML =
+               `<svg viewBox="-6 -6 36 36" height="100%" width="100%">
+                  <g fill="currentColor">
+                     <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>
+                  </g>
+               </svg>`;
+            btnPiP.addEventListener('click', () => {
+               video.loop = !video.loop && true;
+
+               if (movie_player.classList.contains('ad-showing')) video.removeAttribute('loop');
+
+               btnPiP.style.opacity = video.hasAttribute('loop') ? 1 : .5;
+            });
+
+            container.after(btnPiP);
          });
 
-      // does not work
+      // NOVA.waitElement('video')
+      //    .then(video => {
+      //       video.loop = true;
+      //       video.addEventListener('loadeddata', ({ target }) => target.loop = true);
+      //    });
+
+      // doesn't work
       // NOVA.waitElement('#movie_player')
       //    .then(() => movie_player.setLoop());
 

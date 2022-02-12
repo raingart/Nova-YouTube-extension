@@ -9,4 +9,4 @@ function localizePage() {
    }
 }
 
-document.addEventListener('DOMContentLoaded', localizePage);
+window.addEventListener('DOMContentLoaded', localizePage);

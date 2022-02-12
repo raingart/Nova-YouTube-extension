@@ -3,7 +3,7 @@
       "message": "zh_CN"
    },
    "app_description": {
-      "message": "Make YouTube™ be better"
+      "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
       "message": "搜索..."
@@ -76,6 +76,12 @@
    },
    "github_page_issues_tooltip": {
       "message": "报告"
+   },
+   "email": {
+      "message": "作者邮箱"
+   },
+   "email_tooltip": {
+      "message": "反馈"
    },
    "donate_patreon_tooltip": {
       "message": "的支持 Patreon"

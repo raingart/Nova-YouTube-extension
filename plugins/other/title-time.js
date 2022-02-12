@@ -13,7 +13,10 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
-      let backupTitle = document.title;
+      // if isLive dont update - video.duration!
+
+      // let backupTitle = document.title; // create bug. on ini, the value must be null
+      let backupTitle;
 
       document.addEventListener('yt-navigate-start', () => backupTitle = null); // remove saved title
 
@@ -23,27 +26,29 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // save title
             video.addEventListener('loadeddata', () => {
-               if (movie_player.getVideoData().isLive || backupTitle) return;
+               if (backupTitle) return;
                backupTitle = document.title;
             });
             // restore the original title
             ['pause', 'ended'].forEach(evt => { // need add event "suspend" ?
                video.addEventListener(evt, () => {
-                  if (movie_player.getVideoData().isLive || !backupTitle) return;
-                  document.title = backupTitle;
+                  if (!backupTitle) return;
+                  let newTitleArr;
+                  if (movie_player.getVideoData().isLive) newTitleArr = video.currentTime;
+                  setTitle([newTitleArr, backupTitle]);
                });
             });
          });
 
       function updateTitle() {
-         if (movie_player.getVideoData().isLive || !backupTitle) return;
+         if (!backupTitle) return;
 
          let newTitleArr = [];
 
-         switch (user_settings.page_title_time_mode) {
-            // case 'current':
-            //    newTitleArr = [this.currentTime];
-            //    break;
+         switch (movie_player.getVideoData().isLive ? 'current' : user_settings.page_title_time_mode) {
+            case 'current':
+               newTitleArr = [this.currentTime];
+               break;
 
             case 'current-duration':
                if (!isNaN(this.duration)) {
@@ -65,7 +70,11 @@ window.nova_plugins.push({
             .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS.digit(t / this.playbackRate))
             .join('');
 
-         document.title = [newTitleArr, backupTitle]
+         setTitle([newTitleArr, backupTitle]);
+      }
+
+      function setTitle(arr) {
+         document.title = arr
             .filter(n => n)
             .join(' | ');
          // .join(' • ');
@@ -85,7 +94,7 @@ window.nova_plugins.push({
          'label:ko': '방법',
          'label:es': 'Modo',
          'label:pt': 'Modo',
-         // 'label:fr': '',
+         // 'label:fr': 'Mode',
          'label:de': 'Modus',
          options: [
             // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': '', 'label:de': 'strom' },

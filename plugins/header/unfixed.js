@@ -31,7 +31,7 @@ window.nova_plugins.push({
          }`);
 
       if (user_settings.header_scroll_after) {
-         scrollAfter(); // init state
+         scrollAfter(); // init
 
          document.addEventListener('yt-navigate-finish', () => {
             scrollAfter(); // no sense. Youtube auto-scroll up when page is transition

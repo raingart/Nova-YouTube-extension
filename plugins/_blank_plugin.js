@@ -33,7 +33,7 @@ window.nova_plugins.push({
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped
-      NOVA.waitElement('#movie_player') // use css selector. Like document.querySelector
+      NOVA.waitElement('#movie_player') // use css selector. Like document.body.querySelector
          // wait, run the code
          .then(node => { // returns the specified selector above
             // do stuff
@@ -41,7 +41,7 @@ window.nova_plugins.push({
 
       // If you want the search to not be stopped, use this construction
       NOVA.watchElement({
-         selector: 'a#thumbnail img[src]', // use css selector. Like document.querySelectorAll
+         selector: 'a#thumbnail img[src]', // use css selector. Like document.body.querySelectorAll('a#thumbnail img[src]:not([hidden])')
          // The attribute with which the already found elements will be marked
          attr_mark: 'timestamps-updated', // delete if you want to constantly watch
          callback: element => { // returns the specified selector above

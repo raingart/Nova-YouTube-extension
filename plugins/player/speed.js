@@ -36,7 +36,7 @@ window.nova_plugins.push({
       // NOVA.waitElement('#movie_player')
       //    .then(() => {
       //       // trigger default indicator
-      //       // Strategy 1. Default indicator does not work for html5 way (Strategy 2)
+      //       // Strategy 1. Default indicator doesn't work for html5 way (Strategy 2)
       //       movie_player.addEventListener('onPlaybackRateChange', rate => {
       //          console.debug('onPlaybackRateChange', rate);
       //       });
@@ -61,7 +61,9 @@ window.nova_plugins.push({
                }
             });
 
-            video.addEventListener('loadeddata', setDefaultRate);
+            setDefaultRate(); // init
+
+            video.addEventListener('loadeddata', setDefaultRate); // update
 
             if (Object.keys(sliderConteiner).length) {
                sliderConteiner.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
@@ -132,8 +134,8 @@ window.nova_plugins.push({
 
             } else {
                this.log('set:html5');
-               if (videoEl = document.body.querySelector('video')) {
-                  videoEl.playbackRate = +level;
+               if (video = document.body.querySelector('video')) {
+                  video.playbackRate = +level;
                   this.clearInSession();
                }
             }
@@ -176,8 +178,8 @@ window.nova_plugins.push({
          html5(playback_rate = required()) {
             this.log('html5', ...arguments);
 
-            if (videoEl = document.body.querySelector('video')) {
-               const playbackRate = videoEl.playbackRate;
+            if (videoElement = document.body.querySelector('video')) {
+               const playbackRate = videoElement.playbackRate;
                const inRange = step => {
                   const setRateStep = playbackRate + step;
                   return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
@@ -186,19 +188,19 @@ window.nova_plugins.push({
                // set new rate
                if (newRate && newRate != playbackRate) {
                   // document.body.querySelector('video').defaultPlaybackRate = newRate;
-                  videoEl.playbackRate = newRate;
+                  videoElement.playbackRate = newRate;
 
-                  if (newRate === videoEl.playbackRate) {
+                  if (newRate === videoElement.playbackRate) {
                      this.clearInSession();
 
                   } else {
-                     console.error('playerRate:html5 different: %s!=%s', newRate, videoEl.playbackRate);
+                     console.error('playerRate:html5 different: %s!=%s', newRate, videoElement.playbackRate);
                   }
                }
                this.log('html5 return', newRate);
-               return newRate === videoEl.playbackRate && newRate;
+               return newRate === videoElement.playbackRate && newRate;
 
-            } else return console.error('playerRate > videoEl empty:', videoEl);
+            } else return console.error('playerRate > videoElement empty:', videoElement);
          },
 
          saveInSession(level = required()) {
@@ -248,9 +250,9 @@ window.nova_plugins.push({
 
             if (user_settings.rate_default_apply_music == 'expanded') {
                // 【MAD】,『MAD』,「MAD」
-               // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', TEASER
+               // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
                if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                  || ['【', '『', '「', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+                  || ['【', '『', '「', 'CD', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
                ) {
                   return true;
                }
@@ -265,7 +267,7 @@ window.nova_plugins.push({
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
             ]
-               .some(i => i?.toUpperCase().includes('MUSIC'))
+               .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
                // has svg icon "🎵"
                || document.body.querySelector(musicIconSvgSelector)
                // channelNameVEVO
@@ -277,14 +279,14 @@ window.nova_plugins.push({
                || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
                   .some(i => titleStr.toUpperCase().includes(i))
                // word (case sensitive)
-               || titleWords?.length && ['CD', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+               || titleWords?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
                   .some(i => titleWords.includes(i));
          }
       }
 
       function renderSlider() {
          const
-            video = movie_player.querySelector('video'),
+            video = document.body.querySelector('video'),
             SELECTOR_ID = 'rate-slider-menu',
             SELECTOR = '#' + SELECTOR_ID; // for css
 

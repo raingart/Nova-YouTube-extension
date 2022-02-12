@@ -22,7 +22,7 @@ window.nova_plugins.push({
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
-         /*a.ytp-videowall-still:visited, <-- does not work in embed*/
+         /*a.ytp-videowall-still:visited, <-- doesn't work in embed*/
          a#thumbnail:visited,
          a[class*=thumbnail]:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;

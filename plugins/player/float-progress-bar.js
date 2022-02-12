@@ -25,8 +25,9 @@ window.nova_plugins.push({
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
+            renderChapters.init(video); // init
             // is new video
-            video.addEventListener('loadeddata', function () {
+            video.addEventListener('loadeddata', function () { // update
                // hide if is stream.
                container.style.display = movie_player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
 

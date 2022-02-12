@@ -25,8 +25,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.watchElement({
-         // selector: 'a#thumbnail:not(.ytd-playlist-thumbnail) #img[src]',
-         selector: 'a[class*=thumbnail]:not(.ytd-playlist-thumbnail) img[src]',
+         // selector: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',
+         selector: 'a[class*=thumbnail]:not([hidden]):not(.ytd-playlist-thumbnail) img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
             // failed fix to exclude live thumbs from results page

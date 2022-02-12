@@ -1,12 +1,11 @@
 
 // for testing wide-screen video
-// www.youtube.com/watch?v=B4yuZhKRW1c
-// www.youtube.com/watch?v=zEk3A1fA0gc
+// https://www.youtube.com/watch?v=B4yuZhKRW1c
+// https://www.youtube.com/watch?v=zEk3A1fA0gc
 
 // for testing square-screen
-// www.youtube.com/watch?v=v-YQUCP-J8s
-// www.youtube.com/watch?v=ctMEGAcnYjI
-// www.youtube.com/watch?v=yFsmUBLn8O0
+// https://www.youtube.com/watch?v=v-YQUCP-J8s
+// https://www.youtube.com/watch?v=yFsmUBLn8O0
 
 // test z-index "Show chat replay" button
 // https://www.youtube.com/watch?v=9Mv1sOp0Xg8
@@ -57,7 +56,7 @@ window.nova_plugins.push({
 
             NOVA.waitElement('#player-theater-container')
                .then(playerContainer => {
-                  window.addEventListener('scroll', () => {
+                  document.addEventListener('scroll', () => {
                      onScreenToggle({
                         'switchElement': player,
                         'watchingElement': playerContainer,
@@ -133,7 +132,7 @@ window.nova_plugins.push({
          .then(player => {
             drag.init(player);
 
-            // does not work both. Try fix preventDefault. Replace to preventDefault patch
+            // doesn't work both. Try fix preventDefault. Replace to preventDefault patch
             // document.addEventListener('click', evt => {
             //    evt.preventDefault()
             //    console.debug('click', drag.active);
@@ -322,7 +321,7 @@ window.nova_plugins.push({
             NOVA.css.push(
                `[${this.attrNametoLock}]:active {
                   pointer-events: none;
-                  cursor: grab; /* <-- does not work */
+                  cursor: grab; /* <-- doesn't work */
                   outline: 2px dashed #3ea6ff !important;
                }`);
          },
@@ -355,8 +354,8 @@ window.nova_plugins.push({
 
          draging(evt) {
             if (!this.active) return;
-            evt.preventDefault(); // does not work. Replace to preventDefault patch
-            evt.stopImmediatePropagation(); // does not work. Replace to preventDefault patch
+            evt.preventDefault(); // doesn't work. Replace to preventDefault patch
+            evt.stopImmediatePropagation(); // doesn't work. Replace to preventDefault patch
             evt.stopPropagation(); // is work????
 
             this.log('draging');

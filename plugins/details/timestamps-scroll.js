@@ -21,7 +21,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       document.addEventListener('click', evt => {
-         if (!evt.target.matches('a[href*="t="]')) return;
+         if (!evt.target.matches('#description a[href*="t="]')) return;
 
          evt.preventDefault();
          evt.stopPropagation();
@@ -29,7 +29,7 @@ window.nova_plugins.push({
 
          const sec = NOVA.timeFormatTo.hmsToSec(evt.target.textContent);
 
-         movie_player.querySelector('video').currentTime = sec;
+         document.body.querySelector('video').currentTime = sec;
          // movie_player.seekTo(sec);
 
       }, true);

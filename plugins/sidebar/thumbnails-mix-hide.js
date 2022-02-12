@@ -33,5 +33,22 @@ window.nova_plugins.push({
 
       NOVA.css.push(cssSelectors + '{ display: none !important; }');
 
+      // doesn't work
+      // fix to home page
+      // document.addEventListener('yt-page-data-updated', () => {
+      // document.addEventListener('yt-visibility-refresh', () => {
+      //    if (NOVA.currentPageName() != 'home') return;
+
+      //    document.querySelectorAll('ytd-rich-item-renderer')
+      //       .forEach(thumbnail => {
+      //          if (thumbnail.querySelector('a#thumbnail[href*="list="][href*="start_radio="]')
+      //             && thumbnail.querySelector('#video-title').textContent.startsWith('Mix -')
+      //          ) {
+      //             // console.debug('', thumbnail);
+      //             thumbnail.style.display = 'none';
+      //          }
+      //       });
+      // });
+
    },
 });

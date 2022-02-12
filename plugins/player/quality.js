@@ -1,3 +1,8 @@
+
+// for testing
+// https://www.youtube.com/watch?v=LhKT9NTH9HA - dont have 480p
+// https://www.youtube.com/watch?v=FZovbrEP53o - dont have 480p
+
 window.nova_plugins.push({
    id: 'video-quality',
    title: 'Video quality',
@@ -29,7 +34,10 @@ window.nova_plugins.push({
                   }
                });
             }
-            movie_player.addEventListener('onStateChange', setQuality);
+
+            setQuality(); // init
+
+            movie_player.addEventListener('onStateChange', setQuality); // update
          });
 
       function setQuality(state) {

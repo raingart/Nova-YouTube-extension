@@ -1,19 +1,16 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.22.0
-// @description     Make YouTube be better
+// @version         0.23.0
+// @description     YouTube Enhancer
 
-// @author          raingart
+// @author          raingart <raingart+scriptaddons@protonmail.com>
 // @license         Apache-2.0
 // @icon            https://raw.github.com/raingart/Nova-YouTube-extension/master/icons/48.png
 
 // @homepageURL     https://github.com/raingart/Nova-YouTube-extension
 // @supportURL      https://github.com/raingart/Nova-YouTube-extension/issues
 // @contributionURL https://www.patreon.com/raingart
-
-// @updateURL       https://openuserjs.org/meta/raingart/Nova_YouTube.meta.js
-// @downloadURL     https://openuserjs.org/src/scripts/raingart/Nova_YouTube.user.js
 
 // @include         http*://*.youtube.com/*
 // @include         http*://*.youtube-nocookie.com/*

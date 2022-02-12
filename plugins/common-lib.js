@@ -27,7 +27,7 @@ const NOVA = {
 
    waitElement(selector = required()) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-      // this.log('waitElement:', selector);
+      // console.debug('waitElement:', selector);
 
       // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
       // alternatives:
@@ -47,8 +47,8 @@ const NOVA = {
          }
 
          new MutationObserver((mutations, observer) => {
-            mutations.forEach(mutation => {
-               for (const node of [...mutation.addedNodes]) {
+            for (let mutation of mutations) {
+               for (const node of mutation.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType)) return;
 
                   if (node.matches && node.matches(selector)) { // in node
@@ -56,42 +56,55 @@ const NOVA = {
                      observer.disconnect();
                      return resolve(node);
 
-                  } else if (element = node?.parentElement?.querySelector(selector)) { // in parent
+                  } else if (element = (node.parentElement || node)?.querySelector(selector)) { // in parent
                      // console.debug('[3]', mutation.type, node.nodeType, selector);
-                     observer.disconnect();
-                     return resolve(element);
-
-                  } else if (element = (document?.body || document).querySelector(selector)) { // inglobal
-                     // console.debug('[4]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
                   }
                }
-            });
+               if (element = (document?.body || document).querySelector(selector)) { // inglobal
+                  // console.debug('[4]', mutation.type, node.nodeType, selector);
+                  // console.debug('[4]', selector);
+                  observer.disconnect();
+                  return resolve(element);
+               }
+            }
          })
-            .observe(document?.body || document.documentElement, { childList: true, subtree: true });
+            .observe(document?.body || document.documentElement, {
+               childList: true, // observe direct children
+               // subtree: true, // and lower descendants too
+            });
       });
    },
 
    watchElement({ selector = required(), attr_mark, callback = required() }) {
-      this.log('watch', selector);
+      // console.debug('watch', selector);
       if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
+
+      const selectors = selector.split(',').map(s => s.trim());
 
       process(); // launch without waiting
 
       setInterval(process, 1000 * 1.5); // 1.5 sec
 
       function process() {
-         NOVA.log('watch.process', { selector, callback });
-         document.body.querySelectorAll(selector + (attr_mark ? ':not([' + attr_mark + '])' : ''))
-            .forEach(el => {
-               if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
-                  NOVA.log('watch.process.viewed', selector);
-                  if (attr_mark) el.setAttribute(attr_mark, true);
-                  if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
-                  callback(el);
-               }
-            });
+         // console.debug('watch.process', { selector, callback });
+
+         selectors.forEach(selector => {
+            document.body.querySelectorAll(selector
+               + (attr_mark ? `:not([${attr_mark}])` : '')
+               + (selectors.length === 1 ? ':not([hidden])' : '') // cannot be applied to a group (ex. "selector1, selector2")
+            )
+               .forEach(el => {
+                  if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
+                     // console.debug('watch.process.viewed', selector);
+                     if (attr_mark) el.setAttribute(attr_mark, true);
+                     if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
+                     callback(el);
+                  }
+               });
+         });
+
       }
    },
 
@@ -121,7 +134,7 @@ const NOVA = {
                injectCss(css);
 
             } else {
-               document.addEventListener("DOMContentLoaded", () => injectCss(css), { capture: true, once: true });
+               window.addEventListener('load', () => injectCss(css), { capture: true, once: true });
             }
 
          } else {
@@ -236,7 +249,8 @@ const NOVA = {
             if (remove) el.remove();
             else {
                if (document.getElementById(selector_id)) return;
-               el.style.visibility = 'hidden';
+               // el.style.visibility = 'hidden'; // left scroll space
+               el.style.display = 'none';
                // create button
                const btn = document.createElement('a');
                btn.textContent = `Load ${id_name}`;
@@ -252,7 +266,8 @@ const NOVA = {
                });
                btn.addEventListener('click', () => {
                   btn.remove();
-                  el.style.visibility = 'visible';
+                  // el.style.visibility = 'visible'; // left scroll space
+                  el.style.display = 'unset';
                   window.dispatchEvent(new Event('scroll')); // need to "comments-visibility" (https://stackoverflow.com/a/68202306)
                });
                el.before(btn);

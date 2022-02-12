@@ -25,7 +25,7 @@ window.nova_plugins.push({
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')
          .then(redirect);
 
-      // does not work
+      // doesn't work
       // NOVA.waitElement('video')
       //    .then(video => {
       //       video.addEventListener('emptied', redirect);
@@ -36,7 +36,7 @@ window.nova_plugins.push({
          // location.replace(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
 
          // tubeunblock.com is shut down
-         // location.replace('https://tubeunblock.com/watch' + location.search); // save time mark
+         // location.replace(`${location.protocol}//hooktube.com/watch${location.search}`); // save time mark
       }
 
    },

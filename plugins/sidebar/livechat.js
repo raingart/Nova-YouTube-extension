@@ -33,7 +33,7 @@ window.nova_plugins.push({
          'label:ko': '방법',
          'label:es': 'Modo',
          'label:pt': 'Modo',
-         // 'label:fr': '',
+         // 'label:fr': 'Mode',
          'label:de': 'Modus',
          options: [
             { label: 'collapse', value: 'hide', selected: true },

@@ -3,7 +3,7 @@
       "message": "ja"
    },
    "app_description": {
-      "message": "Make YouTube™ be better"
+      "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
       "message": "検索..."
@@ -76,6 +76,12 @@
    },
    "github_page_issues_tooltip": {
       "message": "報告する"
+   },
+   "email": {
+      "message": "著者のメール"
+   },
+   "email_tooltip": {
+      "message": "フィードバックするには"
    },
    "donate_patreon_tooltip": {
       "message": "Patreonによるサポート"

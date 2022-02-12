@@ -3,7 +3,7 @@
       "message": "de"
    },
    "app_description": {
-      "message": "Make YouTube™ be better"
+      "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
       "message": "Suche..."
@@ -76,6 +76,12 @@
    },
    "github_page_issues_tooltip": {
       "message": "Etwas melden"
+   },
+   "email": {
+      "message": "E-Mail des Autors"
+   },
+   "email_tooltip": {
+      "message": "Zur Rückmeldung"
    },
    "donate_patreon_tooltip": {
       "message": "Unterstützung mit Patreon"

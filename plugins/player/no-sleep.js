@@ -26,8 +26,8 @@ window.nova_plugins.push({
       NOVA.waitElement('[role="dialog"] #confirm-button')
          .then(btn => {
             btn.click();
-            if ((vid = movie_player.querySelector('video')) && vid.paused) {
-               vid.play();
+            if ((videoElement = document.body.querySelector('video')) && videoElement.paused) {
+               videoElement.play();
             }
          });
    },

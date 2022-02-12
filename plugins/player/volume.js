@@ -2,6 +2,7 @@
 // the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
+// https://www.youtube.com/watch?v=I0dZOM0wTzg#music - shot duration
 
 window.nova_plugins.push({
    id: 'volume-wheel',
@@ -48,18 +49,19 @@ window.nova_plugins.push({
                      }
                   });
             }
-
             // init volume_level_default
-            if (+ user_settings.volume_level_default) {
-               playerVolume.set(+user_settings.volume_level_default);
+            if (+user_settings.volume_level_default) {
+               (user_settings.volume_boost || +user_settings.volume_level_default > 100)
+                  ? playerVolume.booster(+user_settings.volume_level_default)
+                  : playerVolume.set(+user_settings.volume_level_default);
             }
-
          });
 
 
       const playerVolume = {
          adjust(delta) {
-            return this.set(movie_player.getVolume() + parseInt(delta));
+            const level = movie_player.getVolume() + parseInt(delta);
+            return user_settings.volume_boost ? this.booster(level) : this.set(level);
          },
          // Strategy 1
          set(level = 50) {
@@ -99,10 +101,28 @@ window.nova_plugins.push({
                }
             }
          },
-         // Strategy 2
-         // html5(level = 50) {
-         //    // I'm too lazy to implement it
-         // }
+
+         booster(level = 300) {
+            if (level > 100) {
+               if (!this.audioCtx) {
+                  this.audioCtx = new AudioContext();
+                  const source = this.audioCtx.createMediaElementSource(document.body.querySelector('video'));
+                  this.node = this.audioCtx.createGain();
+                  this.node.gain.value = 1;
+                  source.connect(this.node);
+                  this.node.connect(this.audioCtx.destination);
+               }
+
+               if (this.node.gain.value < 7) this.node.gain.value += 1; // >6 is overload
+
+               NOVA.bezelTrigger(movie_player.getVolume() * this.node.gain.value + '%');
+
+            } else {
+               if (this.audioCtx && this.node.gain.value !== 1) this.node.gain.value = 1; // reset
+               this.set(level);
+            }
+            // console.debug('booster', this.node.gain.value);
+         }
       };
 
    },
@@ -123,7 +143,8 @@ window.nova_plugins.push({
          placeholder: '%',
          step: 5,
          min: 0,
-         max: 100,
+         // max: 100,
+         max: 600,
          value: 100,
       },
       volume_step: {
@@ -161,6 +182,26 @@ window.nova_plugins.push({
             { label: 'alt+wheel', value: 'altKey' },
             { label: 'disable', value: false },
          ],
+      },
+      volume_boost: {
+         _tagName: 'input',
+         label: 'Booster',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         title: 'allow set volume above 100%',
+         'title:zh': '允许设定音量高于 100%',
+         'title:ja': '100％を超える設定ボリュームを許可する',
+         'title:ko': '100% 이상의 설정 볼륨 허용',
+         'title:es': 'permitir el volumen establecido por encima del 100%',
+         'title:pt': 'permitir volume definido acima de 100%',
+         'title:fr': 'autoriser le réglage du volume au-dessus de 100 %',
+         'title:de': 'eingestellte Lautstärke über 100 % zulassen',
       },
    }
 });
