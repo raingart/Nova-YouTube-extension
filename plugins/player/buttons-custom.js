@@ -167,8 +167,9 @@ window.nova_plugins.push({
                   try {
                      // fix Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
                      // ex: https://www.youtube.com/watch?v=FZovbrEP53o
-                     container.href = canvas.toDataURL();
-                     // canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
+
+                     canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
+                     // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
                   } catch (error) {
                      alert("The video is protected. Can't take screenshot due to security policy");
                      container.remove();
@@ -183,7 +184,6 @@ window.nova_plugins.push({
                      container.style.zIndex = NOVA.css.getValue({ selector: headerContainer, property: 'z-index' }); // fix header overlapping
                      canvas.addEventListener('click', evt => {
                         evt.preventDefault();
-                        // location.href = canvas.toDataURL(); // dont set name
                         downloadCanvasAsImage(evt.target);
                         container.remove();
                      });
@@ -214,9 +214,9 @@ window.nova_plugins.push({
                         ]
                            .join(' ');
 
-                  // downloadLink.href = canvas.toBlob(blob => URL.createObjectURL(blob));
+                  downloadLink.href = canvas.toBlob(blob => URL.createObjectURL(blob));
                   // downloadLink.href = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-                  downloadLink.href = canvas.toDataURL();
+                  // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
                   downloadLink.download = downloadFileName + '.png';
                   downloadLink.click();
                }

@@ -51,6 +51,7 @@ window.nova_plugins.push({
                   padding: 0 15px;
                   background-color: #222;
                   border: 1px solid #333;
+                  max-width: 90%;
                }
 
                ${COMMENTS_SELECTOR}:not(:hover) {

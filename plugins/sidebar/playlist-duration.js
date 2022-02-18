@@ -51,7 +51,7 @@ window.nova_plugins.push({
 
                      const vids_list = (document.body.querySelector('ytd-app')?.data?.response || window.ytInitialData)
                         .contents.twoColumnBrowseResultsRenderer
-                        .tabs[0].tabRenderer?.content?.sectionListRenderer
+                        ?.tabs[0].tabRenderer?.content?.sectionListRenderer
                         ?.contents[0].itemSectionRenderer
                         .contents[0].playlistVideoListRenderer?.contents;
 

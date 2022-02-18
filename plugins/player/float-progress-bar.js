@@ -110,6 +110,7 @@ window.nova_plugins.push({
                   visibility: hidden;
                }
 
+               /*.ytp-chrome-bottom[hidden],*/
                .ytp-autohide ${SELECTOR} {
                   visibility: visible;
                }

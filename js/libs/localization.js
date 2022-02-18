@@ -1,7 +1,7 @@
 const i18n = msg => chrome.i18n.getMessage(msg);
 
 function localizePage() {
-	let html = document.getElementsByTagName('html')[0];
+   let html = document.getElementsByTagName('html')[0];
    html.innerHTML = internationalize(html.innerHTML)
 
    function internationalize(name) {
