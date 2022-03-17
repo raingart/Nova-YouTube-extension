@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'La pestaña predeterminada en la página del canal',
    'title:pt': 'A guia padrão na página do canal',
    'title:fr': 'Onglet par défaut sur la page de la chaîne',
+   'title:tr': 'Kanal sayfasındaki varsayılan sekme',
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    run_on_pages: 'channel, -mobile',
    restart_on_transition: true,
@@ -50,6 +51,7 @@ window.nova_plugins.push({
          'label:es': 'Ficha predeterminada',
          'label:pt': 'Aba padrão',
          'label:fr': 'Onglet par défaut',
+         'label:tr': 'Varsayılan sekme',
          'label:de': 'Standard-Tab',
          options: [
             { label: 'videos', value: 'videos', selected: true },
@@ -66,6 +68,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
+         'label:tr': 'Mod',
          'label:de': 'Modus',
          title: 'Redirect is safer but slower',
          'title:zh': '重定向是安全的，但速度很慢',
@@ -74,6 +77,7 @@ window.nova_plugins.push({
          'title:es': 'La redirección es más segura pero más lenta',
          'label:pt': 'O redirecionamento é mais seguro, mas mais lento',
          'label:fr': 'La redirection est plus sûre mais plus lente',
+         'label:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
          'label:de': 'Redirect ist sicherer, aber langsamer',
          options: [
             { label: 'redirect', value: 'redirect' },

@@ -10,6 +10,7 @@ window.nova_plugins.push({
    'title:es': 'Agregar botón de reproducción en bucle',
    'title:pt': 'Adicionar botão de reprodução em loop',
    'title:fr': 'Ajouter un bouton de lecture en boucle',
+   'title:tr': 'Döngü oynatma düğmesi ekle',
    'title:de': 'Loop-Wiedergabe-Schaltfläche hinzufügen',
    run_on_pages: 'watch',
    section: 'player',
@@ -20,7 +21,8 @@ window.nova_plugins.push({
    // 'desc:es': 'Reproducción de video en bucle',
    // 'desc:pt': 'Reprodução de vídeo em loop',
    // 'desc:fr': 'Lecture vidéo en boucle',
-   // 'desc:de': 'Loop-Videowiedergabe',
+   // 'desc:tr': 'Döngü video oynatma',
+   'desc:de': 'Loop-Videowiedergabe',
    _runtime: user_settings => {
 
       // createPlayerButton

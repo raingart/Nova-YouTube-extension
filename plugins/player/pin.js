@@ -19,6 +19,7 @@ window.nova_plugins.push({
    'title:es': 'Fijar jugador mientras se desplaza',
    'title:pt': 'Fixar jogador enquanto rola',
    'title:fr': 'Épingler le lecteur pendant le défilement',
+   'title:tr': 'Kaydırırken oynatıcıyı sabitle',
    'title:de': 'Pin-Player beim Scrollen',
    run_on_pages: 'watch, -mobile',
    section: 'player',
@@ -29,6 +30,7 @@ window.nova_plugins.push({
    // 'desc:es': 'El jugador permanece siempre visible mientras se desplaza',
    'desc:pt': 'O jogador fica sempre visível enquanto rola',
    'desc:fr': 'Le lecteur reste toujours visible pendant le défilement',
+   'desc:tr': 'Kaydırma sırasında oyuncu her zaman görünür kalır',
    'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    _runtime: user_settings => {
 
@@ -356,7 +358,6 @@ window.nova_plugins.push({
             if (!this.active) return;
             evt.preventDefault(); // doesn't work. Replace to preventDefault patch
             evt.stopImmediatePropagation(); // doesn't work. Replace to preventDefault patch
-            evt.stopPropagation(); // is work????
 
             this.log('draging');
 
@@ -402,6 +403,7 @@ window.nova_plugins.push({
          'label:es': 'Tamaño del jugador',
          'label:pt': 'Tamanho do jogador',
          'label:fr': 'Taille du joueur',
+         'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
          type: 'number',
          title: 'less value - larger size',
@@ -411,6 +413,7 @@ window.nova_plugins.push({
          'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
+         'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          placeholder: '2-5',
          step: 0.1,
@@ -427,6 +430,7 @@ window.nova_plugins.push({
          'label:es': 'Posición de fijación del jugador',
          'label:pt': 'Posição de fixação do jogador',
          'label:fr': 'Position de fixation du joueur',
+         'label:tr': 'Oyuncu sabitleme pozisyonu',
          'label:de': 'Spielerfixierungsposition',
          options: [
             { label: 'left-top', value: 'top-left' },

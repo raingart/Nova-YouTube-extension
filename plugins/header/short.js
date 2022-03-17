@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Encabezado compacto',
    'title:pt': 'Cabeçalho compacto',
    'title:fr': 'En-tête compact',
+   'title:tr': 'Başlık kompakt',
    'title:de': 'Header kompakt',
    run_on_pages: 'all, -embed, -mobile',
    section: 'header',

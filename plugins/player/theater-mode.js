@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Modo teatro',
    'title:pt': 'Modo teatro',
    'title:fr': 'Mode théâtre',
+   'title:tr': 'Tiyatro modu',
    'title:de': 'Theatermodus',
    run_on_pages: 'watch, -mobile',
    section: 'player',
@@ -16,7 +17,8 @@ window.nova_plugins.push({
    'desc:ko': '플레이어 전체 너비 모드 자동 활성화',
    // 'desc:pt': 'Habilitar automaticamente o modo de largura total do player',
    // 'desc:fr': 'Activer automatiquement le mode pleine largeur du lecteur',
-   // 'desc:de': 'Player-Modus mit voller Breite automatisch aktivieren',
+   'desc:tr': 'Oyuncu tam genişlik modunu otomatik etkinleştir',
+   'desc:de': 'Player-Modus mit voller Breite automatisch aktivieren',
    // 'desc:es': 'Activar automáticamente el modo de ancho completo del reproductor',
    _runtime: user_settings => {
 

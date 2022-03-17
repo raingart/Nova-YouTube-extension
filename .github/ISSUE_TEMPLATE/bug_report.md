@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report, suggestions
 title: ''
 labels: ''
 assignees: ''
@@ -9,9 +9,8 @@ assignees: ''
 
 <!-- Note! Try updating/reinstalling the extensions. Maybe this will help. -->
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+*Describe the bug*
 
- - Browser [ex: chrome 99.0.4389.82]
- - If you use userscript (specify Monkey used) [ex: violentmonkey 99.1]
- - Extension version [ex: 6.6.1]
+ - Browser [ex: chrome 999.0]
+ - You are using userscript? Specify the ...monkey to use [ex: violentmonkey 99.1]
+ - Script version [ex: 6.6.1]

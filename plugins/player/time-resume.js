@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Reanudar el estado de tiempo de reproducción',
    'title:pt': 'Retomar o estado do tempo de reprodução',
    'title:fr': "Reprendre l'état de l'heure de lecture",
+   'title:tr': 'Oynatma süresi durumunu devam ettir',
    'title:de': 'Wiedergabezeitstatus fortsetzen',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'En la recarga de la página - reanudar la reproducción',
    'desc:pt': 'Recarregar na página - retomar a reprodução',
    'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
+   'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
@@ -107,6 +109,7 @@ window.nova_plugins.push({
          'label:es': 'Marcar tiempo en url cuando está en pausa',
          'label:pt': 'Marcar tempo no URL quando pausado',
          'label:fr': "Marquer l'heure dans l'url en pause",
+         'label:tr': "Duraklatıldığında zamanı url'de işaretleyin",
          'label:de': 'Zeit in URL markieren, wenn pausiert',
          type: 'checkbox',
          title: 'update ?t=',

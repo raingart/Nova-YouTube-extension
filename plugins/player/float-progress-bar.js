@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Barra de progreso flotante del jugador',
    'title:pt': 'Barra de progresso do jogador flutuante',
    'title:fr': 'Barre de progression du joueur flottant',
+   'title:tr': 'Kayan oyuncu ilerleme çubuğu',
    'title:de': 'Float-Player-Fortschrittsbalken',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -76,7 +77,7 @@ window.nova_plugins.push({
       function renderFloatBar() {
 
          return document.getElementById(SELECTOR_ID) || (function () {
-            movie_player.insertAdjacentHTML('beforeend',
+            movie_player?.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
                   <div class="conteiner">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
@@ -207,7 +208,7 @@ window.nova_plugins.push({
                // if (!isNaN(duration)) {
                NOVA.getChapterList(duration)
                   ?.forEach((chapter, i, chapters_list) => {
-                     // console.debug('', (newChapter.sec / duration) * 100 + '%');
+                     // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
                      const newChapter = document.createElement('span');
                      const nextChapterSec = chapters_list[i + 1]?.sec || duration;
 
@@ -252,6 +253,7 @@ window.nova_plugins.push({
          'label:es': 'Altura',
          'label:pt': 'Altura',
          'label:fr': 'Hauteur',
+         'label:tr': 'Yükseklik',
          'label:de': 'Höhe',
          type: 'number',
          title: 'in pixels',
@@ -269,6 +271,7 @@ window.nova_plugins.push({
          'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
          'label:fr': 'Opacité',
+         'label:tr': 'Opaklık',
          'label:de': 'Opazität',
          type: 'number',
          // title: '',

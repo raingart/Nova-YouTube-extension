@@ -7,11 +7,14 @@ window.nova_plugins.push({
    'title:es': 'Descripción en ventana emergente',
    'title:pt': 'Descrição em pop-up',
    'title:fr': 'Description dans la fenêtre contextuelle',
+   'title:tr': 'Açılır pencerede açıklama',
    'title:de': 'Beschreibung im Popup',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
    _runtime: user_settings => {
+
+      // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
       const DESCRIPTION_SELECTOR = '#meta #description:not([hidden]):not(:empty)';
 

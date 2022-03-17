@@ -167,21 +167,23 @@ const App = {
 App.init();
 
 // test normal lite
-// https://www.youtube.com/watch?v=4ldjbjwim4k 240
-// https://www.youtube.com/watch?v=aCyGvGEtOwc 360
-// https://www.youtube.com/watch?v=668nUCeBHyY 720
-// https://www.youtube.com/watch?v=b6At_bb1PNU 1080
-// https://www.youtube.com/watch?v=rFeBMv98X30 1080
-// https://www.youtube.com/watch?v=s-yflRFexPc 4k
+// https://www.youtube.com/watch?v=FSjr2H0RDsY 240 AMV
+// https://www.youtube.com/watch?v=qnLunQEcMn0 480 MUSIC (has title)
+// https://www.youtube.com/watch?v=w1FUjM78HAI 480 AMV
+// https://www.youtube.com/watch?v=668nUCeBHyY 720 short time
+// https://www.youtube.com/watch?v=b6At_bb1PNU 1080 Trailer
+// https://www.youtube.com/watch?v=rFeBMv98X30 1080 PV
+// https://www.youtube.com/watch?v=s-yflRFexPc 4k short time
 
 // example url new embed page
-// https://www.youtube.com/embed/JVi_e8g7K4A
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
-// https://www.youtube.com/embed/JVi_e8g7K4A?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
+// https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
 
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded
-// https://www.youtube.com/channel/UCYPymLmMIXZEbPGZCep2P9A - no have sorting button
+
+// clear history
+// https://www.youtube.com/feed/history/community_history
 
 // TODO
 // upgrade code to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment

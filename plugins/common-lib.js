@@ -49,7 +49,7 @@ const NOVA = {
          new MutationObserver((mutations, observer) => {
             for (let mutation of mutations) {
                for (const node of mutation.addedNodes) {
-                  if (![1, 3, 8].includes(node.nodeType)) return;
+                  if (![1, 3, 8].includes(node.nodeType)) continue;
 
                   if (node.matches && node.matches(selector)) { // in node
                      // console.debug('[2]', mutation.type, node.nodeType, selector);
@@ -167,6 +167,7 @@ const NOVA = {
                + '\n';
             // sheet.insertRule(css, sheet.cssRules.length);
             // (document.head || document.documentElement).append(sheet);
+            // document.adoptedStyleSheets.push(newSheet); // v99+
 
             // sheet.onload = () => NOVA.log('style loaded:', sheet.src || sheet || sheet.textContent.substr(0, 100));
          }
@@ -329,7 +330,7 @@ const NOVA = {
                            'time': timestamp,
                            'title': line
                               .replace(timestamp, '')
-                              .trim().replace(/(^[:\-–—|]|[:\-–—.;|]$)/, '')
+                              .trim().replace(/(^[:\-–—|]|[:\-–—.;|]$)/g, '')
                               .trim()
                         });
                      }
@@ -363,9 +364,9 @@ const NOVA = {
    //                title: link.parentElement.textContent
    //                   .split('\n')
    //                   .find(line => line.includes(link.textContent))
-   //                   .replace(link.textContent, '')
+   //                   .replaceAll(link.textContent, '')
    //                   .trim()
-   //                   .replace(/(^[:\-–—]|[:\-–—.;]$)/, '')
+   //                   .replace(/(^[:\-–—]|[:\-–—.;]$)/g, '')
    //                   .trim()
    //             });
    //          }
@@ -438,7 +439,7 @@ const NOVA = {
       },
    },
 
-   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'home',
+   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'home',
 
    queryURL: {
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),

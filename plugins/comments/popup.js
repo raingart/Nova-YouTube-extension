@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Mostrar en ventana emergente',
    'title:pt': 'Mostrar em pop-up',
    'title:fr': 'Afficher dans la fenêtre contextuelle',
+   'title:tr': 'Açılır pencerede göster',
    'title:de': 'Im Popup anzeigen',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
@@ -15,6 +16,9 @@ window.nova_plugins.push({
 
       // contents is empty
       // #comments:not([hidden]) > #sections > #contents:not(:empty)
+
+      // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
+      // test example: https://www.youtube.com/watch?v=CV_BR1tfdCo
 
       const COMMENTS_SELECTOR = '#comments:not([hidden])';
 

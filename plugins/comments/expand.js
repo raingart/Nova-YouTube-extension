@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Expandir comentarios',
    'title:pt': 'Expandir comentários',
    'title:fr': 'Développer les commentaires',
+   'title:tr': 'Yorumları genişlet',
    'title:de': 'Kommentare erweitern',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
@@ -65,11 +66,12 @@ window.nova_plugins.push({
          'label:es': 'Expandir comentarios',
          'label:pt': 'Expandir comentário',
          'label:fr': 'Développer les commentaires',
+         'label:tr': 'Yorumu genişlet',
          'label:de': 'Kommentar erweitern',
          // title: '',
          options: [
-            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:es': 'stets' },
-            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', 'label:es': 'auf schweben' },
+            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:tr': 'her zaman', 'label:de': 'stets' },
+            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben' },
          ],
       },
       comments_view_reply: {
@@ -81,11 +83,12 @@ window.nova_plugins.push({
          'label:es': 'Expandir respuesta',
          'label:pt': 'Expandir a resposta',
          'label:fr': 'Développer la réponse',
+         'label:tr': 'Cevabı genişlet',
          'label:de': 'Antwort erweitern',
          // title: '',
          options: [
-            { label: 'always', value: 'always', 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:es': 'stets' },
-            { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', 'label:es': 'auf schweben' },
+            { label: 'always', value: 'always', 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:tr': 'her zaman', 'label:de': 'stets' },
+            { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben' },
          ],
       },
    }

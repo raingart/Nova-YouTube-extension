@@ -22,6 +22,25 @@ window.nova_plugins.push({
    section: 'player', // optional. Visual section in settings where the plugin belongs. Available list of values: header, player, details, comments, sidebar, other, channel
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
    desc: 'Title description', // optional. Title description in settings. Don't use double quotes inside the text!
+
+   // localization
+   // 'title:zh': '',
+   // 'title:ja': '',
+   // 'title:ko': '',
+   // 'title:es': '',
+   // 'title:pt': '',
+   // 'title:fr': '',
+   // 'title:tr': '',
+   // 'title:de': '',
+
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
    /* optional GIU in options page: end */
 
 

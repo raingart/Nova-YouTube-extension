@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
    'title:pt': 'Pausar automaticamente todas as guias, exceto a ativa',
    'title:fr': "Interrompt la lecture des vidéos dans d'autres onglets",
+   'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -22,6 +23,7 @@ window.nova_plugins.push({
    'desc:es': 'Soporta iframes y otras ventanas',
    'desc:pt': 'Suporta iframes e outras janelas',
    'desc:fr': 'Prend en charge les iframes et autres fenêtres',
+   'desc:tr': "iframe'leri ve diğer pencereleri destekler",
    'desc:de': 'Unterstützt iframes und andere Fenster',
    _runtime: user_settings => {
 
@@ -108,6 +110,7 @@ window.nova_plugins.push({
          'label:es': 'Reproducción automática en el enfoque de la pestaña',
          'label:pt': 'Reprodução automática no foco da guia',
          'label:fr': "Lecture automatique sur le focus de l'onglet",
+         'label:tr': 'Sekme odağında otomatik oynatma',
          'label:de': 'Autoplay bei Tab-Fokus',
          type: 'checkbox',
          // title: '',

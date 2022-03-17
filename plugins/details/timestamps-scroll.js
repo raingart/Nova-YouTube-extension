@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Desactivar marcas de tiempo desplazándose al jugador',
    'title:pt': 'Desativar carimbos de data/hora rolando para o player',
    'title:fr': 'Désactiver le défilement des horodatages vers le lecteur',
+   'title:tr': 'Oyuncuya kaydırma zaman damgalarını devre dışı bırak',
    'title:de': 'Deaktivieren Sie Zeitstempel, die zum Player scrollen',
    run_on_pages: 'watch, -mobile',
    section: 'details',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'Deja de desplazarte al jugador al hacer clic en marcas de tiempo',
    'desc:pt': 'Pare de rolar para o player ao clicar em timestamps',
    'desc:fr': 'Arrêtez de faire défiler vers le lecteur lorsque vous cliquez sur les horodatages',
+   'desc:tr': 'Zaman damgalarına tıklarken oynatıcıya kaydırmayı bırakın',
    'desc:de': 'Beenden Sie das Scrollen zum Player, wenn Sie auf Zeitstempel klicken',
    _runtime: user_settings => {
 

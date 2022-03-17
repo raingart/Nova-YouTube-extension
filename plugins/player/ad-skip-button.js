@@ -5,13 +5,14 @@
 
 window.nova_plugins.push({
    id: 'ad-skip-button',
-   title: 'Ads Skip',
+   title: 'Ad Skip',
    'title:zh': '广告视频跳过',
    'title:ja': '広告スキップ',
    'title:ko': '광고 건너뛰기',
    'title:es': 'Saltar anuncios',
    'title:pt': 'Pular anúncios',
    'title:fr': 'Ignorer les annonces',
+   'title:tr': 'Reklam Atlama',
    'title:de': 'Anzeigen überspringen',
    run_on_pages: 'watch',
    section: 'player',
@@ -22,6 +23,7 @@ window.nova_plugins.push({
    // 'desc:es': 'Haga clic automáticamente en el botón [Omitir anuncio]',
    // 'desc:pt': 'Clique automaticamente no botão [Ignorar anúncio]',
    // 'desc:fr': "Clic automatique sur le bouton [Ignorer l'annonce]",
+   'desc:tr': "Clic automatique sur le bouton [Ignorer l'annonce]",
    // 'desc:de': 'Klicken Sie automatisch auf die Schaltfläche [Anzeige überspringen]',
    _runtime: user_settings => {
 

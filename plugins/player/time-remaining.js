@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Tiempo restante',
    'title:pt': 'Tempo restante',
    'title:fr': 'Temps restant',
+   'title:tr': 'Kalan süre',
    'title:de': 'Verbleibende Zeit',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'Tiempo restante hasta el final del video',
    'desc:pt': 'Tempo restante até o final do vídeo',
    'desc:fr': "Temps restant jusqu'à la fin de la vidéo",
+   'desc:tr': 'Videonun sonuna kalan süre',
    'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    _runtime: user_settings => {
 
@@ -89,6 +91,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
+         'label:tr': 'Mod',
          'label:de': 'Modus',
          options: [
             { label: 'time+(%)', value: 'full' },

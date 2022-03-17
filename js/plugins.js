@@ -37,6 +37,7 @@ const Plugins = {
       'other/title-time.js',
       'other/scroll-to-top.js',
       'other/search-filter.js',
+      'other/shorts-redirect.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -65,7 +66,8 @@ const Plugins = {
       (list || this.list)
          .forEach(plugin => {
             try {
-               this.injectScript(chrome.extension.getURL('/plugins/' + plugin));
+               this.injectScript(chrome.extension.getURL('/plugins/' + plugin)); // manifest v2
+               // this.injectScript('/plugins/' + plugin); // manifest v3
             } catch (error) {
                console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
             }
@@ -103,7 +105,7 @@ const Plugins = {
       // copy fn - NOVA.currentPageName()
       const currentPage = (function () {
          const page = location.pathname.split('/')[1];
-         return ['channel', 'c', 'user'].includes(page) ? 'channel' : (page == 'shorts' ? 'watch' : page) || 'home';
+         return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'home';
       })();
 
       // redirect shorts page
@@ -135,7 +137,8 @@ const Plugins = {
             logTableStatus = 'off';
 
          } else if (
-            (pagesAllowList?.includes(currentPage)
+            (
+               pagesAllowList?.includes(currentPage)
                || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + currentPage))
             )
             && (!isMobile || (isMobile && !pagesAllowList?.includes('-mobile')))

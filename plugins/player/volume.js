@@ -13,6 +13,7 @@ window.nova_plugins.push({
    'title:es': 'Volumen',
    // 'title:pt': 'Volume',
    'title:fr': 'Le volume',
+   'title:tr': 'Hacim',
    'title:de': 'Volumen',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
@@ -24,6 +25,7 @@ window.nova_plugins.push({
    'desc:es': 'con rueda de ratón',
    'desc:pt': 'com roda do mouse',
    'desc:fr': 'avec molette de la souris',
+   'desc:tr': 'fare tekerleği ile',
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
@@ -60,12 +62,12 @@ window.nova_plugins.push({
 
       const playerVolume = {
          adjust(delta) {
-            const level = movie_player.getVolume() + parseInt(delta);
+            const level = movie_player?.getVolume() + parseInt(delta);
             return user_settings.volume_boost ? this.booster(level) : this.set(level);
          },
          // Strategy 1
          set(level = 50) {
-            if (!movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+            if (!movie_player?.hasOwnProperty('getVolume')) return console.error('Error getVolume');
             const newLevel = Math.max(0, Math.min(100, parseInt(level)));
 
             // set new volume level
@@ -137,6 +139,7 @@ window.nova_plugins.push({
          'label:es': 'Volumen predeterminado',
          'label:pt': 'Volume padrão',
          'label:fr': 'Volume par défaut',
+         'label:tr': 'Varsayılan ses',
          'label:de': 'Standardlautstärke',
          type: 'number',
          title: '0 - auto',
@@ -156,6 +159,7 @@ window.nova_plugins.push({
          'label:es': 'Paso',
          'label:pt': 'Degrau',
          'label:fr': 'Étape',
+         'label:tr': 'Adım',
          'label:de': 'Schritt',
          type: 'number',
          title: 'in percents',
@@ -174,6 +178,7 @@ window.nova_plugins.push({
          'label:es': 'Tecla de acceso rápido',
          'label:pt': 'Tecla de atalho',
          'label:fr': 'Raccourci',
+         'label:tr': 'Kısayol tuşu',
          'label:de': 'Schnelltaste',
          options: [
             { label: 'wheel', value: 'none', selected: true },
@@ -192,7 +197,8 @@ window.nova_plugins.push({
          // 'label:es': '',
          // 'label:pt': '',
          // 'label:fr': '',
-         // 'label:de': '',
+         // 'label:tr': '',
+         'label:de': '',
          type: 'checkbox',
          title: 'allow set volume above 100%',
          'title:zh': '允许设定音量高于 100%',
@@ -201,7 +207,8 @@ window.nova_plugins.push({
          'title:es': 'permitir el volumen establecido por encima del 100%',
          'title:pt': 'permitir volume definido acima de 100%',
          'title:fr': 'autoriser le réglage du volume au-dessus de 100 %',
-         'title:de': 'eingestellte Lautstärke über 100 % zulassen',
+         'title:tr': "%100'ün üzerinde ses ayarına izin ver",
+         'title:de': 'eingestellte Lautstärke über 100% zulassen',
       },
    }
 });

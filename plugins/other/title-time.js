@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Mostrar la hora en el título de la pestaña',
    'title:pt': 'Mostrar tempo no título da guia',
    'title:fr': "Afficher l'heure dans le titre de l'onglet",
+   'title:tr': 'Sekme başlığında zamanı göster',
    'title:de': 'Zeit im Tab-Titel anzeigen',
    run_on_pages: 'watch',
    section: 'other',
@@ -95,11 +96,12 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
+         'label:tr': 'Mod',
          'label:de': 'Modus',
          options: [
-            // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': '', 'label:de': 'strom' },
-            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', 'label:es': 'links' },
-            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', 'label:es': 'strom/dauer' },
+            // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:tr': 'akım', 'label:de': 'strom' },
+            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', 'label:tr': 'o ayrıldı', 'label:de': 'links' },
+            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', 'label:tr': 'akım/süre', 'label:de': 'strom/dauer' },
          ],
       },
    }

@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Reemplazar indicador predeterminado',
    'title:pt': 'Substituir o indicador padrão',
    'title:fr': "Remplacer l'indicateur par défaut",
+   'title:tr': 'Varsayılan göstergeyi değiştir',
    'title:de': 'Standardkennzeichen ersetzen',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -188,6 +189,7 @@ window.nova_plugins.push({
          'label:es': 'Tipo de indicador',
          'label:pt': 'Tipo de indicador',
          'label:fr': "Type d'indicateur",
+         'label:tr': 'Varsayılan göstergeyi değiştir',
          'label:de': 'Indikatortyp',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },

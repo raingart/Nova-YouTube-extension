@@ -10,8 +10,9 @@ window.nova_plugins.push({
    'title:es': 'Miniaturas claras',
    'title:pt': 'Limpar miniaturas',
    'title:fr': 'Effacer les vignettes',
+   'title:tr': 'Küçük resimleri temizle',
    'title:de': 'Miniaturansichten löschen',
-   run_on_pages: 'home, feed, channel, watch', // broken "live now" in results
+   run_on_pages: 'home, feed, channel, watch', // "live now" doesn't work on results page
    // run_on_pages: 'all, -embed, -results',
    section: 'other',
    desc: 'Replaces the predefined thumbnail',
@@ -21,6 +22,7 @@ window.nova_plugins.push({
    'desc:es': 'Reemplaza la miniatura predefinida',
    'desc:pt': 'Substitui a miniatura predefinida',
    'desc:fr': 'Remplace la vignette prédéfinie',
+   'desc:tr': 'Önceden tanımlanmış küçük resmi değiştirir',
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    _runtime: user_settings => {
 
@@ -37,7 +39,7 @@ window.nova_plugins.push({
             //    // #overlays [overlay-style="DEFAULT"]
             // ) {
             //    console.debug('img.parentElement.parentElement', link);
-            //    return; // slip "live now"
+            //    return; // skip "live now"
             // }
 
             // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
@@ -66,17 +68,19 @@ window.nova_plugins.push({
          'label:es': 'Marcas de tiempo en miniatura',
          'label:pt': 'Carimbos de data e hora em miniatura',
          'label:fr': 'Horodatages des vignettes',
+         'label:tr': 'Küçük resim zaman damgaları',
          'label:de': 'Thumbnail-Zeitstempel',
          title: 'Show thumbnail from video time position',
          'title:zh': '从视频时间位置显示缩略图',
          'title:ja': 'ビデオの時間位置からサムネイルを表示',
          // 'title:es': 'Mostrar miniatura de la posición de tiempo del video',
          'title:pt': 'Mostrar miniatura da posição no tempo do vídeo',
-         // 'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
+         'title:tr': 'Video zaman konumundan küçük resmi göster',
+         'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
          options: [
-            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', 'label:de': 'anfang' }, // often shows intro
-            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', 'label:de': 'mitte' },
-            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', 'label:de': 'ende' }
+            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', 'label:tr': 'başlat', 'label:de': 'anfang' }, // often shows intro
+            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', 'label:tr': 'orta', 'label:de': 'mitte' },
+            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', 'label:tr': 'son', 'label:de': 'ende' }
          ],
       },
       thumbnails_clear_overlay: {
@@ -88,6 +92,7 @@ window.nova_plugins.push({
          'label:es': 'Ocultar botones superpuestos en una miniatura',
          'label:pt': 'Ocultar botões de sobreposição em uma miniatura',
          'label:fr': 'Masquer les boutons de superposition sur une vignette',
+         'label:tr': 'Küçük resimdeki bindirme düğmelerini gizle',
          'label:de': 'Überlagerungsschaltflächen auf einer Miniaturansicht ausblenden',
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',

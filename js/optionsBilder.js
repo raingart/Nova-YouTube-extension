@@ -204,9 +204,9 @@ const Opt = {
    },
 
    // tab selector
-   openTab(tabId, reset_page) {
+   openTab(tabId, reload_page) {
       // console.debug('openTab', ...arguments);
-      if (reset_page) {
+      if (reload_page) {
          document.location = location.pathname + '?tabs=' + tabId;
       } else {
          document.getElementById(tabId).checked = true;
@@ -316,7 +316,7 @@ const Opt = {
                      Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
                      alert(i18n('opt_alert_import_successfully'));
                      // document.location.reload();
-                     this.openTab('tab-plugins', 'reset_page');
+                     this.openTab('tab-plugins', 'reload_page');
                   }
                   catch (err) { alert('Error parsing settings\n' + err.name + ": " + err.message); }
                });
@@ -334,7 +334,7 @@ const Opt = {
             if (confirm(i18n('opt_prompt_reset_settings'))) {
                Storage.setParams(null, this.storageMethod);
                // document.location.reload();
-               this.openTab('tab-plugins', 'reset_page');
+               this.openTab('tab-plugins', 'reload_page');
             }
          });
 
@@ -419,7 +419,7 @@ window.addEventListener('load', () => {
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
             highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
             replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
-            marked = content.replace(pattern, replaceWith);
+            marked = content.replaceAll(pattern, replaceWith);
 
          return (target.innerHTML = marked) !== content;
       }

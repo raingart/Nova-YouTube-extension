@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Desactivar la suspensión de la página',
    'title:pt': 'Desativar página suspensa',
    'title:fr': 'Désactiver la mise en veille de la page',
+   'title:tr': 'Sayfa uykusunu devre dışı bırak',
    'title:de': 'Seitenschlaf deaktivieren',
    run_on_pages: 'watch, -mobile',
    section: 'player',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'evitar la alerta de [Video en pausa]',
    'desc:pt': 'evitar o alerta de [Vídeo pausado]',
    'desc:fr': "empêcher l'alerte [Vidéo en pause]",
+   'desc:tr': '[Video duraklatıldı] uyarısını engelle',
    'desc:de': 'Warnung [Video pausiert] verhindern',
    _runtime: user_settings => {
 

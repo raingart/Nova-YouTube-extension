@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Borrar enlaces de redireccionamientos',
    'title:pt': 'Limpar links de redirecionamentos',
    'title:fr': 'Effacer les liens des redirections',
+   'title:tr': 'Yönlendirmeden bağlantıları temizle',
    'title:de': 'Links aus Weiterleitungen löschen',
    run_on_pages: 'watch, channel',
    section: 'details',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'Enlaces externos directos',
    'desc:pt': 'Links externos diretos',
    'desc:fr': 'Liens externes directs',
+   'desc:tr': 'Doğrudan harici bağlantılar',
    'desc:de': 'Direkte externe Links',
    _runtime: user_settings => {
 

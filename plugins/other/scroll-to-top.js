@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Desplazarse al botón superior',
    'title:pt': 'Role para o botão superior',
    'title:fr': 'Faites défiler vers le haut',
+   'title:tr': 'Üst düğmeye kaydır',
    'title:de': 'Nach oben scrollen',
    run_on_pages: 'all, -embed, -mobile',
    section: 'other',
@@ -17,6 +18,7 @@ window.nova_plugins.push({
    'desc:es': 'Mostrado en páginas largas',
    'desc:pt': 'Exibido em páginas longas',
    'desc:fr': 'Affiché sur de longues pages',
+   'desc:tr': 'Uzun sayfalarda görüntüleniyor',
    'desc:de': 'Wird auf langen Seiten angezeigt',
    _runtime: user_settings => {
 
@@ -104,6 +106,7 @@ window.nova_plugins.push({
          'label:es': 'Suave',
          'label:pt': 'Suave',
          'label:fr': 'Lisse',
+         'label:tr': 'Düz',
          'label:de': 'Glatt',
          type: 'checkbox',
       },
@@ -116,6 +119,7 @@ window.nova_plugins.push({
          'label:es': 'Reanudar video',
          'label:pt': 'Retomar vídeo',
          'label:fr': 'Annuler la pause de la vidéo',
+         'label:tr': 'Videoyu Duraklat',
          'label:de': 'Video wieder anhalten',
          type: 'checkbox',
       },

@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Mostrar recuento de videos del canal',
    'title:pt': 'Mostrar contagem de vídeos do canal',
    'title:fr': 'Afficher le nombre de vidéos de la chaîne',
+   'title:tr': 'Kanal video sayısını göster',
    'title:de': 'Anzahl der Kanalvideos anzeigen',
    run_on_pages: 'watch, channel',
    restart_on_transition: true,
@@ -19,6 +20,7 @@ window.nova_plugins.push({
    'desc:es': 'Mostrar videos subidos en el canal',
    'desc:pt': 'Exibir vídeos enviados no canal',
    'desc:fr': 'Afficher les vidéos mises en ligne sur la chaîne',
+   'desc:tr': 'Yüklenen videoları kanalda göster',
    'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    _runtime: user_settings => {
 

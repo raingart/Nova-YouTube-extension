@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Logotipo de YouTube',
    'title:pt': 'Logotipo do YouTube',
    // 'title:fr': '',
+   'title:tr': 'YouTube logosu',
    // 'title:de': '',
    run_on_pages: 'all, -embed, -mobile',
    section: 'header',
