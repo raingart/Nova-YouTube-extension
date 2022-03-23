@@ -14,6 +14,10 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // does not work. I don't know how to implement it better. By updating "removeEventListener/addEventListener" or reloading the entire comment block
+      // dirty fix bug with not updating comments addEventListener: reset comments block
+      // document.addEventListener('yt-page-data-updated', () => location.reload());
+
       // comment
       NOVA.watchElement({
          selector: '#contents #expander[collapsed]',
@@ -21,7 +25,7 @@ window.nova_plugins.push({
          callback: el => {
             const moreExpand = () => el.querySelector('#more')?.click();
             // on hover auto expand
-            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
+            el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
             // if (user_settings.comments_expand_mode === 'always') moreExpand();
             if (user_settings.comments_expand_mode != 'onhover') moreExpand();
          },
@@ -34,7 +38,7 @@ window.nova_plugins.push({
          callback: el => {
             const moreExpand = () => el.querySelector('#button')?.click();
             // on hover auto expand
-            el.addEventListener("mouseenter", moreExpand, { capture: true, once: true });
+            el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
             if (user_settings.comments_view_reply == 'always') moreExpand();
          },
       });

@@ -16,7 +16,7 @@ window.nova_plugins.push({
 
       NOVA.preventVisibilityElement({
          selector: '#secondary #related, ytm-item-section-renderer[section-identifier="related-items"]',
-         id_name: 'related',
+         title: 'related',
          remove: user_settings.related_visibility_mode == 'disable' ? true : false,
       });
 

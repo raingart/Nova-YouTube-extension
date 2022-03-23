@@ -17,7 +17,7 @@ window.nova_plugins.push({
 
       NOVA.preventVisibilityElement({
          selector: '#comments',
-         id_name: 'comments',
+         title: 'comments',
          remove: user_settings.comments_visibility_mode == 'disable' ? true : false,
       });
 

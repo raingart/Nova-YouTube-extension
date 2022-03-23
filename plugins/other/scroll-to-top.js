@@ -79,9 +79,9 @@ window.nova_plugins.push({
          // btn hover style
          NOVA.css.push(
             `#${SELECTOR_ID}:hover {
-                  opacity: 1 !important;
-                  background-color: rgba(0,0,0,.6) !important;
-               }`);
+               opacity: 1 !important;
+               background-color: rgba(0,0,0,.6) !important;
+            }`);
 
          // scroll event
          const scrollToTop_btn = document.getElementById(SELECTOR_ID);

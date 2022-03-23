@@ -15,6 +15,13 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // dirty fix bug with not updating thumbnails/title: reset page
+      document.addEventListener('yt-navigate-finish', () => {
+         if (document.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
+            location.reload();
+         }
+      });
+
       const
          VIDEO_TITLE_SELECTOR = '#video-title:not(:empty), a > h3.large-media-item-headline:not(:empty)', // '.title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,

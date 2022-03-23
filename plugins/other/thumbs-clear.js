@@ -1,5 +1,6 @@
 // for test:
 // https://www.youtube.com/channel/UCl7OsED7y9eavZJbTGnK0xg/playlists - select Albums & Singles
+// https://www.youtube.com/c/cafemusicbgmchannel/videos - live
 
 window.nova_plugins.push({
    id: 'thumbnails-clear',
@@ -12,8 +13,8 @@ window.nova_plugins.push({
    'title:fr': 'Effacer les vignettes',
    'title:tr': 'Küçük resimleri temizle',
    'title:de': 'Miniaturansichten löschen',
-   run_on_pages: 'home, feed, channel, watch', // "live now" doesn't work on results page
-   // run_on_pages: 'all, -embed, -results',
+   run_on_pages: 'home, results, feed, channel, watch',
+   // run_on_pages: 'all, -embed',
    section: 'other',
    desc: 'Replaces the predefined thumbnail',
    'desc:zh': '替换预定义的缩略图',
@@ -26,26 +27,25 @@ window.nova_plugins.push({
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    _runtime: user_settings => {
 
+      // dirty fix bug with not updating thumbnails: reset page
+      document.addEventListener('yt-navigate-finish', () => NOVA.queryURL.has('sort') && location.reload());
+
       NOVA.watchElement({
          // selector: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',
          selector: 'a[class*=thumbnail]:not([hidden]):not(.ytd-playlist-thumbnail) img[src]',
          attr_mark: 'preview-cleared',
          callback: img => {
-            // failed fix to exclude live thumbs from results page
-            // if ((link = img.parentElement.parentElement)
-            //    && link.getAttribute('id') == 'thumbnail'
-            //    && link.querySelector('#text.ytd-thumbnail-overlay-time-status-renderer')
-            //    // #text.ytd-thumbnail-overlay-time-status-renderer
-            //    // #overlays [overlay-style="DEFAULT"]
-            // ) {
-            //    console.debug('img.parentElement.parentElement', link);
-            //    return; // skip "live now"
-            // }
-
+            // skip "premiere", "live now"
+            if (parent = img.closest('ytd-video-renderer, ytd-grid-video-renderer')) {
+               if (!parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]') || parent.querySelector('#badges .badge-style-type-live-now, ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')) {
+                  // console.debug('skiped thumbnails-preview-cleared', parent);
+                  return;
+               }
+            }
             // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
             // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
             if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnails_clear_timestamps || 'hq2') + '.jpg');
+               img.src = img.src.replace(re, (user_settings.thumbnails_clear_preview_timestamps || 'hq2') + '.jpg');
             }
          },
       });

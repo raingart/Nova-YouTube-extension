@@ -32,7 +32,10 @@ zip -q -r $filename \
 echo "Compressed $filename"
 
 pause 'Press [Enter] to pushing the repository...'
-git add --all
+git add .
+if [ ! -z "$1" ]; then
+   ver="$1"
+fi
 git commit -m "$ver"
 git tag "v${ver}"
-git push
+git push origin master

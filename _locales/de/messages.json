@@ -66,19 +66,19 @@
       "message": "Use your [API key] for stable work"
    },
    "github_page": {
-      "message": "Source Code"
+      "message": "Quellcode"
    },
    "github_page_tooltip": {
       "message": "Offen"
    },
    "github_page_issues": {
-      "message": "Report Bugs"
+      "message": "Fehler melden"
    },
    "github_page_issues_tooltip": {
       "message": "Etwas melden"
    },
    "email": {
-      "message": "E-Mail des Autors"
+      "message": "Kontakt E-mail"
    },
    "email_tooltip": {
       "message": "Zur Rückmeldung"

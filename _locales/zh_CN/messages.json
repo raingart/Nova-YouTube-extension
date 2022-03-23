@@ -57,7 +57,7 @@
       "message": "该扩展程序在嵌入视频中不起作用"
    },
    "opt_report_issues": {
-      "message": "启用报告错误"
+      "message": "显示提示报告错误"
    },
    "opt_report_issues_tooltip": {
       "message": "需要允许在 YouTube 上弹出提示"
@@ -66,7 +66,7 @@
       "message": "使用您的 [API 密钥] 进行稳定的工作"
    },
    "github_page": {
-      "message": "Source Code"
+      "message": "源代码"
    },
    "github_page_tooltip": {
       "message": "打开"
@@ -78,7 +78,7 @@
       "message": "报告"
    },
    "email": {
-      "message": "作者邮箱"
+      "message": "联系电子邮件"
    },
    "email_tooltip": {
       "message": "反馈"

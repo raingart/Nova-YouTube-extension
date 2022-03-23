@@ -104,12 +104,13 @@ const Plugins = {
 
       // copy fn - NOVA.currentPageName()
       const currentPage = (function () {
-         const page = location.pathname.split('/')[1];
-         return ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'home';
+         const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+         return (['channel', 'c', 'user'].includes(page)
+            // fix non-standard link - https://www.youtube.com/pencilmation/videos
+            || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+         ) ? 'channel' : page || 'home';
       })();
-
-      // redirect shorts page
-      // if (currentPage == 'shorts') location.href = location.href.replace('shorts/', 'watch?v=');
+      // console.debug('currentPage', currentPage);
 
       const isMobile = location.host == 'm.youtube.com';
 

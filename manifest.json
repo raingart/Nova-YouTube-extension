@@ -27,7 +27,7 @@
             "https://*.youtube-nocookie.com/*"
          ],
          "exclude_matches": [
-            "https://*.youtube.com/*/*.xml*",
+            "https://*.youtube.com/*.xml*",
             "https://*.youtube.com/error*",
             "https://music.youtube.com/*",
             "https://accounts.youtube.com/*"

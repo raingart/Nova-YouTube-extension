@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Désactiver les shorts',
    'title:tr': 'Şortları devre dışı bırak',
    'title:de': 'Kurzschlüsse deaktivieren',
-   run_on_pages: 'feed, shorts, -mobile',
+   run_on_pages: 'home, results, feed, channel, shorts, -mobile',
    restart_on_transition: true,
    section: 'channel',
    // desc: 'Redirect shorts video to normal URL',
@@ -24,9 +24,10 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       switch (NOVA.currentPageName()) {
+         // redirect shorts page
          case 'shorts': location.href = location.href.replace('shorts/', 'watch?v='); break;
 
-         case 'feed':
+         default:
             // check
             const interval = setInterval(hideShorts, 150);
             // clear
@@ -34,11 +35,14 @@ window.nova_plugins.push({
             setTimeout(() => clearInterval(interval), 1000 * 5); // after 5s. Fallback if nothing is found
 
             function hideShorts() {
-               document.body.querySelectorAll('ytd-grid-video-renderer:not([hidden])')
+               document.body.querySelectorAll('ytd-video-renderer:not([hidden]), ytd-grid-video-renderer:not([hidden])')
                   .forEach(thumb => {
                      if (link = thumb.querySelector('a[href*="shorts/"]')) {
+                        thumb.remove();
+                        // thumb.style.display = 'none';
+
                         // console.debug('has #shorts:', link, link.textContent);
-                        thumb.style.display = 'none';
+                        // thumb.style.border = "2px solid red"; // mark for test
                      }
                   });
             }

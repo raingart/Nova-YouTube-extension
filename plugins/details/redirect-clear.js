@@ -22,15 +22,24 @@ window.nova_plugins.push({
    'desc:de': 'Direkte externe Links',
    _runtime: user_settings => {
 
-      NOVA.watchElement({
-         selector: 'a[href*="/redirect?"]',
-         attr_mark: 'redirect-cleared',
-         callback: link => {
-            if (q = NOVA.queryURL.get('q', link.href)) {
-               link.href = decodeURIComponent(q);
-            }
-         },
-      });
+      document.addEventListener('click', ({ target }) => {
+         if (!target.matches('a[href*="/redirect?"]')) return;
+
+         if (q = NOVA.queryURL.get('q', target.href)) {
+            console.debug('>', target);
+            target.href = decodeURIComponent(q);
+         }
+      }, true);
+
+      // NOVA.watchElement({
+      //    selector: 'a[href*="/redirect?"]',
+      //    attr_mark: 'redirect-cleared',
+      //    callback: link => {
+      //       if (q = NOVA.queryURL.get('q', link.href)) {
+      //          link.href = decodeURIComponent(q);
+      //       }
+      //    },
+      // });
 
    }
 });

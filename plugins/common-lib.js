@@ -237,13 +237,13 @@ const NOVA = {
 
    /* NOVA.preventVisibilityElement({
          selector: '#secondary #related',
-         id_name: 'related',// auto uppercase
+         title: 'related',// auto uppercase
          remove: true,
          remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
    }); */
-   preventVisibilityElement({ selector = required(), id_name = required(), remove }) {
+   preventVisibilityElement({ selector = required(), title = required(), remove }) {
       // console.debug('preventVisibilityElement', ...arguments);
-      const selector_id = `${id_name}-prevent-load-btn`;
+      const selector_id = `${title.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
 
       this.waitElement(selector.toString())
          .then(el => {
@@ -254,7 +254,7 @@ const NOVA = {
                el.style.display = 'none';
                // create button
                const btn = document.createElement('a');
-               btn.textContent = `Load ${id_name}`;
+               btn.textContent = `Load ${title}`;
                btn.id = selector_id;
                btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
                // btn.className = 'ytd-vertical-list-renderer';
@@ -439,12 +439,20 @@ const NOVA = {
       },
    },
 
-   currentPageName: () => (page = location.pathname.split('/')[1]) && ['channel', 'c', 'user'].includes(page) ? 'channel' : page || 'home',
+   currentPageName: () => {
+      const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+      return (['channel', 'c', 'user'].includes(page)
+         // fix non-standard link - https://www.youtube.com/pencilmation/videos
+         || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+      ) ? 'channel' : page || 'home';
+   },
 
    queryURL: {
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
       // has: (query = required()) => new URLSearchParams(location.search).has(query),
-      has: (query = required(), url_string) => new URL(url_string || location).searchParams.has(query.toString()),
+      has: (query = required(), url_string) => url_string
+         ? new URL(url_string).searchParams.has(query.toString())
+         : location.search.includes(query + '='),
       get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
       set(query_obj = {}, url_string) {
          // NOVA.log('queryURL.set:', ...arguments);

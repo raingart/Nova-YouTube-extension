@@ -24,7 +24,7 @@ window.nova_plugins.push({
          });
 
       function setVideoPause() {
-         if (location.href.includes('list=') && !user_settings.video_autopause_ignore_playlist) return;
+         if (NOVA.queryURL.has('list') && !user_settings.video_autopause_ignore_playlist) return;
 
          this.pause();
 

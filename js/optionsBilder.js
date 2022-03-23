@@ -264,6 +264,10 @@ const Opt = {
                'remove_to_selector': `${this.UI.pluginsContainer} li.item`,
                'class_name': 'hide'
             });
+            // if (search = document.body.querySelector('form input[type=search]')) { // clear
+            //    searchInput.value = '';
+            //    searchInput.dispatchEvent(new Event('change'));
+            // }
             this.openTab('tab-plugins');
          });
 

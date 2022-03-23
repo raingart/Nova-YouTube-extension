@@ -66,7 +66,7 @@
       "message": "Utilice su [clave API] para un trabajo estable"
    },
    "github_page": {
-      "message": "Source Code"
+      "message": "Código fuente"
    },
    "github_page_tooltip": {
       "message": "Abierta"
@@ -78,7 +78,7 @@
       "message": "Para reportar"
    },
    "email": {
-      "message": "Correo electrónico del autor"
+      "message": "Email de contacto"
    },
    "email_tooltip": {
       "message": "A comentarios"

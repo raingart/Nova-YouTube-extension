@@ -57,7 +57,7 @@
       "message": "The extension will not work in embed video"
    },
    "opt_report_issues": {
-      "message": "Enable report bugs"
+      "message": "Show prompting to report bugs"
    },
    "opt_report_issues_tooltip": {
       "message": "Need allow pop-up on YouTube for prompting"
@@ -66,22 +66,22 @@
       "message": "Use your [API key] for stable work"
    },
    "github_page": {
-      "message": "Source Code"
+      "message": "Source code"
    },
    "github_page_tooltip": {
       "message": "Open"
    },
    "github_page_issues": {
-      "message": "Report Bugs"
+      "message": "Report bugs"
    },
    "github_page_issues_tooltip": {
-      "message": "To Report"
+      "message": "To report"
    },
    "email": {
-      "message": "Author Email"
+      "message": "Contact email"
    },
    "email_tooltip": {
-      "message": "To Feedback"
+      "message": "To feedback"
    },
    "donate_patreon_tooltip": {
       "message": "Support with Patreon"
