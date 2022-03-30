@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Marquer les vignettes visionnées',
    'title:tr': 'İzlenen küçük resimleri işaretle',
    'title:de': 'Angesehene Miniaturansichten markieren',
-   run_on_pages: 'home, feed, results, channel, watch, -mobile',
+   run_on_pages: 'home, results, feed, channel, watch, -mobile',
    // run_on_pages: 'all, -embed',
    section: 'other',
    // desc: 'Need to Turn on [YouTube History]',

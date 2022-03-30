@@ -75,7 +75,8 @@ window.addEventListener('load', () => {
          Storage.setParams(newSettings, this.storageMethod);
 
          // notify background page
-         // chrome.extension.sendMessage({
+         // chrome.extension.sendMessage({ // manifest v2
+         // chrome.runtime.sendMessage({ // manifest v3
          //    "action": 'setOptions',
          //    "settings": newSettings
          // });

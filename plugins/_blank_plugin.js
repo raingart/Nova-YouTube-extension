@@ -13,7 +13,7 @@ window.nova_plugins.push({
    // minus in front denotes an exception
    // exclude page from launch:
    // https://www.youtube.com/embed/*** <-- -embed
-   run_on_pages: 'all, home, feed, results, channel, watch, -embed',
+   run_on_pages: 'all, home, results, feed, channel, watch, -embed',
 
    // deactivate if use NOVA.HTMLElement.watch
    restart_on_transition: true, // optional. Restart plugin on every url change
@@ -106,8 +106,24 @@ window.nova_plugins.push({
          // Option Attribute List:
          // attr: 'param',
          label: 'Step',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
          type: 'number',
          title: 'sec',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:tr': '',
+         // 'title:de': '',
          placeholder: 'sec',
          step: 1,
          min: 1,

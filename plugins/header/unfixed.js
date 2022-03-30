@@ -32,7 +32,7 @@ window.nova_plugins.push({
             position: sticky !important;
          }`);
 
-      if (user_settings.header_scroll_after) {
+      if (user_settings.header_unfixed_scroll) {
          scrollAfter(); // init
 
          document.addEventListener('yt-navigate-finish', () => {
@@ -72,7 +72,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      header_scroll_after: {
+      header_unfixed_scroll: {
          _tagName: 'input',
          label: 'Scroll after header',
          'label:zh': '在标题后滚动',

@@ -4,6 +4,7 @@
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
 // https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#2 (bug has 1 chapters blocks). Manual chapter numbering
+// https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
 // https://www.youtube.com/watch?v=hLXIK9DBxAo - very long line of timestamp
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed test
@@ -129,7 +130,7 @@ window.nova_plugins.push({
 
                               // console.debug('Chapter', ChapterRatio, chapterWidth);
                               if (ChapterRatio >= progressRatio && ChapterRatio < 1) {
-                                 return Math.floor(ChapterRatio * this.duration) + chapterMargin + 1;
+                                 return ~~(ChapterRatio * this.duration) + chapterMargin + 1;
                               }
                               // accumulate passed
                               passedWidth += chapterWidth + chapterMargin;

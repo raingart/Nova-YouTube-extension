@@ -264,7 +264,7 @@ window.nova_plugins.push({
                location.href, // 'music.youtube.com' or 'youtube.com#music'
                channelName,
 
-               // ALL BELOW - not updated on page transition!
+               // ALL BELOW - not updated after page transition!
                // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
@@ -273,12 +273,12 @@ window.nova_plugins.push({
                // has svg icon "🎵"
                || document.body.querySelector(musicIconSvgSelector)
                // channelNameVEVO
-               || /(VEVO|Topic|Records|AMV)$/.test(channelName)
+               || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
                // word
                || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
                   .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
                // words
-               || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER']
+               || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
                   .some(i => titleStr.toUpperCase().includes(i))
                // word (case sensitive)
                || titleWords?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']

@@ -40,7 +40,7 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', savePlaybackTime.bind(video));
 
             // embed dont support "t=" parameter
-            if (user_settings.player_resume_playback_on_pause_update_url && NOVA.currentPageName() != 'embed') {
+            if (user_settings.player_resume_playback_url_mark && NOVA.currentPageName() != 'embed') {
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.has('t')) {
                   document.addEventListener('yt-navigate-start', connectSaveStateInURL.bind(video), { capture: true, once: true });
@@ -55,10 +55,11 @@ window.nova_plugins.push({
          // ad skip
          if (this.currentTime > 5 && this.duration > 30 && !movie_player.classList.contains('ad-showing')) {
             // console.debug('save progress time', this.currentTime);
-            sessionStorage.setItem(cacheName, Math.floor(this.currentTime));
-            // new URL(location.href).searchParams.set('t', Math.floor(this.currentTime)); // url way
+            sessionStorage.setItem(cacheName, ~~this.currentTime);
+            // new URL(location.href).searchParams.set('t', ~~this.currentTime); // url way
          }
       }
+
       function resumePlaybackTime() {
          if (NOVA.queryURL.has('t')) return;
          cacheName = getCacheName(); // for optimization
@@ -72,13 +73,13 @@ window.nova_plugins.push({
       }
 
       function connectSaveStateInURL() {
-         const updateURL = (new_url = required()) => window.history.replaceState(null, null, new_url);
+         const changeUrl = (new_url = required()) => window.history.replaceState(null, null, new_url);
          let delaySaveOnPauseURL; // fix glitch update url when rewinding video
          // save
          this.addEventListener('pause', () => {
             if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) { // fix video ended
                delaySaveOnPauseURL = setTimeout(() => {
-                  updateURL(NOVA.queryURL.set({ 't': parseInt(this.currentTime) + 's' }));
+                  changeUrl(NOVA.queryURL.set({ 't': parseInt(this.currentTime) + 's' }));
                }, 100); // 100ms
             }
          })
@@ -86,7 +87,7 @@ window.nova_plugins.push({
          this.addEventListener('play', () => {
             if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL);
 
-            if (NOVA.queryURL.has('t')) updateURL(NOVA.queryURL.remove('t'));
+            if (NOVA.queryURL.has('t')) changeUrl(NOVA.queryURL.remove('t'));
          });
 
          // alt. strategy
@@ -100,7 +101,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      player_resume_playback_on_pause_update_url: {
+      player_resume_playback_url_mark: {
          _tagName: 'input',
          label: 'Mark time in url when paused',
          'label:zh': '暂停时在 url 中节省时间',

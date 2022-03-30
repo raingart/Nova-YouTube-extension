@@ -22,8 +22,8 @@ window.nova_plugins.push({
    'desc:de': 'Kanäle auf der Suchseite ausblenden',
    _runtime: user_settings => {
 
-      const keywords = user_settings.search_filter_blocklist
-         .split(/[\n,;]/)
+      const keywords = user_settings.search_filter_channel_blocklist
+         ?.split(/[\n,;]/)
          .map(e => e.toString().trim().toLowerCase())
          .filter(e => e.length);
 
@@ -45,7 +45,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      search_filter_blocklist: {
+      search_filter_channel_blocklist: {
          _tagName: 'textarea',
          label: 'Channels list',
          'label:zh': '频道列表',

@@ -33,7 +33,7 @@ const App = {
       const manifest = chrome.runtime.getManifest();
       console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
-      // skip first run on page transition
+      // skip first page transition
       // Strategy 1
       document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
       // document.addEventListener('yt-navigate-finish', () => this.isURLChanged() && this.run());
@@ -167,6 +167,7 @@ const App = {
 App.init();
 
 // test normal lite
+// https://www.youtube.com/watch?v=v-YQUCP-J8s 144 MUSIC
 // https://www.youtube.com/watch?v=FSjr2H0RDsY 240 AMV
 // https://www.youtube.com/watch?v=qnLunQEcMn0 480 MUSIC (has title)
 // https://www.youtube.com/watch?v=w1FUjM78HAI 480 AMV

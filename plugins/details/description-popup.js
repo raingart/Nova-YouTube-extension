@@ -16,7 +16,7 @@ window.nova_plugins.push({
 
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
-      const DESCRIPTION_SELECTOR = '#meta #description:not([hidden]):not(:empty)';
+      const DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #meta #description:not([hidden]):not(:empty)';
 
       NOVA.waitElement('#masthead-container')
          .then(masthead => {
@@ -27,7 +27,7 @@ window.nova_plugins.push({
                   position: fixed;
                   top: ${masthead.offsetHeight || 56}px;
                   right: 0;
-                  z-index: ${(Math.max(NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }), 601)) + 1};
+                  z-index: ${(Math.max(NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }), 601)) + 1};
                }
 
                /* button */

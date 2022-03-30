@@ -25,7 +25,7 @@ window.nova_plugins.push({
 
             // global
             NOVA.css.push(
-               `/* button${SELECTOR_BTN} { padding: 5px; } */
+               `/* button${SELECTOR_BTN} { padding: 5px; width: 25px; } */
                ${SELECTOR_BTN}:hover { color: #66afe9 !important; }
                ${SELECTOR_BTN}:active { color: #2196f3 !important; }`);
 
@@ -37,12 +37,17 @@ window.nova_plugins.push({
                btnPiP.title = 'Open in PictureInPicture';
                // btnPopup.setAttribute('aria-label','');
                btnPiP.innerHTML =
-                  `<svg viewBox="-3 -7 30 30" height="100%" width="100%">
+                  `<svg viewBox="-8 -6 36 36" height="100%" width="100%">
                      <g fill="currentColor">
-                        <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
-                        <path d="M8 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-3z"/>
+                        <path d="M2.5,17A1.5,1.5,0,0,1,1,15.5v-9A1.5,1.5,0,0,1,2.5,5h13A1.5,1.5,0,0,1,17,6.5V10h1V6.5A2.5,2.5,0,0,0,15.5,4H2.5A2.5,2.5,0,0,0,0,6.5v9A2.5,2.5,0,0,0,2.5,18H7V17Z M18.5,11h-8A2.5,2.5,0,0,0,8,13.5v5A2.5,2.5,0,0,0,10.5,21h8A2.5,2.5,0,0,0,21,18.5v-5A2.5,2.5,0,0,0,18.5,11Z" />
                      </g>
                   </svg>`;
+                  // `<svg viewBox="-3 -7 30 30" height="100%" width="100%">
+                  //    <g fill="currentColor">
+                  //       <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+                  //       <path d="M8 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-3z"/>
+                  //    </g>
+                  // </svg>`;
                btnPiP.addEventListener('click', () => video.requestPictureInPicture());
 
                container.prepend(btnPiP);
@@ -79,7 +84,7 @@ window.nova_plugins.push({
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
-                  if (currentTime = Math.floor(video?.currentTime)) url.searchParams.append('start', currentTime);
+                  if (currentTime = ~~video?.currentTime) url.searchParams.append('start', currentTime);
                   url.searchParams.append('autoplay', 1);
                   url.searchParams.append('popup', true); // deactivate popup-button for used window
 
@@ -265,23 +270,29 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('rotate')) {
+               // alt https://github.com/zhzLuke96/ytp-rotate
                const btnRotate = document.createElement('button');
 
                // if (video.videoWidth < video.videoHeight) {
                btnRotate.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                btnRotate.title = 'Rotate video';
                // btnRotate.setAttribute('aria-label','');
+               btnRotate.style.width = '23px';
                btnRotate.innerHTML =
-                  `<svg viewBox="0 0 48 48" height="100%" width="100%" style="transform: scale(.5);">
-                        <g fill="currentColor">
-                           <path d="M32.97 5.03c6.53 3.1 11.22 9.45 11.93 16.97h3c-1.02-12.32-11.32-22-23.9-22-.45 0-.88.04-1.33.07l7.63 7.63 2.67-2.67zm-12.51-1.54c-1.17-1.17-3.07-1.17-4.24 0l-12.73 12.73c-1.17 1.17-1.17 3.07 0 4.24l24.04 24.04c1.17 1.17 3.07 1.17 4.24 0l12.73-12.73c1.17-1.17 1.17-3.07 0-4.24l-24.04-24.04zm9.2 38.89l-24.05-24.04 12.73-12.73 24.04 24.04-12.72 12.73zm-14.63.59c-6.53-3.1-11.22-9.45-11.93-16.97h-3c1.02 12.32 11.32 22 23.9 22 .45 0 .88-.04 1.33-.07l-7.63-7.63-2.67 2.67z"/>
-                        </g>
-                     </svg>`;
+                  `<svg viewBox="0 100 1536 1536" height="100%" width="100%">
+                     <g fill="currentColor">
+                        <path
+                           d="M1536 128v448q0 26-19 45t-45 19h-448q-42 0-59-40-17-39 14-69l138-138Q969 256 768 256q-104 0-198.5 40.5T406 406 296.5 569.5 256 768t40.5 198.5T406 1130t163.5 109.5T768 1280q119 0 225-52t179-147q7-10 23-12 14 0 25 9l137 138q9 8 9.5 20.5t-7.5 22.5q-109 132-264 204.5T768 1536q-156 0-298-61t-245-164-164-245T0 768t61-298 164-245T470 61 768 0q147 0 284.5 55.5T1297 212l130-129q29-31 70-14 39 17 39 59z"/>
+                        </path>
+                     </g>
+                  </svg>`;
                btnRotate.addEventListener('click', () => {
                   let angle = parseInt(video.style.transform.replace(/^\D+/g, '')) || 0;
-                  // console.debug('angle', angle, video.style.transform);
+                  // fix ratio scale. Before angle calc
+                  const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / video.clientWidth : 1;
                   angle += 90;
-                  video.style.transform = angle === 360 ? '' : `rotate(${angle}deg)`;
+                  video.style.transform = angle === 360 ? '' : `rotate(${angle}deg) scale(${scale})`;
+                  // console.debug('rotate', angle, scale, video.style.transform);
                });
                container.prepend(btnRotate);
                // }

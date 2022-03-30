@@ -38,6 +38,7 @@ const Plugins = {
       'other/scroll-to-top.js',
       'other/search-filter.js',
       'other/shorts-redirect.js',
+      'other/premiere-hide.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -66,8 +67,7 @@ const Plugins = {
       (list || this.list)
          .forEach(plugin => {
             try {
-               this.injectScript(chrome.extension.getURL('/plugins/' + plugin)); // manifest v2
-               // this.injectScript('/plugins/' + plugin); // manifest v3
+               this.injectScript(chrome.runtime.getURL('/plugins/' + plugin));
             } catch (error) {
                console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
             }

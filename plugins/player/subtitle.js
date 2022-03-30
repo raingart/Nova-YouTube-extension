@@ -26,6 +26,16 @@ window.nova_plugins.push({
 
       if (user_settings.subtitle_bold) css['font-weight'] = 'bold';
 
+      if (user_settings.subtitle_fixed) {
+         NOVA.css.push(
+            // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
+            `.caption-window {
+               margin-bottom: 1px !important;
+               bottom: 1% !important;
+               left: 50% !important;
+            }`);
+      }
+
       NOVA.css.push(css, `.ytp-caption-segment`, 'important');
    },
    options: {
@@ -40,6 +50,19 @@ window.nova_plugins.push({
          'label:fr': 'Texte en gras',
          'label:tr': 'Kalın yazı',
          'label:de': 'Fetter Text',
+         type: 'checkbox',
+      },
+      subtitle_fixed: {
+         _tagName: 'input',
+         label: 'Fixed bottom',
+         // 'label:zh': '粗体',
+         // 'label:ja': '太字',
+         // 'label:ko': '굵은 텍스트',
+         // 'label:es': 'Texto en negrita',
+         // 'label:pt': 'Texto em negrito',
+         // 'label:fr': 'Texte en gras',
+         // 'label:tr': 'Kalın yazı',
+         // 'label:de': 'Fetter Text',
          type: 'checkbox',
       },
    }

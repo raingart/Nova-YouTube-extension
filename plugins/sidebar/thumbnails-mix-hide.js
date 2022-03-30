@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:fr': 'Masquer les vignettes "Mix"',
    'title:tr': "'Karıştır' küçük resimlerini gizle",
    'title:de': '„Mix“-Thumbnails ausblenden',
-   run_on_pages: 'watch, results, home',
+   run_on_pages: 'home, results, watch',
    section: 'sidebar',
    desc: '[Mix] offers to rewatch what has already saw',
    'desc:zh': '[混合]提供重新观看已经看过的内容',

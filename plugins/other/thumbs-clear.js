@@ -45,7 +45,7 @@ window.nova_plugins.push({
             // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
             // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
             if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(img.src)) {
-               img.src = img.src.replace(re, (user_settings.thumbnails_clear_preview_timestamps || 'hq2') + '.jpg');
+               img.src = img.src.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
             }
          },
       });
@@ -59,7 +59,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      thumbnails_clear_preview_timestamps: {
+      thumbnails_clear_preview_timestamp: {
          _tagName: 'select',
          label: 'Thumbnail timestamps',
          'label:zh': '缩略图时间戳',

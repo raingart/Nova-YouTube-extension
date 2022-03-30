@@ -330,7 +330,9 @@ const NOVA = {
                            'time': timestamp,
                            'title': line
                               .replace(timestamp, '')
-                              .trim().replace(/(^[:\-–—|]|[:\-–—.;|]$)/g, '')
+                              .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '')
+                              //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?|[:\-–—.;|]$/g, '') // clear numeric list prefix
+                              // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                               .trim()
                         });
                      }
@@ -397,18 +399,31 @@ const NOVA = {
       },
 
       HMS: {
+         // 65.77 % slower
+         // digit(ts = required()) { // format out "h:mm:ss"
+         //    const
+         //       ms = Math.abs(+ts),
+         //       days = ~~(ms / 86400);
+
+         //    let t = new Date(ms).toISOString();
+         //    if (ms < 3600000) t = t.substr(14, 5); // add hours
+         //    else t = t.substr(11, 8); // only minutes
+
+         //    return (days ? `${days}d ` : '') + t;
+         // },
          digit(ts = required()) { // format out "h:mm:ss"
             const
                ms = Math.abs(+ts),
-               d = Math.floor(ms / 86400),
-               h = Math.floor((ms % 86400) / 3600),
-               m = Math.floor((ms % 3600) / 60),
-               s = Math.floor(ms % 60);
+               d = ~~(ms / 86400),
+               h = ~~((ms % 86400) / 3600),
+               m = ~~((ms % 3600) / 60),
+               s = ~~(ms % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
                + (h ? m.toString().padStart(2, '0') : m) + ':'
                + s.toString().padStart(2, '0');
+
             // 84% slower
             // return (days && !isNaN(days) ? `${days}d ` : '')
             //    + [hours, minutes, seconds]
@@ -416,13 +431,14 @@ const NOVA = {
             //       .map((item, idx) => idx ? item.toString().padStart(2, '0') : item) // "1:2:3" => "1:02:03"
             //       .join(':'); // format "h:m:s"
          },
+
          abbr(ts = required()) { // format out "999h00m00s"
             const
                ms = Math.abs(+ts),
-               d = Math.floor(ms / 86400),
-               h = Math.floor((ms % 86400) / 3600),
-               m = Math.floor((ms % 3600) / 60),
-               s = Math.floor(ms % 60);
+               d = ~~(ms / 86400),
+               h = ~~((ms % 86400) / 3600),
+               m = ~~((ms % 3600) / 60),
+               s = ~~(ms % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
@@ -453,16 +469,20 @@ const NOVA = {
       has: (query = required(), url_string) => url_string
          ? new URL(url_string).searchParams.has(query.toString())
          : location.search.includes(query + '='),
+
       get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
+
       set(query_obj = {}, url_string) {
-         // NOVA.log('queryURL.set:', ...arguments);
+         // console.log('queryURL.set:', ...arguments);
          if (!Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
-         const url = new URL(url_string || location).searchParams;
-         Object.entries(query_obj).forEach(([key, value]) => url.set(key, value));
+         const url = new URL(url_string || location);
+         Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
       },
+
       remove(query = required(), url_string) {
-         const url = new URL(url_string || location).searchParams.delete(query.toString());
+         const url = new URL(url_string || location);
+         url.searchParams.delete(query.toString());
          return url.toString();
       },
    },
@@ -538,8 +558,8 @@ const NOVA = {
 
    getPlayerState(state) {
       // movie_player.getPlayerState() === 2 // 2: PAUSED
-      // const onPlayerStateChange = state => 'PLAYING' == NOVA.getPlayerState(state)
       // NOVA.getPlayerState() == 'PLAYING'
+      // movie_player.addEventListener('onStateChange', state => 'PLAYING' == NOVA.getPlayerState(state));
       return {
          '-1': 'UNSTARTED',
          0: 'ENDED',

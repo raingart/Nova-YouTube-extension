@@ -41,7 +41,7 @@ window.nova_plugins.push({
                         setVideoCount({
                            'container': el,
                            'channel_id': new URL(link.href).pathname.split('/')[2],
-                           // ALL BELOW - not updated on page transition!
+                           // ALL BELOW - not updated after page transition!
                            // || window.ytplayer?.config?.args.ucid
                            // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
                            // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId

@@ -38,20 +38,19 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            // on playing set mark
+            // mark a playing
             video.addEventListener('playing', () => localStorage.setItem(storeName, instanceID));
-
-            // remove mark - video not play
+            // remove mark if video stop play
             ['pause', 'suspend', 'ended'].forEach(evt => video.addEventListener(evt, removeStorage));
-            // remove mark - on tab closed
+            // remove mark if tab closed
             window.addEventListener('beforeunload', removeStorage);
 
             // auto play on tab focus
-            if (user_settings.pause_background_tab_onfocus) {
+            if (user_settings.pause_background_tab_autoplay_onfocus) {
                document.addEventListener('visibilitychange', () => {
-                  //   if other tabs are not playing
+                  // if other tabs are not playing
                   if (document.visibilityState == 'visible'
-                     && !localStorage.hasOwnProperty(storeName)
+                     && !localStorage.hasOwnProperty(storeName) // store empty
                      // && video.paused  // dont see ENDED
                      && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
                   ) {
@@ -63,8 +62,9 @@ window.nova_plugins.push({
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
                if ((document.visibilityState == 'hidden' || currentPageName == 'embed') // tab unfocus
-                  && store.key === storeName && store.storageArea === localStorage // checking now store
-                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // has storage
+                  && store.key === storeName && store.storageArea === localStorage // checking store target
+                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
+                  && ['PLAYING'].includes(NOVA.getPlayerState())
                ) {
                   // console.debug('video pause', localStorage[storeName]);
                   video.pause();
@@ -72,6 +72,66 @@ window.nova_plugins.push({
             });
 
          });
+
+      // PiP auto enable
+      // NOVA.waitElement('video')
+      //    .then(video => {
+      //       // Detect Picture-in-Picture Support
+      //       if (!document.pictureInPictureEnabled/* || video.disablePictureInPicture*/) {
+      //          return alert('Picture-in-Picture not supported!');
+      //       }
+      //       let PiP_lock;
+      //       // enable PiP
+      //       document.addEventListener('visibilitychange', () => {
+      //          // tab on focus - exit PiP
+      //          if (document.visibilityState == 'visible'
+      //             && document.pictureInPictureElement
+      //             && PiP_lock
+      //          ) {
+      //             console.debug('exitPictureInPicture');
+      //             // video.disablePictureInPicture = true;
+      //             // setTimeout(() => video.disablePictureInPicture = false, 1000 * 2);
+      //             // clearTimeout(timeoutPiP);
+      //             return document.exitPictureInPicture();
+      //          }
+      //          // tab unfocus - enable PiP
+      //          if (document.visibilityState == 'hidden'
+      //             && !document.pictureInPictureElement // PiP not activated
+      //             // && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
+      //             && ['PLAYING'].includes(NOVA.getPlayerState())
+      //             // && !video.disablePictureInPicture
+      //             && !PiP_lock
+      //          ) {
+      //             console.debug('requestPictureInPicture');
+      //             // video.disablePictureInPicture = false;
+      //             video.requestPictureInPicture();
+
+      //             // timeoutPiP = setTimeout(() => video.requestPictureInPicture(), 1000 * 2);
+      //          }
+      //       });
+      //       // exit PiP
+      //       ['suspend', 'ended'].forEach(evt =>
+      //          video.addEventListener(evt, () => document.pictureInPictureElement && document.exitPictureInPicture()));
+      //       video.addEventListener('leavepictureinpicture', () => {
+      //          console.debug('leavepictureinpicture');
+      //          PiP_lock = false;
+      //       });
+      //       video.addEventListener('enterpictureinpicture', () => {
+      //          console.debug('enterpictureinpicture');
+      //          PiP_lock = true;
+      //       });
+      //    });
+
+      // https://stackoverflow.com/questions/6877403/how-to-tell-if-a-video-element-is-currently-playing
+      // Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+      //    get: function () {
+      //       return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+      //    }
+      // })
+      // if (document.querySelector('video').playing) { // checks if element is playing right now
+      //    // Do anything you want to
+      // }
+
 
       // replaced with generic HTML5 method
       // const onPlayerStateChange = state => ('PLAYING' == NOVA.getPlayerState(state)) ? localStorage.setItem(storeName, instanceID) : removeStorage();
@@ -101,7 +161,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      pause_background_tab_onfocus: {
+      pause_background_tab_autoplay_onfocus: {
          _tagName: 'input',
          label: 'Autoplay on tab focus',
          'label:zh': '在标签焦点上自动播放',

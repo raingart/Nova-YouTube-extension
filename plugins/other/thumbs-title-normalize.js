@@ -9,18 +9,19 @@ window.nova_plugins.push({
    'title:fr': 'Démajuscule le titre des vignettes',
    'title:tr': 'Küçük resim başlığının büyük harflerini kaldır',
    'title:de': 'Thumbnails-Titel entfernen',
-   run_on_pages: 'home, feed, results, channel, watch',
+   run_on_pages: 'home, feed, channel, watch, -results',
+   // run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed, -results',
    section: 'other',
    // desc: '',
    _runtime: user_settings => {
 
       // dirty fix bug with not updating thumbnails/title: reset page
-      document.addEventListener('yt-navigate-finish', () => {
-         if (document.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
-            location.reload();
-         }
-      });
+      // document.addEventListener('yt-navigate-finish', () => {
+      //    if (document.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
+      //       location.reload();
+      //    }
+      // });
 
       const
          VIDEO_TITLE_SELECTOR = '#video-title:not(:empty), a > h3.large-media-item-headline:not(:empty)', // '.title';

@@ -37,7 +37,9 @@ window.nova_plugins.push({
                });
 
             function setRemaining() {
-               if (isNaN(this.duration) || movie_player.getVideoData().isLive || document.body.querySelector('.ytp-autohide video')) return;
+               if (isNaN(this.duration)
+                  || movie_player.getVideoData().isLive
+                  || (movie_player || document.body).querySelector('.ytp-autohide video')) return;
 
                const getProgressPt = () => {
                   const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour

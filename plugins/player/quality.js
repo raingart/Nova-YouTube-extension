@@ -24,7 +24,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(() => {
             // keep save manual quality in the session
-            if (user_settings.video_quality_manual_save_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
+            if (user_settings.video_quality_manual_save_in_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
                   if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
@@ -127,7 +127,7 @@ window.nova_plugins.push({
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
       },
-      video_quality_manual_save_tab: {
+      video_quality_manual_save_in_tab: {
          _tagName: 'input',
          // label: 'Manually selected qualities are saved in the current tab' // too much long
          label: 'Save manually selected for the same tab',

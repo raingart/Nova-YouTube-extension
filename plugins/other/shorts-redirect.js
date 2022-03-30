@@ -1,17 +1,17 @@
 window.nova_plugins.push({
    id: 'shorts-disable',
    title: 'Disable shorts',
-   'title:zh': '禁用短裤',
-   'title:ja': 'ショートパンツを無効にする',
-   'title:ko': '반바지 비활성화',
-   'title:es': 'Deshabilitar pantalones cortos',
-   'title:pt': 'Desativar shorts',
-   'title:fr': 'Désactiver les shorts',
-   'title:tr': 'Şortları devre dışı bırak',
-   'title:de': 'Kurzschlüsse deaktivieren',
-   run_on_pages: 'home, results, feed, channel, shorts, -mobile',
+   // 'title:zh': '禁用短裤',
+   // 'title:ja': 'ショートパンツを無効にする',
+   // 'title:ko': '반바지 비활성화',
+   // 'title:es': 'Deshabilitar pantalones cortos',
+   // 'title:pt': 'Desativar shorts',
+   // 'title:fr': 'Désactiver les shorts',
+   // 'title:tr': 'Şortları devre dışı bırak',
+   // 'title:de': 'Kurzschlüsse deaktivieren',
+   run_on_pages: 'home, results, feed, channel, shorts',
    restart_on_transition: true,
-   section: 'channel',
+   section: 'other',
    // desc: 'Redirect shorts video to normal URL',
    // 'desc:zh': '将短片视频重定向到正常 URL',
    // 'desc:ja': 'ショートパンツの動画を通常のURLにリダイレクトする',
@@ -29,13 +29,18 @@ window.nova_plugins.push({
 
          default:
             // check
-            const interval = setInterval(hideShorts, 150);
+            const interval = setInterval(hideHTML, 150);
             // clear
             document.addEventListener('yt-navigate-start', () => clearInterval(interval)); // on feed transition
             setTimeout(() => clearInterval(interval), 1000 * 5); // after 5s. Fallback if nothing is found
 
-            function hideShorts() {
-               document.body.querySelectorAll('ytd-video-renderer:not([hidden]), ytd-grid-video-renderer:not([hidden])')
+            function hideHTML() {
+               // Strategy 1
+               // document.querySelectorAll('a[href*="shorts/"], ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"], #overlays [aria-label="Shorts"]')
+               // .forEach(a => a.closest('ytd-grid-video-renderer')?.remove());
+
+               // Strategy 2
+               document.body.querySelectorAll('ytd-video-renderer:not([hidden]), ytd-grid-video-renderer:not([hidden]), ytm-compact-video-renderer')
                   .forEach(thumb => {
                      if (link = thumb.querySelector('a[href*="shorts/"]')) {
                         thumb.remove();

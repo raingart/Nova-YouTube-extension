@@ -71,7 +71,7 @@ window.nova_plugins.push({
 
                      let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
                         ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents
-                        // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated on page transition!
+                        // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated after page transition!
                         .filter(i => i.playlistPanelVideoRenderer?.hasOwnProperty('videoId')); // filter hidden
 
                      console.assert(vids_list?.length === playlistLength, 'playlist loading:', vids_list?.length + '/' + playlistLength);
@@ -82,7 +82,7 @@ window.nova_plugins.push({
                         if (duration = getPlaylistDuration(vids_list)) {
                            insertToHTML({ 'container': el, 'text': duration });
 
-                        } else if (!user_settings.playlist_duration_progress) { // this method ignores progress
+                        } else if (!user_settings.playlist_duration_progress_type) { // this method ignores progress
                            getPlaylistDurationFromThumbnails({
                               'container': document.body.querySelector('#secondary #playlist'),
                               'items_selector': '#playlist-items #unplayableText[hidden]',
@@ -98,7 +98,7 @@ window.nova_plugins.push({
                   function getPlaylistDuration(vids_list = []) {
                      // console.log('getPlaylistDuration', ...arguments);
 
-                     // if (!user_settings.playlist_duration_progress && (storage = sessionStorage.getItem(STORE_NAME))) {
+                     // if (!user_settings.playlist_duration_progress_type && (storage = sessionStorage.getItem(STORE_NAME))) {
                      //    // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
                      //    return storage;
                      // }
@@ -116,7 +116,7 @@ window.nova_plugins.push({
                      const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected)
                      let total;
 
-                     switch (user_settings.playlist_duration_progress) {
+                     switch (user_settings.playlist_duration_progress_type) {
                         case 'done':
                            total = getDurationFromList(vids_list);
                            vids_list.splice(playingIdx);
@@ -133,7 +133,7 @@ window.nova_plugins.push({
                      }
 
                      if ((duration = getDurationFromList(vids_list)) // disallow set zero
-                        || (duration === 0 && user_settings.playlist_duration_progress) // allow set zero if use playlist_duration_progress
+                        || (duration === 0 && user_settings.playlist_duration_progress_type) // allow set zero if use playlist_duration_progress_type
                      ) {
                         return outFormat(duration, total);
                      }
@@ -194,7 +194,7 @@ window.nova_plugins.push({
          let out = NOVA.timeFormatTo.HMS.digit(duration);
          out = `(${out})`;
 
-         if (total) out += ` [${Math.floor(duration * 100 / total)}%${user_settings.playlist_duration_progress ? ' ' + user_settings.playlist_duration_progress : ''}]`;
+         if (total) out += ` [${~~(duration * 100 / total)}%${user_settings.playlist_duration_progress_type ? ' ' + user_settings.playlist_duration_progress_type : ''}]`;
 
          return out;
       }
@@ -219,7 +219,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      playlist_duration_progress: {
+      playlist_duration_progress_type: {
          _tagName: 'select',
          label: 'Time display mode',
          'label:zh': '时间显示方式',
