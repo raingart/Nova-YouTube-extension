@@ -5,23 +5,17 @@ const
    fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
    user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
 
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'pause_background_tab_onfocus': 'pause_background_tab_autoplay_onfocus',
-   'player_resume_playback_on_pause_update_url': 'player_resume_playback_url_mark',
-   'video_quality_manual_save_tab': 'video_quality_manual_save_in_tab',
-   'playlist_duration_progress': 'playlist_duration_progress_type',
-   'thumbnails_clear_preview_timestamps': 'thumbnails_clear_preview_timestamp',
-   'search_filter_blocklist': 'search_filter_channel_blocklist',
-   'header_scroll_after': 'header_unfixed_scroll',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// updateKeyStorage
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }F
 
 if (isOptionsPage()) return;
 landerPlugins();

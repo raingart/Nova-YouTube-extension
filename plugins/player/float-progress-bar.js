@@ -45,7 +45,8 @@ window.nova_plugins.push({
             // NOVA.waitElement(`${SELECTOR}-progress`)
             //    .then(progressEl => {
             video.addEventListener('timeupdate', function () {
-               if (movie_player.getVideoData().isLive) return;
+               if (document.visibilityState == 'hidden' // tab inactive
+                  || movie_player.getVideoData().isLive) return;
 
                if (!isNaN(this.duration)) {
                   progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
@@ -62,12 +63,18 @@ window.nova_plugins.push({
             function renderBuffer() {
                if (movie_player.getVideoData().isLive) return;
 
-               for (let i = 0; i < this.buffered.length; i++) {
-                  //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
-                  //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
-                  if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
-                     bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
-                  }
+               // Strategy 1 HTML5
+               // for (let i = 0; i < this.buffered.length; i++) {
+               //    //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
+               //    //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
+               //    if (!isNaN(this.duration) && this.currentTime > this.buffered.start(i)) {
+               //       bufferEl.style.transform = `scaleX(${this.buffered.end(i) / this.duration})`;
+               //    }
+               // }
+
+               // Strategy 2
+               if ((totalDuration = movie_player.getDuration()) && !isNaN(totalDuration) && movie_player.getCurrentTime()) {
+                  bufferEl.style.transform = `scaleX(${movie_player.getVideoBytesLoaded() / totalDuration})`;
                }
             }
             // });
@@ -191,8 +198,8 @@ window.nova_plugins.push({
 
          from_description(duration = required()) {
             if (Math.sign(duration) !== 1) return console.error('duration not positive number:', duration);
-
-            const selectorTimestampLink = 'a[href*="t="]';
+            // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
+            const selectorTimestampLink = 'a[href*="&t="]';
             // search in description
             NOVA.waitElement(`#meta #description ${selectorTimestampLink}`)
                .then(() => renderChaptersMarks(duration));

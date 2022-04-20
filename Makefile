@@ -9,6 +9,8 @@ out="/tmp/super-nova.user.js"
 build:
 	cat ./UserScript/meta.js > $(out)
 
+	cat ./UserScript/check-browser-support.js >> $(out)
+
 	# plugins conteiner
 	echo -e 'window.nova_plugins = [];' >> $(out)
 	# all plugins

@@ -23,18 +23,18 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       document.addEventListener('click', evt => {
-         if (!evt.target.matches('#description a[href*="t="]')) return;
+         // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
+         if (!evt.target.matches('a[href*="&t="]')) return;
 
-         evt.preventDefault();
-         evt.stopPropagation();
-         evt.stopImmediatePropagation();
+         if (sec = NOVA.timeFormatTo.hmsToSec(evt.target.textContent)) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            evt.stopImmediatePropagation();
 
-         const sec = NOVA.timeFormatTo.hmsToSec(evt.target.textContent);
-
-         document.body.querySelector('video').currentTime = sec;
-         // movie_player.seekTo(sec);
-
-      }, true);
+            // document.body.querySelector('video')?.currentTime = sec;
+            movie_player.seekTo(sec);
+         }
+      }, { capture: true });
 
    },
 });

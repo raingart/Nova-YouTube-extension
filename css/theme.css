@@ -2,6 +2,7 @@
    /* --bg: #1c1c1c;
    --bg: oldlace;
    --fg: slategrey; */
+   /* --scrollbar-bg: #fff; */
    --input-bg: #fff;
    --input-border: #cccccc;
    --btn-bg: silver;
@@ -21,6 +22,7 @@
    :root {
       --bg: #1c1c1c;
       --fg: slategrey;
+      /* --scrollbar-bg: #1a1a1a; */
       --input-bg: #171717;
       --input-border: #2d2d2d;
       --li-item: #353535;
@@ -85,61 +87,66 @@ input[type=button]:hover {
 }
 
 /* scrollbar */
-
 ::-webkit-scrollbar {
    width: 10px;
    height: 8px;
 }
-::-webkit-scrollbar-button {
-   width: 0;
-   height: 0;
+
+/* ::-webkit-scrollbar-thumb {
+   background: #ccc;
 }
-::-webkit-scrollbar-thumb {
-   border: 0;
-   /* border-radius: 3px; */
+
+::-webkit-scrollbar-thumb:hover {
+   background: #bbb;
+}
+
+::-webkit-scrollbar-thumb:active {
    background: #888;
 }
-::-webkit-scrollbar-thumb:hover {
-   background: #666;
-}
-::-webkit-scrollbar-thumb:active {
-   background: #444;
-}
+
 ::-webkit-scrollbar-track {
-   border: 0;
-   border-radius: 0;
-   background: #e1e1e1;
-}
-/* ::-webkit-scrollbar-track:hover {
-   background: #666;
+   background: #ddd;
 } */
-/*::-webkit-scrollbar-track:active {
-   background: #333;
-}*/
-::-webkit-scrollbar-corner {
-   background: transparent;
+
+/* ::-webkit-scrollbar-button:single-button {
+   background: radial-gradient(circle at center, #333 40%, var(--scrollbar-bg) 0)
+}
+
+::-webkit-scrollbar-button:single-button:hover {
+   background: radial-gradient(circle at center, #444 40%, var(--scrollbar-bg) 0)
+}
+
+::-webkit-scrollbar-button:single-button:active {
+   background: radial-gradient(circle at center, #555 40%, var(--scrollbar-bg) 0)
+} */
+
+::-webkit-scrollbar-button:single-button {
+   display: none;
+}
+
+::-webkit-resizer {
+   background: var(--input-bg) linear-gradient(-45deg, transparent 3px, #888 0, #888 4px, transparent 0, transparent 6px, #888 0, #888 7px, transparent 0) no-repeat;
+   border: 2px solid transparent
 }
 
 @media (prefers-color-scheme:dark) {
    body:after {
       display: none;
    }
+
    ::-webkit-scrollbar-thumb {
       background: #333;
    }
+
    ::-webkit-scrollbar-thumb:hover {
-      background: #666;
+      background: #555;
    }
+
    ::-webkit-scrollbar-thumb:active {
       background: #888;
    }
+
    ::-webkit-scrollbar-track {
       background: #222;
    }
-   /* ::-webkit-scrollbar-track:hover {
-      background: #666;
-   } */
-   /* ::-webkit-scrollbar-track:active {
-      background: #333;
-   } */
 }

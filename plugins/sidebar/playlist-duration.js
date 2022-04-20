@@ -1,7 +1,7 @@
 // for test:
 // https://www.youtube.com/playlist?list=WL
 // https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
-// https://www.youtube.com/watch?v=oxqQw1o5Tuk&list=RDlaemnkfj1lo - hidden playlist conteiner
+// https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist conteiner
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 
 window.nova_plugins.push({
@@ -54,7 +54,7 @@ window.nova_plugins.push({
                         .contents.twoColumnBrowseResultsRenderer
                         ?.tabs[0].tabRenderer?.content?.sectionListRenderer
                         ?.contents[0].itemSectionRenderer
-                        .contents[0].playlistVideoListRenderer?.contents;
+                        ?.contents[0].playlistVideoListRenderer?.contents;
 
                      const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
@@ -191,12 +191,19 @@ window.nova_plugins.push({
 
       function outFormat(duration = 0, total) {
          // console.log('outFormat', ...arguments);
-         let out = NOVA.timeFormatTo.HMS.digit(duration);
-         out = `(${out})`;
+         let outArr = [];
+         // time
+         outArr.push(NOVA.timeFormatTo.HMS.digit(duration));
+         // pt
+         if (user_settings.playlist_duration_percentage && total) {
+            outArr.push(`(${~~(duration * 100 / total) + '%'})`);
+         }
+         // progress type title
+         if (user_settings.playlist_duration_progress_type) {
+            outArr.push(user_settings.playlist_duration_progress_type);
+         }
 
-         if (total) out += ` [${~~(duration * 100 / total)}%${user_settings.playlist_duration_progress_type ? ' ' + user_settings.playlist_duration_progress_type : ''}]`;
-
-         return out;
+         return ' - ' + outArr.join(' ');
       }
 
       function insertToHTML({ text = '', container = required() }) {
@@ -231,7 +238,7 @@ window.nova_plugins.push({
          'label:tr': 'Zaman görüntüleme modu',
          'label:de': 'Zeitanzeigemodus',
          options: [
-            { label: 'done', value: 'watched', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', 'label:tr': 'tamamlamak', 'label:de': 'fertig' },
+            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', 'label:tr': 'tamamlamak', 'label:de': 'fertig' },
             { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', 'label:tr': 'sola', 'label:de': 'links' },
             { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:es': '','label:pt': '',*/  'label:fr': 'le total', 'label:tr': 'toplam', 'label:de': 'gesamt' },
          ],

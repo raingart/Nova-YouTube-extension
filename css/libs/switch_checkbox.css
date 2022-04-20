@@ -43,7 +43,8 @@ input[type=checkbox] {
    height: var(--height);
    line-height: 1.6em;
    border-radius: 3em;
-   background-color: #ddd;
+   /* background-color: #ddd; */
+   background-color: #aaa;
    /* background-color: #8f8f8f; */
    appearance: none;
    -webkit-appearance: none;

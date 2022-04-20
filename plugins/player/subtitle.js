@@ -1,4 +1,5 @@
 // https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
+// https://youtu.be/XvJRE6Sm-lM - has sub
 
 window.nova_plugins.push({
    id: 'subtitle-transparent',
@@ -11,7 +12,7 @@ window.nova_plugins.push({
    'title:fr': 'Sous-titres transparents',
    'title:tr': 'Şeffaf altyazılar',
    'title:de': 'Transparente Untertitel',
-   run_on_pages: 'watch, -mobile',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {

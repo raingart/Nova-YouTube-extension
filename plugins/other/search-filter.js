@@ -28,7 +28,7 @@ window.nova_plugins.push({
          .filter(e => e.length);
 
       NOVA.watchElement({
-         selector: 'ytd-video-renderer, ytm-compact-video-renderer', //ytm-compact-channel-renderer, ytd-channel-renderer
+         selector: 'ytd-video-renderer:not([hidden]), ytm-compact-video-renderer:not([hidden])', //ytm-compact-channel-renderer, ytd-channel-renderer
          attr_mark: 'thumb-filtered',
          callback: conteiner => {
             keywords.forEach(keyword => {
@@ -36,7 +36,7 @@ window.nova_plugins.push({
                   ?.textContent.toLowerCase().includes(keyword)
                ) {
                   conteiner.remove();
-                  // conteiner.style.border = "2px solid red"; // mark for test
+                  // conteiner.style.border = '2px solid red'; // mark for test
                   // console.log('filter removed', keyword, conteiner);
                }
             });

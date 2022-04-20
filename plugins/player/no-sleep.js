@@ -25,7 +25,7 @@ window.nova_plugins.push({
       window.setInterval(() => window._lact = window._fact = Date.now(), 1000 * 60 * 5); // 5 min
 
       function skipConfirmDialog() {
-         // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button')
+         // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
          NOVA.waitElement('[role="dialog"] #confirm-button')
             .then(btn => {
                btn.click();

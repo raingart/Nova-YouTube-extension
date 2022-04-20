@@ -3,7 +3,8 @@
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
-// https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#2 (bug has 1 chapters blocks). Manual chapter numbering
+// https://www.youtube.com/watch?v=Dg30oEk5Mw0 - timestamp in pinned comment #2 once
+// https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#3 (bug has 1 chapters blocks). Manual chapter numbering
 // https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
 // https://www.youtube.com/watch?v=hLXIK9DBxAo - very long line of timestamp
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
@@ -52,7 +53,9 @@ window.nova_plugins.push({
                         chapterList = NOVA.getChapterList(movie_player.getDuration()) || null;
                         // console.debug('chapterList:', chapterList);
                      }
-                     const nextChapterIndex = chapterList?.findIndex(c => c?.sec > movie_player.getCurrentTime());
+                     const
+                        nextChapterIndex = chapterList?.findIndex(c => c.sec > movie_player.getCurrentTime()),
+                        separator = ' • ';
                      // console.debug('nextChapterIndex', nextChapterIndex);
                      let msg;
                      // has chapters and chapters not ended
@@ -66,7 +69,7 @@ window.nova_plugins.push({
                            const chapterTitleEl = player.querySelector('.ytp-chapter-title-content');
 
                            msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
-                              + ' • ' + chapterList[nextChapterIndex].time;
+                              + separator + chapterList[nextChapterIndex].time;
 
                            if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
                               chapterTitleEl.click()
@@ -77,13 +80,13 @@ window.nova_plugins.push({
                            // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
                            movie_player.seekTo(nextChapterData.sec);
 
-                           msg = nextChapterData.title + ' • ' + nextChapterData.time;
+                           msg = nextChapterData.title + separator + nextChapterData.time;
                         }
 
                      } else { // chapters none
                         movie_player.seekBy(+user_settings.time_jump_step);
 
-                        msg = `+${user_settings.time_jump_step} sec • ` + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
+                        msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
                      }
 
                      NOVA.bezelTrigger(msg); // trigger default indicator

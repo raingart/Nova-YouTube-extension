@@ -22,6 +22,7 @@ window.nova_plugins.push({
       NOVA.waitElement('.ytp-right-controls')
          .then(container => {
             const video = document.body.querySelector('video');
+            // document.addEventListener("play", ({ target }) => video = target, true); // captureActiveVideoElement
 
             // global
             NOVA.css.push(
@@ -42,12 +43,12 @@ window.nova_plugins.push({
                         <path d="M2.5,17A1.5,1.5,0,0,1,1,15.5v-9A1.5,1.5,0,0,1,2.5,5h13A1.5,1.5,0,0,1,17,6.5V10h1V6.5A2.5,2.5,0,0,0,15.5,4H2.5A2.5,2.5,0,0,0,0,6.5v9A2.5,2.5,0,0,0,2.5,18H7V17Z M18.5,11h-8A2.5,2.5,0,0,0,8,13.5v5A2.5,2.5,0,0,0,10.5,21h8A2.5,2.5,0,0,0,21,18.5v-5A2.5,2.5,0,0,0,18.5,11Z" />
                      </g>
                   </svg>`;
-                  // `<svg viewBox="-3 -7 30 30" height="100%" width="100%">
-                  //    <g fill="currentColor">
-                  //       <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
-                  //       <path d="M8 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-3z"/>
-                  //    </g>
-                  // </svg>`;
+               // `<svg viewBox="-3 -7 30 30" height="100%" width="100%">
+               //    <g fill="currentColor">
+               //       <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5v-9zM1.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+               //       <path d="M8 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-3z"/>
+               //    </g>
+               // </svg>`;
                btnPiP.addEventListener('click', () => video.requestPictureInPicture());
 
                container.prepend(btnPiP);

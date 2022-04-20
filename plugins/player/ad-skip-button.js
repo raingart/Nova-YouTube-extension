@@ -27,16 +27,17 @@ window.nova_plugins.push({
    // 'desc:de': 'Klicken Sie automatisch auf die Schaltfläche [Anzeige überspringen]',
    _runtime: user_settings => {
 
-      NOVA.css.push( // hides the appearance when playing on the next video
-         `#movie_player.ad-showing video {
-            visibility: hidden !important;
-         }`);
+      // NOVA.css.push( // hides the appearance when playing on the next video
+      //    `#movie_player.ad-showing video {
+      //       visibility: hidden !important;
+      //    }`);
 
       NOVA.waitElement('#movie_player.ad-showing video')
          .then(video => {
             adSkip();
 
             video.addEventListener('loadeddata', adSkip.bind(video));
+            video.addEventListener('canplay', adSkip.bind(video));
             // video.addEventListener('durationupdate', adSkip.bind(video)); // stream
          });
 
@@ -45,7 +46,7 @@ window.nova_plugins.push({
 
          this.currentTime = this.duration; // set end ad video
 
-         NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text, button.ytp-ad-skip-button')
+         NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text:not([hidden]), button.ytp-ad-skip-button:not([hidden])')
             .then(btn => btn.click()); // click skip-ad
       }
    },

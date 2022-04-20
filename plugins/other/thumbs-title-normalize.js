@@ -24,7 +24,7 @@ window.nova_plugins.push({
       // });
 
       const
-         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty), a > h3.large-media-item-headline:not(:empty)', // '.title';
+         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden])', // '.title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'title-normalized';
 

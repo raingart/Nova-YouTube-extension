@@ -38,7 +38,8 @@ window.nova_plugins.push({
 
             function setRemaining() {
                if (isNaN(this.duration)
-                  || movie_player.getVideoData().isLive
+                  || movie_player.getVideoData().isLive // stream
+                  || document.visibilityState == 'hidden' // tab inactive
                   || (movie_player || document.body).querySelector('.ytp-autohide video')) return;
 
                const getProgressPt = () => {

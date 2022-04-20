@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener(details => {
             // );
 
             if (confirm(`${manifest.short_name}: no configuration data found!\nActivate default plugins and settings?`)) {
-               const defaultSettings = { "ad-skip-button": "on", "custom-api-key": "", "header-short": "on", "pause-background-tab": "on", "player-float-progress-bar": "on", "player-hotkeys-focused": "on", "player-pin-scroll": "on", "player_float_progress_bar_height": "3", "player_float_progress_bar_opacity": "0.7", "player_float_scroll_position": "top-right", "player_float_scroll_size_ratio": "2.5", "rate-wheel": "on", "rate_default": "1", "rate_hotkey": "altKey", "rate_step": "0.25", "report_issues": "on", "scroll-to-top": "on", "square-avatars": "on", "tabs": "on", "thumbnails-title-normalize": "on", "video-quality": "on", "video_quality": "hd1080", "video_quality_manual_save_tab": "on", "volume-wheel": "on", "volume_hotkey": "none", "volume_level_default": "100", "volume_step": "10" };
+               const defaultSettings = { "ad-skip-button": "on", "custom-api-key": "", "header-short": "on", "pause-background-tab": "on", "player-float-progress-bar": "on", "player-hotkeys-focused": "on", "player_float_progress_bar_height": "3", "player_float_progress_bar_opacity": "0.7", "rate-wheel": "on", "rate_default": "1", "rate_hotkey": "altKey", "rate_step": "0.25", "report_issues": "on", "scroll-to-top": "on", "square-avatars": "on", "tabs": "on", "thumbnails-title-normalize": "on", "video-quality": "on", "video_quality": "hd1080", "video_quality_manual_save_in_tab": "on", "volume-wheel": "on", "volume_hotkey": "none", "volume_level_default": "100", "volume_step": "10" };
                Storage.setParams(defaultSettings, 'sync');
                console.debug('Apply default configuration');
 
@@ -26,36 +26,29 @@ chrome.runtime.onInstalled.addListener(details => {
             }
             break;
 
-         case 'update':
-            // notify(
-            //    "Update installed!",
-            //    "NovaTube has just been updated, please click here to visit the options menu & enable any new settings.",
-            //    10000
-            // );
+         // case 'update':
+         //    // notify(
+         //    //    "Update installed!",
+         //    //    "NovaTube has just been updated, please click here to visit the options menu & enable any new settings.",
+         //    //    10000
+         //    // );
 
-            // updateKeyStorage
-            Storage.getParams(settings => {
-               const keyRenameTemplate = {
-                  // 'oldKey': 'newKey',
-                  'pause_background_tab_onfocus': 'pause_background_tab_autoplay_onfocus',
-                  'player_resume_playback_on_pause_update_url': 'player_resume_playback_url_mark',
-                  'video_quality_manual_save_tab': 'video_quality_manual_save_in_tab',
-                  'playlist_duration_progress': 'playlist_duration_progress_type',
-                  'thumbnails_clear_preview_timestamps': 'thumbnails_clear_preview_timestamp',
-                  'search_filter_blocklist': 'search_filter_channel_blocklist',
-                  'header_scroll_after': 'header_unfixed_scroll',
-               }
-               for (const oldKey in settings) {
-                  if (newKey = keyRenameTemplate[oldKey]) {
-                     console.log(oldKey, '=>', newKey);
-                     delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
-                  }
-               }
-               console.debug('new updated settings:', settings);
-               Storage.setParams(settings, 'sync');
-            }, 'sync');
+         //    // updateKeyStorage
+         //    Storage.getParams(settings => {
+         //       const keyRenameTemplate = {
+         //          // 'oldKey': 'newKey',
+         //       }
+         //       for (const oldKey in settings) {
+         //          if (newKey = keyRenameTemplate[oldKey]) {
+         //             console.log(oldKey, '=>', newKey);
+         //             delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
+         //          }
+         //       }
+         //       console.debug('new updated settings:', settings);
+         //       Storage.setParams(settings, 'sync');
+         //    }, 'sync');
 
-            break;
+         //    break;
       }
    });
 });

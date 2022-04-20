@@ -29,6 +29,7 @@ const NOVA = {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
       // console.debug('waitElement:', selector);
 
+      // https://stackoverflow.com/a/68262400
       // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
       // alternatives:
       // https://git.io/waitForKeyElements.js
@@ -56,7 +57,11 @@ const NOVA = {
                      observer.disconnect();
                      return resolve(node);
 
-                  } else if (element = (node.parentElement || node)?.querySelector(selector)) { // in parent
+                  } else if ( // in parent
+                     (el_ = node.parentElement || node)
+                     && (el_ instanceof HTMLElement)
+                     && (element = el_.querySelector(selector))
+                  ) {
                      // console.debug('[3]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
@@ -72,34 +77,39 @@ const NOVA = {
          })
             .observe(document?.body || document.documentElement, {
                childList: true, // observe direct children
-               // subtree: true, // and lower descendants too
+               subtree: true, // and lower descendants too
             });
       });
    },
 
+   watchElement_list: {}, // can to stop
+   // NOVA.clearInterval(NOVA.watchElement_list[attr_mark]); // ex.
+
    watchElement({ selector = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
       if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
+      if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
 
       const selectors = selector.split(',').map(s => s.trim());
 
       process(); // launch without waiting
 
-      setInterval(process, 1000 * 1.5); // 1.5 sec
+      this.watchElement_list[attr_mark] = setInterval(process, 1000 * 1.5); // 1.5 sec
 
       function process() {
          // console.debug('watch.process', { selector, callback });
+         selectors.forEach(selectorItem => {
+            if (attr_mark) selectorItem += `:not([${attr_mark}])`;
+            if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
+               selectorItem += slEnd;
+            }
+            // console.debug('selectorItem', selectorItem);
 
-         selectors.forEach(selector => {
-            document.body.querySelectorAll(selector
-               + (attr_mark ? `:not([${attr_mark}])` : '')
-               + (selectors.length === 1 ? ':not([hidden])' : '') // cannot be applied to a group (ex. "selector1, selector2")
-            )
+            document.body.querySelectorAll(selectorItem)
                .forEach(el => {
                   if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
-                     // console.debug('watch.process.viewed', selector);
+                     // console.debug('watch.process.viewed', selectorItem);
                      if (attr_mark) el.setAttribute(attr_mark, true);
-                     if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
                      callback(el);
                   }
                });
@@ -340,7 +350,7 @@ const NOVA = {
                });
          });
 
-      if (timestampsCollect?.length > 1) { // clear from "lying timestamp"
+      if (timestampsCollect.length) {
          // console.debug('timestampsCollect', timestampsCollect);
          return timestampsCollect;
       }
@@ -348,7 +358,7 @@ const NOVA = {
 
    // there are problems with the video https://www.youtube.com/watch?v=SgQ_Jk49FRQ. Too lazy to continue testing because it is unclear which method is more optimal.
    // getChapterList(video_duration = required()) {
-   //    const selectorLinkTimestamp = 'a[href*="t="]';
+   //    const selectorLinkTimestamp = 'a[href*="&t="]';
    //    let timestampList = [];
    //    let prevSec = -1;
 
@@ -394,8 +404,9 @@ const NOVA = {
    // },
 
    timeFormatTo: {
-      hmsToSec(str = required()) { // format out "h:mm:ss" > "sec"
-         return str?.split(':').reduce((acc, time) => (60 * acc) + parseInt(time));
+      hmsToSec(str) { // format out "h:mm:ss" > "sec"
+         return ((arr = str?.split(':').filter(Number)) && arr.length > 1)
+            && arr.reduce((acc, time) => (60 * acc) + parseInt(time));
       },
 
       HMS: {
@@ -465,10 +476,7 @@ const NOVA = {
 
    queryURL: {
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
-      // has: (query = required()) => new URLSearchParams(location.search).has(query),
-      has: (query = required(), url_string) => url_string
-         ? new URL(url_string).searchParams.has(query.toString())
-         : location.search.includes(query + '='),
+      has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.href).search).has(query),
 
       get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
 

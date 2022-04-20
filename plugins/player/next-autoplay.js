@@ -20,8 +20,6 @@ window.nova_plugins.push({
       NOVA.cookie.updateParam({ key: 'PREF', param: 'f5', value: 30000 });
 
       if (user_settings.video_next_autoplay_timeout) {
-         let timeoutNext;
-
          // NOVA.waitElement('video')
          //    .then(video => {
          //       // add next-button eventListener - Strategy 1
@@ -42,7 +40,7 @@ window.nova_plugins.push({
             if (movie_player.classList.contains('ad-showing')) return; // ad skip
 
             if (btn = document.querySelector('.ytp-next-button')) {
-               timeoutNext = setTimeout(() => btn.click(), 1000 * parseInt(user_settings.video_next_autoplay_timeout)); // click btn after N sec.
+               Modal_NOVA.timeoutNext = setTimeout(() => btn.click(), 1000 * parseInt(user_settings.video_next_autoplay_timeout)); // click btn after N sec.
 
                Modal_NOVA.create();
                // auto-close modal - Strategy 2
@@ -79,7 +77,7 @@ window.nova_plugins.push({
 
             close() {
                Modal_NOVA.notice?.remove();
-               clearTimeout(timeoutNext);
+               clearTimeout(Modal_NOVA.timeoutNext);
             },
          };
       }

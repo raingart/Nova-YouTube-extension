@@ -28,7 +28,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // dirty fix bug with not updating thumbnails: reset page
-      document.addEventListener('yt-navigate-finish', () => NOVA.queryURL.has('sort') && location.reload());
+      // document.addEventListener('yt-navigate-finish', () => NOVA.queryURL.has('sort') && location.reload());
 
       NOVA.watchElement({
          // selector: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',

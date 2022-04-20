@@ -1,6 +1,6 @@
 window.nova_plugins.push({
-   id: 'premiere-hide',
-   title: 'Hide Premieres',
+   id: 'live-now-hide',
+   title: 'Hide LIVE NOW',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -9,9 +9,9 @@ window.nova_plugins.push({
    // 'title:fr': '',
    // 'title:tr': '',
    // 'title:de': '',
-   run_on_pages: 'home, results, feed, channel',
+   run_on_pages: 'results, feed',
    section: 'other',
-   // desc: '',
+   desc: 'Hide stream',
    _runtime: user_settings => {
 
       // init
@@ -24,13 +24,13 @@ window.nova_plugins.push({
       });
 
       function hideHTML() {
-         document.body.querySelectorAll('ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"], #overlays [aria-label="PREMIERE"]') // #metadata-line:has_text("Premieres")
+         document.body.querySelectorAll('#video-badges .badge-style-type-live-now') // #metadata-line:empty, #video-badges span:has_text("LIVE NOW")
             .forEach(el => el.closest('ytd-grid-video-renderer')?.remove());
          // for test
          // .forEach(el => {
          //    if (thumb = el.closest('ytd-grid-video-renderer')) {
          //       // thumb.style.display = 'none';
-         //       console.debug('has Premieres:', thumb);
+         //       console.debug('has LIVE NOW:', thumb);
          //       thumb.style.border = '2px solid red'; // mark for test
          //    }
          // });

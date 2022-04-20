@@ -1,3 +1,5 @@
+// fore test
+// https://www.youtube.com/watch?v=bTm3kwroEyw - https://watannetwork.com/tools/blocked/#url=bTm3kwroEyw
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
 
 window.nova_plugins.push({
@@ -35,6 +37,7 @@ window.nova_plugins.push({
 
       function redirect() {
          location.hostname = 'hooktube.com';
+         // window.location.assign(`https://watannetwork.com/tools/blocked/#url=` + NOVA.queryURL.get('v'))
          // location.replace(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
 
          // tubeunblock.com is shut down

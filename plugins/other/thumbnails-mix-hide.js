@@ -31,26 +31,25 @@ window.nova_plugins.push({
          'a.ytp-videowall-still[data-is-mix=true]',
          'ytm-radio-renderer'
       ]
-         .join(',');
+         .join(':not([hidden]),');
 
-      NOVA.css.push(cssSelectors + '{ display: none !important; }');
+      NOVA.css.push(cssSelectors + ' { display: none !important; }');
 
-      // doesn't work
-      // fix to home page
-      // document.addEventListener('yt-page-data-updated', () => {
-      // document.addEventListener('yt-visibility-refresh', () => {
-      //    if (NOVA.currentPageName() != 'home') return;
+      // for home page
+      document.addEventListener('yt-action', evt => {
+         if (evt.detail?.actionName == 'ytd-rich-item-index-update-action' && NOVA.currentPageName() == 'home') {
 
-      //    document.querySelectorAll('ytd-rich-item-renderer')
-      //       .forEach(thumbnail => {
-      //          if (thumbnail.querySelector('a#thumbnail[href*="list="][href*="start_radio="]')
-      //             && thumbnail.querySelector('#video-title').textContent.startsWith('Mix -')
-      //          ) {
-      //             // console.debug('', thumbnail);
-      //             thumbnail.style.display = 'none';
-      //          }
-      //       });
-      // });
-
+            document.body.querySelectorAll('a[href*="list="][href*="start_radio="]:not([hidden]), a[title^="Mix -"]:not([hidden])')
+               .forEach(el => el.closest('ytd-rich-item-renderer')?.remove());
+            // for test
+            // .forEach(el => {
+            //    if (thumb = el.closest('ytd-rich-item-renderer')) {
+            //       // thumb.style.display = 'none';
+            //       console.debug('has Mix:', thumb);
+            //       thumb.style.border = '2px solid red'; // mark for test
+            //    }
+            // });
+         }
+      });
    },
 });

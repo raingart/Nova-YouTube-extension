@@ -27,6 +27,7 @@ const Plugins = {
       // 'player/stop.js', // incompatible with quality.js
       'player/unblocker.js',
       'player/next-autoplay.js',
+      'player/video-cards.js',
 
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
@@ -39,6 +40,8 @@ const Plugins = {
       'other/search-filter.js',
       'other/shorts-redirect.js',
       'other/premiere-hide.js',
+      'other/thumbnails-mix-hide.js',
+      'other/live-now-hide.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -56,7 +59,6 @@ const Plugins = {
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',
-      'sidebar/thumbnails-mix-hide.js',
 
       'header/short.js',
       'header/unfixed.js',
