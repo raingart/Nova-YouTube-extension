@@ -39,9 +39,10 @@ const Plugins = {
       'other/scroll-to-top.js',
       'other/search-filter.js',
       'other/shorts-redirect.js',
+      'other/shorts-hide.js',
       'other/premiere-hide.js',
       'other/thumbnails-mix-hide.js',
-      'other/live-now-hide.js',
+      'other/stream-hide.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -123,7 +124,7 @@ const Plugins = {
       // console.groupCollapsed('plugins status');
 
       window.nova_plugins?.forEach(plugin => {
-         const pagesAllowList = plugin?.run_on_pages?.split(',').map(p => p.trim().toLowerCase());
+         const pagesAllowList = plugin?.run_on_pages?.split(',').map(p => p.trim().toLowerCase()).filter(Boolean);
          // reset logTable
          logTableTime = 0;
          logTableStatus = false;

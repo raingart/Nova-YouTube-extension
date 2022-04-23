@@ -131,7 +131,7 @@ function isOptionsPage() {
       window.addEventListener('load', () => {
          let interval_pagesync = setInterval(() => {
             //if (document.body.classList.contains('preload')) return console.debug('page loading..');
-            if (!document.querySelector('[data-dependent]')) return console.debug('page loading..');
+            if (!document.body?.querySelector('[data-dependent]')) return console.debug('page loading..');
             clearInterval(interval_pagesync);
 
             PopulateForm.fill(user_settings); // fill form

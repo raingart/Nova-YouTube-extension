@@ -135,18 +135,22 @@ input[type=button]:hover {
    }
 
    ::-webkit-scrollbar-thumb {
-      background: #333;
-   }
-
-   ::-webkit-scrollbar-thumb:hover {
       background: #555;
    }
 
-   ::-webkit-scrollbar-thumb:active {
+   ::-webkit-scrollbar-thumb:hover {
       background: #888;
+   }
+
+   ::-webkit-scrollbar-thumb:active {
+      background: #ccc;
    }
 
    ::-webkit-scrollbar-track {
       background: #222;
+   }
+
+   /* ::-webkit-scrollbar-track:hover {
+      background: #444; */
    }
 }

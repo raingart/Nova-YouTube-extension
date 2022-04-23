@@ -31,7 +31,7 @@ window.nova_plugins.push({
             const
                SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
                btnPiP = document.createElement('button'),
-               video = document.querySelector('video');
+               video = document.body.querySelector('video');
 
             // "ye-repeat-button"
             btnPiP.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;

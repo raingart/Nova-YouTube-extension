@@ -18,7 +18,7 @@ window.nova_plugins.push({
 
       // dirty fix bug with not updating thumbnails/title: reset page
       // document.addEventListener('yt-navigate-finish', () => {
-      //    if (document.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
+      //    if (document.body.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
       //       location.reload();
       //    }
       // });

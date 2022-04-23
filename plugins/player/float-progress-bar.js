@@ -48,9 +48,14 @@ window.nova_plugins.push({
                if (document.visibilityState == 'hidden' // tab inactive
                   || movie_player.getVideoData().isLive) return;
 
+               // Strategy 1 HTML5
                if (!isNaN(this.duration)) {
                   progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
                }
+               // Strategy 2
+               // if (!isNaN(movie_player.getDuration())) {
+               //    progressEl.style.transform = `scaleX(${movie_player.getCurrentTime() / movie_player.getDuration()})`;
+               // }
             });
             // });
 
@@ -73,8 +78,10 @@ window.nova_plugins.push({
                // }
 
                // Strategy 2
-               if ((totalDuration = movie_player.getDuration()) && !isNaN(totalDuration) && movie_player.getCurrentTime()) {
-                  bufferEl.style.transform = `scaleX(${movie_player.getVideoBytesLoaded() / totalDuration})`;
+               if ((totalDuration = movie_player.getDuration()) && !isNaN(totalDuration)) {
+                  bufferEl.style.transform = `scaleX(${
+                     (movie_player.getVideoBytesLoaded() / totalDuration) * totalDuration
+                     })`;
                }
             }
             // });

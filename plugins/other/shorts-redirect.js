@@ -1,102 +1,114 @@
 window.nova_plugins.push({
-   id: 'shorts-disable',
-   title: 'Disable Shorts',
-   // 'title:zh': '禁用短裤',
-   // 'title:ja': 'ショートパンツを無効にする',
-   // 'title:ko': '반바지 비활성화',
-   // 'title:es': 'Deshabilitar pantalones cortos',
-   // 'title:pt': 'Desativar Shorts',
-   // 'title:fr': 'Désactiver les Shorts',
-   // 'title:tr': 'Şortları devre dışı bırak',
-   // 'title:de': 'Kurzschlüsse deaktivieren',
-   run_on_pages: 'home, results, feed, channel, shorts',
+   id: 'shorts-redirect',
+   title: 'Shorts to normal video',
+   // 'label:zh': '',
+   // 'label:ja': '',
+   // 'label:ko': '',
+   // 'label:es': '',
+   // 'label:pt': '',
+   // 'label:fr': '',
+   // 'label:tr': '',
+   // 'label:de': '',
+   run_on_pages: 'results, feed, channel, shorts',
+   restart_on_transition: true,
    section: 'other',
-   // desc: 'Redirect Shorts video to normal URL',
-   // 'desc:zh': '将短片视频重定向到正常 URL',
-   // 'desc:ja': 'ショートパンツの動画を通常のURLにリダイレクトする',
-   // 'desc:ko': '짧은 비디오를 일반 URL로 리디렉션',
-   // 'desc:es': 'Redirigir video corto a URL normal',
-   // 'desc:pt': 'Redirecionar vídeo curto para URL normal',
-   // 'desc:fr': 'Rediriger la vidéo courte vers une URL normale',
-   // 'desc:tr': "Kısa videoyu normal URL'ye yönlendir",
-   // 'desc:de': 'Kurzvideos auf normale URL umleiten',
+   desc: 'Redirect Shorts video to normal URL',
+   'desc:zh': '将短片视频重定向到正常 URL',
+   'desc:ja': 'ショートパンツの動画を通常のURLにリダイレクトする',
+   'desc:ko': '짧은 비디오를 일반 URL로 리디렉션',
+   'desc:es': 'Redirigir video corto a URL normal',
+   'desc:pt': 'Redirecionar vídeo curto para URL normal',
+   'desc:fr': 'Rediriger la vidéo courte vers une URL normale',
+   'desc:tr': "Kısa videoyu normal URL'ye yönlendir",
+   'desc:de': 'Kurzvideos auf normale URL umleiten',
    _runtime: user_settings => {
 
-      // redirect
-      redirectShorts(); // init
+      if (user_settings['shorts-disable']) return; // conflict with plugin
 
-      document.addEventListener('yt-navigate-start', redirectShorts);
+      const ATTR_MARK = 'shorts-pathed';
 
-      function redirectShorts() {
-         if (NOVA.currentPageName() == 'shorts') {
+      // clear before restart_on_transition
+      document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
+
+      switch (NOVA.currentPageName()) {
+         case 'shorts':
             location.href = location.href.replace('shorts/', 'watch?v=');
-         }
-      }
+            break;
 
-      // hide
-      hideHTML(); // init
-      // on scroll update page
-      document.addEventListener('yt-action', evt => {
-         if (['ytd-update-grid-state-action', 'yt-append-continuation-items-action'].includes(evt.detail?.actionName)) {
-            hideHTML();
-         }
-      });
+         default:
+            const thumbsSelectors = [
+               // 'ytd-rich-item-renderer', // home
+               'ytd-video-renderer', // results
+               'ytd-grid-video-renderer', // feed, channel
+               // 'ytd-compact-video-renderer', // sidepanel in watch
+               'ytm-compact-video-renderer' // mobile
+            ];
 
-      function hideHTML() {
-         // Strategy 1
-         // document.querySelectorAll('a[href*="shorts/"], ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"], #overlays [aria-label="Shorts"]')
-         // .forEach(a => a.closest('ytd-grid-video-renderer')?.remove());
+            NOVA.watchElement({
+               selector: thumbsSelectors.map(e => e + ':not([hidden]) a[href*="shorts/"]').join(',\n'),
+               attr_mark: ATTR_MARK,
+               callback: link => {
+                  link.href += '&list=RDSH'; // fix href redirect to watch
+                  // link.href = link.href.replace('shorts/', 'watch?v=');
 
-         // Strategy 2
-         document.body.querySelectorAll('ytd-video-renderer:not([hidden]), ytd-grid-video-renderer:not([hidden]), ytm-compact-video-renderer:not([hidden])')
-            .forEach(thumb => {
-               if ((link = thumb.querySelector('a[href*="shorts/"]'))
-                  // user_settings.shorts_disable_min_duration
-                  || NOVA.timeFormatTo.hmsToSec(thumb?.querySelector('#overlays #text:not(:empty)')?.textContent.trim()) < (parseInt(user_settings.shorts_disable_min_duration) || 60)
-               ) {
-                  thumb.remove();
-                  // thumb.style.display = 'none';
-                  // console.debug('has #shorts:', link, link.textContent);
-                  // thumb.style.border = `2px solid ${link ? 'red' : 'green'}`; // mark for test
-               }
+                  // console.debug('has #shorts:', link);
+                  // link.style.border = '2px solid green'; // mark for test
+
+                  // add time to overlay
+                  if (user_settings.shorts_thumbnails_time && link.matches('a#thumbnail')) {
+                     NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+                        .then(overlay => {
+                           if ((thumb = link.closest(thumbsSelectors.join(',\n')))
+                              && (time = getThumbTime(thumb.data))
+                           ) {
+                              // console.debug('time', time);
+                              overlay.setAttribute('overlay-style', 'DEFAULT');
+                              overlay.querySelector('#text').textContent = time;
+                           }
+                        });
+                  }
+               },
             });
+            break;
       }
 
-      // There is a init delay. Not an optimized way
-      // NOVA.watchElement({
-      //    selector: 'ytd-grid-video-renderer:not([hidden])',
-      //    attr_mark: 'shorts-cleared',
-      //    callback: thumb => {
-      //       if ((link = thumb.querySelector('a#video-title, a[href*="shorts/"]'))
-      //          && link.textContent.includes('#shorts')
-      //       ) {
-      //          // console.debug('has #shorts:', link, link.textContent);
-      //          thumb.style.display = 'none';
-      //          cleared = true;
-      //       }
-      //    },
-      // });
+      function getThumbTime(videoData = required()) {
+         // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
+         //    .forEach(videoRenderer => {
+         const
+            // videoData = videoRenderer.data,
+            title = videoData.title.accessibility.accessibilityData.label,
+            publishedTimeText = videoData.publishedTimeText.simpleText,
+            viewCountText = videoData.viewCountText.simpleText;
+
+         let
+            [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
+               .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+
+         if (!seconds) { // fix mixed up in places
+            seconds = minutes;
+            minutes = null;
+         }
+         // console.debug('>', [minutes, seconds]);
+         return [minutes || '0', seconds].join(':');
+         // });
+      }
+
    },
    options: {
-      shorts_disable_min_duration: {
+      shorts_thumbnails_time: {
          _tagName: 'input',
-         label: 'Min duration in sec',
-         'label:zh': '最短持续时间（以秒为单位）',
-         'label:ja': '秒単位の最小期間',
-         'label:ko': '최소 지속 시간(초)',
-         'label:es': 'Duración mínima en segundos',
-         'label:pt': 'Duração mínima em segundos',
-         'label:fr': 'Durée minimale en secondes',
-         'label:tr': 'Saniye cinsinden minimum süre',
-         'label:de': 'Mindestdauer in Sekunden',
-         type: 'number',
-         // title: '60 - default',
-         // title: 'Minimum duration in seconds',
-         placeholder: '60-300',
-         step: 1,
-         min: 10,
-         max: 300,
-         value: 60,
+         label: 'Add time to overlay',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         // title: '',
       },
    }
 });

@@ -39,7 +39,7 @@ window.nova_plugins.push({
          function nextVideoButton() {
             if (movie_player.classList.contains('ad-showing')) return; // ad skip
 
-            if (btn = document.querySelector('.ytp-next-button')) {
+            if (btn = document.body.querySelector('.ytp-next-button')) {
                Modal_NOVA.timeoutNext = setTimeout(() => btn.click(), 1000 * parseInt(user_settings.video_next_autoplay_timeout)); // click btn after N sec.
 
                Modal_NOVA.create();

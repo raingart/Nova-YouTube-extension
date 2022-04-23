@@ -128,7 +128,7 @@ window.nova_plugins.push({
       //       return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
       //    }
       // })
-      // if (document.querySelector('video').playing) { // checks if element is playing right now
+      // if (document.body.querySelector('video').playing) { // checks if element is playing right now
       //    // Do anything you want to
       // }
 

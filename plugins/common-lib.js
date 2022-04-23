@@ -25,8 +25,9 @@ const NOVA = {
    //    });
    // },
 
-   waitElement(selector = required()) {
+   waitElement(selector = required(), container) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+      if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
       // console.debug('waitElement:', selector);
 
       // https://stackoverflow.com/a/68262400
@@ -42,7 +43,7 @@ const NOVA = {
       // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
 
       return new Promise(resolve => {
-         if (element = (document?.body || document).querySelector(selector)) {
+         if (element = (container || document?.body || document).querySelector(selector)) {
             // console.debug('[1]', selector);
             return resolve(element);
          }
@@ -75,15 +76,19 @@ const NOVA = {
                }
             }
          })
-            .observe(document?.body || document.documentElement, {
+            .observe(container || document?.body || document.documentElement, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
             });
       });
    },
 
-   watchElement_list: {}, // can to stop
+   watchElement_list: {}, // can to stop watch setInterval
    // NOVA.clearInterval(NOVA.watchElement_list[attr_mark]); // ex.
+
+   clear_watchElement(name = required()) {
+      return this.watchElement_list.hasOwnProperty(name) && clearInterval(this.watchElement_list[name]);
+   },
 
    watchElement({ selector = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);

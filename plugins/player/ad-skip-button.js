@@ -1,6 +1,4 @@
 // for test
-// https://www.youtube.com/watch?v=XKa6TpPM70E
-
 // https://www.youtube.com/watch?v=jx9LC2kyfcQ - ad rent block
 
 window.nova_plugins.push({

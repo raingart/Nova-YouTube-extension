@@ -190,7 +190,7 @@ window.nova_plugins.push({
       },
       volume_boost: {
          _tagName: 'input',
-         label: 'Booster',
+         label: 'Booster unlimit',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
