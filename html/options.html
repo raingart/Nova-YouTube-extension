@@ -82,7 +82,10 @@
                   <div>
                      <!-- <form enctype="multipart/form-data"> -->
                      <div class="between">
-                        <input type="search" title="filter item" placeholder="__MSG_plugins_search_placeholder__" />
+                        <div class="search_box">
+                           <input type="search" title="filter item" placeholder="__MSG_plugins_search_placeholder__" />
+                           <span id="search_clear" title="__MSG_btn_plugins_search_clear_tooltip__" flow="left">❌</span>
+                        </div>
                         <button type="submit" tooltip="__MSG_opt_btn_save_settings_tooltip__"
                            flow="left">__MSG_opt_btn_save_settings__</button>
                      </div>
@@ -116,13 +119,14 @@
                   <div>
                      <div class="between">
                         <input type="text" name="custom-api-key" id="custom-api-key" pattern="^(AIzaSy)[\d\w]+"
-                        placeholder="__MSG_opt_btn_api_key_input__">
+                           placeholder="__MSG_opt_btn_api_key_input__">
                         <button type="submit" tooltip="" flow="right">__MSG_opt_btn_save_settings__</button>
                      </div>
 
                      <ul>
                         <li>
-                           <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/How-to-generate-a-YouTube-API-key%3F" target="_blank">__MSG_opt_api_key_generate__</a>
+                           <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/How-to-generate-a-YouTube-API-key%3F"
+                              target="_blank">__MSG_opt_api_key_generate__</a>
                         </li>
                      </ul>
 
@@ -136,10 +140,12 @@
                      </fieldset>
 
                      <div class="between">
-                        <label for="disable_in_frame" tooltip="__MSG_opt_disable_in_frame_tooltip__">__MSG_opt_disable_in_frame__</label>
+                        <label for="disable_in_frame"
+                           tooltip="__MSG_opt_disable_in_frame_tooltip__">__MSG_opt_disable_in_frame__</label>
                         <input type="checkbox" name="disable_in_frame" id="disable_in_frame" />
 
-                        <label for="report_issues" tooltip="__MSG_opt_report_issues_tooltip__">__MSG_opt_report_issues__</label>
+                        <label for="report_issues"
+                           tooltip="__MSG_opt_report_issues_tooltip__">__MSG_opt_report_issues__</label>
                         <input type="checkbox" name="report_issues" id="report_issues" />
                      </div>
 

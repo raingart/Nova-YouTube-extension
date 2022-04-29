@@ -29,7 +29,7 @@ window.nova_plugins.push({
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
-      NOVA.waitElement('video')
+      NOVA.waitElement('#movie_player video')
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {
@@ -53,8 +53,8 @@ window.nova_plugins.push({
             }
             // init volume_level_default
             if (+user_settings.volume_level_default) {
-               (user_settings.volume_boost || +user_settings.volume_level_default > 100)
-                  ? playerVolume.booster(+user_settings.volume_level_default)
+               (user_settings.volume_unlimit || +user_settings.volume_level_default > 100)
+                  ? playerVolume.unlimit(+user_settings.volume_level_default)
                   : playerVolume.set(+user_settings.volume_level_default);
             }
          });
@@ -63,11 +63,11 @@ window.nova_plugins.push({
       const playerVolume = {
          adjust(delta) {
             const level = movie_player?.getVolume() + parseInt(delta);
-            return user_settings.volume_boost ? this.booster(level) : this.set(level);
+            return user_settings.volume_unlimit ? this.unlimit(level) : this.set(level);
          },
          // Strategy 1
          set(level = 50) {
-            if (!movie_player?.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+            if (typeof movie_player === 'undefined' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
             const newLevel = Math.max(0, Math.min(100, parseInt(level)));
 
             // set new volume level
@@ -104,7 +104,7 @@ window.nova_plugins.push({
             }
          },
 
-         booster(level = 300) {
+         unlimit(level = 300) {
             if (level > 100) {
                if (!this.audioCtx) {
                   this.audioCtx = new AudioContext();
@@ -123,7 +123,7 @@ window.nova_plugins.push({
                if (this.audioCtx && this.node.gain.value !== 1) this.node.gain.value = 1; // reset
                this.set(level);
             }
-            // console.debug('booster', this.node.gain.value);
+            // console.debug('unlimit', this.node.gain.value);
          }
       };
 
@@ -188,9 +188,9 @@ window.nova_plugins.push({
             { label: 'disable', value: false },
          ],
       },
-      volume_boost: {
+      volume_unlimit: {
          _tagName: 'input',
-         label: 'Booster unlimit',
+         label: 'Break limit',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

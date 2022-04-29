@@ -134,8 +134,9 @@ const App = {
    reflectException() {
       const
          manifest = chrome.runtime.getManifest(),
-         alertMsg = manifest.name + '\nCrash in one of the plugins\nDetails in the console\n\nOpen tab to report the bug?',
-         senderException = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
+         alertMsg = `Failure when async-call of one "${manifest.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
+
+         openBugReport = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
             if (confirm(confirm_msg || alertMsg)) {
                window.open(
                   'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
@@ -149,10 +150,10 @@ const App = {
 
       // capture promise exception
       Plugins.injectScript(
-         `const _pluginsCaptureException = ${senderException};
+         `const _pluginsCaptureException = ${openBugReport};
          window.addEventListener('unhandledrejection', err => {
             if (!err.reason.stack?.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
-            console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose\`);
+            console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=${encodeURIComponent([chrome.runtime.getManifest().version, navigator.userAgent].join(' | '))}\`);
 
             _pluginsCaptureException({
                'trace_name': 'unhandledrejection',
@@ -187,4 +188,9 @@ App.init();
 // https://www.youtube.com/feed/history/community_history
 
 // TODO
+// create such plugins:
+// https://greasyfork.org/en/scripts/418605-export-youtube-playlist-in-tab-delimited-text
+// https://greasyfork.org/en/scripts/34388-space-efficient-youtube
+// https://greasyfork.org/en/scripts/419722-return-watched-badge-on-youtube-with-custom-text
+
 // upgrade code to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR_assignment

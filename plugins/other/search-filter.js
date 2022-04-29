@@ -28,16 +28,20 @@ window.nova_plugins.push({
          .filter(e => e.length);
 
       NOVA.watchElement({
-         selector: 'ytd-video-renderer:not([hidden]), ytm-compact-video-renderer:not([hidden])', //ytm-compact-channel-renderer, ytd-channel-renderer
+         selectors: [
+            'ytd-video-renderer',
+            'ytd-playlist-renderer',
+            'ytm-compact-video-renderer'
+         ],
          attr_mark: 'thumb-filtered',
-         callback: conteiner => {
+         callback: thumb => {
             keywords.forEach(keyword => {
-               if (conteiner.querySelector('ytd-channel-name, .compact-media-item-byline')
+               if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')
                   ?.textContent.toLowerCase().includes(keyword)
                ) {
-                  conteiner.remove();
-                  // conteiner.style.border = '2px solid red'; // mark for test
-                  // console.log('filter removed', keyword, conteiner);
+                  thumb.remove();
+                  // thumb.style.border = '2px solid red'; // mark for test
+                  // console.log('filter removed', keyword, thumb);
                }
             });
          }

@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=FSjr2H0RDsY - empty desc
+
 window.nova_plugins.push({
    id: 'description-popup',
    title: 'Description in popup',
@@ -27,7 +30,10 @@ window.nova_plugins.push({
                   position: fixed;
                   top: ${masthead.offsetHeight || 56}px;
                   right: 0;
-                  z-index: ${(Math.max(NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }), 601)) + 1};
+                  z-index: ${Math.max(
+                  NOVA.css.getValue({ selector: '#masthead-container', property: 'z-index' }),
+                  NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }),
+                  601) + 1};
                }
 
                /* button */

@@ -30,6 +30,12 @@ window.nova_plugins.push({
       // clear before restart_on_transition
       document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
 
+      // fix clear thumb on page update (change sort etc.)
+      // document.addEventListener('yt-page-data-updated', () =>
+      document.addEventListener('yt-navigate-finish', () =>
+         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
+         , { capture: true, once: true });
+
       switch (NOVA.currentPageName()) {
          case 'shorts':
             location.href = location.href.replace('shorts/', 'watch?v=');
@@ -41,11 +47,11 @@ window.nova_plugins.push({
                'ytd-video-renderer', // results
                'ytd-grid-video-renderer', // feed, channel
                // 'ytd-compact-video-renderer', // sidepanel in watch
-               'ytm-compact-video-renderer' // mobile
+               'ytm-compact-video-renderer', // mobile
             ];
 
             NOVA.watchElement({
-               selector: thumbsSelectors.map(e => e + ':not([hidden]) a[href*="shorts/"]').join(',\n'),
+               selectors: thumbsSelectors.map(e => e + ':not([hidden]) a[href*="shorts/"]'),
                attr_mark: ATTR_MARK,
                callback: link => {
                   link.href += '&list=RDSH'; // fix href redirect to watch

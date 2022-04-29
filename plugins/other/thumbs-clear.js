@@ -27,17 +27,22 @@ window.nova_plugins.push({
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    _runtime: user_settings => {
 
-      // dirty fix bug with not updating thumbnails: reset page
-      // document.addEventListener('yt-navigate-finish', () => NOVA.queryURL.has('sort') && location.reload());
+      const ATTR_MARK = 'preview-cleared';
+
+      // dirty fix bug with not updating thumbnails
+      document.addEventListener('yt-navigate-finish', () =>
+         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElement({
-         // selector: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',
-         selector: 'a[class*=thumbnail]:not([hidden]):not(.ytd-playlist-thumbnail) img[src]',
-         attr_mark: 'preview-cleared',
+         // selectors: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',
+         selectors: 'a[class*=thumbnail]:not([hidden]):not(.ytd-playlist-thumbnail) img[src]', // fix broken playlist
+         attr_mark: ATTR_MARK,
          callback: img => {
             // skip "premiere", "live now"
             if (parent = img.closest('ytd-video-renderer, ytd-grid-video-renderer')) {
-               if (!parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]') || parent.querySelector('#badges .badge-style-type-live-now, ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')) {
+               if (!parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]')
+                  || parent.querySelector('#badges .badge-style-type-live-now, ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')
+               ) {
                   // console.debug('skiped thumbnails-preview-cleared', parent);
                   return;
                }

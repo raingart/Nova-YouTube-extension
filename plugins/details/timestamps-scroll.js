@@ -1,27 +1,24 @@
+// for test:
+// https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
+// https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
+
 window.nova_plugins.push({
    id: 'description-timestamps-scroll',
-   title: 'Disable timestamps scrolling to player',
-   'title:zh': '禁用滚动到播放器的时间戳',
-   'title:ja': 'プレーヤーへのタイムスタンプのスクロールを無効にする',
-   'title:ko': '플레이어로 스크롤하는 타임스탬프 비활성화',
-   'title:es': 'Desactivar marcas de tiempo desplazándose al jugador',
-   'title:pt': 'Desativar carimbos de data/hora rolando para o player',
-   'title:fr': 'Désactiver le défilement des horodatages vers le lecteur',
-   'title:tr': 'Oyuncuya kaydırma zaman damgalarını devre dışı bırak',
-   'title:de': 'Deaktivieren Sie Zeitstempel, die zum Player scrollen',
+   title: 'No scroll to player on timestamps',
+   'title:zh': '没有在时间戳上滚动到播放器',
+   'title:ja': 'タイムスタンプでプレーヤーにスクロールしない',
+   'title:ko': '타임스탬프에서 플레이어로 스크롤하지 않음',
+   'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
+   'title:pt': 'Sem rolar para o jogador em timestamps',
+   'title:fr': 'Pas de défilement vers le joueur sur les horodatages',
+   'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
+   'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
    run_on_pages: 'watch, -mobile',
    section: 'details',
-   desc: 'Stop scrolling to player when clicking on timestamps',
-   'desc:zh': '单击时间戳时停止滚动到播放器',
-   'desc:ja': 'タイムスタンプをクリックすると、プレーヤーへのスクロールを停止します',
-   'desc:ko': '타임스탬프를 클릭할 때 플레이어로 스크롤 중지',
-   'desc:es': 'Deja de desplazarte al jugador al hacer clic en marcas de tiempo',
-   'desc:pt': 'Pare de rolar para o player ao clicar em timestamps',
-   'desc:fr': 'Arrêtez de faire défiler vers le lecteur lorsque vous cliquez sur les horodatages',
-   'desc:tr': 'Zaman damgalarına tıklarken oynatıcıya kaydırmayı bırakın',
-   'desc:de': 'Beenden Sie das Scrollen zum Player, wenn Sie auf Zeitstempel klicken',
+   desc: 'Disable scrolling to player when clicking on timestamps',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/438943-youtube-no-scroll-to-top-on-timestamps
       document.addEventListener('click', evt => {
          // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
          if (!evt.target.matches('a[href*="&t="]')) return;

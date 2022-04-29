@@ -17,10 +17,9 @@ window.nova_plugins.push({
       document.addEventListener('keydown', ({ target }) => {
          if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
 
+         document.body.querySelector('video')?.focus();
          // document.activeElement.style.border = '2px solid red'; // mark for test
          // console.debug('active element', target.localName);
-
-         document.body.querySelector('video')?.focus();
       });
 
    },

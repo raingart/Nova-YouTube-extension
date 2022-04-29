@@ -1,39 +1,39 @@
 {
    "localization": {
-      "message": "en"
+      "message": "fr"
    },
    "app_description": {
       "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
-      "message": "Search..."
+      "message": "Rechercher..."
    },
    "btn_plugins_search_clear_tooltip": {
-      "message": "Clear Search"
+      "message": "Effacer la recherche"
    },
    "opt_btn_save_settings": {
-      "message": "Save"
+      "message": "Enregistrer"
    },
    "opt_btn_save_settings_process": {
-      "message": "Saving..."
+      "message": "Enregistrement en cours..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Saved!"
+      "message": "Enregistré !"
    },
    "opt_legend_settings_transfer": {
-      "message": "Settings transfer:"
+      "message": "Transfert des paramètres :"
    },
    "opt_title_help_link": {
-      "message": "More info"
+      "message": "Plus d'infos"
    },
    "opt_btn_import_settings": {
       "message": "Import"
    },
    "opt_prompt_import_settings": {
-      "message": "Not access in pop-up!\nOpen setting page?"
+      "message": "Pas d'accès dans la fenêtre contextuelle !\nOuvrir la page de configuration ?"
    },
    "opt_alert_import_successfully": {
-      "message": "Settings imported successfully!"
+      "message": "Paramètres importés avec succès !"
    },
    "opt_btn_export_settings": {
       "message": "Export"
@@ -42,10 +42,10 @@
       "message": "Reset"
    },
    "opt_prompt_reset_settings": {
-      "message": "It is advised to backup your current settings before continuing.\nDelete all settings?"
+      "message": "Il est conseillé de sauvegarder vos paramètres actuels avant de continuer.\nSupprimer tous les paramètres ?"
    },
    "opt_btn_save_settings_tooltip": {
-      "message": "Open tabs don't change"
+      "message": "Les onglets ouverts ne changent pas"
    },
    "opt_btn_api_key_input": {
       "message": "custom Youtube API key"
@@ -54,48 +54,48 @@
       "message": "Generate API key"
    },
    "opt_disable_in_frame": {
-      "message": "Disable in iframe"
+      "message": "Désactiver dans iframe"
    },
    "opt_disable_in_frame_tooltip": {
-      "message": "The extension will not work in embed video"
+      "message": "L'extension ne fonctionnera pas dans la vidéo intégrée"
    },
    "opt_report_issues": {
-      "message": "Show prompting to report bugs"
+      "message": "Afficher l'invite pour signaler les bogues"
    },
    "opt_report_issues_tooltip": {
-      "message": "Need allow pop-up on YouTube for prompting"
+      "message": "Besoin d'autoriser les fenêtres contextuelles sur YouTube pour les invites"
    },
    "opt_api_key_warn": {
-      "message": "Use your [API key] for stable work"
+      "message": "Utilisez votre [clé API] pour un travail stable"
    },
    "github_page": {
-      "message": "Source code"
+      "message": "Code source"
    },
    "github_page_tooltip": {
-      "message": "Open"
+      "message": "Ouvrir"
    },
    "github_page_issues": {
-      "message": "Report bugs"
+      "message": "Signaler les bogues"
    },
    "github_page_issues_tooltip": {
-      "message": "To report"
+      "message": "Pour signaler"
    },
    "email": {
-      "message": "Contact email"
+      "message": "E-mail de contact"
    },
    "email_tooltip": {
-      "message": "To feedback"
+      "message": "Pour les commentaires"
    },
    "donate_patreon_tooltip": {
-      "message": "Support with Patreon"
+      "message": "Assistance avec Patreon"
    },
    "donate_patreon": {
-      "message": "Donate (Patreon)"
+      "message": "Faire un don (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Support with buymeacoffee"
+      "message": "Assistance avec buymeacoffee"
    },
    "donate_buymeacoffee": {
-      "message": "Donate (buymeacoffee)"
+      "message": "Faire un don (buymeacoffee)"
    }
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.25.1
+// @version         0.26.0
 // @description     YouTube Enhancer
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
@@ -34,6 +34,7 @@
 // @grant           GM_unregisterMenuCommand
 // @grant           GM_notification
 // @grant           GM_openInTab
+
 // @run-at          document-start
 
 // @compatible      chrome >=80 Violentmonkey,Tampermonkey

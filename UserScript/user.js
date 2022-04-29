@@ -6,21 +6,21 @@ const
    user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }F
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'volume_boost': 'volume_unlimit',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (isOptionsPage()) return;
 landerPlugins();
 if (!user_settings?.disable_setting_button) renderSettingButton();
-reflectException();
 
 function renderSettingButton() {
    NOVA.waitElement('#masthead #end')
@@ -39,6 +39,13 @@ function renderSettingButton() {
                   </g>
                </svg>
             </yt-icon-button>`;
+         // a.textContent = '►';
+         // Object.assign(a.style, {
+         //    'font-size': '24px',
+         //    'color': 'deepskyblue !important',
+         //    'text-decoration': 'none',
+         //    'padding': '0 10px',
+         // });
          a.addEventListener('click', () => {
             setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
          });
@@ -236,16 +243,14 @@ function landerPlugins() {
    document.addEventListener('yt-navigate-start', () => isURLChanged() && landerPlugins());
 }
 
-function reflectException() {
-   function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
-      GM_notification({ text: GM_info.script.name + '\n' + err.reason, timeout: 4000, onclick: reportBug });
+function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
+   GM_notification({ text: GM_info.script.name + '\n' + err.reason, timeout: 4000, onclick: openBugReport });
 
-      if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Open popup to report the bug?`)) {
-         reportBug();
-      }
-   };
+   if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Open popup to report the bug?`)) {
+      openBugReport();
+   }
 
-   function reportBug() {
+   function openBugReport() {
       window.open(
          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
          '?entry.35504208=' + encodeURIComponent(trace_name) +
@@ -253,17 +258,17 @@ function reflectException() {
          '&entry.744404568=' + encodeURIComponent(location.href) +
          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent), '_blank');
    }
+};
 
-   window.addEventListener('unhandledrejection', err => {
-      //if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
-      console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose');
+window.addEventListener('unhandledrejection', err => {
+   //if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+   console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
-      if (user_settings.report_issues)
-         _pluginsCaptureException({
-            'trace_name': 'unhandledrejection',
-            'err_stack': err.reason.stack,
-            'app_ver': GM_info.script.version,
-            'confirm_msg': 'Failure when async-call of one "Nova YouTube™" plugin.\n\nOpen tab to report the bug?',
-         });
-   });
-}
+   if (user_settings.report_issues)
+      _pluginsCaptureException({
+         'trace_name': 'unhandledrejection',
+         'err_stack': err.reason.stack,
+         'app_ver': GM_info.script.version,
+         'confirm_msg': `Failure when async-call of one "GM_info.script.name" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
+      });
+});

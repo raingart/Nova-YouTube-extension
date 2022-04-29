@@ -1,27 +1,27 @@
 {
    "localization": {
-      "message": "en"
+      "message": "ko"
    },
    "app_description": {
       "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
-      "message": "Search..."
+      "message": "검색..."
    },
    "btn_plugins_search_clear_tooltip": {
-      "message": "Clear Search"
+      "message": "클리어 검색"
    },
    "opt_btn_save_settings": {
-      "message": "Save"
+      "message": "저장"
    },
    "opt_btn_save_settings_process": {
-      "message": "Saving..."
+      "message": "저장..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Saved!"
+      "message": "저장했습니다!"
    },
    "opt_legend_settings_transfer": {
-      "message": "Settings transfer:"
+      "message": "설정 전송:"
    },
    "opt_title_help_link": {
       "message": "More info"
@@ -30,10 +30,10 @@
       "message": "Import"
    },
    "opt_prompt_import_settings": {
-      "message": "Not access in pop-up!\nOpen setting page?"
+      "message": "팝업으로 액세스할 수 없습니다!\n설정 페이지를 엽니까?"
    },
    "opt_alert_import_successfully": {
-      "message": "Settings imported successfully!"
+      "message": "설정이 성공적으로 가져왔습니다!"
    },
    "opt_btn_export_settings": {
       "message": "Export"
@@ -42,10 +42,10 @@
       "message": "Reset"
    },
    "opt_prompt_reset_settings": {
-      "message": "It is advised to backup your current settings before continuing.\nDelete all settings?"
+      "message": "계속하기 전에 현재 설정을 백업하는 것이 좋습니다.\n모든 설정을 삭제하시겠습니까?"
    },
    "opt_btn_save_settings_tooltip": {
-      "message": "Open tabs don't change"
+      "message": "열려 있는 탭은 변경되지 않습니다"
    },
    "opt_btn_api_key_input": {
       "message": "custom Youtube API key"
@@ -54,48 +54,48 @@
       "message": "Generate API key"
    },
    "opt_disable_in_frame": {
-      "message": "Disable in iframe"
+      "message": "iframe에서 사용 중지"
    },
    "opt_disable_in_frame_tooltip": {
-      "message": "The extension will not work in embed video"
+      "message": "확장 기능은 포함된 동영상에서는 작동하지 않습니다"
    },
    "opt_report_issues": {
-      "message": "Show prompting to report bugs"
+      "message": "버그 신고 프롬프트 표시"
    },
    "opt_report_issues_tooltip": {
-      "message": "Need allow pop-up on YouTube for prompting"
+      "message": "프롬프트를 보려면 YouTube에서 팝업을 허용해야 합니다."
    },
    "opt_api_key_warn": {
-      "message": "Use your [API key] for stable work"
+      "message": "안전한 작업을 위해 [API 키]를 사용하십시오"
    },
    "github_page": {
       "message": "Source code"
    },
    "github_page_tooltip": {
-      "message": "Open"
+      "message": "열기"
    },
    "github_page_issues": {
-      "message": "Report bugs"
+      "message": "버그 신고"
    },
    "github_page_issues_tooltip": {
-      "message": "To report"
+      "message": "보고하기"
    },
    "email": {
-      "message": "Contact email"
+      "message": "연락처 이메일 주소"
    },
    "email_tooltip": {
-      "message": "To feedback"
+      "message": "피드백하려면"
    },
    "donate_patreon_tooltip": {
-      "message": "Support with Patreon"
+      "message": "Patreon 지원"
    },
    "donate_patreon": {
-      "message": "Donate (Patreon)"
+      "message": "기부【Patreon】"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Support with buymeacoffee"
+      "message": "buymeacoffee 지원"
    },
    "donate_buymeacoffee": {
-      "message": "Donate (buymeacoffee)"
+      "message": "기부[buymeacoffee]"
    }
 }

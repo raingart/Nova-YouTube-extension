@@ -8,6 +8,9 @@
    "plugins_search_placeholder": {
       "message": "検索..."
    },
+   "btn_plugins_search_clear_tooltip": {
+      "message": "クリア検索"
+   },
    "opt_btn_save_settings": {
       "message": "保存する"
    },

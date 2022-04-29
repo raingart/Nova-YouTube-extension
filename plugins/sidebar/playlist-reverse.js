@@ -56,13 +56,16 @@ window.nova_plugins.push({
 
       document.addEventListener('yt-navigate-finish', () => {
          if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
-         // add  button
-         // NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed, .playlist-controls-primary')
+         addBtn(); // add  button
+         updateNext(); // add events
+      });
+
+      addBtn();
+
+      function addBtn() {
          NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed')
             .then(e => appendReverseBtn(e));
-         // add events
-         updateNext();
-      });
+      }
 
       function appendReverseBtn(container = required()) {
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);

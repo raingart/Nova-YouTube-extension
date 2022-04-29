@@ -1,7 +1,7 @@
 try {
-   // throw "test";
+   // throw 'test';
    document?.body;
 } catch (error) {
-   return alert(GM_info.script.name + " ERROR!\nYour browser does not support chaining operator.");
+   return alert(GM_info.script.name + ' ERROR!\nYour browser does not support chaining operator.');
 }
-if (GM_info?.scriptHandler == 'Greasemonkey') return alert(GM_info.script.name + " doesn't work with GreaseMonkey!");
+if (GM_info?.scriptHandler == 'Greasemonkey') alert(GM_info.script.name + ' ERROR!\nGreasemonkey is not supported.');

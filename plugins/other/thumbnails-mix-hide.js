@@ -29,7 +29,7 @@ window.nova_plugins.push({
          '.use-ellipsis',
          // 'a.ytp-videowall-still.ytp-suggestion-set[data-is-mix=true]',
          'a.ytp-videowall-still[data-is-mix=true]',
-         'ytm-radio-renderer'
+         'ytm-radio-renderer',
       ]
          .join(':not([hidden]),');
 

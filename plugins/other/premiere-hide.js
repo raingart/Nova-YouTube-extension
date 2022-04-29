@@ -14,6 +14,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // Strategy 1
       // init
       // hideThumb(); // does work
       // page scroll update. init
@@ -43,6 +44,25 @@ window.nova_plugins.push({
          //    }
          // });
       }
+
+      // Strategy 2
+      // const conteinerSelector = 'ytd-grid-video-renderer:not([hidden])';
+
+      // NOVA.watchElement({
+      //    selectors: [
+      //       `${conteinerSelector} ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"]`,
+      //       `${conteinerSelector} #overlays [aria-label="PREMIERE"]`
+      //       // #metadata-line:has_text("Premieres")
+      //    ],
+      //    attr_mark: 'thumb-filtered',
+      //    callback: thumb => {
+      //       thumb.closest(conteinerSelector)?.remove();
+      //       console.debug('has Premieres:', thumb);
+      //       thumb.style.border = '2px solid red'; // mark for test
+
+      //       // thumb.textContent.toLowerCase().includes('Premieres')
+      //    }
+      // });
 
    },
 });

@@ -8,6 +8,9 @@
    "plugins_search_placeholder": {
       "message": "搜索..."
    },
+   "btn_plugins_search_clear_tooltip": {
+      "message": "清除搜索"
+   },
    "opt_btn_save_settings": {
       "message": "保存"
    },

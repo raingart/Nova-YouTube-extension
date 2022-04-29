@@ -22,7 +22,7 @@ window.nova_plugins.push({
       NOVA.waitElement('.ytp-right-controls')
          .then(container => {
             const video = document.body.querySelector('video');
-            // document.addEventListener("play", ({ target }) => video = target, true); // captureActiveVideoElement
+            // document.addEventListener('play', ({ target }) => video = target, true); // captureActiveVideoElement
 
             // global
             NOVA.css.push(
@@ -314,12 +314,12 @@ window.nova_plugins.push({
                   btnQuality = document.createElement('span'),
 
                   qualityFormatList = {
-                     highres: { label: '4320p', sub_label: '8K' },
-                     hd2880: { label: '2880p', sub_label: '5K' },
-                     hd2160: { label: '2160p', sub_label: '4K' },
-                     hd1440: { label: '1440p', sub_label: 'QHD' },
-                     hd1080: { label: '1080p', sub_label: 'FHD' },
-                     hd720: { label: '720p', sub_label: 'HD' },
+                     highres: { label: '4320p', badge: '8K' },
+                     hd2880: { label: '2880p', badge: '5K' },
+                     hd2160: { label: '2160p', badge: '4K' },
+                     hd1440: { label: '1440p', badge: 'QHD' },
+                     hd1080: { label: '1080p', badge: 'FHD' },
+                     hd720: { label: '720p', badge: 'HD' },
                      large: { label: '480p' },
                      medium: { label: '360p' },
                      small: { label: '240p' },
@@ -359,7 +359,7 @@ window.nova_plugins.push({
                      color: #fff;
                   }
 
-                  ${SELECTOR_QUALITY_LIST} li .quality-menu-item-sub-label {
+                  ${SELECTOR_QUALITY_LIST} li .quality-menu-item-label-badge {
                      position: absolute;
                      right: 1em;
                      width: 1.7em;
@@ -403,12 +403,12 @@ window.nova_plugins.push({
                            if (movie_player.getPlaybackQuality() == quality) qualityItem.className = 'active';
                            // qualityList.innerHTML =
                            //    `<span class="quality-menu-item-text">1080p</span>
-                           //    <span class="quality-menu-item-sub-label">HD</span>`;
+                           //    <span class="quality-menu-item-label-badge">HD</span>`;
                            if (qualityData = qualityFormatList[quality]) {
                               qualityItem.textContent = qualityData.label;
-                              if (sub_label = qualityData.sub_label) {
+                              if (badge = qualityData.badge) {
                                  qualityItem.insertAdjacentHTML('beforeend',
-                                    `<span class="quality-menu-item-sub-label">${sub_label}</span>`);
+                                    `<span class="quality-menu-item-label-badge">${badge}</span>`);
                               }
                               qualityItem.addEventListener('click', () => {
                                  // console.debug('setPlaybackQuality', quality);

@@ -8,6 +8,9 @@
    "plugins_search_placeholder": {
       "message": "Búsqueda..."
    },
+   "btn_plugins_search_clear_tooltip": {
+      "message": "Borrar búsqueda"
+   },
    "opt_btn_save_settings": {
       "message": "Save"
    },

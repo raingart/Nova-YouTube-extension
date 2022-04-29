@@ -20,7 +20,7 @@ window.nova_plugins.push({
 
       // comment
       NOVA.watchElement({
-         selector: '#contents #expander[collapsed]',
+         selectors: ['#contents #expander[collapsed]'],
          attr_mark: 'comment-expanded',
          callback: el => {
             const moreExpand = () => el.querySelector('#more')?.click();
@@ -33,7 +33,7 @@ window.nova_plugins.push({
 
       // comment replies
       NOVA.watchElement({
-         selector: '#more-replies',
+         selectors: ['#more-replies'],
          attr_mark: 'replies-expanded',
          callback: el => {
             const moreExpand = () => el.querySelector('#button')?.click();

@@ -19,7 +19,7 @@ window.nova_plugins.push({
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitElement('video')
+      NOVA.waitElement('#movie_player video')
          .then(video => {
             const
                container = renderFloatBar(),
@@ -289,9 +289,9 @@ window.nova_plugins.push({
          'label:de': 'Opazität',
          type: 'number',
          // title: '',
-         placeholder: '1-10',
-         step: .1,
-         min: .1,
+         placeholder: '0-1',
+         step: .05,
+         min: 0,
          max: 1,
          value: .7,
       },

@@ -24,14 +24,16 @@ window.nova_plugins.push({
 
       window.setInterval(() => window._lact = window._fact = Date.now(), 1000 * 60 * 5); // 5 min
 
+      // captureActiveVideoElement
+      let videoElement;
+      document.addEventListener('play', ({ target }) => videoElement = target, true);
+
       function skipConfirmDialog() {
          // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
          NOVA.waitElement('[role="dialog"] #confirm-button')
             .then(btn => {
                btn.click();
-               if ((videoElement = document.body.querySelector('video')) && videoElement.paused) {
-                  videoElement.play();
-               }
+               if (videoElement?.paused) videoElement.play();
                skipConfirmDialog(); // recursion init state. What would work more than once
             });
       }

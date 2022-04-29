@@ -44,7 +44,7 @@ window.nova_plugins.push({
       //       });
       //    });
 
-      NOVA.waitElement('video')
+      NOVA.waitElement('#movie_player video')
          .then(video => {
             const sliderConteiner = renderSlider();
             // console.debug('sliderConteiner', sliderConteiner);

@@ -26,8 +26,7 @@ window.nova_plugins.push({
 
       const
          CACHE_PREFIX = 'channel-videos-count:',
-         SELECTOR_ID = 'video_count',
-         isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
+         SELECTOR_ID = 'video_count';
 
       switch (NOVA.currentPageName()) {
          case 'watch':
@@ -55,26 +54,15 @@ window.nova_plugins.push({
                // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
                .then(el => {
                   // console.debug('channel page');
-                  setVideoCount({ 'container': el, 'channel_id': getChannelId() });
+                  if (channelId = NOVA.getChannelId()) {
+                     setVideoCount({ 'container': el, 'channel_id': channelId });
+                  }
                });
-
-            function getChannelId() {
-               return [
-                  (document.body.querySelector('ytd-app')?.data?.response || window.ytInitialData)
-                     ?.metadata?.channelMetadataRenderer?.externalId,
-                  document.head.querySelector('meta[itemprop="channelId"][content]')?.content,
-                  document.head.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
-                  location.pathname.split('/')[2],
-               ]
-                  .find(i => isChannelId(i))
-            }
             break;
       }
 
       function setVideoCount({ container = required(), channel_id }) {
          // console.debug('setVideoCount:', ...arguments);
-         if (!isChannelId(channel_id)) return console.error('channel_id empty:', channel_id);
-
          // cached
          if (storage = sessionStorage.getItem(CACHE_PREFIX + channel_id)) {
             insertToHTML({ 'text': storage, 'container': container });
@@ -99,6 +87,7 @@ window.nova_plugins.push({
          function insertToHTML({ text = '', container = required() }) {
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+
             (document.getElementById(SELECTOR_ID) || (function () {
                container.insertAdjacentHTML('beforeend',
                   `<span class="date style-scope ytd-video-secondary-info-renderer" style="margin-right:5px;"> • <span id="${SELECTOR_ID}">${text}</span> videos</span>`);

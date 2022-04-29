@@ -68,7 +68,7 @@ const NOVA = {
                      return resolve(element);
                   }
                }
-               if (element = (document?.body || document).querySelector(selector)) { // inglobal
+               if (element = (document?.body || document).querySelector(selector)) { // in global
                   // console.debug('[4]', mutation.type, node.nodeType, selector);
                   // console.debug('[4]', selector);
                   observer.disconnect();
@@ -90,37 +90,43 @@ const NOVA = {
       return this.watchElement_list.hasOwnProperty(name) && clearInterval(this.watchElement_list[name]);
    },
 
-   watchElement({ selector = required(), attr_mark, callback = required() }) {
+   watchElement({ selectors = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
-      if (typeof selector !== 'string') return console.error('watch > selector:', typeof selector);
+      if (!Array.isArray(selectors) && typeof selectors !== 'string') return console.error('watch > selector:', typeof selectors);
       if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
 
-      const selectors = selector.split(',').map(s => s.trim());
+      // async wait el. Removes the delay for init
+      this.waitElement(typeof selectors === 'string' ? selectors : selectors.join(','))
+         .then(video => {
+            // selectors - str to array
+            !Array.isArray(selectors) && (selectors = selectors.split(',').map(s => s.trim()));
 
-      process(); // launch without waiting
+            process(); // launch without waiting
+            this.watchElement_list[attr_mark] = setInterval(() =>
+               document.visibilityState == 'visible' && process(), 1000 * 1.5); // 1.5 sec
 
-      this.watchElement_list[attr_mark] = setInterval(process, 1000 * 1.5); // 1.5 sec
+            function process() {
+               // console.debug('watch.process', { selector, callback });
+               selectors
+                  .forEach(selectorItem => {
+                     if (attr_mark) selectorItem += `:not([${attr_mark}])`;
+                     if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
+                        selectorItem += slEnd;
+                     }
+                     // console.debug('selectorItem', selectorItem);
 
-      function process() {
-         // console.debug('watch.process', { selector, callback });
-         selectors.forEach(selectorItem => {
-            if (attr_mark) selectorItem += `:not([${attr_mark}])`;
-            if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
-               selectorItem += slEnd;
+                     document.body.querySelectorAll(selectorItem)
+                        .forEach(el => {
+                           // if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
+                           // console.debug('watch.process.viewed', selectorItem);
+                           if (attr_mark) el.setAttribute(attr_mark, true);
+                           callback(el);
+                           // }
+                        });
+                  });
             }
-            // console.debug('selectorItem', selectorItem);
-
-            document.body.querySelectorAll(selectorItem)
-               .forEach(el => {
-                  if (el.offsetWidth > 0 || el.offsetHeight > 0) { // el.is(":visible")
-                     // console.debug('watch.process.viewed', selectorItem);
-                     if (attr_mark) el.setAttribute(attr_mark, true);
-                     callback(el);
-                  }
-               });
          });
 
-      }
    },
 
    css: {
@@ -581,6 +587,24 @@ const NOVA = {
          3: 'BUFFERING',
          5: 'CUED'
       }[state || movie_player.getPlayerState()];
+   },
+
+   getChannelId() {
+      const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
+      return [
+         // channel page
+         (document.body.querySelector('ytd-app')?.__data?.data.response
+            || document.body.querySelector('ytd-app')?.data?.response
+            || window.ytInitialData
+         )
+            ?.metadata?.channelMetadataRenderer?.externalId,
+         document.head.querySelector('meta[itemprop="channelId"][content]')?.content,
+         document.head.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
+         location.pathname.split('/')[2],
+         // playlist page
+         document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
+      ]
+         .find(i => isChannelId(i))
    },
 
    log() {

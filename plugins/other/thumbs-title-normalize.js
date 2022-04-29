@@ -16,17 +16,14 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // dirty fix bug with not updating thumbnails/title: reset page
-      // document.addEventListener('yt-navigate-finish', () => {
-      //    if (document.body.querySelector(`[${ATTR_MARK}]`) && NOVA.currentPageName() == 'results') {
-      //       location.reload();
-      //    }
-      // });
-
       const
          VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden])', // '.title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'title-normalized';
+
+      // dirty fix bug with not updating thumbnails
+      document.addEventListener('yt-navigate-finish', () =>
+         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(
@@ -47,7 +44,7 @@ window.nova_plugins.push({
          }, `[${ATTR_MARK}]:first-letter`, 'important');
 
          NOVA.watchElement({
-            selector: VIDEO_TITLE_SELECTOR,
+            selectors: VIDEO_TITLE_SELECTOR,
             attr_mark: ATTR_MARK,
             callback: title => {
                let counterUpperCase = 0;

@@ -369,14 +369,20 @@ const Opt = {
 
 window.addEventListener('load', () => {
    // search bar
+   const searchInput = document.body.querySelector('form input[type=search]');
    ['change', 'keyup'].forEach(evt => {
-      document.body.querySelector('form input[type=search]')
+      searchInput
          .addEventListener(evt, function () {
             searchFilter({
                'keyword': this.value,
                'in_selector': `${Opt.UI.pluginsContainer} li.item`,
                'highlight_filter_selector': 'label'
             });
+         });
+      document.getElementById('search_clear')
+         .addEventListener('click', () => {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('change')); // run searchFilter
          });
    });
 
@@ -390,6 +396,12 @@ window.addEventListener('load', () => {
          document.body.querySelectorAll('.info b').forEach(el => el.remove());
       }
    }, Opt.storageMethod);
+
+   document.body.querySelector('a[href$="issues/new"]')
+      .addEventListener('click', ({ target }) => {
+         const app_ver = typeof GM_info === 'undefined' ? chrome.runtime.getManifest().version : GM_info.script.version;
+         target.href += '?body=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent);
+      });
 
    function searchFilter({ keyword = required(), in_selector = required(), highlight_filter_selector }) {
       // console.debug('searchFilter:', ...arguments);

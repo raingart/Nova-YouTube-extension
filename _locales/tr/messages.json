@@ -1,39 +1,39 @@
 {
    "localization": {
-      "message": "en"
+      "message": "tr"
    },
    "app_description": {
       "message": "YouTube™ Enhancer"
    },
    "plugins_search_placeholder": {
-      "message": "Search..."
+      "message": "Ara..."
    },
    "btn_plugins_search_clear_tooltip": {
-      "message": "Clear Search"
+      "message": "Aramayı Temizle"
    },
    "opt_btn_save_settings": {
-      "message": "Save"
+      "message": "Kaydet"
    },
    "opt_btn_save_settings_process": {
-      "message": "Saving..."
+      "message": "Kaydediliyor..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Saved!"
+      "message": "Kaydedildi!"
    },
    "opt_legend_settings_transfer": {
-      "message": "Settings transfer:"
+      "message": "Ayar aktarımı:"
    },
    "opt_title_help_link": {
-      "message": "More info"
+      "message": "Daha fazla bilgi"
    },
    "opt_btn_import_settings": {
       "message": "Import"
    },
    "opt_prompt_import_settings": {
-      "message": "Not access in pop-up!\nOpen setting page?"
+      "message": "Açılır pencereden erişilemiyor!\nAyar sayfası açılsın mı?"
    },
    "opt_alert_import_successfully": {
-      "message": "Settings imported successfully!"
+      "message": "Ayarlar başarıyla içe aktarıldı!"
    },
    "opt_btn_export_settings": {
       "message": "Export"
@@ -42,10 +42,10 @@
       "message": "Reset"
    },
    "opt_prompt_reset_settings": {
-      "message": "It is advised to backup your current settings before continuing.\nDelete all settings?"
+      "message": "Devam etmeden önce mevcut ayarlarınızı yedeklemeniz önerilir.\nTüm ayarlar silinsin mi?"
    },
    "opt_btn_save_settings_tooltip": {
-      "message": "Open tabs don't change"
+      "message": "Açık sekmeler değişmez"
    },
    "opt_btn_api_key_input": {
       "message": "custom Youtube API key"
@@ -54,48 +54,48 @@
       "message": "Generate API key"
    },
    "opt_disable_in_frame": {
-      "message": "Disable in iframe"
+      "message": "iframe'de devre dışı bırak"
    },
    "opt_disable_in_frame_tooltip": {
-      "message": "The extension will not work in embed video"
+      "message": "Uzantı, gömülü videoda çalışmayacak"
    },
    "opt_report_issues": {
-      "message": "Show prompting to report bugs"
+      "message": "Hataları bildirme istemini göster"
    },
    "opt_report_issues_tooltip": {
-      "message": "Need allow pop-up on YouTube for prompting"
+      "message": "YouTube'da sorulması için pop-up'a izin verilmesi gerekiyor"
    },
    "opt_api_key_warn": {
-      "message": "Use your [API key] for stable work"
+      "message": "Kararlı çalışma için [API anahtarınızı] kullanın"
    },
    "github_page": {
       "message": "Source code"
    },
    "github_page_tooltip": {
-      "message": "Open"
+      "message": "Aç"
    },
    "github_page_issues": {
-      "message": "Report bugs"
+      "message": "Hataları bildir"
    },
    "github_page_issues_tooltip": {
-      "message": "To report"
+      "message": "Bildirmek için"
    },
    "email": {
-      "message": "Contact email"
+      "message": "İletişim e-postası"
    },
    "email_tooltip": {
-      "message": "To feedback"
+      "message": "Geri bildirim için"
    },
    "donate_patreon_tooltip": {
-      "message": "Support with Patreon"
+      "message": "Patreon ile Destek"
    },
    "donate_patreon": {
-      "message": "Donate (Patreon)"
+      "message": "Bağış yap (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Support with buymeacoffee"
+      "message": "Buymeacoffee ile destek"
    },
    "donate_buymeacoffee": {
-      "message": "Donate (buymeacoffee)"
+      "message": "Bağış yap (buymeacoffee)"
    }
 }

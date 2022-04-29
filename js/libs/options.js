@@ -8,51 +8,51 @@ window.addEventListener('load', () => {
 
       attrDependencies() {
          document.body.querySelectorAll('[data-dependent]')
-            .forEach(dependentItem => {
-               // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-               const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
-               const handler = () => showOrHide(dependentItem, dependentsJson);
+            .forEach(dependentEl => {
+               // let dependentsList = dependentEl.getAttribute('data-dependent').split(',').forEach(i => i.trim());
+               const dependentsJson = JSON.parse(dependentEl.getAttribute('data-dependent').toString());
+               const handler = () => showOrHide(dependentEl, dependentsJson);
                document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
                // init state
                handler();
             });
 
-         function showOrHide(dependentItem, dependentsJson) {
+         function showOrHide(dependentEl, dependentsJson) {
             // console.debug('showOrHide', ...arguments);
-            for (const name in dependentsJson) {
+            for (const targetName in dependentsJson) {
                // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-               if (dependentOnEl = document.getElementsByName(name)[0]) {
-                  const val = dependentsJson[name].toString();
-                  const dependentOnValues = (function () {
-                     if (options = dependentOnEl?.selectedOptions) {
+               if (targetEl = document.getElementsByName(targetName)[0]) {
+                  const targetValue = dependentsJson[targetName].toString();
+                  const targetValues = (function () {
+                     if (options = targetEl?.selectedOptions) {
                         return Array.from(options).map(({ value }) => value);
                      }
-                     return [dependentOnEl.value];
+                     return [targetEl.value];
                   })();
 
-                  if (val && (dependentOnEl.checked || dependentOnValues.includes(val))
-                     || (val?.startsWith('!') && dependentOnEl.value !== val.replace('!', '')) // inverse
+                  if (targetValue && (targetEl.checked || targetValues.includes(targetValue)) // has value
+                     || (targetValue.startsWith('!') && targetEl.value !== targetValue.replace('!', '')) // inverse
                   ) {
-                     // console.debug('show:', name);
-                     dependentItem.classList.remove('hide');
+                     // console.debug('show:', targetName);
+                     dependentEl.classList.remove('hide');
                      childInputDisable(false);
 
                   } else {
-                     // console.debug('hide:', name);
-                     dependentItem.classList.add('hide');
+                     // console.debug('hide:', targetName);
+                     dependentEl.classList.add('hide');
                      childInputDisable(true);
                   }
 
                } else {
-                  console.error('error showOrHide:', name);
+                  console.error('error showOrHide:', targetName);
                }
             }
 
             function childInputDisable(status = false) {
-               dependentItem.querySelectorAll('input, textarea, select')
-                  .forEach(childItem => {
-                     childItem.disabled = status;
-                     // dependentItem.readOnly = status;
+               dependentEl.querySelectorAll('input, textarea, select')
+                  .forEach(el => {
+                     el.disabled = Boolean(status);
+                     // dependentEl.readOnly = Boolean(status);
                   });
             }
          }
@@ -118,8 +118,9 @@ window.addEventListener('load', () => {
          });
          // form unsave
          document.addEventListener('change', ({ target }) => {
-            // console.debug('change', target);
-            if (target.name == 'tabs') return; // fix/ignore switch tabs
+            // console.debug('change', target, 'name:', target.name);
+            // if (!target.matches('input[type=search]')) return;
+            if (!target.name || target.name == 'tabs') return; // fix/ignore switch tabs
             if (this.btnSubmitAnimation.outputStatus.length && !this.btnSubmitAnimation.outputStatus[0].classList.contains('unSaved')) {
                this.btnSubmitAnimation.outputStatus.forEach(e => e.classList.add('unSaved'));
             }

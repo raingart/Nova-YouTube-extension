@@ -20,15 +20,21 @@ window.nova_plugins.push({
       // clear before restart_on_transition
       document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
 
+      // fix clear thumb on page update (change sort etc.)
+      // document.addEventListener('yt-page-data-updated', () =>
+      document.addEventListener('yt-navigate-finish', () =>
+         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
+         , { capture: true, once: true });
+
       NOVA.watchElement({
-         selector: ([
+         selectors: [
             // 'ytd-rich-item-renderer', // home
             'ytd-video-renderer', // results
             'ytd-grid-video-renderer', // feed, channel
             // 'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer' // mobile
+            'ytm-compact-video-renderer', // mobile
             // #video-badges span:has_text("LIVE NOW")
-         ].join(',')),
+         ],
          attr_mark: ATTR_MARK,
          callback: thumb => {
             // if (thumb.querySelector('a[href*="shorts/"], ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"], #overlays [aria-label="Shorts"]')
@@ -44,6 +50,7 @@ window.nova_plugins.push({
             }
          },
       });
+
    },
    options: {
       shorts_disable_min_duration: {

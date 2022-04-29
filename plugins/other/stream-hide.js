@@ -21,14 +21,14 @@ window.nova_plugins.push({
       // document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
 
       NOVA.watchElement({
-         selector: ([
+         selectors: [
             'ytd-rich-item-renderer', // home
             'ytd-video-renderer', // results
             'ytd-grid-video-renderer', // feed, channel
             'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer' // mobile
+            'ytm-compact-video-renderer', // mobile
             // #video-badges span:has_text("LIVE NOW")
-         ].join(',')),
+         ],
          attr_mark: ATTR_MARK,
          callback: thumb => {
             // live now

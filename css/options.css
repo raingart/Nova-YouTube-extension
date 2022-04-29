@@ -44,6 +44,28 @@ div.between input[type=text] {
    padding: 5px;
 }
 
+.search_box {
+   position: relative;
+}
+
+.search_box #search_clear {
+   position: absolute;
+   height: 100%;
+   width: 30px;
+   top: 0;
+   right: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   font-size: 1.2em;
+   text-decoration: none;
+   cursor: pointer;
+}
+
+input[type=search]:placeholder-shown+#search_clear {
+   visibility: hidden;
+}
+
 .container {
    display: grid;
    grid-gap: 15px;

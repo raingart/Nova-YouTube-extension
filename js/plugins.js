@@ -11,9 +11,10 @@ const Plugins = {
       'player/theater-mode.js',
       'player/pause-background.js',
       // 'player/fullscreen-on-playback.js',
+      'player/auto-fullscreen.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
-      'player/pin.js',
+      // 'player/pin.js',
       'player/time-jump.js',
       'player/time-remaining.js',
       'player/float-progress-bar.js',
@@ -28,6 +29,7 @@ const Plugins = {
       'player/unblocker.js',
       'player/next-autoplay.js',
       'player/video-cards.js',
+      'player/fullscreen-scroll.js',
 
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
@@ -43,6 +45,7 @@ const Plugins = {
       'other/premiere-hide.js',
       'other/thumbnails-mix-hide.js',
       'other/stream-hide.js',
+      'other/playlist-rss.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -157,14 +160,14 @@ const Plugins = {
 
             } catch (err) {
                console.groupEnd('plugins status'); // out-of-group display
-               console.error(`[ERROR PLUGIN] ${plugin.id}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new/choose`);
+               console.error(`[ERROR PLUGIN] ${plugin.id}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=` + encodeURIComponent(app_ver + ' | ' + navigator.userAgent));
 
                if (user_settings.report_issues && _pluginsCaptureException) {
                   _pluginsCaptureException({
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `Nova YouTube™\n\nCrash plugin "${plugin.title}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
+                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.title}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
                   });
                }
 
