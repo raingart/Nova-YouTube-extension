@@ -26,30 +26,29 @@ chrome.runtime.onInstalled.addListener(details => {
             }
             break;
 
-         case 'update':
-            // notify(
-            //    "Update installed!",
-            //    "NovaTube has just been updated, please click here to visit the options menu & enable any new settings.",
-            //    10000
-            // );
+         // case 'update':
+         //    // notify(
+         //    //    "Update installed!",
+         //    //    "NovaTube has just been updated, please click here to visit the options menu & enable any new settings.",
+         //    //    10000
+         //    // );
 
-            // updateKeyStorage
-            Storage.getParams(settings => {
-               const keyRenameTemplate = {
-                  // 'oldKey': 'newKey',
-                  'volume_boost': 'volume_unlimit',
-               }
-               for (const oldKey in settings) {
-                  if (newKey = keyRenameTemplate[oldKey]) {
-                     console.log(oldKey, '=>', newKey);
-                     delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
-                  }
-               }
-               console.debug('new updated settings:', settings);
-               Storage.setParams(settings, 'sync');
-            }, 'sync');
+         //    // updateKeyStorage
+         //    Storage.getParams(settings => {
+         //       const keyRenameTemplate = {
+         //          // 'oldKey': 'newKey',
+         //       }
+         //       for (const oldKey in settings) {
+         //          if (newKey = keyRenameTemplate[oldKey]) {
+         //             console.log(oldKey, '=>', newKey);
+         //             delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
+         //          }
+         //       }
+         //       console.debug('new updated settings:', settings);
+         //       Storage.setParams(settings, 'sync');
+         //    }, 'sync');
 
-            break;
+         //    break;
       }
    });
 });

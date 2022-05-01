@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Desactivar la reproducción automática del siguiente video',
    'title:pt': 'Desativar a reprodução automática do próximo vídeo',
    'title:fr': 'Désactiver la lecture automatique de la prochaine vidéo',
-   'title:tr': 'Sonraki videoyu otomatik oynatmayı devre dışı bırak',
+   // 'title:tr': 'Sonraki videoyu otomatik oynatmayı devre dışı bırak',
    'title:de': 'Deaktivieren Sie die automatische Wiedergabe des nächsten Videos',
    run_on_pages: 'watch',
    section: 'player',

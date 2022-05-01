@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Tema oscuro',
    'title:pt': 'Tema escuro',
    'title:fr': 'Thème sombre',
-   'title:tr': 'Karanlık Tema',
+   // 'title:tr': 'Karanlık Tema',
    'title:de': 'Dunkles Thema',
    run_on_pages: 'all, -embed',
    section: 'other',
@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'desc:ko': '경고하다! 불필요하게 사용하지 마십시오',
    'desc:es': '¡Advertir! no lo use innecesariamente',
    'desc:pt': 'Avisar! não use desnecessariamente',
-   'desc:fr': 'Prévenir! Ne pas utiliser inutilement',
+   // 'desc:fr': 'Prévenir! Ne pas utiliser inutilement',
    'desc:tr': 'Uyarmak! gereksiz yere kullanmayınız',
    'desc:de': 'Warnen! nicht unnötig verwenden',
    _runtime: user_settings => {

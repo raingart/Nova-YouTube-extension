@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Mostrar la hora en el título de la pestaña',
    'title:pt': 'Mostrar tempo no título da guia',
    'title:fr': "Afficher l'heure dans le titre de l'onglet",
-   'title:tr': 'Sekme başlığında zamanı göster',
+   // 'title:tr': 'Sekme başlığında zamanı göster',
    'title:de': 'Zeit im Tab-Titel anzeigen',
    run_on_pages: 'watch',
    section: 'other',
@@ -96,7 +96,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          options: [
             // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:tr': 'akım', 'label:de': 'strom' },

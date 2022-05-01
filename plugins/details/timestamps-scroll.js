@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
    'title:pt': 'Sem rolar para o jogador em timestamps',
    'title:fr': 'Pas de défilement vers le joueur sur les horodatages',
-   'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
+   // 'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
    'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
    run_on_pages: 'watch, -mobile',
    section: 'details',

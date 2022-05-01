@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Avatares cuadrados',
    'title:pt': 'Avatares quadrados',
    'title:fr': 'Avatars carrés',
-   'title:tr': 'Kare avatarlar',
+   // 'title:tr': 'Kare avatarlar',
    'title:de': 'Quadratische Avatare',
    run_on_pages: 'all',
    section: 'comments',
@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'desc:ko': '사용자 이미지를 정사각형으로 만들기',
    // 'desc:es': 'Haz que las imágenes de los usuarios sean cuadradas',
    'desc:pt': 'Torne as imagens do usuário quadradas',
-   'desc:fr': 'Rendre les images utilisateur au carré',
+   // 'desc:fr': 'Rendre les images utilisateur au carré',
    'desc:tr': 'Kullanıcı resimlerini kare haline getirin',
    'desc:de': 'Machen Sie Benutzerbilder quadriert',
    _runtime: user_settings => {

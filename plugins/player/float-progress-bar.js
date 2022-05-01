@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Barra de progreso flotante del jugador',
    'title:pt': 'Barra de progresso do jogador flutuante',
    'title:fr': 'Barre de progression du joueur flottant',
-   'title:tr': 'Kayan oyuncu ilerleme çubuğu',
+   // 'title:tr': 'Kayan oyuncu ilerleme çubuğu',
    'title:de': 'Float-Player-Fortschrittsbalken',
    run_on_pages: 'watch, embed',
    section: 'player',
@@ -217,22 +217,23 @@ window.nova_plugins.push({
 
             function renderChaptersMarks(duration) {
                // console.debug('renderChaptersMarks', ...arguments);
-               const chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
-               chaptersConteiner.innerHTML = ''; // clear old
-               // if (!isNaN(duration)) {
-               NOVA.getChapterList(duration)
-                  ?.forEach((chapter, i, chapters_list) => {
-                     // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
-                     const newChapter = document.createElement('span');
-                     const nextChapterSec = chapters_list[i + 1]?.sec || duration;
+               if (chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`)) {
+                  chaptersConteiner.innerHTML = ''; // clear old
+                  // if (!isNaN(duration)) {
+                  NOVA.getChapterList(duration)
+                     ?.forEach((chapter, i, chapters_list) => {
+                        // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
+                        const newChapter = document.createElement('span');
+                        const nextChapterSec = chapters_list[i + 1]?.sec || duration;
 
-                     newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
-                     if (chapter.title) newChapter.title = chapter.title;
-                     newChapter.setAttribute('time', chapter.time);
+                        newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
+                        if (chapter.title) newChapter.title = chapter.title;
+                        newChapter.setAttribute('time', chapter.time);
 
-                     chaptersConteiner.append(newChapter);
-                  });
-               // }
+                        chaptersConteiner.append(newChapter);
+                     });
+                  // }
+               }
             }
          },
 
@@ -267,7 +268,7 @@ window.nova_plugins.push({
          'label:es': 'Altura',
          'label:pt': 'Altura',
          'label:fr': 'Hauteur',
-         'label:tr': 'Yükseklik',
+         // 'label:tr': 'Yükseklik',
          'label:de': 'Höhe',
          type: 'number',
          title: 'in pixels',
@@ -285,7 +286,7 @@ window.nova_plugins.push({
          'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
          'label:fr': 'Opacité',
-         'label:tr': 'Opaklık',
+         // 'label:tr': 'Opaklık',
          'label:de': 'Opazität',
          type: 'number',
          // title: '',

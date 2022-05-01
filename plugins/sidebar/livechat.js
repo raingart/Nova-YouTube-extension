@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Ocultar chat en vivo',
    'title:pt': 'Ocultar livechat',
    'title:fr': 'Masquer le chat en direct',
-   'title:tr': 'Canlı sohbeti gizle',
+   // 'title:tr': 'Canlı sohbeti gizle',
    'title:de': 'Livechat ausblenden',
    run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
@@ -35,7 +35,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          options: [
             { label: 'collapse', value: 'hide', selected: true },

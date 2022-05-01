@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:es': "Ocultar miniaturas de 'Mix'",
    'title:pt': "Ocultar miniaturas de 'Mix'",
    'title:fr': 'Masquer les vignettes "Mix"',
-   'title:tr': "'Karıştır' küçük resimlerini gizle",
+   // 'title:tr': "'Karıştır' küçük resimlerini gizle",
    'title:de': '„Mix“-Thumbnails ausblenden',
    run_on_pages: 'home, results, watch',
    section: 'sidebar',

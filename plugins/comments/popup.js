@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Mostrar en ventana emergente',
    'title:pt': 'Mostrar em pop-up',
    'title:fr': 'Afficher dans la fenêtre contextuelle',
-   'title:tr': 'Açılır pencerede göster',
+   // 'title:tr': 'Açılır pencerede göster',
    'title:de': 'Im Popup anzeigen',
    run_on_pages: 'watch, -mobile',
    section: 'comments',

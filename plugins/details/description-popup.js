@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:es': 'Descripción en ventana emergente',
    'title:pt': 'Descrição em pop-up',
    'title:fr': 'Description dans la fenêtre contextuelle',
-   'title:tr': 'Açılır pencerede açıklama',
+   // 'title:tr': 'Açılır pencerede açıklama',
    'title:de': 'Beschreibung im Popup',
    run_on_pages: 'watch, -mobile',
    section: 'details',

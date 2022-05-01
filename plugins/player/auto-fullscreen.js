@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'player-fullscreen-mode',
-   title: 'Fullscreen player mode',
+   title: 'Player full-screen mode',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -48,7 +48,7 @@ window.nova_plugins.push({
          'label:es': 'Salir si el video termina',
          'label:pt': 'Sair se o vídeo terminar',
          'label:fr': 'Quitter si la vidéo se termine',
-         'label:tr': 'Video biterse çık',
+         // 'label:tr': 'Video biterse çık',
          'label:de': 'Beenden, wenn das Video endet',
          type: 'checkbox',
       },

@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Reproductor completo con modo',
    'title:pt': 'Modo de jogador completo',
    'title:fr': 'Mode lecteur complet avec',
-   'title:tr': 'Oyuncu tam mod',
+   // 'title:tr': 'Oyuncu tam mod',
    'title:de': 'Player full-with-modus',
    run_on_pages: 'watch, -mobile',
    section: 'player',
@@ -86,7 +86,7 @@ window.nova_plugins.push({
                   [class*="popup"],
                   [role="navigation"],
                   [role="dialog"] {
-                     z-index1: ${zIindex + 1};
+                     z-index: ${zIindex + 1};
                   }
                   #playlist:hover {
                      position: relative;
@@ -105,7 +105,7 @@ window.nova_plugins.push({
          'label:es': 'Modo de pantalla completa',
          'label:pt': 'Modo tela cheia',
          'label:fr': 'Mode plein écran',
-         'label:tr': 'Tam ekran modu',
+         // 'label:tr': 'Tam ekran modu',
          'label:de': 'Vollbildmodus',
          type: 'checkbox',
          // title: '',
@@ -120,7 +120,7 @@ window.nova_plugins.push({
          'label:es': 'Salir si el video termina/pausa',
          'label:pt': 'Sair se o vídeo terminar/pausar',
          'label:fr': 'Quitter si la vidéo se termine/pause',
-         'label:tr': 'Video biterse/duraklatılırsa çıkın',
+         // 'label:tr': 'Video biterse/duraklatılırsa çıkın',
          'label:de': 'Beenden, wenn das Video endet/pausiert',
          type: 'checkbox',
          'data-dependent': '{"player_full_viewport_mode":"true"}',
@@ -144,7 +144,7 @@ window.nova_plugins.push({
          'title:es': 'Mientras se reproduce el video, la página se oscurecerá',
          'title:pt': 'Enquanto o vídeo estiver sendo reproduzido, a página ficará escura',
          'title:fr': "Pendant la lecture de la vidéo, la page s'assombrit",
-         'title:tr': 'Video oynatılırken sayfa kararacak',
+         // 'title:tr': 'Video oynatılırken sayfa kararacak',
          'title:de': 'Während das Video abgespielt wird, wird die Seite dunkel',
       },
       cinema_mode_opacity: {
@@ -156,7 +156,7 @@ window.nova_plugins.push({
          'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
          'label:fr': 'Opacité',
-         'label:tr': 'Opaklık',
+         // 'label:tr': 'Opaklık',
          'label:de': 'Opazität',
          type: 'number',
          title: '0-1',

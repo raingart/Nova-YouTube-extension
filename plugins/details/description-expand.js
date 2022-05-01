@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Ampliar descripción',
    'title:pt': 'Expandir descrição',
    'title:fr': 'Développer la description',
-   'title:tr': 'Açıklamayı genişlet',
+   // 'title:tr': 'Açıklamayı genişlet',
    'title:de': 'Beschreibung erweitern',
    run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
@@ -37,7 +37,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          // title: '',
          options: [

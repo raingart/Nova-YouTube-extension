@@ -14,7 +14,7 @@ const Plugins = {
       'player/auto-fullscreen.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
-      // 'player/pin.js',
+      'player/pin.js',
       'player/time-jump.js',
       'player/time-remaining.js',
       'player/float-progress-bar.js',

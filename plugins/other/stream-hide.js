@@ -75,7 +75,7 @@ window.nova_plugins.push({
          'title:es': 'Que han sido completados',
          'title:pt': 'Que foram concluídos',
          'title:fr': 'Qui ont été complétés',
-         'title:tr': 'Tamamlanmış olanlar',
+         // 'title:tr': 'Tamamlanmış olanlar',
          'title:de': 'Die sind abgeschlossen',
       },
    }

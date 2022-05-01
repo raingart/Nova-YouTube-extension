@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:es': 'Saltar anuncios',
    'title:pt': 'Pular anúncios',
    'title:fr': 'Ignorer les annonces',
-   'title:tr': 'Reklam Atlama',
+   // 'title:tr': 'Reklam Atlama',
    'title:de': 'Anzeigen überspringen',
    run_on_pages: 'watch',
    section: 'player',

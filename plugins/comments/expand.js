@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Expandir comentarios',
    'title:pt': 'Expandir comentários',
    'title:fr': 'Développer les commentaires',
-   'title:tr': 'Yorumları genişlet',
+   // 'title:tr': 'Yorumları genişlet',
    'title:de': 'Kommentare erweitern',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
@@ -70,7 +70,7 @@ window.nova_plugins.push({
          'label:es': 'Expandir comentarios',
          'label:pt': 'Expandir comentário',
          'label:fr': 'Développer les commentaires',
-         'label:tr': 'Yorumu genişlet',
+         // 'label:tr': 'Yorumu genişlet',
          'label:de': 'Kommentar erweitern',
          // title: '',
          options: [
@@ -87,7 +87,7 @@ window.nova_plugins.push({
          'label:es': 'Expandir respuesta',
          'label:pt': 'Expandir a resposta',
          'label:fr': 'Développer la réponse',
-         'label:tr': 'Cevabı genişlet',
+         // 'label:tr': 'Cevabı genişlet',
          'label:de': 'Antwort erweitern',
          // title: '',
          options: [

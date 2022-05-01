@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Desactivar el desplazamiento a pantalla completa',
    'title:pt': 'Desabilitar rolagem em tela cheia',
    'title:fr': 'Désactiver le défilement plein écran',
-   'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
+   // 'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
    'title:de': 'Deaktivieren Sie das Scrollen im Vollbildmodus',
    run_on_pages: 'watch',
    section: 'player',

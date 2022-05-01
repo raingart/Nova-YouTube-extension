@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:es': 'Desbloquear vídeo',
    'title:pt': 'Desbloquear vídeo',
    'title:fr': 'Débloquer la vidéo',
-   'title:tr': 'Videonun engellemesini kaldır',
+   // 'title:tr': 'Videonun engellemesini kaldır',
    'title:de': 'Video entsperren',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',

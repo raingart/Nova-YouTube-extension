@@ -7,7 +7,7 @@ window.nova_plugins.push({
    'title:es': 'Ocultar sección relacionada',
    'title:pt': 'Ocultar seção relacionada',
    'title:fr': 'Masquer la section associée',
-   'title:tr': 'İlgili bölümü gizle',
+   // 'title:tr': 'İlgili bölümü gizle',
    'title:de': 'Zugehörigen Abschnitt ausblenden',
    run_on_pages: 'watch, -mobile',
    section: 'sidebar',
@@ -31,7 +31,7 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          options: [
             { label: 'collapse', value: 'hide', selected: true },

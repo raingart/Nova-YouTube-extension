@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '짧은 비디오를 일반 URL로 리디렉션',
    'desc:es': 'Redirigir video corto a URL normal',
    'desc:pt': 'Redirecionar vídeo curto para URL normal',
-   'desc:fr': 'Rediriger la vidéo courte vers une URL normale',
+   // 'desc:fr': 'Rediriger la vidéo courte vers une URL normale',
    'desc:tr': "Kısa videoyu normal URL'ye yönlendir",
    'desc:de': 'Kurzvideos auf normale URL umleiten',
    _runtime: user_settings => {
