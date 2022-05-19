@@ -1,12 +1,12 @@
 {
-   "manifest_version": 2,
+   "manifest_version": 3,
    "name": "Nova YouTube™",
    "short_name": "NovaTube",
    "description": "__MSG_app_description__",
    "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
    "minimum_chrome_version": "80.0",
-   "version": "1.26.1",
+   "version": "2.0.0",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",
@@ -16,10 +16,6 @@
    "permissions": [
       "storage"
    ],
-   "background": {
-      "page": "/html/background.html",
-      "persistent": false
-   },
    "content_scripts": [
       {
          "matches": [
@@ -42,10 +38,21 @@
       }
    ],
    "web_accessible_resources": [
-      "/plugins/*"
+      {
+         "resources": [
+            "/plugins/*",
+            "*.js"
+         ],
+         "matches": [
+            "<all_urls>"
+         ]
+      }
    ],
    "options_page": "/html/options.html?tabs=tab-plugins",
-   "browser_action": {
+   "action": {
       "default_popup": "/html/options.html"
+   },
+   "content_security_policy": {
+      "extension_pages": "script-src 'self' 'unsafe-eval'; object-src 'self'"
    }
 }
