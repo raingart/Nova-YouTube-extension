@@ -29,31 +29,32 @@ window.nova_plugins.push({
       NOVA.waitElement('.ytp-left-controls .ytp-play-button')
          .then(container => {
             const
-               SELECTOR_BTN_CLASS_NAME = 'right-custom-button',
-               btnPiP = document.createElement('button'),
-               video = document.body.querySelector('video');
+               SELECTOR_BTN_CLASS_NAME = 'nova-right-custom-button', // same class in "player-buttons-custom" plugin
+               btn = document.createElement('button');
 
             // "ye-repeat-button"
-            btnPiP.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-            btnPiP.style.opacity = .5;
-            btnPiP.style.minWidth = NOVA.css.getValue({ selector: container, property: 'width' }) || '48px'; // fix if has chapters
-            btnPiP.title = 'Repeat';
+            btn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+            btn.style.opacity = .5;
+            btn.style.minWidth = NOVA.css.getValue({ selector: container, property: 'width' }) || '48px'; // fix if has chapters
+            btn.title = 'Repeat';
             // btnPopup.setAttribute('aria-label','');
-            btnPiP.innerHTML =
+            btn.innerHTML =
                `<svg viewBox="-6 -6 36 36" height="100%" width="100%">
                   <g fill="currentColor">
                      <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>
                   </g>
                </svg>`;
-            btnPiP.addEventListener('click', () => {
-               video.loop = !video.loop && true;
+            btn.addEventListener('click', () => {
+               if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
 
-               if (movie_player.classList.contains('ad-showing')) video.removeAttribute('loop');
+               NOVA.videoElement.loop = !NOVA.videoElement.loop && true;
+               // fix ad
+               if (movie_player.classList.contains('ad-showing')) NOVA.videoElement.removeAttribute('loop');
 
-               btnPiP.style.opacity = video.hasAttribute('loop') ? 1 : .5;
+               btn.style.opacity = NOVA.videoElement.hasAttribute('loop') ? 1 : .5;
             });
 
-            container.after(btnPiP);
+            container.after(btn);
          });
 
       // NOVA.waitElement('video')
@@ -62,7 +63,7 @@ window.nova_plugins.push({
       //       video.addEventListener('loadeddata', ({ target }) => target.loop = true);
       //    });
 
-      // doesn't work
+      // Doesn't work
       // NOVA.waitElement('#movie_player')
       //    .then(() => movie_player.setLoop());
 

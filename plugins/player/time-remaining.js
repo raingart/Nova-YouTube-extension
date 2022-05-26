@@ -22,7 +22,7 @@ window.nova_plugins.push({
    'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    _runtime: user_settings => {
 
-      const SELECTOR_ID = 'ytp-time-remaining';
+      const SELECTOR_ID = 'nova-player-time-remaining';
 
       NOVA.waitElement('.ytp-time-duration, ytm-time-display .time-display-content')
          .then(container => {

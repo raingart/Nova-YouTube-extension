@@ -3,16 +3,16 @@
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
 
 window.nova_plugins.push({
-   id: 'video-unblocker',
-   title: 'Unblock video',
-   'title:zh': '解锁视频',
-   'title:ja': 'ビデオのブロックを解除する',
-   'title:ko': '비디오 차단 해제',
-   'title:es': 'Desbloquear vídeo',
-   'title:pt': 'Desbloquear vídeo',
-   'title:fr': 'Débloquer la vidéo',
-   // 'title:tr': 'Videonun engellemesini kaldır',
-   'title:de': 'Video entsperren',
+   id: 'video-unblock-region',
+   title: 'Try unblock if video not available in your country',
+   'title:zh': '尝试解锁您所在地区的视频',
+   'title:ja': 'お住まいの地域の動画のブロックを解除してみてください',
+   'title:ko': '해당 지역의 동영상 차단을 해제해 보세요',
+   'title:es': 'Intenta desbloquear videos para tu región',
+   'title:pt': 'Tente desbloquear vídeos para sua região',
+   'title:fr': 'Débloquer la vidéo de la région',
+   // 'title:tr': 'Bölgeniz için videoların engellemesini kaldırmayı deneyin',
+   'title:de': 'Versuchen Sie, Videos für Ihre Region zu entsperren',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: "attempt fix 'is not available in your country'",
@@ -29,7 +29,7 @@ window.nova_plugins.push({
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')
          .then(redirect);
 
-      // doesn't work
+      // Doesn't work
       // NOVA.waitElement('video')
       //    .then(video => {
       //       video.addEventListener('emptied', redirect);

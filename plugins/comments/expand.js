@@ -14,7 +14,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // does not work. I don't know how to implement it better. By updating "removeEventListener/addEventListener" or reloading the entire comment block
+      // Doesn't work. I don't know how to implement it better. By updating "removeEventListener/addEventListener" or reloading the entire comment block
       // dirty fix bug with not updating comments addEventListener: reset comments block
       // document.addEventListener('yt-page-data-updated', () => location.reload());
 

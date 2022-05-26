@@ -16,13 +16,13 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         SELECTOR_ID = 'rss-link',
+         SELECTOR_ID = 'nova-rss-link',
          rssLinkPrefix = 'https://www.youtube.com/feeds/videos.xml',
          playlistURL = rssLinkPrefix + '?playlist_id=' + NOVA.queryURL.get('list'),
          genChannelURL = channelId => rssLinkPrefix + '?channel_id=' + channelId;
 
 
-      switch (NOVA.currentPageName()) {
+      switch (NOVA.currentPage) {
          case 'channel':
             NOVA.waitElement('#channel-header #channel-name')
                .then(container => {

@@ -23,7 +23,7 @@ window.nova_plugins.push({
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
-         /*a.ytp-videowall-still:visited, <-- doesn't work in embed*/
+         /*a.ytp-videowall-still:visited, <-- Doesn't work in embed*/
          a#thumbnail:visited,
          a[class*=thumbnail]:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
@@ -32,7 +32,7 @@ window.nova_plugins.push({
       if (user_settings.thumbnails_watched_title) {
          NOVA.css.push(
             `a#video-title:visited:not(:hover),
-            #meta #description a:visited {
+            #primary-inner #description a:visited {
                color: ${user_settings.thumbnails_watched_title_color} !important;
             }`);
       }

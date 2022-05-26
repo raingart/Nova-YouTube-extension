@@ -37,7 +37,7 @@ window.nova_plugins.push({
 
       // for home page
       document.addEventListener('yt-action', evt => {
-         if (evt.detail?.actionName == 'ytd-rich-item-index-update-action' && NOVA.currentPageName() == 'home') {
+         if (evt.detail?.actionName == 'ytd-rich-item-index-update-action' && NOVA.currentPage == 'home') {
 
             document.body.querySelectorAll('a[href*="list="][href*="start_radio="]:not([hidden]), a[title^="Mix -"]:not([hidden])')
                .forEach(el => el.closest('ytd-rich-item-renderer')?.remove());

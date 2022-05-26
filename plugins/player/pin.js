@@ -1,15 +1,3 @@
-
-// for testing wide-screen video
-// https://www.youtube.com/watch?v=B4yuZhKRW1c
-// https://www.youtube.com/watch?v=zEk3A1fA0gc
-
-// for testing square-screen
-// https://www.youtube.com/watch?v=v-YQUCP-J8s
-// https://www.youtube.com/watch?v=yFsmUBLn8O0
-
-// test z-index "Show chat replay" button
-// https://www.youtube.com/watch?v=9Mv1sOp0Xg8
-
 window.nova_plugins.push({
    id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
@@ -34,89 +22,93 @@ window.nova_plugins.push({
    'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    _runtime: user_settings => {
 
-      if (user_settings.player_pip_scroll) {
+      // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
+      // if (user_settings.player_pip_scroll) {
+      //    if (!document.pictureInPictureEnabled) return console, error('pip disable');
 
-         NOVA.waitElement('#movie_player video')
-            .then(video => {
-               new window.IntersectionObserver(([entry]) => {
-                  if (entry.isIntersecting) {
-                     if (document.pictureInPictureElement) {
-                        // console.log('enter pip')
-                        document.exitPictureInPicture();
-                        video.disablePictureInPicture = true;
-                     }
-                     return
-                  }
-                  if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-                     // console.log('leave pip')
-                     video.disablePictureInPicture = false;
-                     video.requestPictureInPicture();
-                  }
-               }, {
-                  root: null,
-                  threshold: 0.2, // set offset 0.1 means trigger if atleast 10% of element in viewport
-               })
-                  .observe(video);
-            });
-         return;
-      }
+      //    NOVA.waitElement('video')
+      //       .then(video => {
+      //          if (video.disablePictureInPicture) return console, error('pip disable');
+
+      //          new window.IntersectionObserver(async ([entry]) => {
+      //             if (entry.isIntersecting) {
+      //                if (video === document.pictureInPictureElement) {
+      //                   await document.exitPictureInPicture();
+      //                }
+      //                return
+      //             }
+      //             if (!document.pictureInPictureElement && video.readyState > 0) {
+      //                await video.requestPictureInPicture();
+      //             }
+      //          }, {
+      //             root: null,
+      //             threshold: 0.2, // set offset 0.X means trigger if atleast X0% of element in viewport
+      //          })
+      //             .observe(video);
+      //       });
+      //    return;
+      // }
 
       const
-         CLASS_VALUE = 'player-float',
+         CLASS_VALUE = 'nova-player-pin',
          PINNED_SELECTOR = '.' + CLASS_VALUE, // for css
          CLOSE_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
          CLOSE_BTN_SELECTOR = '.' + CLOSE_BTN_CLASS_VALUE; // for css
 
-      NOVA.waitElement('#movie_player')
+      // if player fullscreen desable float mode
+      document.addEventListener('fullscreenchange', () =>
+         (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE), false);
+
+      // toggle
+      NOVA.waitElement('#player-theater-container')
+         .then(container => {
+            new window.IntersectionObserver(([entry]) => {
+               // leave viewport
+               if (entry.isIntersecting) {
+                  movie_player.classList.remove(CLASS_VALUE);
+                  drag.reset(); // save old pos. Clear curr pos
+
+               } else if (!movie_player.isFullscreen()) { // enter viewport // fix bug on scroll in fullscreen player mode
+                  // } else { // enter viewport
+                  movie_player.classList.add(CLASS_VALUE);
+                  drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
+               }
+
+               window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
+            }, {
+               root: null,
+               threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+            })
+               .observe(container);
+         });
+
+      NOVA.waitElement(PINNED_SELECTOR)
          .then(player => {
-            // if player fullscreen desable float mode
-            document.addEventListener('fullscreenchange', () =>
-               (document.fullscreen || movie_player.isFullscreen()) && player.classList.remove(CLASS_VALUE), false);
+            // add drag
+            drag.init(player);
 
             // init css
             const waitHeader = setInterval(() => {
                // awaiting positioning of elements to calculate positioning
-               if (player.clientWidth && player.clientHeight
-                  && document.getElementById('masthead-container')?.offsetHeight) {
+               if (
+                  // movie_player.clientWidth && movie_player.clientHeight
+                  NOVA.videoElement.videoWidth && NOVA.videoElement.videoHeight
+                  && !isNaN(NOVA.videoElement.videoWidth) && !isNaN(NOVA.videoElement.videoHeight)
+                  // && document.getElementById('masthead-container')?.offsetHeight
+               ) {
                   clearInterval(waitHeader);
-                  initStyles();
+                  initMiniStyles();
                }
             }, 500); // 500ms
-
-            NOVA.waitElement('#player-theater-container')
-               .then(playerContainer => {
-                  document.addEventListener('scroll', () => {
-                     onScreenToggle({
-                        'switchElement': player,
-                        'watchingElement': playerContainer,
-                     });
-                  });
-
-                  // Bug: Does not accept status change on initialization
-                  // isInViewport({
-                  //    'element': playerContainer,
-                  //    'callback_show': () => {
-                  //       console.debug('run callback_show');
-                  //       if (user_settings.player_fixed_scroll_pause_video) movie_player.playVideo();
-                  //       player.classList.remove(CLASS_VALUE);
-                  //    },
-                  //    'callback_hide': () => {
-                  //       console.debug('run callback_hide');
-                  //       if (user_settings.player_fixed_scroll_pause_video) movie_player.pauseVideo()
-                  //       player.classList.add(CLASS_VALUE)
-                  //    },
-                  //    // 'disconnectAfterMatch': true,
-                  // });
-               })
 
             // add unpin button
             NOVA.css.push(
                PINNED_SELECTOR + ` {
-                  --zIndex: ${(Math.max(
+                  --zIndex: ${Math.max(
                   NOVA.css.getValue({ selector: '#chat', property: 'z-index' }),
                   NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }),
-                  601
-               )) + 1};
+                  // NOVA.css.getValue({ selector: '#description', property: 'z-index' }), // consider plugin "description-popup"
+                  601) + 1};
                }
 
                ${CLOSE_BTN_SELECTOR} { display: none; }
@@ -156,38 +148,15 @@ window.nova_plugins.push({
             player.append(btnUnpin);
          });
 
-      // add drag
-      NOVA.waitElement(PINNED_SELECTOR)
-         .then(player => {
-            drag.init(player);
-
-            // doesn't work both. Try fix preventDefault. Replace to preventDefault patch
-            // document.addEventListener('click', evt => {
-            //    evt.preventDefault()
-            //    console.debug('click', drag.active);
-            //    if (drag.active) {
-            //       evt.preventDefault()
-            //       console.debug('', 111);
-            //    };
-            // });
-            // movie_player.addEventListener('onStateChange', state => {
-            //    if (drag.active/* && ['PLAYING', 'PAUSED'].includes(NOVA.getPlayerState())*/) {
-            //       console.debug('onStateChange', state);
-            //       switch (NOVA.getPlayerState(state)) {
-            //          case 'PLAYING': movie_player.pauseVideo(); break;
-            //          case 'PAUSED': movie_player.playVideo(); break;
-            //       }
-            //    }
-            // });
-         });
-
-      function initStyles() {
+      function initMiniStyles() {
          const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
-         const miniSize = calculateAspectRatioFit({
-            'srcWidth': movie_player.clientWidth,
-            'srcHeight': movie_player.clientHeight,
+         const miniSize = NOVA.calculateAspectRatioFit({
+            // 'srcWidth': movie_player.clientWidth,
+            // 'srcHeight': movie_player.clientHeight,
+            'srcWidth': NOVA.videoElement.videoWidth,
+            'srcHeight': NOVA.videoElement.videoHeight,
             'maxWidth': (window.innerWidth / user_settings.player_float_scroll_size_ratio),
-            'maxHeight': (window.innerHeight / user_settings.player_float_scroll_size_ratio)
+            'maxHeight': (window.innerHeight / user_settings.player_float_scroll_size_ratio),
          });
 
          let initcss = {
@@ -244,58 +213,15 @@ window.nova_plugins.push({
          // fix video size in pinned
          NOVA.css.push(
             `${PINNED_SELECTOR} video {
-                  width: var(--width) !important;
-                  height: var(--height) !important;
-                  left: 0 !important;
-                  top: 0 !important;
-               }
-
-               .ended-mode video {
-                  visibility: hidden;
-               }`);
-
-         function calculateAspectRatioFit({ srcWidth = 0, srcHeight = 0, maxWidth = 0, maxHeight = 0 }) {
-            const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
-            return {
-               width: Math.round(+srcWidth * aspectRatio),
-               height: Math.round(+srcHeight * aspectRatio),
-            };
-         };
-      }
-
-      function onScreenToggle({ switchElement, watchingElement }) {
-         // console.debug('onScreenToggle:', ...arguments);
-         if (isInViewport(watchingElement || switchElement)) {
-            if (!this.inViewport) {
-               // console.debug('switchElement unpin');
-               switchElement.classList.remove(CLASS_VALUE);
-               this.inViewport = true;
-               window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
-
-               drag.reset(); // save and clear pos
+               width: var(--width) !important;
+               height: var(--height) !important;
+               left: 0 !important;
+               top: 0 !important;
             }
-         } else if (this.inViewport
-            && !movie_player.classList.contains('ytp-fullscreen') // fix bug on fullscreen in "header_scroll_after"
-         ) {
-            // console.debug('switchElement pin');
-            switchElement.classList.add(CLASS_VALUE);
-            drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
-            this.inViewport = false;
 
-            window.dispatchEvent(new Event('resize')); // fix: .ytp-chrome-bottom size if pinned
-         }
-
-         function isInViewport(el = required()) {
-            if (el instanceof HTMLElement) {
-               const bounding = el.getBoundingClientRect();
-               return (
-                  bounding.top >= 0 &&
-                  bounding.left >= 0 &&
-                  bounding.bottom <= window.innerHeight &&
-                  bounding.right <= window.innerWidth
-               );
-            }
-         }
+            .ended-mode video {
+               visibility: hidden;
+            }`);
       }
 
       const drag = {
@@ -350,7 +276,7 @@ window.nova_plugins.push({
             NOVA.css.push(
                `[${this.attrNametoLock}]:active {
                   pointer-events: none;
-                  cursor: grab; /* <-- doesn't work */
+                  cursor: grab; /* <-- Doesn't work */
                   outline: 2px dashed #3ea6ff !important;
                }`);
          },
@@ -383,8 +309,8 @@ window.nova_plugins.push({
 
          draging(evt) {
             if (!this.active) return;
-            evt.preventDefault(); // doesn't work. Replace to preventDefault patch
-            evt.stopImmediatePropagation(); // doesn't work. Replace to preventDefault patch
+            evt.preventDefault(); // Doesn't work. Replace to preventDefault patch
+            evt.stopImmediatePropagation(); // Doesn't work. Replace to preventDefault patch
 
             this.log('draging');
 
@@ -466,31 +392,51 @@ window.nova_plugins.push({
             { label: 'right-bottom', value: 'bottom-right' },
          ],
       },
+      player_float_scroll_sensivity_range: {
+         _tagName: 'input',
+         label: 'Player sensivity visibility range',
+         'label:zh': '播放器灵敏度可见范围',
+         'label:ja': 'プレイヤーの感度の可視範囲',
+         'label:ko': '플레이어 감도 가시 범위',
+         'label:es': 'Rango de visibilidad de la sensibilidad del jugador',
+         'label:pt': 'Faixa de visibilidade da sensibilidade do jogador',
+         'label:fr': 'Plage de visibilité de la sensibilité du joueur',
+         'label:tr': 'Oyuncu duyarlılığı görünürlük aralığı',
+         'label:de': 'Sichtbarkeitsbereich der Spielerempfindlichkeit',
+         type: 'number',
+         title: 'in %',
+         placeholder: '%',
+         step: 10,
+         min: 10,
+         max: 100,
+         value: 80,
+      },
       // 'player_float_scroll_pause_video': {
       //    _tagName: 'input',
       //    label: 'Pause pinned video',
       //    type: 'checkbox',
       // },
-      player_pip_scroll: {
-         _tagName: 'input',
-         label: 'Picture-in-Picture mode',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         type: 'checkbox',
-         'title:zh': 'Caution! Experimental function',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:tr': '',
-         // 'title:de': '',
-      },
+      // player_pip_scroll: {
+      //    _tagName: 'input',
+      //    label: 'Picture-in-Picture mode',
+      //    // 'label:zh': '',
+      //    // 'label:ja': '',
+      //    // 'label:ko': '',
+      //    // 'label:es': '',
+      //    // 'label:pt': '',
+      //    // 'label:fr': '',
+      //    // 'label:tr': '',
+      //    // 'label:de': '',
+      //    type: 'checkbox',
+      //    'title': 'Caution! Experimental function',
+      //    // 'title:zh': '',
+      //    // 'title:ja': '',
+      //    // 'title:ko': '',
+      //    // 'title:es': '',
+      //    // 'title:pt': '',
+      //    // 'title:fr': '',
+      //    // 'title:tr': '',
+      //    // 'title:de': '',
+      // },
    }
 });

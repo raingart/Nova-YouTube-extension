@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'player-disable-fullscreen-wheel',
-   title: 'Disable fullscreen scroll',
+   title: 'Disable player scrolling in fullscreen mode',
    'title:zh': '禁用全屏滚动',
    'title:ja': 'フルスクリーンスクロールを無効にする',
    'title:ko': '전체 화면 스크롤 비활성화',
@@ -17,14 +17,25 @@ window.nova_plugins.push({
       // hide button
       NOVA.css.push(`.ytp-fullerscreen-edu-button { display: none !important; }`);
 
-      // document.addEventListener("fullscreenchange", lockscroll);
+      document.addEventListener('fullscreenchange', () => {
+         document.fullscreenElement
+            ? document.addEventListener('wheel', lockscroll, { passive: false })
+            : document.removeEventListener('wheel', lockscroll)
+      }
+      );
 
-      document.addEventListener('wheel', evt => {
-         if (document.fullscreen || movie_player.isFullscreen()) {
-            // console.debug('fullscreenElement:', document.fullscreenElement);
-            evt.preventDefault();
-         }
-      }, { passive: false });
+      function lockscroll(evt) {
+         // console.debug('fullscreenElement:', document.fullscreenElement);
+         evt.preventDefault();
+      }
+
+      // document.addEventListener('wheel', evt => {
+      //    if (document.fullscreen || movie_player.isFullscreen()) {
+      //       // console.debug('fullscreenElement:', document.fullscreenElement);
+      //       evt.preventDefault();
+      //       // movie_player.scrollIntoView({behavior: 'instant', block: 'end', inline: 'nearest'});
+      //    }
+      // }, { passive: false });
 
    },
 });

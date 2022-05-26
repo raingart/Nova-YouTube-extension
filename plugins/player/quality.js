@@ -24,7 +24,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(() => {
             // keep save manual quality in the session
-            if (user_settings.video_quality_manual_save_in_tab && NOVA.currentPageName() == 'watch') { // no sense if in the embed
+            if (user_settings.video_quality_manual_save_in_tab && NOVA.currentPage == 'watch') { // no sense if in the embed
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
                   if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
@@ -91,18 +91,30 @@ window.nova_plugins.push({
          }
       }
 
+      // error detector
+      NOVA.waitElement('.ytp-error [class*="reason"]')
+         .then(error_reason_el => {
+            if (alertText = error_reason_el.textContent) {
+               // err ex:
+               // This video isn't available at the selected quality. Please try again later.
+               // An error occurred. Please try again later. (Playback ID: Ame9qzOk-p5tXqLS) Learn More
+               // alert(alertText);
+               throw alertText; // send to _pluginsCaptureException
+            }
+         });
+
    },
    options: {
       video_quality: {
          _tagName: 'select',
-         label: 'Default video quality',
+         label: 'Default quality',
          'label:zh': '默认视频质量',
          'label:ja': 'デフォルトのビデオ品質',
          'label:ko': '기본 비디오 품질',
-         'label:es': 'Calidad de video predeterminada',
-         'label:pt': 'Qualidade de vídeo padrão',
-         'label:fr': 'Qualité vidéo par défaut',
-         // 'label:tr': 'Varsayılan video kalitesi',
+         'label:es': 'Calidad predeterminada',
+         'label:pt': 'Qualidade padrão',
+         'label:fr': 'Qualité par défaut',
+         // 'label:tr': 'Varsayılan kalite',
          'label:de': 'Standardvideoqualität',
          title: 'If unavailable, set max available quality',
          'title:zh': '如果不可用，将选择可用的最高质量。',

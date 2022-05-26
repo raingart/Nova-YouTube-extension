@@ -15,11 +15,11 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         SELECTOR_ID = 'player-float-progress-bar',
+         SELECTOR_ID = 'nova-player-float-progress-bar',
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitElement('#movie_player video')
+      NOVA.waitElement('video')
          .then(video => {
             const
                container = renderFloatBar(),
@@ -66,7 +66,8 @@ window.nova_plugins.push({
             video.addEventListener('seeking', renderBuffer.bind(video));
 
             function renderBuffer() {
-               if (movie_player.getVideoData().isLive) return;
+               if (document.visibilityState == 'hidden' // tab inactive
+                  || movie_player.getVideoData().isLive) return;
 
                // Strategy 1 HTML5
                // for (let i = 0; i < this.buffered.length; i++) {
@@ -175,10 +176,10 @@ window.nova_plugins.push({
 
       const renderChapters = {
          init(vid) {
-            if (NOVA.currentPageName() == 'watch' && !(vid instanceof HTMLElement)) return console.error('vid not HTMLElement:', chaptersContainer);
+            if (NOVA.currentPage == 'watch' && !(vid instanceof HTMLElement)) return console.error('vid not HTMLElement:', chaptersContainer);
 
             const waitDuration = setInterval((() => {
-               switch (NOVA.currentPageName()) {
+               switch (NOVA.currentPage) {
                   case 'watch':
                      return () => {
                         if (!isNaN(vid.duration)) {
@@ -208,7 +209,7 @@ window.nova_plugins.push({
             // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
             const selectorTimestampLink = 'a[href*="&t="]';
             // search in description
-            NOVA.waitElement(`#meta #description ${selectorTimestampLink}`)
+            NOVA.waitElement(`#primary-inner #description ${selectorTimestampLink}`)
                .then(() => renderChaptersMarks(duration));
 
             // search in first/pinned comment

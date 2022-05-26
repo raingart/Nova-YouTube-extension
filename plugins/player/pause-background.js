@@ -32,7 +32,7 @@ window.nova_plugins.push({
 
       const
          storeName = 'playngInstanceIDTab',
-         currentPageName = NOVA.currentPageName(), // watch or embed. Unchanged during the transition
+         currentPageName = NOVA.currentPage, // watch or embed. Unchanged during the transition
          instanceID = Math.random(), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 
@@ -128,7 +128,7 @@ window.nova_plugins.push({
       //       return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
       //    }
       // })
-      // if (document.body.querySelector('video').playing) { // checks if element is playing right now
+      // if (NOVA.videoElement?.playing) { // checks if element is playing right now
       //    // Do anything you want to
       // }
 

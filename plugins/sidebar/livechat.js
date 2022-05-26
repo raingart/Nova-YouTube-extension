@@ -10,7 +10,7 @@ window.nova_plugins.push({
    // 'title:tr': 'Canlı sohbeti gizle',
    'title:de': 'Livechat ausblenden',
    run_on_pages: 'watch, -mobile',
-   restart_on_transition: true,
+   // restart_on_transition: true, // maybe the shutdown is wrong. But all for the sake of optimization
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {

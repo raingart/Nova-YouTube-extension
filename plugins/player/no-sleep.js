@@ -22,18 +22,18 @@ window.nova_plugins.push({
    'desc:de': 'Warnung [Video pausiert] verhindern',
    _runtime: user_settings => {
 
-      window.setInterval(() => window._lact = window._fact = Date.now(), 1000 * 60 * 5); // 5 min
-
-      // captureActiveVideoElement
-      let videoElement;
-      document.addEventListener('play', ({ target }) => videoElement = target, true);
+      // Doesn't work
+      // window.setInterval(() => window._lact = window._fact = Date.now(), 1000 * 60 * 5); // 5 min
 
       function skipConfirmDialog() {
          // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
-         NOVA.waitElement('[role="dialog"] #confirm-button')
+         // NOVA.waitElement('[role="dialog"] #confirm-button')
+         NOVA.waitElement('#confirm-button')
             .then(btn => {
+               console.debug('page page wake up', btn);
                btn.click();
-               if (videoElement?.paused) videoElement.play();
+               if (NOVA.videoElement?.paused) NOVA.videoElement.play();
+               // movie_player.playVideo();
                skipConfirmDialog(); // recursion init state. What would work more than once
             });
       }

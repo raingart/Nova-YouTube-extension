@@ -27,7 +27,7 @@ window.nova_plugins.push({
          if (!target.matches('a[href*="/redirect?"]')) return;
 
          if (q = NOVA.queryURL.get('q', target.href)) {
-            // console.debug('>', decodeURIComponent(q), target);
+            // console.debug('redirect clear:', decodeURIComponent(q), target);
             target.href = decodeURIComponent(q);
          }
       }, { capture: true });

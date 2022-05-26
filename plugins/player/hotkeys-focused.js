@@ -15,9 +15,12 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       document.addEventListener('keydown', ({ target }) => {
-         if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
+         if (movie_player.contains(document.activeElement) // player active
+            || ['input', 'textarea'].includes(target.localName) || target.isContentEditable // text edit field
+         ) return;
 
-         document.body.querySelector('video')?.focus();
+         // NOVA.videoElement?.focus();
+         movie_player.focus();
          // document.activeElement.style.border = '2px solid red'; // mark for test
          // console.debug('active element', target.localName);
       });

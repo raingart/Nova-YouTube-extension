@@ -25,7 +25,7 @@ window.nova_plugins.push({
       document.addEventListener('scroll', createBtn, { capture: true, once: true });
 
       function createBtn() {
-         const SELECTOR_ID = 'scrollToTop_btn';
+         const SELECTOR_ID = 'nova-scrollTop-btn';
 
          const btn = document.createElement('button');
          btn.id = SELECTOR_ID;
@@ -54,12 +54,12 @@ window.nova_plugins.push({
                // left: window.pageXOffset,
                behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
             });
-            if (user_settings.scroll_to_top_autoplay && NOVA.currentPageName() == 'watch'
-               //    && (video = document.body.querySelector('video')) && video.paused // restart ENDED
+            if (user_settings.scroll_to_top_autoplay && NOVA.currentPage == 'watch'
+               // && NOVA.videoElement?.paused // restart ENDED
                && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
             ) {
                movie_player.playVideo();
-               // video.play();
+               // NOVA.videoElement?.play();
             }
          });
 
@@ -84,14 +84,14 @@ window.nova_plugins.push({
             }`);
 
          // scroll event
-         const scrollToTop_btn = document.getElementById(SELECTOR_ID);
+         const scrollTop_btn = document.getElementById(SELECTOR_ID);
          let sOld;
          window.addEventListener('scroll', () => {
             const sCurr = document.documentElement.scrollTop > (window.innerHeight / 2);
             if (sCurr == sOld) return;
             sOld = sCurr;
-            scrollToTop_btn.style.visibility = sCurr ? 'visible' : 'hidden';
-            // console.debug('visibility:', scrollToTop_btn.style.visibility);
+            scrollTop_btn.style.visibility = sCurr ? 'visible' : 'hidden';
+            // console.debug('visibility:', scrollTop_btn.style.visibility);
          });
       }
 

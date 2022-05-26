@@ -23,7 +23,7 @@ window.nova_plugins.push({
          // NOVA.waitElement('video')
          //    .then(video => {
          //       // add next-button eventListener - Strategy 1
-         //       // video.addEventListener('ended', nextVideoButton); // does not work when rewinding manually
+         //       // video.addEventListener('ended', nextVideoButton); // Doesn't work when rewinding manually
          //       // video.addEventListener('suspend', nextVideoButton); // need test
          //       // auto-close modal - Strategy 1
          //       video.addEventListener('loadstart', Modal_NOVA.close);
@@ -40,7 +40,7 @@ window.nova_plugins.push({
             if (movie_player.classList.contains('ad-showing')) return; // ad skip
 
             if (btn = document.body.querySelector('.ytp-next-button')) {
-               Modal_NOVA.timeoutNext = setTimeout(() => btn.click(), 1000 * parseInt(user_settings.video_next_autoplay_timeout)); // click btn after N sec.
+               Modal_NOVA.timeoutNext = setTimeout(() => btn.click(), 1000 * +user_settings.video_next_autoplay_timeout); // click btn after N sec.
 
                Modal_NOVA.create();
                // auto-close modal - Strategy 2

@@ -28,7 +28,7 @@ window.nova_plugins.push({
             evt.stopPropagation();
             evt.stopImmediatePropagation();
 
-            // document.body.querySelector('video')?.currentTime = sec;
+            // NOVA.videoElement?.currentTime = sec;
             movie_player.seekTo(sec);
          }
       }, { capture: true });

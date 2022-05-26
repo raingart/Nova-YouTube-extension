@@ -55,26 +55,44 @@ const Opt = {
       list(plugins_list) {
          this.log('list nova_plugins:', plugins_list);
 
-         plugins_list.forEach(plugin => {
-            try {
-               if (!this.pluginChecker(plugin)) throw new Error('pluginInvalid!');
-               this.log('plugin load:', plugin.id);
+         plugins_list
+            // sort by id
+            // .sort((a, b) => {
+            //    if (a.id < b.id) return -1;
+            //    else if (a.id > b.id) return 1;
+            //    return 0; // names must be equal
+            // })
+            // sort by title
+            // .sort((a, b) => {
+            //    const nameA = a.title.toUpperCase(); // ignore upper and lowercase
+            //    const nameB = b.title.toUpperCase(); // ignore upper and lowercase
+            //    if (nameA < nameB) return -1;
+            //    else if (nameA > nameB) return 1;
+            //    // names must be equal
+            //    return 0;
+            // })
+            // sort by (number)
+            // .sort((a, b) => a.sort - b.sort)
+            .forEach(plugin => {
+               try {
+                  if (!this.pluginChecker(plugin)) throw new Error('pluginInvalid!');
+                  this.log('plugin load:', plugin.id);
 
-               // localize
-               if (title_local = plugin['title:' + lang_code]) {
-                  plugin.title = title_local;
-                  delete plugin[title_local];
-               }
-               if (desc_local = plugin['desc:' + lang_code]) {
-                  plugin.desc = desc_local;
-                  delete plugin[desc_local];
-               }
-               // localize
+                  // localize
+                  if (title_local = plugin['title:' + lang_code]) {
+                     plugin.title = title_local;
+                     delete plugin[title_local];
+                  }
+                  if (desc_local = plugin['desc:' + lang_code]) {
+                     plugin.desc = desc_local;
+                     delete plugin[desc_local];
+                  }
+                  // localize
 
-               const li = document.createElement('li');
-               li.className = 'item';
-               li.innerHTML =
-                  `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc}" flow="up"` : ''}>
+                  const li = document.createElement('li');
+                  li.className = 'item';
+                  li.innerHTML =
+                     `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc}" flow="up"` : ''}>
                      <label for="${plugin.id}">${plugin.title}</label>
                      <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
                      ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}
@@ -82,27 +100,27 @@ const Opt = {
                   <div class="opt">
                      <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
                   </div>`;
-               // ⚠️
+                  // ⚠️
 
-               if (plugin.options) {
-                  li.append(
-                     document.createElement('li')
-                        .appendChild(this.generate.options.apply(this, [plugin.options, plugin.id]))
-                  );
+                  if (plugin.options) {
+                     li.append(
+                        document.createElement('li')
+                           .appendChild(this.generate.options.apply(this, [plugin.options, plugin.id]))
+                     );
+                  }
+
+                  let p = this.UI.pluginsContainer;
+                  if (targetSection = '>#' + plugin?.section?.toString().toLowerCase()) {
+                     p += (plugin.section && document.body.querySelector(p + targetSection)) ? targetSection : '>#other';
+                  }
+
+                  document.body.querySelector(p).append(li); // append to section tab
+
+               } catch (error) {
+                  console.error('Error plugin generate:\n', error.stack + '\n', plugin);
+                  alert('Error plugin generate\n' + plugin?.id);
                }
-
-               let p = this.UI.pluginsContainer;
-               if (targetSection = '>#' + plugin?.section?.toString().toLowerCase()) {
-                  p += (plugin.section && document.body.querySelector(p + targetSection)) ? targetSection : '>#other';
-               }
-
-               document.body.querySelector(p).append(li); // append to section tab
-
-            } catch (error) {
-               console.error('Error plugin generate:\n', error.stack + '\n', plugin);
-               alert('Error plugin generate\n' + plugin?.id);
-            }
-         });
+            });
       },
 
       options(obj, id) {

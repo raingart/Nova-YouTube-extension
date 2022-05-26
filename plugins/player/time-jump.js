@@ -1,14 +1,17 @@
 // for test:
-// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have 3-digit timestamps in description, but dont have chapters
+// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have 3-digit timestamps in description, Manual chapter numbering
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
 // https://www.youtube.com/watch?v=Dg30oEk5Mw0 - timestamp in pinned comment #2 once
 // https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#3 (bug has 1 chapters blocks). Manual chapter numbering
 // https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
-// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long line of timestamp
+// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long text line of timestamp
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed test
+
+// test TitleOffset
+// https://youtu.be/t_fbcgzmxHs
 
 window.nova_plugins.push({
    id: 'time-jump',
@@ -36,7 +39,7 @@ window.nova_plugins.push({
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
 
-      switch (NOVA.currentPageName()) {
+      switch (NOVA.currentPage) {
          case 'watch':
             let chapterList;
 
@@ -156,22 +159,21 @@ window.nova_plugins.push({
 
          NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {
-               if ((tooltipEl = document.body.querySelector('.ytp-tooltip-text'))
-                  && (video = document.body.querySelector('video'))
-               ) {
+               if (tooltipEl = document.body.querySelector('.ytp-tooltip-text')) {
                   progressContainer.addEventListener('mousemove', () => {
                      if (movie_player.getVideoData().isLive) return;
                      const
                         cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
-                        offsetTime = cursorTime - video.currentTime,
+                        offsetTime = cursorTime - NOVA.videoElement?.currentTime,
                         sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
                      // updateOffsetTime
+                     // console.debug('offsetTime', offsetTime, cursorTime, sign);
                      tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS.digit(offsetTime)}`);
                   });
                   // hide titleOffset
                   progressContainer.addEventListener('mouseleave', () => tooltipEl.removeAttribute('data-before'));
                }
-            })
+            });
       }
 
       function doubleKeyPressListener(callback, keyCodeFilter) {

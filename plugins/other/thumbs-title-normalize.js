@@ -19,7 +19,7 @@ window.nova_plugins.push({
       const
          VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden])', // '.title';
          MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
-         ATTR_MARK = 'title-normalized';
+         ATTR_MARK = 'nova-title-normalized';
 
       // dirty fix bug with not updating thumbnails
       document.addEventListener('yt-navigate-finish', () =>
@@ -112,15 +112,15 @@ window.nova_plugins.push({
       },
       thumbnails_title_normalize_smart_max_words: {
          _tagName: 'input',
-         label: 'Uppercase word limit',
-         'label:zh': '大写字数限制',
-         'label:ja': '大文字の単語制限',
-         'label:ko': '대문자 단어 제한',
-         'label:es': 'Límite de palabras en mayúsculas',
-         'label:pt': 'Limite de palavras maiúsculas',
-         'label:fr': 'Limite de mots en majuscules',
-         // 'label:tr': 'Büyük harfli kelime sınırı',
-         'label:de': 'Wortbeschränkung in Großbuchstaben',
+         label: 'Max words in uppercase',
+         'label:zh': '大写字数上限',
+         'label:ja': '大文字の最大単語数',
+         'label:ko': '대문자의 최대 단어 수',
+         'label:es': 'Máximo de palabras en mayúsculas',
+         'label:pt': 'Máximo de palavras em maiúsculas',
+         'label:fr': 'Mots maximum en majuscules',
+         // 'label:tr': 'Büyük harfli maksimum kelime',
+         'label:de': 'Maximale Wörter in Großbuchstaben',
          type: 'number',
          // title: '',
          placeholder: '1-10',

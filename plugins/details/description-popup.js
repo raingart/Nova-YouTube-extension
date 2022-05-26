@@ -3,15 +3,15 @@
 
 window.nova_plugins.push({
    id: 'description-popup',
-   title: 'Description in popup',
-   'title:zh': '弹出窗口中的说明',
-   'title:ja': 'ポップアップでの説明',
-   'title:ko': '팝업 설명',
-   'title:es': 'Descripción en ventana emergente',
-   'title:pt': 'Descrição em pop-up',
-   'title:fr': 'Description dans la fenêtre contextuelle',
-   // 'title:tr': 'Açılır pencerede açıklama',
-   'title:de': 'Beschreibung im Popup',
+   title: 'Description section in popup',
+   'title:zh': '弹出窗口中的描述部分',
+   'title:ja': 'ポップアップの説明セクション',
+   'title:ko': '팝업의 설명 섹션',
+   'title:es': 'Sección de descripción en ventana emergente',
+   'title:pt': 'Seção de descrição no pop-up',
+   'title:fr': 'Section de description dans la fenêtre contextuelle',
+   // 'title:tr': 'Açılır pencerede açıklama bölümü',
+   'title:de': 'Beschreibungsabschnitt im Popup',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
@@ -19,7 +19,7 @@ window.nova_plugins.push({
 
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
-      const DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #meta #description:not([hidden]):not(:empty)';
+      const DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #primary-inner #description:not([hidden]):not(:empty)';
 
       NOVA.waitElement('#masthead-container')
          .then(masthead => {

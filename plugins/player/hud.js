@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'player-indicator',
-   title: 'Replace default indicator',
+   title: 'Replace HUD (bezel)',
    'title:zh': '替换默认指示器',
    'title:ja': 'デフォルトのインジケーターを置き換える',
    'title:ko': '기본 표시기 교체',
@@ -11,11 +11,14 @@ window.nova_plugins.push({
    'title:de': 'Standardkennzeichen ersetzen',
    run_on_pages: 'watch, embed',
    section: 'player',
-   desc: 'bezel',
+   // desc: '',
    _runtime: user_settings => {
 
+      // alt:
+      // https://greasyfork.org/en/scripts/376002-youtube-volume-mouse-controller
+      // https://greasyfork.org/en/scripts/376155-youtube-scroll-volume
       const
-         SELECTOR_ID = 'player-indicator-info',
+         SELECTOR_ID = 'nova-player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ff0000';
 
       NOVA.waitElement('video')

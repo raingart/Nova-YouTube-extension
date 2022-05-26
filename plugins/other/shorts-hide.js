@@ -1,24 +1,25 @@
 window.nova_plugins.push({
    id: 'shorts-disable',
-   title: 'Disable Shorts',
-   'title:zh': '禁用短裤',
-   'title:ja': 'ショートパンツを無効にする',
-   'title:ko': '반바지 비활성화',
-   'title:es': 'Deshabilitar pantalones cortos',
-   'title:pt': 'Desativar Shorts',
-   'title:fr': 'Désactiver les Shorts',
-   // 'title:tr': 'Şortları devre dışı bırak',
-   'title:de': 'Kurzschlüsse deaktivieren',
+   title: 'Hide Shorts',
+   'title:zh': '隐藏短裤',
+   'title:ja': 'ショーツを隠す',
+   'title:ko': '반바지 숨기기',
+   'title:es': 'Ocultar pantalones cortos',
+   'title:pt': 'Ocultar shorts',
+   'title:fr': 'Masquer les shorts',
+   // 'title:tr': 'Şort Gizle',
+   'title:de': 'Shorts verstecken',
    run_on_pages: 'results, feed, channel',
    restart_on_transition: true,
    section: 'other',
    // desc: '',
    _runtime: user_settings => {
 
-      const ATTR_MARK = 'shorts-cleared';
+      const ATTR_MARK = 'nova-shorts-cleared';
 
       // clear before restart_on_transition
-      document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
+      document.addEventListener('yt-navigate-start', () =>
+         NOVA.clear_watchElement(ATTR_MARK), { capture: true, once: true });
 
       // fix clear thumb on page update (change sort etc.)
       // document.addEventListener('yt-page-data-updated', () =>
@@ -40,7 +41,7 @@ window.nova_plugins.push({
             // if (thumb.querySelector('a[href*="shorts/"], ytd-thumbnail-overlay-time-status-renderer[overlay-style="SHORTS"], #overlays [aria-label="Shorts"]')
             if (thumb.querySelector('a[href*="shorts/"]')
                // user_settings.shorts_disable_min_duration
-               || NOVA.timeFormatTo.hmsToSec(thumb.querySelector('#overlays #text:not(:empty)')?.textContent.trim()) < (parseInt(user_settings.shorts_disable_min_duration) || 60)
+               || NOVA.timeFormatTo.hmsToSec(thumb.querySelector('#overlays #text:not(:empty)')?.textContent.trim()) < (+user_settings.shorts_disable_min_duration || 60)
             ) {
                thumb.remove();
                // // thumb.style.display = 'none';

@@ -1,8 +1,5 @@
 // for test
 // the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
-// https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
-// https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
-// https://www.youtube.com/watch?v=I0dZOM0wTzg#music - shot duration
 
 window.nova_plugins.push({
    id: 'volume-wheel',
@@ -29,12 +26,17 @@ window.nova_plugins.push({
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
-      NOVA.waitElement('#movie_player video')
+      NOVA.waitElement('video')
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
                NOVA.bezelTrigger(movie_player.getVolume() + '%');
+
+               if (user_settings.volume_mute_unsave) {
+                  this.muted = false;
+                  playerVolume.saveInSession(movie_player.getVolume());
+               }
             });
 
             if (user_settings.volume_hotkey) {
@@ -62,13 +64,14 @@ window.nova_plugins.push({
 
       const playerVolume = {
          adjust(delta) {
-            const level = movie_player?.getVolume() + parseInt(delta);
+            const level = movie_player?.getVolume() + +delta;
             return user_settings.volume_unlimit ? this.unlimit(level) : this.set(level);
          },
          // Strategy 1
          set(level = 50) {
             if (typeof movie_player === 'undefined' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
-            const newLevel = Math.max(0, Math.min(100, parseInt(level)));
+
+            const newLevel = Math.max(0, Math.min(100, +level));
 
             // set new volume level
             if (newLevel !== movie_player.getVolume()) {
@@ -76,7 +79,7 @@ window.nova_plugins.push({
                movie_player.setVolume(newLevel); // 0 - 100
 
                if (newLevel === movie_player.getVolume()) {
-                  saveInSession(newLevel);
+                  this.saveInSession(newLevel);
 
                } else {
                   console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
@@ -85,22 +88,25 @@ window.nova_plugins.push({
 
             return newLevel === movie_player.getVolume() && newLevel;
 
-            function saveInSession(level = required()) {
-               const storageData = {
-                  creation: Date.now(),
-                  data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
-               };
+         },
 
-               try {
-                  localStorage['yt-player-volume'] = JSON.stringify(
-                     Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
-                  );
-                  sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
-                  // console.debug('volume saved', ...arguments);
+         saveInSession(level = required()) {
+            const storageData = {
+               creation: Date.now(),
+               // data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
+               data: { 'volume': +level, 'muted': ((level || user_settings.volume_mute_unsave) ? 'false' : 'true') },
+            };
+            console.debug('data', storageData);
 
-               } catch (err) {
-                  console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
-               }
+            try {
+               localStorage['yt-player-volume'] = JSON.stringify(
+                  Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
+               );
+               sessionStorage['yt-player-volume'] = JSON.stringify(storageData);
+               // console.debug('volume saved', ...arguments);
+
+            } catch (err) {
+               console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
             }
          },
 
@@ -108,7 +114,7 @@ window.nova_plugins.push({
             if (level > 100) {
                if (!this.audioCtx) {
                   this.audioCtx = new AudioContext();
-                  const source = this.audioCtx.createMediaElementSource(document.body.querySelector('video'));
+                  const source = this.audioCtx.createMediaElementSource(NOVA.videoElement);
                   this.node = this.audioCtx.createGain();
                   this.node.gain.value = 1;
                   source.connect(this.node);
@@ -132,7 +138,7 @@ window.nova_plugins.push({
       volume_level_default: {
          _tagName: 'input',
          // label: 'Level at startup',
-         label: 'Default volume',
+         label: 'Default level',
          'label:zh': '默认音量',
          'label:ja': 'デフォルトのボリューム',
          'label:ko': '기본 볼륨',
@@ -162,7 +168,7 @@ window.nova_plugins.push({
          // 'label:tr': 'Adım',
          'label:de': 'Schritt',
          type: 'number',
-         title: 'in percents',
+         title: 'in %',
          placeholder: '%',
          step: 5,
          min: 5,
@@ -190,7 +196,7 @@ window.nova_plugins.push({
       },
       volume_unlimit: {
          _tagName: 'input',
-         label: 'Break limit',
+         label: 'Allow unlimit (booster)',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -198,7 +204,7 @@ window.nova_plugins.push({
          // 'label:pt': '',
          // 'label:fr': '',
          // 'label:tr': '',
-         'label:de': '',
+         // 'label:de': '',
          type: 'checkbox',
          title: 'allow set volume above 100%',
          'title:zh': '允许设定音量高于 100%',
@@ -209,6 +215,31 @@ window.nova_plugins.push({
          'title:fr': 'autoriser le réglage du volume au-dessus de 100 %',
          // 'title:tr': "%100'ün üzerinde ses ayarına izin ver",
          'title:de': 'eingestellte Lautstärke über 100% zulassen',
+      },
+      volume_mute_unsave: {
+         _tagName: 'input',
+         // Force unmute for videos opened in new tabs while another video is muted
+         label: 'Not keep muted state',
+         // disable mute save state
+         // disable mute memory state
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         title: 'only affects new tabs',
+         'title:zh': '只影响新标签',
+         'title:ja': '新しいタブにのみ影響します',
+         'title:ko': '새 탭에만 영향',
+         'title:es': 'solo afecta a las pestañas nuevas',
+         'title:pt': 'afeta apenas novas guias',
+         'title:fr': "n'affecte que les nouveaux onglets",
+         'title:tr': 'yalnızca yeni sekmeleri etkiler',
+         'title:de': 'wirkt sich nur auf neue Registerkarten aus',
       },
    }
 });

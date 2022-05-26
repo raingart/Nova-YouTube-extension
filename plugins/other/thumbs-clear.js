@@ -27,7 +27,7 @@ window.nova_plugins.push({
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    _runtime: user_settings => {
 
-      const ATTR_MARK = 'preview-cleared';
+      const ATTR_MARK = 'nova-preview-cleared';
 
       // dirty fix bug with not updating thumbnails
       document.addEventListener('yt-navigate-finish', () =>

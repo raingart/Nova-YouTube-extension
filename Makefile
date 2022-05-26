@@ -7,6 +7,8 @@ out="/tmp/super-nova.user.js"
 # find . -type f -name "*.txt" ! -path "./Movies/*" ! -path "./Downloads/*" ! -path "./Music/*"
 
 build:
+	rm -f $(out)
+
 	cat ./UserScript/meta.js > $(out)
 
 	cat ./UserScript/check-browser-support.js >> $(out)

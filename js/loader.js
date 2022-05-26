@@ -1,7 +1,7 @@
 const App = {
    lastURL: location.href,
 
-   isURLChanged() {
+   isURLChange() {
       return this.lastURL === location.href ? false : this.lastURL = location.href;
    },
 
@@ -35,10 +35,10 @@ const App = {
 
       // skip first page transition
       // Strategy 1
-      document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
-      // document.addEventListener('yt-navigate-finish', () => this.isURLChanged() && this.run());
+      document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
+      // document.addEventListener('yt-navigate-finish', () => this.isURLChange() && this.run());
       // Strategy 2
-      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChanged() && this.run());
+      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
 
       // for test
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
@@ -166,6 +166,30 @@ const App = {
 }
 
 App.init();
+
+// for testing
+// https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
+// https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
+// https://www.youtube.com/watch?v=I0dZOM0wTzg#music - shot duration
+
+// wide-screen video
+// https://www.youtube.com/watch?v=B4yuZhKRW1c
+// https://www.youtube.com/watch?v=zEk3A1fA0gc
+
+// shorts
+// https://www.youtube.com/shorts/5ndfxasp2r0
+
+// for testing square-screen
+// https://www.youtube.com/watch?v=v-YQUCP-J8s
+// https://www.youtube.com/watch?v=gWqENeW7EyQ
+// https://www.youtube.com/watch?v=Hlk7AzBMmOA
+// https://www.youtube.com/watch?v=bDmA8qQKhMY
+
+// test z-index "Show chat replay" button
+// https://www.youtube.com/watch?v=9Mv1sOp0Xg8
+
+// The following content may contain suicide or self-harm topics.
+// https://www.youtube.com/watch?v=MiQozY6jR0I
 
 // test normal lite
 // https://www.youtube.com/watch?v=v-YQUCP-J8s 144 MUSIC

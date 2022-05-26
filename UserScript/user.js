@@ -6,16 +6,17 @@ const
    user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'video-unblocker': 'video-unblock-region',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (isOptionsPage()) return;
 landerPlugins();

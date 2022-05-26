@@ -28,7 +28,7 @@ window.nova_plugins.push({
 
          this.pause();
 
-         const forcePaused = setInterval(() => this.paused || this.pause(), 200); // 100ms
+         const forcePaused = setInterval(() => this.paused || this.pause(), 200); // 200ms
          setTimeout(() => clearInterval(forcePaused), 1000); // 1s
       }
 

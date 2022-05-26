@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      NOVA.waitElement('#meta [collapsed] #more')
+      NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')
          .then(btn => {
             if (user_settings.description_expand_mode == 'onhover') {
                btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });

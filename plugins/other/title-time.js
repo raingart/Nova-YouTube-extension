@@ -27,7 +27,9 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // save title
             video.addEventListener('loadeddata', () => {
-               if (backupTitle) return;
+               if (backupTitle
+                  || movie_player.classList.contains('ad-showing')
+                  || /^((\d?\d:){1,2}\d{2})(\s\|\s)/g.exec(document.title)) return;
                backupTitle = document.title;
             });
             // restore the original title
@@ -77,8 +79,8 @@ window.nova_plugins.push({
       function setTitle(arr) {
          document.title = arr
             .filter(n => n)
-            .join(' | ');
-         // .join(' • ');
+            .join(' | '); // add to regex
+         // .join(' • '); // add to regex
       }
 
       // function getVideoTitle() {

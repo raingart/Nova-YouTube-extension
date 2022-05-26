@@ -37,10 +37,13 @@ window.nova_plugins.push({
 
          document.addEventListener('yt-navigate-finish', () => {
             scrollAfter(); // no sense. Youtube auto-scroll up when page is transition
-            NOVA.waitElement('video')
-               .then(video => {
-                  video.addEventListener('loadeddata', scrollAfter, { capture: true, once: true });
-               });
+
+            if (NOVA.currentPage != 'watch') {
+               NOVA.waitElement('video')
+                  .then(video => {
+                     video.addEventListener('loadeddata', scrollAfter, { capture: true, once: true });
+                  });
+            }
          });
 
          createArrowButton();

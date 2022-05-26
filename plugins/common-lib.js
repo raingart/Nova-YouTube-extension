@@ -32,7 +32,7 @@ const NOVA = {
 
       // https://stackoverflow.com/a/68262400
       // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
-      // alternatives:
+      // alt:
       // https://git.io/waitForKeyElements.js
       // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
       // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
@@ -53,12 +53,12 @@ const NOVA = {
                for (const node of mutation.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType)) continue;
 
-                  if (node.matches && node.matches(selector)) { // in node
+                  if (node.matches && node.matches(selector)) { // this node
                      // console.debug('[2]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(node);
 
-                  } else if ( // in parent
+                  } else if ( // inside node
                      (el_ = node.parentElement || node)
                      && (el_ instanceof HTMLElement)
                      && (element = el_.querySelector(selector))
@@ -68,12 +68,14 @@ const NOVA = {
                      return resolve(element);
                   }
                }
-               if (element = (document?.body || document).querySelector(selector)) { // in global
-                  // console.debug('[4]', mutation.type, node.nodeType, selector);
-                  // console.debug('[4]', selector);
-                  observer.disconnect();
-                  return resolve(element);
-               }
+            }
+            // after loop
+            if (document?.readyState != 'loading' // fix slowdown page
+               && (element = (document?.body || document).querySelector(selector))
+            ) { // in global
+               // console.debug('[4]', selector);
+               observer.disconnect();
+               return resolve(element);
             }
          })
             .observe(container || document?.body || document.documentElement, {
@@ -82,6 +84,17 @@ const NOVA = {
             });
       });
    },
+
+   // async waitUntil(condition, timeout = 100) {
+   //    return new Promise((resolve) => {
+   //       const interval = setInterval(() => {
+   //          if (result = condition) {
+   //             clearInterval(interval);
+   //             resolve(result);
+   //          }
+   //       }, timeout);
+   //    });
+   // },
 
    watchElement_list: {}, // can to stop watch setInterval
    // NOVA.clearInterval(NOVA.watchElement_list[attr_mark]); // ex.
@@ -297,6 +310,19 @@ const NOVA = {
          });
    },
 
+   calculateAspectRatioFit({
+      srcWidth = 0, srcHeight = 0,
+      maxWidth = window.innerWidth,
+      maxHeight = window.innerHeight
+   }) {
+      // console.debug('aspectRatioFit:', ...arguments);
+      const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
+      return {
+         width: +srcWidth * aspectRatio,
+         height: +srcHeight * aspectRatio,
+      };
+   },
+
    bezelTrigger(text) {
       // console.debug('bezelTrigger', ...arguments);
       if (!text) return;
@@ -334,7 +360,7 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.body.querySelectorAll('#meta #description, #comments ytd-comment-thread-renderer:first-child #content')
+      document.body.querySelectorAll('#primary-inner #description, #comments ytd-comment-thread-renderer:first-child #content')
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
@@ -351,7 +377,7 @@ const NOVA = {
                            'time': timestamp,
                            'title': line
                               .replace(timestamp, '')
-                              .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '')
+                              .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '') // clear of quotes and list characters
                               //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?|[:\-–—.;|]$/g, '') // clear numeric list prefix
                               // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                               .trim()
@@ -373,7 +399,7 @@ const NOVA = {
    //    let timestampList = [];
    //    let prevSec = -1;
 
-   //    document.body.querySelectorAll(`#meta #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
+   //    document.body.querySelectorAll(`#primary-inner #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
    //          const sec = parseInt(this.queryURL.get('t', link.href));
@@ -416,8 +442,8 @@ const NOVA = {
 
    timeFormatTo: {
       hmsToSec(str) { // format out "h:mm:ss" > "sec"
-         return ((arr = str?.split(':').filter(Number)) && arr.length > 1)
-            && arr.reduce((acc, time) => (60 * acc) + parseInt(time));
+         return ((arr = str?.split(':').filter(Number)) && arr.length)
+            && arr?.reduce((acc, time) => (60 * acc) + ~~time);
       },
 
       HMS: {
@@ -477,17 +503,11 @@ const NOVA = {
       },
    },
 
-   currentPageName: () => {
-      const [page, channelTab] = location.pathname.split('/').filter(Boolean);
-      return (['channel', 'c', 'user'].includes(page)
-         // fix non-standard link - https://www.youtube.com/pencilmation/videos
-         || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
-      ) ? 'channel' : page || 'home';
-   },
-
    queryURL: {
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
-      has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.href).search).has(query),
+      // has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.href)).has(query), // Doesn't work
+
+      has: (query = required(), url_string) => new URL(url_string || location).searchParams.has(query.toString()),
 
       get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
 
@@ -588,6 +608,16 @@ const NOVA = {
          5: 'CUED'
       }[state || movie_player.getPlayerState()];
    },
+
+   // captureActiveVideoElement
+   videoElement: (() => {
+      // init
+      document.addEventListener('canplay', ({ target }) => {
+         target.matches('#movie_player video') && (NOVA.videoElement = target);
+      }, { capture: true, once: true });
+      // update
+      document.addEventListener('play', ({ target }) => NOVA.videoElement = target, true);
+   })(),
 
    getChannelId() {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);

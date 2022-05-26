@@ -1,5 +1,4 @@
 # Nova YouTube
-[![ver.](https://img.shields.io/chrome-web-store/v/miiheelkbegpkflplpmmkidaklfgjecb.svg?style=flat-square)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
 
 Combine small plugins, expanding the possibilities of YouTube.
 

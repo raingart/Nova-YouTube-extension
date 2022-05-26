@@ -10,8 +10,7 @@ const Plugins = {
       'player/autopause.js', // after quality.js
       'player/theater-mode.js',
       'player/pause-background.js',
-      // 'player/fullscreen-on-playback.js',
-      'player/auto-fullscreen.js',
+      'player/fullscreen-on-playback.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
       'player/pin.js',
@@ -20,7 +19,7 @@ const Plugins = {
       'player/float-progress-bar.js',
       'player/no-sleep.js',
       'player/loop.js',
-      'player/time-resume.js',
+      'player/resume-playback.js',
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
       'player/subtitle.js',
@@ -66,7 +65,7 @@ const Plugins = {
 
       'header/short.js',
       'header/unfixed.js',
-      'header/logo.js',
+      // 'header/logo.js',
    ],
 
    load(list) {
@@ -108,15 +107,14 @@ const Plugins = {
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
-      // copy fn - NOVA.currentPageName()
-      const currentPage = (function () {
+      NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          return (['channel', 'c', 'user'].includes(page)
             // fix non-standard link - https://www.youtube.com/pencilmation/videos
             || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
          ) ? 'channel' : page || 'home';
       })();
-      // console.debug('currentPage', currentPage);
+      // console.debug('NOVA.currentPage', NOVA.currentPage);
 
       const isMobile = location.host == 'm.youtube.com';
 
@@ -145,8 +143,8 @@ const Plugins = {
 
          } else if (
             (
-               pagesAllowList?.includes(currentPage)
-               || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + currentPage))
+               pagesAllowList?.includes(NOVA.currentPage)
+               || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + NOVA.currentPage))
             )
             && (!isMobile || (isMobile && !pagesAllowList?.includes('-mobile')))
          ) {

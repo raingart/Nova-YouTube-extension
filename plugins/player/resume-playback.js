@@ -22,7 +22,7 @@ window.nova_plugins.push({
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
-      if (NOVA.currentPageName() == 'embed' && !window.sessionStorage) return;
+      if (NOVA.currentPage == 'embed' && !window.sessionStorage) return;
 
       // TODO adSkip alt. - add comparison by duration. Need stream test
       const
@@ -33,17 +33,18 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            resumePlaybackTime(video);
+            resumePlayback(video);
 
-            video.addEventListener('loadeddata', resumePlaybackTime.bind(video));
+            video.addEventListener('loadeddata', resumePlayback.bind(video));
 
-            video.addEventListener('timeupdate', savePlaybackTime.bind(video));
+            video.addEventListener('timeupdate', savePlayback.bind(video));
 
             // embed dont support "t=" parameter
-            if (user_settings.player_resume_playback_url_mark && NOVA.currentPageName() != 'embed') {
+            if (user_settings.player_resume_playback_url_mark && NOVA.currentPage != 'embed') {
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.has('t')) {
-                  document.addEventListener('yt-navigate-start', connectSaveStateInURL.bind(video), { capture: true, once: true });
+                  document.addEventListener('yt-navigate-start',
+                     connectSaveStateInURL.bind(video), { capture: true, once: true });
 
                } else {
                   connectSaveStateInURL.apply(video);
@@ -51,7 +52,7 @@ window.nova_plugins.push({
             }
          });
 
-      function savePlaybackTime() {
+      function savePlayback() {
          // ad skip
          if (this.currentTime > 5 && this.duration > 30 && !movie_player.classList.contains('ad-showing')) {
             // console.debug('save progress time', this.currentTime);
@@ -60,17 +61,23 @@ window.nova_plugins.push({
          }
       }
 
-      function resumePlaybackTime() {
+      function resumePlayback() {
          if (NOVA.queryURL.has('t')) return;
          cacheName = getCacheName(); // for optimization
 
          if ((time = +sessionStorage.getItem(cacheName))
             && (time < (this.duration - 1)) // fix for playlist
          ) {
-            // console.debug('resumePlaybackTime', `${time}/${this.duration}`);
+            // console.debug('resumePlayback', `${time}/${this.duration}`);
             this.currentTime = time;
          }
       }
+
+      // function resumePlayback() {
+      //    if (!isNaN(this.duration) && this.currentTime < this.duration) {
+      //       window.location.hash = "t=" + this.currentTime;
+      //    }
+      // }
 
       function connectSaveStateInURL() {
          const changeUrl = (new_url = required()) => window.history.replaceState(null, null, new_url);
@@ -79,7 +86,7 @@ window.nova_plugins.push({
          this.addEventListener('pause', () => {
             if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) { // fix video ended
                delaySaveOnPauseURL = setTimeout(() => {
-                  changeUrl(NOVA.queryURL.set({ 't': parseInt(this.currentTime) + 's' }));
+                  changeUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
                }, 100); // 100ms
             }
          })
@@ -89,14 +96,6 @@ window.nova_plugins.push({
 
             if (NOVA.queryURL.has('t')) changeUrl(NOVA.queryURL.remove('t'));
          });
-
-         // alt. strategy
-         // NOVA.waitElement('#movie_player')
-         //    .then(() => {
-         //       movie_player.addEventListener('onStateChange', state => {
-         //          console.debug('state', NOVA.getPlayerState(state));
-         //       });
-         //    });
       }
 
    },

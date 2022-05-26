@@ -1,7 +1,5 @@
 // for test
 // the adjustment area depends on the video size. Problems are visible at non-standard proportions
-// https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
-// https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 // https://www.youtube.com/watch?v=embed%2FJVi_e - err - TypeError: Cannot read property 'playerMicroformatRenderer' of undefined
 
 // fot "isMusic" fn test
@@ -33,20 +31,20 @@ window.nova_plugins.push({
    'desc:de': 'mit mausrad',
    _runtime: user_settings => {
 
-      const musicIconSvgSelector = '#meta #upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
+      const musicIconSvgSelector = '#upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
 
       // NOVA.waitElement('#movie_player')
       //    .then(() => {
       //       // trigger default indicator
-      //       // Strategy 1. Default indicator doesn't work for html5 way (Strategy 2)
+      //       // Strategy 1. Default indicator Doesn't work for html5 way (Strategy 2)
       //       movie_player.addEventListener('onPlaybackRateChange', rate => {
       //          console.debug('onPlaybackRateChange', rate);
       //       });
       //    });
 
-      NOVA.waitElement('#movie_player video')
+      NOVA.waitElement('video')
          .then(video => {
-            const sliderConteiner = renderSlider();
+            const sliderConteiner = renderSlider.apply(this);
             // console.debug('sliderConteiner', sliderConteiner);
 
             // trigger default indicator
@@ -101,7 +99,7 @@ window.nova_plugins.push({
          NOVA.waitElement(musicIconSvgSelector)
             .then(icon => playerRate.set(1));
 
-         NOVA.waitElement('#meta #upload-info #channel-name a[href]')
+         NOVA.waitElement('#upload-info #channel-name a[href]')
             .then(channelName => {
                // channelNameVEVO
                if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
@@ -124,11 +122,11 @@ window.nova_plugins.push({
 
          // default method requires a multiplicity of 0.25
          testDefault: rate => (+rate % .25) === 0
-            && movie_player.hasOwnProperty('getPlaybackRate')
             && +rate <= 2
-            && +user_settings.rate_default <= 2,
+            && +user_settings.rate_default <= 2
+            && (typeof movie_player !== 'undefined' && movie_player.hasOwnProperty('getPlaybackRate')),
 
-         set(level = 1) {
+         async set(level = 1) {
             this.log('set', ...arguments);
             if (this.testDefault(level)) {
                this.log('set:default');
@@ -136,8 +134,9 @@ window.nova_plugins.push({
 
             } else {
                this.log('set:html5');
-               if (video = document.body.querySelector('video')) {
-                  video.playbackRate = +level;
+               NOVA.videoElement = await NOVA.waitElement('video');
+               if (NOVA.videoElement) { // fix - Uncaught SyntaxError: Invalid left-hand side in assignment
+                  NOVA.videoElement.playbackRate = +level;
                   this.clearInSession();
                }
             }
@@ -179,30 +178,28 @@ window.nova_plugins.push({
          // Strategy 2
          html5(playback_rate = required()) {
             this.log('html5', ...arguments);
+            if (!NOVA.videoElement) return console.error('playerRate > videoElement empty:', NOVA.videoElement);
 
-            if (videoElement = document.body.querySelector('video')) {
-               const playbackRate = videoElement.playbackRate;
-               const inRange = step => {
-                  const setRateStep = playbackRate + step;
-                  return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
-               };
-               const newRate = inRange(+playback_rate);
-               // set new rate
-               if (newRate && newRate != playbackRate) {
-                  // document.body.querySelector('video').defaultPlaybackRate = newRate;
-                  videoElement.playbackRate = newRate;
+            const playbackRate = NOVA.videoElement.playbackRate;
+            const inRange = step => {
+               const setRateStep = playbackRate + step;
+               return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
+            };
+            const newRate = inRange(+playback_rate);
+            // set new rate
+            if (newRate && newRate != playbackRate) {
+               // NOVA.videoElement?.defaultPlaybackRate = newRate;
+               NOVA.videoElement.playbackRate = newRate;
 
-                  if (newRate === videoElement.playbackRate) {
-                     this.clearInSession();
+               if (newRate === NOVA.videoElement.playbackRate) {
+                  this.clearInSession();
 
-                  } else {
-                     console.error('playerRate:html5 different: %s!=%s', newRate, videoElement.playbackRate);
-                  }
+               } else {
+                  console.error('playerRate:html5 different: %s!=%s', newRate, NOVA.videoElement.playbackRate);
                }
-               this.log('html5 return', newRate);
-               return newRate === videoElement.playbackRate && newRate;
-
-            } else return console.error('playerRate > videoElement empty:', videoElement);
+            }
+            this.log('html5 return', newRate);
+            return newRate === NOVA.videoElement.playbackRate && newRate;
          },
 
          saveInSession(level = required()) {
@@ -239,15 +236,27 @@ window.nova_plugins.push({
 
       function setDefaultRate() {
          // init rate_default
-         if (+user_settings.rate_default !== 1 && (!user_settings.rate_default_apply_music || !isMusic())) {
-            // console.debug('update rate_default', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
-            playerRate.set(user_settings.rate_default);
+         // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
+         if (+user_settings.rate_default !== 1) {
+            const is_music = isMusic();
+            if (NOVA.videoElement?.playbackRate !== +user_settings.rate_default
+               && (!user_settings.rate_default_apply_music || !is_music)
+            ) {
+               // console.debug('update rate_default');
+               playerRate.set(user_settings.rate_default);
+
+            } else if (NOVA.videoElement?.playbackRate !== 1 && is_music) { // reset
+               // console.debug('reset rate_default');
+               playerRate.set(1);
+            }
          }
 
          function isMusic() {
             const
-               channelName = document.body.querySelector('#meta #upload-info #channel-name a')?.textContent,
-               titleStr = movie_player.getVideoData().title,
+               channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
+               titleStr = movie_player.getVideoData().title
+                  // add playlist title check
+                  + ((playlistTitle = document.querySelector('#secondary #playlist #header-description a[href*="/playlist"]:not(:empty)')?.textContent) ? '.' + playlistTitle : ''), // https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
                titleWords = titleStr?.match(/\w+/g);
 
             if (user_settings.rate_default_apply_music == 'expanded') {
@@ -259,12 +268,14 @@ window.nova_plugins.push({
                   return true;
                }
             }
+
             return [
                titleStr,
                location.href, // 'music.youtube.com' or 'youtube.com#music'
                channelName,
 
                // ALL BELOW - not updated after page transition!
+               // window.ytplayer?.config?.args.title,
                // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
@@ -288,8 +299,7 @@ window.nova_plugins.push({
 
       function renderSlider() {
          const
-            video = document.body.querySelector('video'),
-            SELECTOR_ID = 'rate-slider-menu',
+            SELECTOR_ID = 'nova-rate-slider-menu',
             SELECTOR = '#' + SELECTOR_ID; // for css
 
          NOVA.css.push(
@@ -320,7 +330,7 @@ window.nova_plugins.push({
          slider.min = +user_settings.rate_step;
          slider.max = Math.max(2, +user_settings.rate_default);
          slider.step = +user_settings.rate_step;
-         slider.value = video.playbackRate;
+         slider.value = this.playbackRate;
          // slider.addEventListener('change', () => playerRate.set(slider.value));
          // slider.addEventListener('wheel', () => playerRate.set(slider.value));
 
@@ -329,7 +339,7 @@ window.nova_plugins.push({
 
          const sliderLabel = document.createElement('div');
          sliderLabel.className = 'ytp-menuitem-label';
-         sliderLabel.textContent = `Speed (${video.playbackRate})`;
+         sliderLabel.textContent = `Speed (${this.playbackRate})`;
 
          const sliderCheckbox = document.createElement('input');
          sliderCheckbox.className = 'ytp-menuitem-toggle-checkbox';
@@ -359,7 +369,7 @@ window.nova_plugins.push({
 
          return out;
 
-         // append final
+         // append final html code
          // document.body.querySelector('.ytp-panel-menu')
          //    ?.insertAdjacentHTML('beforeend',
          //       `<div class="ytp-menuitem" id="rate-slider-menu">

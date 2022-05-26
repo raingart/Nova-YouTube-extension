@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'theater-mode',
-   title: 'Player full-with mode',
+   title: 'Player full-with (theater) mode',
    'title:zh': '播放器全模式',
    'title:ja': 'プレーヤーフル-モード付き',
    'title:ko': '플레이어 풀-위드 모드',
@@ -37,20 +37,28 @@ window.nova_plugins.push({
                   2020);
 
             if (user_settings.player_full_viewport_mode) {
-               NOVA.css.push(
-                  `${PLAYER_SELECTOR}${user_settings.player_full_viewport_mode_exit
-                     ? `.playing-mode, ${PLAYER_SELECTOR}.paused-mode` : ''} {
-                     width: 100vw;
-                     height: 100vh;
-                     position: fixed;
-                     bottom: 0 !important;
-                     z-index: ${zIindex};
-                     background-color: black;
-                  }`);
+               setPlayerFullViewport();
 
-               // fix restore controlbar position
+            } else if (user_settings.player_full_viewport_smart_mode) {
+               // exclude shorts page
+               if (user_settings.player_full_viewport_smart_mode_exclude_shorts
+                  && (NOVA.currentPage == 'shorts') || window.ytplayer?.config?.args?.title?.includes('#shorts')) { // dont update state on transitio
+                  return;
+               }
+
                NOVA.waitElement('video')
-                  .then(video => video.addEventListener('pause', () => window.dispatchEvent(new Event('resize'))));
+                  .then(video => {
+                     video.addEventListener('loadeddata', function () {
+                        const miniSize = NOVA.calculateAspectRatioFit({
+                           'srcWidth': this.videoWidth,
+                           'srcHeight': this.videoHeight,
+                           // 'maxWidth': window.innerWidth,
+                           // 'maxHeight': window.innerHeight,
+                        });
+                        // out of viewport
+                        if (miniSize.width < window.innerWidth) setPlayerFullViewport();
+                     });
+                  });
             }
 
             // cinema_mode
@@ -92,10 +100,41 @@ window.nova_plugins.push({
                      position: relative;
                   }`);
             }
+
+            function setPlayerFullViewport() {
+               NOVA.css.push(
+                  `${PLAYER_SELECTOR}${
+                  user_settings.player_full_viewport_mode_exit ? `.playing-mode, ${PLAYER_SELECTOR}.paused-mode` : ''} {
+                     width: 100vw;
+                     height: 100vh;
+                     position: fixed;
+                     bottom: 0 !important;
+                     z-index: ${zIindex};
+                     background-color: black;
+                  }`);
+
+               // fix restore controlbar position
+               NOVA.waitElement('video')
+                  .then(video => video.addEventListener('pause', () => window.dispatchEvent(new Event('resize'))));
+            }
          });
 
    },
    options: {
+      player_full_viewport_smart_mode: {
+         _tagName: 'input',
+         label: 'Full-viewport smart toggle',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         // title: '',
+      },
       player_full_viewport_mode: {
          _tagName: 'input',
          label: 'Full-viewport mode',
@@ -166,6 +205,20 @@ window.nova_plugins.push({
          max: 1,
          value: .85,
          'data-dependent': '{"cinema_mode":"true"}',
+      },
+      player_full_viewport_smart_mode_exclude_shorts: {
+         _tagName: 'input',
+         label: 'Exclude shorts',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         // title: '',
       },
    }
 });

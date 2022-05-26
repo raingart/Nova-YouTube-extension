@@ -22,14 +22,14 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         SELECTOR_ID = 'playlist-duration-time',
+         SELECTOR_ID = 'nova-playlist-duration',
          // CACHE_PREFIX = SELECTOR_ID + ':',
          // STORE_NAME = CACHE_PREFIX + playlistId,
          playlistId = NOVA.queryURL.get('list');
 
       if (!playlistId) return;
 
-      switch (NOVA.currentPageName()) {
+      switch (NOVA.currentPage) {
          case 'playlist':
             NOVA.waitElement('#stats yt-formatted-string:first-child')
                .then(el => {

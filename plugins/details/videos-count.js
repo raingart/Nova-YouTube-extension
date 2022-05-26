@@ -25,16 +25,16 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         CACHE_PREFIX = 'channel-videos-count:',
-         SELECTOR_ID = 'video_count';
+         CACHE_PREFIX = 'nova-channel-videos-count:',
+         SELECTOR_ID = 'nova-video-count';
 
-      switch (NOVA.currentPageName()) {
+      switch (NOVA.currentPage) {
          case 'watch':
-            NOVA.waitElement('#meta #upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
+            NOVA.waitElement('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
                .then(link => {
                   // console.debug('watch page');
-                  NOVA.waitElement('#meta #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
-                     // NOVA.waitElement('#meta #owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
+                  NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
+                     // NOVA.waitElement('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
                      .then(el => {
                         if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
                         setVideoCount({
@@ -94,6 +94,8 @@ window.nova_plugins.push({
                return document.getElementById(SELECTOR_ID);
             })())
                .textContent = text;
+
+            container.title = `${text} videos`;
          }
 
       }

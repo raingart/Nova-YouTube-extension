@@ -1,14 +1,14 @@
 window.nova_plugins.push({
    id: 'comments-popup',
-   title: 'Show in popup',
-   'title:zh': '在弹出窗口中显示',
-   'title:ja': 'ポップアップで表示',
-   'title:ko': '팝업으로 표시',
-   'title:es': 'Mostrar en ventana emergente',
-   'title:pt': 'Mostrar em pop-up',
-   'title:fr': 'Afficher dans la fenêtre contextuelle',
-   // 'title:tr': 'Açılır pencerede göster',
-   'title:de': 'Im Popup anzeigen',
+   title: 'Comments section in popup',
+   'title:zh': '弹出窗口中的评论部分',
+   'title:ja': 'ポップアップのコメントセクション',
+   'title:ko': '팝업의 댓글 섹션',
+   'title:es': 'Sección de comentarios en ventana emergente',
+   'title:pt': 'Seção de comentários no pop-up',
+   'title:fr': 'Section des commentaires dans la fenêtre contextuelle',
+   // 'title:tr': 'Açılır pencerede yorumlar bölümü',
+   'title:de': 'Kommentarbereich im Popup',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
    // desc: '',
@@ -32,9 +32,9 @@ window.nova_plugins.push({
                   top: ${masthead.offsetHeight || 56}px;
                   right: 0;
                   z-index: ${Math.max(
-                     NOVA.css.getValue({ selector: '#masthead-container', property: 'z-index' }),
-                     NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }),
-                     601) + 1};
+                  NOVA.css.getValue({ selector: '#masthead-container', property: 'z-index' }),
+                  NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }),
+                  601) + 1};
                }
 
                /* button */

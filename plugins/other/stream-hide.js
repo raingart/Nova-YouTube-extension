@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      const ATTR_MARK = 'live-cleared';
+      const ATTR_MARK = 'nova-live-cleared';
 
       // clear before restart_on_transition
       // document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
