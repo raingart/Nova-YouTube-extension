@@ -30,22 +30,28 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'watch':
-            NOVA.waitElement('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
-               .then(link => {
+            // NOVA.waitElement('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
+            //    .then(link => {
+            //       // console.debug('watch page');
+            //       NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
+            //          // NOVA.waitElement('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
+            //          .then(el => {
+            //             if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
+
+            //             setVideoCount({
+            //                'container': el,
+            //                'channel_id': new URL(link.href).pathname.split('/')[2],
+            //             });
+            //          });
+            //    });
+            // break;
+
+            NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
+               .then(el => {
                   // console.debug('watch page');
-                  NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
-                     // NOVA.waitElement('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
-                     .then(el => {
-                        if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
-                        setVideoCount({
-                           'container': el,
-                           'channel_id': new URL(link.href).pathname.split('/')[2],
-                           // ALL BELOW - not updated after page transition!
-                           // || window.ytplayer?.config?.args.ucid
-                           // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
-                           // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
-                        });
-                     });
+                  if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
+
+                  setVideoCount(el);
                });
             break;
 
@@ -54,23 +60,24 @@ window.nova_plugins.push({
                // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
                .then(el => {
                   // console.debug('channel page');
-                  if (channelId = NOVA.getChannelId()) {
-                     setVideoCount({ 'container': el, 'channel_id': channelId });
-                  }
+                  setVideoCount(el);
                });
             break;
       }
 
-      function setVideoCount({ container = required(), channel_id }) {
+      function setVideoCount(container = required()) {
          // console.debug('setVideoCount:', ...arguments);
+         const channelId = NOVA.getChannelId();
+         if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
+
          // cached
-         if (storage = sessionStorage.getItem(CACHE_PREFIX + channel_id)) {
+         if (storage = sessionStorage.getItem(CACHE_PREFIX + channelId)) {
             insertToHTML({ 'text': storage, 'container': container });
 
          } else {
             NOVA.request.API({
                request: 'channels',
-               params: { 'id': channel_id, 'part': 'statistics' },
+               params: { 'id': channelId, 'part': 'statistics' },
                api_key: user_settings['custom-api-key'],
             })
                .then(res => {
@@ -78,7 +85,7 @@ window.nova_plugins.push({
                      if (videoCount = +item.statistics.videoCount) {
                         insertToHTML({ 'text': videoCount, 'container': container });
                         // save cache in tabs
-                        sessionStorage.setItem(CACHE_PREFIX + channel_id, videoCount);
+                        sessionStorage.setItem(CACHE_PREFIX + channelId, videoCount);
                      }
                   });
                });

@@ -34,20 +34,19 @@ chrome.runtime.onInstalled.addListener(details => {
             // );
 
             // updateKeyStorage
-            Storage.getParams(settings => {
-               const keyRenameTemplate = {
-                  // 'oldKey': 'newKey',
-                  'video-unblocker': 'video-unblock-region',
-               }
-               for (const oldKey in settings) {
-                  if (newKey = keyRenameTemplate[oldKey]) {
-                     console.log(oldKey, '=>', newKey);
-                     delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
-                  }
-               }
-               console.debug('new updated settings:', settings);
-               Storage.setParams(settings, 'sync');
-            }, 'sync');
+            // Storage.getParams(settings => {
+            //    const keyRenameTemplate = {
+            //       // 'oldKey': 'newKey',
+            //    }
+            //    for (const oldKey in settings) {
+            //       if (newKey = keyRenameTemplate[oldKey]) {
+            //          console.log(oldKey, '=>', newKey);
+            //          delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
+            //       }
+            //    }
+            //    console.debug('new updated settings:', settings);
+            //    Storage.setParams(settings, 'sync');
+            // }, 'sync');
 
             break;
       }

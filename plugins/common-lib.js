@@ -25,6 +25,7 @@ const NOVA = {
    //    });
    // },
 
+   // untilDOM
    waitElement(selector = required(), container) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
       if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
@@ -51,7 +52,7 @@ const NOVA = {
          new MutationObserver((mutations, observer) => {
             for (let mutation of mutations) {
                for (const node of mutation.addedNodes) {
-                  if (![1, 3, 8].includes(node.nodeType)) continue;
+                  if (![1, 3, 8].includes(node.nodeType)) continue; // speedup hack
 
                   if (node.matches && node.matches(selector)) { // this node
                      // console.debug('[2]', mutation.type, node.nodeType, selector);
@@ -59,9 +60,9 @@ const NOVA = {
                      return resolve(node);
 
                   } else if ( // inside node
-                     (el_ = node.parentElement || node)
-                     && (el_ instanceof HTMLElement)
-                     && (element = el_.querySelector(selector))
+                     (parentEl = node.parentElement || node)
+                     && (parentEl instanceof HTMLElement)
+                     && (element = parentEl.querySelector(selector))
                   ) {
                      // console.debug('[3]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
@@ -71,7 +72,7 @@ const NOVA = {
             }
             // after loop
             if (document?.readyState != 'loading' // fix slowdown page
-               && (element = (document?.body || document).querySelector(selector))
+               && (element = (container || document?.body || document).querySelector(selector))
             ) { // in global
                // console.debug('[4]', selector);
                observer.disconnect();
@@ -85,25 +86,38 @@ const NOVA = {
       });
    },
 
-   // async waitUntil(condition, timeout = 100) {
-   //    return new Promise((resolve) => {
-   //       const interval = setInterval(() => {
-   //          if (result = condition) {
-   //             clearInterval(interval);
-   //             resolve(result);
-   //          }
-   //       }, timeout);
-   //    });
-   // },
+   /** wait for every DOM change until a condition becomes true */
+   // await NOVA.waitUntil(?, 500) // 50ms
+   async waitUntil(condition = required(), timeout = 100) {
+      if (typeof condition !== 'function') return console.error('waitUntil > condition is not fn:', typeof condition);
 
-   watchElement_list: {}, // can to stop watch setInterval
-   // NOVA.clearInterval(NOVA.watchElement_list[attr_mark]); // ex.
+      return new Promise((resolve) => {
+         if (result = condition()) {
+            // console.debug('waitUntil[1]', result, condition, timeout);
+            resolve(result);
 
-   clear_watchElement(name = required()) {
-      return this.watchElement_list.hasOwnProperty(name) && clearInterval(this.watchElement_list[name]);
+         } else {
+            const interval = setInterval(() => {
+               if (result = condition()) {
+                  // console.debug('waitUntil[2]', result, condition, timeout);
+                  clearInterval(interval);
+                  resolve(result);
+               }
+               // console.debug('waitUntil[3]', result, condition, timeout);
+            }, timeout);
+         }
+      });
    },
 
-   watchElement({ selectors = required(), attr_mark, callback = required() }) {
+   watchElements_list: {}, // can to stop watch setInterval
+   // complete doesn't work
+   // clear_watchElements(name = required()) {
+   //    return this.watchElements_list.hasOwnProperty(name)
+   //       && clearInterval(this.watchElements_list[name])
+   //       && delete this.watchElements_list[name];
+   // },
+
+   watchElements({ selectors = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
       if (!Array.isArray(selectors) && typeof selectors !== 'string') return console.error('watch > selector:', typeof selectors);
       if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
@@ -115,8 +129,10 @@ const NOVA = {
             !Array.isArray(selectors) && (selectors = selectors.split(',').map(s => s.trim()));
 
             process(); // launch without waiting
-            this.watchElement_list[attr_mark] = setInterval(() =>
+            // if (attr_mark) {
+            this.watchElements_list[attr_mark] = setInterval(() =>
                document.visibilityState == 'visible' && process(), 1000 * 1.5); // 1.5 sec
+            // }
 
             function process() {
                // console.debug('watch.process', { selector, callback });
@@ -207,14 +223,13 @@ const NOVA = {
          }
       },
 
-      // ex: NOVA.css.getValue({ selector: 'video', property: 'z-index' })
-      getValue({ selector = required(), property = required() }) {
-         const el = (selector instanceof HTMLElement) ? selector : document.body.querySelector(selector);
-         return el && window.getComputedStyle(el)[property];
-         // return el
-         //    ? window.getComputedStyle(el)[property] // ok
-         //    : console.warn('getCSSValue:selector is empty', el, ...arguments); // err
-
+      // https://developer.mozilla.org/ru/docs/Web/API/CSSStyleDeclaration
+      // HTMLElement.prototype.getIntValue = () {}
+      // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
+      getValue(selector = required(), propName = required()) {
+         const el = document.body.querySelector(selector);
+         return el && getComputedStyle(el).getPropertyValue(propName);
+         // return el && getComputedStyle(el)[property];
       },
    },
 
@@ -440,6 +455,7 @@ const NOVA = {
    //    return result
    // },
 
+   // dateFormatter
    timeFormatTo: {
       hmsToSec(str) { // format out "h:mm:ss" > "sec"
          return ((arr = str?.split(':').filter(Number)) && arr.length)
@@ -450,22 +466,22 @@ const NOVA = {
          // 65.77 % slower
          // digit(ts = required()) { // format out "h:mm:ss"
          //    const
-         //       ms = Math.abs(+ts),
-         //       days = ~~(ms / 86400);
+         //       ts = Math.abs(+ts),
+         //       days = Math.floor(ts / 86400);
 
-         //    let t = new Date(ms).toISOString();
-         //    if (ms < 3600000) t = t.substr(14, 5); // add hours
+         //    let t = new Date(ts).toISOString();
+         //    if (ts < 3600000) t = t.substr(14, 5); // add hours
          //    else t = t.substr(11, 8); // only minutes
 
          //    return (days ? `${days}d ` : '') + t;
          // },
-         digit(ts = required()) { // format out "h:mm:ss"
+         digit(timeSec = required()) { // format out "h:mm:ss"
             const
-               ms = Math.abs(+ts),
-               d = ~~(ms / 86400),
-               h = ~~((ms % 86400) / 3600),
-               m = ~~((ms % 3600) / 60),
-               s = ~~(ms % 60);
+               ts = Math.abs(+timeSec),
+               d = ~~(ts / 86400),
+               h = ~~((ts % 86400) / 3600),
+               m = ~~((ts % 3600) / 60),
+               s = Math.floor(ts % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
@@ -480,13 +496,13 @@ const NOVA = {
             //       .join(':'); // format "h:m:s"
          },
 
-         abbr(ts = required()) { // format out "999h00m00s"
+         abbr(timeSec = required()) { // format out "999h00m00s"
             const
-               ms = Math.abs(+ts),
-               d = ~~(ms / 86400),
-               h = ~~((ms % 86400) / 3600),
-               m = ~~((ms % 3600) / 60),
-               s = ~~(ms % 60);
+               ts = Math.abs(+timeSec),
+               d = ~~(ts / 86400),
+               h = ~~((ts % 86400) / 3600),
+               m = ~~((ts % 3600) / 60),
+               s = Math.floor(ts % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
@@ -622,17 +638,23 @@ const NOVA = {
    getChannelId() {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
       return [
+         document.querySelector('meta[itemprop="channelId"][content]')?.content,
          // channel page
          (document.body.querySelector('ytd-app')?.__data?.data.response
             || document.body.querySelector('ytd-app')?.data?.response
             || window.ytInitialData
          )
             ?.metadata?.channelMetadataRenderer?.externalId,
-         document.head.querySelector('meta[itemprop="channelId"][content]')?.content,
-         document.head.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
+         document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
          location.pathname.split('/')[2],
          // playlist page
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
+         // watch page
+         // document.body.querySelector('#owner #upload-info a[href]')
+         // ALL BELOW - not updated after page transition!
+         // || window.ytplayer?.config?.args.ucid
+         // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
+         // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
       ]
          .find(i => isChannelId(i))
    },

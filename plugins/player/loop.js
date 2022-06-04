@@ -35,7 +35,7 @@ window.nova_plugins.push({
             // "ye-repeat-button"
             btn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
             btn.style.opacity = .5;
-            btn.style.minWidth = NOVA.css.getValue({ selector: container, property: 'width' }) || '48px'; // fix if has chapters
+            btn.style.minWidth = getComputedStyle(container).width || '48px'; // fix if has chapters
             btn.title = 'Repeat';
             // btnPopup.setAttribute('aria-label','');
             btn.innerHTML =

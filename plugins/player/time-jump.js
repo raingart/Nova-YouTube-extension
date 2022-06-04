@@ -123,23 +123,22 @@ window.nova_plugins.push({
                      function seekToNextChapter() {
                         if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
                            && chaptersContainer?.children.length > 1
-                           && (progressContainerWidth = parseInt(NOVA.css.getValue({ selector: chaptersContainer, property: 'width' })))
+                           && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
                         ) {
                            const progressRatio = this.currentTime / this.duration;
                            let passedWidth = 0;
                            for (const chapter of chaptersContainer.children) {
                               const
-                                 chapterWidth = parseInt(NOVA.css.getValue({ selector: chapter, property: 'width' })),
-                                 ChapterRatio = (passedWidth + chapterWidth) / progressContainerWidth,
-                                 chapterMargin = parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-left' }))
-                                    + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-right' }));
+                                 { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
+                                 chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
+                                 chapterRatio = (passedWidth + width) / progressContainerWidth;
 
-                              // console.debug('Chapter', ChapterRatio, chapterWidth);
-                              if (ChapterRatio >= progressRatio && ChapterRatio < 1) {
-                                 return ~~(ChapterRatio * this.duration) + chapterMargin + 1;
+                              // console.debug('Chapter', chapterRatio, chapterWidth);
+                              if (chapterRatio >= progressRatio && chapterRatio < 1) {
+                                 return ~~(chapterRatio * this.duration) + chapterMargin + 1;
                               }
                               // accumulate passed
-                              passedWidth += chapterWidth + chapterMargin;
+                              passedWidth += width + chapterMargin;
                            }
                            // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chaptersContainer?.children.length, progressContainerWidth, '/', progressRatio);
                         }
@@ -155,7 +154,7 @@ window.nova_plugins.push({
                content: attr(data-before);
                color: #ffcc00;
             }`);
-         // color: ${NOVA.css.getValue({ selector: '.ytp-swatch-background-color', property: 'background-color' }) || '#f00'};
+         // color: ${getComputedStyle(document.querySelector('.ytp-swatch-background-color'))['background-color'] || '#f00'};
 
          NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {

@@ -91,7 +91,7 @@ const App = {
                margin: '50px',
                'z-index': 9999,
                'border-radius': '2px',
-               'background-color': typeof NOVA === 'object' ? '#0099ff' : '#f00',
+               'background-color': typeof NOVA === 'object' ? '#0099ff' : 'darkred',
                'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
                'font-size': '12px',
                color: '#fff',
@@ -170,7 +170,6 @@ App.init();
 // for testing
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
-// https://www.youtube.com/watch?v=I0dZOM0wTzg#music - shot duration
 
 // wide-screen video
 // https://www.youtube.com/watch?v=B4yuZhKRW1c
@@ -184,6 +183,7 @@ App.init();
 // https://www.youtube.com/watch?v=gWqENeW7EyQ
 // https://www.youtube.com/watch?v=Hlk7AzBMmOA
 // https://www.youtube.com/watch?v=bDmA8qQKhMY
+// https://www.youtube.com/watch?v=Ol8eMfmzpe0
 
 // test z-index "Show chat replay" button
 // https://www.youtube.com/watch?v=9Mv1sOp0Xg8

@@ -19,13 +19,13 @@ window.nova_plugins.push({
 
       NOVA.css.push(
          `a#thumbnail,
-         a[class*=thumbnail] {
+         a[class*="thumbnail"] {
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
          /*a.ytp-videowall-still:visited, <-- Doesn't work in embed*/
          a#thumbnail:visited,
-         a[class*=thumbnail]:visited {
+         a[class*="thumbnail"]:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
          }`);
 
@@ -96,7 +96,7 @@ window.nova_plugins.push({
          'label:de': 'Titelfarbe auswählen',
          type: 'color',
          value: '#ff4500',
-         'data-dependent': '{"thumbnails_watched_title":"true"}',
+         'data-dependent': { 'thumbnails_watched_title': true },
       },
    }
 });

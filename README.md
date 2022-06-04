@@ -26,7 +26,7 @@ You can now load the extension into your browser through the browser's extension
 
 **Extensions**: `$ ./package-extensions.sh`
 
-**Userscript**: `$ make build`
+**Userscript**: `$ make`
 
 ## Development
 ### File structure

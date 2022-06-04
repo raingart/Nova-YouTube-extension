@@ -10,16 +10,16 @@ window.nova_plugins.push({
    // 'title:tr': 'Şort Gizle',
    'title:de': 'Shorts verstecken',
    run_on_pages: 'results, feed, channel',
-   restart_on_transition: true,
+   // restart_on_transition: true,
    section: 'other',
    // desc: '',
    _runtime: user_settings => {
 
-      const ATTR_MARK = 'nova-shorts-cleared';
+      const ATTR_MARK = 'nova-thumb-shorts-cleared';
 
       // clear before restart_on_transition
-      document.addEventListener('yt-navigate-start', () =>
-         NOVA.clear_watchElement(ATTR_MARK), { capture: true, once: true });
+      // document.addEventListener('yt-navigate-start', () =>
+      //    NOVA.clear_watchElements(ATTR_MARK), { capture: true, once: true });
 
       // fix clear thumb on page update (change sort etc.)
       // document.addEventListener('yt-page-data-updated', () =>
@@ -27,7 +27,7 @@ window.nova_plugins.push({
          document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
          , { capture: true, once: true });
 
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: [
             // 'ytd-rich-item-renderer', // home
             'ytd-video-renderer', // results

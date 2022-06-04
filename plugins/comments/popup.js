@@ -32,8 +32,8 @@ window.nova_plugins.push({
                   top: ${masthead.offsetHeight || 56}px;
                   right: 0;
                   z-index: ${Math.max(
-                  NOVA.css.getValue({ selector: '#masthead-container', property: 'z-index' }),
-                  NOVA.css.getValue({ selector: '#movie_player', property: 'z-index' }),
+                  getComputedStyle(masthead)['z-index'],
+                  getComputedStyle(movie_player)['z-index'],
                   601) + 1};
                }
 
@@ -44,7 +44,7 @@ window.nova_plugins.push({
                   visibility: visible;
                   /*transform: rotate(-90deg) translateX(-100%);*/
                   right: 4em;
-                  padding: 6px 8px;
+                  padding: 0 8px 3px;
                   line-height: normal;
                   font-family: Roboto, Arial, sans-serif;
                   font-size: 11px;

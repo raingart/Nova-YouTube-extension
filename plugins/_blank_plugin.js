@@ -59,7 +59,7 @@ window.nova_plugins.push({
          });
 
       // If you want the search to not be stopped, use this construction
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: 'a#thumbnail img[src]', // use css selector (array, srting). Like document.body.querySelectorAll('a#thumbnail img[src]:not([hidden])')
          // The attribute with which the already found elements will be marked
          attr_mark: 'timestamps-updated', // delete if you want to constantly watch
@@ -147,7 +147,7 @@ window.nova_plugins.push({
          label: 'Smooth',
          type: 'checkbox',
          title: 'Help info',
-         'data-dependent': '{"jump_step":"true"}',
+         'data-dependent': { 'jump_step': true },
       },
    },
 });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.27.0
+// @version         0.28.0
 // @description     YouTube Enhancer
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>

@@ -15,8 +15,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       document.addEventListener('keydown', ({ target }) => {
-         if (movie_player.contains(document.activeElement) // player active
-            || ['input', 'textarea'].includes(target.localName) || target.isContentEditable // text edit field
+         // movie_player.contains(document.activeElement) // Dont use! stay overline
+         if (['input', 'textarea'].includes(target.localName) || target.isContentEditable // text edit field
          ) return;
 
          // NOVA.videoElement?.focus();

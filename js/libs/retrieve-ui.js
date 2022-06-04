@@ -34,8 +34,7 @@ const PopulateForm = {
                         break;
 
                      case 'radio':
-                        (Array.isArray(val) ? val : [val])
-                           .forEach(value => el.checked = value ? true : false); // multiple Check/Uncheck
+                        [...document.getElementsByName(key)]?.some(e => e.value == val && (e.checked = true));
                         break;
 
                      default:

@@ -15,12 +15,12 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      const ATTR_MARK = 'nova-live-cleared';
+      const ATTR_MARK = 'nova-thumb-live-cleared';
 
       // clear before restart_on_transition
-      // document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElement(ATTR_MARK));
+      // document.addEventListener('yt-navigate-start', () => NOVA.clear_watchElements(ATTR_MARK));
 
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: [
             'ytd-rich-item-renderer', // home
             'ytd-video-renderer', // results
@@ -32,7 +32,7 @@ window.nova_plugins.push({
          attr_mark: ATTR_MARK,
          callback: thumb => {
             // live now
-            if (thumb.querySelector('.badge-style-type-live-now')) {
+            if (thumb.querySelector('#video-badges [class*="live-now"], img[src*="qdefault_live.jpg"]')) {
                thumb.remove();
                // thumb.style.display = 'none';
 

@@ -22,10 +22,11 @@ const Plugins = {
       'player/resume-playback.js',
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
-      'player/subtitle.js',
+      'player/subtitle-transparent.js',
+      'player/subtitle-lang.js',
       // 'player/miniplayer-disable.js',
       // 'player/stop.js', // incompatible with quality.js
-      'player/unblocker.js',
+      'player/unblock-region.js',
       'player/next-autoplay.js',
       'player/video-cards.js',
       'player/fullscreen-scroll.js',

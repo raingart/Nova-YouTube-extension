@@ -34,7 +34,6 @@ window.nova_plugins.push({
                NOVA.bezelTrigger(movie_player.getVolume() + '%');
 
                if (user_settings.volume_mute_unsave) {
-                  this.muted = false;
                   playerVolume.saveInSession(movie_player.getVolume());
                }
             });
@@ -93,10 +92,9 @@ window.nova_plugins.push({
          saveInSession(level = required()) {
             const storageData = {
                creation: Date.now(),
-               // data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
-               data: { 'volume': +level, 'muted': ((level || user_settings.volume_mute_unsave) ? 'false' : 'true') },
+               data: { 'volume': +level, 'muted': (level ? 'false' : 'true') },
+               // data: { 'volume': +level, 'muted': ((level || user_settings.volume_mute_unsave) ? 'false' : 'true') },
             };
-            console.debug('data', storageData);
 
             try {
                localStorage['yt-player-volume'] = JSON.stringify(

@@ -38,7 +38,7 @@
 
 
 body {
-   background: var(--bg);
+   background-color: var(--bg);
    color: var(--fg);
    /* -webkit-filter: invert(100%); */
 }
@@ -151,6 +151,6 @@ input[type=button]:hover {
    }
 
    /* ::-webkit-scrollbar-track:hover {
-      background: #444; */
-   }
+      background: #444;
+   } */
 }

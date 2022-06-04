@@ -22,6 +22,10 @@ window.nova_plugins.push({
    'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    _runtime: user_settings => {
 
+      if (!('IntersectionObserver' in window)) {
+         return alert('Pin player Error!\IntersectionObserver not supported.');
+      }
+
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
       // if (user_settings.player_pip_scroll) {
       //    if (!document.pictureInPictureEnabled) return console, error('pip disable');
@@ -62,6 +66,7 @@ window.nova_plugins.push({
       // toggle
       NOVA.waitElement('#player-theater-container')
          .then(container => {
+            // movie_player / #ytd-player
             new window.IntersectionObserver(([entry]) => {
                // leave viewport
                if (entry.isIntersecting) {
@@ -76,38 +81,35 @@ window.nova_plugins.push({
 
                window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
             }, {
-               root: null,
                threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
             })
                .observe(container);
          });
 
       NOVA.waitElement(PINNED_SELECTOR)
-         .then(player => {
+         .then(async player => {
             // add drag
             drag.init(player);
 
-            // init css
-            const waitHeader = setInterval(() => {
-               // awaiting positioning of elements to calculate positioning
-               if (
-                  // movie_player.clientWidth && movie_player.clientHeight
-                  NOVA.videoElement.videoWidth && NOVA.videoElement.videoHeight
-                  && !isNaN(NOVA.videoElement.videoWidth) && !isNaN(NOVA.videoElement.videoHeight)
-                  // && document.getElementById('masthead-container')?.offsetHeight
-               ) {
-                  clearInterval(waitHeader);
-                  initMiniStyles();
-               }
-            }, 500); // 500ms
+            // wait video size
+            await NOVA.waitUntil(
+               // movie_player.clientWidth && movie_player.clientHeight
+               () => (NOVA.videoElement.videoWidth && NOVA.videoElement.videoHeight)
+               // && document.getElementById('masthead-container')?.offsetHeight
+               , 500) // 500ms
+
+            initMiniStyles();
 
             // add unpin button
             NOVA.css.push(
                PINNED_SELECTOR + ` {
                   --zIndex: ${Math.max(
-                  NOVA.css.getValue({ selector: '#chat', property: 'z-index' }),
-                  NOVA.css.getValue({ selector: '.ytp-chrome-top .ytp-cards-button', property: 'z-index' }),
-                  // NOVA.css.getValue({ selector: '#description', property: 'z-index' }), // consider plugin "description-popup"
+                  NOVA.css.getValue('#chat', 'z-index'),
+                  NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
+                  // NOVA.css.getValue('#description', 'z-index'), // consider plugin "description-popup"
+                  // getComputedStyle(document.getElementById('chat'))['z-index'],
+                  // getComputedStyle(document.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
+                  // // getComputedStyle(document.getElementById('description'))['z-index'], // consider plugin "description-popup"
                   601) + 1};
                }
 
@@ -180,7 +182,7 @@ window.nova_plugins.push({
             case 'top-right':
                initcss.top = user_settings['header-unfixed'] ? 0
                   : (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
-               initcss.right = scrollbarWidth;
+               initcss.right = scrollbarWidth; // scroll right
                break;
             case 'bottom-left':
                initcss.bottom = 0;
@@ -188,7 +190,7 @@ window.nova_plugins.push({
                break;
             case 'bottom-right':
                initcss.bottom = 0;
-               initcss.right = scrollbarWidth;
+               initcss.right = scrollbarWidth; // scroll right
                break;
          }
 
@@ -376,15 +378,15 @@ window.nova_plugins.push({
       },
       player_float_scroll_position: {
          _tagName: 'select',
-         label: 'Player fixing position',
-         'label:zh': '玩家固定位置',
-         'label:ja': 'プレーヤーの固定位置',
-         'label:ko': '선수 고정 위치',
-         'label:es': 'Posición de fijación del jugador',
-         'label:pt': 'Posição de fixação do jogador',
-         'label:fr': 'Position de fixation du joueur',
-         // 'label:tr': 'Oyuncu sabitleme pozisyonu',
-         'label:de': 'Spielerfixierungsposition',
+         label: 'Player position',
+         'label:zh': '球员位置',
+         'label:ja': 'プレイヤーの位置',
+         'label:ko': '선수 위치',
+         'label:es': 'Posición de jugador',
+         'label:pt': 'Posição do jogador',
+         'label:fr': 'La position du joueur',
+         'label:tr': 'Oyuncu pozisyonu',
+         'label:de': 'Spielerposition',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },

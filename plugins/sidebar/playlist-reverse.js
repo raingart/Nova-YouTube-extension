@@ -102,7 +102,7 @@ window.nova_plugins.push({
          // Strategy 1
          reverseElement(document.body.querySelector('#secondary #playlist #items.playlist-items, ytm-playlist lazy-list'));
          scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
-         // Strategy 2: scroll Doesn't work
+         // Strategy 2: scroll doesn't work
          // NOVA.css.push(
          //    `#playlist #items.playlist-items {
          //       display: flex;

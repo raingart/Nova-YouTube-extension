@@ -1,14 +1,14 @@
 window.nova_plugins.push({
    id: 'search-filter',
-   title: 'Search channel filter',
-   'title:zh': '搜索频道过滤器',
-   'title:ja': 'チャンネルフィルターを検索',
-   'title:ko': '채널 필터 검색',
-   'title:es': 'Filtro de canales de búsqueda',
-   'title:pt': 'Filtro de canais de pesquisa',
-   'title:fr': 'Rechercher un filtre de canal',
-   // 'title:tr': 'Kanal filtresi ara',
-   'title:de': 'Kanalfilter suchen',
+   title: 'Blocked channels',
+   'title:zh': '屏蔽频道列表',
+   'title:ja': 'ブロックされたチャネルのリスト',
+   'title:ko': '차단된 채널 목록',
+   'title:es': 'Lista de canales bloqueados',
+   'title:pt': 'Lista de canais bloqueados',
+   'title:fr': 'Liste des chaînes bloquées',
+   // 'title:tr': 'Engellenen kanalların listesi',
+   'title:de': 'Liste der gesperrten Kanäle',
    run_on_pages: 'results',
    section: 'other',
    desc: 'Hide channels on the search page',
@@ -27,13 +27,13 @@ window.nova_plugins.push({
          .map(e => e.toString().trim().toLowerCase())
          .filter(e => e.length);
 
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: [
             'ytd-video-renderer',
             'ytd-playlist-renderer',
             'ytm-compact-video-renderer'
          ],
-         attr_mark: 'thumb-filtered',
+         attr_mark: 'thumb-search-filtered',
          callback: thumb => {
             keywords.forEach(keyword => {
                if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')
@@ -51,15 +51,15 @@ window.nova_plugins.push({
    options: {
       search_filter_channel_blocklist: {
          _tagName: 'textarea',
-         label: 'Channels list',
+         label: 'List',
          'label:zh': '频道列表',
          'label:ja': 'チャンネルリスト',
          'label:ko': '채널 목록',
-         'label:es': 'Lista de canales',
-         'label:pt': 'Lista de canais',
-         'label:fr': 'Liste des chaînes',
-         // 'label:tr': 'Kanal listesi',
-         'label:de': 'Liste der Kanäle',
+         'label:es': 'Lista',
+         'label:pt': 'Lista',
+         'label:fr': 'Liste',
+         // 'label:tr': 'Listesi',
+         'label:de': 'Liste',
          title: 'separator: "," or ";" or "new line"',
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',

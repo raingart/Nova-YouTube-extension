@@ -48,7 +48,7 @@ window.nova_plugins.push({
       // Strategy 2
       // const conteinerSelector = 'ytd-grid-video-renderer:not([hidden])';
 
-      // NOVA.watchElement({
+      // NOVA.watchElements({
       //    selectors: [
       //       `${conteinerSelector} ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"]`,
       //       `${conteinerSelector} #overlays [aria-label="PREMIERE"]`

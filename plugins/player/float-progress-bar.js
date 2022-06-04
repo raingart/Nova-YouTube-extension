@@ -101,11 +101,8 @@ window.nova_plugins.push({
                   <div id="${SELECTOR_ID}-chapters"></div>
                </div>`);
 
-            const
-               zIndex = NOVA.css.getValue({ selector: '.ytp-chrome-bottom', property: 'z-index' }) || 60,
-               height = +user_settings.player_float_progress_bar_height || 3,
-               bgColor = NOVA.css.getValue({ selector: '.ytp-progress-list', property: 'background-color' }) || 'rgba(255,255,255,.2)';
-            // bufferColor = NOVA.css.getValue({ selector: '.ytp-load-progress', property: 'background-color' }) || 'rgba(255,255,255,.4)';
+            const zIndex = getComputedStyle(document.querySelector('.ytp-chrome-bottom'))['z-index'] || 60;
+            // const bufferColor = getComputedStyle(document.querySelector('.ytp-load-progress'))['background-color'] || 'rgba(255,255,255,.4)';
 
             NOVA.css.push(
                `[id|=${SELECTOR_ID}] {
@@ -115,13 +112,13 @@ window.nova_plugins.push({
 
                ${SELECTOR} {
                   --opacity: ${+user_settings.player_float_progress_bar_opacity || .7};
-                  --height: ${height}px;
-                  --bg-color: ${bgColor};
+                  --height: ${+user_settings.player_float_progress_bar_height || 3}px;
+                  --bg-color: ${getComputedStyle(document.querySelector('.ytp-progress-list'))['background-color'] || 'rgba(255,255,255,.2)'};
                   --zindex: ${zIndex};
 
                   opacity: var(--opacity)
                   z-index: var(--zindex);
-                  background: var(--bg-color);
+                  background-color: var(--bg-color);
                   width: 100%;
                   visibility: hidden;
                }
@@ -175,33 +172,21 @@ window.nova_plugins.push({
       }
 
       const renderChapters = {
-         init(vid) {
+         async init(vid) {
             if (NOVA.currentPage == 'watch' && !(vid instanceof HTMLElement)) return console.error('vid not HTMLElement:', chaptersContainer);
 
-            const waitDuration = setInterval((() => {
-               switch (NOVA.currentPage) {
-                  case 'watch':
-                     return () => {
-                        if (!isNaN(vid.duration)) {
-                           clearInterval(waitDuration);
-                           this.from_description(vid.duration);
-                        }
-                     };
-                     break;
+            switch (NOVA.currentPage) {
+               case 'watch':
+                  await NOVA.waitUntil(() => !isNaN(vid.duration), 1000) // panel hides for a few seconds. No need to hurry
+                  this.from_description(vid.duration);
+                  break;
 
-                  // embed dont have description
-                  case 'embed':
-                     return () => {
-                        if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
-                           && chaptersContainer?.children.length > 1
-                        ) {
-                           clearInterval(waitDuration);
-                           this.from_div(chaptersContainer);
-                        }
-                     }
-                     break;
-               }
-            })(), 1000); // panel hides for a few seconds. No need to hurry
+               // embed dont have description
+               case 'embed':
+                  await NOVA.waitUntil(() => (chaptersContainer = document.body.querySelector('.ytp-chapters-container')) && chaptersContainer?.children.length, 1000) // panel hides for a few seconds. No need to hurry
+                  this.from_div(chaptersContainer);
+                  break;
+            }
          },
 
          from_description(duration = required()) {
@@ -241,17 +226,16 @@ window.nova_plugins.push({
          from_div(chaptersContainer = required()) {
             if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
             const
-               progressContainerWidth = parseInt(NOVA.css.getValue({ selector: chaptersContainer, property: 'width' })),
+               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
                chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
 
             for (const chapter of chaptersContainer.children) {
                const
                   newChapter = document.createElement('span'),
-                  chapterWidth = parseInt(NOVA.css.getValue({ selector: chapter, property: 'width' })),
-                  chapterMargin = parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-left' }))
-                     + parseInt(NOVA.css.getValue({ selector: chapter, property: 'margin-right' }));
+                  { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
+                  chapterMargin = parseInt(marginLeft) + parseInt(marginRight);
 
-               newChapter.style.width = (((chapterWidth + chapterMargin) / progressContainerWidth) * 100) + '%';
+               newChapter.style.width = (((width + chapterMargin) / progressContainerWidth) * 100) + '%';
 
                chaptersConteiner.append(newChapter);
             }

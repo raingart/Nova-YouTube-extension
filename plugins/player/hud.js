@@ -63,7 +63,7 @@ window.nova_plugins.push({
                `#${SELECTOR_ID} {
                   --color: #fff;
                   --bg-color: rgba(0,0,0,0.3);
-                  --zindex: ${NOVA.css.getValue({ selector: '.ytp-chrome-top', property: 'z-index' }) || 60};
+                  --zindex: ${getComputedStyle(document.querySelector('.ytp-chrome-top'))['z-index'] || 60};
 
                   position: absolute;
                   right: 0;
@@ -206,7 +206,7 @@ window.nova_plugins.push({
          label: 'Color',
          type: 'color',
          value: '#ff0000', // red
-         'data-dependent': '{"player_indicator_type":["!text-top"]}',
+         'data-dependent': { 'player_indicator_type': '!text-top' },
       },
    }
 });

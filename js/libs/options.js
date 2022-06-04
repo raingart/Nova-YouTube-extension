@@ -12,7 +12,9 @@ window.addEventListener('load', () => {
                // let dependentsList = dependentEl.getAttribute('data-dependent').split(',').forEach(i => i.trim());
                const dependentsJson = JSON.parse(dependentEl.getAttribute('data-dependent').toString());
                const handler = () => showOrHide(dependentEl, dependentsJson);
-               document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
+               // document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
+               document.getElementsByName(Object.keys(dependentsJson))
+                  .forEach(el => el.addEventListener('change', handler));
                // init state
                handler();
             });
@@ -21,17 +23,33 @@ window.addEventListener('load', () => {
             // console.debug('showOrHide', ...arguments);
             for (const targetName in dependentsJson) {
                // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-               if (targetEl = document.getElementsByName(targetName)[0]) {
-                  const targetValue = dependentsJson[targetName].toString();
-                  const targetValues = (function () {
+               const targetEl = Array.from(document.getElementsByName(targetName))
+                  .find(e => (e.type == 'radio') ? e.checked : e); // return radio:checked or document.getElementsByName(targetName)[0]
+
+               if (targetEl) {
+                  const targetValues = Array.isArray(dependentsJson[targetName])
+                     ? dependentsJson[targetName]
+                     : [dependentsJson[targetName]];
+
+                  const targetValuesList = (function () {
                      if (options = targetEl?.selectedOptions) {
                         return Array.from(options).map(({ value }) => value);
                      }
                      return [targetEl.value];
                   })();
 
-                  if (targetValue && (targetEl.checked || targetValues.includes(targetValue)) // has value
-                     || (targetValue.startsWith('!') && targetEl.value !== targetValue.replace('!', '')) // inverse
+                  // if (targetName == 'player_full_viewport')
+                  //    console.debug('targetValues', targetValuess, targetValues, dependentsJson[targetName]);
+
+                  if (targetValues.length // filter value present
+                     && ( // element has value or checked
+                        (targetEl.checked && !targetEl.matches('[type="radio"]')) // skip radio (which is always checked. Unlike a checkbox)
+                        || targetValues.some(i => targetValuesList.includes(i.toString())) // has value
+                     )
+                     // || (targetValues.startsWith('!') && targetEl.value !== targetValues.replace('!', '')) // inverse value
+                     || targetValues.some(i =>
+                        i.toString().startsWith('!') && !targetValuesList.includes(i.toString().replace('!', '')) // inverse value
+                     )
                   ) {
                      // console.debug('show:', targetName);
                      dependentEl.classList.remove('hide');

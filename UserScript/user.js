@@ -6,17 +6,16 @@ const
    user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'video-unblocker': 'video-unblock-region',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 if (isOptionsPage()) return;
 landerPlugins();
@@ -32,7 +31,7 @@ function renderSettingButton() {
          a.innerHTML =
             // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 0 28 28" height="100%" width="100%" version="1.1">
+               <svg viewBox="0 -2 28 28" height="100%" width="100%" version="1.1">
                   <g fill="deepskyblue">
                      <polygon points='21 12 3,1.8 3 22.2' />
                      <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
@@ -91,7 +90,7 @@ function isOptionsPage() {
       f.accept = 'application/JSON';
       f.style.display = 'none';
       f.addEventListener('change', function () {
-         if (f.files.length !== 1) return;
+         if (f.files.length !== 1) return alert('file empty');
          let rdr = new FileReader();
          rdr.addEventListener('load', function () {
             try {

@@ -93,13 +93,13 @@ const Opt = {
                   li.className = 'item';
                   li.innerHTML =
                      `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc}" flow="up"` : ''}>
-                     <label for="${plugin.id}">${plugin.title}</label>
-                     <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
-                     ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}
-                  </div>
-                  <div class="opt">
-                     <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
-                  </div>`;
+                        <label for="${plugin.id}">${plugin.title}</label>
+                        <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
+                        ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}
+                     </div>
+                     <div class="opt">
+                        <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
+                     </div>`;
                   // ⚠️
 
                   if (plugin.options) {
@@ -124,6 +124,7 @@ const Opt = {
       },
 
       options(obj, id) {
+         // console.debug('', ...arguments);
          const exportHTML = document.createElement('ul');
          exportHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
@@ -139,13 +140,23 @@ const Opt = {
             const exportContainer = document.createElement('li');
             const exportProperty = document.createElement(property._tagName);
 
-            property.name = key;
-            property.id = key;
+            if (property.hasOwnProperty('name')) {
+               if (property.type?.toLowerCase() == 'radio') {
+                  property.id = property.value; // for radio
+               } else {
+                  console.error('property.name not defined for radio element', property);
+               }
+
+            } else {
+               property.name = key;
+               property.id = key;
+            }
+
             delete property._tagName;
 
             if (property['data-dependent']) {
                // exportContainer.setAttribute('data-dependent', '{\"'+ id +'\":[true]}');
-               exportContainer.setAttribute('data-dependent', property['data-dependent']);
+               exportContainer.setAttribute('data-dependent', JSON.stringify(property['data-dependent']));
                delete property['data-dependent'];
             }
 
@@ -196,8 +207,9 @@ const Opt = {
 
                      case 'label':
                         const label = document.createElement(attr);
+                        // label.textContent = value;
                         label.innerHTML = '<font>↪</font>' + value;
-                        label.htmlFor = property.name;
+                        label.htmlFor = property.type?.toLowerCase() == 'radio' ? property.value : property.name;
                         exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
                         break;
@@ -332,7 +344,7 @@ const Opt = {
             f.accept = 'application/JSON';
             f.style.display = 'none';
             f.addEventListener('change', ({ target }) => {
-               if (f.files.length !== 1) return;
+               if (f.files.length !== 1) return alert('file empty');
                let rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {

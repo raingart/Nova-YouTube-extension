@@ -96,6 +96,12 @@
       "message": "buymeacoffee 지원"
    },
    "donate_buymeacoffee": {
-      "message": "기부[buymeacoffee]"
+      "message": "기부【buymeacoffee】"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Paypal지원 "
+   },
+   "donate_paypal": {
+      "message": "기부【Paypal】"
    }
 }

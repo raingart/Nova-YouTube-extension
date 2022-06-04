@@ -97,5 +97,11 @@
    },
    "donate_buymeacoffee": {
       "message": "Spenden (buymeacoffee)"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Unterstützung mit Paypal"
+   },
+   "donate_paypal": {
+      "message": "Spenden (Paypal)"
    }
 }

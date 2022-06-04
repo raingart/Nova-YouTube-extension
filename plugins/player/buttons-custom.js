@@ -137,7 +137,7 @@ window.nova_plugins.push({
                      // height = Math.round(width / aspectRatio);
                      height = Math.round(width / (16 / 9));
 
-                  url = new URL(document.head.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + movie_player.getVideoData().video_id));
+                  url = new URL(document.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + movie_player.getVideoData().video_id));
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -176,12 +176,16 @@ window.nova_plugins.push({
                      top: 0;
                      right: 0;
                      overflow: hidden;
-                     margin: 30px; /* <-- possibility out of date */
+                     margin: 36px 30px; /* <-- possibility out of date */
                      box-shadow: 0 0 15px #000;
                      max-width: var(--width);
                      max-height: var(--height);
                      z-index: 300; /* <-- possibility out of date */
                   }
+                  /* for embed */
+                  /*html[data-cast-api-enabled] ${SELECTOR_SCREENSHOT} {
+                     margin-right: 0;
+                  }*/
 
                   /*${SELECTOR_SCREENSHOT}:hover {
                      outline: 2px dashed #f69c55;
@@ -197,7 +201,7 @@ window.nova_plugins.push({
                      position: absolute;
                      bottom: 0;
                      right: 0;
-                     background: rgba(0, 0, 0, .5);
+                     background-color: rgba(0, 0, 0, .5);
                      color: #FFF;
                      cursor: pointer;
                      font-size: 12px;
@@ -205,7 +209,7 @@ window.nova_plugins.push({
                      height: 100%;
                      width: 25%;
                   }
-                  ${SELECTOR_SCREENSHOT} .close-btn:hover { background: rgba(0, 0, 0, .65); }
+                  ${SELECTOR_SCREENSHOT} .close-btn:hover { background-color: rgba(0, 0, 0, .65); }
                   ${SELECTOR_SCREENSHOT} .close-btn > * { margin: auto; }`);
 
                const screenshotBtn = document.createElement('button');
@@ -268,12 +272,13 @@ window.nova_plugins.push({
                   }
                   // create
                   if (!container.id) {
-                     const headerContainer = document.getElementById('masthead-container');
                      container.id = SELECTOR_SCREENSHOT_ID;
                      container.target = '_blank'; // useful link
                      container.title = 'Click to save';
-                     container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
-                     container.style.zIndex = NOVA.css.getValue({ selector: headerContainer, property: 'z-index' }); // fix header overlapping
+                     if (headerContainer = document.getElementById('masthead-container')) { // skip embed
+                        container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
+                        container.style.zIndex = getComputedStyle(headerContainer)['z-index']; // fix header overlapping
+                     }
                      canvas.addEventListener('click', evt => {
                         evt.preventDefault();
                         downloadCanvasAsImage(evt.target);
@@ -337,7 +342,7 @@ window.nova_plugins.push({
                //          window.ytplayer.config.args.raw_player_response.videoDetails.thumbnail.thumbnails.pop(),
                //          window.ytplayer.config.args.raw_player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0],
                //       ]
-               //          .filter(u => u)
+               //          .filter(Boolean)
                //    window.open(thumbnail_url);
                // }
 
@@ -441,7 +446,15 @@ window.nova_plugins.push({
                      left: -2em;
                      list-style: none;
                      padding-bottom: .5em;
-                     z-index: ${NOVA.css.getValue({ selector: '.ytp-progress-bar', property: 'z-index' }) + 1};
+                     z-index: ${+getComputedStyle(document.querySelector('.ytp-progress-bar'))['z-index'] + 1};
+                  }
+
+                  /* for embed */
+                  html[data-cast-api-enabled] ${SELECTOR_QUALITY_LIST} {
+                     margin: 0;
+                     padding: 0;
+                     bottom: 3.3em;
+                     /* --yt-spec-brand-button-background: #c00; */
                   }
 
                   ${SELECTOR_QUALITY}:not(:hover) ${SELECTOR_QUALITY_LIST} {
@@ -465,7 +478,8 @@ window.nova_plugins.push({
                   }
 
                   ${SELECTOR_QUALITY_LIST} li.active { background: #720000; }
-                  ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: var(--yt-spec-brand-button-background); }`);
+                  ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background: #c00; }`);
+               // ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: var(--yt-spec-brand-button-background); }`);
                // conteiner <a>
                qualityConteinerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_QUALITY_CLASS_NAME}`;
                // qualityConteinerBtn.title = 'Change quality';
@@ -678,7 +692,7 @@ window.nova_plugins.push({
          min: 1.5,
          max: 4,
          value: 2.5,
-         'data-dependent': '{"player_buttons_custom_items":["popup"]}',
+         'data-dependent': { 'player_buttons_custom_items': ['popup'] },
       },
       player_buttons_custom_hotkey_toggle_speed: {
          _tagName: 'select',
@@ -695,7 +709,7 @@ window.nova_plugins.push({
          options: [
             { label: 'A', value: 'a', selected: true },
             'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
-         'data-dependent': '{"player_buttons_custom_items":["toggle-speed"]}',
+         'data-dependent': { 'player_buttons_custom_items': ['toggle-speed'] },
       },
    }
 });

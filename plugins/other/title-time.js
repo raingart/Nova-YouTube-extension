@@ -77,8 +77,7 @@ window.nova_plugins.push({
       }
 
       function setTitle(arr) {
-         document.title = arr
-            .filter(n => n)
+         document.title = arr.filter(Boolean)
             .join(' | '); // add to regex
          // .join(' • '); // add to regex
       }

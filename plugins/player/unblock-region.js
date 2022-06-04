@@ -37,11 +37,10 @@ window.nova_plugins.push({
 
       function redirect() {
          location.hostname = 'hooktube.com';
-         // window.location.assign(`https://watannetwork.com/tools/blocked/#url=` + NOVA.queryURL.get('v'))
-         // location.replace(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
+         // location.assign(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
 
          // tubeunblock.com is shut down
-         // location.replace(`${location.protocol}//hooktube.com/watch${location.search}`); // save time mark
+         // location.assign(`${location.protocol}//hooktube.com/watch${location.search}`); // save time mark
       }
 
    },

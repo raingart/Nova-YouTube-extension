@@ -97,5 +97,11 @@
    },
    "donate_buymeacoffee": {
       "message": "Bağış yap (buymeacoffee)"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Paypal ile destek"
+   },
+   "donate_paypal": {
+      "message": "Bağış yap  (Paypal)"
    }
 }

@@ -36,7 +36,7 @@ window.nova_plugins.push({
       // NOVA.waitElement('#movie_player')
       //    .then(() => {
       //       // trigger default indicator
-      //       // Strategy 1. Default indicator Doesn't work for html5 way (Strategy 2)
+      //       // Strategy 1. Default indicator doesn't work for html5 way (Strategy 2)
       //       movie_player.addEventListener('onPlaybackRateChange', rate => {
       //          console.debug('onPlaybackRateChange', rate);
       //       });
@@ -44,7 +44,7 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            const sliderConteiner = renderSlider.apply(this);
+            const sliderConteiner = renderSlider.apply(video);
             // console.debug('sliderConteiner', sliderConteiner);
 
             // trigger default indicator
@@ -276,7 +276,7 @@ window.nova_plugins.push({
 
                // ALL BELOW - not updated after page transition!
                // window.ytplayer?.config?.args.title,
-               // document.head.querySelector('meta[itemprop="genre"][content]')?.content,
+               // document.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
             ]
@@ -429,7 +429,7 @@ window.nova_plugins.push({
             { label: 'skip (extended)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:ko': '건너뛰다(확장)', 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:fr': 'sauter (étendu)', 'label:tr': 'atlamak (genişletilmiş)', 'label:de': 'überspringen (erweitert)' },
             { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:ko': '강제 적용', 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:fr': 'appliquer la force', 'label:tr': 'zorlamak', 'label:de': 'kraft anwenden' },
          ],
-         'data-dependent': '{"rate_default":"!1"}',
+         'data-dependent': { 'rate_default': '!1' },
       },
       rate_step: {
          _tagName: 'input',

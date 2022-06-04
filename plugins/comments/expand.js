@@ -19,7 +19,7 @@ window.nova_plugins.push({
       // document.addEventListener('yt-page-data-updated', () => location.reload());
 
       // comment
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: ['#contents #expander[collapsed]'],
          attr_mark: 'comment-expanded',
          callback: el => {
@@ -32,7 +32,7 @@ window.nova_plugins.push({
       });
 
       // comment replies
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: ['#more-replies'],
          attr_mark: 'replies-expanded',
          callback: el => {
@@ -44,14 +44,14 @@ window.nova_plugins.push({
       });
 
       // old method. No hover
-      // NOVA.watchElement({
+      // NOVA.watchElements({
       //    selector: '#contents #expander[collapsed] #more',
       //    attr_mark: 'comment-expanded',
       //    callback: btn => btn.click(),
       // });
 
       // if (user_settings.comments_view_reply) {
-      //    NOVA.watchElement({
+      //    NOVA.watchElements({
       //       selector: '#comment #expander #more-replies',
       //       attr_mark: 'replies-expanded',
       //       callback: btn => btn.click(),

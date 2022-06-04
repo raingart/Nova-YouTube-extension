@@ -97,5 +97,11 @@
    },
    "donate_buymeacoffee": {
       "message": "寄付【buymeacoffee】"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Paypalによるサポート"
+   },
+   "donate_paypal": {
+      "message": "寄付【Paypal】"
    }
 }

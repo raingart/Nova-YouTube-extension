@@ -13,7 +13,7 @@ window.nova_plugins.push({
    // 'label:tr': '',
    // 'label:de': '',
    run_on_pages: 'results, feed, channel, shorts',
-   restart_on_transition: true,
+   // restart_on_transition: true,
    section: 'other',
    desc: 'Redirect Shorts video to normal player',
    'desc:zh': '将 Shorts 视频重定向到普通播放器',
@@ -34,11 +34,11 @@ window.nova_plugins.push({
 
       if (user_settings['shorts-disable']) return; // conflict with plugin. Attention! After shorts redirect
 
-      const ATTR_MARK = 'nova-shorts-pathed';
+      const ATTR_MARK = 'nova-thumb-shorts-pathed';
 
       // clear before restart_on_transition
-      document.addEventListener('yt-navigate-start', () =>
-         NOVA.clear_watchElement(ATTR_MARK), { capture: true, once: true });
+      // document.addEventListener('yt-navigate-start', () =>
+      //    NOVA.clear_watchElements(ATTR_MARK), { capture: true, once: true });
 
       // fix clear thumb on page update (change sort etc.)
       // document.addEventListener('yt-page-data-updated', () =>
@@ -54,7 +54,7 @@ window.nova_plugins.push({
          'ytm-compact-video-renderer', // mobile
       ];
 
-      NOVA.watchElement({
+      NOVA.watchElements({
          selectors: thumbsSelectors.map(e => e + ':not([hidden]) a[href*="shorts/"]'),
          attr_mark: ATTR_MARK,
          callback: link => {

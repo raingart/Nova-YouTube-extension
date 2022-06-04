@@ -17,9 +17,10 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden])', // '.title';
-         MAX_TITLE_WORDS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
-         ATTR_MARK = 'nova-title-normalized';
+         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden]), h1.title',
+         MAX_CAPS_LETTERS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
+         ATTR_MARK = 'nova-thumb-title-normalized',
+         clearOfEmoji = str => str.replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
       // dirty fix bug with not updating thumbnails
       document.addEventListener('yt-navigate-finish', () =>
@@ -43,21 +44,25 @@ window.nova_plugins.push({
             // color: '#8A2BE2', // indicator
          }, `[${ATTR_MARK}]:first-letter`, 'important');
 
-         NOVA.watchElement({
+         NOVA.watchElements({
             selectors: VIDEO_TITLE_SELECTOR,
             attr_mark: ATTR_MARK,
             callback: title => {
-               let counterUpperCase = 0;
+               let countCaps = 0;
                const normalizedText = title.textContent.replace(UpperCaseLetterRegex, match => {
                   // console.debug('match', match);
-                  counterUpperCase++;
+                  countCaps++;
                   return match.toLowerCase();
                });
 
                // Upper case
-               if (counterUpperCase > MAX_TITLE_WORDS) {
+               if (countCaps > MAX_CAPS_LETTERS) {
                   title.textContent = normalizedText.trim();
-                  // console.debug('normalize:', counterUpperCase, '\n' + title.title, '\n' + title.textContent);
+                  // console.debug('normalize:', countCaps, '\n' + title.title, '\n' + title.textContent);
+               }
+
+               if (user_settings.thumbnails_title_clear_emoji) {
+                  title.textContent = clearOfEmoji(title.textContent);
                }
             }
          });
@@ -127,7 +132,21 @@ window.nova_plugins.push({
          min: 1,
          max: 10,
          value: 2,
-         'data-dependent': '{"thumbnails_title_normalize_smart":"true"}',
+         'data-dependent': { 'thumbnails_title_normalize_smart': true },
+      },
+      thumbnails_title_clear_emoji: {
+         _tagName: 'input',
+         label: 'Clear emoji',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         type: 'checkbox',
+         'data-dependent': { 'thumbnails_title_normalize_smart': true },
       },
    }
 });

@@ -87,15 +87,21 @@
       "message": "Para feedback"
    },
    "donate_patreon_tooltip": {
-      "message": "Suporte com  Patreon"
+      "message": "Suporte com Patreon"
    },
    "donate_patreon": {
       "message": "Doar (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Suporte com  buymeacoffee"
+      "message": "Suporte com buymeacoffee"
    },
    "donate_buymeacoffee": {
       "message": "Doar (buymeacoffee)"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Suporte com Paypal"
+   },
+   "donate_paypal": {
+      "message": "Doar (Paypal)"
    }
 }

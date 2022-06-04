@@ -1,3 +1,4 @@
+// https://www.youtube.com/watch?v=9EvbqxBUG_c - great for testing
 // https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
 // https://youtu.be/XvJRE6Sm-lM - has sub
 
@@ -17,6 +18,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // movie_player.getSubtitlesUserSettings();
+      // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color
+
       let css = {
          'background': 'transparent',
          'text-shadow':
@@ -25,7 +29,11 @@ window.nova_plugins.push({
             rgb(0, 0, 0) 0 0 .4em`,
       };
 
-      if (user_settings.subtitle_bold) css['font-weight'] = 'bold';
+      if (user_settings.subtitle_bold) {
+         css['font-weight'] = 'bold';
+      }
+
+      NOVA.css.push(css, `.ytp-caption-segment`, 'important');
 
       if (user_settings.subtitle_fixed) {
          NOVA.css.push(
@@ -37,7 +45,6 @@ window.nova_plugins.push({
             }`);
       }
 
-      NOVA.css.push(css, `.ytp-caption-segment`, 'important');
    },
    options: {
       subtitle_bold: {

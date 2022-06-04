@@ -1,16 +1,18 @@
 window.nova_plugins.push({
-   id: 'disable-page-sleep',
-   title: 'Disable page sleep',
-   'title:zh': '禁用页面休眠',
-   'title:ja': 'ページスリープを無効にする',
-   'title:ko': '페이지 절전 비활성화',
-   'title:es': 'Desactivar la suspensión de la página',
-   'title:pt': 'Desativar página suspensa',
-   'title:fr': 'Désactiver la mise en veille de la page',
+   id: 'disable-player-sleep-mode',
+   title: 'Player stay active forever',
+   // title: 'Disable player sleep mode',
+   'title:zh': '玩家永远保持活跃',
+   'title:ja': 'プレーヤーは永遠にアクティブなままです',
+   'title:ko': '플레이어는 영원히 활성 상태를 유지',
+   'title:es': 'El jugador permanece activo para siempre',
+   'title:pt': 'Jogador permanece ativo para sempre',
+   'title:fr': 'Le joueur reste actif pour toujours',
    // 'title:tr': 'Sayfa uykusunu devre dışı bırak',
-   'title:de': 'Seitenschlaf deaktivieren',
+   'title:de': 'Spieler bleiben für immer aktiv',
    run_on_pages: 'watch, -mobile',
    section: 'player',
+   // desc: 'prevent asking you to click "yes" to continue playing?',
    desc: 'prevent [Video paused] alert',
    'desc:zh': '防止[视频暂停]警报',
    'desc:ja': '「Video paused」アラートを防止します',
@@ -22,9 +24,10 @@ window.nova_plugins.push({
    'desc:de': 'Warnung [Video pausiert] verhindern',
    _runtime: user_settings => {
 
-      // Doesn't work
-      // window.setInterval(() => window._lact = window._fact = Date.now(), 1000 * 60 * 5); // 5 min
+      // Strategy 1
+      window.setInterval(() => document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })), 1000 * 60 * 5); // 5 min
 
+      // Strategy 2
       function skipConfirmDialog() {
          // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
          // NOVA.waitElement('[role="dialog"] #confirm-button')

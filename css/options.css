@@ -252,15 +252,15 @@ li>label+* {
    margin-right: 10px;
 }
 
-.item a[href*=wiki] {
+.item a[href*="wiki"] {
    font-weight: bold;
    margin-left: 3px;
    opacity: .2;
 }
 
-.item:hover a[href*=wiki] {
+.item:hover a[href*="wiki"] {
    opacity: 1;
 }
 
-/* a[href*=wiki]:hover {
+/* a[href*="wiki"]:hover {
 } */

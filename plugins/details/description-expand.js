@@ -10,13 +10,32 @@ window.nova_plugins.push({
    // 'title:tr': 'Açıklamayı genişlet',
    'title:de': 'Beschreibung erweitern',
    run_on_pages: 'watch, -mobile',
-   restart_on_transition: true,
+   // restart_on_transition: true,
    section: 'details',
    // desc: '',
    _runtime: user_settings => {
 
-      NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')
-         .then(btn => {
+      // Doesn't work after page transition
+      // NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')
+      //    .then(btn => {
+      //       if (user_settings.description_expand_mode == 'onhover') {
+      //          btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });
+      //       }
+      //       // else if (user_settings.description_expand_mode == 'always') {
+      //       else {
+      //          btn.click();
+      //       }
+      //    });
+
+      // const ATTR_MARK = 'nove-description-expand';
+
+      NOVA.watchElements({
+         selectors: [
+            '#meta [collapsed] #more',
+            '[description-collapsed] #description-and-actions #description #expand',
+         ],
+         // attr_mark: ATTR_MARK,
+         callback: btn => {
             if (user_settings.description_expand_mode == 'onhover') {
                btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });
             }
@@ -24,7 +43,10 @@ window.nova_plugins.push({
             else {
                btn.click();
             }
-         });
+            // NOVA.clear_watchElements(ATTR_MARK);
+         }
+
+      });
 
    },
    options: {
