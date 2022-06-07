@@ -65,7 +65,7 @@ window.nova_plugins.push({
 
       // Doesn't work
       // NOVA.waitElement('#movie_player')
-      //    .then(() => movie_player.setLoop());
+      //    .then(movie_player => movie_player.setLoop());
 
    },
 });

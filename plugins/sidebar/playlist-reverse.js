@@ -47,7 +47,8 @@ window.nova_plugins.push({
          ${SELECTOR_BTN}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
       document.addEventListener('yt-navigate-finish', () => {
-         if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
+         // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
+         if (!location.search.includes('list=')) return;
          insertButton();
          reverseControl(); // add events
       });

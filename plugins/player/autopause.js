@@ -13,23 +13,54 @@ window.nova_plugins.push({
    restart_on_transition: true,
    section: 'player',
    desc: 'Disable autoplay',
+   'desc:zh': '禁用自动播放',
+   'desc:ja': '自動再生を無効にする',
+   'desc:ko': '자동 재생 비활성화',
+   'desc:es': 'Deshabilitar reproducción automática',
+   'desc:pt': 'Desativar reprodução automática',
+   'desc:fr': 'Désactiver la lecture automatique',
+   // 'desc:tr': 'Otomatik oynatmayı devre dışı bırak',
+   'desc:de': 'Deaktiviere Autoplay',
    _runtime: user_settings => {
 
-      // better use this flag when launching the browser:
+      // better use this flag when launching the chrome/imum:
       //  --autoplay-policy=user-gesture-required
+
+      if (user_settings['video-stop-preload']) return; // disable if active another similar plugin
 
       NOVA.waitElement('video')
          .then(video => {
-            video.addEventListener('playing', setVideoPause.bind(video), { capture: true, once: true });
+            video.addEventListener('playing', forceVideoPause.bind(video), { capture: true, once: true });
          });
 
-      function setVideoPause() {
-         if (NOVA.queryURL.has('list') && !user_settings.video_autopause_ignore_playlist) return;
+      function forceVideoPause() {
+         if (user_settings.video_autopause_ignore_playlist && location.search.includes('list=')) return;
+         // if (user_settings.video_autopause_ignore_playlist && NOVA.queryURL.has('list')) return;
 
          this.pause();
 
-         const forcePaused = setInterval(() => this.paused || this.pause(), 200); // 200ms
-         setTimeout(() => clearInterval(forcePaused), 1000); // 1s
+         const forceHoldPause = setInterval(() => this.paused || this.pause(), 200); // 200ms
+         // setTimeout(() => clearInterval(forceHoldPause), 1000); // 1s
+
+         document.addEventListener('click', stopforceHoldPause);
+         document.addEventListener('keyup', keyupSpace);
+
+         function stopforceHoldPause() {
+            if (movie_player.contains(document.activeElement)) {
+               clearInterval(forceHoldPause);
+               document.removeEventListener('keyup', keyupSpace);
+               document.removeEventListener('click', stopforceHoldPause);
+            }
+         }
+
+         function keyupSpace(evt) {
+            // console.debug('evt.code', evt.code); // no sense if latch wich { capture: true, once: true }
+            switch (evt.code) {
+               case 'Space':
+                  stopforceHoldPause()
+                  break;
+            }
+         }
       }
 
    },
@@ -47,5 +78,5 @@ window.nova_plugins.push({
          'label:de': 'Wiedergabeliste ignorieren',
          type: 'checkbox',
       },
-   },
+   }
 });

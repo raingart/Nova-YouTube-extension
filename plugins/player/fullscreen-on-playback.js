@@ -66,5 +66,5 @@ window.nova_plugins.push({
          'label:de': 'Beenden Sie den Vollbildmodus bei Pause',
          type: 'checkbox',
       },
-   },
+   }
 });

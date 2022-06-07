@@ -22,7 +22,7 @@ window.nova_plugins.push({
       let selectedQuality = user_settings.video_quality;
 
       NOVA.waitElement('#movie_player')
-         .then(() => {
+         .then(movie_player => {
             // keep save manual quality in the session
             if (user_settings.video_quality_manual_save_in_tab && NOVA.currentPage == 'watch') { // no sense if in the embed
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
@@ -46,7 +46,6 @@ window.nova_plugins.push({
          // console.debug('playerState', NOVA.getPlayerState(state));
 
          // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
-         // if (('PLAYING' == NOVA.getPlayerState(state) || 'BUFFERING' == NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
          if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
             setQuality.quality_busy = true;
 
@@ -84,7 +83,6 @@ window.nova_plugins.push({
                }
             }, 50); // 50ms
 
-            // } else if ('UNSTARTED' == NOVA.getPlayerState(state) || 'ENDED' == NOVA.getPlayerState(state)) {
             // } else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
          } else if (state <= 0) {
             setQuality.quality_busy = false;
@@ -162,5 +160,5 @@ window.nova_plugins.push({
          // 'title:tr': 'Sonraki videoları etkiler',
          'title:de': 'Beeinflusst die nächsten Videos',
       },
-   },
+   }
 });

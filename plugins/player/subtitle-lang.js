@@ -147,5 +147,5 @@ window.nova_plugins.push({
             { label: 'Russian', value: 'ru' },
          ],
       },
-   },
+   }
 });

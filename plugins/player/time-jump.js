@@ -48,7 +48,7 @@ window.nova_plugins.push({
                .then(video => video.addEventListener('loadeddata', () => chapterList = []));
 
             NOVA.waitElement('#movie_player')
-               .then(player => {
+               .then(movie_player => {
                   doubleKeyPressListener(timeLeap, user_settings.time_jump_hotkey);
 
                   function timeLeap() {
@@ -64,12 +64,12 @@ window.nova_plugins.push({
                      // has chapters and chapters not ended
                      if (chapterList?.length && nextChapterIndex !== -1) {
                         // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
-                        if (player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                        if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
                            // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
                            movie_player.seekToChapterWithAnimation(nextChapterIndex);
 
                            // querySelector update after seek
-                           const chapterTitleEl = player.querySelector('.ytp-chapter-title-content');
+                           const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
 
                            msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
                               + separator + chapterList[nextChapterIndex].time;
@@ -109,7 +109,7 @@ window.nova_plugins.push({
                         sec = secNextChapter;
                         // wait chapter-title update
                         document.body.querySelector('.ytp-chapter-title-content')
-                           ?.addEventListener("DOMNodeInserted", ({ target }) => {
+                           ?.addEventListener('DOMNodeInserted', ({ target }) => {
                               NOVA.bezelTrigger(
                                  target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
                               );// trigger default indicator

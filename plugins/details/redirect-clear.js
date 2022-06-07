@@ -32,5 +32,5 @@ window.nova_plugins.push({
          }
       }, { capture: true });
 
-   }
+   },
 });

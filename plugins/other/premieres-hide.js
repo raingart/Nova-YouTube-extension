@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'premiere-disable',
+   id: 'premieres-disable',
    title: 'Hide Premieres',
    // 'title:zh': '',
    // 'title:ja': '',
@@ -28,7 +28,7 @@ window.nova_plugins.push({
          const conteinerSelector = 'ytd-grid-video-renderer:not([hidden])';
 
          document.body.querySelectorAll(
-            `${conteinerSelector} ytd-thumbnail-overlay-time-status-renderer[overlay-style="UPCOMING"],
+            `${conteinerSelector} #overlays [overlay-style="UPCOMING"],
             ${conteinerSelector} #overlays [aria-label="PREMIERE"]`
             // #metadata-line:has_text("Premieres")
          )

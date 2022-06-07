@@ -25,6 +25,10 @@ input[type=number] {
    width: 3em;
 }
 
+.tabs-content>div {
+   margin: 0 auto;
+}
+
 div.between {
    display: grid;
    grid-template-columns: 1fr auto;

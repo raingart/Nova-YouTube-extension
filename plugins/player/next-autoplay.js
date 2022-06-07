@@ -31,7 +31,7 @@ window.nova_plugins.push({
 
          // add next-button eventListener - Strategy 2
          NOVA.waitElement('#movie_player')
-            .then(() => {
+            .then(movie_player => {
                movie_player.addEventListener('onStateChange', state =>
                   'ENDED' == NOVA.getPlayerState(state) && nextVideoButton());
             });

@@ -64,7 +64,7 @@ window.nova_plugins.push({
                if ((document.visibilityState == 'hidden' || currentPageName == 'embed') // tab unfocus
                   && store.key === storeName && store.storageArea === localStorage // checking store target
                   && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
-                  && ['PLAYING'].includes(NOVA.getPlayerState())
+                  && 'PLAYING' == NOVA.getPlayerState()
                ) {
                   // console.debug('video pause', localStorage[storeName]);
                   video.pause();
@@ -74,6 +74,7 @@ window.nova_plugins.push({
          });
 
       // PiP auto enable
+      // alt https://chrome.google.com/webstore/detail/always-video-%E1%B4%B4%E1%B4%B7-beta-pip/gcfcmfbcpibcjmcinnimklngkpkkcing?hl=en
       // NOVA.waitElement('video')
       //    .then(video => {
       //       // Detect Picture-in-Picture Support
@@ -137,7 +138,7 @@ window.nova_plugins.push({
       // const onPlayerStateChange = state => ('PLAYING' == NOVA.getPlayerState(state)) ? localStorage.setItem(storeName, instanceID) : removeStorage();
 
       // NOVA.waitElement('#movie_player')
-      //    .then(() => {
+      //    .then(movie_player => {
       //       movie_player.addEventListener('onStateChange', onPlayerStateChange);
 
       //       // remove storage if this tab closed

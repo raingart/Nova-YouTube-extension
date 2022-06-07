@@ -1,6 +1,7 @@
 // fore test
 // https://www.youtube.com/watch?v=bTm3kwroEyw - https://watannetwork.com/tools/blocked/#url=bTm3kwroEyw
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
+// https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
 
 window.nova_plugins.push({
    id: 'video-unblock-region',
@@ -36,11 +37,14 @@ window.nova_plugins.push({
       //    });
 
       function redirect() {
-         location.hostname = 'hooktube.com';
-         // location.assign(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`);
+         // location.hostname = 'hooktube.com';
+         // or
+         location.assign(`${location.protocol}//hooktube.com/watch${location.search}`); // currect tab
+
+         window.open(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`); // new tab and focus
 
          // tubeunblock.com is shut down
-         // location.assign(`${location.protocol}//hooktube.com/watch${location.search}`); // save time mark
+         // location.assign(`${location.protocol}//hooktube.com/watch${location.search}`);
       }
 
    },

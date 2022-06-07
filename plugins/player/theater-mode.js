@@ -1,14 +1,14 @@
 window.nova_plugins.push({
    id: 'theater-mode',
-   title: 'Player full-with (theater) mode',
-   'title:zh': '播放器全模式',
-   'title:ja': 'プレーヤーフル-モード付き',
-   'title:ko': '플레이어 풀-위드 모드',
-   'title:es': 'Reproductor completo con modo',
-   'title:pt': 'Modo de jogador completo',
-   'title:fr': 'Mode lecteur complet avec',
+   title: 'Theater mode',
+   // 'title:zh': '播放器全模式',
+   // 'title:ja': 'プレーヤーフル-モード付き',
+   // 'title:ko': '플레이어 풀-위드 모드',
+   // 'title:es': 'Reproductor completo con modo',
+   // 'title:pt': 'Modo de jogador completo',
+   // 'title:fr': 'Mode lecteur complet avec',
    // 'title:tr': 'Oyuncu tam mod',
-   'title:de': 'Player full-with-modus',
+   // 'title:de': 'Player full-with-modus',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
@@ -22,28 +22,33 @@ window.nova_plugins.push({
       NOVA.waitElement('ytd-watch-flexy')
          .then(el => el.theaterModeChanged_(true));
 
+      // for legacy user_settings
+      if (!user_settings.player_full_viewport_mode && user_settings.cinema_mode) {
+         user_settings.player_full_viewport_mode = 'cinema_mode';
+      }
+
       NOVA.waitElement('#movie_player')
-         .then(() => {
+         .then(movie_player => {
             const
                PLAYER_CONTEINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-theater-container', // fix for "player-pin-scroll" plugin
-               PLAYER_SELECTOR = `${PLAYER_CONTEINER_SELECTOR} #movie_player:not(.player-float)`, // fix for "player-pin-scroll" plugin
+               PLAYER_SCROLL_LOCK_CLASS_NAME = 'nova-lock-scroll',
+               PLAYER_SELECTOR = `${PLAYER_CONTEINER_SELECTOR} #movie_player:not(.player-float):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for "player-pin-scroll" plugin
                zIindex = Math.max(
+                  // getComputedStyle(document.getElementById('masthead-container'))['z-index'],
                   getComputedStyle(movie_player)['z-index'],
                   2020);
-            // zIindex = Math.max(
-            //    getComputedStyle(document.getElementById('masthead-container'))['z-index'],
-            //    getComputedStyle(movie_player)['z-index'],
-            //    2020);
+
+            addScrollBehavior();
 
             switch (user_settings.player_full_viewport_mode) {
                case 'force':
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
-                  break;
 
                case 'smart':
                   // exclude shorts page
                   if (user_settings.player_full_viewport_mode_exclude_shorts
-                     && (NOVA.currentPage == 'shorts') || window.ytplayer?.config?.args?.title?.includes('#shorts')) { // dont update state on transitio
+                     && (NOVA.currentPage == 'shorts') || window.ytplayer?.config?.args?.title?.includes('#shorts')
+                  ) { // dont update state on transition
                      return;
                   }
 
@@ -57,7 +62,9 @@ window.nova_plugins.push({
                               // 'maxHeight': window.innerHeight,
                            });
                            // out of viewport
-                           if (miniSize.width < window.innerWidth) setPlayerFullViewport('player_full_viewport_mode_exit');
+                           if (miniSize.width < window.innerWidth) {
+                              setPlayerFullViewport('player_full_viewport_mode_exit');
+                           }
                         });
                      });
                   break;
@@ -65,7 +72,9 @@ window.nova_plugins.push({
                case 'cinema_mode':
                   // alt - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
                   NOVA.css.push(
-                     PLAYER_CONTEINER_SELECTOR + ` { z-index: ${zIindex}; }
+                     PLAYER_CONTEINER_SELECTOR + `{
+                        z-index: ${zIindex};
+                     }
 
                      ${PLAYER_SELECTOR}:before {
                         content: '';
@@ -106,10 +115,10 @@ window.nova_plugins.push({
                   break;
             }
 
-            function setPlayerFullViewport(player_full_viewport_mode_exit) {
+            function setPlayerFullViewport(exclude_pause) {
+               const CLASS_OVER_PAUSED = 'nova-player-fullviewport';
                NOVA.css.push(
-                  `${PLAYER_SELECTOR}${
-                  player_full_viewport_mode_exit ? `.playing-mode, ${PLAYER_SELECTOR}.paused-mode` : ''} {
+                  `${PLAYER_SELECTOR}.playing-mode ${exclude_pause ? '' : `, ${PLAYER_SELECTOR}.paused-mode`}, ${PLAYER_SELECTOR}.${CLASS_OVER_PAUSED} {
                      width: 100vw;
                      height: 100vh;
                      position: fixed;
@@ -122,9 +131,63 @@ window.nova_plugins.push({
                      overflow: hidden;
                   }`);
 
-               // fix restore controlbar position
-               NOVA.waitElement('video')
-                  .then(video => video.addEventListener('pause', () => window.dispatchEvent(new Event('resize'))));
+               // for fix
+               if (user_settings.player_full_viewport_mode_exit) {
+                  NOVA.waitElement('video')
+                     .then(video => {
+                        // fix restore video size
+                        video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
+                        // video.addEventListener('playing', () => window.dispatchEvent(new Event('resize')));
+                        // video.addEventListener('pause', () => {
+                        //    console.debug('', document.activeElement);
+                        //    //
+                        // });
+                     });
+
+                  // fix overlapped ".paused-mode" after mouse seek in progressbar
+                  NOVA.waitElement('.ytp-progress-bar')
+                     .then(progress_bar => {
+                        progress_bar.addEventListener('mousedown', () =>
+                           movie_player.classList.add(CLASS_OVER_PAUSED));
+                        progress_bar.addEventListener('mouseup', () =>
+                           movie_player.classList.add(CLASS_OVER_PAUSED));
+                     });
+                  // document.addEventListener('mousedown', () => {
+                  //    // if (movie_player.contains(document.activeElement)) {
+                  //    if (document.activeElement.matches('.ytp-progress-bar')) {
+                  //       movie_player.classList.add(CLASS_OVER_PAUSED);
+                  //    }
+                  // });
+                  // document.addEventListener('mouseup', () => {
+                  //    if (document.activeElement.matches('.ytp-progress-bar')) {
+                  //       movie_player.classList.remove(CLASS_OVER_PAUSED);
+                  //    }
+                  // });
+               }
+            }
+
+            function addScrollBehavior() {
+               if (activateScrollElement = document.querySelector('.ytp-chrome-controls')) {
+                  // const player = document.querySelector(PLAYER_SELECTOR);
+                  activateScrollElement.addEventListener('wheel', evt => {
+                     switch (Math.sign(evt.wheelDelta)) {
+                        // case 1: // up
+                        //    movie_player.classList.remove(PLAYER_SCROLL_LOCK_CLASS_NAME);
+                        //    break;
+
+                        case -1: // down
+                           movie_player.classList.add(PLAYER_SCROLL_LOCK_CLASS_NAME);
+                           // player.classList.add(PLAYER_SCROLL_LOCK_CLASS_NAME);
+                           break;
+                     }
+                  });
+                  // up (on top page)
+                  document.addEventListener('scroll', evt => {
+                     if (window.scrollY === 0 && movie_player.classList.contains(PLAYER_SCROLL_LOCK_CLASS_NAME)) {
+                        movie_player.classList.remove(PLAYER_SCROLL_LOCK_CLASS_NAME);
+                     }
+                  });
+               }
             }
          });
 
@@ -132,19 +195,19 @@ window.nova_plugins.push({
    options: {
       player_full_viewport_mode: {
          _tagName: 'select',
-         label: 'Toggle mode',
-         'label:zh': '模式',
-         'label:ja': 'モード',
-         'label:ko': '방법',
-         'label:es': 'Modo',
-         'label:pt': 'Modo',
-         // 'label:fr': 'Mode',
-         // 'label:tr': 'Mod',
-         'label:de': 'Modus',
+         label: 'Toggle type',
+         // 'label:zh': '模式',
+         // 'label:ja': 'モード',
+         // 'label:ko': '방법',
+         // 'label:es': 'Modo',
+         // 'label:pt': 'Modo',
+         // // 'label:fr': 'Mode',
+         // // 'label:tr': 'Mod',
+         // 'label:de': 'Modus',
          options: [
-            { label: 'Default', value: false, selected: true },
-            { label: 'Cinema', value: 'cinema_mode'},
-            { label: 'Full-viewport (Smart)', value: 'smart' },
+            { label: 'Default', /*value: false,*/ selected: true },
+            { label: 'Cinema', value: 'cinema_mode' },
+            { label: 'Full-viewport (auto)', value: 'smart' },
             { label: 'Full-viewport', value: 'force' },
             { label: 'Redirect to embedded', value: 'redirect_watch_to_embed' },
          ],
@@ -196,7 +259,7 @@ window.nova_plugins.push({
          step: .05,
          min: 0,
          max: 1,
-         value: .85,
+         value: .75,
          'data-dependent': { 'player_full_viewport_mode': 'cinema_mode' },
       },
    }

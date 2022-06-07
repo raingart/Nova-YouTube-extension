@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'stream-disable',
+   id: 'streams-disable',
    title: 'Hide Stream (live)',
    // 'title:zh': '',
    // 'title:ja': '',
@@ -32,7 +32,7 @@ window.nova_plugins.push({
          attr_mark: ATTR_MARK,
          callback: thumb => {
             // live now
-            if (thumb.querySelector('#video-badges [class*="live-now"], img[src*="qdefault_live.jpg"]')) {
+            if (thumb.querySelector('#overlays [overlay-style="LIVE"], #video-badges [class*="live-now"], #thumbnail img[src*="qdefault_live.jpg"]')) {
                thumb.remove();
                // thumb.style.display = 'none';
 

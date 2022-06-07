@@ -107,5 +107,5 @@ window.nova_plugins.push({
 
       }
 
-   }
+   },
 });

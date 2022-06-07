@@ -33,7 +33,7 @@ window.nova_plugins.push({
                   right: 0;
                   z-index: ${Math.max(
                   getComputedStyle(masthead)['z-index'],
-                  getComputedStyle(movie_player)['z-index'],
+                  // getComputedStyle(movie_player)['z-index'], // movie_player is not defined
                   601) + 1};
                }
 

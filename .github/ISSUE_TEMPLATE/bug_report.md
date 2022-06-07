@@ -12,5 +12,5 @@ assignees: ''
 *Describe the bug*
 
  - Browser: Chrome 999.0
- - You are using userscript? Specify the ...monkey to use [ex: violentmonkey 99.1]
+ - ...monkey [ex: violentmonkey 99.1]
  - Nova version: 6.6.1

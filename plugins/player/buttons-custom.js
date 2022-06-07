@@ -94,7 +94,7 @@ window.nova_plugins.push({
 
                // update icon
                NOVA.videoElement?.addEventListener('enterpictureinpicture', () => pipBtn.innerHTML = createSVG(2));
-               NOVA.videoElement?.addEventListener("leavepictureinpicture", () => pipBtn.innerHTML = createSVG());
+               NOVA.videoElement?.addEventListener('leavepictureinpicture', () => pipBtn.innerHTML = createSVG());
 
                function createSVG(alt) {
                   const svg = document.createElement('svg');
@@ -180,7 +180,6 @@ window.nova_plugins.push({
                      box-shadow: 0 0 15px #000;
                      max-width: var(--width);
                      max-height: var(--height);
-                     z-index: 300; /* <-- possibility out of date */
                   }
                   /* for embed */
                   /*html[data-cast-api-enabled] ${SELECTOR_SCREENSHOT} {
@@ -277,7 +276,7 @@ window.nova_plugins.push({
                      container.title = 'Click to save';
                      if (headerContainer = document.getElementById('masthead-container')) { // skip embed
                         container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
-                        container.style.zIndex = getComputedStyle(headerContainer)['z-index']; // fix header overlapping
+                        container.style.zIndex = +getComputedStyle(headerContainer)['z-index'] + 1; // fix header overlapping
                      }
                      canvas.addEventListener('click', evt => {
                         evt.preventDefault();
@@ -659,7 +658,7 @@ window.nova_plugins.push({
             { label: 'quick quality', value: 'quick-quality', 'label:zh': '质量', 'label:ja': '品質', 'label:ko': '품질', 'label:es': 'calidad', 'label:pt': 'qualidade', 'label:fr': 'qualité', 'label:tr': 'hızlı kalite', 'label:de': 'qualität' },
             { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:ko': '토글 속도', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:fr': 'basculer la vitesse', 'label:tr': 'geçiş hızı', 'label:de': 'geschwindigkeit umschalten' },
             { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:ko': '스크린샷', 'label:es': 'captura de pantalla', 'label:pt': 'captura de tela', 'label:fr': "capture d'écran", 'label:tr': 'ekran görüntüsü', 'label:de': 'bildschirmfoto' },
-            { label: 'Picture-in-Picture', value: 'picture-in-picture'/*, 'label:zh': '', 'label:ja': '', 'label:ko': '', 'label:es': '', 'label:pt': '', 'label:fr': '', 'label:tr': '', 'label:de': ''*/ },
+            { label: 'picture-in-picture', value: 'picture-in-picture'/*, 'label:zh': '', 'label:ja': '', 'label:ko': '', 'label:es': '', 'label:pt': '', 'label:fr': '', 'label:tr': '', 'label:de': ''*/ },
             { label: 'popup', value: 'popup', 'label:zh': '弹出式播放器', 'label:ja': 'ポップアッププレーヤー', 'label:ko': '썸네일', /*'label:es': 'jugadora emergente',*/ 'label:pt': 'jogador pop-up', 'label:fr': 'lecteur contextuel', 'label:tr': 'pop-up oynatıcı', /*'label:de': ''*/ },
             { label: 'rotate', value: 'rotate', 'label:zh': '旋转', 'label:ja': '回転する', 'label:ko': '회전', 'label:es': 'girar', 'label:pt': 'girar', 'label:fr': 'tourner', 'label:tr': 'döndürmek', 'label:de': 'drehen' },
             { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:ko': '썸네일', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:fr': 'la vignette', 'label:tr': 'küçük resim', 'label:de': 'bildschirmfoto' },

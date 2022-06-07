@@ -139,9 +139,9 @@ const NOVA = {
                selectors
                   .forEach(selectorItem => {
                      if (attr_mark) selectorItem += `:not([${attr_mark}])`;
-                     if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
-                        selectorItem += slEnd;
-                     }
+                     // if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
+                     //    selectorItem += slEnd;
+                     // }
                      // console.debug('selectorItem', selectorItem);
 
                      document.body.querySelectorAll(selectorItem)
@@ -200,11 +200,11 @@ const NOVA = {
                sheet.href = source;
 
             } else {
-               const sheetName = 'NOVA_style';
-               sheet = document.getElementById(sheetName) || (function () {
+               const sheetId = 'NOVA-style';
+               sheet = document.getElementById(sheetId) || (function () {
                   const style = document.createElement('style');
                   style.type = 'text/css';
-                  style.id = sheetName;
+                  style.id = sheetId;
                   return document.head.appendChild(style);
                })();
             }

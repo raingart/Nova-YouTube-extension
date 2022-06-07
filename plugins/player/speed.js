@@ -34,7 +34,7 @@ window.nova_plugins.push({
       const musicIconSvgSelector = '#upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
 
       // NOVA.waitElement('#movie_player')
-      //    .then(() => {
+      //    .then(movie_player => {
       //       // trigger default indicator
       //       // Strategy 1. Default indicator doesn't work for html5 way (Strategy 2)
       //       movie_player.addEventListener('onPlaybackRateChange', rate => {

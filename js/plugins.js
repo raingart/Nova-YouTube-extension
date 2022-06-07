@@ -7,6 +7,7 @@ const Plugins = {
       'player/volume.js',
       'player/hud.js',
       'player/quality.js',
+      'player/autostop.js', // after quality.js
       'player/autopause.js', // after quality.js
       'player/theater-mode.js',
       'player/pause-background.js',
@@ -42,10 +43,11 @@ const Plugins = {
       'other/search-filter.js',
       'other/shorts-redirect.js',
       'other/shorts-hide.js',
-      'other/premiere-hide.js',
+      'other/premieres-hide.js',
       'other/thumbnails-mix-hide.js',
-      'other/stream-hide.js',
+      'other/streams-hide.js',
       'other/playlist-rss.js',
+      'other/thumbs-sort.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
