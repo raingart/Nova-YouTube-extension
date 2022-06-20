@@ -39,6 +39,7 @@ chrome.runtime.onInstalled.addListener(details => {
                   // 'oldKey': 'newKey',
                   'premiere-disable': 'premieres-disable',
                   'stream-disable': 'streams-disable',
+                  'disable_in_frame': 'exclude_iframe',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

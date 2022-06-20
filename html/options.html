@@ -40,68 +40,66 @@
    <div class="wrapper">
       <div class="container">
 
-         <form enctype="multipart/form-data">
+         <div class="tabbed">
+            <input type="radio" name="tabs" id="tab-map" checked>
+            <label for="tab-map">Map</label>
 
-            <div class="tabbed">
-               <input type="radio" name="tabs" id="tab-map" checked>
-               <label for="tab-map">Map</label>
+            <input type="radio" name="tabs" id="tab-plugins">
+            <label for="tab-plugins" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
 
-               <input type="radio" name="tabs" id="tab-plugins">
-               <label for="tab-plugins" id="show_all_plugins" tooltip="All plugins" flow="down">Plugins</label>
+            <input type="radio" name="tabs" id="tab-other">
+            <label for="tab-other">Other</label>
 
-               <input type="radio" name="tabs" id="tab-other">
-               <label for="tab-other">Other</label>
+            <form enctype="multipart/form-data" class="tabs-content">
 
-               <div class="tabs-content">
-
-                  <!-- map -->
-                  <div class="appearance_container">
-                     <div class="appearance">
-                        <div class="header" id="header">
-                           <span>Header</span>
-                        </div>
-                        <div class="player" id="player">
-                           <span>Player</span>
-                        </div>
-                        <div class="sidebar" id="sidebar">
-                           <span>Sidebar</span>
-                        </div>
-                        <div class="details" id="details">
-                           <span>Details</span>
-                        </div>
-                        <div class="comments" id="comments">
-                           <span>Comments</span>
-                        </div>
-                        <div class="other" id="other">
-                           <span>Other</span>
-                        </div>
+               <!-- map -->
+               <div class="appearance_container">
+                  <div class="appearance">
+                     <div class="header" id="header">
+                        <span>Header</span>
+                     </div>
+                     <div class="player" id="player">
+                        <span>Player</span>
+                     </div>
+                     <div class="sidebar" id="sidebar">
+                        <span>Sidebar</span>
+                     </div>
+                     <div class="details" id="details">
+                        <span>Details</span>
+                     </div>
+                     <div class="comments" id="comments">
+                        <span>Comments</span>
+                     </div>
+                     <div class="other" id="other">
+                        <span>Other</span>
                      </div>
                   </div>
+               </div>
 
-                  <!-- plugins -->
-                  <div>
-                     <!-- <form enctype="multipart/form-data"> -->
-                     <div class="between">
-                        <div class="search_box">
-                           <input type="search" title="filter item" placeholder="__MSG_plugins_search_placeholder__" />
-                           <span id="search_clear" title="__MSG_btn_plugins_search_clear_tooltip__" flow="left">❌</span>
-                        </div>
-                        <button type="submit" tooltip="__MSG_opt_btn_save_settings_tooltip__"
-                           flow="left">__MSG_opt_btn_save_settings__</button>
+               <!-- plugins -->
+               <div>
+                  <!-- <form enctype="multipart/form-data"> -->
+                  <div class="between">
+                     <div class="search_box">
+                        <input type="search" title="filter item" placeholder="__MSG_plugins_search_placeholder__" />
+                        <span id="search_clear" title="__MSG_btn_plugins_search_clear_tooltip__" flow="left">❌</span>
                      </div>
+                     <button type="submit" tooltip="__MSG_opt_btn_save_settings_tooltip__"
+                        flow="left">__MSG_opt_btn_save_settings__</button>
+                  </div>
 
-                     <div id="plugins">
-                        <ul id="player" class="active"></ul>
-                        <ul id="other" class="active"></ul>
-                        <ul id="details" class="active"></ul>
-                        <ul id="sidebar" class="active"></ul>
-                        <ul id="comments" class="active"></ul>
-                        <ul id="header" class="active"></ul>
-                     </div>
+                  <div id="plugins">
+                     <ul id="player" class="active"></ul>
+                     <ul id="other" class="active"></ul>
+                     <ul id="details" class="active"></ul>
+                     <ul id="sidebar" class="active"></ul>
+                     <ul id="comments" class="active"></ul>
+                     <ul id="header" class="active"></ul>
+                  </div>
 
-                     <!-- <hr /> -->
+                  <!-- <hr /> -->
 
-                     <!-- <div class="item">
+                  <!-- <div class="item">
                         <div class="info" tooltip="__MSG_opt_example_tooltip__" flow="left">
                            <label for="id-example">__MSG_opt_example__
                               <span>__MSG_opt_example_desc__</span>
@@ -112,96 +110,107 @@
                         </div>
                      </div> -->
 
-                     <!-- </form> -->
+                  <!-- </form> -->
+               </div>
+
+               <!-- about -->
+               <div style="max-width: 380px;">
+                  <div class="between">
+                     <input type="text" name="custom-api-key" id="custom-api-key" pattern="^(AIzaSy)[\d\w]+"
+                        placeholder="__MSG_opt_btn_api_key_input__">
+                     <button type="submit" tooltip="" flow="right">__MSG_opt_btn_save_settings__</button>
                   </div>
 
-                  <!-- about -->
-                  <div style="max-width: 380px;">
-                     <div class="between">
-                        <input type="text" name="custom-api-key" id="custom-api-key" pattern="^(AIzaSy)[\d\w]+"
-                           placeholder="__MSG_opt_btn_api_key_input__">
-                        <button type="submit" tooltip="" flow="right">__MSG_opt_btn_save_settings__</button>
-                     </div>
+                  <ul>
+                     <li>
+                        <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/How-to-generate-a-YouTube-API-key%3F"
+                           target="_blank">__MSG_opt_api_key_generate__</a>
+                     </li>
+                  </ul>
 
-                     <ul>
-                        <li>
-                           <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/How-to-generate-a-YouTube-API-key%3F"
-                              target="_blank">__MSG_opt_api_key_generate__</a>
-                        </li>
-                     </ul>
+                  <hr />
 
-                     <hr />
+                  <fieldset>
+                     <legend>__MSG_opt_legend_settings_transfer__</legend>
+                     <button type="button" id="settings_import">__MSG_opt_btn_import_settings__</button>
+                     <button type="button" id="settings_export">__MSG_opt_btn_export_settings__</button>
+                     <button type="button" id="settings_reset">__MSG_opt_btn_reset_settings__</button>
+                  </fieldset>
 
-                     <fieldset>
-                        <legend>__MSG_opt_legend_settings_transfer__</legend>
-                        <button type="button" id="settings_import">__MSG_opt_btn_import_settings__</button>
-                        <button type="button" id="settings_export">__MSG_opt_btn_export_settings__</button>
-                        <button type="button" id="settings_reset">__MSG_opt_btn_reset_settings__</button>
-                     </fieldset>
+                  <div class="between">
+                     <label for="exclude_iframe"
+                        tooltip="__MSG_opt_exclude_iframe_tooltip__">__MSG_opt_exclude_iframe__</label>
+                     <input type="checkbox" name="exclude_iframe" id="exclude_iframe" />
 
-                     <div class="between">
-                        <label for="disable_in_frame"
-                           tooltip="__MSG_opt_disable_in_frame_tooltip__">__MSG_opt_disable_in_frame__</label>
-                        <input type="checkbox" name="disable_in_frame" id="disable_in_frame" />
+                     <label for="report_issues"
+                        tooltip="__MSG_opt_report_issues_tooltip__">__MSG_opt_report_issues__</label>
+                     <input type="checkbox" name="report_issues" id="report_issues" />
 
-                        <label for="report_issues"
-                           tooltip="__MSG_opt_report_issues_tooltip__">__MSG_opt_report_issues__</label>
-                        <input type="checkbox" name="report_issues" id="report_issues" />
-
-                        <!-- <label for="detect_player_crash"
+                     <!-- <label for="detect_player_crash"
                            tooltip="__MSG_opt_detect_player_crash_tooltip__">detect player crash</label>
                         <input type="checkbox" name="detect_player_crash" id="detect_player_crash" /> -->
-                     </div>
-
-                     <!-- <div class="between">
-                        <label for="lang_code" tooltip="__MSG_opt_lang_code_tooltip__">__MSG_opt_lang_code__</label>
-                        <select name="lang_code" id="lang_code">
-                           <option>English</option>
-                           <option value="ja">日本語</option>
-                           <option value="zh">繁體中文</option>
-                           <option value="es">Español</option>
-                           <option value="pt">Português</option>
-                           <option value="de">Deutsch</option>
-                         </select>
-                     </div> -->
-
-                     <hr />
-
-                     <ul>
-                        <li>
-                           <a href="https://github.com/raingart/Nova-YouTube-extension" target="_blank"
-                              tooltip="__MSG_github_page_tooltip__" flow="right">__MSG_github_page__</a>
-                        </li>
-                        <li>
-                           <a href="https://github.com/raingart/Nova-YouTube-extension/issues/new" target="_blank"
-                              tooltip="__MSG_github_page_issues_tooltip__" flow="right">__MSG_github_page_issues__</a>
-                        </li>
-                        <li>
-                           <a href="mailto:raingart+scriptaddons@protonmail.com" target="_blank"
-                              tooltip="__MSG_email_tooltip__" flow="right">__MSG_email__</a>
-                        </li>
-                        <li>
-                           <a href="https://www.patreon.com/join/raingart/checkout?rid=3120225" target="_blank"
-                              tooltip="__MSG_donate_patreon_tooltip__" flow="right">__MSG_donate_patreon__</a>
-                        </li>
-                        <li>
-                           <a href="https://www.buymeacoffee.com/raingart" target="_blank"
-                              tooltip="__MSG_donate_buymeacoffee_tooltip__" flow="right">__MSG_donate_buymeacoffee__</a>
-                        </li>
-                        <li>
-                           <a href="https://www.paypal.com/donate/?hosted_button_id=B44WLWHZ8AGU2" target="_blank"
-                              tooltip="__MSG_donate_paypal_tooltip__" flow="right">__MSG_donate_paypal__</a>
-                        </li>
-                     </ul>
-
                   </div>
+
+                  <div class="between">
+                     <label for="lang_code" tooltip="__MSG_lang_code_tooltip__">__MSG_lang_code__</label>
+                     <select name="lang_code" id="lang_code">
+                        <option value="en">English</option>
+                        <option value="ja">日本語</option>
+                        <option value="zh">繁體中文</option>
+                        <option value="ko">자막</option>
+                        <option value="es">Español</option>
+                        <option value="pt">Português</option>
+                        <option value="tr">Türkçe</option>
+                        <option value="de">Deutsch</option>
+                        <option value="pl">Polski</option>
+                     </select>
+                  </div>
+
+                  <hr />
+
+                  <ul>
+                     <li>
+                        <a href="https://github.com/raingart/Nova-YouTube-extension" target="_blank"
+                           tooltip="__MSG_github_page_tooltip__" flow="right">__MSG_github_page__</a>
+                     </li>
+                     <li>
+                        <a href="https://github.com/raingart/Nova-YouTube-extension/issues/new" rel="nofollow"
+                           target="_blank" tooltip="__MSG_github_page_issues_tooltip__"
+                           flow="right">__MSG_github_page_issues__</a>
+                     </li>
+                     <li>
+                        <a href="mailto:raingart+scriptaddons@protonmail.com" rel="nofollow" target="_blank"
+                           tooltip="__MSG_email_tooltip__" flow="right">__MSG_email__</a>
+                     </li>
+                     <li>
+                        <a href="https://www.patreon.com/join/raingart/checkout?rid=3120225" target="_blank"
+                           tooltip="__MSG_donate_patreon_tooltip__" flow="right">__MSG_donate_patreon__</a>
+                     </li>
+                     <li>
+                        <a href="https://www.buymeacoffee.com/raingart" target="_blank" rel="nofollow"
+                           tooltip="__MSG_donate_buymeacoffee_tooltip__" flow="right">__MSG_donate_buymeacoffee__</a>
+                     </li>
+                     <li>
+                        <a href="https://www.paypal.com/donate/?hosted_button_id=B44WLWHZ8AGU2" target="_blank"
+                           rel="nofollow" tooltip="__MSG_donate_paypal_tooltip__" flow="right">__MSG_donate_paypal__</a>
+                     </li>
+                  </ul>
+
+                  <hr />
+
+                  <fieldset>
+                     <!-- <legend>__MSG_opt_legend_translation__</legend> -->
+                     <legend>Translation:</legend>
+                     <ul>
+                        <li>Polski - <a href="https://github.com/J4CKED" rel="nofollow">J4CKED</a></li>
+                     </ul>
+                  </fieldset>
 
                </div>
 
-            </div>
+            </form>
 
-         </form>
-
+         </div>
 
       </div>
    </div>

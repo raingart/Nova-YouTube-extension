@@ -9,6 +9,7 @@ window.nova_plugins.push({
    // 'title:fr': '',
    // 'title:tr': '',
    // 'title:de': '',
+   'title:pl': 'Ukryj strumień (na żywo)',
    run_on_pages: 'home, results, feed, channel, watch',
    // restart_on_transition: true,
    section: 'other',
@@ -67,6 +68,7 @@ window.nova_plugins.push({
          // 'label:fr': '',
          // 'label:tr': '',
          // 'label:de': '',
+         'label:pl': 'Po streamie',
          type: 'checkbox',
          title: 'That have been completed',
          'title:zh': '已经完成的',
@@ -75,8 +77,9 @@ window.nova_plugins.push({
          'title:es': 'Que han sido completados',
          'title:pt': 'Que foram concluídos',
          'title:fr': 'Qui ont été complétés',
-         // 'title:tr': 'Tamamlanmış olanlar',
+         'title:tr': 'Tamamlanmış olanlar',
          'title:de': 'Die sind abgeschlossen',
+         'title:pl': 'Które zostały zakończone',
       },
    }
 });

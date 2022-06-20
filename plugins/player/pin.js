@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Fijar jugador mientras se desplaza',
    'title:pt': 'Fixar jogador enquanto rola',
    'title:fr': 'Épingler le lecteur pendant le défilement',
-   // 'title:tr': 'Kaydırırken oynatıcıyı sabitle',
+   'title:tr': 'Kaydırırken oynatıcıyı sabitle',
    'title:de': 'Pin-Player beim Scrollen',
+   'title:pl': 'Przypnij odtwarzacz podczas przewijania',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Mini player',
@@ -23,33 +24,50 @@ window.nova_plugins.push({
    // 'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    _runtime: user_settings => {
 
-      if (!('IntersectionObserver' in window)) {
-         return alert('Pin player Error!\IntersectionObserver not supported.');
-      }
+      if (!('IntersectionObserver' in window)) return alert('Pin player Error!\IntersectionObserver not supported.');
 
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
-      // if (user_settings.player_pip_scroll) {
-      //    if (!document.pictureInPictureEnabled) return console, error('pip disable');
+      // if (user_settings.player_pin_mode == 'pip') {
+      //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
       //    NOVA.waitElement('video')
       //       .then(video => {
-      //          if (video.disablePictureInPicture) return console, error('pip disable');
+      //          if (video.disablePictureInPicture) return console.error('video pip is disable');
+
+      //          const pipBtn = document.createElement('button');
+      //          pipBtn.style.display = 'none';
+      //          pipBtn.addEventListener('click', () => document.pictureInPictureElement
+      //             ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
+      //          );
+      //          pipBtn.addEventListener('click', () => NOVA.videoElement.requestPictureInPicture());
+      //          document.body.prepend(pipBtn);
 
       //          new window.IntersectionObserver(async ([entry]) => {
       //             if (entry.isIntersecting) {
       //                if (video === document.pictureInPictureElement) {
-      //                   await document.exitPictureInPicture();
+      //                   console.debug('exitPictureInPicture');
+      //                   // await document.exitPictureInPicture();
+      //                   simulClick(pipBtn);
       //                }
       //                return
       //             }
       //             if (!document.pictureInPictureElement && video.readyState > 0) {
-      //                await video.requestPictureInPicture();
+      //                console.debug('requestPictureInPicture');
+      //                // await video.requestPictureInPicture();
+      //                simulClick(pipBtn);
       //             }
       //          }, {
       //             root: null,
       //             threshold: 0.2, // set offset 0.X means trigger if atleast X0% of element in viewport
       //          })
       //             .observe(video);
+
+      //          function simulClick(el) {
+      //             const clickEvent = document.createEvent('MouseEvents');
+      //             clickEvent.initEvent('click', true, true);
+      //             clickEvent.artificialevent = true;
+      //             el.dispatchEvent(clickEvent);
+      //          }
       //       });
       //    return;
       // }
@@ -350,6 +368,25 @@ window.nova_plugins.push({
 
    },
    options: {
+      // player_pin_mode: {
+      //    _tagName: 'select',
+      //    label: ' mode',
+      //    label: 'Mode',
+      //    'label:zh': '模式',
+      //    'label:ja': 'モード',
+      //    'label:ko': '방법',
+      //    'label:es': 'Modo',
+      //    'label:pt': 'Modo',
+      //    // 'label:fr': 'Mode',
+      //    'label:tr': 'Mod',
+      //    'label:de': 'Modus',
+      //    'label:pl': 'Tryb',
+      //    // title: '',
+      //    options: [
+      //       { label: 'Picture-in-Picture', value: 'pip', selected: true },
+      //       { label: 'Float', value: 'float' },
+      //    ],
+      // },
       player_float_scroll_size_ratio: {
          _tagName: 'input',
          label: 'Player size',
@@ -359,7 +396,7 @@ window.nova_plugins.push({
          'label:es': 'Tamaño del jugador',
          'label:pt': 'Tamanho do jogador',
          'label:fr': 'Taille du joueur',
-         // 'label:tr': 'Oyuncu boyutu',
+         'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
          type: 'number',
          title: 'less value - larger size',
@@ -369,13 +406,15 @@ window.nova_plugins.push({
          'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
-         // 'title:tr': 'Daha az değer - daha büyük boyut',
+         'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
+         'label:pl': 'Rozmiar odtwarzacza',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
          max: 5,
          value: 2.5,
+         // 'data-dependent': { 'player_pin_mode': ['float'] },
       },
       player_float_scroll_position: {
          _tagName: 'select',
@@ -388,12 +427,14 @@ window.nova_plugins.push({
          'label:fr': 'La position du joueur',
          'label:tr': 'Oyuncu pozisyonu',
          'label:de': 'Spielerposition',
+         'title:pl': 'mniejsza wartość - większy rozmiar',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },
             { label: 'right-top', value: 'top-right', selected: true },
             { label: 'right-bottom', value: 'bottom-right' },
          ],
+         // 'data-dependent': { 'player_pin_mode': ['float'] },
       },
       player_float_scroll_sensivity_range: {
          _tagName: 'input',
@@ -406,6 +447,7 @@ window.nova_plugins.push({
          'label:fr': 'Plage de visibilité de la sensibilité du joueur',
          'label:tr': 'Oyuncu duyarlılığı görünürlük aralığı',
          'label:de': 'Sichtbarkeitsbereich der Spielerempfindlichkeit',
+         'label:pl': 'Pozycja odtwarzacza',
          type: 'number',
          title: 'in %',
          placeholder: '%',
@@ -413,33 +455,12 @@ window.nova_plugins.push({
          min: 10,
          max: 100,
          value: 80,
+         // 'data-dependent': { 'player_pin_mode': ['float'] },
       },
       // 'player_float_scroll_pause_video': {
       //    _tagName: 'input',
       //    label: 'Pause pinned video',
       //    type: 'checkbox',
-      // },
-      // player_pip_scroll: {
-      //    _tagName: 'input',
-      //    label: 'Picture-in-Picture mode',
-      //    // 'label:zh': '',
-      //    // 'label:ja': '',
-      //    // 'label:ko': '',
-      //    // 'label:es': '',
-      //    // 'label:pt': '',
-      //    // 'label:fr': '',
-      //    // 'label:tr': '',
-      //    // 'label:de': '',
-      //    type: 'checkbox',
-      //    'title': 'Caution! Experimental function',
-      //    // 'title:zh': '',
-      //    // 'title:ja': '',
-      //    // 'title:ko': '',
-      //    // 'title:es': '',
-      //    // 'title:pt': '',
-      //    // 'title:fr': '',
-      //    // 'title:tr': '',
-      //    // 'title:de': '',
       // },
    }
 });

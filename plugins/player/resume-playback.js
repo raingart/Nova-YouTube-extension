@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Reanudar posición de tiempo de reproducción',
    'title:pt': 'Retomar a posição do tempo de reprodução',
    'title:fr': 'Reprendre la position de temps de lecture',
-   // 'title:tr': 'Oynatma süresi konumunu devam ettir',
+   'title:tr': 'Oynatma süresi konumunu devam ettir',
    'title:de': 'Wiedergabezeitposition fortsetzen',
+   'title:pl': 'Powrót do pozycji czasowej odtwarzania',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'On page reload - resume playback',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
    'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
+   'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (NOVA.currentPage == 'embed' && !window.sessionStorage) return;
@@ -109,8 +111,9 @@ window.nova_plugins.push({
          'label:es': 'Marcar tiempo en url cuando está en pausa',
          'label:pt': 'Marcar tempo no URL quando pausado',
          'label:fr': "Marquer l'heure dans l'url en pause",
-         // 'label:tr': "Duraklatıldığında zamanı url'de işaretleyin",
+         'label:tr': "Duraklatıldığında zamanı url'de işaretleyin",
          'label:de': 'Zeit in URL markieren, wenn pausiert',
+         'label:pl': 'Zaznacz czas w adresie url po wstrzymaniu',
          type: 'checkbox',
          title: 'update ?t=',
       },

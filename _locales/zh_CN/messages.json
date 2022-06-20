@@ -53,11 +53,11 @@
    "opt_api_key_generate": {
       "message": "Generate API key"
    },
-   "opt_disable_in_frame": {
-      "message": "在 iframe 中禁用"
+   "opt_exclude_iframe": {
+      "message": "排除 iframe 视频"
    },
-   "opt_disable_in_frame_tooltip": {
-      "message": "该扩展程序在嵌入视频中不起作用"
+   "opt_exclude_iframe_tooltip": {
+      "message": "该扩展程序不适用于嵌入式视频"
    },
    "opt_report_issues": {
       "message": "显示提示报告错误"
@@ -67,6 +67,12 @@
    },
    "opt_api_key_warn": {
       "message": "使用您的 [API 密钥] 进行稳定的工作"
+   },
+   "lang_code_tooltip": {
+      "message": "本地化选择"
+   },
+   "lang_code": {
+      "message": "语"
    },
    "github_page": {
       "message": "源代码"

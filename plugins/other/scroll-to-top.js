@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Desplazarse al botón superior',
    'title:pt': 'Role para o botão superior',
    'title:fr': 'Faites défiler vers le haut',
-   // 'title:tr': 'Üst düğmeye kaydır',
+   'title:tr': 'Üst düğmeye kaydır',
    'title:de': 'Nach oben scrollen',
+   'title:pl': 'Przycisk przewijania do góry',
    run_on_pages: 'all, -embed, -mobile',
    section: 'other',
    desc: 'Displayed on long pages',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Affiché sur de longues pages',
    'desc:tr': 'Uzun sayfalarda görüntüleniyor',
    'desc:de': 'Wird auf langen Seiten angezeigt',
+   'desc:pl': 'Wyświetlaj na długich stronach',
    _runtime: user_settings => {
 
       document.addEventListener('scroll', createBtn, { capture: true, once: true });
@@ -106,8 +108,9 @@ window.nova_plugins.push({
          'label:es': 'Suave',
          'label:pt': 'Suave',
          'label:fr': 'Lisse',
-         // 'label:tr': 'Düz',
+         'label:tr': 'Düz',
          'label:de': 'Glatt',
+         'label:pl': 'Płynnie',
          type: 'checkbox',
       },
       scroll_to_top_autoplay: {
@@ -119,8 +122,9 @@ window.nova_plugins.push({
          'label:es': 'Reanudar video',
          'label:pt': 'Retomar vídeo',
          'label:fr': 'Annuler la pause de la vidéo',
-         // 'label:tr': 'Videoyu Duraklat',
+         'label:tr': 'Videoyu Duraklat',
          'label:de': 'Video wieder anhalten',
+         'label:pl': 'Wyłącz wstrzymanie odtwarzania filmu',
          type: 'checkbox',
       },
    }

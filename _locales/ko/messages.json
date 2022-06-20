@@ -53,11 +53,11 @@
    "opt_api_key_generate": {
       "message": "Generate API key"
    },
-   "opt_disable_in_frame": {
-      "message": "iframe에서 사용 중지"
+   "opt_exclude_iframe": {
+      "message": "iframe 동영상 제외"
    },
-   "opt_disable_in_frame_tooltip": {
-      "message": "확장 기능은 포함된 동영상에서는 작동하지 않습니다"
+   "opt_exclude_iframe_tooltip": {
+      "message": "확장 프로그램은 포함된 비디오에서 작동하지 않습니다."
    },
    "opt_report_issues": {
       "message": "버그 신고 프롬프트 표시"
@@ -67,6 +67,12 @@
    },
    "opt_api_key_warn": {
       "message": "안전한 작업을 위해 [API 키]를 사용하십시오"
+   },
+   "lang_code_tooltip": {
+      "message": "현지화 선택"
+   },
+   "lang_code": {
+      "message": "언어"
    },
    "github_page": {
       "message": "Source code"

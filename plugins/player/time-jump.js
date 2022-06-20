@@ -22,8 +22,9 @@ window.nova_plugins.push({
    'title:es': 'Salto de tiempo',
    'title:pt': 'Salto no tempo',
    'title:fr': 'Saut dans le temps',
-   // 'title:tr': 'Zaman atlama',
+   'title:tr': 'Zaman atlama',
    'title:de': 'Zeitsprung',
+   'title:pl': 'Skok czasowy',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: 'Use to skip ad inserts',
@@ -35,6 +36,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Utiliser pour ignorer les insertions publicitaires',
    'desc:tr': 'Reklam eklerini atlamak için kullanın',
    'desc:de': 'Zum Überspringen von Anzeigeninsertionen verwenden',
+   'desc:pl': 'Użyj, aby pominąć wstawki reklamowe',
    _runtime: user_settings => {
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
@@ -217,8 +219,9 @@ window.nova_plugins.push({
          'label:es': 'Tiempo de paso',
          'label:pt': 'Tempo da etapa',
          'label:fr': 'Temps de pas',
-         // 'label:tr': 'Adım süresi',
+         'label:tr': 'Adım süresi',
          'label:de': 'Schrittzeit',
+         'label:pl': 'Krok czasowy',
          type: 'number',
          title: 'in seconds',
          placeholder: 'sec',
@@ -235,8 +238,9 @@ window.nova_plugins.push({
          'label:es': 'Tecla de acceso rápido (doble clic)',
          'label:pt': 'Atalho (duplo clique)',
          'label:fr': 'Raccourci clavier (double clic)',
-         // 'label:tr': 'Kısayol tuşu (çift tıklama)',
+         'label:tr': 'Kısayol tuşu (çift tıklama)',
          'label:de': 'Hotkey (Doppelklick)',
+         'label:pl': 'Klawisz skrótu (podwójne kliknięcie)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'alt', value: 18 },
@@ -253,8 +257,9 @@ window.nova_plugins.push({
          'label:es': 'Mostrar compensación de tiempo en la barra de progreso',
          'label:pt': 'Mostrar a diferença de tempo na barra de progresso',
          'label:fr': 'Afficher le décalage horaire sur la barre de progression',
-         // 'label:tr': 'İlerleme çubuğunda zaman ofsetini göster',
+         'label:tr': 'İlerleme çubuğunda zaman ofsetini göster',
          'label:de': 'Zeitverschiebung im Fortschrittsbalken anzeigen',
+         'label:pl': 'Pokaż przesunięcie czasu na pasku postępu',
          type: 'checkbox',
          // title: 'When you hover offset current playback time',
          title: 'Time offset from current playback time',
@@ -264,8 +269,9 @@ window.nova_plugins.push({
          'title:es': 'Desfase de tiempo del tiempo de reproducción actual',
          'title:pt': 'Deslocamento de tempo do tempo de reprodução atual',
          'title:fr': "Décalage temporel par rapport à l'heure de lecture actuelle",
-         // 'title:tr': 'Geçerli oynatma süresinden zaman farkı',
+         'title:tr': 'Geçerli oynatma süresinden zaman farkı',
          'title:de': 'Zeitverschiebung zur aktuellen Wiedergabezeit',
+         'title:pl': 'Przesunięcie czasu względem bieżącego czasu odtwarzania',
       },
       time_jump_chapters_list_show: {
          _tagName: 'input',
@@ -276,8 +282,9 @@ window.nova_plugins.push({
          'label:es': 'Mostrar bloque de lista de capítulos',
          'label:pt': 'Mostrar bloco de lista de capítulos',
          'label:fr': 'Afficher la section de la liste des chapitres',
-         // 'label:tr': 'Bölüm listesi bölümünü göster',
+         'label:tr': 'Bölüm listesi bölümünü göster',
          'label:de': 'Kapitellistenblock anzeigen',
+         'label:pl': 'Pokaż sekcję listy rozdziałów',
          type: 'checkbox',
       },
    }

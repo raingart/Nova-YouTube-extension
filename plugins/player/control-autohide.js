@@ -12,8 +12,9 @@ window.nova_plugins.push({
    'title:es': 'Ocultar automáticamente los controles en el reproductor',
    'title:pt': 'Auto-ocultar controles no player',
    'title:fr': 'Masque le panneau de contrôle du lecteur',
-   // 'title:tr': 'Oynatıcıdaki kontrolleri otomatik gizle',
+   'title:tr': 'Oynatıcıdaki kontrolleri otomatik gizle',
    'title:de': 'Blendet das Player-Bedienfeld aus',
+   'title:pl': 'Auto ukrywanie elementów w odtwarzaczu',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Hover over it to display it',
@@ -25,6 +26,7 @@ window.nova_plugins.push({
    // 'desc:fr': "Survolez-le pour l'afficher",
    'desc:tr': 'Görüntülemek için üzerine gelin',
    'desc:de': 'Bewegen Sie den Mauszeiger darüber, um es anzuzeigen',
+   'desc:pl': 'Najedź, aby wyświetlić',
    _runtime: user_settings => {
 
       NOVA.css.push(

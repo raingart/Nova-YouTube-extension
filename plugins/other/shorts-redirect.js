@@ -10,8 +10,9 @@ window.nova_plugins.push({
    'label:es': 'Redirigir Shorts a URL normales (ver)',
    'label:pt': 'Redirecionar Shorts para URLs regulares (observar)',
    'label:fr': 'Rediriger les shorts vers des URL normales (de surveillance)',
-   // 'label:tr': "Shorts'ları normal (izleyin) URL'lerine yönlendirin",
+   'label:tr': "Shorts'ları normal (izleyin) URL'lerine yönlendirin",
    'label:de': 'Leiten Sie Shorts zu regulären (Watch-)URLs um',
+   'label:pl': 'Przełączaj Shorts na zwykłe adresy URL',
    run_on_pages: 'results, feed, channel, shorts',
    // restart_on_transition: true,
    section: 'other',
@@ -22,8 +23,9 @@ window.nova_plugins.push({
    'desc:es': 'Redirigir el video de Shorts al reproductor normal',
    'desc:pt': 'Redirecionar o vídeo do Shorts para o player normal',
    'desc:fr': 'Rediriger la vidéo Short vers un lecteur normal',
-   // 'desc:tr': 'Shorts videosunu normal oynatıcıya yönlendir',
+   'desc:tr': 'Shorts videosunu normal oynatıcıya yönlendir',
    'desc:de': 'Shorts-Video auf normalen Player umleiten',
+   'desc:pl': 'Przełącza krótkie filmy do normalnego odtwarzacza',
    _runtime: user_settings => {
 
       if ('shorts' == NOVA.currentPage) {
@@ -113,8 +115,9 @@ window.nova_plugins.push({
          'label:es': 'Agregar tiempo para superponer',
          'label:pt': 'Adicionar tempo à sobreposição',
          'label:fr': 'Ajouter du temps à la superposition',
-         // 'label:tr': 'Bindirme için zaman ekleyin',
+         'label:tr': 'Bindirme için zaman ekleyin',
          'label:de': 'Zeit zum Überlagern hinzufügen',
+         'label:pl': 'Pokaż nakładkę z czasem',
          type: 'checkbox',
          // title: '',
       },

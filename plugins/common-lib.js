@@ -233,56 +233,56 @@ const NOVA = {
       },
    },
 
-   cookie: {
-      get(name = required()) {
-         return Object.fromEntries(
-            document.cookie
-               .split(/; */)
-               .map(c => {
-                  const [key, ...v] = c.split('=');
-                  return [key, decodeURIComponent(v.join('='))];
-               })
-         )[name];
-      },
+   // cookie: {
+   //    get(name = required()) {
+   //       return Object.fromEntries(
+   //          document.cookie
+   //             .split(/; */)
+   //             .map(c => {
+   //                const [key, ...v] = c.split('=');
+   //                return [key, decodeURIComponent(v.join('='))];
+   //             })
+   //       )[name];
+   //    },
 
-      set(name = required(), value, days = 90) { // 90 days
-         let date = new Date();
-         date.setTime(date.getTime() + 3600000 * 24 * days); // m*h*d
+   //    set(name = required(), value, days = 90) { // 90 days
+   //       let date = new Date();
+   //       date.setTime(date.getTime() + 3600000 * 24 * days); // m*h*d
 
-         document.cookie = Object.entries({
-            // [encodeURIComponent(name)]: encodeURIComponent(value),
-            [encodeURIComponent(name)]: value,
-            // domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
-            domain: '.youtube.com',
-            // expires: date.toUTCString(),
-            path: '/', // what matters at the end
-         })
-            .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
+   //       document.cookie = Object.entries({
+   //          // [encodeURIComponent(name)]: encodeURIComponent(value),
+   //          [encodeURIComponent(name)]: value,
+   //          // domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
+   //          domain: '.youtube.com',
+   //          // expires: date.toUTCString(),
+   //          path: '/', // what matters at the end
+   //       })
+   //          .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
-         console.assert(this.get(name) == value, 'cookie set err:', ...arguments, document.cookie);
-      },
+   //       console.assert(this.get(name) == value, 'cookie set err:', ...arguments, document.cookie);
+   //    },
 
-      getParamLikeObj(name = required()) {
-         return Object.fromEntries(
-            this.get(name)
-               ?.split(/&/)
-               .map(c => {
-                  const [key, ...v] = c.split('=');
-                  return [key, decodeURIComponent(v.join('='))];
-               }) || []
-         );
-      },
+   //    getParamLikeObj(name = required()) {
+   //       return Object.fromEntries(
+   //          this.get(name)
+   //             ?.split(/&/)
+   //             .map(c => {
+   //                const [key, ...v] = c.split('=');
+   //                return [key, decodeURIComponent(v.join('='))];
+   //             }) || []
+   //       );
+   //    },
 
-      updateParam({ key = required(), param = required(), value = required() }) {
-         let paramsObj = this.getParamLikeObj(key) || {};
+   //    updateParam({ key = required(), param = required(), value = required() }) {
+   //       let paramsObj = this.getParamLikeObj(key) || {};
 
-         if (paramsObj[param] != value) {
-            paramsObj[param] = value;
-            this.set(key, NOVA.queryURL.set(paramsObj).split('?').pop());
-            location.reload();
-         }
-      },
-   },
+   //       if (paramsObj[param] != value) {
+   //          paramsObj[param] = value;
+   //          this.set(key, NOVA.queryURL.set(paramsObj).split('?').pop());
+   //          location.reload();
+   //       }
+   //    },
+   // },
 
    /* NOVA.preventVisibilityElement({
          selector: '#secondary #related',

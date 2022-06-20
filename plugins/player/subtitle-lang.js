@@ -1,6 +1,7 @@
 // https://www.youtube.com/watch?v=9EvbqxBUG_c - great for testing
 // https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
-// https://youtu.be/XvJRE6Sm-lM - has sub
+// https://youtu.be/XvJRE6Sm-lM - has sub (multi)
+// https://www.youtube.com/watch?v=jz-hkKgcuF0 - has sub (eng)
 
 window.nova_plugins.push({
    id: 'subtitle-lang',
@@ -13,6 +14,7 @@ window.nova_plugins.push({
    'title:fr': 'Langue des sous-titres',
    'title:tr': 'Altyazı dili',
    'title:de': 'Untertitelsprache',
+   'title:pl': 'Język napisów',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: 'captions',
@@ -22,14 +24,16 @@ window.nova_plugins.push({
 
       const localYT = {
          en: {
-            subtitles: 'Subtitles/CC',
+            // subtitles: 'Subtitles/CC',
+            subtitles: 'Subtitles',
             translate: 'Auto-translate',
             lang: 'English',
          },
          cn: {
             subtitles: '字幕',
             translate: '自动翻译',
-            lang: '中文（简体）',
+            // lang: '中文（简体）',
+            lang: '简体',
          },
          ja: {
             subtitles: '字幕',
@@ -57,7 +61,8 @@ window.nova_plugins.push({
             lang: 'Español',
          },
          pt: {
-            subtitles: 'Legendas/CC',
+            // subtitles: 'Legendas/CC',
+            subtitles: 'Legendas',
             translate: 'Traduzir automaticamente',
             lang: 'Português',
          },
@@ -66,11 +71,16 @@ window.nova_plugins.push({
             translate: 'Otomatik çevir',
             lang: 'Türkçe',
          },
-         ru: {
-            subtitles: 'Субтитры',
-            translate: 'Перевести',
-            lang: 'Русский',
+         pl: {
+            subtitles: 'Napisy',
+            translate: 'Przetłumacz automatycznie',
+            lang: 'Polski',
          },
+         // ru: {
+         //    subtitles: 'Субтитры',
+         //    translate: 'Перевести',
+         //    lang: 'Русский',
+         // },
       };
 
       // selectSubtitles
@@ -111,8 +121,9 @@ window.nova_plugins.push({
                }
 
                function getMenuByLabel(name = required()) {
-                  return (a = [...document.querySelectorAll('.ytp-menuitem')]
-                     .find(e => e.textContent.includes(name)));
+                  name = name.toLocaleLowerCase();
+                  return [...document.querySelectorAll('.ytp-menuitem')]
+                     .find(e => e.textContent.toLocaleLowerCase().includes(name));
                   // .closest('.ytp-menuitem');
                }
 
@@ -144,7 +155,8 @@ window.nova_plugins.push({
             { label: 'Español', value: 'es' },
             { label: 'Português', value: 'pt' },
             { label: 'Türkçe', value: 'tr' },
-            { label: 'Russian', value: 'ru' },
+            { label: 'Polski', value: 'pl' },
+            // { label: 'Russian', value: 'ru' },
          ],
       },
    }

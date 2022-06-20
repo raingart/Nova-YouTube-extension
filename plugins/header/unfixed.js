@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Encabezado sin arreglar',
    'title:pt': 'Cabeçalho não corrigido',
    'title:fr': 'En-tête non corrigé',
-   // 'title:tr': 'Başlık sabitlenmemiş',
+   'title:tr': 'Başlık sabitlenmemiş',
    'title:de': 'Kopfleiste nicht fixiert',
+   'title:pl': 'Przewijany nagłówek',
    // run_on_pages: 'watch, channel',
    run_on_pages: 'all, -embed, -mobile',
    // restart_on_transition: true,
@@ -22,6 +23,7 @@ window.nova_plugins.push({
    // 'desc:fr': "Empêcher l'en-tête de coller",
    'desc:tr': 'Başlığın yapışmasını önleyin',
    'desc:de': 'Verhindert das Ankleben des Headers',
+   'desc:pl': 'Nagłówek będzie przewijany wraz ze stroną',
    _runtime: user_settings => {
 
       NOVA.css.push(
@@ -84,8 +86,9 @@ window.nova_plugins.push({
          'label:es': 'Desplazarse después del encabezado',
          'label:pt': 'Role após o cabeçalho',
          'label:fr': "Faire défiler après l'en-tête",
-         // 'label:tr': 'Başlıktan sonra kaydır',
+         'label:tr': 'Başlıktan sonra kaydır',
          'label:de': 'Nach der Kopfzeile scrollen',
+         'label:pl': 'Przewiń nagłówek',
          title: 'Makes sense on a small screen',
          'title:zh': '在小屏幕上有意义',
          'title:ja': '小さな画面で意味があります',
@@ -93,8 +96,9 @@ window.nova_plugins.push({
          'title:es': 'Tiene sentido en una pantalla pequeña',
          'title:pt': 'Faz sentido em uma tela pequena',
          'title:fr': 'A du sens sur un petit écran',
-         // 'title:tr': 'Küçük ekranda mantıklı',
+         'title:tr': 'Küçük ekranda mantıklı',
          'title:de': 'Macht auf einem kleinen Bildschirm Sinn',
+         'title:pl': 'Przydatne na małym ekranie',
          type: 'checkbox',
       },
    }

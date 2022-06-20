@@ -9,8 +9,9 @@ window.nova_plugins.push({
    'title:es': "Ocultar miniaturas de 'Mix'",
    'title:pt': "Ocultar miniaturas de 'Mix'",
    'title:fr': 'Masquer les vignettes "Mix"',
-   // 'title:tr': "'Karıştır' küçük resimlerini gizle",
+   'title:tr': "'Karıştır' küçük resimlerini gizle",
    'title:de': '„Mix“-Thumbnails ausblenden',
+   'title:pl': 'Ukryj miniaturki "Mix"',
    run_on_pages: 'home, results, watch',
    section: 'sidebar',
    desc: '[Mix] offers to rewatch what has already saw',
@@ -19,8 +20,9 @@ window.nova_plugins.push({
    'desc:ko': '[Mix]는 이미 본 것을 다시 볼 것을 제안합니다',
    'desc:es': '[Mix] ofrece volver a ver lo que ya vio',
    'desc:pt': '[Mix] se oferece para rever o que já viu',
-   // 'desc:tr': '[Mix], daha önce görmüş olanı yeniden izlemeyi teklif ediyor',
+   'desc:tr': '[Mix], daha önce görmüş olanı yeniden izlemeyi teklif ediyor',
    'desc:de': '[Mix] bietet an, bereits Gesehenes noch einmal anzuschauen',
+   'desc:pl': '[Mix] proponuje ponowne obejrzenie już obejrzanych filmów',
    _runtime: user_settings => {
 
       const cssSelectors = [

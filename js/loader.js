@@ -16,8 +16,8 @@ const App = {
          }
          this.settingsStore = settings;
          // in the iframe
-         if (settings?.disable_in_frame && window.self !== window.top) {
-            return console.warn('processed in the frame disable');
+         if (settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
+            return console.warn('processed in the iframe disable');
          }
          if (settings?.report_issues) this.reflectException();
          this.run();

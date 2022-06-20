@@ -53,10 +53,10 @@
    "opt_api_key_generate": {
       "message": "Generate API key"
    },
-   "opt_disable_in_frame": {
-      "message": "Désactiver dans iframe"
+   "opt_exclude_iframe": {
+      "message": "Exclure la vidéo iframe"
    },
-   "opt_disable_in_frame_tooltip": {
+   "opt_exclude_iframe_tooltip": {
       "message": "L'extension ne fonctionnera pas dans la vidéo intégrée"
    },
    "opt_report_issues": {
@@ -67,6 +67,12 @@
    },
    "opt_api_key_warn": {
       "message": "Utilisez votre [clé API] pour un travail stable"
+   },
+   "lang_code_tooltip": {
+      "message": "Сchoix de la localisation"
+   },
+   "lang_code": {
+      "message": "Langue"
    },
    "github_page": {
       "message": "Code source"

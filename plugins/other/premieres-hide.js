@@ -9,6 +9,7 @@ window.nova_plugins.push({
    // 'title:fr': '',
    // 'title:tr': '',
    // 'title:de': '',
+   // 'title:pl': '',
    run_on_pages: 'feed, channel',
    section: 'other',
    // desc: '',

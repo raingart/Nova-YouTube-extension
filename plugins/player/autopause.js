@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Pausa automática de video',
    'title:pt': 'Pausa automática de vídeo',
    'title:fr': 'Pause automatique de la vidéo',
-   // 'title:tr': 'Video otomatik duraklatma',
+   'title:tr': 'Video otomatik duraklatma',
    'title:de': 'Automatische Pause des Videos',
+   'title:pl': 'Automatyczne zatrzymanie wideo',
    run_on_pages: 'watch, embed',
    restart_on_transition: true,
    section: 'player',
@@ -19,8 +20,9 @@ window.nova_plugins.push({
    'desc:es': 'Deshabilitar reproducción automática',
    'desc:pt': 'Desativar reprodução automática',
    'desc:fr': 'Désactiver la lecture automatique',
-   // 'desc:tr': 'Otomatik oynatmayı devre dışı bırak',
+   'desc:tr': 'Otomatik oynatmayı devre dışı bırak',
    'desc:de': 'Deaktiviere Autoplay',
+   'desc:pl': 'Wyłącz autoodtwarzanie',
    _runtime: user_settings => {
 
       // better use this flag when launching the chrome/imum:
@@ -74,8 +76,9 @@ window.nova_plugins.push({
          'label:es': 'Ignorar lista de reproducción',
          'label:pt': 'Ignorar lista de reprodução',
          'label:fr': 'Ignorer la liste de lecture',
-         // 'label:tr': 'Oynatma listesini yoksay',
+         'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
+         'label:pl': 'Zignoruj listę odtwarzania',
          type: 'checkbox',
       },
    }

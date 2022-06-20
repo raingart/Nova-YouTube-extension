@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Borrar enlaces de redireccionamientos',
    'title:pt': 'Limpar links de redirecionamentos',
    'title:fr': 'Effacer les liens des redirections',
-   // 'title:tr': 'Yönlendirmeden bağlantıları temizle',
+   'title:tr': 'Yönlendirmeden bağlantıları temizle',
    'title:de': 'Links aus Weiterleitungen löschen',
+   'title:pl': 'Wyczyść linki z przekierowań',
    run_on_pages: 'watch, channel',
    section: 'details',
    desc: 'Direct external links',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Liens externes directs',
    'desc:tr': 'Doğrudan harici bağlantılar',
    'desc:de': 'Direkte externe Links',
+   'desc:pl': 'Bezpośrednie łącza zewnętrzne',
    _runtime: user_settings => {
 
       // document.addEventListener('mouseover', ({ target }) => { // increased load but the hint will be the right link

@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Ocultar chat en vivo',
    'title:pt': 'Ocultar livechat',
    'title:fr': 'Masquer le chat en direct',
-   // 'title:tr': 'Canlı sohbeti gizle',
+   'title:tr': 'Canlı sohbeti gizle',
    'title:de': 'Livechat ausblenden',
+   'title:pl': 'Ukryj czat na żywo',
    run_on_pages: 'watch, -mobile',
    // restart_on_transition: true, // maybe the shutdown is wrong. But all for the sake of optimization
    section: 'sidebar',
@@ -35,8 +36,9 @@ window.nova_plugins.push({
          'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         // 'label:tr': 'Mod',
+         'label:tr': 'Mod',
          'label:de': 'Modus',
+         'label:pl': 'Tryb',
          options: [
             { label: 'collapse', value: 'hide', selected: true },
             { label: 'remove', value: 'disable' },

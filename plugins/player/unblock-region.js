@@ -12,8 +12,9 @@ window.nova_plugins.push({
    'title:es': 'Intenta desbloquear videos para tu región',
    'title:pt': 'Tente desbloquear vídeos para sua região',
    'title:fr': 'Débloquer la vidéo de la région',
-   // 'title:tr': 'Bölgeniz için videoların engellemesini kaldırmayı deneyin',
+   'title:tr': 'Bölgeniz için videoların engellemesini kaldırmayı deneyin',
    'title:de': 'Versuchen Sie, Videos für Ihre Region zu entsperren',
+   'title:pl': 'Spróbuj odblokować, jeśli film nie jest dostępny w Twoim kraju',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: "attempt fix 'is not available in your country'",
@@ -25,6 +26,7 @@ window.nova_plugins.push({
    // 'desc:fr': '',
    // 'desc:tr': '',
    // 'desc:de': '',
+   // 'desc:pl': '',
    _runtime: user_settings => {
 
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')

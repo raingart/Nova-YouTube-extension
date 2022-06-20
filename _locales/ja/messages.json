@@ -53,10 +53,10 @@
    "opt_api_key_generate": {
       "message": "Generate API key"
    },
-   "opt_disable_in_frame": {
-      "message": "iframeで無効にする"
+   "opt_exclude_iframe": {
+      "message": "iframeビデオを除外する"
    },
-   "opt_disable_in_frame_tooltip": {
+   "opt_exclude_iframe_tooltip": {
       "message": "拡張機能は埋め込みビデオでは機能しません"
    },
    "opt_report_issues": {
@@ -67,6 +67,12 @@
    },
    "opt_api_key_warn": {
       "message": "安定した作業のために[APIキー]を使用してください"
+   },
+   "lang_code_tooltip": {
+      "message": "ローカリゼーションの選択"
+   },
+   "lang_code": {
+      "message": "言語"
    },
    "github_page": {
       "message": "Source code"

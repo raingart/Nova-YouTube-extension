@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
+
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
    title: 'Float player progress bar',
@@ -7,8 +10,9 @@ window.nova_plugins.push({
    'title:es': 'Barra de progreso flotante del jugador',
    'title:pt': 'Barra de progresso do jogador flutuante',
    'title:fr': 'Barre de progression du joueur flottant',
-   // 'title:tr': 'Kayan oyuncu ilerleme çubuğu',
+   'title:tr': 'Kayan oyuncu ilerleme çubuğu',
    'title:de': 'Float-Player-Fortschrittsbalken',
+   'title:pl': 'Pływający pasek postępu odtwarzacza',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -20,9 +24,11 @@ window.nova_plugins.push({
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
       NOVA.waitElement('video')
-         .then(video => {
+         .then(async video => {
             const
-               container = renderFloatBar(),
+               // async fix embed when disable chrome-bottom
+               chromeBtn = await NOVA.waitUntil(() => document.querySelector('.ytp-chrome-bottom')),
+               container = renderFloatBar(chromeBtn),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
@@ -89,9 +95,10 @@ window.nova_plugins.push({
 
          });
 
-      function renderFloatBar() {
+      function renderFloatBar(chrome_btn) {
 
          return document.getElementById(SELECTOR_ID) || (function () {
+
             movie_player?.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
                   <div class="conteiner">
@@ -101,7 +108,8 @@ window.nova_plugins.push({
                   <div id="${SELECTOR_ID}-chapters"></div>
                </div>`);
 
-            const zIndex = getComputedStyle(document.querySelector('.ytp-chrome-bottom'))['z-index'] || 60;
+            const zIndex = (chrome_btn && chrome_btn instanceof HTMLElement)
+               ? getComputedStyle(chrome_btn)['z-index'] : 60;
             // const bufferColor = getComputedStyle(document.querySelector('.ytp-load-progress'))['background-color'] || 'rgba(255,255,255,.4)';
 
             NOVA.css.push(
@@ -253,8 +261,9 @@ window.nova_plugins.push({
          'label:es': 'Altura',
          'label:pt': 'Altura',
          'label:fr': 'Hauteur',
-         // 'label:tr': 'Yükseklik',
+         'label:tr': 'Yükseklik',
          'label:de': 'Höhe',
+         'label:pl': 'Wysokość',
          type: 'number',
          title: 'in pixels',
          placeholder: 'px',
@@ -271,8 +280,9 @@ window.nova_plugins.push({
          'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
          'label:fr': 'Opacité',
-         // 'label:tr': 'Opaklık',
+         'label:tr': 'Opaklık',
          'label:de': 'Opazität',
+         'label:pl': 'Przejrzystość',
          type: 'number',
          // title: '',
          placeholder: '0-1',

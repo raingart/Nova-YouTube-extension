@@ -28,7 +28,7 @@ const Plugins = {
       // 'player/miniplayer-disable.js',
       // 'player/stop.js', // incompatible with quality.js
       'player/unblock-region.js',
-      'player/next-autoplay.js',
+      // 'player/next-autoplay.js',
       'player/video-cards.js',
       'player/fullscreen-scroll.js',
 
@@ -37,7 +37,7 @@ const Plugins = {
       // 'other/thumbs-rating.js',
       'other/thumbs-watched.js', // outdated
       'other/channel-tab.js',
-      'other/dark-theme.js',
+      // 'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
       'other/search-filter.js',
@@ -134,7 +134,7 @@ const Plugins = {
          logTableStatus = false;
 
          if (!pluginChecker(plugin)) {
-            console.error('Plugin invalid\n', JSON.stringify(plugin));
+            console.error('Plugin invalid\n', plugin);
             alert('Plugin invalid: ' + plugin?.id);
             logTableStatus = 'INVALID';
 

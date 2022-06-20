@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Plein écran automatique lors de la lecture',
    // 'title:tr': '',
    'title:de': 'Automatischer Vollbildmodus bei Wiedergabe',
+   'title:pl': 'Automatyczny pełny ekran podczas odtwarzania',
    run_on_pages: 'watch',
    section: 'player',
    // desc: '',
@@ -64,6 +65,7 @@ window.nova_plugins.push({
          'label:pt': 'Sair da tela cheia na pausa',
          'label:fr': 'Quitter le plein écran en pause',
          'label:de': 'Beenden Sie den Vollbildmodus bei Pause',
+         'label:pl': 'Wyjście z trybu pełnoekranowego po wstrzymaniu/zakończeniu',
          type: 'checkbox',
       },
    }

@@ -11,11 +11,13 @@ window.nova_plugins.push({
    'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
    'title:pt': 'Sem rolar para o jogador em timestamps',
    'title:fr': 'Pas de défilement vers le joueur sur les horodatages',
-   // 'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
+   'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
    'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
+   'title:pl': 'Brak przejścia do odtwarzacza na znacznikach czasu',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    desc: 'Disable scrolling to player when clicking on timestamps',
+   'desc:pl': 'Wyłącza przewijanie do odtwarzacza podczas klikania znaczników czasu',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/438943-youtube-no-scroll-to-top-on-timestamps

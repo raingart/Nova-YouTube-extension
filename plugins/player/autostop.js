@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Detener la precarga de video',
    'title:pt': 'Parar o pré-carregamento de vídeo',
    'title:fr': 'Arrêter le préchargement de la vidéo',
-   // 'title:tr': 'Video önyüklemesini durdur',
+   'title:tr': 'Video önyüklemesini durdur',
    'title:de': 'Beenden Sie das Vorladen des Videos',
+   'title:pl': 'Zatrzymaj ładowanie wideo',
    run_on_pages: 'watch, embed',
    // restart_on_transition: true,
    section: 'player',
@@ -68,8 +69,9 @@ window.nova_plugins.push({
          'label:es': 'Ignorar lista de reproducción',
          'label:pt': 'Ignorar lista de reprodução',
          'label:fr': 'Ignorer la liste de lecture',
-         // 'label:tr': 'Oynatma listesini yoksay',
+         'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
+         'label:pl': 'Zignoruj listę odtwarzania',
          type: 'checkbox',
       },
       // stop_preload_ignore_active_tab: {
@@ -83,6 +85,7 @@ window.nova_plugins.push({
       //    // 'label:fr': '',
       //    // 'label:tr': '',
       //    // 'label:de': '',
+      //    // 'label:pl': '',
       //    type: 'checkbox',
       //    title: 'Ignore active tab',
       //    // 'title:zh': '',
@@ -93,6 +96,7 @@ window.nova_plugins.push({
       //    // 'title:fr': '',
       //    // 'title:tr': '',
       //    // 'title:de': '',
+      //    // 'title:pl': '',
       // },
    }
 });

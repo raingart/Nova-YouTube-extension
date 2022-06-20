@@ -12,8 +12,9 @@ window.nova_plugins.push({
    'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
    'title:pt': 'Pausar automaticamente todas as guias, exceto a ativa',
    'title:fr': "Interrompt la lecture des vidéos dans d'autres onglets",
-   // 'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
+   'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
+   'title:pl': 'Autopauza wszystkich kart tła oprócz aktywnej',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',
@@ -25,6 +26,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Prend en charge les iframes et autres fenêtres',
    'desc:tr': "iframe'leri ve diğer pencereleri destekler",
    'desc:de': 'Unterstützt iframes und andere Fenster',
+   'desc:pl': 'Obsługa ramek iframe i innych okien',
    _runtime: user_settings => {
 
       // redirection for localStorage common storage space
@@ -47,10 +49,20 @@ window.nova_plugins.push({
 
             // auto play on tab focus
             if (user_settings.pause_background_tab_autoplay_onfocus) {
-               document.addEventListener('visibilitychange', () => {
+               // document.addEventListener('visibilitychange', () => {
+               //    // if other tabs are not playing
+               //    if (document.visibilityState == 'visible'
+               //       && !localStorage.hasOwnProperty(storeName) // store empty
+               //       // && video.paused  // dont see ENDED
+               //       && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
+               //    ) {
+               //       // console.debug('play video in focus');
+               //       video.play();
+               //    }
+               // });
+               window.addEventListener('focus', () => {
                   // if other tabs are not playing
-                  if (document.visibilityState == 'visible'
-                     && !localStorage.hasOwnProperty(storeName) // store empty
+                  if (!localStorage.hasOwnProperty(storeName) // store empty
                      // && video.paused  // dont see ENDED
                      && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
                   ) {
@@ -58,6 +70,7 @@ window.nova_plugins.push({
                      video.play();
                   }
                });
+               // window.addEventListener('blur', pause);
             }
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
@@ -171,8 +184,9 @@ window.nova_plugins.push({
          'label:es': 'Reproducción automática en el enfoque de la pestaña',
          'label:pt': 'Reprodução automática no foco da guia',
          'label:fr': "Lecture automatique sur le focus de l'onglet",
-         // 'label:tr': 'Sekme odağında otomatik oynatma',
+         'label:tr': 'Sekme odağında otomatik oynatma',
          'label:de': 'Autoplay bei Tab-Fokus',
+         'label:pl': 'Autoodtwarzanie po wybraniu karty',
          type: 'checkbox',
          // title: '',
       },

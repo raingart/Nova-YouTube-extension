@@ -10,8 +10,9 @@ window.nova_plugins.push({
    'title:es': 'Agregar botón para ordenar las miniaturas por vistas',
    'title:pt': 'Botão Adicionar para classificar miniaturas por visualizações',
    'title:fr': 'Ajouter un bouton pour trier les vignettes par vues',
-   // 'title:tr': 'Küçük resimleri görünümlere göre sıralamak için Ekle düğmesi',
+   'title:tr': 'Küçük resimleri görünümlere göre sıralamak için Ekle düğmesi',
    'title:de': 'Schaltfläche "Hinzufügen", um Miniaturansichten nach Ansichten zu sortieren',
+   'title:pl': 'Dodaj przycisk do sortowania miniatur według wyświetleń',
    run_on_pages: 'channel, -mobile',
    // restart_on_transition: true, // dirty fix. required to use. But for optimization it is disabled and the code is not adapted
    section: 'other',
@@ -83,8 +84,9 @@ window.nova_plugins.push({
          'label:es': 'Corrientes y estrenos es la primera',
          'label:pt': 'Streams e estreias é o primeiro',
          'label:fr': 'Les flux et les premières sont les premiers',
-         // 'label:tr': 'Akışlar ve prömiyerler ilk sırada',
+         'label:tr': 'Akışlar ve prömiyerler ilk sırada',
          'label:de': 'Streams und Premieren stehen an erster Stelle',
+         'label:pl': 'Streamy i premiery jako pierwsze',
          type: 'checkbox',
       },
    }

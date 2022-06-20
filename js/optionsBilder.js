@@ -1,15 +1,5 @@
 console.debug('init optionsView.js');
 
-// https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
-let lang_code = window.navigator.language.substring(0, 2);
-// lang_code = 'zh'
-// lang_code = 'ja'
-// lang_code = 'ko'
-// lang_code = 'es'
-// lang_code = 'pt'
-// lang_code = 'fr'
-// lang_code = 'de'
-
 window.nova_plugins = [];
 Plugins.load();
 
@@ -17,6 +7,17 @@ const Opt = {
    // DEBUG: true,
 
    storageMethod: 'sync',
+
+   // https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
+   lang_code: window.navigator.language.substring(0, 2),
+   // lang_code = 'zh',
+   // lang_code = 'ja',
+   // lang_code = 'ko',
+   // lang_code = 'es',
+   // lang_code = 'pt',
+   // lang_code = 'fr',
+   // lang_code = 'de',
+   // lang_code = 'pl',
 
    UI: {
       pluginsContainer: '#plugins',
@@ -79,11 +80,11 @@ const Opt = {
                   this.log('plugin load:', plugin.id);
 
                   // localize
-                  if (title_local = plugin['title:' + lang_code]) {
+                  if (title_local = plugin['title:' + this.lang_code]) {
                      plugin.title = title_local;
                      delete plugin[title_local];
                   }
-                  if (desc_local = plugin['desc:' + lang_code]) {
+                  if (desc_local = plugin['desc:' + this.lang_code]) {
                      plugin.desc = desc_local;
                      delete plugin[desc_local];
                   }
@@ -136,6 +137,10 @@ const Opt = {
                console.error('_tagName is missing in', property);
                continue;
             }
+            if (!property.label) {
+               console.error('label is missing in', property);
+               continue;
+            }
 
             const exportContainer = document.createElement('li');
             const exportProperty = document.createElement(property._tagName);
@@ -162,11 +167,11 @@ const Opt = {
 
             // localize
             if (property.title) {
-               exportContainer.setAttribute('tooltip', property['title:' + lang_code] || property.title);
+               exportContainer.setAttribute('tooltip', property['title:' + this.lang_code] || property.title);
                delete property.title;
-               delete property['title:' + lang_code];
+               delete property['title:' + this.lang_code];
             }
-            if (label_local = property['label:' + lang_code]) {
+            if (label_local = property['label:' + this.lang_code]) {
                property.label = label_local;
                delete property[label_local];
             }
@@ -182,15 +187,18 @@ const Opt = {
                   this.log('property [%s=%s]', attr, JSON.stringify(value));
                   switch (attr) {
                      case 'options':
+                        if (!Array.isArray(value) || !value.length) {
+                           console.error('select has invalid options(need array):', value);
+                        }
                         value.forEach(option => {
                            const tagOption = document.createElement('option');
                            switch (typeof option) {
                               case 'object':
                                  tagOption.value = option.value;
                                  // localize
-                                 if (option.hasOwnProperty('label:' + lang_code)) {
-                                    option.label = option['label:' + lang_code];
-                                    delete option['label:' + lang_code];
+                                 if (option.hasOwnProperty('label:' + this.lang_code)) {
+                                    option.label = option['label:' + this.lang_code];
+                                    delete option['label:' + this.lang_code];
                                  }
                                  tagOption.textContent = option.label;
                                  if (option.hasOwnProperty('selected')) tagOption.selected = true;
@@ -200,6 +208,14 @@ const Opt = {
                                  tagOption.value = option;
                                  tagOption.textContent = option.toLocaleUpperCase();
                                  break;
+
+                              case 'number':
+                                 tagOption.value = option;
+                                 tagOption.textContent = option;
+                                 break;
+
+                              default:
+                                 console.error('invalid option item type: %s(%s)', option, typeof option);
                            }
                            exportProperty.append(tagOption);
                         });
@@ -237,6 +253,9 @@ const Opt = {
    openTab(tabId, reload_page) {
       // console.debug('openTab', ...arguments);
       if (reload_page) {
+         // const url = location.pathname;
+         // url.searchParams.set('tab', tabId);
+         // document.location = url.href;
          document.location = location.pathname + '?tabs=' + tabId;
       } else {
          document.getElementById(tabId).checked = true;
@@ -350,7 +369,7 @@ const Opt = {
                   try {
                      Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
                      alert(i18n('opt_alert_import_successfully'));
-                     // document.location.reload();
+                     // location.reload();
                      this.openTab('tab-plugins', 'reload_page');
                   }
                   catch (err) { alert('Error parsing settings\n' + err.name + ": " + err.message); }
@@ -368,7 +387,7 @@ const Opt = {
          ?.addEventListener('click', () => {
             if (confirm(i18n('opt_prompt_reset_settings'))) {
                Storage.setParams(null, this.storageMethod);
-               // document.location.reload();
+               // location.reload();
                this.openTab('tab-plugins', 'reload_page');
             }
          });
@@ -398,6 +417,20 @@ const Opt = {
 
 
 window.addEventListener('load', () => {
+   // tab selector
+   if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
+
+   // load
+   Storage.getParams(settings => {
+      if (settings?.lang_code) Opt.lang_code = settings.lang_code; // locale predefinitions
+      Opt.init();
+      Conf.init();
+      // remove api warn if has api
+      if (settings && settings['custom-api-key']) {
+         document.body.querySelectorAll('.info b').forEach(el => el.remove());
+      }
+   }, Opt.storageMethod);
+
    // search bar
    const searchInput = document.body.querySelector('form input[type=search]');
    ['change', 'keyup'].forEach(evt => {
@@ -416,17 +449,12 @@ window.addEventListener('load', () => {
          });
    });
 
-   Opt.init();
+   // reload page after localization change
+   document.addEventListener('submit', evt => {
+      if (evt.target?.lang_code.value != Opt.lang_code) Opt.openTab('tab-plugins', 'reload_page');
+   });
 
-   Storage.getParams(settings => {
-      // tab selector
-      if (tabId = new URLSearchParams(location.search).get('tabs')) Opt.openTab(tabId);
-      // remove api warn if has api
-      if (settings && settings['custom-api-key']) {
-         document.body.querySelectorAll('.info b').forEach(el => el.remove());
-      }
-   }, Opt.storageMethod);
-
+   // add script info to open issues link
    document.body.querySelector('a[href$="issues/new"]')
       .addEventListener('click', ({ target }) => {
          const app_ver = typeof GM_info === 'undefined' ? chrome.runtime.getManifest().version : GM_info.script.version;

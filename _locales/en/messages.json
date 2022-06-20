@@ -53,11 +53,11 @@
    "opt_api_key_generate": {
       "message": "Generate API key"
    },
-   "opt_disable_in_frame": {
-      "message": "Disable in iframe"
+   "opt_exclude_iframe": {
+      "message": "Exclude iframe video"
    },
-   "opt_disable_in_frame_tooltip": {
-      "message": "The extension will not work in embed video"
+   "opt_exclude_iframe_tooltip": {
+      "message": "The extension will not work in embeded video"
    },
    "opt_report_issues": {
       "message": "Show prompting to report bugs"
@@ -67,6 +67,12 @@
    },
    "opt_api_key_warn": {
       "message": "Use your [API key] for stable work"
+   },
+   "lang_code_tooltip": {
+      "message": "Сhoice of localization"
+   },
+   "lang_code": {
+      "message": "Language"
    },
    "github_page": {
       "message": "Source code"

@@ -7,8 +7,9 @@ window.nova_plugins.push({
    'title:es': 'Botones personalizados',
    'title:pt': 'Botões personalizados',
    'title:fr': 'Boutons personnalisés',
-   // 'title:tr': 'Özel düğmeler',
+   'title:tr': 'Özel düğmeler',
    'title:de': 'Benutzerdefinierte Schaltflächen',
+   'title:pl': 'Własne przyciski odtwarzacza',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
@@ -141,9 +142,9 @@ window.nova_plugins.push({
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
-                  if (currentTime = ~~NOVA.videoElement?.currentTime) url.searchParams.append('start', currentTime);
-                  url.searchParams.append('autoplay', 1);
-                  url.searchParams.append('popup', true); // deactivate popup-button for used window
+                  if (currentTime = ~~NOVA.videoElement?.currentTime) url.searchParams.set('start', currentTime);
+                  url.searchParams.set('autoplay', 1);
+                  url.searchParams.set('popup', true); // deactivate popup-button for used window
 
                   openPopup({ 'url': url.href, 'title': document.title, 'width': width, 'height': height });
                });
@@ -640,8 +641,9 @@ window.nova_plugins.push({
          'label:es': 'Botones',
          'label:pt': 'Botões',
          'label:fr': 'Boutons',
-         // 'label:tr': 'Düğmeler',
+         'label:tr': 'Düğmeler',
          'label:de': 'Tasten',
+         'label:pl': 'Przyciski',
          title: '[Ctrl+Click] to select several',
          'title:zh': '[Ctrl+Click] 选择多个',
          'title:ja': '「Ctrl+Click」して、いくつかを選択します',
@@ -649,19 +651,20 @@ window.nova_plugins.push({
          'title:es': '[Ctrl+Click] para seleccionar varias',
          'title:pt': '[Ctrl+Click] para selecionar vários',
          'title:fr': '[Ctrl+Click] pour sélectionner plusieurs',
-         // 'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
+         'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
          'title:de': '[Ctrl+Click] um mehrere auszuwählen',
+         'title:pl': 'Ctrl+kliknięcie, aby zaznaczyć kilka',
          multiple: null, // dont use - selected: true
          required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
-            { label: 'quick quality', value: 'quick-quality', 'label:zh': '质量', 'label:ja': '品質', 'label:ko': '품질', 'label:es': 'calidad', 'label:pt': 'qualidade', 'label:fr': 'qualité', 'label:tr': 'hızlı kalite', 'label:de': 'qualität' },
-            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:ko': '토글 속도', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:fr': 'basculer la vitesse', 'label:tr': 'geçiş hızı', 'label:de': 'geschwindigkeit umschalten' },
-            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:ko': '스크린샷', 'label:es': 'captura de pantalla', 'label:pt': 'captura de tela', 'label:fr': "capture d'écran", 'label:tr': 'ekran görüntüsü', 'label:de': 'bildschirmfoto' },
-            { label: 'picture-in-picture', value: 'picture-in-picture'/*, 'label:zh': '', 'label:ja': '', 'label:ko': '', 'label:es': '', 'label:pt': '', 'label:fr': '', 'label:tr': '', 'label:de': ''*/ },
-            { label: 'popup', value: 'popup', 'label:zh': '弹出式播放器', 'label:ja': 'ポップアッププレーヤー', 'label:ko': '썸네일', /*'label:es': 'jugadora emergente',*/ 'label:pt': 'jogador pop-up', 'label:fr': 'lecteur contextuel', 'label:tr': 'pop-up oynatıcı', /*'label:de': ''*/ },
-            { label: 'rotate', value: 'rotate', 'label:zh': '旋转', 'label:ja': '回転する', 'label:ko': '회전', 'label:es': 'girar', 'label:pt': 'girar', 'label:fr': 'tourner', 'label:tr': 'döndürmek', 'label:de': 'drehen' },
-            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:ko': '썸네일', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:fr': 'la vignette', 'label:tr': 'küçük resim', 'label:de': 'bildschirmfoto' },
+            { label: 'quick quality', value: 'quick-quality', 'label:zh': '质量', 'label:ja': '品質', 'label:ko': '품질', 'label:es': 'calidad', 'label:pt': 'qualidade', 'label:fr': 'qualité', 'label:tr': 'hızlı kalite', 'label:de': 'qualität'/*, 'label:pl': ''*/ },
+            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:ko': '토글 속도', 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:fr': 'basculer la vitesse', 'label:tr': 'geçiş hızı', 'label:de': 'geschwindigkeit umschalten'/*, 'label:pl': ''*/ },
+            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:ko': '스크린샷', 'label:es': 'captura de pantalla', 'label:pt': 'captura de tela', 'label:fr': "capture d'écran", 'label:tr': 'ekran görüntüsü', 'label:de': 'bildschirmfoto'/*, 'label:pl': ''*/ },
+            { label: 'picture-in-picture', value: 'picture-in-picture'/*, 'label:zh': '', 'label:ja': '', 'label:ko': '', 'label:es': '', 'label:pt': '', 'label:fr': '', // 'label:tr': '', 'label:de': '', 'label:pl': ''*/ },
+            { label: 'popup', value: 'popup', 'label:zh': '弹出式播放器', 'label:ja': 'ポップアッププレーヤー', 'label:ko': '썸네일', /*'label:es': 'jugadora emergente',*/ 'label:pt': 'jogador pop-up', 'label:fr': 'lecteur contextuel', 'label:tr': 'pop-up oynatıcı', /*'label:de': '', 'label:pl': ''*/ },
+            { label: 'rotate', value: 'rotate', 'label:zh': '旋转', 'label:ja': '回転する', 'label:ko': '회전', 'label:es': 'girar', 'label:pt': 'girar', 'label:fr': 'tourner', 'label:tr': 'döndürmek', 'label:de': 'drehen'/*, 'label:pl': ''*/ },
+            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:ko': '썸네일', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:fr': 'la vignette', 'label:tr': 'küçük resim', 'label:de': 'bildschirmfoto'/*, 'label:pl': ''*/ },
          ],
       },
       player_buttons_custom_popup_width: {
@@ -673,8 +676,9 @@ window.nova_plugins.push({
          'label:es': 'Relación de aspecto del tamaño de la ventana del reproductor',
          'label:pt': 'Proporção do tamanho da janela do jogador',
          'label:fr': "Rapport d'aspect de la taille de la fenêtre du lecteur",
-         // 'label:tr': 'Oyuncu penceresi boyutu en boy oranı',
+         'label:tr': 'Oyuncu penceresi boyutu en boy oranı',
          'label:de': 'Seitenverhältnis der Player-Fenstergröße',
+         'label:pl': 'Rozmiar okna odtwarzacza',
          type: 'number',
          title: 'less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
@@ -683,8 +687,9 @@ window.nova_plugins.push({
          'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
-         // 'title:tr': 'Daha az değer - daha büyük boyut',
+         'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
+         'title:pl': 'mniejsza wartość - większy rozmiar',
          // title: '',
          placeholder: '1.5-4',
          step: 0.1,
@@ -702,8 +707,9 @@ window.nova_plugins.push({
          'label:es': 'Velocidad de cambio de teclas de acceso rápido',
          'label:pt': 'Velocidade de alternância da tecla de atalho',
          'label:fr': 'Vitesse de basculement des raccourcis clavier',
-         // 'label:tr': 'Kısayol geçiş hızı',
+         'label:tr': 'Kısayol geçiş hızı',
          'label:de': 'Hotkey-Umschaltgeschwindigkeit',
+         'label:pl': 'Skrót przełączania prędkości',
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },

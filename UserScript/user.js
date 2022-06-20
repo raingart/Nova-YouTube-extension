@@ -10,6 +10,7 @@ const keyRenameTemplate = {
    // 'oldKey': 'newKey',
    'premiere-disable': 'premieres-disable',
    'stream-disable': 'streams-disable',
+   'disable_in_frame': 'exclude_iframe',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -17,6 +18,10 @@ for (const oldKey in user_settings) {
       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
    }
    GM_setValue(configStoreName, user_settings);
+}
+
+if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
+   return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
 if (isOptionsPage()) return;
@@ -98,7 +103,7 @@ function isOptionsPage() {
             try {
                GM_setValue(configStoreName, JSON.parse(rdr.result));
                alert('Settings imported');
-               document.location.reload();
+               location.reload();
             }
             catch (err) {
                alert(`Error parsing settings\n${err.name}: ${err.message}`);
@@ -130,81 +135,14 @@ function isOptionsPage() {
             };
          }
          // fix tab reassignment
-         if (obj.tabs) delete obj.tabs;
+         // if (obj.tabs) delete obj.tabs;
 
          console.debug(`update ${configStoreName}:`, obj);
          GM_setValue(configStoreName, obj);
       });
 
-      window.addEventListener('load', () => {
-         let interval_pagesync = setInterval(() => {
-            //if (document.body.classList.contains('preload')) return console.debug('page loading..');
-            if (!document.body?.querySelector('[data-dependent]')) return console.debug('page loading..');
-            clearInterval(interval_pagesync);
-
-            PopulateForm.fill(user_settings); // fill form
-            attrDependencies();
-            document.body.classList.remove('preload');
-            // fix/ re-call // remove api warn if has api
-            if (user_settings && user_settings['custom-api-key']) {
-               document.body.querySelectorAll('.info b').forEach(el => el.remove(el));
-            }
-            document.body.querySelectorAll('form input[type]') // auto selects value on focus
-               .forEach(i => i.addEventListener('focus', i.select));
-         }, 500); // 500ms
-
-         function attrDependencies() {
-            document.body.querySelectorAll('[data-dependent]')
-               .forEach(dependentItem => {
-                  // let dependentsList = dependentItem.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-                  const dependentsJson = JSON.parse(dependentItem.getAttribute('data-dependent').toString());
-                  const handler = () => showOrHide(dependentItem, dependentsJson);
-                  document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
-                  // init state
-                  handler();
-               });
-
-            function showOrHide(dependentItem, dependentsJson) {
-               // console.debug('showOrHide', ...arguments);
-               for (const name in dependentsJson) {
-                  // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-                  if (dependentOnEl = document.getElementsByName(name)[0]) {
-                     const val = dependentsJson[name].toString();
-                     const dependentOnValues = (function () {
-                        if (options = dependentOnEl?.selectedOptions) {
-                           return Array.from(options).map(({ value }) => value);
-                        }
-                        return [dependentOnEl.value];
-                     })();
-
-                     if (val && (dependentOnEl.checked || dependentOnValues.includes(val))
-                        || (val?.startsWith('!') && dependentOnEl.value !== val.replace('!', '')) // inverse
-                     ) {
-                        // console.debug('show:', name);
-                        dependentItem.classList.remove('hide');
-                        childInputDisable(false);
-
-                     } else {
-                        // console.debug('hide:', name);
-                        dependentItem.classList.add('hide');
-                        childInputDisable(true);
-                     }
-
-                  } else {
-                     console.error('error showOrHide:', name);
-                  }
-               }
-
-               function childInputDisable(status = false) {
-                  dependentItem.querySelectorAll('input, textarea, select')
-                     .forEach(childItem => {
-                        childItem.disabled = status;
-                        // dependentItem.readOnly = status;
-                     });
-               }
-            }
-         }
-      });
+      // export(sync) storage
+      window.addEventListener('DOMContentLoaded', () => storeData = user_settings);
 
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       user_settings['report_issues'] = 'on'; // default plugins settings

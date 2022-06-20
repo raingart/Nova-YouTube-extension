@@ -1,0 +1,113 @@
+{
+   "localization": {
+      "message": "pl"
+   },
+   "app_description": {
+      "message": "YouTube™ Enhancer"
+   },
+   "plugins_search_placeholder": {
+      "message": "Szukaj..."
+   },
+   "btn_plugins_search_clear_tooltip": {
+      "message": "Wyczyść wyszukiwanie"
+   },
+   "opt_btn_save_settings": {
+      "message": "Zapisz"
+   },
+   "opt_btn_save_settings_process": {
+      "message": "Zapisywanie..."
+   },
+   "opt_btn_save_settings_processed": {
+      "message": "Zapisano!"
+   },
+   "opt_legend_settings_transfer": {
+      "message": "Przeniesienie ustawień:"
+   },
+   "opt_title_help_link": {
+      "message": "Więcej info"
+   },
+   "opt_btn_import_settings": {
+      "message": "Import"
+   },
+   "opt_prompt_import_settings": {
+      "message": "Brak dostępu w wyskakującym oknie! \nOtworzyć stronę ustawień?"
+   },
+   "opt_alert_import_successfully": {
+      "message": "Ustawienia zostały zaimportowane pomyślnie!"
+   },
+   "opt_btn_export_settings": {
+      "message": "Eksport"
+   },
+   "opt_btn_reset_settings": {
+      "message": "Reset"
+   },
+   "opt_prompt_reset_settings": {
+      "message": "Przed kontynuowaniem zaleca się wykonanie kopii zapasowej bieżących ustawień.\nUsunąć wszystkie ustawienia?"
+   },
+   "opt_btn_save_settings_tooltip": {
+      "message": "Brak zmian w otwartych oknach"
+   },
+   "opt_btn_api_key_input": {
+      "message": "własny klucz API Youtube"
+   },
+   "opt_api_key_generate": {
+      "message": "Wygeneruj klucz API"
+   },
+   "opt_exclude_iframe": {
+      "message": "Wyłącz w ramce iframe"
+   },
+   "opt_exclude_iframe_tooltip": {
+      "message": "Rozszerzenie nie będzie działać w osadzonym materiale wideo"
+   },
+   "opt_report_issues": {
+      "message": "Pokazuj monity o zgłaszanie błędów"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "Potrzebna jest zgoda na wyskakujące okienko na YouTube w celu wyświetlania monitów"
+   },
+   "opt_api_key_warn": {
+      "message": "Użyj swojego [klucza API] do stabilnej pracy"
+   },
+   "lang_code_tooltip": {
+      "message": "Wybór lokalizacji"
+   },
+   "lang_code": {
+      "message": "Język"
+   },
+   "github_page": {
+      "message": "Kod źródłowy"
+   },
+   "github_page_tooltip": {
+      "message": "Otwórz"
+   },
+   "github_page_issues": {
+      "message": "Zgłoś błędy"
+   },
+   "github_page_issues_tooltip": {
+      "message": "Wyślij zgłoszenie"
+   },
+   "email": {
+      "message": "Kontact email"
+   },
+   "email_tooltip": {
+      "message": "Wyślij opinię"
+   },
+   "donate_patreon_tooltip": {
+      "message": "Wspieraj przez Patreon"
+   },
+   "donate_patreon": {
+      "message": "Darowizna (Patreon)"
+   },
+   "donate_buymeacoffee_tooltip": {
+      "message": "Wsparcie z buymeacoffee"
+   },
+   "donate_buymeacoffee": {
+      "message": "Darowizna (buymeacoffee)"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Wsparcie przez Paypal"
+   },
+   "donate_paypal": {
+      "message": "Darowizna (Paypal)"
+   }
+}

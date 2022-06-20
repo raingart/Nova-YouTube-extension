@@ -8,8 +8,9 @@ window.nova_plugins.push({
    'title:es': 'El jugador permanece activo para siempre',
    'title:pt': 'Jogador permanece ativo para sempre',
    'title:fr': 'Le joueur reste actif pour toujours',
-   // 'title:tr': 'Sayfa uykusunu devre dışı bırak',
+   'title:tr': 'Sayfa uykusunu devre dışı bırak',
    'title:de': 'Spieler bleiben für immer aktiv',
+   'title:pl': 'WWyłącz tryb uśpienia odtwarzacza',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: 'prevent asking you to click "yes" to continue playing?',
@@ -22,6 +23,7 @@ window.nova_plugins.push({
    // 'desc:fr': "empêcher l'alerte [Vidéo en pause]",
    'desc:tr': '[Video duraklatıldı] uyarısını engelle',
    'desc:de': 'Warnung [Video pausiert] verhindern',
+   'desc:pl': 'zapobiega wyświetlaniu alertu [Film wstrzymany]',
    _runtime: user_settings => {
 
       // Strategy 1
