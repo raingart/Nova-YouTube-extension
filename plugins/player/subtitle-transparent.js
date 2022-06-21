@@ -71,9 +71,9 @@ window.nova_plugins.push({
          // 'label:es': 'Texto en negrita',
          // 'label:pt': 'Texto em negrito',
          // 'label:fr': 'Texte en gras',
-         'label:tr': 'Kalın yazı',
+         // 'label:tr': 'Kalın yazı',
          // 'label:de': 'Fetter Text',
-         // 'label:pl': '',
+         'label:pl': 'Przyklejone na dole',
          type: 'checkbox',
       },
    }

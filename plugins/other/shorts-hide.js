@@ -66,7 +66,7 @@ window.nova_plugins.push({
          'label:fr': 'Durée minimale en secondes',
          'label:tr': 'Saniye cinsinden minimum süre',
          'label:de': 'Mindestdauer in Sekunden',
-         'label:pl': 'Krótszy czas trwania w sekundach',
+         'label:pl': 'Poniżej czasu trwania w sekundach',
          type: 'number',
          // title: '60 - default',
          // title: 'Minimum duration in seconds',

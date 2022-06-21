@@ -54,9 +54,9 @@ window.nova_plugins.push({
          'label:de': 'Standard-Tab',
          'label:pl': 'Domyślna karta',
          options: [
-            { label: 'videos', value: 'videos', selected: true },
-            { label: 'playlists', value: 'playlists' },
-            { label: 'about', value: 'about' },
+            { label: 'videos', value: 'videos', selected: true, 'label:pl': 'wideo' },
+            { label: 'playlists', value: 'playlists', 'label:pl': 'playlista' },
+            { label: 'about', value: 'about', 'label:pl': 'o kanale' },
          ],
       },
       channel_default_tab_mode: {
@@ -82,8 +82,8 @@ window.nova_plugins.push({
          'label:de': 'Redirect ist sicherer, aber langsamer',
          'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
          options: [
-            { label: 'redirect', value: 'redirect' },
-            { label: 'click', /*value: '',*/ selected: true },
+            { label: 'redirect', value: 'redirect', 'label:pl': 'przekierowanie' },
+            { label: 'click', /*value: '',*/ selected: true, 'label:pl': 'klik' },
          ],
       },
    }

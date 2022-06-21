@@ -25,7 +25,8 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'channel':
-            NOVA.waitElement('#channel-header #channel-name')
+            // NOVA.waitElement('#channel-header #channel-name')
+            NOVA.waitElement('#links-holder #primary-links')
                .then(container => {
                   if (channelId = NOVA.getChannelId()) {
                      insertToHTML({ 'url': genChannelURL(channelId), 'container': container });
@@ -55,9 +56,10 @@ window.nova_plugins.push({
             link.id = SELECTOR_ID;
             // link.href = url;
             link.target = '_blank';
-            // btn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+            // btn.className = `ytp-button ${SELECTOR_CLASS}`;
             link.innerHTML =
-               `<svg viewBox="-28.364 -29.444 42.324 42.822" height="100%" width="100%">
+               // `<svg viewBox="-28.364 -29.444 42.324 42.822" height="100%" width="100%">
+               `<svg viewBox="-40 -40 55 55" height="100%" width="100%" style="width: auto;">
                   <g fill="currentColor">
                      <path fill="#F60" d="M-17.392 7.875c0 3.025-2.46 5.485-5.486 5.485s-5.486-2.46-5.486-5.485c0-3.026 2.46-5.486 5.486-5.486s5.486 2.461 5.486 5.486zm31.351 5.486C14.042.744 8.208-11.757-1.567-19.736c-7.447-6.217-17.089-9.741-26.797-9.708v9.792C-16.877-19.785-5.556-13.535.344-3.66a32.782 32.782 0 0 1 4.788 17.004h8.827v.017zm-14.96 0C-.952 5.249-4.808-2.73-11.108-7.817c-4.821-3.956-11.021-6.184-17.255-6.15v8.245c6.782-.083 13.432 3.807 16.673 9.774a19.296 19.296 0 0 1 2.411 9.326h8.278v-.017z"/>
                   </g>

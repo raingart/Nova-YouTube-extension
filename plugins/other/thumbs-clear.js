@@ -87,9 +87,9 @@ window.nova_plugins.push({
          'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
          'title:pl': 'Pokaż miniaturkę z pozycji czasu wideo',
          options: [
-            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', 'label:tr': 'başlat', 'label:de': 'anfang'/*, 'label:pl': ''*/ }, // often shows intro
-            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', 'label:tr': 'orta', 'label:de': 'mitte'/*, 'label:pl': ''*/ },
-            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', 'label:tr': 'son', 'label:de': 'ende'/*, 'label:pl': ''*/ }
+            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', 'label:tr': 'başlat', 'label:de': 'anfang', 'label:pl': 'początek' }, // often shows intro
+            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', 'label:tr': 'orta', 'label:de': 'mitte', 'label:pl': 'środek' },
+            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', 'label:tr': 'son', 'label:de': 'ende', 'label:pl': 'koniec' }
          ],
       },
       thumbnails_clear_overlay: {

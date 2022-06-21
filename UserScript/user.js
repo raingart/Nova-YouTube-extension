@@ -141,8 +141,8 @@ function isOptionsPage() {
          GM_setValue(configStoreName, obj);
       });
 
-      // export(sync) storage
-      window.addEventListener('DOMContentLoaded', () => storeData = user_settings);
+      window.addEventListener('DOMContentLoaded', () => storeData = user_settings); // export(sync) storage
+      window.addEventListener('load', () => document.body?.classList?.remove('preload')); // unlock if synchronized
 
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       user_settings['report_issues'] = 'on'; // default plugins settings

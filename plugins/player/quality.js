@@ -152,7 +152,7 @@ window.nova_plugins.push({
          'label:fr': 'Enregistrer sélectionné manuellement pour le même onglet',
          'label:tr': 'Aynı sekme için manuel olarak seçili kaydet',
          'label:de': 'Manuell für dieselbe Registerkarte ausgewählt speichern',
-         'label:pl': 'Zapisz ręcznie wybrane dla tej samej karty',
+         'label:pl': 'Właściwości dla obecnej karty',
          type: 'checkbox',
          title: 'Affects to next videos',
          'title:zh': '对下一个视频的影响',

@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:fr': "Interrompt la lecture des vidéos dans d'autres onglets",
    'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
-   'title:pl': 'Autopauza wszystkich kart tła oprócz aktywnej',
+   'title:pl': 'Zatrzymanie kart w tle oprócz aktywnej',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',

@@ -62,6 +62,7 @@ const Plugins = {
       'comments/expand.js',
 
       'sidebar/related-visibility.js',
+      'sidebar/playlist-autoplay.js',
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',

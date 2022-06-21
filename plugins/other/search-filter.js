@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Liste des chaînes bloquées',
    'title:tr': 'Engellenen kanalların listesi',
    'title:de': 'Liste der gesperrten Kanäle',
+   'title:pl': 'Zablokowane kanały',
    run_on_pages: 'results',
    section: 'other',
    desc: 'Hide channels on the search page',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    // 'desc:fr': 'Masquer les chaînes sur la page de recherche',
    'desc:tr': 'Arama sayfasında kanalları gizle',
    'desc:de': 'Kanäle auf der Suchseite ausblenden',
+   'desc:pl': 'Ukryj kanały na stronie wyszukiwania',
    _runtime: user_settings => {
 
       const keywords = user_settings.search_filter_channel_blocklist
@@ -60,7 +62,7 @@ window.nova_plugins.push({
          'label:fr': 'Liste',
          'label:tr': 'Listesi',
          'label:de': 'Liste',
-         'title:pl': 'Zablokowane kanały',
+         'label:pl': 'Lista',
          title: 'separator: "," or ";" or "new line"',
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',
@@ -70,7 +72,7 @@ window.nova_plugins.push({
          'title:fr': 'séparateur : "," ou ";" ou "nouvelle ligne"',
          'title:tr': 'ayırıcı: "," veya ";" veya "new line"',
          'title:de': 'separator: "," oder ";" oder "new line"',
-         'desc:pl': 'Ukryj kanały na stronie wyszukiwania',
+         'title:pl': 'separator: "," lub ";" lub "now linia"',
          placeholder: 'channel1, channel2',
          required: true,
       },

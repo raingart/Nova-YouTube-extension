@@ -144,6 +144,7 @@ window.nova_plugins.push({
          // 'label:fr': '',
          // 'label:tr': '',
          // 'label:de': '',
+         'label:pl': 'Lista języków',
          // multiple: null,
          options: [
             { label: 'English', value: 'en', selected: true },

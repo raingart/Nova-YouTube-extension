@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Désactiver le défilement plein écran',
    'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
    'title:de': 'Deaktivieren Sie das Scrollen im Vollbildmodus',
-   'title:pl': 'Wyłączenie przewijania odtwarzacza w trybie pełnoekranowym',
+   'title:pl': 'Wyłącz przewijanie w trybie pełnoekranowym',
    run_on_pages: 'watch',
    section: 'player',
    // desc: '',

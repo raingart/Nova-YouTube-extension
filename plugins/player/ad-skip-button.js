@@ -24,7 +24,7 @@ window.nova_plugins.push({
    // 'desc:fr': "Clic automatique sur le bouton [Ignorer l'annonce]",
    'desc:tr': "Clic automatique sur le bouton [Ignorer l'annonce]",
    // 'desc:de': 'Klicken Sie automatisch auf die Schaltfläche [Anzeige überspringen]',
-   'desc:pl': 'Automatyczne kliknięcie przycisku [Pomiń reklamę]',
+   'desc:pl': 'Auto kliknięcie przycisku [Pomiń reklamę]',
    _runtime: user_settings => {
 
       // NOVA.css.push( // hides the appearance when playing on the next video

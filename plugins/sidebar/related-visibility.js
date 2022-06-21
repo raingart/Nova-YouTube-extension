@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Masquer la section associée',
    'title:tr': 'İlgili bölümü gizle',
    'title:de': 'Zugehörigen Abschnitt ausblenden',
-   'title:pl': 'Ukryj sekcję powiązane',
+   'title:pl': 'Ukryj powiązane',
    run_on_pages: 'watch, -mobile',
    section: 'sidebar',
    // desc: '',
@@ -36,8 +36,8 @@ window.nova_plugins.push({
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          options: [
-            { label: 'collapse', value: 'hide', selected: true },
-            { label: 'remove', value: 'disable' },
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń' },
          ],
       },
    }

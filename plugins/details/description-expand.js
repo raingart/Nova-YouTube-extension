@@ -65,8 +65,8 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          // title: '',
          options: [
-            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:tr': 'her zaman', 'label:de': 'stets'/*, 'label:pl': ''*/ },
-            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'En vol stationnaire', 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben'/*, 'label:pl': ''*/ },
+            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze' },
+            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'En vol stationnaire', 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'po najechaniu' },
          ],
       },
    }

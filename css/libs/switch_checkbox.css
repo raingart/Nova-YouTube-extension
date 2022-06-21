@@ -11,7 +11,7 @@ input[type=checkbox] {
    width: 2.2em;
 } */
 
-/* #3 */
+/* #2.1 */
 /* input[type=checkbox] {
    --height: 1em;
    width: 2.2em;
@@ -20,13 +20,22 @@ input[type=checkbox]:after {
    transform: scale(1.2);
 } */
 
+/* #3.1 */
+/* input[type=checkbox] {
+   --height: 1em;
+   width: 2.2em;
+}
+input[type=checkbox]:after {
+   transform: scale(1.5);
+} */
+
 /* #4 */
 /* input[type=checkbox] {
    --height: 1.4em;
    width: 3.1em;
 } */
 
-/* #5 */
+/* #4.1 */
 /* input[type=checkbox] {
    --height: 1.4em;
    width: 3.1em;
@@ -60,6 +69,7 @@ input[type=checkbox]:checked {
    /* background-color: #00b7fc; */
    /* background-color: #4cd964; */
    /* background-color: #4CAF50; */
+   /* background-color: #717171; */
 }
 
 input[type=checkbox]:after {

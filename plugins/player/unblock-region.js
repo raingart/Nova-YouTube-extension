@@ -26,7 +26,7 @@ window.nova_plugins.push({
    // 'desc:fr': '',
    // 'desc:tr': '',
    // 'desc:de': '',
-   // 'desc:pl': '',
+   'desc:pl': 'próba naprawienia nie jest dostępna w Twoim kraju',
    _runtime: user_settings => {
 
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')

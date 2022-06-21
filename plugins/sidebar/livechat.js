@@ -40,8 +40,8 @@ window.nova_plugins.push({
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          options: [
-            { label: 'collapse', value: 'hide', selected: true },
-            { label: 'remove', value: 'disable' },
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń' },
          ],
       },
    }

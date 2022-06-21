@@ -9,7 +9,7 @@ window.nova_plugins.push({
    // 'title:fr': '',
    // 'title:tr': '',
    // 'title:de': '',
-   // 'title:pl': '',
+   'title:pl': 'Ukrywaj premiery',
    run_on_pages: 'feed, channel',
    section: 'other',
    // desc: '',

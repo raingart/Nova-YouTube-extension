@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:fr': 'Le joueur reste actif pour toujours',
    'title:tr': 'Sayfa uykusunu devre dışı bırak',
    'title:de': 'Spieler bleiben für immer aktiv',
-   'title:pl': 'WWyłącz tryb uśpienia odtwarzacza',
+   'title:pl': 'Wyłącz tryb uśpienia odtwarzacza',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: 'prevent asking you to click "yes" to continue playing?',

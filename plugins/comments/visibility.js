@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Masquer la section des commentaires',
    'title:tr': 'Yorumlar bölümünü gizle',
    'title:de': 'Kommentarbereich ausblenden',
-   'title:pl': 'Ukryj sekcję komentarzy',
+   'title:pl': 'Ukryj komentarze',
    run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
    section: 'comments',
@@ -37,8 +37,8 @@ window.nova_plugins.push({
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          options: [
-            { label: 'collapse', value: 'hide', selected: true },
-            { label: 'remove', value: 'disable' },
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń'},
          ],
       },
    }

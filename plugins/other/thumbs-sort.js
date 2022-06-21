@@ -1,5 +1,6 @@
 // fore test
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - live
+// https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow - no sort
 
 window.nova_plugins.push({
    id: 'thumbs-sort',
@@ -12,7 +13,7 @@ window.nova_plugins.push({
    'title:fr': 'Ajouter un bouton pour trier les vignettes par vues',
    'title:tr': 'Küçük resimleri görünümlere göre sıralamak için Ekle düğmesi',
    'title:de': 'Schaltfläche "Hinzufügen", um Miniaturansichten nach Ansichten zu sortieren',
-   'title:pl': 'Dodaj przycisk do sortowania miniatur według wyświetleń',
+   'title:pl': 'Dodaj przycisk sortowania miniatur według wyświetleń',
    run_on_pages: 'channel, -mobile',
    // restart_on_transition: true, // dirty fix. required to use. But for optimization it is disabled and the code is not adapted
    section: 'other',

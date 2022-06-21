@@ -31,11 +31,11 @@ window.nova_plugins.push({
       NOVA.waitElement('.ytp-left-controls .ytp-play-button')
          .then(container => {
             const
-               SELECTOR_BTN_CLASS_NAME = 'nova-right-custom-button', // same class in "player-buttons-custom" plugin
+               SELECTOR_CLASS = 'nova-right-custom-button', // same class in "player-buttons-custom" plugin
                btn = document.createElement('button');
 
             // "ye-repeat-button"
-            btn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+            btn.className = `ytp-button ${SELECTOR_CLASS}`;
             btn.style.opacity = .5;
             btn.style.minWidth = getComputedStyle(container).width || '48px'; // fix if has chapters
             btn.title = 'Repeat';

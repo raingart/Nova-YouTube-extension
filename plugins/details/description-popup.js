@@ -112,6 +112,24 @@ window.nova_plugins.push({
                document.querySelector('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')?.click()
             }, false);
             // }, { capture: true, once: true });
+
+            // restore date line
+            NOVA.waitElement('#title h1')
+               .then(container => {
+                  const
+                     // Strategy 1 regex
+                     text = descriptionEl.textContent.trim(),
+                     textDate = text.substring(0, text.search(/\d{4}/) + 4);
+                  // Strategy 2 HTML
+                  // textDate = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
+                  //    .map(e => e.textContent)
+                  //    .join('');
+
+                  // console.debug('textDate', textDate);
+
+                  container.insertAdjacentHTML('afterend',
+                     `<div id="nova-description-date" class="style-scope yt-formatted-string bold" style="font-size:1.2rem; line-height:1.8rem; font-weight:400;">${textDate}</div>`);
+               });
          });
       // });
    },

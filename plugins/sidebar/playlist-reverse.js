@@ -17,18 +17,17 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         SELECTOR_BTN_ID = 'nova-playlist-reverse-button',
-         SELECTOR_BTN = '#' + SELECTOR_BTN_ID, // for css
-         CLASS_NAME_ACTIVE = 'nova-reverse-on';
+         SELECTOR_ID = 'nova-playlist-reverse-btn',
+         SELECTOR = '#' + SELECTOR_ID, // for css
+         CLASS_NAME_ACTIVE = 'nova-playlist-reverse-on';
 
       let playlistReversed;
 
       // init reverseBtn style
       NOVA.css.push(
-         SELECTOR_BTN + ` {
+         SELECTOR + ` {
             background: none;
             border: 0;
-            margin-left: 8px;
          }
 
          yt-icon-button {
@@ -37,15 +36,15 @@ window.nova_plugins.push({
             padding: 10px;
          }
 
-         ${SELECTOR_BTN} svg {
+         ${SELECTOR} svg {
             fill: white;
             fill: var(--yt-spec-text-secondary);
          }
 
-         ${SELECTOR_BTN}:hover svg { fill: #66afe9; }
+         ${SELECTOR}:hover svg { fill: #66afe9; }
 
-         ${SELECTOR_BTN}:active svg,
-         ${SELECTOR_BTN}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
+         ${SELECTOR}:active svg,
+         ${SELECTOR}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
       document.addEventListener('yt-navigate-finish', () => {
          // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
@@ -57,17 +56,17 @@ window.nova_plugins.push({
       insertButton();
 
       function insertButton() {
-         NOVA.waitElement('#secondary #playlist #playlist-action-menu #top-level-buttons-computed')
-            .then(e => addReverseBtn(e));
+         NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
+            .then(el => renderBtn(el));
 
-         function addReverseBtn(container = required()) {
+         function renderBtn(container = required()) {
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-            document.getElementById(SELECTOR_BTN_ID)?.remove(); // clear old
+            document.getElementById(SELECTOR_ID)?.remove(); // clear old
 
             const reverseBtn = document.createElement('div');
             if (playlistReversed) reverseBtn.className = CLASS_NAME_ACTIVE;
-            reverseBtn.id = SELECTOR_BTN_ID;
+            reverseBtn.id = SELECTOR_ID;
             reverseBtn.title = 'Reverse playlist order';
             reverseBtn.innerHTML =
                `<yt-icon-button>

@@ -103,8 +103,8 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          options: [
             // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:tr': 'akım', 'label:de': 'strom' },
-            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', 'label:tr': 'o ayrıldı', 'label:de': 'links'/*, 'label:pl': ''*/  },
-            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', 'label:tr': 'akım/süre', 'label:de': 'strom/dauer'/*, 'label:pl': ''*/  },
+            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', 'label:tr': 'o ayrıldı', 'label:de': 'links', 'label:pl': 'pozostało' },
+            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', 'label:tr': 'akım/süre', 'label:de': 'strom/dauer', 'label:pl': 'bieżący czas' },
          ],
       },
    }

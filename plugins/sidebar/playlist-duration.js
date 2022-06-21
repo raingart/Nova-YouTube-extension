@@ -239,9 +239,9 @@ window.nova_plugins.push({
          'label:de': 'Zeitanzeigemodus',
          'label:pl': 'Tryb wyświetlania czasu',
          options: [
-            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', 'label:tr': 'tamamlamak', 'label:de': 'fertig'/*, 'label:pl': ''*/ },
-            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', 'label:tr': 'sola', 'label:de': 'links' },
-            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:es': '','label:pt': '',*/  'label:fr': 'le total', 'label:tr': 'toplam', 'label:de': 'gesamt'/*, 'label:pl': ''*/ },
+            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', 'label:tr': 'tamamlamak', 'label:de': 'fertig', 'label:pl': 'zakończone' },
+            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', 'label:tr': 'sola', 'label:de': 'links', 'label:pl': 'pozostało' },
+            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:es': '','label:pt': '',*/  'label:fr': 'le total', 'label:tr': 'toplam', 'label:de': 'gesamt', 'label:pl': 'w sumie' },
          ],
       },
       playlist_duration_percentage: {
@@ -255,7 +255,7 @@ window.nova_plugins.push({
          'label:fr': 'Ajouter un pourcentage',
          'label:tr': 'Yüzde ekle',
          'label:de': 'Prozent hinzufügen',
-         'label:pl': 'Dodaj procenty',
+         'label:pl': 'Pokaż procenty',
          type: 'checkbox',
       },
    }

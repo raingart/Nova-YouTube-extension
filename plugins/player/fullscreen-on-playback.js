@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:fr': 'Plein écran automatique lors de la lecture',
    // 'title:tr': '',
    'title:de': 'Automatischer Vollbildmodus bei Wiedergabe',
-   'title:pl': 'Automatyczny pełny ekran podczas odtwarzania',
+   'title:pl': 'Pełny ekran podczas odtwarzania',
    run_on_pages: 'watch',
    section: 'player',
    // desc: '',
