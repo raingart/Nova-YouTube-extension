@@ -23,7 +23,7 @@ window.nova_plugins.push({
    'desc:ko': '그것을 표시하려면 그 위로 마우스를 가져갑니다',
    'desc:es': 'Coloca el cursor sobre él para mostrarlo',
    'desc:pt': 'Passe o mouse sobre ele para exibi-lo',
-   // 'desc:fr': "Survolez-le pour l'afficher",
+   'desc:fr': "Survolez-le pour l'afficher",
    'desc:tr': 'Görüntülemek için üzerine gelin',
    'desc:de': 'Bewegen Sie den Mauszeiger darüber, um es anzuzeigen',
    'desc:pl': 'Najedź, aby wyświetlić',

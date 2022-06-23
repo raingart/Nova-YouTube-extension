@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:tr': 'Ekle düğmesi ters çalma listesi sırası',
    'title:de': 'Umgekehrte Playlist-Reihenfolge hinzufügen',
    'title:pl': 'Dodaj przycisk odtwarzania w odwrotnej kolejności',
-   run_on_pages: 'watch, playlist, -mobile',
+   run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
    // desc: '',
@@ -29,18 +29,15 @@ window.nova_plugins.push({
             background: none;
             border: 0;
          }
-
          yt-icon-button {
             width: 40px;
             height: 40px;
             padding: 10px;
          }
-
          ${SELECTOR} svg {
             fill: white;
             fill: var(--yt-spec-text-secondary);
          }
-
          ${SELECTOR}:hover svg { fill: #66afe9; }
 
          ${SELECTOR}:active svg,
@@ -52,8 +49,9 @@ window.nova_plugins.push({
          insertButton();
          reverseControl(); // add events
       });
-
-      insertButton();
+      // init
+         // if (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/) insertButton();
+      if (location.search.includes('list=')) insertButton();
 
       function insertButton() {
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')

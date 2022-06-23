@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '페이지 새로고침 시 - 재생 재개',
    'desc:es': 'En la recarga de la página - reanudar la reproducción',
    'desc:pt': 'Recarregar na página - retomar a reprodução',
-   // 'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
+   'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
    'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',

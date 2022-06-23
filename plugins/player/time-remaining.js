@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '영상 끝까지 남은 시간',
    'desc:es': 'Tiempo restante hasta el final del video',
    'desc:pt': 'Tempo restante até o final do vídeo',
-   // 'desc:fr': "Temps restant jusqu'à la fin de la vidéo",
+   'desc:fr': "Temps restant jusqu'à la fin de la vidéo",
    'desc:tr': 'Videonun sonuna kalan süre',
    'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    'desc:pl': 'Czas pozostały do końca filmu',

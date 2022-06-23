@@ -23,7 +23,7 @@ window.nova_plugins.push({
    'desc:ko': 'iframe 및 기타 창 지원',
    'desc:es': 'Soporta iframes y otras ventanas',
    'desc:pt': 'Suporta iframes e outras janelas',
-   // 'desc:fr': 'Prend en charge les iframes et autres fenêtres',
+   'desc:fr': 'Prend en charge les iframes et autres fenêtres',
    'desc:tr': "iframe'leri ve diğer pencereleri destekler",
    'desc:de': 'Unterstützt iframes und andere Fenster',
    'desc:pl': 'Obsługa ramek iframe i innych okien',

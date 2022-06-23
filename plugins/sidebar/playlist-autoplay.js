@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'playlist-toggle-autoplay',
-   title: 'Playlist autoplay control',
+   title: 'Playlist autoplay control button',
    'title:zh': '播放列表自动播放控制',
    'title:ja': 'プレイリストの自動再生コントロール',
    'title:ko': '재생 목록 자동 재생 제어',
@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatma listesi otomatik oynatma kontrolü',
    'title:de': 'Steuerung der automatischen Wiedergabe von Wiedergabelisten',
    'title:pl': 'Kontrola autoodtwarzania listy odtwarzania',
-   run_on_pages: 'watch, playlist, -mobile',
+   run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
    // desc: '',
@@ -27,7 +27,6 @@ window.nova_plugins.push({
          `#playlist-action-menu .top-level-buttons {
             align-items: center;
          }
-
          ${SELECTOR}[type=checkbox] {
             --height: 1em;
             width: 2.2em;
@@ -35,7 +34,6 @@ window.nova_plugins.push({
          ${SELECTOR}[type=checkbox]:after {
             transform: scale(1.5);
          }
-
          ${SELECTOR}[type=checkbox] {
             --opacity: .7;
             --color: #fff;
@@ -50,7 +48,6 @@ window.nova_plugins.push({
             outline: 0;
             border: none;
          }
-
          ${SELECTOR}[type=checkbox]:after {
             position: absolute;
             top: 0;
@@ -63,25 +60,22 @@ window.nova_plugins.push({
             box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
             /* box-shadow: 0 .1em .25em #999999; */
          }
-
          ${SELECTOR}[type=checkbox]:checked:after {
             left: calc(100% - var(--height));
             --color: var(--paper-toggle-button-checked-button-color, var(--primary-color));
          }
-
          ${SELECTOR}[type=checkbox]:focus, input[type=checkbox]:focus:after {
             transition: all 200ms ease-in-out;
          }`);
 
-      document.addEventListener('yt-navigate-finish', () => {
-         // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
-         if (!location.search.includes('list=')) return;
-         insertButton();
-      });
-
+      document.addEventListener('yt-navigate-finish', insertButton);
+      // init
       insertButton();
 
       function insertButton() {
+         // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
+         if (!location.search.includes('list=')) return;
+
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
             .then(el => renderCheckbox(el));
 

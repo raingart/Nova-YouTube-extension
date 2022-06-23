@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '사용자 이미지를 정사각형으로 만들기',
    // 'desc:es': 'Haz que las imágenes de los usuarios sean cuadradas',
    'desc:pt': 'Torne as imagens do usuário quadradas',
-   // 'desc:fr': 'Rendre les images utilisateur au carré',
+   'desc:fr': 'Rendre les images utilisateur au carré',
    'desc:tr': 'Kullanıcı resimlerini kare haline getirin',
    'desc:de': 'Machen Sie Benutzerbilder quadriert',
    'desc:pl': 'Awatary użytkowniów będą kwadratowe',

@@ -86,7 +86,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#player-theater-container')
          .then(container => {
             // movie_player / #ytd-player
-            new window.IntersectionObserver(([entry]) => {
+            new IntersectionObserver(([entry]) => {
                // leave viewport
                if (entry.isIntersecting) {
                   movie_player.classList.remove(CLASS_VALUE);
@@ -398,6 +398,7 @@ window.nova_plugins.push({
          'label:fr': 'Taille du joueur',
          'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
+         'label:pl': 'Rozmiar odtwarzacza',
          type: 'number',
          title: 'less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
@@ -408,7 +409,7 @@ window.nova_plugins.push({
          'title:fr': 'Plus petite valeur - plus grande taille',
          'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
-         'label:pl': 'Rozmiar odtwarzacza',
+         'title:pl': 'mniejsza wartość - większy rozmiar',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -427,7 +428,7 @@ window.nova_plugins.push({
          'label:fr': 'La position du joueur',
          'label:tr': 'Oyuncu pozisyonu',
          'label:de': 'Spielerposition',
-         'title:pl': 'mniejsza wartość - większy rozmiar',
+         'label:pl': 'Pozycja odtwarzacza',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },

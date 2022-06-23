@@ -5,6 +5,18 @@
    "app_description": {
       "message": "YouTube™ Enhancer"
    },
+   "tab_map": {
+      "message": "图"
+   },
+   "tab_plugins": {
+      "message": "插件"
+   },
+   "tab_plugins_tooltip": {
+      "message": "所有插件"
+   },
+   "tab_other": {
+      "message": "其它"
+   },
    "plugins_search_placeholder": {
       "message": "搜索..."
    },
@@ -19,6 +31,24 @@
    },
    "opt_btn_save_settings_processed": {
       "message": "已保存！"
+   },
+   "opt_appearance_header": {
+      "message": "Header"
+   },
+   "opt_appearance_player": {
+      "message": "Player"
+   },
+   "opt_appearance_sidebar": {
+      "message": "Sidebar"
+   },
+   "opt_appearance_details": {
+      "message": "Details"
+   },
+   "opt_appearance_comments": {
+      "message": "Comments"
+   },
+   "opt_appearance_other": {
+      "message": "Other"
    },
    "opt_legend_settings_transfer": {
       "message": "设置传输："
@@ -52,6 +82,12 @@
    },
    "opt_api_key_generate": {
       "message": "Generate API key"
+   },
+   "opt_userscript_disable_setting_button": {
+      "message": "禁用设置按钮"
+   },
+   "opt_userscript_disable_setting_button_tooltip": {
+      "message": "在 Youtube 页面上"
    },
    "opt_exclude_iframe": {
       "message": "排除 iframe 视频"

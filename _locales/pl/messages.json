@@ -5,6 +5,18 @@
    "app_description": {
       "message": "YouTube™ Enhancer"
    },
+   "tab_map": {
+      "message": "Mapa"
+   },
+   "tab_plugins": {
+      "message": "Wtyczki"
+   },
+   "tab_plugins_tooltip": {
+      "message": "Wszystkie wtyczki"
+   },
+   "tab_other": {
+      "message": "Inne"
+   },
    "plugins_search_placeholder": {
       "message": "Szukaj..."
    },
@@ -19,6 +31,24 @@
    },
    "opt_btn_save_settings_processed": {
       "message": "Zapisano!"
+   },
+   "opt_appearance_header": {
+      "message": "Nagłówek"
+   },
+   "opt_appearance_player": {
+      "message": "Odtwarzacz"
+   },
+   "opt_appearance_sidebar": {
+      "message": "Pasek boczny"
+   },
+   "opt_appearance_details": {
+      "message": "Szczegóły"
+   },
+   "opt_appearance_comments": {
+      "message": "Komentarze"
+   },
+   "opt_appearance_other": {
+      "message": "Różne"
    },
    "opt_legend_settings_transfer": {
       "message": "Przeniesienie ustawień:"
@@ -52,6 +82,12 @@
    },
    "opt_api_key_generate": {
       "message": "Wygeneruj klucz API"
+   },
+   "opt_userscript_disable_setting_button": {
+      "message": "Wyłącz przycisk ustawień"
+   },
+   "opt_userscript_disable_setting_button_tooltip": {
+      "message": "Na stronach Youtube"
    },
    "opt_exclude_iframe": {
       "message": "Wyłącz w ramce iframe"

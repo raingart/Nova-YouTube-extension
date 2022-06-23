@@ -87,7 +87,7 @@ const NOVA = {
    },
 
    /** wait for every DOM change until a condition becomes true */
-   // await NOVA.waitUntil(?, 500) // 50ms
+   // await NOVA.waitUntil(?, 500) // 500ms
    async waitUntil(condition = required(), timeout = 100) {
       if (typeof condition !== 'function') return console.error('waitUntil > condition is not fn:', typeof condition);
 

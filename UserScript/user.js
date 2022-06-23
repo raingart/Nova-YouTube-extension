@@ -141,15 +141,19 @@ function isOptionsPage() {
          GM_setValue(configStoreName, obj);
       });
 
-      window.addEventListener('DOMContentLoaded', () => storeData = user_settings); // export(sync) storage
-      window.addEventListener('load', () => document.body?.classList?.remove('preload')); // unlock if synchronized
+      window.addEventListener('DOMContentLoaded', () => {
+         storeData = user_settings; // export(sync) settings to page
+         localizePage(user_settings?.lang_code);
+      });
+      // unlock if synchronized
+      window.addEventListener('load', () => document.body?.classList?.remove('preload'));
 
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       user_settings['report_issues'] = 'on'; // default plugins settings
       GM_setValue(configStoreName, user_settings);
       if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
 
-   } else {  // is not optionsPage
+   } else { // is not optionsPage
       return false;
    }
 

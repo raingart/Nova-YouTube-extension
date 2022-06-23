@@ -20,7 +20,7 @@ window.nova_plugins.push({
    'desc:ko': '헤더가 달라붙는 것을 방지',
    'desc:es': 'Evita que el cabezal se pegue',
    'desc:pt': 'Impede que o cabeçalho grude',
-   // 'desc:fr': "Empêcher l'en-tête de coller",
+   'desc:fr': "Empêcher l'en-tête de coller",
    'desc:tr': 'Başlığın yapışmasını önleyin',
    'desc:de': 'Verhindert das Ankleben des Headers',
    'desc:pl': 'Nagłówek będzie przewijany wraz ze stroną',

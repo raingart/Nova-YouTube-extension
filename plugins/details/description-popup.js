@@ -20,7 +20,9 @@ window.nova_plugins.push({
 
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
-      const DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #primary-inner #description:not([hidden]):not(:empty)';
+      const
+         DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #primary-inner #description:not([hidden]):not(:empty)',
+         DATE_SELECTOR_ID = 'nova-description-date';
 
       NOVA.waitElement('#masthead-container')
          .then(masthead => {
@@ -105,7 +107,6 @@ window.nova_plugins.push({
          });
 
       // expand
-      // document.addEventListener('yt-navigate-finish', () => {
       NOVA.waitElement(DESCRIPTION_SELECTOR)
          .then(descriptionEl => {
             descriptionEl.addEventListener('mouseenter', evt => {
@@ -113,24 +114,49 @@ window.nova_plugins.push({
             }, false);
             // }, { capture: true, once: true });
 
-            // restore date line
-            NOVA.waitElement('#title h1')
-               .then(container => {
-                  const
-                     // Strategy 1 regex
-                     text = descriptionEl.textContent.trim(),
-                     textDate = text.substring(0, text.search(/\d{4}/) + 4);
-                  // Strategy 2 HTML
-                  // textDate = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
-                  //    .map(e => e.textContent)
-                  //    .join('');
+            document.addEventListener('yt-navigate-finish', restoreDateLine);
+            // init
+            restoreDateLine();
 
-                  // console.debug('textDate', textDate);
+            function restoreDateLine() {
+               const dataEl = document.getElementById(DATE_SELECTOR_ID);
 
-                  container.insertAdjacentHTML('afterend',
-                     `<div id="nova-description-date" class="style-scope yt-formatted-string bold" style="font-size:1.2rem; line-height:1.8rem; font-weight:400;">${textDate}</div>`);
-               });
+               NOVA.waitElement('#title h1')
+                  .then(async container => {
+                     const
+                        // Strategy 1 regex
+                        textDate = await NOVA.waitUntil(() => {
+                           if ((text = descriptionEl.textContent.trim())
+                              && (dateIdx = text.search(/\d{4}/)) && dateIdx > -1
+                              && (dt = text.substring(0, dateIdx + 4))
+                              && dt && dt != dataEl?.textContent
+                           ) {
+                              return dt;
+                           }
+                        }, 1000); // 1sec
+                     // Strategy 2 HTML
+                     // textDate = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
+                     //    .map(e => e.textContent)
+                     //    .join('');
+
+                     // console.debug('textDate', textDate);
+                     insertToHTML({ 'text': textDate, 'container': container });
+
+                     function insertToHTML({ text = '', container = required() }) {
+                        // console.debug('insertToHTML', ...arguments);
+                        if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+
+                        (document.getElementById(DATE_SELECTOR_ID) || (function () {
+                           container.insertAdjacentHTML('afterend',
+                              `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size:1.3rem; line-height:1.8rem; font-weight:400;">${textDate}</span>`);
+                           return document.getElementById(DATE_SELECTOR_ID);
+                        })())
+                           .textContent = text;
+                     }
+
+                  });
+            }
          });
-      // });
+
    },
 });

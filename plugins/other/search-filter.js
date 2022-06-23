@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '검색 페이지에서 채널 숨기기',
    'desc:es': 'Ocultar canales en la página de búsqueda',
    'desc:pt': 'Ocultar canais na página de pesquisa',
-   // 'desc:fr': 'Masquer les chaînes sur la page de recherche',
+   'desc:fr': 'Masquer les chaînes sur la page de recherche',
    'desc:tr': 'Arama sayfasında kanalları gizle',
    'desc:de': 'Kanäle auf der Suchseite ausblenden',
    'desc:pl': 'Ukryj kanały na stronie wyszukiwania',

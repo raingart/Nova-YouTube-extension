@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '직접 외부 링크',
    'desc:es': 'Enlaces externos directos',
    'desc:pt': 'Links externos diretos',
-   // 'desc:fr': 'Liens externes directs',
+   'desc:fr': 'Liens externes directs',
    'desc:tr': 'Doğrudan harici bağlantılar',
    'desc:de': 'Direkte externe Links',
    'desc:pl': 'Bezpośrednie łącza zewnętrzne',
