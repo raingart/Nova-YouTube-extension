@@ -7,8 +7,8 @@ const Plugins = {
       'player/volume.js',
       'player/hud.js',
       'player/quality.js',
-      'player/autostop.js', // after quality.js
-      'player/autopause.js', // after quality.js
+      'player/autostop.js',
+      'player/autopause.js',
       'player/theater-mode.js',
       'player/pause-background.js',
       'player/fullscreen-on-playback.js',
@@ -26,7 +26,6 @@ const Plugins = {
       'player/subtitle-transparent.js',
       'player/subtitle-lang.js',
       // 'player/miniplayer-disable.js',
-      // 'player/stop.js', // incompatible with quality.js
       'player/unblock-region.js',
       // 'player/next-autoplay.js',
       'player/video-cards.js',
@@ -40,7 +39,8 @@ const Plugins = {
       // 'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
-      'other/search-filter.js',
+      'other/thumb-title-filter.js',
+      'other/search-channel-filter.js',
       'other/shorts-redirect.js',
       'other/shorts-hide.js',
       'other/premieres-hide.js',
@@ -48,6 +48,7 @@ const Plugins = {
       'other/streams-hide.js',
       'other/playlist-rss.js',
       'other/thumbs-sort.js',
+      'other/stop-channel-trailer.js',
 
       'details/videos-count.js',
       'details/description-expand.js',

@@ -31,9 +31,9 @@ window.nova_plugins.push({
 
       NOVA.watchElements({
          selectors: [
-            'ytd-video-renderer',
+            'ytd-video-renderer', // results
             'ytd-playlist-renderer',
-            'ytm-compact-video-renderer'
+            'ytm-compact-video-renderer' // mobile
          ],
          attr_mark: 'thumb-search-filtered',
          callback: thumb => {

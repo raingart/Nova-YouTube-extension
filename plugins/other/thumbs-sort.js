@@ -53,6 +53,7 @@ window.nova_plugins.push({
       }
 
       if (user_settings.thumbs_sort_streams_ahead) {
+         // alt - https://greasyfork.org/en/scripts/433860-yt-feed-sorter/code
          NOVA.waitElement('ytd-grid-video-renderer')
             .then(async () => {
                const
@@ -75,7 +76,6 @@ window.nova_plugins.push({
       }
    },
    options: {
-      // alt - https://greasyfork.org/en/scripts/433860-yt-feed-sorter/code
       thumbs_sort_streams_ahead: {
          _tagName: 'input',
          label: 'Streams and premiere is first',

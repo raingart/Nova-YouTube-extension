@@ -142,8 +142,8 @@ function isOptionsPage() {
       });
 
       window.addEventListener('DOMContentLoaded', () => {
-         storeData = user_settings; // export(sync) settings to page
          localizePage(user_settings?.lang_code);
+         storeData = user_settings; // export(sync) settings to page
       });
       // unlock if synchronized
       window.addEventListener('load', () => document.body?.classList?.remove('preload'));

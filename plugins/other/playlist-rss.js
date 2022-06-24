@@ -54,7 +54,7 @@ window.nova_plugins.push({
          (container.querySelector('#' + SELECTOR_ID) || (function () {
             const link = document.createElement('a');
             link.id = SELECTOR_ID;
-            // link.href = url;
+            link.href = url;
             link.target = '_blank';
             // btn.className = `ytp-button ${SELECTOR_CLASS}`;
             link.innerHTML =

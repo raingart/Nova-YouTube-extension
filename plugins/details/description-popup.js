@@ -109,6 +109,9 @@ window.nova_plugins.push({
       // expand
       NOVA.waitElement(DESCRIPTION_SELECTOR)
          .then(descriptionEl => {
+            // Strategy 2
+            let oldDateText;
+
             descriptionEl.addEventListener('mouseenter', evt => {
                document.querySelector('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')?.click()
             }, false);
@@ -119,25 +122,33 @@ window.nova_plugins.push({
             restoreDateLine();
 
             function restoreDateLine() {
-               const dataEl = document.getElementById(DATE_SELECTOR_ID);
+               // Strategy 1
+               // const dataEl = document.getElementById(DATE_SELECTOR_ID);
 
                NOVA.waitElement('#title h1')
                   .then(async container => {
                      const
-                        // Strategy 1 regex
                         textDate = await NOVA.waitUntil(() => {
-                           if ((text = descriptionEl.textContent.trim())
-                              && (dateIdx = text.search(/\d{4}/)) && dateIdx > -1
-                              && (dt = text.substring(0, dateIdx + 4))
-                              && dt && dt != dataEl?.textContent
+                           // Strategy 1 regex. Does work in Premiered - "613 views Premiered 2 hours ago"
+                           // if (
+                           //    (text = descriptionEl.textContent.trim())
+                           //    && (dateIdx = text.search(/\d{4}/)) && dateIdx > -1
+                           //    && (dt = text.substring(0, dateIdx + 4))
+                           //    && dt && dt != dataEl?.textContent
+                           // ) {
+                           //    return dt;
+                           // }
+                           // Strategy 2 HTML
+                           if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
+                              .map(e => e.textContent).join('').trim())
+                              && text != oldDateText
                            ) {
-                              return dt;
+                              // console.debug('1', oldDateText);
+                              // console.debug('2', text);
+                              oldDateText = text;
+                              return text;
                            }
                         }, 1000); // 1sec
-                     // Strategy 2 HTML
-                     // textDate = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
-                     //    .map(e => e.textContent)
-                     //    .join('');
 
                      // console.debug('textDate', textDate);
                      insertToHTML({ 'text': textDate, 'container': container });
@@ -148,7 +159,7 @@ window.nova_plugins.push({
 
                         (document.getElementById(DATE_SELECTOR_ID) || (function () {
                            container.insertAdjacentHTML('afterend',
-                              `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size:1.3rem; line-height:1.8rem; font-weight:400;">${textDate}</span>`);
+                              `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${textDate}</span>`);
                            return document.getElementById(DATE_SELECTOR_ID);
                         })())
                            .textContent = text;

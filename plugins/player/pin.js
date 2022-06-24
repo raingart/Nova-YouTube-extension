@@ -28,6 +28,7 @@ window.nova_plugins.push({
 
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
       // if (user_settings.player_pin_mode == 'pip') {
+      //    // Alt - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
       //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
       //    NOVA.waitElement('video')

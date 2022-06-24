@@ -16,6 +16,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      if (user_settings.stop_preload_embed && NOVA.currentPage == 'embed') return;
+
       NOVA.waitElement('#movie_player')
          .then(movie_player => {
             let disableStop;
@@ -72,6 +74,20 @@ window.nova_plugins.push({
          'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
          'label:pl': 'Zignoruj listę odtwarzania',
+         type: 'checkbox',
+      },
+      stop_preload_embed: {
+         _tagName: 'input',
+         label: 'Only for embedded videos',
+         'label:zh': '仅适用于嵌入式视频',
+         'label:ja': '埋め込みビデオのみ',
+         'label:ko': '삽입된 동영상에만 해당',
+         'label:es': 'Solo para videos incrustados',
+         'label:pt': 'Apenas para vídeos incorporados',
+         'label:fr': 'Uniquement pour les vidéos intégrées',
+         'label:tr': 'Yalnızca gömülü videolar için',
+         'label:de': 'Nur für eingebettete Videos',
+         'label:pl': 'Tylko dla osadzonych filmów',
          type: 'checkbox',
       },
       // stop_preload_ignore_active_tab: {

@@ -16,6 +16,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/415542-youtube-prevent-playlist-autoplay
+
       const
          SELECTOR_ID = 'nova-playlist-autoplay-btn', // .switcher
          SELECTOR = '#' + SELECTOR_ID; // for css
