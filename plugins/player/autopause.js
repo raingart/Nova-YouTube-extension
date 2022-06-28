@@ -29,7 +29,7 @@ window.nova_plugins.push({
       //  --autoplay-policy=user-gesture-required
 
       if (user_settings['video-stop-preload']) return; // disable if active another similar plugin
-      if (user_settings.video_autopause_embed && NOVA.currentPage == 'embed') return;
+      if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
 
       NOVA.waitElement('video')
          .then(video => {

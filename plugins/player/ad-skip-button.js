@@ -42,6 +42,7 @@ window.nova_plugins.push({
             // video.addEventListener('durationupdate', adSkip.bind(video)); // stream
          });
 
+      // onSkipAdButtonClick
       function adSkip() {
          if (!movie_player.classList.contains('ad-showing')) return;
 

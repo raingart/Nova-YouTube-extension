@@ -179,6 +179,9 @@ App.init();
 // shorts
 // https://www.youtube.com/shorts/5ndfxasp2r0
 
+// clip
+// https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
+
 // for testing square-screen
 // https://www.youtube.com/watch?v=v-YQUCP-J8s
 // https://www.youtube.com/watch?v=gWqENeW7EyQ

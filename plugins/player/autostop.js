@@ -16,7 +16,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings.stop_preload_embed && NOVA.currentPage == 'embed') return;
+      if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
 
       NOVA.waitElement('#movie_player')
          .then(movie_player => {

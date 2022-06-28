@@ -67,6 +67,7 @@ const Plugins = {
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',
+      'sidebar/channel-link.js',
 
       'header/short.js',
       'header/unfixed.js',
@@ -116,8 +117,9 @@ const Plugins = {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          return (['channel', 'c', 'user'].includes(page)
             // fix non-standard link - https://www.youtube.com/pencilmation/videos
+            // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
             || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
-         ) ? 'channel' : page || 'home';
+         ) ? 'channel' : page == 'clip' ? 'watch' : page || 'home';
       })();
       // console.debug('NOVA.currentPage', NOVA.currentPage);
 

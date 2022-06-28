@@ -42,8 +42,9 @@ window.nova_plugins.push({
          callback: img => {
             // skip "premiere", "live now"
             if (parent = img.closest('ytd-video-renderer, ytd-grid-video-renderer')) {
-               if (!parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]')
-                  || img.src.includes('hqdefault_live.jpg') || parent.querySelector('#video-badges [class*="live-now"], ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')
+               if (img.src.includes('hqdefault_live.jpg')
+                  // || !parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]') // Doesn't work - asynchronous loading
+                  || parent.querySelector('#video-badges [class*="live-now"], ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')
                ) {
                   // console.debug('skiped thumbnails-preview-cleared', parent);
                   return;
