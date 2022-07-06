@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'desc:ko': '긴 페이지에 표시됨',
    'desc:es': 'Mostrado en páginas largas',
    'desc:pt': 'Exibido em páginas longas',
-   // 'desc:fr': 'Affiché sur de longues pages',
+   'desc:fr': 'Affiché sur de longues pages',
    'desc:tr': 'Uzun sayfalarda görüntüleniyor',
    'desc:de': 'Wird auf langen Seiten angezeigt',
    'desc:pl': 'Wyświetlaj na długich stronach',

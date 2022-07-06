@@ -27,10 +27,10 @@
       "message": "Speichern"
    },
    "opt_btn_save_settings_process": {
-      "message": "Sparen..."
+      "message": "Speichern …"
    },
    "opt_btn_save_settings_processed": {
-      "message": "Gerettet!"
+      "message": "Gespeichert!"
    },
    "opt_appearance_header": {
       "message": "Header"
@@ -129,19 +129,19 @@
       "message": "Zur Rückmeldung"
    },
    "donate_patreon_tooltip": {
-      "message": "Unterstützung mit Patreon"
+      "message": "Mit Patreon unterstützen"
    },
    "donate_patreon": {
       "message": "Spenden (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Unterstützung mit buymeacoffee"
+      "message": "Mit buymeacoffee unterstützen"
    },
    "donate_buymeacoffee": {
       "message": "Spenden (buymeacoffee)"
    },
    "donate_paypal_tooltip": {
-      "message": "Unterstützung mit Paypal"
+      "message": "Mit Paypal unterstützen"
    },
    "donate_paypal": {
       "message": "Spenden (Paypal)"

@@ -1,5 +1,6 @@
 // for test
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
+// https://radio.nv.ua/online-radio-nv - live embed
 
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
@@ -17,6 +18,9 @@ window.nova_plugins.push({
    section: 'player',
    // desc: '',
    _runtime: user_settings => {
+
+      // Doesn't work in embed - movie_player.getVideoData().isLive
+      if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')) return;
 
       const
          SELECTOR_ID = 'nova-player-float-progress-bar',

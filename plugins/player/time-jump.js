@@ -33,7 +33,7 @@ window.nova_plugins.push({
    'desc:ko': '광고 삽입을 건너뛸 때 사용',
    'desc:es': 'Úselo para omitir inserciones de anuncios',
    'desc:pt': 'Use para pular inserções de anúncios',
-   // 'desc:fr': 'Utiliser pour ignorer les insertions publicitaires',
+   'desc:fr': 'Utiliser pour ignorer les insertions publicitaires',
    'desc:tr': 'Reklam eklerini atlamak için kullanın',
    'desc:de': 'Zum Überspringen von Anzeigeninsertionen verwenden',
    'desc:pl': 'Użyj, aby pominąć wstawki reklamowe',
@@ -162,7 +162,9 @@ window.nova_plugins.push({
             .then(progressContainer => {
                if (tooltipEl = document.body.querySelector('.ytp-tooltip-text')) {
                   progressContainer.addEventListener('mousemove', () => {
-                     if (movie_player.getVideoData().isLive) return;
+                     if (movie_player.getVideoData().isLive // stream. Doesn't work in embed
+                        || (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream'))) return;
+
                      const
                         cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
                         offsetTime = cursorTime - NOVA.videoElement?.currentTime,

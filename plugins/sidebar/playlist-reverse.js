@@ -65,7 +65,7 @@ window.nova_plugins.push({
             const reverseBtn = document.createElement('div');
             if (playlistReversed) reverseBtn.className = CLASS_NAME_ACTIVE;
             reverseBtn.id = SELECTOR_ID;
-            reverseBtn.title = 'Reverse playlist order';
+            reverseBtn.title = `Reverse playlist order is ${playlistReversed ? 'ON' : 'OFF'}`;
             reverseBtn.innerHTML =
                `<yt-icon-button>
                   <svg x="0px" y="0px" viewBox="0 0 381.399 381.399" xml:space="preserve" height="100%" width="100%" version="1.1">

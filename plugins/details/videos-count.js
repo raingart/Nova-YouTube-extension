@@ -20,7 +20,7 @@ window.nova_plugins.push({
    'desc:ko': '채널에 업로드된 동영상 표시',
    'desc:es': 'Mostrar videos subidos en el canal',
    'desc:pt': 'Exibir vídeos enviados no canal',
-   // 'desc:fr': 'Afficher les vidéos mises en ligne sur la chaîne',
+   'desc:fr': 'Afficher les vidéos mises en ligne sur la chaîne',
    'desc:tr': 'Yüklenen videoları kanalda göster',
    'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    'desc:pl': 'Wyświetla przesłane filmy na kanale',

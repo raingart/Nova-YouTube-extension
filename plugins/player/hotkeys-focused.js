@@ -10,15 +10,14 @@ window.nova_plugins.push({
    'title:tr': 'Oyuncu kısayol tuşları her zaman etkin',
    'title:de': 'Player-Hotkeys immer aktiv',
    'title:pl': 'Klawisze skrótów dla graczy zawsze aktywne',
-   run_on_pages: 'watch, -mobile',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: 'Player hotkeys always active【SPACE/F】etc.',
    _runtime: user_settings => {
 
       document.addEventListener('keydown', ({ target }) => {
          // movie_player.contains(document.activeElement) // Dont use! stay overline
-         if (['input', 'textarea'].includes(target.localName) || target.isContentEditable // text edit field
-         ) return;
+         if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
 
          // NOVA.videoElement?.focus();
          movie_player.focus();

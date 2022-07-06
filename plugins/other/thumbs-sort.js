@@ -1,6 +1,7 @@
 // fore test
-// https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - live
-// https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow - no sort
+// https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
+// https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow/videos - no sort
+// https://www.youtube.com/channel/UCHzevlEL9JfsBIm86uNCJqg/videos
 
 window.nova_plugins.push({
    id: 'thumbs-sort',

@@ -58,7 +58,7 @@ window.nova_plugins.push({
                   content: attr(title);
                   position: absolute;
                   top: -3em;
-                  transform: translateX(-25%);
+                  transform: translateX(-30%);
                   line-height: normal;
                   background-color: rgba(28,28,28,.9);
                   border-radius: 2px;

@@ -26,10 +26,17 @@ window.nova_plugins.push({
 
       if (!('IntersectionObserver' in window)) return alert('Pin player Error!\IntersectionObserver not supported.');
 
+      // Alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
+      // only for PWA
+      // NOVA.waitElement('video')
+      //    .then(vid => {
+      //       vid.setAttribute('autopictureinpicture', '');
+      //    });
+      // return;
+
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
       // if (user_settings.player_pin_mode == 'pip') {
       //    // Alt - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
-      //    // Alt2 - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
       //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
       //    NOVA.waitElement('video')
@@ -77,8 +84,8 @@ window.nova_plugins.push({
       const
          CLASS_VALUE = 'nova-player-pin',
          PINNED_SELECTOR = '.' + CLASS_VALUE, // for css
-         CLOSE_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
-         CLOSE_BTN_SELECTOR = '.' + CLOSE_BTN_CLASS_VALUE; // for css
+         UNPIN_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
+         UNPIN_BTN_SELECTOR = '.' + UNPIN_BTN_CLASS_VALUE; // for css
 
       // if player fullscreen desable float mode
       document.addEventListener('fullscreenchange', () =>
@@ -121,7 +128,6 @@ window.nova_plugins.push({
 
             initMiniStyles();
 
-            // add unpin button
             NOVA.css.push(
                PINNED_SELECTOR + ` {
                   --zIndex: ${Math.max(
@@ -134,9 +140,9 @@ window.nova_plugins.push({
                   601) + 1};
                }
 
-               ${CLOSE_BTN_SELECTOR} { display: none; }
+               ${UNPIN_BTN_SELECTOR} { display: none; }
 
-               ${PINNED_SELECTOR} ${CLOSE_BTN_SELECTOR} {
+               ${PINNED_SELECTOR} ${UNPIN_BTN_SELECTOR} {
                   display: initial !important;
                   position: absolute;
                   cursor: pointer;
@@ -156,11 +162,12 @@ window.nova_plugins.push({
                   /* text-transform: uppercase; */
                }
 
-               ${PINNED_SELECTOR}:hover ${CLOSE_BTN_SELECTOR} { opacity: .7; }
-               ${CLOSE_BTN_SELECTOR}:hover { opacity: 1 !important; }`);
+               ${PINNED_SELECTOR}:hover ${UNPIN_BTN_SELECTOR} { opacity: .7; }
+               ${UNPIN_BTN_SELECTOR}:hover { opacity: 1 !important; }`);
 
+            // add unpin button
             const btnUnpin = document.createElement('button');
-            btnUnpin.className = CLOSE_BTN_CLASS_VALUE;
+            btnUnpin.className = UNPIN_BTN_CLASS_VALUE;
             btnUnpin.title = 'Unpin player';
             btnUnpin.textContent = '×'; // ✖
             btnUnpin.addEventListener('click', () => {

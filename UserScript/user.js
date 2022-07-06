@@ -2,31 +2,31 @@ console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.na
 const
    optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
-   fix_GM_getValue = v => v === 'undefined' ? undefined : v, // for Tampermonkey
-   user_settings = fix_GM_getValue(GM_getValue(configStoreName)) || {};
+   fix_undefine = v => v === 'undefined' ? undefined : v, // for Tampermonkey
+   user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'premiere-disable': 'premieres-disable',
-   'stream-disable': 'streams-disable',
-   'disable_in_frame': 'exclude_iframe',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
 if (isOptionsPage()) return;
+
 landerPlugins();
+
 if (!user_settings?.disable_setting_button) renderSettingButton();
+
 
 function renderSettingButton() {
    NOVA.waitElement('#masthead #end')
@@ -187,7 +187,7 @@ function landerPlugins() {
 }
 
 function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
-   GM_notification({ text: GM_info.script.name + '\n' + err.reason, timeout: 4000, onclick: openBugReport });
+   // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
    if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Open popup to report the bug?`)) {
       openBugReport();

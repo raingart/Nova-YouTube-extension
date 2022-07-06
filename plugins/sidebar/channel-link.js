@@ -24,6 +24,9 @@ window.nova_plugins.push({
             && target.__data?.text?.runs.length
             && target.__data?.text?.runs[0].navigationEndpoint?.commandMetadata?.webCommandMetadata?.webPageType == 'WEB_PAGE_TYPE_CHANNEL'
          ) {
+            // Doesn't work
+            // target.addEventListener('click', ({ target }) => target.preventDefault(), false);
+
             //const urlOrig = '/watch?v=' + link.data.watchEndpoint.videoId;
             const urlOrig = link.href;
             const url = target.__data.text.runs[0].navigationEndpoint.commandMetadata.webCommandMetadata.url + '/videos';

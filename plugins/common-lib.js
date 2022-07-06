@@ -226,10 +226,9 @@ const NOVA = {
       // https://developer.mozilla.org/ru/docs/Web/API/CSSStyleDeclaration
       // HTMLElement.prototype.getIntValue = () {}
       // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
-      getValue(selector = required(), propName = required()) {
-         const el = document.body.querySelector(selector);
-         return el && getComputedStyle(el).getPropertyValue(propName);
-         // return el && getComputedStyle(el)[property];
+      getValue(selector = required(), prop_name = required()) {
+         return (el = document.body.querySelector(selector))
+            ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) udefuned return is not valid
       },
    },
 
@@ -458,8 +457,10 @@ const NOVA = {
    // dateFormatter
    timeFormatTo: {
       hmsToSec(str) { // format out "h:mm:ss" > "sec"
-         return ((arr = str?.split(':').filter(Number)) && arr.length)
-            && arr?.reduce((acc, time) => (60 * acc) + ~~time);
+         // str = ':00:00am'; // for test
+         if ((arr = str?.split(':').filter(Number)) && arr.length) {
+            return arr.reduce((acc, time) => (60 * acc) + +time);
+         }
       },
 
       HMS: {
@@ -475,12 +476,13 @@ const NOVA = {
 
          //    return (days ? `${days}d ` : '') + t;
          // },
-         digit(timeSec = required()) { // format out "h:mm:ss"
+         digit(time_sec = required()) { // format out "h:mm:ss"
             const
-               ts = Math.abs(+timeSec),
+               ts = Math.abs(+time_sec),
                d = ~~(ts / 86400),
                h = ~~((ts % 86400) / 3600),
                m = ~~((ts % 3600) / 60),
+               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
                s = Math.floor(ts % 60);
 
             return (d ? `${d}d ` : '')
@@ -496,12 +498,13 @@ const NOVA = {
             //       .join(':'); // format "h:m:s"
          },
 
-         abbr(timeSec = required()) { // format out "999h00m00s"
+         abbr(time_sec = required()) { // format out "999h00m00s"
             const
-               ts = Math.abs(+timeSec),
+               ts = Math.abs(+time_sec),
                d = ~~(ts / 86400),
                h = ~~((ts % 86400) / 3600),
                m = ~~((ts % 3600) / 60),
+               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
                s = Math.floor(ts % 60);
 
             return (d ? `${d}d ` : '')

@@ -280,7 +280,7 @@ window.nova_plugins.push({
                // window.ytplayer?.config?.args.title,
                // document.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
-               document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response.microformat.playerMicroformatRenderer.category
+               document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
             ]
                .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
                // has svg icon "🎵"

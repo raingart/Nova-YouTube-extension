@@ -1,3 +1,6 @@
+// for test
+// https://radio.nv.ua/online-radio-nv - live embed
+
 window.nova_plugins.push({
    id: 'time-remaining',
    title: 'Remaining time',
@@ -40,7 +43,8 @@ window.nova_plugins.push({
 
             function setRemaining() {
                if (isNaN(this.duration)
-                  || movie_player.getVideoData().isLive // stream
+                  || movie_player.getVideoData().isLive // stream. Doesn't work in embed
+                  || (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream'))
                   || document.visibilityState == 'hidden' // tab inactive
                   || (movie_player || document.body).querySelector('.ytp-autohide video')) return;
 
