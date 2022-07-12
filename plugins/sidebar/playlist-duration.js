@@ -3,6 +3,7 @@
 // https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
 // https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist conteiner
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
+// https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
 
 window.nova_plugins.push({
    id: 'playlist-duration',
@@ -10,9 +11,11 @@ window.nova_plugins.push({
    'title:zh': '显示播放列表持续时间',
    'title:ja': 'プレイリストの期間を表示',
    'title:ko': '재생목록 재생시간 표시',
+   'title:id': 'Tampilkan durasi daftar putar',
    'title:es': 'Mostrar duración de la lista de reproducción',
    'title:pt': 'Mostrar duração da lista de reprodução',
    'title:fr': 'Afficher la durée de la liste de lecture',
+   'title:it': 'Mostra la durata della playlist',
    'title:tr': 'Oynatma listesi süresini göster',
    'title:de': 'Wiedergabelistendauer anzeigen',
    'title:pl': 'Pokaż czas trwania playlisty',
@@ -242,16 +245,18 @@ window.nova_plugins.push({
          'label:zh': '时间显示方式',
          'label:ja': '時間表示モード',
          'label:ko': '시간 표시 모드',
+         'label:id': 'Mode tampilan waktu',
          'label:es': 'Modo de visualización de la hora',
          'label:pt': 'Modo de exibição de tempo',
          'label:fr': "Mode d'affichage de l'heure",
+         'label:it': "Modalità di visualizzazione dell'ora",
          'label:tr': 'Zaman görüntüleme modu',
          'label:de': 'Zeitanzeigemodus',
          'label:pl': 'Tryb wyświetlania czasu',
          options: [
-            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', 'label:tr': 'tamamlamak', 'label:de': 'fertig', 'label:pl': 'zakończone' },
-            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', 'label:tr': 'sola', 'label:de': 'links', 'label:pl': 'pozostało' },
-            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:es': '','label:pt': '',*/  'label:fr': 'le total', 'label:tr': 'toplam', 'label:de': 'gesamt', 'label:pl': 'w sumie' },
+            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', /*'label:id': '',*/ 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', /*'label:it': '',*/ 'label:tr': 'tamamlamak', 'label:de': 'fertig', 'label:pl': 'zakończone' },
+            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', /*'label:it': '',*/'label:tr': 'sola', 'label:de': 'links', 'label:pl': 'pozostało' },
+            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:id': '', 'label:es': '','label:pt': '',*/  'label:fr': 'le total', /*'label:it': '',*/ 'label:tr': 'toplam', 'label:de': 'gesamt', 'label:pl': 'w sumie' },
          ],
       },
       playlist_duration_percentage: {
@@ -260,9 +265,11 @@ window.nova_plugins.push({
          'label:zh': '显示百分比',
          'label:ja': 'パーセンテージを表示',
          'label:ko': '백분율 추가',
+         'label:id': 'Tambahkan persentase',
          'label:es': 'Agregar porcentaje',
          'label:pt': 'Adicionar porcentagem',
          'label:fr': 'Ajouter un pourcentage',
+         'label:it': 'Aggiungi percentuale',
          'label:tr': 'Yüzde ekle',
          'label:de': 'Prozent hinzufügen',
          'label:pl': 'Pokaż procenty',

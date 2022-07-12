@@ -25,63 +25,9 @@ if (isOptionsPage()) return;
 
 landerPlugins();
 
-if (!user_settings?.disable_setting_button) renderSettingButton();
-
-
-function renderSettingButton() {
-   NOVA.waitElement('#masthead #end')
-      .then(menu => {
-         const a = document.createElement('a');
-         a.title = 'Nova Settings';
-         a.href = optionsPage + '?tabs=tab-plugins';
-         a.target = '_blank';
-         a.innerHTML =
-            // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
-            `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 -2 28 28" height="100%" width="100%" version="1.1">
-                  <g fill="deepskyblue">
-                     <polygon points='21 12 3,1.8 3 22.2' />
-                     <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
-                  </g>
-               </svg>
-            </yt-icon-button>`;
-         // a.textContent = '►';
-         // Object.assign(a.style, {
-         //    'font-size': '24px',
-         //    'color': 'deepskyblue !important',
-         //    'text-decoration': 'none',
-         //    'padding': '0 10px',
-         // });
-         a.addEventListener('click', () => {
-            setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
-         });
-         menu.prepend(a);
-
-         // const btn = document.createElement('button');
-         // btn.className = 'ytd-topbar-menu-button-renderer';
-         // btn.title = 'Nova Settings';
-         // btn.innerHTML =
-         //    `<svg width="24" height="24" viewBox="0 0 24 24">
-         //       <g fill="deepskyblue">
-         //          <polygon points='21 12 3,1.8 3 22.2' />
-         //          <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
-         //       </g>
-         //    </svg>`;
-         // Object.assign(btn.style, {
-         //    // color: 'var(--yt-spec-text-secondary)',
-         //    padding: '0 24px',
-         //    border: 0,
-         //    outline: 0,
-         //    cursor: 'pointer',
-         // });
-         // btn.addEventListener('click', () => parent.open(optionsPage + '?tabs=tab-plugins'));
-         // // menu.insertBefore(btn, menu.lastElementChild);
-         // menu.prepend(btn);
-      });
-}
-
 function isOptionsPage() {
-   GM_registerMenuCommand('Settings', () => window.open(optionsPage));
+   // GM_registerMenuCommand('Settings', () => window.open(optionsPage));
+   GM_registerMenuCommand('Settings', () => GM_openInTab(optionsPage, { active: true }));
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
       d.style.display = 'none';
@@ -151,7 +97,8 @@ function isOptionsPage() {
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       user_settings['report_issues'] = 'on'; // default plugins settings
       GM_setValue(configStoreName, user_settings);
-      if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
+      // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
+      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(optionsPage, { active: true });
 
    } else { // is not optionsPage
       return false;
@@ -172,6 +119,8 @@ function landerPlugins() {
       console.groupCollapsed('plugins status');
       clearInterval(plugins_lander);
 
+      if (!user_settings?.disable_setting_button) renderSettingButton();
+
       //setTimeout(() => {
       Plugins.run({
          'user_settings': user_settings,
@@ -186,6 +135,58 @@ function landerPlugins() {
    document.addEventListener('yt-navigate-start', () => isURLChanged() && landerPlugins());
 }
 
+function renderSettingButton() {
+   NOVA.waitElement('#masthead #end')
+      .then(menu => {
+         const a = document.createElement('a');
+         a.title = 'Nova Settings';
+         a.href = optionsPage + '?tabs=tab-plugins';
+         a.target = '_blank';
+         a.innerHTML =
+            // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
+            `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
+               <svg viewBox="0 -2 28 28" height="100%" width="100%" version="1.1">
+                  <g fill="deepskyblue">
+                     <polygon points='21 12 3,1.8 3 22.2' />
+                     <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+                  </g>
+               </svg>
+            </yt-icon-button>`;
+         // a.textContent = '►';
+         // Object.assign(a.style, {
+         //    'font-size': '24px',
+         //    'color': 'deepskyblue !important',
+         //    'text-decoration': 'none',
+         //    'padding': '0 10px',
+         // });
+         a.addEventListener('click', () => {
+            setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
+         });
+         menu.prepend(a);
+
+         // const btn = document.createElement('button');
+         // btn.className = 'ytd-topbar-menu-button-renderer';
+         // btn.title = 'Nova Settings';
+         // btn.innerHTML =
+         //    `<svg width="24" height="24" viewBox="0 0 24 24">
+         //       <g fill="deepskyblue">
+         //          <polygon points='21 12 3,1.8 3 22.2' />
+         //          <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+         //       </g>
+         //    </svg>`;
+         // Object.assign(btn.style, {
+         //    // color: 'var(--yt-spec-text-secondary)',
+         //    padding: '0 24px',
+         //    border: 0,
+         //    outline: 0,
+         //    cursor: 'pointer',
+         // });
+         // btn.addEventListener('click', () => parent.open(optionsPage + '?tabs=tab-plugins'));
+         // // menu.insertBefore(btn, menu.lastElementChild);
+         // menu.prepend(btn);
+      });
+}
+
 function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
@@ -194,12 +195,14 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
    }
 
    function openBugReport() {
-      window.open(
+      // window.open(
+      GM_openInTab(
          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
          '?entry.35504208=' + encodeURIComponent(trace_name) +
          '&entry.151125768=' + encodeURIComponent(err_stack) +
          '&entry.744404568=' + encodeURIComponent(location.href) +
-         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent), '_blank');
+         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent), '_blank'
+         , { active: true });
    }
 };
 
@@ -207,11 +210,12 @@ window.addEventListener('unhandledrejection', err => {
    //if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
    console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
-   if (user_settings.report_issues)
+   // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
+   if (user_settings.report_issues && err.reason.stack.includes('Nova'))
       _pluginsCaptureException({
          'trace_name': 'unhandledrejection',
          'err_stack': err.reason.stack,
          'app_ver': GM_info.script.version,
-         'confirm_msg': `Failure when async-call of one "GM_info.script.name" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
+         'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
       });
 });

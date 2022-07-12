@@ -9,9 +9,11 @@ window.nova_plugins.push({
    'title:zh': '添加按钮以按视图对缩略图进行排序',
    'title:ja': 'ビューでサムネイルを並べ替えるボタンを追加',
    'title:ko': '보기별로 축소판을 정렬하는 추가 버튼',
+   'title:id': 'Tambahkan tombol untuk mengurutkan gambar mini berdasarkan tampilan',
    'title:es': 'Agregar botón para ordenar las miniaturas por vistas',
    'title:pt': 'Botão Adicionar para classificar miniaturas por visualizações',
    'title:fr': 'Ajouter un bouton pour trier les vignettes par vues',
+   'title:it': 'Pulsante Aggiungi per ordinare le miniature in base alle visualizzazioni',
    'title:tr': 'Küçük resimleri görünümlere göre sıralamak için Ekle düğmesi',
    'title:de': 'Schaltfläche "Hinzufügen", um Miniaturansichten nach Ansichten zu sortieren',
    'title:pl': 'Dodaj przycisk sortowania miniatur według wyświetleń',
@@ -58,7 +60,7 @@ window.nova_plugins.push({
          NOVA.waitElement('ytd-grid-video-renderer')
             .then(async () => {
                const
-                  liveSelector = '#overlays [overlay-style="LIVE"], #video-badges [class*="live-now"], #thumbnail img[src*="qdefault_live.jpg"]',
+                  liveSelector = '#badges [class*="live-now"], #thumbnail img[src*="qdefault_live.jpg"]',
                   soonSelector = '#overlays [overlay-style="UPCOMING"], #overlays [aria-label="PREMIERE"]';
 
                // wait all stream
@@ -83,9 +85,11 @@ window.nova_plugins.push({
          'label:zh': '流媒体和首映是第一',
          'label:ja': 'ストリームとプレミアが最初です',
          'label:ko': '스트림 및 프리미어가 먼저입니다.',
+         'label:id': 'Streaming dan premier adalah yang pertama',
          'label:es': 'Corrientes y estrenos es la primera',
          'label:pt': 'Streams e estreias é o primeiro',
          'label:fr': 'Les flux et les premières sont les premiers',
+         'label:it': 'Stream e premiere sono i primi',
          'label:tr': 'Akışlar ve prömiyerler ilk sırada',
          'label:de': 'Streams und Premieren stehen an erster Stelle',
          'label:pl': 'Streamy i premiery jako pierwsze',

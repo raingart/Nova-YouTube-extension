@@ -27,6 +27,7 @@ const Opt = {
 
    pluginChecker(plugin) {
       const isValid = plugin?.id // required
+         && plugin.title
          && plugin.run_on_pages?.split(',').length
          && plugin._runtime && typeof plugin._runtime === 'function'
          // optional
@@ -134,11 +135,11 @@ const Opt = {
             this.log('property', property);
 
             if (!property._tagName) {
-               console.error('_tagName is missing in', property);
+               console.error('_tagName is missing in:', property, obj);
                continue;
             }
             if (!property.label) {
-               console.error('label is missing in', property);
+               console.error('label is missing in:', property, obj);
                continue;
             }
 
@@ -167,6 +168,11 @@ const Opt = {
 
             // localize
             if (property.title) {
+               // empty local property
+               if (property.hasOwnProperty('title:' + this.lang_code) && !property['title:' + this.lang_code].length) {
+                  console.warn(`property title(${this.lang_code}) is empty:`, property.title);
+               }
+
                exportContainer.setAttribute('tooltip', property['title:' + this.lang_code] || property.title);
                delete property.title;
                delete property['title:' + this.lang_code];

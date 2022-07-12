@@ -1,6 +1,6 @@
 {
    "localization": {
-      "message": "de"
+      "message": "id"
    },
    "app_description": {
       "message": "YouTube™ Enhancer"
@@ -18,19 +18,19 @@
       "message": "Other"
    },
    "plugins_search_placeholder": {
-      "message": "Suche..."
+      "message": "Mencari..."
    },
    "btn_plugins_search_clear_tooltip": {
-      "message": "Saubere Suche"
+      "message": "Bersihkan pencarian"
    },
    "opt_btn_save_settings": {
-      "message": "Einstellungen speichern"
+      "message": "Menyimpan"
    },
    "opt_btn_save_settings_process": {
-      "message": "Speichern …"
+      "message": "Penghematan..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Einstellungen gespeichert!"
+      "message": "Diselamatkan!"
    },
    "opt_appearance_header": {
       "message": "Header"
@@ -51,99 +51,99 @@
       "message": "Other"
    },
    "opt_legend_settings_transfer": {
-      "message": "Einstellungen übertragen:"
+      "message": "Transfer pengaturan:"
    },
    "opt_title_help_link": {
-      "message": "Mehr Info"
+      "message": "Info lebih lanjut"
    },
    "opt_btn_import_settings": {
-      "message": "Import"
+      "message": "Impor"
    },
    "opt_prompt_import_settings": {
-      "message": "Kein Zugriff im Pop-up!\nEinstellungsseite öffnen?"
+      "message": "Tidak dapat mengakses dalam pop-up!\nBuka halaman pengaturan?"
    },
    "opt_alert_import_successfully": {
-      "message": "Einstellungen erfolgreich importiert!"
+      "message": "Pengaturan berhasil diimpor!"
    },
    "opt_btn_export_settings": {
-      "message": "Export"
+      "message": "Ekspor"
    },
    "opt_btn_reset_settings": {
-      "message": "Reset"
+      "message": "Mengatur ulang"
    },
    "opt_prompt_reset_settings": {
-      "message": "Es wird empfohlen, Ihre aktuellen Einstellungen zu sichern, bevor Sie fortfahren.\nAlle Einstellungen löschen?"
+      "message": "Disarankan untuk membuat cadangan pengaturan Anda saat ini sebelum melanjutkan.\nHapus semua pengaturan?"
    },
    "opt_btn_save_settings_tooltip": {
-      "message": "Geöffnete Tabs ändern sich nicht"
+      "message": "Tab yang terbuka tidak berubah"
    },
    "opt_btn_api_key_input": {
-      "message": "custom Youtube API key"
+      "message": "kunci API Youtube khusus"
    },
    "opt_api_key_generate": {
-      "message": "Generate API key"
+      "message": "Hasilkan kunci API"
    },
    "opt_userscript_disable_setting_button": {
-      "message": "Einstellungsschaltfläche deaktivieren"
+      "message": "Nonaktifkan tombol pengaturan"
    },
    "opt_userscript_disable_setting_button_tooltip": {
-      "message": "Auf Youtube-Seiten"
+      "message": "Di halaman Youtube"
    },
    "opt_exclude_iframe": {
-      "message": "Iframe-Video ausschließen"
+      "message": "Kecualikan video iframe"
    },
    "opt_exclude_iframe_tooltip": {
-      "message": "Die Erweiterung funktioniert nicht in eingebetteten Videos"
+      "message": "Ekstensi tidak akan berfungsi di video tersemat"
    },
    "opt_report_issues": {
-      "message": "Fehler melden aktivieren"
+      "message": "Tampilkan permintaan untuk melaporkan bug"
    },
    "opt_report_issues_tooltip": {
-      "message": "Pop-up auf YouTube für Aufforderungen zulassen"
+      "message": "Perlu izinkan pop-up di YouTube untuk meminta"
    },
    "opt_api_key_warn": {
-      "message": "Use your [API key] for stable work"
+      "message": "Gunakan [kunci API] Anda untuk pekerjaan yang stabil"
    },
    "lang_code_tooltip": {
-      "message": "Wahl der Lokalisierung"
+      "message": "Pilihan lokalisasi"
    },
    "lang_code": {
-      "message": "Sprache"
+      "message": "Bahasa"
    },
    "github_page": {
-      "message": "Quellcode"
+      "message": "Source code"
    },
    "github_page_tooltip": {
-      "message": "Offen"
+      "message": "Membuka"
    },
    "github_page_issues": {
-      "message": "Fehler melden"
+      "message": "Report bugs"
    },
    "github_page_issues_tooltip": {
-      "message": "Etwas melden"
+      "message": "Melaporkan"
    },
    "email": {
-      "message": "Kontakt E-mail"
+      "message": "Kontak Email"
    },
    "email_tooltip": {
-      "message": "Zur Rückmeldung"
+      "message": "Untuk umpan balik"
    },
-   "donate_patreon_tooltip": {
-      "message": "Mit Patreon unterstützen"
+   "Menyumbangkan_patreon_tooltip": {
+      "message": "Dukungan dengan Patreon"
    },
-   "donate_patreon": {
-      "message": "Spenden (Patreon)"
+   "Menyumbangkan_patreon": {
+      "message": "Menyumbangkan (Patreon)"
    },
-   "donate_buymeacoffee_tooltip": {
-      "message": "Mit buymeacoffee unterstützen"
+   "Menyumbangkan_buymeacoffee_tooltip": {
+      "message": "Dukungan dengan buymeacoffee"
    },
-   "donate_buymeacoffee": {
-      "message": "Spenden (buymeacoffee)"
+   "Menyumbangkan_buymeacoffee": {
+      "message": "Menyumbangkan (buymeacoffee)"
    },
-   "donate_paypal_tooltip": {
-      "message": "Mit Paypal unterstützen"
+   "Menyumbangkan_paypal_tooltip": {
+      "message": "Dukungan dengan Paypal"
    },
-   "donate_paypal": {
-      "message": "Spenden (Paypal)"
+   "Menyumbangkan_paypal": {
+      "message": "Menyumbangkan (Paypal)"
    }
 }

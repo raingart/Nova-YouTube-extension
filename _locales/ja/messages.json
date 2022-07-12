@@ -24,13 +24,13 @@
       "message": "クリア検索"
    },
    "opt_btn_save_settings": {
-      "message": "保存する"
+      "message": "変更を保存"
    },
    "opt_btn_save_settings_process": {
-      "message": "保存..."
+      "message": "保存中..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "保存しました！"
+      "message": "保存しました!"
    },
    "opt_appearance_header": {
       "message": "Header"

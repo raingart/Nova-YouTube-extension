@@ -1,6 +1,6 @@
 {
    "localization": {
-      "message": "de"
+      "message": "it"
    },
    "app_description": {
       "message": "YouTube™ Enhancer"
@@ -18,19 +18,19 @@
       "message": "Other"
    },
    "plugins_search_placeholder": {
-      "message": "Suche..."
+      "message": "Ricerca..."
    },
    "btn_plugins_search_clear_tooltip": {
-      "message": "Saubere Suche"
+      "message": "Cancella ricerca"
    },
    "opt_btn_save_settings": {
-      "message": "Einstellungen speichern"
+      "message": "Salva"
    },
    "opt_btn_save_settings_process": {
-      "message": "Speichern …"
+      "message": "Salvataggio..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Einstellungen gespeichert!"
+      "message": "Salvato!"
    },
    "opt_appearance_header": {
       "message": "Header"
@@ -51,99 +51,99 @@
       "message": "Other"
    },
    "opt_legend_settings_transfer": {
-      "message": "Einstellungen übertragen:"
+      "message": "Trasferimento delle impostazioni:"
    },
    "opt_title_help_link": {
-      "message": "Mehr Info"
+      "message": "Ulteriori informazioni"
    },
    "opt_btn_import_settings": {
-      "message": "Import"
+      "message": "Importare"
    },
    "opt_prompt_import_settings": {
-      "message": "Kein Zugriff im Pop-up!\nEinstellungsseite öffnen?"
+      "message": "Non accedi al pop-up!\nApri la pagina delle impostazioni?"
    },
    "opt_alert_import_successfully": {
-      "message": "Einstellungen erfolgreich importiert!"
+      "message": "Impostazioni importate correttamente!"
    },
    "opt_btn_export_settings": {
-      "message": "Export"
+      "message": "Esportare"
    },
    "opt_btn_reset_settings": {
-      "message": "Reset"
+      "message": "Ripristina"
    },
    "opt_prompt_reset_settings": {
-      "message": "Es wird empfohlen, Ihre aktuellen Einstellungen zu sichern, bevor Sie fortfahren.\nAlle Einstellungen löschen?"
+      "message": "Si consiglia di eseguire il backup delle impostazioni correnti prima di continuare.\nElimina tutte le impostazioni?"
    },
    "opt_btn_save_settings_tooltip": {
-      "message": "Geöffnete Tabs ändern sich nicht"
+      "message": "Le schede aperte non cambiano"
    },
    "opt_btn_api_key_input": {
-      "message": "custom Youtube API key"
+      "message": "chiave API Youtube personalizzata"
    },
    "opt_api_key_generate": {
-      "message": "Generate API key"
+      "message": "Genera chiave API"
    },
    "opt_userscript_disable_setting_button": {
-      "message": "Einstellungsschaltfläche deaktivieren"
+      "message": "Disattiva il pulsante di impostazione"
    },
    "opt_userscript_disable_setting_button_tooltip": {
-      "message": "Auf Youtube-Seiten"
+      "message": "Sulle pagine di Youtube"
    },
    "opt_exclude_iframe": {
-      "message": "Iframe-Video ausschließen"
+      "message": "Escludi video iframe"
    },
    "opt_exclude_iframe_tooltip": {
-      "message": "Die Erweiterung funktioniert nicht in eingebetteten Videos"
+      "message": "L'estensione non funzionerà nel video incorporato"
    },
    "opt_report_issues": {
-      "message": "Fehler melden aktivieren"
+      "message": "Mostra la richiesta di segnalare i bug"
    },
    "opt_report_issues_tooltip": {
-      "message": "Pop-up auf YouTube für Aufforderungen zulassen"
+      "message": "È necessario consentire il pop-up su YouTube per la richiesta"
    },
    "opt_api_key_warn": {
-      "message": "Use your [API key] for stable work"
+      "message": "Usa la tua [chiave API] per un lavoro stabile"
    },
    "lang_code_tooltip": {
-      "message": "Wahl der Lokalisierung"
+      "message": "Scelta della localizzazione"
    },
    "lang_code": {
-      "message": "Sprache"
+      "message": "Lingua"
    },
    "github_page": {
-      "message": "Quellcode"
+      "message": "Source code"
    },
    "github_page_tooltip": {
-      "message": "Offen"
+      "message": "Aprire"
    },
    "github_page_issues": {
-      "message": "Fehler melden"
+      "message": "Report bugs"
    },
    "github_page_issues_tooltip": {
-      "message": "Etwas melden"
+      "message": "Da segnalare"
    },
    "email": {
-      "message": "Kontakt E-mail"
+      "message": "Contatto email"
    },
    "email_tooltip": {
-      "message": "Zur Rückmeldung"
+      "message": "Al feedback"
    },
    "donate_patreon_tooltip": {
-      "message": "Mit Patreon unterstützen"
+      "message": "Supporto con Patreon"
    },
    "donate_patreon": {
-      "message": "Spenden (Patreon)"
+      "message": "Donare (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Mit buymeacoffee unterstützen"
+      "message": "Supporto con buymeacoffee"
    },
    "donate_buymeacoffee": {
-      "message": "Spenden (buymeacoffee)"
+      "message": "Donare (buymeacoffee)"
    },
    "donate_paypal_tooltip": {
-      "message": "Mit Paypal unterstützen"
+      "message": "Supporto con Paypal"
    },
    "donate_paypal": {
-      "message": "Spenden (Paypal)"
+      "message": "Donare (Paypal)"
    }
 }

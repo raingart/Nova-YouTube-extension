@@ -458,7 +458,7 @@ const NOVA = {
    timeFormatTo: {
       hmsToSec(str) { // format out "h:mm:ss" > "sec"
          // str = ':00:00am'; // for test
-         if ((arr = str?.split(':').filter(Number)) && arr.length) {
+         if ((arr = str?.split(':')) && arr.length) {
             return arr.reduce((acc, time) => (60 * acc) + +time);
          }
       },
@@ -652,12 +652,16 @@ const NOVA = {
          location.pathname.split('/')[2],
          // playlist page
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
+         document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
          // document.body.querySelector('#owner #upload-info a[href]')
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
          // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
+
+         // https://www.googleapis.com/youtube/v3/channels?key={YOUR_API_KEY}&forUsername={USER_NAME}&part=id
+
       ]
          .find(i => isChannelId(i))
    },

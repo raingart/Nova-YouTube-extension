@@ -4,9 +4,11 @@ window.nova_plugins.push({
    'title:zh': '从大写中删除缩略图标题',
    'title:ja': 'サムネイルのタイトルを大文字から外す',
    'title:ko': '썸네일 제목을 대문자로',
+   'title:id': 'Judul gambar mini decapitalize',
    'title:es': 'Descapitalizar el título de las miniaturas',
    'title:pt': 'Decapitalize o título das miniaturas',
    'title:fr': 'Démajuscule le titre des vignettes',
+   'title:it': 'Decapitalizza il titolo delle miniature',
    'title:tr': 'Küçük resim başlığının büyük harflerini kaldır',
    'title:de': 'Thumbnails-Titel entfernen',
    'title:pl': 'Zmniejsz czcionkę w tytule miniatur',
@@ -36,8 +38,8 @@ window.nova_plugins.push({
       }
 
       if (user_settings.thumbnails_title_normalize_smart) {
-         // Letters (Lu): Upper case letter unicode - https://apps.timwhitlock.info/js/regex
-         const UpperCaseLetterRegex = new RegExp("([A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸ-ŹŻŽƁ-ƂƄƆ-ƇƉ-ƋƎ-ƑƓ-ƔƖ-ƘƜ-ƝƟ-ƠƢƤƦ-ƧƩƬƮ-ƯƱ-ƳƵƷ-ƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺ-ȻȽ-ȾɁɃ-ɆɈɊɌɎͰͲͶΆΈ-ΊΌΎ-ΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹ-ϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀ-ӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԱ-ՖႠ-ჅḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾ-ℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱯⱲⱵⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽ-ꝾꞀꞂꞄꞆꞋＡ-Ｚ]|\ud801[\udc00-\udc27]|\ud835[\udc00-\udc19\udc34-\udc4d\udc68-\udc81\udc9c\udc9e-\udc9f\udca2\udca5-\udca6\udca9-\udcac\udcae-\udcb5\udcd0-\udce9\udd04-\udd05\udd07-\udd0a\udd0d-\udd14\udd16-\udd1c\udd38-\udd39\udd3b-\udd3e\udd40-\udd44\udd46\udd4a-\udd50\udd6c-\udd85\udda0-\uddb9\uddd4-\udded\ude08-\ude21\ude3c-\ude55\ude70-\ude89\udea8-\udec0\udee2-\udefa\udf1c-\udf34\udf56-\udf6e\udf90-\udfa8\udfca]){2,}", 'g');
+         // Letters(Lu) + Dash punctuation(Pd) + Decimal number(Nd): Upper case letter unicode - https://apps.timwhitlock.info/js/regex
+         const UpperCaseLetterRegex = new RegExp("([\-0-9A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸ-ŹŻŽƁ-ƂƄƆ-ƇƉ-ƋƎ-ƑƓ-ƔƖ-ƘƜ-ƝƟ-ƠƢƤƦ-ƧƩƬƮ-ƯƱ-ƳƵƷ-ƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺ-ȻȽ-ȾɁɃ-ɆɈɊɌɎͰͲͶΆΈ-ΊΌΎ-ΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹ-ϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀ-ӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԱ-Ֆ֊־٠-٩۰-۹߀-߉०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯๐-๙໐-໙༠-༩၀-၉႐-႙Ⴀ-Ⴥ០-៩᠆᠐-᠙᥆-᥏᧐-᧙᭐-᭙᮰-᮹᱀-᱉᱐-᱙ḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώ‐-―ℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾ-ℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱯⱲⱵⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢ⸗⸚〜〰゠꘠-꘩ꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽ-ꝾꞀꞂꞄꞆꞋ꣐-꣙꤀-꤉꩐-꩙︱-︲﹘﹣－０-９Ａ-Ｚ]|\ud801[\udc00-\udc27\udca0-\udca9]|\ud835[\udc00-\udc19\udc34-\udc4d\udc68-\udc81\udc9c\udc9e-\udc9f\udca2\udca5-\udca6\udca9-\udcac\udcae-\udcb5\udcd0-\udce9\udd04-\udd05\udd07-\udd0a\udd0d-\udd14\udd16-\udd1c\udd38-\udd39\udd3b-\udd3e\udd40-\udd44\udd46\udd4a-\udd50\udd6c-\udd85\udda0-\uddb9\uddd4-\udded\ude08-\ude21\ude3c-\ude55\ude70-\ude89\udea8-\udec0\udee2-\udefa\udf1c-\udf34\udf56-\udf6e\udf90-\udfa8\udfca\udfce-\udfff]){2,}", 'g');
 
          // first letter uppercase
          NOVA.css.push({
@@ -53,7 +55,8 @@ window.nova_plugins.push({
                const normalizedText = title.textContent.replace(UpperCaseLetterRegex, match => {
                   // console.debug('match', match);
                   countCaps++;
-                  return match.toLowerCase();
+                  // skip hasNumber
+                  return /\d/.test(match) ? match : match.toLowerCase();
                });
 
                // Upper case
@@ -87,9 +90,11 @@ window.nova_plugins.push({
          'label:zh': '显示完整标题',
          'label:ja': '完全なタイトルを表示',
          'label:ko': '전체 제목 표시',
+         'label:id': 'Tampilkan judul lengkap',
          'label:es': 'Mostrar título completo',
          'label:pt': 'Mostrar título completo',
          'label:fr': 'Afficher le titre complet',
+         'label:it': 'Mostra il titolo completo',
          'label:tr': 'Tam başlığı göster',
          'label:de': 'Vollständigen Titel anzeigen',
          'label:pl': 'Pokaż pełny tytuł',
@@ -101,9 +106,11 @@ window.nova_plugins.push({
          'label:zh': '智能模式',
          'label:ja': 'Smart モード',
          'label:ko': '스마트 모드',
+         'label:id': 'Modalità intelligente',
          'label:es': 'Modo inteligente',
          'label:pt': 'Modo inteligente',
          'label:fr': 'Mode intelligent',
+         'label:it': 'Modus pintar',
          'label:tr': 'Akıllı mod',
          'label:de': 'Smart-Modus',
          'label:pl': 'Tryb Smart',
@@ -112,9 +119,11 @@ window.nova_plugins.push({
          'title:ja': '正規表現パターンで単語をフィルタリングする',
          'title:zh': '按正则表达式过滤单词',
          'title:ko': '정규식 패턴으로 단어 필터링',
+         'title:id': 'Filter kata berdasarkan pola regex',
          'title:es': 'Filtrar palabras por patrón de expresiones regulares',
          'title:pt': 'Filtrar palavras por padrão regex',
          'title:fr': 'Filtrer les mots par modèle regex',
+         'title:it': 'Filtra le parole per modello regolare',
          'title:tr': 'Kelimeleri normal ifade kalıbına göre filtrele',
          'title:de': 'Wörter nach Regex-Muster filtern',
          'title:pl': 'Filtrowanie słów według wzorca regex',
@@ -125,9 +134,11 @@ window.nova_plugins.push({
          'label:zh': '大写字数上限',
          'label:ja': '大文字の最大単語数',
          'label:ko': '대문자의 최대 단어 수',
+         'label:id': 'Maks kata dalam huruf besar',
          'label:es': 'Máximo de palabras en mayúsculas',
          'label:pt': 'Máximo de palavras em maiúsculas',
          'label:fr': 'Mots maximum en majuscules',
+         'label:it': 'Max parole in maiuscolo',
          'label:tr': 'Büyük harfli maksimum kelime',
          'label:de': 'Maximale Wörter in Großbuchstaben',
          'label:pl': 'Maksymalna liczba słów pisanych wielkimi literami',
@@ -145,9 +156,11 @@ window.nova_plugins.push({
          'label:zh': '从表情符号中清除标题',
          'label:ja': 'クリア絵文字',
          'label:ko': '이모티콘 지우기',
+         'label:id': 'Hapus emoji',
          'label:es': 'Borrar emoji',
          'label:pt': 'Limpar emoji',
          'label:fr': 'Emoji clair',
+         'label:it': 'Emoji trasparenti',
          'label:tr': 'Emojiyi temizle',
          'label:de': 'Emoji löschen',
          'label:pl': 'Usuń emoji',
