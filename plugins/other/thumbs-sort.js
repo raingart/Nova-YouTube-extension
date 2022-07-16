@@ -22,6 +22,8 @@ window.nova_plugins.push({
    section: 'other',
    desc: 'On channel page',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/383420-youtube-uploads-sorter-button
       // addButton
       NOVA.waitElement('#sub-menu #sort-menu:empty') // if default sort by is empty
          .then(container => {
@@ -56,7 +58,7 @@ window.nova_plugins.push({
       }
 
       if (user_settings.thumbs_sort_streams_ahead) {
-         // alt - https://greasyfork.org/en/scripts/433860-yt-feed-sorter/code
+         // alt - https://greasyfork.org/en/scripts/433860-yt-feed-sorter
          NOVA.waitElement('ytd-grid-video-renderer')
             .then(async () => {
                const

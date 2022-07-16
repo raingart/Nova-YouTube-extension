@@ -60,9 +60,10 @@ window.nova_plugins.push({
             }
             // init volume_level_default
             if (+user_settings.volume_level_default) {
-               (user_settings.volume_unlimit || +user_settings.volume_level_default > 100)
-                  ? playerVolume.unlimit(+user_settings.volume_level_default)
-                  : playerVolume.set(+user_settings.volume_level_default);
+               playerVolume.set(+user_settings.volume_level_default);
+               // (user_settings.volume_unlimit || +user_settings.volume_level_default > 100)
+               //    ? playerVolume.unlimit(+user_settings.volume_level_default)
+               //    : playerVolume.set(+user_settings.volume_level_default);
             }
          });
 
@@ -159,8 +160,8 @@ window.nova_plugins.push({
          placeholder: '%',
          step: 5,
          min: 0,
-         // max: 100,
-         max: 600,
+         max: 100,
+         // max: 600,
          value: 100,
       },
       volume_step: {

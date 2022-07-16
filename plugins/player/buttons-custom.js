@@ -28,7 +28,11 @@ window.nova_plugins.push({
 
             // global
             NOVA.css.push(
-               `/* button${SELECTOR_BTN} { padding: 5px; width: 25px; } */
+               `button${SELECTOR_BTN} {
+                  user-select: none;
+                  /*padding: 5px;
+                  width: 25px;*/
+               }
                ${SELECTOR_BTN}:hover { color: #66afe9 !important; }
                ${SELECTOR_BTN}:active { color: #2196f3 !important; }`);
 

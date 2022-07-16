@@ -30,6 +30,8 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', updateTitle.bind(video));
             // save title
             video.addEventListener('loadeddata', () => {
+               if (movie_player.getVideoData().isLive) return;
+
                if (backupTitle
                   || movie_player.classList.contains('ad-showing')
                   || /^((\d?\d:){1,2}\d{2})(\s\|\s)/g.exec(document.title)) return;

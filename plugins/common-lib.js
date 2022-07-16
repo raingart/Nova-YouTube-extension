@@ -245,16 +245,17 @@ const NOVA = {
    //    },
 
    //    set(name = required(), value, days = 90) { // 90 days
+   //       if (this.get(name) == value) return;
+
    //       let date = new Date();
    //       date.setTime(date.getTime() + 3600000 * 24 * days); // m*h*d
 
    //       document.cookie = Object.entries({
-   //          // [encodeURIComponent(name)]: encodeURIComponent(value),
    //          [encodeURIComponent(name)]: value,
    //          // domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
-   //          domain: '.youtube.com',
-   //          // expires: date.toUTCString(),
-   //          path: '/', // what matters at the end
+   //          domain: location.hostname,
+   //          expires: date.toUTCString(),
+   //          path: '/',
    //       })
    //          .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
@@ -638,9 +639,10 @@ const NOVA = {
       document.addEventListener('play', ({ target }) => NOVA.videoElement = target, true);
    })(),
 
-   getChannelId() {
+   async getChannelId(api_key) {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
-      return [
+      // local search
+      let result = [
          document.querySelector('meta[itemprop="channelId"][content]')?.content,
          // channel page
          (document.body.querySelector('ytd-app')?.__data?.data.response
@@ -654,16 +656,45 @@ const NOVA = {
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
          document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
-         // document.body.querySelector('#owner #upload-info a[href]')
+         // document.querySelector('#owner #channel-name a[href]')?.href.split('/')[4],
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
          // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
-
-         // https://www.googleapis.com/youtube/v3/channels?key={YOUR_API_KEY}&forUsername={USER_NAME}&part=id
-
       ]
          .find(i => isChannelId(i))
+      // console.debug('channelId (local):', result);
+
+      if (!result) { // request
+         let channelName;
+         switch (this.currentPage) {
+            case 'channel':
+               channelLink = location.pathname.split('/');
+               if (['c', 'user'].includes(channelLink[1])) {
+                  channelName = channelLink[2];
+               }
+               break;
+            case 'watch':
+               channelLink = await this.waitElement('#owner #channel-name a[href]');
+               channelArr = channelLink?.href.split('/');
+               if (channelArr.length && ['c', 'user'].includes(channelArr[3])) {
+                  channelName = channelArr[4];
+               }
+               break;
+         }
+         // console.debug('channelName:', channelName);
+         if (!channelName) return
+         // https://www.googleapis.com/youtube/v3/channels?key={YOUR_API_KEY}&forUsername={USER_NAME}&part=id
+         const res = await this.request.API({
+            request: 'channels',
+            params: { 'forUsername': channelName, 'part': 'id' },
+            api_key: api_key,
+         });
+         // console.debug('res', res);
+         if (isChannelId(res?.items.length && res.items[0].id)) result = res.items[0].id;
+         // console.debug('channelId (request):', result);
+      }
+      return result;
    },
 
    log() {

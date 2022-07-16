@@ -207,16 +207,15 @@ window.nova_plugins.push({
          // console.log('outFormat', ...arguments);
          let outArr = [];
          // time
-         outArr.push(NOVA.timeFormatTo.HMS.digit(duration));
+         outArr.push(NOVA.timeFormatTo.HMS.digit(duration / NOVA.videoElement.playbackRate));
          // pt
          if (user_settings.playlist_duration_percentage && total) {
             outArr.push(`(${~~(duration * 100 / total) + '%'})`);
          }
-         // progress type title
+         // progress type (done, left, total)
          if (user_settings.playlist_duration_progress_type) {
             outArr.push(user_settings.playlist_duration_progress_type);
          }
-
          return ' - ' + outArr.join(' ');
       }
 

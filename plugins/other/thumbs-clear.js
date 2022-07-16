@@ -34,46 +34,73 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-      ATTR_MARK = 'nova-thumb-preview-cleared',
-      patchImg = str => {
-         // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
-         // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
-         if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(str)) {
-            return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
-         }
-      };
+         ATTR_MARK = 'nova-thumb-preview-cleared',
+         thumbsSelectors = [
+            // 'ytd-rich-item-renderer', // home
+            'ytd-video-renderer', // results
+            'ytd-grid-video-renderer', // feed, channel
+            // 'ytd-compact-video-renderer', // sidepanel in watch
+            // 'ytm-compact-video-renderer', // mobile
+         ];
 
+      // Doesn't work
+      // page update
+      // document.addEventListener('yt-action', evt => {
+      //    console.log(evt.detail?.actionName);
+      //    if ([
+      //       'ytd-update-grid-state-action',
+      //       'yt-append-continuation-items-action',
+      //       'yt-service-request'
+      //    ]
+      //       .includes(evt.detail?.actionName)
+      //    ) {
+      //       patchThumb();
+      //    }
+      // });
+
+      // function patchThumb() {
+      //    document.body.querySelectorAll(`#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"]):not([${ATTR_MARK}])`)
+      //       .forEach(img => {
+      //          img.setAttribute(ATTR_MARK, true);
+      //          img.src = patchImg(img.src);
+      //       });
+      // }
+
+      // Strategy 2
       // dirty fix bug with not updating thumbnails
       document.addEventListener('yt-navigate-finish', () =>
          document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElements({
-         // selectors: 'a#thumbnail:not([hidden]):not(.ytd-playlist-thumbnail) #img[src]',
-         selectors: 'a[class*="thumbnail"]:not([hidden]):not(.ytd-playlist-thumbnail) img[src]', // fix broken playlist
+         selectors: '#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"])',
          attr_mark: ATTR_MARK,
          callback: img => {
             // skip "premiere", "live now"
-            if (parent = img.closest('ytd-video-renderer, ytd-grid-video-renderer')) {
-               if (img.src.includes('qdefault_live.jpg')
-                  // || !parent.querySelector('#overlays [overlay-style="DEFAULT"], #overlays [overlay-style="SHORTS"]') // Doesn't work - asynchronous loading
-                  || parent.querySelector('#badges [class*="live-now"], ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], [aria-label="PREMIERE"]')
-               ) {
-                  // console.debug('skiped thumbnails-preview-cleared', parent);
-                  return;
-               }
+            if ((thumb = img.closest(thumbsSelectors)) && thumb.querySelector('#badges [class*="live-now"], ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], #overlays [aria-label="PREMIERE"]')
+            ) {
+               // console.debug('skiped thumbnails-preview-cleared', parent);
+               return;
             }
             img.src = patchImg(img.src);
          },
       });
 
+      if (user_settings.thumbnails_clear_overlay) {
+         NOVA.css.push(
+            `#hover-overlays {
+               visibility: hidden !important;
+            }`);
+      }
+
       // patch end card
-      if (user_settings.thumbnails_clear_videowall) {
+      if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
          NOVA.waitElement('video')
             .then(video => {
                // force show title
                NOVA.css.push(
                   `.ytp-videowall-still .ytp-videowall-still-info-content {
                      opacity: 1 !important;
+                     text-shadow: rgb(0, 0, 0) 0 0 .1em, rgb(0, 0, 0) 0 0 .2em, rgb(0, 0, 0) 0 0 .4em;
                   }
                   .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-author,
                   .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-live {
@@ -82,16 +109,19 @@ window.nova_plugins.push({
 
                video.addEventListener('ended', () => {
                   document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
-                     .forEach(img => img.style.backgroundImage = patchImg(img.style.backgroundImage));
+                     .forEach(img => {
+                        img.style.backgroundImage = patchImg(img.style.backgroundImage);
+                     });
                }, false);
             });
       }
 
-      if (user_settings.thumbnails_clear_overlay) {
-         NOVA.css.push(
-            `#hover-overlays {
-               visibility: hidden !important;
-            }`);
+      function patchImg(str) {
+         // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
+         // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
+         if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(str)) {
+            return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
+         }
       }
 
    },

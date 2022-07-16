@@ -94,7 +94,7 @@ window.nova_plugins.push({
                /* size section */
                ${COMMENTS_SELECTOR} #sections {
                   max-width: fit-content;
-                  min-width: 500px;
+                  min-width: 510px;
                }
 
                /* custom scroll */

@@ -23,6 +23,8 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 
 if (isOptionsPage()) return;
 
+if (!user_settings?.disable_setting_button) renderSettingButton();
+
 landerPlugins();
 
 function isOptionsPage() {
@@ -118,8 +120,6 @@ function landerPlugins() {
    function processLander() {
       console.groupCollapsed('plugins status');
       clearInterval(plugins_lander);
-
-      if (!user_settings?.disable_setting_button) renderSettingButton();
 
       //setTimeout(() => {
       Plugins.run({

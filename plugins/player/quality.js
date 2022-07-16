@@ -168,7 +168,7 @@ window.nova_plugins.push({
          'title:zh': '对下一个视频的影响',
          'title:ja': '次の動画への影響',
          'title:ko': '다음 동영상에 영향',
-         'label:id': 'Mempengaruhi video berikutnya',
+         'title:id': 'Mempengaruhi video berikutnya',
          'title:es': 'Afecta a los siguientes videos',
          'title:pt': 'Afeta para os próximos vídeos',
          'title:fr': 'Affecte aux prochaines vidéos',

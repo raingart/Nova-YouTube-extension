@@ -71,9 +71,9 @@ window.nova_plugins.push({
             break;
       }
 
-      function setVideoCount(container = required()) {
+      async function setVideoCount(container = required()) {
          // console.debug('setVideoCount:', ...arguments);
-         const channelId = NOVA.getChannelId();
+         const channelId = await NOVA.getChannelId(user_settings['custom-api-key']);
          if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
 
          // cached

@@ -19,7 +19,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // Doesn't work after page transition
-      // NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')
+      // NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description #expand')
       //    .then(btn => {
       //       if (user_settings.description_expand_mode == 'onhover') {
       //          btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });
@@ -35,7 +35,7 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: [
             '#meta [collapsed] #more',
-            '[description-collapsed] #description-and-actions #description #expand',
+            '[description-collapsed] #description #expand',
          ],
          // attr_mark: ATTR_MARK,
          callback: btn => {

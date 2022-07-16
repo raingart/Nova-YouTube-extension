@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=dq5a1GW6iVA
+
 window.nova_plugins.push({
    id: 'livechat-visibility',
    title: 'Hide live chat',

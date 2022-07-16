@@ -1,6 +1,7 @@
 // https://www.youtube.com/watch?v=9EvbqxBUG_c - great for testing
 // https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
 // https://youtu.be/XvJRE6Sm-lM - has sub (multi)
+// https://www.youtube.com/watch?v=gsuJgNjDMSE - has sub (multi)
 // https://www.youtube.com/watch?v=jz-hkKgcuF0 - has sub (eng)
 
 window.nova_plugins.push({

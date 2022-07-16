@@ -269,7 +269,7 @@ window.nova_plugins.push({
                // 【MAD】,『MAD』,「MAD」
                // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
                if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                  || ['【', '『', '「', 'CD', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+                  || ['【', '『', '「', 'CD', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
                ) {
                   return true;
                }
@@ -292,7 +292,7 @@ window.nova_plugins.push({
                // channelNameVEVO
                || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
                // word
-               || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'POP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
+               || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
                   .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
                // words
                || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'

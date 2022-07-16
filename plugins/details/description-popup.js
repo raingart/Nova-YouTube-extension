@@ -115,7 +115,7 @@ window.nova_plugins.push({
             let oldDateText;
 
             descriptionEl.addEventListener('mouseenter', evt => {
-               document.querySelector('#meta [collapsed] #more, [description-collapsed] #description-and-actions #description #expand')?.click()
+               document.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click()
             }, false);
             // }, { capture: true, once: true });
 

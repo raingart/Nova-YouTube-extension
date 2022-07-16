@@ -22,25 +22,64 @@ window.nova_plugins.push({
          .map(e => e.toString().trim().toLowerCase())
          .filter(e => e.length);
 
-      NOVA.watchElements({
-         selectors: [
-            'ytd-rich-item-renderer', // home
-            'ytd-video-renderer', // results
-            'ytd-grid-video-renderer', // feed, channel
-            'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer', // mobile
-         ],
-         attr_mark: 'thumb-title-filtered',
-         callback: thumb => {
-            keywords.forEach(keyword => {
-               if (thumb.querySelector('#video-title')?.textContent.toLowerCase().includes(keyword)) {
-                  thumb.remove();
-                  // thumb.style.border = '2px solid orange'; // mark for test
-                  // console.log('filter removed', keyword, thumb);
-               }
-            });
+      const thumbsSelectors = [
+         'ytd-rich-item-renderer', // home
+         'ytd-video-renderer', // results
+         'ytd-grid-video-renderer', // feed, channel
+         'ytd-compact-video-renderer', // sidepanel in watch
+         'ytm-compact-video-renderer', // mobile
+      ]
+         .join(',');
+
+      // Strategy 1. More optimize.
+      // page update
+      document.addEventListener('yt-action', evt => {
+         // console.log(evt.detail?.actionName);
+         if ([
+            'ytd-update-grid-state-action',
+            'yt-append-continuation-items-action',
+            'yt-service-request'
+         ]
+            .includes(evt.detail?.actionName)
+         ) {
+            hideThumb();
          }
       });
+
+      function hideThumb() {
+         document.body.querySelectorAll('#video-title')
+            .forEach(el => {
+               keywords.forEach(keyword => {
+                  if (el.textContent.toLowerCase().includes(keyword) && (thumb = el.closest(thumbsSelectors))) {
+                     thumb.remove();
+                     // thumb.style.display = 'none';
+
+                     // console.log('filter removed', keyword, thumb);
+                     // thumb.style.border = '2px solid orange'; // mark for test
+                  }
+               });
+            });
+      }
+
+      // NOVA.watchElements({
+      //    selectors: [
+      //       'ytd-rich-item-renderer', // home
+      //       'ytd-video-renderer', // results
+      //       'ytd-grid-video-renderer', // feed, channel
+      //       'ytd-compact-video-renderer', // sidepanel in watch
+      //       'ytm-compact-video-renderer', // mobile
+      //    ],
+      //    attr_mark: 'thumb-title-filtered',
+      //    callback: thumb => {
+      //       keywords.forEach(keyword => {
+      //          if (thumb.querySelector('#video-title')?.textContent.toLowerCase().includes(keyword)) {
+      //             thumb.remove();
+      //             // thumb.style.border = '2px solid orange'; // mark for test
+      //             // console.log('filter removed', keyword, thumb);
+      //          }
+      //       });
+      //    }
+      // });
 
    },
    options: {

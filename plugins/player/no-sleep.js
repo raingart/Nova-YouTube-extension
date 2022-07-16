@@ -16,7 +16,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: 'prevent asking you to click "yes" to continue playing?',
-   desc: 'prevent [Video paused] alert',
+   desc: 'disable [Video paused] alert',
    'desc:zh': '防止[视频暂停]警报',
    'desc:ja': '「Video paused」アラートを防止します',
    'desc:ko': '[Video paused] 알림을 방지합니다',
@@ -31,22 +31,26 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // Strategy 1
-      window.setInterval(() => document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })), 1000 * 60 * 5); // 5 min
+      window.setInterval(() => {
+         document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 }));
+         window.wrappedJSObject._lact = Date.now();
+      }, 1000 * 60 * 5); // 5 min
+
 
       // Strategy 2
-      function skipConfirmDialog() {
-         // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
-         // NOVA.waitElement('[role="dialog"] #confirm-button')
-         NOVA.waitElement('#confirm-button')
-            .then(btn => {
-               console.debug('page page wake up', btn);
-               btn.click();
-               if (NOVA.videoElement?.paused) NOVA.videoElement.play();
-               // movie_player.playVideo();
-               skipConfirmDialog(); // recursion init state. What would work more than once
-            });
-      }
+      // function skipConfirmDialog() {
+      //    // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
+      //    // NOVA.waitElement('[role="dialog"] #confirm-button')
+      //    NOVA.waitElement('#confirm-button')
+      //       .then(btn => {
+      //          console.debug('page page wake up', btn);
+      //          btn.click();
+      //          if (NOVA.videoElement?.paused) NOVA.videoElement.play();
+      //          // movie_player.playVideo();
+      //          skipConfirmDialog(); // recursion init state. What would work more than once
+      //       });
+      // }
 
-      skipConfirmDialog();
+      // skipConfirmDialog();
    },
 });
