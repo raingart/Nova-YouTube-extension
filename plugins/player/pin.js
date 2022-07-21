@@ -126,7 +126,7 @@ window.nova_plugins.push({
             // wait video size
             await NOVA.waitUntil(
                // movie_player.clientWidth && movie_player.clientHeight
-               () => (NOVA.videoElement.videoWidth && NOVA.videoElement.videoHeight)
+               () => (NOVA.videoElement?.videoWidth && NOVA.videoElement?.videoHeight)
                // && document.getElementById('masthead-container')?.offsetHeight
                , 500) // 500ms
 

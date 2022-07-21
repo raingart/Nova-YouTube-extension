@@ -40,7 +40,65 @@ window.nova_plugins.push({
 
       if (user_settings['shorts-disable']) return; // conflict with plugin. Attention! After shorts redirect
 
-      const ATTR_MARK = 'nova-thumb-shorts-pathed';
+      const
+         // ATTR_MARK = 'nova-thumb-shorts-pathed',
+         thumbsSelectors = [
+            // 'ytd-rich-item-renderer', // home
+            'ytd-video-renderer', // results
+            'ytd-grid-video-renderer', // feed, channel
+            // 'ytd-compact-video-renderer', // sidepanel in watch
+            'ytm-compact-video-renderer', // mobile
+         ]
+            .join(',');
+
+      // Strategy 1
+      document.addEventListener('yt-action', evt => {
+         // console.log(evt.detail?.actionName);
+         if ([
+            'ytd-update-grid-state-action',
+            'yt-append-continuation-items-action',
+            'yt-service-request'
+         ]
+            .includes(evt.detail?.actionName)
+         ) {
+            removeThumbShort();
+         }
+      });
+
+      function removeThumbShort() {
+         document.body.querySelectorAll('a[href*="shorts/"]')
+            .forEach(link => {
+               link.href += '&list=RDSH'; // fix href redirect to watch
+               // link.href = link.href.replace('shorts/', 'watch?v=');
+
+               // if (thumb = link.closest(thumbsSelectors)) {
+               //    thumb.remove();
+               //    thumb.style.display = 'none';
+
+               //    console.debug('has #shorts:', thumb);
+               //    thumb.style.border = '2px solid orange'; // mark for test
+
+               //    // add time to overlay
+               //    if (user_settings.shorts_thumbnails_time) {
+               //       NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+               //          .then(async overlay => {
+               //             if ((thumb = link.closest(thumbsSelectors))
+               //                && (time = getThumbTime(thumb.data))
+               //             ) {
+               //                // console.debug('time', time);
+               //                console.debug('>', overlay.querySelector('#text'));
+               //                overlay.setAttribute('overlay-style', 'DEFAULT');
+               //                if (timeLabelEl = overlay.querySelector('#text')) {
+               //                   timeLabelEl.textContent = time;
+               //                }
+               //             }
+               //          });
+               //    }
+               // }
+            });
+      }
+
+      // Strategy 2
 
       // clear before restart_on_transition
       // document.addEventListener('yt-navigate-start', () =>
@@ -48,84 +106,79 @@ window.nova_plugins.push({
 
       // fix clear thumb on page update (change sort etc.)
       // document.addEventListener('yt-page-data-updated', () =>
-      document.addEventListener('yt-navigate-finish', () =>
-         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
-         , { capture: true, once: true });
+      // document.addEventListener('yt-navigate-finish', () =>
+      // document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
+      // , { capture: true, once: true });
 
-      const thumbsSelectors = [
-         // 'ytd-rich-item-renderer', // home
-         'ytd-video-renderer', // results
-         'ytd-grid-video-renderer', // feed, channel
-         // 'ytd-compact-video-renderer', // sidepanel in watch
-         'ytm-compact-video-renderer', // mobile
-      ];
+      // NOVA.watchElements({
+      //    selectors: 'a[href*="shorts/"]',
+      //    attr_mark: ATTR_MARK,
+      //    callback: link => {
+      //       link.href += '&list=RDSH'; // fix href redirect to watch
+      //       // link.href = link.href.replace('shorts/', 'watch?v=');
 
-      NOVA.watchElements({
-         selectors: thumbsSelectors.map(e => e + ':not([hidden]) a[href*="shorts/"]'),
-         attr_mark: ATTR_MARK,
-         callback: link => {
-            link.href += '&list=RDSH'; // fix href redirect to watch
-            // link.href = link.href.replace('shorts/', 'watch?v=');
+      //       // console.debug('has #shorts:', link);
+      //       // link.style.border = '2px solid green'; // mark for test
 
-            // console.debug('has #shorts:', link);
-            // link.style.border = '2px solid green'; // mark for test
+      //       // add time to overlay
+      //       if (user_settings.shorts_thumbnails_time) {
+      //          NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+      //             .then(async overlay => {
+      //                if ((thumb = link.closest(thumbsSelectors))
+      //                   && (time = getThumbTime(thumb.data))
+      //                ) {
+      //                   // console.debug('time', time);
+      //                   console.debug('', overlay);
+      //                   overlay.setAttribute('overlay-style', 'DEFAULT');
+      //                   if (timeLabelEl = overlay.querySelector('#text')) {
+      //                      timeLabelEl.textContent = time;
+      //                   }
+      //                }
+      //             });
+      //       }
+      //    },
+      // });
 
-            // add time to overlay
-            if (user_settings.shorts_thumbnails_time && link.matches('a#thumbnail')) {
-               NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
-                  .then(overlay => {
-                     if ((thumb = link.closest(thumbsSelectors.join(',\n')))
-                        && (time = getThumbTime(thumb.data))
-                     ) {
-                        // console.debug('time', time);
-                        overlay.setAttribute('overlay-style', 'DEFAULT');
-                        overlay.querySelector('#text').textContent = time;
-                     }
-                  });
-            }
-         },
-      });
+      // function getThumbTime(videoData = required()) {
+      //    // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
+      //    //    .forEach(videoRenderer => {
+      //    const
+      //       // videoData = videoRenderer.data,
+      //       title = videoData.title.accessibility.accessibilityData.label,
+      //       publishedTimeText = videoData.publishedTimeText.simpleText,
+      //       viewCountText = videoData.viewCountText.simpleText;
 
-      function getThumbTime(videoData = required()) {
-         // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
-         //    .forEach(videoRenderer => {
-         const
-            // videoData = videoRenderer.data,
-            title = videoData.title.accessibility.accessibilityData.label,
-            publishedTimeText = videoData.publishedTimeText.simpleText,
-            viewCountText = videoData.viewCountText.simpleText;
+      //    let
+      //       [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
+      //          .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
-         let
-            [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
-               .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
-
-         if (!seconds) { // fix mixed up in places
-            seconds = minutes;
-            minutes = null;
-         }
-         // console.debug('>', [minutes, seconds]);
-         return [minutes || '0', seconds].join(':');
-         // });
-      }
+      //    if (!seconds) { // fix mixed up in places
+      //       seconds = minutes;
+      //       minutes = null;
+      //    }
+      //    // console.debug('>', [minutes, seconds]);
+      //    return [minutes || '0', seconds].join(':');
+      //    // });
+      // }
 
    },
-   options: {
-      shorts_thumbnails_time: {
-         _tagName: 'input',
-         label: 'Add time to overlay',
-         'label:zh': '添加时间叠加',
-         'label:ja': 'オーバーレイする時間を追加する',
-         'label:ko': '오버레이 시간 추가',
-         'label:id': 'Tambahkan waktu untuk overlay',
-         'label:es': 'Agregar tiempo para superponer',
-         'label:pt': 'Adicionar tempo à sobreposição',
-         'label:fr': 'Ajouter du temps à la superposition',
-         'label:it': 'Aggiungi tempo per la sovrapposizione',
-         'label:tr': 'Bindirme için zaman ekleyin',
-         'label:de': 'Zeit zum Überlagern hinzufügen',
-         'label:pl': 'Pokaż nakładkę z czasem',
-         type: 'checkbox',
-         // title: '',
-      },
-   }
+   // options: {
+   //    shorts_thumbnails_time: {
+   //       _tagName: 'input',
+   //       label: 'Add time to overlay',
+   //       'label:zh': '添加时间叠加',
+   //       'label:ja': 'オーバーレイする時間を追加する',
+   //       'label:ko': '오버레이 시간 추가',
+   //       'label:id': 'Tambahkan waktu untuk overlay',
+   //       'label:es': 'Agregar tiempo para superponer',
+   //       'label:pt': 'Adicionar tempo à sobreposição',
+   //       'label:fr': 'Ajouter du temps à la superposition',
+   //       'label:it': 'Aggiungi tempo per la sovrapposizione',
+   //       'label:tr': 'Bindirme için zaman ekleyin',
+   //       'label:de': 'Zeit zum Überlagern hinzufügen',
+   //       'label:pl': 'Pokaż nakładkę z czasem',
+   //       type: 'checkbox',
+   //       // title: '',
+   //    },
+   // }
 });

@@ -73,7 +73,7 @@ window.nova_plugins.push({
 
       async function setVideoCount(container = required()) {
          // console.debug('setVideoCount:', ...arguments);
-         const channelId = await NOVA.getChannelId(user_settings['custom-api-key']);
+         const channelId = await NOVA.getChannelId(user_settings['user-api-key']);
          if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
 
          // cached
@@ -84,7 +84,7 @@ window.nova_plugins.push({
             NOVA.request.API({
                request: 'channels',
                params: { 'id': channelId, 'part': 'statistics' },
-               api_key: user_settings['custom-api-key'],
+               api_key: user_settings['user-api-key'],
             })
                .then(res => {
                   res?.items?.forEach(item => {

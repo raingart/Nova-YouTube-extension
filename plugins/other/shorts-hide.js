@@ -38,11 +38,11 @@ window.nova_plugins.push({
          ]
             .includes(evt.detail?.actionName)
          ) {
-            hideThumb();
+            removeThumb();
          }
       });
 
-      function hideThumb() {
+      function removeThumb() {
          document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
             .forEach(el => el.closest(thumbsSelectors)?.remove());
          // for test
@@ -57,10 +57,10 @@ window.nova_plugins.push({
          //    });
 
          if (+user_settings.shorts_disable_min_duration) {
-            document.body.querySelectorAll('#thumbnail')
+            document.body.querySelectorAll('#thumbnail #overlays #text:not(:empty)')
                .forEach(el => {
                   if ((thumb = el.closest(thumbsSelectors))
-                     && NOVA.timeFormatTo.hmsToSec(thumb.querySelector('#overlays #text:not(:empty)')?.textContent.trim()) < (+user_settings.shorts_disable_min_duration || 60)
+                     && NOVA.timeFormatTo.hmsToSec(el.textContent.trim()) < (+user_settings.shorts_disable_min_duration || 60)
                   ) {
                      thumb.remove();
                      // thumb.style.display = 'none';

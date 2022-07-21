@@ -432,7 +432,7 @@ window.addEventListener('load', () => {
       Opt.init();
       Conf.init();
       // remove api warn if has api
-      if (settings && settings['custom-api-key']) {
+      if (settings && settings['user-api-key']) {
          document.body.querySelectorAll('.info b').forEach(el => el.remove());
       }
    }, Opt.storageMethod);

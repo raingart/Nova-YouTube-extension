@@ -207,7 +207,10 @@ window.nova_plugins.push({
          // console.log('outFormat', ...arguments);
          let outArr = [];
          // time
-         outArr.push(NOVA.timeFormatTo.HMS.digit(duration / NOVA.videoElement.playbackRate));
+         outArr.push(NOVA.timeFormatTo.HMS.digit(
+            (NOVA.currentPage == 'watch' && NOVA.videoElement?.playbackRate)
+            ? duration / NOVA.videoElement.playbackRate : duration
+         ));
          // pt
          if (user_settings.playlist_duration_percentage && total) {
             outArr.push(`(${~~(duration * 100 / total) + '%'})`);

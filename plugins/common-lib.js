@@ -691,7 +691,7 @@ const NOVA = {
             api_key: api_key,
          });
          // console.debug('res', res);
-         if (isChannelId(res?.items.length && res.items[0].id)) result = res.items[0].id;
+         if (res?.items?.length && isChannelId(res.items[0]?.id)) result = res.items[0].id;
          // console.debug('channelId (request):', result);
       }
       return result;

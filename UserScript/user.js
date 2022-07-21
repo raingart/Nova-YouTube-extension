@@ -6,16 +6,17 @@ const
    user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'custom-api-key': 'user-api-key',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');

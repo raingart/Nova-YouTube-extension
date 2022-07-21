@@ -91,10 +91,13 @@ window.nova_plugins.push({
                   height: 0;
                   margin-top: 10px;
                }
+               #expander.ytd-comment-renderer {
+                  overflow: visible !important;
+               }
                /* size section */
                ${COMMENTS_SELECTOR} #sections {
                   max-width: fit-content;
-                  min-width: 510px;
+                  min-width: 500px;
                }
 
                /* custom scroll */

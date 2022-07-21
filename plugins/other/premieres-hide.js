@@ -31,8 +31,8 @@ window.nova_plugins.push({
          const thumbsSelector = 'ytd-grid-video-renderer:not([hidden])';
 
          document.body.querySelectorAll(
-            `${thumbsSelector} #overlays [overlay-style="UPCOMING"],
-            ${thumbsSelector} #overlays [aria-label="PREMIERE"]`
+            `#thumbnail #overlays [overlay-style="UPCOMING"],
+            #thumbnail  #overlays [aria-label="PREMIERE"]`
          )
             .forEach(el => el.closest(thumbsSelector)?.remove());
          // for test

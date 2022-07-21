@@ -48,16 +48,18 @@ window.nova_plugins.push({
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
 
                case 'smart':
-                  // exclude shorts page
-                  if (user_settings.player_full_viewport_mode_exclude_shorts
-                     && (NOVA.currentPage == 'shorts') || window.ytplayer?.config?.args?.title?.includes('#shorts')
-                  ) { // dont update state on transition
+                  // exclude shorts page #1
+                  if (user_settings.player_full_viewport_mode_exclude_shorts && NOVA.currentPage == 'shorts') {
                      return;
                   }
 
                   NOVA.waitElement('video')
                      .then(video => {
                         video.addEventListener('loadeddata', function () {
+                           // exclude shorts page #2
+                           if (user_settings.player_full_viewport_mode_exclude_shorts && this.videoWidth < this.videoHeight) {
+                              return;
+                           }
                            const miniSize = NOVA.calculateAspectRatioFit({
                               'srcWidth': this.videoWidth,
                               'srcHeight': this.videoHeight,

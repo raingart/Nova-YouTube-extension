@@ -9,6 +9,7 @@
 // https://www.youtube.com/watch?v=hLXIK9DBxAo - very long text line of timestamp
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed test
+// https://www.youtube.com/watch?v=tNkZsRW7h2c - can't rewind video (live)
 
 // test TitleOffset
 // https://youtu.be/t_fbcgzmxHs
