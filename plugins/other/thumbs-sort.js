@@ -2,6 +2,7 @@
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
 // https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow/videos - no sort
 // https://www.youtube.com/channel/UCHzevlEL9JfsBIm86uNCJqg/videos
+// https://www.youtube.com/channel/UCcYrdFJF7hmPXRNaWdrko4w/videos
 
 window.nova_plugins.push({
    id: 'thumbs-sort',
@@ -29,8 +30,12 @@ window.nova_plugins.push({
          .then(container => {
             const sortBtn = document.createElement('button');
             sortBtn.textContent = 'Sort by Views';
+            Object.assign(sortBtn.style, {
+               'user-select': 'none',
+               cursor: 'pointer',
+            });
             sortBtn.addEventListener('click', () => {
-               if (container = document.querySelector('#page-manager #primary #items')) {
+               if (container = document.querySelector('#contents #items')) {
                   container.append(...Array.from(container.childNodes).sort(sortBy));
 
                } else console.error('sortBtn container items is empty');
@@ -44,7 +49,8 @@ window.nova_plugins.push({
          return getViews(b) - getViews(a);
 
          function getViews(e) {
-            const views = e.querySelector('a[aria-label]')?.getAttribute('aria-label') // #metadata
+            // const views = e.querySelector('a[aria-label]')?.getAttribute('aria-label') // #metadata
+            const views = e.$['video-title']?.getAttribute('aria-label')
                ?.match(/([\d,]+) views/);
 
             return views && views[1] ? +views[1].replace(/,/g, '') : 0;

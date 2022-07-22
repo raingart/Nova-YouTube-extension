@@ -71,30 +71,27 @@ window.nova_plugins.push({
                link.href += '&list=RDSH'; // fix href redirect to watch
                // link.href = link.href.replace('shorts/', 'watch?v=');
 
-               // if (thumb = link.closest(thumbsSelectors)) {
-               //    thumb.remove();
-               //    thumb.style.display = 'none';
+               if (thumb = link.closest(thumbsSelectors)) {
+                  // console.debug('has #shorts:', thumb);
+                  // thumb.style.border = '2px solid orange'; // mark for test
 
-               //    console.debug('has #shorts:', thumb);
-               //    thumb.style.border = '2px solid orange'; // mark for test
-
-               //    // add time to overlay
-               //    if (user_settings.shorts_thumbnails_time) {
-               //       NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
-               //          .then(async overlay => {
-               //             if ((thumb = link.closest(thumbsSelectors))
-               //                && (time = getThumbTime(thumb.data))
-               //             ) {
-               //                // console.debug('time', time);
-               //                console.debug('>', overlay.querySelector('#text'));
-               //                overlay.setAttribute('overlay-style', 'DEFAULT');
-               //                if (timeLabelEl = overlay.querySelector('#text')) {
-               //                   timeLabelEl.textContent = time;
-               //                }
-               //             }
-               //          });
-               //    }
-               // }
+                  // add time to overlay
+                  if (user_settings.shorts_thumbnails_time) {
+                     NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+                        .then(async overlay => {
+                           if ((thumb = link.closest(thumbsSelectors))
+                              && (time = getThumbTime(thumb.data))
+                           ) {
+                              // console.debug('time', time);
+                              overlay.setAttribute('overlay-style', 'DEFAULT');
+                              // if (timeLabelEl = overlay.querySelector('#text')) {
+                              if (timeLabelEl = overlay.$['text']) {
+                                 timeLabelEl.textContent = time;
+                              }
+                           }
+                        });
+                  }
+               }
             });
       }
 
@@ -139,46 +136,49 @@ window.nova_plugins.push({
       //    },
       // });
 
-      // function getThumbTime(videoData = required()) {
-      //    // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
-      //    //    .forEach(videoRenderer => {
-      //    const
-      //       // videoData = videoRenderer.data,
-      //       title = videoData.title.accessibility.accessibilityData.label,
-      //       publishedTimeText = videoData.publishedTimeText.simpleText,
-      //       viewCountText = videoData.viewCountText.simpleText;
+      function getThumbTime(videoData = required()) {
+         // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
+         //    .forEach(videoRenderer => {
+         const
+            // videoData = videoRenderer.data,
+            title = videoData.title.accessibility.accessibilityData.label,
+            publishedTimeText = videoData.publishedTimeText.simpleText,
+            viewCountText = videoData.viewCountText.simpleText;
 
-      //    let
-      //       [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
-      //          .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+         let
+            [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
+               .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
-      //    if (!seconds) { // fix mixed up in places
-      //       seconds = minutes;
-      //       minutes = null;
-      //    }
-      //    // console.debug('>', [minutes, seconds]);
-      //    return [minutes || '0', seconds].join(':');
-      //    // });
-      // }
+         if (!seconds) { // fix mixed up in places
+            seconds = minutes;
+            minutes = null;
+         }
+         if (String(seconds).length === 1) {// fix "0:3" > "0:30"
+            seconds += '0';
+         }
+         // console.debug('>', [minutes, seconds]);
+         return [minutes || 0, seconds].join(':');
+         // });
+      }
 
    },
-   // options: {
-   //    shorts_thumbnails_time: {
-   //       _tagName: 'input',
-   //       label: 'Add time to overlay',
-   //       'label:zh': '添加时间叠加',
-   //       'label:ja': 'オーバーレイする時間を追加する',
-   //       'label:ko': '오버레이 시간 추가',
-   //       'label:id': 'Tambahkan waktu untuk overlay',
-   //       'label:es': 'Agregar tiempo para superponer',
-   //       'label:pt': 'Adicionar tempo à sobreposição',
-   //       'label:fr': 'Ajouter du temps à la superposition',
-   //       'label:it': 'Aggiungi tempo per la sovrapposizione',
-   //       'label:tr': 'Bindirme için zaman ekleyin',
-   //       'label:de': 'Zeit zum Überlagern hinzufügen',
-   //       'label:pl': 'Pokaż nakładkę z czasem',
-   //       type: 'checkbox',
-   //       // title: '',
-   //    },
-   // }
+   options: {
+      shorts_thumbnails_time: {
+         _tagName: 'input',
+         label: 'Add time to overlay',
+         'label:zh': '添加时间叠加',
+         'label:ja': 'オーバーレイする時間を追加する',
+         'label:ko': '오버레이 시간 추가',
+         'label:id': 'Tambahkan waktu untuk overlay',
+         'label:es': 'Agregar tiempo para superponer',
+         'label:pt': 'Adicionar tempo à sobreposição',
+         'label:fr': 'Ajouter du temps à la superposition',
+         'label:it': 'Aggiungi tempo per la sovrapposizione',
+         'label:tr': 'Bindirme için zaman ekleyin',
+         'label:de': 'Zeit zum Überlagern hinzufügen',
+         'label:pl': 'Pokaż nakładkę z czasem',
+         type: 'checkbox',
+         // title: '',
+      },
+   }
 });

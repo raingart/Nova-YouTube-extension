@@ -42,9 +42,8 @@ window.nova_plugins.push({
          attr_mark: 'thumb-search-filtered',
          callback: thumb => {
             keywords.forEach(keyword => {
-               if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')
-                  ?.textContent.toLowerCase().includes(keyword)
-               ) {
+               // if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')?.textContent.toLowerCase().includes(keyword)) {
+               if (thumb.$['channel-name']?.innerText.toLowerCase().includes(keyword)) {
                   thumb.remove();
                   // thumb.style.border = '2px solid red'; // mark for test
                   // console.log('filter removed', keyword, thumb);
