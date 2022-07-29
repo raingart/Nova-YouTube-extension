@@ -284,14 +284,14 @@ const NOVA = {
    //    },
    // },
 
-   /* NOVA.preventVisibilityElement({
+   /* NOVA.collapseElement({
          selector: '#secondary #related',
          title: 'related',// auto uppercase
          remove: true,
          remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
    }); */
-   preventVisibilityElement({ selector = required(), title = required(), remove }) {
-      // console.debug('preventVisibilityElement', ...arguments);
+   collapseElement({ selector = required(), title = required(), remove }) {
+      // console.debug('collapseElement', ...arguments);
       const selector_id = `${title.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
 
       this.waitElement(selector.toString())
@@ -524,6 +524,7 @@ const NOVA = {
    },
 
    queryURL: {
+      // const videoId = new URLSearchParams(window.location.search).get('v');
       // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
       // has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.href)).has(query), // Doesn't work
 

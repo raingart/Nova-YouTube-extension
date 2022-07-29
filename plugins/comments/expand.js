@@ -21,16 +21,34 @@ window.nova_plugins.push({
       // dirty fix bug with not updating comments addEventListener: reset comments block
       // document.addEventListener('yt-page-data-updated', () => location.reload());
 
+      NOVA.css.push(
+         `/* fixs */
+         #expander.ytd-comment-renderer {
+            overflow-x: hidden;
+         }`);
+
       // comment
       NOVA.watchElements({
-         selectors: ['#contents #expander[collapsed]'],
+         selectors: ['#contents #expander[collapsed] #more:not([hidden])'],
          attr_mark: 'comment-expanded',
-         callback: el => {
-            const moreExpand = () => el.querySelector('#more')?.click();
+         callback: more_btn => {
+            const comment = more_btn.closest('#expander[collapsed]');
+            // console.debug('contents expander:', comment);
+            // comment.style.border = '2px solid red'; // mark for test
+
+            const moreExpand = () => more_btn.click();
+
             // on hover auto expand
-            el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
-            // if (user_settings.comments_expand_mode === 'always') moreExpand();
-            if (user_settings.comments_expand_mode != 'onhover') moreExpand();
+            switch (user_settings.comments_expand_mode) {
+               case 'onhover':
+                  comment.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
+                  break;
+
+               // case 'always':
+               default:
+                  moreExpand()
+                  break;
+            }
          },
       });
 
@@ -40,22 +58,31 @@ window.nova_plugins.push({
          attr_mark: 'replies-expanded',
          callback: el => {
             const moreExpand = () => el.querySelector('#button')?.click();
+
             // on hover auto expand
-            el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
-            if (user_settings.comments_view_reply == 'always') moreExpand();
+            switch (user_settings.comments_view_reply) {
+               case 'onhover':
+                  el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
+                  break;
+
+               // case 'always':
+               default:
+                  moreExpand()
+                  break;
+            }
          },
       });
 
       // old method. No hover
       // NOVA.watchElements({
-      //    selector: '#contents #expander[collapsed] #more',
+      //    selector: ['#contents #expander[collapsed] #more'],
       //    attr_mark: 'comment-expanded',
       //    callback: btn => btn.click(),
       // });
 
       // if (user_settings.comments_view_reply) {
       //    NOVA.watchElements({
-      //       selector: '#comment #expander #more-replies',
+      //       selector: ['#comment #expander #more-replies'],
       //       attr_mark: 'replies-expanded',
       //       callback: btn => btn.click(),
 

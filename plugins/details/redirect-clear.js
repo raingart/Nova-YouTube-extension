@@ -28,15 +28,19 @@ window.nova_plugins.push({
    'desc:pl': 'Bezpośrednie łącza zewnętrzne',
    _runtime: user_settings => {
 
-      // document.addEventListener('mouseover', ({ target }) => { // increased load but the hint will be the right link
-      document.addEventListener('click', ({ target }) => {
+      // mouse left click
+      document.addEventListener('click', ({ target }) => patchLink(target), { capture: true });
+      // mouse middle click
+      document.addEventListener('auxclick', evt => evt.button === 1 && patchLink(evt.target), { capture: true });
+
+      function patchLink(target = required()) {
          if (!target.matches('a[href*="/redirect?"]')) return;
 
          if (q = NOVA.queryURL.get('q', target.href)) {
-            // console.debug('redirect clear:', decodeURIComponent(q), target);
             target.href = decodeURIComponent(q);
+            // alert(target.href);
          }
-      }, { capture: true });
+      }
 
    },
 });

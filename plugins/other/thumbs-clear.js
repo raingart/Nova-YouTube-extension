@@ -72,7 +72,7 @@ window.nova_plugins.push({
          document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElements({
-         selectors: '#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"])',
+         selectors: ['#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"])'],
          attr_mark: ATTR_MARK,
          callback: img => {
             // skip "premiere", "live now"

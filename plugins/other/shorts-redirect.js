@@ -108,7 +108,7 @@ window.nova_plugins.push({
       // , { capture: true, once: true });
 
       // NOVA.watchElements({
-      //    selectors: 'a[href*="shorts/"]',
+      //    selectors: ['a[href*="shorts/"]'],
       //    attr_mark: ATTR_MARK,
       //    callback: link => {
       //       link.href += '&list=RDSH'; // fix href redirect to watch

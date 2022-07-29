@@ -8,12 +8,17 @@ const
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'custom-api-key': 'user-api-key',
+   'shorts-disable': 'shorts_disable',
+   'premieres-disable': 'premieres_disable',
+   'streams-disable': 'streams_disable',
+   'thumbnails-mix-hide': 'thumbnails_mix_hide',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
       console.log(oldKey, '=>', newKey);
       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+
+      user_settings['thumbs-hide'] = true;
    }
    GM_setValue(configStoreName, user_settings);
 }

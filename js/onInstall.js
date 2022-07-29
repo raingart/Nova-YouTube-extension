@@ -42,11 +42,19 @@ chrome.runtime.onInstalled.addListener(details => {
                   'stream-disable': 'streams-disable',
                   'disable_in_frame': 'exclude_iframe',
                   'custom-api-key': 'user-api-key',
+
+                  // for 'thumbs-hide'
+                  'shorts-disable': 'shorts_disable',
+                  'premieres-disable': 'premieres_disable',
+                  'streams-disable': 'streams_disable',
+                  'thumbnails-mix-hide': 'thumbnails_mix_hide',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {
                      console.log(oldKey, '=>', newKey);
                      delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
+
+                     user_settings['thumbs-hide'] = true;
                   }
                }
                console.debug('new updated settings:', settings);

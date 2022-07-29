@@ -28,7 +28,7 @@ window.nova_plugins.push({
 
             // global
             NOVA.css.push(
-               `button${SELECTOR_BTN} {
+               `${SELECTOR_BTN} {
                   user-select: none;
                   /*padding: 5px;
                   width: 25px;*/
@@ -414,6 +414,39 @@ window.nova_plugins.push({
                // }
             }
 
+            if (user_settings.player_buttons_custom_items?.includes('watch-later')) {
+               const watchLaterBtn = document.createElement('button');
+
+               watchLaterBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+               watchLaterBtn.title = 'Watch later';
+               Object.assign(watchLaterBtn.style, {
+                  padding: '0 .5em',
+                  position: 'relative',
+               });
+               updateSVG();
+               watchLaterBtn.addEventListener('click', () => {
+                  if (watchLater = document.querySelector('#movie_player .ytp-watch-later-button')) {
+                     watchLater.click();
+                     updateSVG();
+                     setTimeout(updateSVG, 1000); // 1 sec
+                  }
+               });
+               container.prepend(watchLaterBtn);
+
+               function updateSVG() {
+                  // return alt
+                  //    ? `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
+                  //          <use class="ytp-svg-shadow" xlink:href="#ytp-id-25"></use>
+                  //          <path class="ytp-svg-fill"
+                  //             d="M18,8 C12.47,8 8,12.47 8,18 C8,23.52 12.47,28 18,28 C23.52,28 28,23.52 28,18 C28,12.47 23.52,8 18,8 L18,8 Z M16,19.02 L16,12.00 L18,12.00 L18,17.86 L23.10,20.81 L22.10,22.54 L16,19.02 Z"
+                  //             id="ytp-id-25"></path>
+                  //       </svg>`
+                  //    : watchLater.querySelector('.ytp-watch-later-icon').innerHTML;
+                  watchLaterBtn.innerHTML = document.querySelector('#movie_player .ytp-watch-later-button')
+                     ?.querySelector('.ytp-watch-later-icon')?.innerHTML;
+               }
+            }
+
             if (user_settings.player_buttons_custom_items?.includes('quick-quality')) {
                const
                   // conteiner <a>
@@ -673,13 +706,126 @@ window.nova_plugins.push({
          required: true, // dont use - selected: true
          size: 4, // = options.length
          options: [
-            { label: 'quick quality', value: 'quick-quality', 'label:zh': '质量', 'label:ja': '品質', 'label:ko': '품질', /*'label:id': '',*/ 'label:es': 'calidad', 'label:pt': 'qualidade', 'label:fr': 'qualité', /*'label:it': '',*/ 'label:tr': 'hızlı kalite', 'label:de': 'qualität', 'label:pl': 'jakość' },
-            { label: 'toggle speed', value: 'toggle-speed', 'label:zh': '切换速度', 'label:ja': 'トグル速度', 'label:ko': '토글 속도', /*'label:id': '',*/ 'label:es': 'alternar velocidad', 'label:pt': 'velocidade de alternância', 'label:fr': 'basculer la vitesse', /*'label:it': '',*/ 'label:tr': 'geçiş hızı', 'label:de': 'geschwindigkeit umschalten', 'label:pl': 'szybkość' },
-            { label: 'screenshot', value: 'screenshot', 'label:zh': '截屏', 'label:ja': 'スクリーンショット', 'label:ko': '스크린샷', /*'label:id': '',*/ 'label:es': 'captura de pantalla', 'label:pt': 'captura de tela', 'label:fr': "capture d'écran", /*'label:it': '',*/ 'label:tr': 'ekran görüntüsü', 'label:de': 'bildschirmfoto'/*, 'label:pl': 'screenshot'*/ },
-            { label: 'picture-in-picture', value: 'picture-in-picture',/*, 'label:zh': '', 'label:ja': '', 'label:ko': '', 'label:id': '', 'label:es': '', 'label:pt': '', 'label:fr': '', 'label:it': '', 'label:tr': '', 'label:de': ''*/ 'label:pl': 'obraz w obrazie' },
-            { label: 'popup', value: 'popup', 'label:zh': '弹出式播放器', 'label:ja': 'ポップアッププレーヤー', 'label:ko': '썸네일', /*'label:id': '',*/ /*'label:es': 'jugadora emergente',*/ 'label:pt': 'jogador pop-up', 'label:fr': 'lecteur contextuel', /*'label:it': '',*/ 'label:tr': 'pop-up oynatıcı', /*'label:de': ''*/ 'label:pl': 'w okienku' },
-            { label: 'rotate', value: 'rotate', 'label:zh': '旋转', 'label:ja': '回転する', 'label:ko': '회전', /*'label:id': '',*/ 'label:es': 'girar', 'label:pt': 'girar', 'label:fr': 'tourner', /*'label:it': '',*/ 'label:tr': 'döndürmek', 'label:de': 'drehen', 'label:pl': 'obróć' },
-            { label: 'thumbnail', value: 'thumbnail', 'label:zh': '缩略图', 'label:ja': 'サムネイル', 'label:ko': /*'label:id': '',*/ '썸네일', 'label:es': 'miniatura', 'label:pt': 'captura de tela', 'label:fr': 'la vignette', /*'label:it': '',*/ 'label:tr': 'küçük resim', 'label:de': 'bildschirmfoto', 'label:pl': 'miniaturka' },
+            {
+               value: 'quick-quality',
+               label: 'quick quality',
+               'label:zh': '质量',
+               'label:ja': '品質',
+               'label:ko': '품질',
+               // 'label:id': '',
+               'label:es': 'calidad',
+               'label:pt': 'qualidade',
+               'label:fr': 'qualité',
+               // 'label:it': '',
+               'label:tr': 'hızlı kalite',
+               'label:de': 'qualität',
+               'label:pl': 'jakość',
+            },
+            {
+               value: 'toggle-speed',
+               label: 'toggle speed',
+               'label:zh': '切换速度',
+               'label:ja': 'トグル速度',
+               'label:ko': '토글 속도',
+               // 'label:id': '',
+               'label:es': 'alternar velocidad',
+               'label:pt': 'velocidade de alternância',
+               'label:fr': 'basculer la vitesse',
+               // 'label:it': '',
+               'label:tr': 'geçiş hızı',
+               'label:de': 'geschwindigkeit umschalten',
+               'label:pl': 'szybkość',
+            },
+            {
+               value: 'screenshot',
+               label: 'screenshot',
+               'label:zh': '截屏',
+               'label:ja': 'スクリーンショット',
+               'label:ko': '스크린샷',
+               // 'label:id': '',
+               'label:es': 'captura de pantalla',
+               'label:pt': 'captura de tela',
+               'label:fr': "capture d'écran",
+               // 'label:it': '',
+               'label:tr': 'ekran görüntüsü',
+               'label:de': 'bildschirmfoto',
+               // 'label:pl': 'screenshot'
+            },
+            {
+               value: 'picture-in-picture',
+               label: 'picture-in-picture',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': ''
+               'label:pl': 'obraz w obrazie',
+            },
+            {
+               value: 'popup',
+               label: 'popup',
+               'label:zh': '弹出式播放器',
+               'label:ja': 'ポップアッププレーヤー',
+               'label:ko': '썸네일',
+               // 'label:id': '',
+               // 'label:es': 'jugadora emergente',
+               'label:pt': 'jogador pop-up',
+               'label:fr': 'lecteur contextuel',
+               // 'label:it': '',
+               'label:tr': 'pop-up oynatıcı',
+               // 'label:de': ''
+               'label:pl': 'w okienku',
+            },
+            {
+               value: 'rotate',
+               label: 'rotate',
+               'label:zh': '旋转',
+               'label:ja': '回転する',
+               'label:ko': '회전',
+               // 'label:id': '',
+               'label:es': 'girar',
+               'label:pt': 'girar',
+               'label:fr': 'tourner',
+               // 'label:it': '',
+               'label:tr': 'döndürmek',
+               'label:de': 'drehen',
+               'label:pl': 'obróć',
+            },
+            {
+               value: 'watch-later',
+               label: 'watch later',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+            },
+            {
+               value: 'thumbnail',
+               label: 'thumbnail',
+               'label:zh': '缩略图',
+               'label:ja': 'サムネイル',
+               'label:ko': '썸네일',
+               // 'label:id': '',
+               'label:es': 'miniatura',
+               'label:pt': 'captura de tela',
+               'label:fr': 'la vignette',
+               // 'label:it': '',
+               'label:tr': 'küçük resim',
+               'label:de': 'bildschirmfoto',
+               'label:pl': 'miniaturka',
+            },
          ],
       },
       player_buttons_custom_popup_width: {

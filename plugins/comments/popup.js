@@ -61,7 +61,7 @@ window.nova_plugins.push({
                   padding: 0 15px;
                   background-color: #222;
                   border: 1px solid #333;
-                  max-width: 90%;
+                  max-width: 500px;
                }
 
                ${COMMENTS_SELECTOR}:not(:hover) {
@@ -92,12 +92,11 @@ window.nova_plugins.push({
                   margin-top: 10px;
                }
                #expander.ytd-comment-renderer {
-                  overflow: visible !important;
+                  overflow-x: hidden;
                }
                /* size section */
                ${COMMENTS_SELECTOR} #sections {
                   max-width: fit-content;
-                  min-width: 500px;
                }
 
                /* custom scroll */
