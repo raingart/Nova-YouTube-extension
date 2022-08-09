@@ -45,6 +45,7 @@ window.nova_plugins.push({
 
             switch (user_settings.player_full_viewport_mode) {
                case 'force':
+                  // alt - https://greasyfork.org/en/scripts/434075-youtube-fullscreen-mode
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
 
                case 'smart':
@@ -77,9 +78,7 @@ window.nova_plugins.push({
                case 'cinema_mode':
                   // alt - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
                   NOVA.css.push(
-                     PLAYER_CONTEINER_SELECTOR + `{
-                        z-index: ${zIindex};
-                     }
+                     PLAYER_CONTEINER_SELECTOR + `{ z-index: ${zIindex}; }
 
                      ${PLAYER_SELECTOR}:before {
                         content: '';

@@ -460,12 +460,13 @@ window.addEventListener('load', () => {
       if (evt.target?.lang_code.value != Opt.lang_code) Opt.openTab('tab-plugins', 'reload_page');
    });
 
-   // add script info to open issues link
-   document.body.querySelector('a[href$="issues/new"]')
-      .addEventListener('click', ({ target }) => {
-         const app_ver = typeof GM_info === 'undefined' ? chrome.runtime.getManifest().version : GM_info.script.version;
-         target.href += '?body=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent);
-      });
+   if (typeof chrome !== 'undefined') {
+      // add script info to open issues link
+      document.body.querySelector('a[href$="issues/new"]')
+         .addEventListener('click', ({ target }) => {
+            target.href += '?body=' + encodeURIComponent(chrome.runtime.getManifest().version + ' | ' + navigator.userAgent);
+         });
+   }
 
    function searchFilter({ keyword = required(), in_selector = required(), highlight_filter_selector }) {
       // console.debug('searchFilter:', ...arguments);

@@ -38,6 +38,7 @@ window.nova_plugins.push({
             video.addEventListener('volumechange', function () {
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
                NOVA.bezelTrigger(movie_player.getVolume() + '%');
+               playerVolume.buildVolumeSlider();
 
                if (user_settings.volume_mute_unsave) {
                   playerVolume.saveInSession(movie_player.getVolume());
@@ -86,6 +87,7 @@ window.nova_plugins.push({
 
                if (newLevel === movie_player.getVolume()) {
                   this.saveInSession(newLevel);
+                  // this.buildVolumeSlider();
 
                } else {
                   console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
@@ -93,7 +95,6 @@ window.nova_plugins.push({
             }
 
             return newLevel === movie_player.getVolume() && newLevel;
-
          },
 
          saveInSession(level = required()) {
@@ -129,12 +130,63 @@ window.nova_plugins.push({
                if (this.node.gain.value < 7) this.node.gain.value += 1; // >6 is overload
 
                NOVA.bezelTrigger(movie_player.getVolume() * this.node.gain.value + '%');
+               // this.buildVolumeSlider();
 
             } else {
                if (this.audioCtx && this.node.gain.value !== 1) this.node.gain.value = 1; // reset
                this.set(level);
             }
             // console.debug('unlimit', this.node.gain.value);
+         },
+
+         buildVolumeSlider(timeout_ms = 800) {
+            if (volumeArea = movie_player?.querySelector('.ytp-volume-area')) {
+               // reset hide
+               if (typeof this.showTimeout === 'number') clearTimeout(this.showTimeout);
+               // show
+               volumeArea.dispatchEvent(new Event('mouseover', { bubbles: true }));
+               // hide
+               this.showTimeout = setTimeout(() =>
+                  volumeArea.dispatchEvent(new Event('mouseout', { bubbles: true }))
+                  , timeout_ms); // 800ms
+
+               insertToHTML({
+                  'text': Math.round(movie_player.getVolume()),
+                  'container': volumeArea,
+               });
+            }
+
+            function insertToHTML({ text = '', container = required() }) {
+               // console.debug('insertToHTML', ...arguments);
+               if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+               const SELECTOR_ID = 'nova-volume-text';
+
+               (document.getElementById(SELECTOR_ID) || (function () {
+                  const SELECTOR = '#' + SELECTOR_ID; // for css
+
+                  NOVA.css.push(`
+                     ${SELECTOR} {
+                        display: none;
+                        text-indent: 2px;
+                        font-size: 110%;
+                        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+                        cursor: default;
+                     }
+                     ${SELECTOR}:after { content: '%'; }
+
+                     .ytp-volume-control-hover:not([aria-valuenow="0"])+${SELECTOR} {
+                        display: block;
+                     }`)
+
+                  const el = document.createElement('span');
+                  el.id = SELECTOR_ID;
+                  container.insertAdjacentElement('beforeend', el);
+                  return el;
+               })())
+                  .textContent = text;
+
+               container.title = `${text} %`;
+            }
          }
       };
 
@@ -158,7 +210,7 @@ window.nova_plugins.push({
          type: 'number',
          title: '0 - auto',
          placeholder: '%',
-         step: 5,
+         step: 1,
          min: 0,
          max: 100,
          // max: 600,

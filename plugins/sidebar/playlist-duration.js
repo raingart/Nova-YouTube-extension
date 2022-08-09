@@ -25,6 +25,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/408966-display-remaining-youtube-playlist-time
+      // alt2 - https://greasyfork.org/en/scripts/407457-youtube-playlist-duration-calculator
+
       const
          SELECTOR_ID = 'nova-playlist-duration',
          // CACHE_PREFIX = SELECTOR_ID + ':',
@@ -35,7 +38,6 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'playlist':
-            // alt - https://greasyfork.org/en/scripts/407457-youtube-playlist-duration-calculator
             NOVA.waitElement('#stats yt-formatted-string:first-child')
                .then(el => {
                   if (duration = getPlaylistDuration()) {

@@ -341,7 +341,7 @@ const NOVA = {
    bezelTrigger(text) {
       // console.debug('bezelTrigger', ...arguments);
       if (!text) return;
-      if (typeof fateBezel === 'number') clearTimeout(fateBezel);
+      if (typeof this.fateBezel === 'number') clearTimeout(this.fateBezel); // reset hide
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
       if (!bezelEl) return console.warn(`bezelTrigger ${text}=>${bezelEl}`);
 
@@ -364,7 +364,7 @@ const NOVA = {
       bezelEl.textContent = text;
       bezelConteiner.classList.add(CLASS_VALUE_TOGGLE);
 
-      fateBezel = setTimeout(() => {
+      this.fateBezel = setTimeout(() => {
          bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
       }, 600); // 600ms

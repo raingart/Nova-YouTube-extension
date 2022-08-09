@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=9JzmYISeRMA&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4
+
 window.nova_plugins.push({
    id: 'playlist-reverse',
    title: 'Add playlist reverse order button',

@@ -29,20 +29,40 @@ window.nova_plugins.push({
             // volume
             video.addEventListener('volumechange', function () {
                // console.debug('volumechange', movie_player.getVolume(), this.volume); // there is a difference
-               HUD.set(Math.round(movie_player.getVolume()), '%');
+               HUD.set({
+                  'pt': Math.round(movie_player.getVolume()),
+                  'suffix': '%',
+                  // 'timeout_ms': 0,
+               });
             });
             // rate
-            video.addEventListener('ratechange', () => HUD.set(video.playbackRate, 'x'));
+            video.addEventListener('ratechange', () => HUD.set({
+               'pt': video.playbackRate,
+               'suffix': 'x',
+               // 'timeout_ms': 0,
+            }));
          });
 
       // Listener default indicator
       NOVA.waitElement('.ytp-bezel-text')
          .then(target => {
             new MutationObserver(mutations => {
+               let timeout_ms; // ms
                for (const mutation of mutations) {
                   // console.log('bezel mutation detected', mutation.type, target.textContent);
                   if (target.textContent) {
-                     HUD.set(target.textContent);
+                     // increase delay for plugin "time-jump"
+                     // target.textContent #1:"+30 sec • 10:00" - skip
+                     // target.textContent #2:"chapter name • 10:00" - ok
+                     if (!target.textContent.startsWith('+') && target.textContent.includes(' • ')) {
+                        timeout_ms = 1800; // ms
+                        // console.debug(`HUD delay increased: ${timeout_ms}ms`);
+                     }
+                     HUD.set({
+                        'pt': target.textContent,
+                        // 'suffix': '',
+                        'timeout_ms': timeout_ms,
+                     });
                      break;
                   }
                }
@@ -137,14 +157,14 @@ window.nova_plugins.push({
             return this.conteiner;
          },
 
-         set(pt = 100, rate_suffix = '') {
+         set({ pt = 100, suffix = '', timeout_ms = 800 }) {
             // console.debug('HUD set', ...arguments);
-            if (typeof fateNovaHUD === 'number') clearTimeout(fateNovaHUD);
+            if (typeof this.fateNovaHUD === 'number') clearTimeout(this.fateNovaHUD); // reset hide
 
             let hudConteiner = this.get();
-            const text = pt + rate_suffix;
+            const text = pt + suffix;
 
-            if (rate_suffix == 'x') { // rate to pt
+            if (suffix == 'x') { // rate to pt
                const maxPercent = (+user_settings.rate_step % .25) === 0 ? 2 : 3;
                pt = (+pt / maxPercent) * 100;
             }
@@ -176,11 +196,11 @@ window.nova_plugins.push({
             hudConteiner.style.opacity = 1;
             // hudConteiner.style.visibility = 'visible';
 
-            fateNovaHUD = setTimeout(() => {
+            this.fateNovaHUD = setTimeout(() => {
                hudConteiner.style.transition = 'opacity 200ms ease-in';
                hudConteiner.style.opacity = null;
                // hudConteiner.style.visibility = 'hidden';
-            }, 800); //total 1s = 800ms + 200ms(hudConteiner.style.transition)
+            }, timeout_ms); //total 1s = 800ms + 200ms(hudConteiner.style.transition)
          }
       };
 

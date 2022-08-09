@@ -41,7 +41,7 @@ const Plugins = {
       'other/scroll-to-top.js',
       'other/thumb-title-filter.js',
       'other/search-channel-filter.js',
-      'other/hide-thumb.js',
+      'other/thumbs-hide.js',
       'other/shorts-redirect.js',
       // 'other/shorts-hide.js',
       // 'other/premieres-hide.js',

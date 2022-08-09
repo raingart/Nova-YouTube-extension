@@ -1,8 +1,10 @@
 // fore test
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
 // https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow/videos - no sort
-// https://www.youtube.com/channel/UCHzevlEL9JfsBIm86uNCJqg/videos
-// https://www.youtube.com/channel/UCcYrdFJF7hmPXRNaWdrko4w/videos
+// https://www.youtube.com/channel/UCT41vlFeZ_asAUCY7BOiJVQ/videos - no sort
+// https://www.youtube.com/channel/UC2yGvqVB_kK0FC1eUifENGQ/videos - no sort
+// https://www.youtube.com/channel/UCHzevlEL9JfsBIm86uNCJqg/videos - no sort
+// https://www.youtube.com/channel/UCcYrdFJF7hmPXRNaWdrko4w/videos - no sort
 
 window.nova_plugins.push({
    id: 'thumbs-sort',
@@ -21,47 +23,61 @@ window.nova_plugins.push({
    run_on_pages: 'channel, -mobile',
    // restart_on_transition: true, // dirty fix. required to use. But for optimization it is disabled and the code is not adapted
    section: 'other',
-   desc: 'On channel page',
+   desc: 'The "sort video button" in some Youtube channels (usually Music channels) has disabled this feature.',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/383420-youtube-uploads-sorter-button
-      // addButton
+      // alt2 - https://greasyfork.org/en/scripts/437318-sort-youtube-videos
+
+      // Strategy 1
       NOVA.waitElement('#sub-menu #sort-menu:empty') // if default sort by is empty
          .then(container => {
-            const sortBtn = document.createElement('button');
-            sortBtn.textContent = 'Sort by Views';
-            Object.assign(sortBtn.style, {
-               'user-select': 'none',
-               cursor: 'pointer',
-            });
-            sortBtn.addEventListener('click', () => {
-               if (container = document.querySelector('#contents #items')) {
-                  container.append(...Array.from(container.childNodes).sort(sortBy));
-
-               } else console.error('sortBtn container items is empty');
-            });
-            container.append(sortBtn);
+            container.innerHTML =
+               `<select name="sort-select" id="sort-select" onchange="location = this.value;">
+                  <option disabled selected value>SORT BY</option>
+                  <option value="?view=0&sort=p&flow=grid">Most popular</option>
+                  <option value="?view=0&sort=da&flow=grid">Date added (oldest)</option>
+                  <option value="?view=0&sort=dd&flow=grid">Date added (newest)</option>
+               </select>`;
          });
 
-      function sortBy(a = required(), b = required()) {
-         // switch (sortBy_type) {
-         //    case 'views':
-         return getViews(b) - getViews(a);
+      // Strategy 2
+      // NOVA.waitElement('#sub-menu #sort-menu:empty') // if default sort by is empty
+      //    .then(container => {
+      //       const sortBtn = document.createElement('button');
+      //       sortBtn.textContent = 'Sort by Views';
+      //       Object.assign(sortBtn.style, {
+      //          'user-select': 'none',
+      //          cursor: 'pointer',
+      //       });
+      //       sortBtn.addEventListener('click', () => {
+      //          if (container = document.querySelector('#contents #items')) {
+      //             container.append(...Array.from(container.childNodes).sort(sortBy));
 
-         function getViews(e) {
-            // const views = e.querySelector('a[aria-label]')?.getAttribute('aria-label') // #metadata
-            const views = e.$['video-title']?.getAttribute('aria-label')
-               ?.match(/([\d,]+) views/);
+      //          } else console.error('sortBtn container items is empty');
+      //       });
+      //       container.append(sortBtn);
+      //    });
 
-            return views && views[1] ? +views[1].replace(/,/g, '') : 0;
-            // return views && views[1] ? parseInt(views[1].replace(/,/g, '')) : 0;
-         }
-         //    break;
+      // function sortBy(a = required(), b = required()) {
+      //    // switch (sortBy_type) {
+      //    //    case 'views':
+      //    return getViews(b) - getViews(a);
 
-         //    default:
-         //       break;
-         // }
-      }
+      //    function getViews(e) {
+      //       // const views = e.querySelector('a[aria-label]')?.getAttribute('aria-label') // #metadata
+      //       const views = e.$['video-title']?.getAttribute('aria-label')
+      //          ?.match(/([\d,]+) views/);
+
+      //       return views && views[1] ? +views[1].replace(/,/g, '') : 0;
+      //       // return views && views[1] ? parseInt(views[1].replace(/,/g, '')) : 0;
+      //    }
+      //    //    break;
+
+      //    //    default:
+      //    //       break;
+      //    // }
+      // }
 
       if (user_settings.thumbs_sort_streams_ahead) {
          // alt - https://greasyfork.org/en/scripts/433860-yt-feed-sorter

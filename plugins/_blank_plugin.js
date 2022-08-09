@@ -2,7 +2,7 @@
 
 window.nova_plugins.push({
    id: 'time-jump', // unique identifier for the plugin. Used to store settings
-   title: 'Plugin Name', // optional. Only displayed in the settings file
+   title: 'Plugin Name', // optional. Plugin destination
 
    // List of pages where the plugin can be launched
    // eg:
@@ -21,7 +21,7 @@ window.nova_plugins.push({
    /* optional GIU in options page: start */
    section: 'player', // optional. Visual section in settings where the plugin belongs. Available list of values: header, player, details, comments, sidebar, other, channel
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
-   desc: 'Title description', // optional. Title description in settings. Don't use double quotes inside the text!
+   desc: 'Title description', // optional. Plugin description in settings. Don't use double quotes inside the text!
 
    // localization
    // 'title:zh': '',

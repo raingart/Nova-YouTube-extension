@@ -90,7 +90,7 @@
       "message": "On Youtube pages"
    },
    "opt_exclude_iframe": {
-      "message": "Exclude iframe video"
+      "message": "Disable embedded players support"
    },
    "opt_exclude_iframe_tooltip": {
       "message": "The extension will not work in embedded video"
@@ -105,7 +105,7 @@
       "message": "Use your [API key] for stable work"
    },
    "lang_code_tooltip": {
-      "message": "Сhoice of localization"
+      "message": "Choice of localization"
    },
    "lang_code": {
       "message": "Language"

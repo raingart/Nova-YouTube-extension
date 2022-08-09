@@ -37,17 +37,17 @@ chrome.runtime.onInstalled.addListener(details => {
             Storage.getParams(settings => {
                const keyRenameTemplate = {
                   // 'oldKey': 'newKey',
-                  'premiere-disable': 'premieres-disable',
-                  'premiere-disable': 'premieres-disable',
-                  'stream-disable': 'streams-disable',
                   'disable_in_frame': 'exclude_iframe',
                   'custom-api-key': 'user-api-key',
 
                   // for 'thumbs-hide'
                   'shorts-disable': 'shorts_disable',
+                  'premiere-disable': 'premieres_disable',
                   'premieres-disable': 'premieres_disable',
-                  'streams-disable': 'streams_disable',
-                  'thumbnails-mix-hide': 'thumbnails_mix_hide',
+                  'streams-disable': 'live_disable',
+                  'streams_disable': 'live_disable',
+                  'thumbnails-mix-hide': 'thumb_mix_disable',
+                  'thumbnails_mix_hide': 'thumb_mix_disable',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

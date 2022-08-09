@@ -8,10 +8,8 @@ const
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'shorts-disable': 'shorts_disable',
-   'premieres-disable': 'premieres_disable',
-   'streams-disable': 'streams_disable',
-   'thumbnails-mix-hide': 'thumbnails_mix_hide',
+   'thumbnails_mix_hide': 'thumb_mix_disable',
+   'streams_disable': 'live_disable',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -99,8 +97,16 @@ function isOptionsPage() {
          localizePage(user_settings?.lang_code);
          storeData = user_settings; // export(sync) settings to page
       });
-      // unlock if synchronized
-      window.addEventListener('load', () => document.body?.classList?.remove('preload'));
+
+      window.addEventListener('load', () => {
+         // unlock if synchronized
+         document.body?.classList?.remove('preload');
+
+         document.body.querySelector('a[href$="issues/new"]')
+            .addEventListener('click', ({ target }) => {
+               target.href += '?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent);
+            });
+      });
 
    } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
       user_settings['report_issues'] = 'on'; // default plugins settings

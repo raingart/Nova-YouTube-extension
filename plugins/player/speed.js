@@ -37,8 +37,6 @@ window.nova_plugins.push({
    'desc:pl': 'za pomocą kółka myszy',
    _runtime: user_settings => {
 
-      const musicIconSvgSelector = '#upload-info #channel-name svg path[d*="M12,4v9.38C11.27,12.54,10.2,12,9,12c-2.21,0-4,1.79-4,4c0,2.21,1.79,4,4,4s4-1.79,4-4V8h6V4H12z"]';
-
       // NOVA.waitElement('#movie_player')
       //    .then(movie_player => {
       //       // trigger default indicator
@@ -102,7 +100,8 @@ window.nova_plugins.push({
 
       // during initialization, the icon can be loaded after the video
       if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
-         NOVA.waitElement(musicIconSvgSelector)
+         // 'Official Artist' badge
+         NOVA.waitElement('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
 
          NOVA.waitElement('#upload-info #channel-name a[href]')
@@ -287,8 +286,8 @@ window.nova_plugins.push({
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
             ]
                .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
-               // has svg icon "🎵"
-               || document.body.querySelector(musicIconSvgSelector)
+               // 'Official Artist' badge
+               || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
                // channelNameVEVO
                || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
                // word

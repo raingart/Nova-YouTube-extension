@@ -36,9 +36,10 @@ window.nova_plugins.push({
       document.addEventListener('yt-action', evt => {
          // console.log(evt.detail?.actionName);
          if ([
-            'ytd-update-grid-state-action',
-            'yt-append-continuation-items-action',
-            'yt-service-request'
+            'yt-append-continuation-items-action', // home, results, feed, channel, watch
+            'ytd-update-grid-state-action', // feed, channel
+            'yt-service-request', // results, watch
+            // 'ytd-rich-item-index-update-action', // home
          ]
             .includes(evt.detail?.actionName)
          ) {

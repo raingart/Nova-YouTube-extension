@@ -34,7 +34,11 @@ window.nova_plugins.push({
       document.addEventListener('auxclick', evt => evt.button === 1 && patchLink(evt.target), { capture: true });
 
       function patchLink(target = required()) {
-         if (!target.matches('a[href*="/redirect?"]')) return;
+         const linkSelector = 'a[href*="/redirect?"]';
+
+         if (!target.matches(linkSelector)) {
+            if (!(target = target.closest(linkSelector))) return;
+         }
 
          if (q = NOVA.queryURL.get('q', target.href)) {
             target.href = decodeURIComponent(q);

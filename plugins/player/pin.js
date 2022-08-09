@@ -30,7 +30,7 @@ window.nova_plugins.push({
 
       if (!('IntersectionObserver' in window)) return alert('Pin player Error!\IntersectionObserver not supported.');
 
-      // Alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
+      // alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
       // only for PWA
       // NOVA.waitElement('video')
       //    .then(vid => {
@@ -40,7 +40,7 @@ window.nova_plugins.push({
 
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
       // if (user_settings.player_pin_mode == 'pip') {
-      //    // Alt - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
+      //    // alt - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
       //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
       //    NOVA.waitElement('video')

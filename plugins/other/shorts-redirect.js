@@ -38,7 +38,7 @@ window.nova_plugins.push({
          // location.replace(location.href.replace('/shorts/', '/watch?v='));
       }
 
-      if (user_settings['shorts-disable']) return; // conflict with plugin. Attention! After shorts redirect
+      if (user_settings['shorts_disable']) return; // conflict with plugin. Attention! After shorts redirect
 
       const
          // ATTR_MARK = 'nova-thumb-shorts-pathed',
@@ -55,9 +55,10 @@ window.nova_plugins.push({
       document.addEventListener('yt-action', evt => {
          // console.log(evt.detail?.actionName);
          if ([
-            'ytd-update-grid-state-action',
-            'yt-append-continuation-items-action',
-            'yt-service-request'
+            'yt-append-continuation-items-action', // home, results, feed, channel, watch
+            'ytd-update-grid-state-action', // feed, channel
+            'yt-service-request', // results, watch
+            // 'ytd-rich-item-index-update-action', // home
          ]
             .includes(evt.detail?.actionName)
          ) {
