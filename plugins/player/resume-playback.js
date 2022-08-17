@@ -29,7 +29,7 @@ window.nova_plugins.push({
    'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
-      if (NOVA.currentPage == 'embed' && !window.sessionStorage) return;
+      if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
 
       // TODO adSkip alt. - add comparison by duration. Need stream test
       const

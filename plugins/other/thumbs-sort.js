@@ -33,7 +33,7 @@ window.nova_plugins.push({
       NOVA.waitElement('#sub-menu #sort-menu:empty') // if default sort by is empty
          .then(container => {
             container.innerHTML =
-               `<select name="sort-select" id="sort-select" onchange="location = this.value;">
+               `<select onchange="location=this.value;">
                   <option disabled selected value>SORT BY</option>
                   <option value="?view=0&sort=p&flow=grid">Most popular</option>
                   <option value="?view=0&sort=da&flow=grid">Date added (oldest)</option>

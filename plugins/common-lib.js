@@ -44,7 +44,7 @@ const NOVA = {
       // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
 
       return new Promise(resolve => {
-         if (element = (container || document?.body || document).querySelector(selector)) {
+         if (element = (container || document.body || document).querySelector(selector)) {
             // console.debug('[1]', selector);
             return resolve(element);
          }
@@ -79,7 +79,7 @@ const NOVA = {
                return resolve(element);
             }
          })
-            .observe(container || document?.body || document.documentElement, {
+            .observe(container || document.body || document.documentElement || document, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
             });

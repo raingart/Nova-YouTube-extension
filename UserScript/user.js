@@ -122,29 +122,72 @@ function isOptionsPage() {
 }
 
 function landerPlugins() {
-   let plugins_lander = setInterval(() => {
-      const domLoaded = document?.readyState != 'loading';
-      if (!domLoaded) return console.debug('waiting, page loading..');
-      processLander();
+   processLander();
 
-   }, 100); // 100ms
+   let playlist_page_transition_count = 0;
 
    function processLander() {
-      console.groupCollapsed('plugins status');
-      clearInterval(plugins_lander);
+      const plugins_lander = setInterval(() => {
+         // wait page loaded
+         const domLoaded = document?.readyState != 'loading';
+         if (!domLoaded) return console.debug('waiting, page loading..');
 
-      //setTimeout(() => {
-      Plugins.run({
-         'user_settings': user_settings,
-         'app_ver': GM_info.script.version,
-      });
-      //}, 300);
+         clearInterval(plugins_lander);
+         // force page reload. Dirty hack to page reset hack to clean up junk (for playlist)
+         playlistPageReload();
+
+         console.groupCollapsed('plugins status');
+
+         Plugins.run({
+            'user_settings': user_settings,
+            'app_ver': GM_info.script.version,
+         });
+
+      }, 500); // 100ms
    }
 
    let lastUrl = location.href;
    const isURLChanged = () => lastUrl == location.href ? false : lastUrl = location.href;
    // skip first page transition
-   document.addEventListener('yt-navigate-start', () => isURLChanged() && landerPlugins());
+   document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
+
+   function playlistPageReload(sec = 10) {
+      if (location.search.includes('list=')) {
+         playlist_page_transition_count++;
+         console.debug('playlist_page_transition_count:', playlist_page_transition_count);
+
+         if (playlist_page_transition_count === 30) {
+            const notice = document.createElement('div');
+            Object.assign(notice.style, {
+               position: 'fixed',
+               top: 0,
+               right: '50%',
+               transform: 'translateX(50%)',
+               margin: '50px',
+               'z-index': 9999,
+               'border-radius': '2px',
+               'background-color': 'tomato',
+               'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
+               'font-size': '12px',
+               color: '#fff',
+               padding: '10px',
+               cursor: 'pointer',
+            });
+            notice.addEventListener('click', () => {
+               playlist_page_transition_count = 0;
+               notice.remove();
+               clearTimeout(playlist_reload);
+            });
+            notice.innerHTML =
+               `<h4 style="margin:0;">Attention! ${GM_info.script.name}</h4>
+               <div>The page will be automatically reloaded within 10 sec</div>
+               <div><i>Click for cancel</i></div>`;
+            document.body.append(notice);
+
+            const playlist_reload = setTimeout(() =>location.reload(), 1000 * +sec); // 10sec
+         }
+      }
+   }
 }
 
 function renderSettingButton() {

@@ -91,7 +91,7 @@ const App = {
                margin: '50px',
                'z-index': 9999,
                'border-radius': '2px',
-               'background-color': typeof NOVA === 'object' ? '#0099ff' : 'darkred',
+               'background-color': typeof NOVA === 'object' ? '#0099ff' : 'crimson',
                'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
                'font-size': '12px',
                color: '#fff',
@@ -183,6 +183,7 @@ App.init();
 // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
 
 // for testing square-screen
+// https://www.youtube.com/watch?v=lx79bS-Kl78
 // https://www.youtube.com/watch?v=v-YQUCP-J8s
 // https://www.youtube.com/watch?v=gWqENeW7EyQ
 // https://www.youtube.com/watch?v=Hlk7AzBMmOA

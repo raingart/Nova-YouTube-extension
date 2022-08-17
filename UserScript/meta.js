@@ -1,7 +1,7 @@
 // ==UserScript==
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.32.7
+// @version         0.32.8
 // @description     Ultimate decision for YouTube™
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
@@ -20,6 +20,7 @@
 // @exclude         http*://*.youtube.com/error*
 // @exclude         http*://music.youtube.com/*
 // @exclude         http*://accounts.youtube.com/*
+// @exclude         http*://studio.youtube.com/*
 
 // @grant           GM_addStyle
 // @grant           GM_getResourceText

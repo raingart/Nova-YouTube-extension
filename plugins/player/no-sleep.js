@@ -33,7 +33,6 @@ window.nova_plugins.push({
       // Strategy 1
       window.setInterval(() => {
          document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 }));
-         window.wrappedJSObject._lact = Date.now();
       }, 1000 * 60 * 5); // 5 min
 
 

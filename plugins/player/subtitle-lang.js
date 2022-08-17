@@ -25,6 +25,38 @@ window.nova_plugins.push({
 
       if (!user_settings.subtitle_lang) throw 'Nova subtitle lang is empty';
 
+      // Strategy 1
+      // Вoes not work with auto translation
+      // NOVA.waitElement('#movie_player video')
+      //    .then(video => video.addEventListener('play', selectSubtitles));
+
+      // function selectSubtitles() {
+      //    movie_player.toggleSubtitles();
+
+      //    const langData = movie_player
+      //       .getOption('captions', 'tracklist', { includeAsr: true })
+      //       // {
+      //       //    displayName: "English"
+      //       //    id: null
+      //       //    is_default: false
+      //       //    is_servable: false
+      //       //    is_translateable: true
+      //       //    kind: ""
+      //       //    languageCode: "en"
+      //       //    languageName: "English"
+      //       //    name: null
+      //       //    vss_id: ".en"
+      //       // }
+      //       ?.find(({ languageCode }) => languageCode == user_settings.subtitle_lang);
+
+      //    if (langData && Object.keys(langData).length) {
+      //       console.debug('>', langData);
+      //       movie_player.setOption('captions', 'track', langData);
+      //    }
+      // }
+
+
+      // Strategy 2
       const localYT = {
          en: {
             // subtitles: 'Subtitles/CC',

@@ -86,7 +86,7 @@ window.nova_plugins.push({
                      // }
 
                   } else { // chapters blocks none, but has timestamp
-                     const nextChapterData = chapterList?.find(c => c?.sec >= movie_player.getCurrentTime());
+                     const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
                      // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
                      movie_player.seekTo(nextChapterData.sec);
 
