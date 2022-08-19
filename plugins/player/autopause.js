@@ -32,7 +32,7 @@ window.nova_plugins.push({
       // better use this flag when launching the chrome/imum:
       //  --autoplay-policy=user-gesture-required
 
-      if (user_settings['video-stop-preload']) return; // disable if active another similar plugin
+      if (user_settings['video-stop-preload'] && !user_settings.stop_preload_embed) return; // disable if a similar plugin of higher priority is active
       if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
 
       NOVA.waitElement('video')

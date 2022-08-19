@@ -3,17 +3,17 @@
 
 window.nova_plugins.push({
    id: 'thumbs-hide',
-   title: 'Filterable thumbnails',
-   'title:zh': '隐藏一些缩略图',
-   'title:ja': '一部のサムネイルを非表示',
-   'title:ko': '일부 미리보기 이미지 숨기기',
-   'title:id': 'Sembunyikan beberapa thumbnail',
-   'title:es': 'Ocultar algunas miniaturas',
-   'title:pt': 'Ocultar algumas miniaturas',
-   'title:fr': 'Masquer certaines vignettes',
-   'title:it': 'Nascondi alcune miniature',
-   'title:tr': 'Bazı küçük resimleri gizle',
-   'title:de': 'Blenden Sie einige Miniaturansichten aus',
+   title: 'Thumbnails filtering',
+   'title:zh': '缩略图过滤',
+   'title:ja': 'サムネイルのフィルタリング',
+   'title:ko': '썸네일 필터링',
+   'title:id': 'Pemfilteran gambar mini',
+   'title:es': 'Filtrado de miniaturas',
+   'title:pt': 'Filtragem de miniaturas',
+   'title:fr': 'Filtrage des vignettes',
+   'title:it': 'Filtraggio miniature',
+   'title:tr': 'Küçük resim filtreleme',
+   'title:de': 'Filtrowanie miniatur',
    'title:pl': 'Ukryj kilka miniatur',
    run_on_pages: 'home, results, feed, channel, watch',
    section: 'other',
@@ -117,7 +117,7 @@ window.nova_plugins.push({
          premieres() {
             if (!user_settings.premieres_disable) return;
 
-            document.body.querySelectorAll('#thumbnail #overlays [aria-label="Premiere"]')
+            document.body.querySelectorAll('#thumbnail #overlays [aria-label="Premiere"], #thumbnail #overlays [aria-label="Upcoming"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {

@@ -73,7 +73,7 @@ const Plugins = {
 
       'header/short.js',
       'header/unfixed.js',
-      // 'header/logo.js',
+      'header/logo.js',
    ],
 
    load(list) {

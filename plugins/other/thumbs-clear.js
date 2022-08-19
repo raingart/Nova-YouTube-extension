@@ -19,7 +19,7 @@ window.nova_plugins.push({
    run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed',
    section: 'other',
-   desc: 'Replaces the predefined thumbnail',
+   desc: 'Replaces the predefined clickbait thumbnail',
    'desc:zh': '替换预定义的缩略图',
    'desc:ja': '事前定義されたサムネイルを置き換えます',
    'desc:ko': '미리 정의된 축소판을 대체합니다',
