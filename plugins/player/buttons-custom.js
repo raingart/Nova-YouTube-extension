@@ -24,7 +24,7 @@ window.nova_plugins.push({
       // NOVA.waitElement('.ytp-left-controls')
       NOVA.waitElement('.ytp-right-controls')
          .then(async container => {
-            NOVA.videoElement = await NOVA.waitElement('video');
+            NOVA.videoElement = await NOVA.waitElement('video'); // wait load video
 
             // global
             NOVA.css.push(
@@ -144,7 +144,7 @@ window.nova_plugins.push({
                      // height = Math.round(width / aspectRatio);
                      height = Math.round(width / (16 / 9));
 
-                  url = new URL(document.querySelector('link[itemprop="embedUrl"][href]')?.href || ('https://www.youtube.com/embed/' + movie_player.getVideoData().video_id));
+                  url = new URL(document.querySelector('link[itemprop="embedUrl"][href]')?.href || ('/embed/' + movie_player.getVideoData().video_id));
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -467,7 +467,8 @@ window.nova_plugins.push({
                      hd2160: { label: '2160p', badge: '4K' },
                      hd1440: { label: '1440p', badge: 'QHD' },
                      hd1080: { label: '1080p', badge: 'FHD' },
-                     hd720: { label: '720p', badge: 'HD' },
+                     // hd720: { label: '720p', badge: 'HD' },
+                     hd720: { label: '720p', badge: 'ᴴᴰ' },
                      large: { label: '480p' },
                      medium: { label: '360p' },
                      small: { label: '240p' },
@@ -548,7 +549,7 @@ window.nova_plugins.push({
 
                fillQualityMenu(); // init
 
-               NOVA.videoElement?.addEventListener('loadeddata', fillQualityMenu); // update
+               NOVA.videoElement?.addEventListener('canplay', fillQualityMenu); // update
 
                function fillQualityMenu() {
                   if (qualityList = document.getElementById(SELECTOR_QUALITY_LIST_ID)) {

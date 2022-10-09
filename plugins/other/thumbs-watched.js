@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=oWoWkxzeiok&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4&index=3
+
 window.nova_plugins.push({
    id: 'thumbnails-watched',
    title: 'Mark watched thumbnails',
@@ -26,10 +29,15 @@ window.nova_plugins.push({
             outline: 1px solid var(--yt-spec-general-background-a);
          }
 
-         /*a.ytp-videowall-still:visited, <-- Doesn't work in embed*/
+         /*a.ytp-videowall-still.ytp-suggestion-set:visited, <-- Doesn't work*/
          a#thumbnail:visited,
          a[class*="thumbnail"]:visited {
             outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
+         }
+
+         /*for playlist*/
+         ytd-playlist-panel-video-renderer a:visited #meta * {
+            color: ${user_settings.thumbnails_watched_title_color || '#ff4500'} !important;
          }`);
 
       if (user_settings.thumbnails_watched_title) {

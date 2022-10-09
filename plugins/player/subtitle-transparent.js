@@ -32,9 +32,7 @@ window.nova_plugins.push({
             rgb(0, 0, 0) 0 0 .4em`,
       };
 
-      if (user_settings.subtitle_bold) {
-         css['font-weight'] = 'bold';
-      }
+      if (user_settings.subtitle_bold) css['font-weight'] = 'bold';
 
       NOVA.css.push(css, `.ytp-caption-segment`, 'important');
 
@@ -44,8 +42,26 @@ window.nova_plugins.push({
             `.caption-window {
                margin-bottom: 1px !important;
                bottom: 1% !important;
-               left: 50% !important;
             }`);
+      }
+
+      if (user_settings.subtitle_selectable) {
+         NOVA.watchElements({
+            selectors: [
+               '.ytp-caption-segment:not([selectable="true"]',
+               //    'div.caption-window',
+               //    '#caption-window-1:not([selectable="true"]'
+            ],
+            // attr_mark: ATTR_MARK,
+            callback: el => {
+               el.addEventListener('mousedown', evt => evt.stopPropagation(), true);
+               el.setAttribute('draggable', 'false');
+               el.setAttribute('selectable', 'true');
+               el.style.userSelect = 'text';
+               elem.style.WebkitUserSelect = 'text'; // for Safari
+               el.style.cursor = 'text';
+            }
+         });
       }
 
    },
@@ -68,18 +84,34 @@ window.nova_plugins.push({
       },
       subtitle_fixed: {
          _tagName: 'input',
-         label: 'Fixed bottom',
-         // 'label:zh': '粗体',
-         // 'label:ja': '太字',
-         // 'label:ko': '굵은 텍스트',
-         // 'label:id': '',
-         // 'label:es': 'Texto en negrita',
-         // 'label:pt': 'Texto em negrito',
-         // 'label:fr': 'Texte en gras',
-         // 'label:it': '',
-         // 'label:tr': 'Kalın yazı',
-         // 'label:de': 'Fetter Text',
+         label: 'Fixed from below',
+         'label:zh': '从下方固定',
+         'label:ja': '下から固定',
+         'label:ko': '아래에서 고정',
+         'label:id': 'Diperbaiki dari bawah',
+         'label:es': 'Fijado desde abajo',
+         'label:pt': 'Fixo por baixo',
+         'label:fr': 'Fixé par le bas',
+         'label:it': 'Risolto dal basso',
+         'label:tr': 'Risolto dal basso',
+         'label:de': 'Von unten befestigt',
          'label:pl': 'Przyklejone na dole',
+         type: 'checkbox',
+      },
+      subtitle_selectable: {
+         _tagName: 'input',
+         label: 'Make caption selectable',
+         'label:zh': '使字幕可选',
+         'label:ja': 'キャプションを選択可能にする',
+         'label:ko': '캡션을 선택 가능하게 만들기',
+         'label:id': 'Jadikan teks dapat dipilih',
+         'label:es': 'Hacer subtítulos seleccionables',
+         'label:pt': 'Tornar a legenda selecionável',
+         'label:fr': 'Rendre la légende sélectionnable',
+         'label:it': 'Rendi selezionabile la didascalia',
+         'label:tr': 'Altyazıyı seçilebilir yap',
+         'label:de': 'Bildunterschrift auswählbar machen',
+         'label:pl': 'Ustaw podpis do wyboru',
          type: 'checkbox',
       },
    }

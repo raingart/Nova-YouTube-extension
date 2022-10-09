@@ -53,21 +53,13 @@ window.nova_plugins.push({
             // break;
 
             NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
-               .then(el => {
-                  // console.debug('watch page');
-                  if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
-
-                  setVideoCount(el);
-               });
+               .then(el => setVideoCount(el));
             break;
 
          case 'channel':
             NOVA.waitElement('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
                // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
-               .then(el => {
-                  // console.debug('channel page');
-                  setVideoCount(el);
-               });
+               .then(el => setVideoCount(el));
             break;
       }
 
@@ -76,7 +68,7 @@ window.nova_plugins.push({
          const channelId = await NOVA.getChannelId(user_settings['user-api-key']);
          if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
 
-         // cached
+         // has in cache
          if (storage = sessionStorage.getItem(CACHE_PREFIX + channelId)) {
             insertToHTML({ 'text': storage, 'container': container });
 
@@ -92,7 +84,8 @@ window.nova_plugins.push({
                         insertToHTML({ 'text': videoCount, 'container': container });
                         // save cache in tabs
                         sessionStorage.setItem(CACHE_PREFIX + channelId, videoCount);
-                     }
+
+                     } else console.warn('API is change', item);
                   });
                });
          }

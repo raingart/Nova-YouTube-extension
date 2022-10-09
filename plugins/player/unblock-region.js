@@ -1,4 +1,4 @@
-// fore test
+// for test
 // https://www.youtube.com/watch?v=bTm3kwroEyw - https://watannetwork.com/tools/blocked/#url=bTm3kwroEyw
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
 // https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
@@ -43,7 +43,7 @@ window.nova_plugins.push({
       //    });
 
       function redirect() {
-         // location.hostname = 'hooktube.com';
+         // location.hostname = 'hooktube.com'; // cinemaphile.com
          // or
          location.assign(`${location.protocol}//hooktube.com/watch${location.search}`); // currect tab
 

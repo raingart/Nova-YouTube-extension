@@ -37,7 +37,8 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            video.addEventListener('playing', forceVideoPause.bind(video), { capture: true, once: true });
+            forceVideoPause.apply(video);
+            // video.addEventListener('timeupdate', forceVideoPause.bind(video), { capture: true, once: true });
          });
 
       function forceVideoPause() {

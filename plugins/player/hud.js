@@ -80,7 +80,13 @@ window.nova_plugins.push({
 
          create() {
             // hide default indicator
-            NOVA.css.push('.ytp-bezel-text-wrapper { display:none !important }');
+            NOVA.css.push(
+               `.ytp-bezel-text-wrapper,
+               .ytp-doubletap-ui-legacy.ytp-time-seeking,
+               /*.ytp-doubletap-seek-info-container,*/
+               .ytp-chapter-seek {
+                  display:none !important;
+               }`);
             // init common css
             NOVA.css.push(
                `#${SELECTOR_ID} {

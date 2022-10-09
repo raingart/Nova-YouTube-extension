@@ -41,7 +41,7 @@ window.nova_plugins.push({
                   getComputedStyle(movie_player)['z-index'],
                   2020);
 
-            addScrollBehavior();
+            addScrollDownBehavior();
 
             switch (user_settings.player_full_viewport_mode) {
                case 'force':
@@ -142,35 +142,25 @@ window.nova_plugins.push({
                         // fix restore video size
                         video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
                         // video.addEventListener('playing', () => window.dispatchEvent(new Event('resize')));
-                        // video.addEventListener('pause', () => {
-                        //    console.debug('', document.activeElement);
-                        //    //
-                        // });
                      });
 
-                  // fix overlapped ".paused-mode" after mouse seek in progressbar
+                  // fix overlapped ".paused-mode" after you scroll the time in the player with the mouse
                   NOVA.waitElement('.ytp-progress-bar')
                      .then(progress_bar => {
-                        progress_bar.addEventListener('mousedown', () =>
-                           movie_player.classList.add(CLASS_OVER_PAUSED));
-                        progress_bar.addEventListener('mouseup', () =>
-                           movie_player.classList.add(CLASS_OVER_PAUSED));
+                        ['mousedown', 'mouseup'].forEach(evt => {
+                           video.addEventListener(evt, () => {
+                              //    // if (movie_player.contains(document.activeElement)) {
+                              // if (document.activeElement.matches('.ytp-progress-bar')) {
+                              movie_player.classList.add(CLASS_OVER_PAUSED)
+                              // }
+                           });
+                        });
                      });
-                  // document.addEventListener('mousedown', () => {
-                  //    // if (movie_player.contains(document.activeElement)) {
-                  //    if (document.activeElement.matches('.ytp-progress-bar')) {
-                  //       movie_player.classList.add(CLASS_OVER_PAUSED);
-                  //    }
-                  // });
-                  // document.addEventListener('mouseup', () => {
-                  //    if (document.activeElement.matches('.ytp-progress-bar')) {
-                  //       movie_player.classList.remove(CLASS_OVER_PAUSED);
-                  //    }
-                  // });
                }
             }
 
-            function addScrollBehavior() {
+            // add scroll-down behavior on player control panel
+            function addScrollDownBehavior() {
                if (activateScrollElement = document.querySelector('.ytp-chrome-controls')) {
                   // const player = document.querySelector(PLAYER_SELECTOR);
                   activateScrollElement.addEventListener('wheel', evt => {
@@ -187,7 +177,9 @@ window.nova_plugins.push({
                   });
                   // up (on top page)
                   document.addEventListener('scroll', evt => {
-                     if (window.scrollY === 0 && movie_player.classList.contains(PLAYER_SCROLL_LOCK_CLASS_NAME)) {
+                     if (window.scrollY === 0
+                        && movie_player.classList.contains(PLAYER_SCROLL_LOCK_CLASS_NAME)
+                     ) {
                         movie_player.classList.remove(PLAYER_SCROLL_LOCK_CLASS_NAME);
                      }
                   });

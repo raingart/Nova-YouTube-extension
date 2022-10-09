@@ -1,15 +1,19 @@
 console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
+
 const
    optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
    fix_undefine = v => v === 'undefined' ? undefined : v, // for Tampermonkey
    user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
 
+if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
+   return console.warn(GM_info.script.name + ': processed in the iframe disable');
+}
+
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'thumbnails_mix_hide': 'thumb_mix_disable',
-   'streams_disable': 'live_disable',
+   'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -19,10 +23,6 @@ for (const oldKey in user_settings) {
       user_settings['thumbs-hide'] = true;
    }
    GM_setValue(configStoreName, user_settings);
-}
-
-if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
-   return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
 if (isOptionsPage()) return;
@@ -61,13 +61,20 @@ function isOptionsPage() {
                alert(`Error parsing settings\n${err.name}: ${err.message}`);
             }
          });
-         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr.error));
+         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
          rdr.readAsText(f.files[0]);
       });
       document.body.append(f);
       f.click();
       f.remove();
    });
+   //    GM_registerMenuCommand('Import settings', () => {
+   //       if(json = JSON.parse(prompt('Enter json file context'))) {
+   //           GM_setValue(configStoreName, json);
+   //           alert('Settings imported');
+   //           location.reload();
+   //       } else alert('Import failed');
+   //   });
 
    // is optionsPage
    if (location.hostname === new URL(optionsPage).hostname) {
@@ -151,10 +158,10 @@ function landerPlugins() {
    // skip first page transition
    document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
 
-   function playlistPageReload(sec = 10) {
+   function playlistPageReload(sec = 5) {
       if (location.search.includes('list=')) {
          playlist_page_transition_count++;
-         console.debug('playlist_page_transition_count:', playlist_page_transition_count);
+         // console.debug('playlist_page_transition_count:', playlist_page_transition_count);
 
          if (playlist_page_transition_count === 30) {
             const notice = document.createElement('div');
@@ -180,11 +187,11 @@ function landerPlugins() {
             });
             notice.innerHTML =
                `<h4 style="margin:0;">Attention! ${GM_info.script.name}</h4>
-               <div>The page will be automatically reloaded within 10 sec</div>
+               <div>The page will be automatically reloaded within ${sec} sec</div>
                <div><i>Click for cancel</i></div>`;
             document.body.append(notice);
 
-            const playlist_reload = setTimeout(() =>location.reload(), 1000 * +sec); // 10sec
+            const playlist_reload = setTimeout(() => location.reload(), 1000 * +sec); // 5sec
          }
       }
    }
@@ -200,10 +207,9 @@ function renderSettingButton() {
          a.innerHTML =
             // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 -2 28 28" height="100%" width="100%" version="1.1">
+               <svg viewBox="0 -2 20 20">
                   <g fill="deepskyblue">
-                     <polygon points='21 12 3,1.8 3 22.2' />
-                     <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
+                     <polygon points="0,16 14,8 0,0"/>
                   </g>
                </svg>
             </yt-icon-button>`;

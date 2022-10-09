@@ -32,16 +32,43 @@ window.nova_plugins.push({
    'desc:pl': 'Przełącza krótkie filmy do normalnego odtwarzacza',
    _runtime: user_settings => {
 
-      if ('shorts' == NOVA.currentPage) {
-         // alt - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
-         return location.href = location.href.replace('shorts/', 'watch?v=');
-         // location.replace(location.href.replace('/shorts/', '/watch?v='));
+      // page init
+      redirectPageToNormal();
+      // page update
+      document.addEventListener('yt-navigate-finish', redirectPageToNormal);
+
+      function redirectPageToNormal() {
+         if ('shorts' == NOVA.currentPage) {
+            // alt - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
+            return location.href = location.href.replace('shorts/', 'watch?v=');
+            // location.replace(location.href.replace('/shorts/', '/watch?v='));
+         }
       }
 
-      if (user_settings['shorts_disable']) return; // conflict with plugin. Attention! After shorts redirect
+      // add time to overlay
+      if (user_settings.shorts_thumbnails_time
+         && !user_settings['shorts_disable'] // conflict with plugin. Attention! After shorts redirect
+      ) {
+
+         // Strategy 1
+         document.addEventListener('yt-action', evt => {
+            // console.log(evt.detail?.actionName);
+            if ([
+               'yt-append-continuation-items-action', // home, results, feed, channel, watch
+               'ytd-update-grid-state-action', // feed, channel
+               'yt-service-request', // results, watch
+               // 'ytd-rich-item-index-update-action', // home
+            ]
+               .includes(evt.detail?.actionName)
+            ) {
+               patchThumbShort();
+            }
+         });
+      }
 
       const
          // ATTR_MARK = 'nova-thumb-shorts-pathed',
+         linkQueryPatch = '&list=RDSH',
          thumbsSelectors = [
             // 'ytd-rich-item-renderer', // home
             'ytd-video-renderer', // results
@@ -51,47 +78,29 @@ window.nova_plugins.push({
          ]
             .join(',');
 
-      // Strategy 1
-      document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
-         if ([
-            'yt-append-continuation-items-action', // home, results, feed, channel, watch
-            'ytd-update-grid-state-action', // feed, channel
-            'yt-service-request', // results, watch
-            // 'ytd-rich-item-index-update-action', // home
-         ]
-            .includes(evt.detail?.actionName)
-         ) {
-            removeThumbShort();
-         }
-      });
-
-      function removeThumbShort() {
-         document.body.querySelectorAll('a[href*="shorts/"]')
+      function patchThumbShort() {
+         document.body.querySelectorAll(`a[href*="/shorts/"]:not([href$="${linkQueryPatch}"])`)
             .forEach(link => {
-               link.href += '&list=RDSH'; // fix href redirect to watch
+               link.href += linkQueryPatch; // fix href redirect to watch
                // link.href = link.href.replace('shorts/', 'watch?v=');
 
                if (thumb = link.closest(thumbsSelectors)) {
                   // console.debug('has #shorts:', thumb);
                   // thumb.style.border = '2px solid orange'; // mark for test
 
-                  // add time to overlay
-                  if (user_settings.shorts_thumbnails_time) {
-                     NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
-                        .then(async overlay => {
-                           if ((thumb = link.closest(thumbsSelectors))
-                              && (time = getThumbTime(thumb.data))
-                           ) {
-                              // console.debug('time', time);
-                              overlay.setAttribute('overlay-style', 'DEFAULT');
-                              // if (timeLabelEl = overlay.querySelector('#text')) {
-                              if (timeLabelEl = overlay.$['text']) {
-                                 timeLabelEl.textContent = time;
-                              }
+                  NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+                     .then(async overlay => {
+                        if ((thumb = link.closest(thumbsSelectors))
+                           && (time = getThumbTime(thumb.data))
+                        ) {
+                           // console.debug('time', time);
+                           overlay.setAttribute('overlay-style', 'DEFAULT');
+                           // if (timeLabelEl = overlay.querySelector('#text')) {
+                           if (timeLabelEl = overlay.$['text']) {
+                              timeLabelEl.textContent = time;
                            }
-                        });
-                  }
+                        }
+                     });
                }
             });
       }
@@ -142,9 +151,9 @@ window.nova_plugins.push({
          //    .forEach(videoRenderer => {
          const
             // videoData = videoRenderer.data,
-            title = videoData.title.accessibility.accessibilityData.label,
-            publishedTimeText = videoData.publishedTimeText.simpleText,
-            viewCountText = videoData.viewCountText.simpleText;
+            title = videoData.title.accessibility.accessibilityData?.label,
+            publishedTimeText = videoData.publishedTimeText?.simpleText,
+            viewCountText = videoData.viewCountText?.simpleText;
 
          let
             [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "

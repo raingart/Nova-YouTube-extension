@@ -15,7 +15,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed',
    // restart_on_transition: true,
    section: 'player',
-   // desc: '',
+   // desc: 'Prevent the player from auto-playing videos',
    _runtime: user_settings => {
 
       if (user_settings.stop_preload_embed) {
@@ -32,9 +32,11 @@ window.nova_plugins.push({
          .then(movie_player => {
             let disableStop;
 
-            movie_player.stopVideo(); // init before update onStateChange
-            // reset disableStop
-            document.addEventListener('yt-navigate-start', () => disableStop = false);
+            try {
+               movie_player.stopVideo(); // init before update onStateChange
+               // reset disableStop
+               document.addEventListener('yt-navigate-start', () => disableStop = false);
+            } catch (err) { }
 
             movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));
 

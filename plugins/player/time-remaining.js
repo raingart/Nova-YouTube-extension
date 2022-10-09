@@ -40,9 +40,11 @@ window.nova_plugins.push({
                .then(video => {
                   video.addEventListener('timeupdate', setRemaining.bind(video));
                   video.addEventListener('ratechange', setRemaining.bind(video));
+                  // clear text
                   ['suspend', 'ended'].forEach(evt => {
                      video.addEventListener(evt, () => insertToHTML({ 'container': container }));
                   });
+                  document.addEventListener('yt-navigate-start', () => insertToHTML({ 'container': container }));
                });
 
             function setRemaining() {
@@ -52,13 +54,15 @@ window.nova_plugins.push({
                   || document.visibilityState == 'hidden' // tab inactive
                   || (movie_player || document.body).querySelector('.ytp-autohide video')) return;
 
-               const getProgressPt = () => {
-                  const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour
-                     : this.duration > 1500 ? pt.toFixed(1) // >25 Minute
-                        : Math.round(pt); // whats left
-                  return floatRound((this.currentTime / this.duration) * 100) + '%';
-               }
-               const getLeftTime = () => '-' + NOVA.timeFormatTo.HMS.digit((this.duration - this.currentTime) / this.playbackRate);
+               const
+                  getProgressPt = () => {
+                     const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour
+                        : this.duration > 1500 ? pt.toFixed(1) // >25 Minute
+                           : Math.round(pt); // whats left
+                     return floatRound((this.currentTime / this.duration) * 100) + '%';
+                  },
+                  getLeftTime = () => '-' + NOVA.timeFormatTo.HMS.digit((this.duration - this.currentTime) / this.playbackRate);
+
                let text;
 
                switch (user_settings.time_remaining_mode) {
@@ -86,7 +90,8 @@ window.nova_plugins.push({
                   // const el = document.createElement('span');
                   // el.id = SELECTOR_ID;
                   // container.after(el);
-                  container.insertAdjacentHTML('afterend', ` <span id="${SELECTOR_ID}">${text}</span>`);
+                  // container.insertAdjacentElement('afterend', '&nbsp;' + el);
+                  container.insertAdjacentHTML('afterend', `&nbsp;<span id="${SELECTOR_ID}">${text}</span>`);
                   return document.getElementById(SELECTOR_ID);
                })())
                   .textContent = text;

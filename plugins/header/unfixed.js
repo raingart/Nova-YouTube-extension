@@ -39,20 +39,14 @@ window.nova_plugins.push({
          }`);
 
       if (user_settings.header_unfixed_scroll) {
-         scrollAfter(); // init
-
-         document.addEventListener('yt-navigate-finish', () => {
-            scrollAfter(); // no sense. Youtube auto-scroll up when page is transition
-
-            if (NOVA.currentPage != 'watch') {
-               NOVA.waitElement('video')
-                  .then(video => {
-                     video.addEventListener('loadeddata', scrollAfter, { capture: true, once: true });
-                  });
+         createArrowButton();
+         // scroll
+         document.addEventListener('yt-action', evt => {
+            // console.log(evt.detail?.actionName);
+            if (evt.detail?.actionName == 'yt-reload-continuation-items-command') {
+               scrollAfter();
             }
          });
-
-         createArrowButton();
 
          function scrollAfter() {
             if (topOffset = document.getElementById('masthead')?.offsetHeight) {

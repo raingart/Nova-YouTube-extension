@@ -48,6 +48,7 @@ chrome.runtime.onInstalled.addListener(details => {
                   'streams_disable': 'live_disable',
                   'thumbnails-mix-hide': 'thumb_mix_disable',
                   'thumbnails_mix_hide': 'thumb_mix_disable',
+                  'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

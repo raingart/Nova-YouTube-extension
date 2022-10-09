@@ -32,11 +32,10 @@ window.nova_plugins.push({
          selectors: ['#contents #expander[collapsed] #more:not([hidden])'],
          attr_mark: 'comment-expanded',
          callback: more_btn => {
+            const moreExpand = () => more_btn.click();
             const comment = more_btn.closest('#expander[collapsed]');
             // console.debug('contents expander:', comment);
             // comment.style.border = '2px solid red'; // mark for test
-
-            const moreExpand = () => more_btn.click();
 
             // on hover auto expand
             switch (user_settings.comments_expand_mode) {
@@ -58,7 +57,6 @@ window.nova_plugins.push({
          attr_mark: 'replies-expanded',
          callback: el => {
             const moreExpand = () => el.querySelector('#button')?.click();
-
             // on hover auto expand
             switch (user_settings.comments_view_reply) {
                case 'onhover':

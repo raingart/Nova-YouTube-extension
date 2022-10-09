@@ -1,5 +1,6 @@
-// fore test
+// for test
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
+// https://www.youtube.com/channel/UCOJPgtKYrDrTjbn7rLRHfTQ/videos - many live
 // https://www.youtube.com/channel/UCIjYyZxkFucP_W-tmXg_9Ow/videos - no sort
 // https://www.youtube.com/channel/UCT41vlFeZ_asAUCY7BOiJVQ/videos - no sort
 // https://www.youtube.com/channel/UC2yGvqVB_kK0FC1eUifENGQ/videos - no sort
@@ -26,9 +27,9 @@ window.nova_plugins.push({
    desc: 'The "sort video button" in some Youtube channels (usually Music channels) has disabled this feature.',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/383420-youtube-uploads-sorter-button
-      // alt2 - https://greasyfork.org/en/scripts/437318-sort-youtube-videos
-
+      // alt1 - https://greasyfork.org/en/scripts/450761-sort-menu-for-arist-channels-on-youtube
+      // alt2 - https://greasyfork.org/en/scripts/383420-youtube-uploads-sorter-button
+      // alt3 - https://greasyfork.org/en/scripts/437318-sort-youtube-videos
       // Strategy 1
       NOVA.waitElement('#sub-menu #sort-menu:empty') // if default sort by is empty
          .then(container => {

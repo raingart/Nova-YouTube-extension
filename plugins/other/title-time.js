@@ -17,79 +17,87 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
-      // if isLive dont update - video.duration!
-
-      // let backupTitle = document.title; // create bug. on ini, the value must be null
-      let backupTitle;
-
-      document.addEventListener('yt-navigate-start', () => backupTitle = null); // remove saved title
-
       NOVA.waitElement('video')
          .then(video => {
-            // update title
-            video.addEventListener('timeupdate', updateTitle.bind(video));
+            // remove saved title
+            document.addEventListener('yt-navigate-start', () => pageTitle.backup = null);
             // save title
-            video.addEventListener('loadeddata', () => {
-               if (movie_player.getVideoData().isLive) return;
-
-               if (backupTitle
-                  || movie_player.classList.contains('ad-showing')
-                  || /^((\d?\d:){1,2}\d{2})(\s\|\s)/g.exec(document.title)) return;
-               backupTitle = document.title;
-            });
-            // restore the original title
-            ['pause', 'ended'].forEach(evt => { // need add event "suspend" ?
-               video.addEventListener(evt, () => {
-                  if (!backupTitle) return;
-                  let newTitleArr;
-                  if (movie_player.getVideoData().isLive) newTitleArr = video.currentTime;
-                  setTitle([newTitleArr, backupTitle]);
-               });
-            });
+            video.addEventListener('playing', pageTitle.save.bind(pageTitle));
+            // update title
+            video.addEventListener('timeupdate', () => pageTitle.update(video));
+            // restore title
+            video.addEventListener('pause', () => pageTitle.restore(video));
+            video.addEventListener('ended', () => pageTitle.restore(video));
          });
 
-      function updateTitle() {
-         if (!backupTitle) return;
 
-         let newTitleArr = [];
+      const pageTitle = {
+         // backup: document.title,
 
-         switch (movie_player.getVideoData().isLive ? 'current' : user_settings.page_title_time_mode) {
-            case 'current':
-               newTitleArr = [this.currentTime];
-               break;
+         strSplit: ' | ',
+         // strSplit: ' • ',
 
-            case 'current-duration':
-               if (!isNaN(this.duration)) {
-                  newTitleArr = [this.currentTime, ' / ', this.duration]; // string
-               }
-               break;
+         save() {
+            if (this.backup
+               || movie_player.getVideoData().isLive // live
+               || movie_player.classList.contains('ad-showing') // ad-video
+               || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|','\\|')})`, '').test(document.title) // title has time "0:00:00${this.strSplit}"
+            ) {
+               return;
+            }
+            this.backup = document.title; // getVideoTitle();
+            // console.debug('save', this.backup);
 
-            // case 'left':
-            default:
-               if (!isNaN(this.duration)) {
-                  newTitleArr = [this.duration - this.currentTime];
-               }
-         }
+            // function getVideoTitle() {
+            //    return movie_player.getVideoData().title || document.body.querySelector('#info h1.title')?.content;
+            // }
+         },
 
-         // add playbackRate if it is not default
-         // if (this.playbackRate !== 1) newTitleArr.push(` (${this.playbackRate}x)`);
+         update(video = NOVA.videoElement) {
+            if (!this.backup) return;
 
-         newTitleArr = newTitleArr
-            .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS.digit(t / this.playbackRate))
-            .join('');
+            let newTitleArr = [];
 
-         setTitle([newTitleArr, backupTitle]);
-      }
+            switch (movie_player.getVideoData().isLive ? 'current' : user_settings.page_title_time_mode) {
+               case 'current':
+                  newTitleArr = [video.currentTime];
+                  break;
 
-      function setTitle(arr) {
-         document.title = arr.filter(Boolean)
-            .join(' | '); // add to regex
-         // .join(' • '); // add to regex
-      }
+               case 'current-duration':
+                  if (!isNaN(video.duration)) {
+                     newTitleArr = [video.currentTime, ' / ', video.duration]; // string
+                  }
+                  break;
 
-      // function getVideoTitle() {
-      //    return movie_player.getVideoData().title || document.body.querySelector('#info h1.title')?.content;
-      // }
+               // case 'left':
+               default:
+                  if (!isNaN(video.duration)) {
+                     newTitleArr = [video.duration - video.currentTime];
+                  }
+            }
+
+            // add playbackRate if it is not default
+            // if (this.playbackRate !== 1) newTitleArr.push(` (${this.playbackRate}x)`);
+
+            newTitleArr = newTitleArr
+               .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS.digit(t / video.playbackRate))
+               .join('');
+
+            this.set([newTitleArr, this.backup]);
+         },
+
+         restore(video = NOVA.videoElement) {
+            if (!this.backup) return;
+
+            this.set([movie_player.getVideoData().isLive && video.currentTime, this.backup]);
+         },
+
+         set(arr) {
+            document.title = arr
+               .filter(Boolean) // filter null/undefined
+               .join(this.strSplit);
+         },
+      };
 
    },
    options: {

@@ -112,8 +112,8 @@ const Opt = {
                   }
 
                   let p = this.UI.pluginsContainer;
-                  if (targetSection = '>#' + plugin?.section?.toString().toLowerCase()) {
-                     p += (plugin.section && document.body.querySelector(p + targetSection)) ? targetSection : '>#other';
+                  if (targetSection = `> #${plugin?.section?.toString().toLowerCase()}`) {
+                     p += (plugin.section && document.body.querySelector(p + targetSection)) ? targetSection : '> #other';
                   }
 
                   document.body.querySelector(p).append(li); // append to section tab
@@ -231,6 +231,7 @@ const Opt = {
                         const label = document.createElement(attr);
                         // label.textContent = value;
                         label.innerHTML = '<font>↪</font>' + value;
+                        // label.innerHTML = '<font>►</font>' + value;
                         label.htmlFor = property.type?.toLowerCase() == 'radio' ? property.value : property.name;
                         exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');

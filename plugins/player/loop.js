@@ -4,6 +4,7 @@
 window.nova_plugins.push({
    id: 'player-loop',
    title: 'Add repeat (loop) playback button',
+   // Repeat the video you're watching.
    'title:zh': '添加循环播放按钮',
    'title:ja': 'ループ再生ボタンを追加する',
    'title:ko': '루프 재생 버튼 추가',
@@ -53,7 +54,7 @@ window.nova_plugins.push({
             btn.addEventListener('click', () => {
                if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
 
-               NOVA.videoElement.loop = !NOVA.videoElement.loop && true;
+               NOVA.videoElement.loop = !NOVA.videoElement.loop;
                // fix ad
                if (movie_player.classList.contains('ad-showing')) NOVA.videoElement.removeAttribute('loop');
 

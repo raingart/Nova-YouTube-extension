@@ -26,7 +26,7 @@ window.nova_plugins.push({
          SELECTOR = '#' + SELECTOR_ID, // for css
          CLASS_NAME_ACTIVE = 'nova-playlist-reverse-on';
 
-      let playlistReversed;
+      window.nova_playlistReversed; // global for other plugin (for fix conflict)
 
       // init reverseBtn style
       NOVA.css.push(
@@ -55,7 +55,7 @@ window.nova_plugins.push({
          reverseControl(); // add events
       });
       // init
-         // if (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/) insertButton();
+      // if (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/) insertButton();
       if (location.search.includes('list=')) insertButton();
 
       function insertButton() {
@@ -67,25 +67,38 @@ window.nova_plugins.push({
 
             document.getElementById(SELECTOR_ID)?.remove(); // clear old
 
-            const reverseBtn = document.createElement('div');
-            if (playlistReversed) reverseBtn.className = CLASS_NAME_ACTIVE;
+            const
+               reverseBtn = document.createElement('div'),
+               renderTitle = () => reverseBtn.title = `Reverse playlist order is ${window.nova_playlistReversed ? 'ON' : 'OFF'}`;
+
+            if (window.nova_playlistReversed) reverseBtn.className = CLASS_NAME_ACTIVE;
             reverseBtn.id = SELECTOR_ID;
-            reverseBtn.title = `Reverse playlist order is ${playlistReversed ? 'ON' : 'OFF'}`;
+            renderTitle(); // refresh only after page transitionend
             reverseBtn.innerHTML =
+               // `<yt-icon-button>
+               //    <svg viewBox="0 0 16 20">
+               //       <g>
+               //          <polygon points="7,8 3,8 3,14 0,14 5,20 10,14 7,14"/>
+               //          <polygon points="'11,0 6,6 9,6 9,12 13,12 13,6 16,6"/>
+               //       </g>
+               //    </svg>
+               // </yt-icon-button>`;
                `<yt-icon-button>
                   <svg x="0px" y="0px" viewBox="0 0 381.399 381.399" xml:space="preserve" height="100%" width="100%" version="1.1">
                      <g>
-                     <path d="M233.757,134.901l-63.649-25.147v266.551c0,2.816-2.286,5.094-5.104,5.094h-51.013c-2.82,0-5.099-2.277-5.099-5.094 V109.754l-63.658,25.147c-2.138,0.834-4.564,0.15-5.946-1.669c-1.389-1.839-1.379-4.36,0.028-6.187L135.452,1.991 C136.417,0.736,137.91,0,139.502,0c1.576,0,3.075,0.741,4.041,1.991l96.137,125.061c0.71,0.919,1.061,2.017,1.061,3.109 c0,1.063-0.346,2.158-1.035,3.078C238.333,135.052,235.891,135.735,233.757,134.901z M197.689,378.887h145.456v-33.62H197.689 V378.887z M197.689,314.444h145.456v-33.622H197.689V314.444z M197.689,218.251v33.619h145.456v-33.619H197.689z"/>
-                  </g>
+                        <path d="M233.757,134.901l-63.649-25.147v266.551c0,2.816-2.286,5.094-5.104,5.094h-51.013c-2.82,0-5.099-2.277-5.099-5.094 V109.754l-63.658,25.147c-2.138,0.834-4.564,0.15-5.946-1.669c-1.389-1.839-1.379-4.36,0.028-6.187L135.452,1.991 C136.417,0.736,137.91,0,139.502,0c1.576,0,3.075,0.741,4.041,1.991l96.137,125.061c0.71,0.919,1.061,2.017,1.061,3.109 c0,1.063-0.346,2.158-1.035,3.078C238.333,135.052,235.891,135.735,233.757,134.901z M197.689,378.887h145.456v-33.62H197.689 V378.887z M197.689,314.444h145.456v-33.622H197.689V314.444z M197.689,218.251v33.619h145.456v-33.619H197.689z"/>
+                     </g>
                   </svg>
                </yt-icon-button>`;
             reverseBtn.addEventListener('click', () => {
                reverseBtn.classList.toggle(CLASS_NAME_ACTIVE);
-               playlistReversed = !playlistReversed;
+               window.nova_playlistReversed = !window.nova_playlistReversed;
 
-               if (playlistReversed) {
+               if (window.nova_playlistReversed) {
                   reverseControl();
                   // movie_player.updatePlaylist();
+                  renderTitle(); // refresh before page transition
+                  disable_conflict_plugins();
                } else {
                   location.reload(); // disable reverse
                }
@@ -94,13 +107,19 @@ window.nova_plugins.push({
          }
       }
 
+      function disable_conflict_plugins() {
+         // document.getElementById('nova-playlist-duration').style.display = 'none'; // hide
+         document.getElementById('nova-playlist-duration').innerHTML = '&nbsp; [out of reach] &nbsp;';
+         document.getElementById('nova-playlist-autoplay-btn').disabled = true; // disabled button
+         document.getElementById('nova-playlist-autoplay-btn').title = 'out of reach';
+      }
 
       function reverseControl() {
-         if (!playlistReversed) return;
+         if (!window.nova_playlistReversed) return;
 
          // auto next click
          NOVA.videoElement?.addEventListener('ended', () =>
-            playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
+            window.nova_playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
 
          // update UI
          // Strategy 1

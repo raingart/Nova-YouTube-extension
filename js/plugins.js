@@ -24,17 +24,17 @@ const Plugins = {
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
       'player/subtitle-transparent.js',
-      'player/subtitle-lang.js',
+      // 'player/subtitle-lang.js',
       // 'player/miniplayer-disable.js',
       'player/unblock-region.js',
       // 'player/next-autoplay.js',
-      'player/video-cards.js',
       'player/fullscreen-scroll.js',
 
+      'other/annotations.js',
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
       // 'other/thumbs-rating.js',
-      'other/thumbs-watched.js', // outdated
+      'other/thumbs-watched.js',
       'other/channel-tab.js',
       // 'other/dark-theme.js',
       'other/title-time.js',
@@ -71,10 +71,22 @@ const Plugins = {
       'sidebar/channel-link.js',
       // 'sidebar/playlist-skip-liked.js',
 
+      'header/search.js',
       'header/short.js',
       'header/unfixed.js',
       'header/logo.js',
    ],
+
+   // for test
+   // list: [
+   //    'other/annotations.js',
+   //    'sidebar/playlist-duration.js',
+   //    'sidebar/playlist-reverse.js',
+   //    'comments/expand.js',
+   //    'details/description-expand.js',
+   //    'details/description-popup.js',
+   //    'details/videos-count.js',
+   // ],
 
    load(list) {
       (list || this.list)
@@ -92,11 +104,10 @@ const Plugins = {
 
       if (source.endsWith('.js')) {
          script.src = source;
-         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-defer:~:text=defer,-This
-         script.defer = true;
+         script.defer = true; // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-defer:~:text=defer,-This
          // script.async = true;
 
-      } else {
+      } else { // injectCode
          script.textContent = source.toString();
          // script.src = "data:text/plain;base64," + btoa(source);
          // script.src = 'data:text/javascript,' + encodeURIComponent(source)
@@ -105,10 +116,15 @@ const Plugins = {
       (document.head || document.documentElement).append(script);
 
       script.onload = () => {
-         // console.log('script loaded:', script.src || script.textContent.substr(0, 100));
+         // console.log('script injected:', script.src || script.textContent.substr(0, 100));
          script.remove(script); // Remove <script> node after injectScript runs.
       };
    },
+
+   // injectFunction(func, args) {
+   //    // console.debug('injectFunction', ...arguments);
+   //    this.injectScript(`(${func})(${args});`);
+   // },
 
    run: ({ user_settings, app_ver }) => {
       // console.debug('plugins_executor', ...arguments);
@@ -118,9 +134,11 @@ const Plugins = {
       NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          return (['channel', 'c', 'user'].includes(page)
-            // fix non-standard link - https://www.youtube.com/pencilmation/videos
-            // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
+            // fix non-standard link:
+            // https://www.youtube.com/pencilmation
+            // https://www.youtube.com/rhino
             || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+            // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
          ) ? 'channel' : page == 'clip' ? 'watch' : page || 'home';
       })();
       // console.debug('NOVA.currentPage', NOVA.currentPage);

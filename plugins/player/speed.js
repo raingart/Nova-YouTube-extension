@@ -5,6 +5,7 @@
 // fot "isMusic" fn test
 // https://www.youtube.com/watch?v=kCHiSHxTXgg - svg icon "🎵"
 // https://www.youtube.com/results?search_query=Highly+Suspect+-+Upperdrugs+-+2019 // test transition. Open firt thumb "Highly Suspect 🎵"
+// https://www.youtube.com/embed/fEcGObUqzk4 - embed (music not recognized)
 
 window.nova_plugins.push({
    id: 'rate-wheel',
@@ -268,7 +269,7 @@ window.nova_plugins.push({
                // 【MAD】,『MAD』,「MAD」
                // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
                if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-                  || ['【', '『', '「', 'CD', 'AUDIO', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+                  || ['【', '『', '「', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
                ) {
                   return true;
                }
@@ -290,8 +291,10 @@ window.nova_plugins.push({
                || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
                // channelNameVEVO
                || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
+               // specific channel
+               || ['MontageRock'].includes(channelName)
                // word
-               || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'EXTENDED', 'CINEMATIC']
+               || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
                   .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
                // words
                || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'

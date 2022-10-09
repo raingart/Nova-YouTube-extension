@@ -17,7 +17,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // hide button
+      // hide "Scroll for details" button
       NOVA.css.push(`.ytp-fullerscreen-edu-button { display: none !important; }`);
 
       document.addEventListener('fullscreenchange', () => {

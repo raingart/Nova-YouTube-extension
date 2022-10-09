@@ -27,7 +27,7 @@ window.nova_plugins.push({
             && target.__data?.text?.runs[0].navigationEndpoint?.commandMetadata?.webCommandMetadata?.webPageType == 'WEB_PAGE_TYPE_CHANNEL'
          ) {
             // Doesn't work
-            // target.addEventListener('click', ({ target }) => target.preventDefault(), false);
+            // target.addEventListener('click', ({ target }) => target.preventDefault());
 
             //const urlOrig = '/watch?v=' + link.data.watchEndpoint.videoId;
             const urlOrig = link.href;
@@ -39,14 +39,14 @@ window.nova_plugins.push({
             link.data.commandMetadata.webCommandMetadata.webPageType = 'WEB_PAGE_TYPE_CHANNEL';
             link.data.browseEndpoint = target.__data.text.runs[0].navigationEndpoint.browseEndpoint;
             link.data.browseEndpoint.params = encodeURIComponent(btoa(String.fromCharCode(0x12, 0x06) + 'videos'));
-            //console.debug('>', 1);
+            //console.debug('patch link:', 1);
 
             // restore
             target.addEventListener('mouseout', ({ target }) => {
                link.href = urlOrig;
                link.data.commandMetadata.webCommandMetadata.url = urlOrig;
                link.data.commandMetadata.webCommandMetadata.webPageType = 'WEB_PAGE_TYPE_WATCH';
-               //console.debug('>', 2);
+               //console.debug('restore link:', 2);
             }, { capture: true, once: true });
          }
       })

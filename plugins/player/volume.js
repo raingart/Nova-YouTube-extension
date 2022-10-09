@@ -36,6 +36,7 @@ window.nova_plugins.push({
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {
+               // bug? demonstration of different values
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
                NOVA.bezelTrigger(movie_player.getVolume() + '%');
                playerVolume.buildVolumeSlider();
@@ -93,7 +94,6 @@ window.nova_plugins.push({
                   console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
                }
             }
-
             return newLevel === movie_player.getVolume() && newLevel;
          },
 
@@ -127,13 +127,16 @@ window.nova_plugins.push({
                   this.node.connect(this.audioCtx.destination);
                }
 
-               if (this.node.gain.value < 7) this.node.gain.value += 1; // >6 is overload
+               if (this.node.gain.value < 7) this.node.gain.value += 1; // 7(700%) max
 
                NOVA.bezelTrigger(movie_player.getVolume() * this.node.gain.value + '%');
                // this.buildVolumeSlider();
 
             } else {
-               if (this.audioCtx && this.node.gain.value !== 1) this.node.gain.value = 1; // reset
+               if (this.audioCtx && this.node.gain.value !== 1) {
+                  this.node.gain.value = 1; // reset
+               }
+
                this.set(level);
             }
             // console.debug('unlimit', this.node.gain.value);
@@ -178,6 +181,8 @@ window.nova_plugins.push({
                         display: block;
                      }`)
 
+                  // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
+                  // return document.getElementById(SELECTOR_ID);
                   const el = document.createElement('span');
                   el.id = SELECTOR_ID;
                   container.insertAdjacentElement('beforeend', el);

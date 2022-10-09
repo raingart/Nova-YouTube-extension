@@ -1,15 +1,17 @@
 // for test:
 // https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have 3-digit timestamps in description, Manual chapter numbering
-// https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
-// https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 // https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
-// https://www.youtube.com/watch?v=Dg30oEk5Mw0 - timestamp in pinned comment #2 once
 // https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#3 (bug has 1 chapters blocks). Manual chapter numbering
 // https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
 // https://www.youtube.com/watch?v=hLXIK9DBxAo - very long text line of timestamp
+// correct chapters:
+// https://www.youtube.com/watch?v=egAB2qtVWFQ - ctitle of chapters before timestamp. Manual chapter numbering
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
-// https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed test
-// https://www.youtube.com/watch?v=tNkZsRW7h2c - can't rewind video (live)
+// https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
+// false detect:
+// https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
+// https://www.youtube.com/watch?v=Dg30oEk5Mw0 - timestamp in pinned comment #2 (once)
+// https://www.youtube.com/watch?v=tNkZsRW7h2c - live
 
 // test TitleOffset
 // https://youtu.be/t_fbcgzmxHs
@@ -46,114 +48,118 @@ window.nova_plugins.push({
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
 
-      // switch (NOVA.currentPage) {
-      //    case 'watch':
-      let chapterList;
+      switch (NOVA.currentPage) {
+         case 'watch':
+            let chapterList;
 
-      // reset chapterList
-      NOVA.waitElement('video')
-         .then(video => video.addEventListener('loadeddata', () => chapterList = []));
+            // reset chapterList
+            NOVA.waitElement('video')
+               .then(video => video.addEventListener('loadeddata', () => chapterList = []));
 
-      NOVA.waitElement('#movie_player')
-         .then(movie_player => {
-            doubleKeyPressListener(timeLeap, user_settings.time_jump_hotkey);
+            NOVA.waitElement('#movie_player')
+               .then(movie_player => {
+                  doubleKeyPressListener(timeLeap, user_settings.time_jump_hotkey);
 
-            function timeLeap() {
-               if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
-                  chapterList = NOVA.getChapterList(movie_player.getDuration()) || null;
-                  // console.debug('chapterList:', chapterList);
-               }
-               const
-                  nextChapterIndex = chapterList?.findIndex(c => c.sec > movie_player.getCurrentTime()),
-                  separator = ' • ';
-               // console.debug('nextChapterIndex', nextChapterIndex);
-               let msg;
-               // has chapters and chapters not ended
-               if (chapterList?.length && nextChapterIndex !== -1) {
-                  // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
-                  if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
-                     // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
-                     movie_player.seekToChapterWithAnimation(nextChapterIndex);
+                  function timeLeap() {
+                     if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
+                        chapterList = NOVA.getChapterList(movie_player.getDuration()) || null;
+                        // console.debug('chapterList:', chapterList);
+                     }
+                     const
+                        nextChapterIndex = chapterList?.findIndex(c => c.sec > movie_player.getCurrentTime()),
+                        separator = ' • ';
+                     // console.debug('nextChapterIndex', nextChapterIndex);
+                     let msg;
+                     // has chapters and chapters not ended
+                     if (chapterList?.length && nextChapterIndex !== -1) {
+                        // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
+                        if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                           // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
+                           movie_player.seekToChapterWithAnimation(nextChapterIndex);
 
-                     // querySelector update after seek
-                     // const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
+                           // querySelector update after seek
+                           // const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
 
-                     // msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
-                     //    + separator + chapterList[nextChapterIndex].time;
+                           // msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
+                           //    + separator + chapterList[nextChapterIndex].time;
 
-                     // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
-                     //    chapterTitleEl.click()
-                     // }
+                           msg = chapterList[nextChapterIndex].title + separator + chapterList[nextChapterIndex].time;
 
-                  } else { // chapters blocks none, but has timestamp
-                     const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
-                     // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
-                     movie_player.seekTo(nextChapterData.sec);
+                           // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
+                           //    chapterTitleEl.click()
+                           // }
 
-                     msg = nextChapterData.title + separator + nextChapterData.time;
+                        } else { // chapters blocks none, but has timestamp
+                           const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
+                           // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
+                           // +0.5 fix paused jump (ex: https://www.youtube.com/watch?v=Xt2sbtvBuk8)
+                           movie_player.seekTo(nextChapterData.sec + .5);
+
+                           msg = nextChapterData.title + separator + nextChapterData.time;
+                        }
+
+                     } else { // chapters none
+                        movie_player.seekBy(+user_settings.time_jump_step);
+
+                        msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
+                     }
+
+                     NOVA.bezelTrigger(msg); // trigger default indicator
                   }
+               });
+            break;
 
-               } else { // chapters none
-                  movie_player.seekBy(+user_settings.time_jump_step);
+         case 'embed':
+            NOVA.waitElement('video')
+               .then(video => {
+                  doubleKeyPressListener(timeLeap.bind(video), user_settings.time_jump_hotkey);
 
-                  msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
-               }
+                  function timeLeap() {
+                     let sec = +user_settings.time_jump_step + this.currentTime;
 
-               NOVA.bezelTrigger(msg); // trigger default indicator
-            }
-         });
-      // break;
+                     if (secNextChapter = seekToNextChapter.apply(this)) {
+                        sec = secNextChapter;
+                        // wait chapter-title update
+                        document.body.querySelector('.ytp-chapter-title-content')
+                           ?.addEventListener('DOMNodeInserted', ({ target }) => {
+                              NOVA.bezelTrigger(
+                                 target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
+                              );// trigger default indicator
+                           }, { capture: true, once: true });
+                     } else {
+                        NOVA.bezelTrigger(`+${user_settings.time_jump_step} sec`); // trigger default indicator
+                     }
+                     // console.debug('seekTo', sec);
+                     this.currentTime = sec;
 
-      // case 'embed':
-      //    NOVA.waitElement('video')
-      //       .then(video => {
-      //          doubleKeyPressListener(timeLeap.bind(video), user_settings.time_jump_hotkey);
+                     function seekToNextChapter() {
+                        if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
+                           && chaptersContainer?.children.length > 1
+                           && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
+                        ) {
+                           const progressRatio = this.currentTime / this.duration;
+                           let passedWidth = 0;
+                           for (const chapter of chaptersContainer.children) {
+                              const
+                                 { width, marginLeft, marginRight } = getComputedStyle(chapter),
+                                 chapterWidth = parseInt(width),
+                                 chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
+                                 chapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
 
-      //          function timeLeap() {
-      //             let sec = +user_settings.time_jump_step + this.currentTime;
-
-      //             if (secNextChapter = seekToNextChapter.apply(this)) {
-      //                sec = secNextChapter;
-      //                // wait chapter-title update
-      //                document.body.querySelector('.ytp-chapter-title-content')
-      //                   ?.addEventListener('DOMNodeInserted', ({ target }) => {
-      //                      NOVA.bezelTrigger(
-      //                         target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
-      //                      );// trigger default indicator
-      //                   }, { capture: true, once: true });
-      //             } else {
-      //                NOVA.bezelTrigger(`+${user_settings.time_jump_step} sec`); // trigger default indicator
-      //             }
-      //             // console.debug('seekTo', sec);
-      //             this.currentTime = sec;
-
-      //             function seekToNextChapter() {
-      //                if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
-      //                   && chaptersContainer?.children.length > 1
-      //                   && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
-      //                ) {
-      //                   const progressRatio = this.currentTime / this.duration;
-      //                   let passedWidth = 0;
-      //                   for (const chapter of chaptersContainer.children) {
-      //                      const
-      //                         { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
-      //                         chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
-      //                         chapterRatio = (passedWidth + width) / progressContainerWidth;
-
-      //                      // console.debug('Chapter', chapterRatio, chapterWidth);
-      //                      if (chapterRatio >= progressRatio && chapterRatio < 1) {
-      //                         return ~~(chapterRatio * this.duration) + chapterMargin + 1;
-      //                      }
-      //                      // accumulate passed
-      //                      passedWidth += width + chapterMargin;
-      //                   }
-      //                   // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chaptersContainer?.children.length, progressContainerWidth, '/', progressRatio);
-      //                }
-      //             }
-      //          }
-      //       });
-      //    break;
-      // }
+                              // console.debug('Chapter', chapterRatio, chapterWidth);
+                              if (chapterRatio >= progressRatio && chapterRatio < 1) {
+                                 return ~~(chapterRatio * this.duration) + chapterMargin + 1;
+                              }
+                              // accumulate passed
+                              passedWidth += chapterWidth + chapterMargin;
+                           }
+                           // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chaptersContainer?.children.length, progressContainerWidth, '/', progressRatio);
+                        }
+                     }
+                  }
+               });
+            break;
+      }
 
       function addTitleOffset() {
          NOVA.css.push(

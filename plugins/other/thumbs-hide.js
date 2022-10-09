@@ -1,4 +1,4 @@
-// fore test
+// for test
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
 
 window.nova_plugins.push({
@@ -116,7 +116,7 @@ window.nova_plugins.push({
 
          premieres() {
             if (!user_settings.premieres_disable) return;
-
+            // announced
             document.body.querySelectorAll('#thumbnail #overlays [aria-label="Premiere"], #thumbnail #overlays [aria-label="Upcoming"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
@@ -129,6 +129,23 @@ window.nova_plugins.push({
             //       thumb.style.border = '2px solid red'; // mark for test
             //    }
             // });
+
+            // streaming
+            // #overlays > :not(ytd-thumbnail-overlay-time-status-renderer)
+            document.body.querySelectorAll('#thumbnail #video-badges')
+               // && !el.querySelector('#overlays > ytd-thumbnail-overlay-time-status-renderer')
+               .forEach(el => {
+                  if (el.classList.includes('live-now') // .badge-style-type-live-now-alternate
+                     && el.querySelector('#repeat')
+                     && (thumb = el.closest(thumbsSelectors))
+                  ) {
+                     thumb.remove();
+                     // thumb.style.display = 'none';
+
+                     // console.debug('Premieres:', thumb);
+                     // thumb.style.border = '2px solid red'; // mark for test
+                  }
+               });
          },
 
          live() {

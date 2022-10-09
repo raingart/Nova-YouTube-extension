@@ -20,7 +20,7 @@ window.nova_plugins.push({
 
       const
          SELECTOR_ID = 'nova-rss-link',
-         rssLinkPrefix = 'https://www.youtube.com/feeds/videos.xml',
+         rssLinkPrefix = '/feeds/videos.xml',
          playlistURL = rssLinkPrefix + '?playlist_id=' + NOVA.queryURL.get('list'),
          genChannelURL = channelId => rssLinkPrefix + '?channel_id=' + channelId;
 
@@ -29,10 +29,9 @@ window.nova_plugins.push({
          case 'channel':
             // NOVA.waitElement('#channel-header #channel-name')
             NOVA.waitElement('#links-holder #primary-links')
-               .then(container => {
-                  if (channelId = NOVA.getChannelId()) {
+               .then(async container => {
+                  if (channelId = await NOVA.getChannelId()) {
                      insertToHTML({ 'url': genChannelURL(channelId), 'container': container });
-                     addMetaLink();
                   }
                   // console.debug('channelId:', channelId);
                });
@@ -43,7 +42,6 @@ window.nova_plugins.push({
                .then(container => {
                   // playlist page
                   insertToHTML({ 'url': playlistURL, 'container': container });
-                  addMetaLink();
                });
             break;
       }
@@ -76,12 +74,14 @@ window.nova_plugins.push({
             // return container.appendChild(link);
          })())
             .href = url;
-      }
 
-      function addMetaLink() {
-         if (channelId = NOVA.getChannelId()) {
-            document.head.insertAdjacentHTML('beforeend',
-               `<link rel="alternate" type="application/rss+xml" title="RSS" href="${genChannelURL(channelId)}">`);
+         addMetaLink();
+
+         async function addMetaLink() {
+            if (channelId = await NOVA.getChannelId()) {
+               document.head.insertAdjacentHTML('beforeend',
+                  `<link rel="alternate" type="application/rss+xml" title="RSS" href="${genChannelURL(channelId)}">`);
+            }
          }
       }
 

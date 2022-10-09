@@ -33,7 +33,7 @@ window.nova_plugins.push({
    'desc:pl': 'Obsługa ramek iframe i innych okien',
    _runtime: user_settings => {
 
-      // redirection for localStorage common storage space
+      // redirect for localStorage common storage space
       if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
 
       const

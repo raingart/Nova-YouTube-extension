@@ -28,6 +28,7 @@ window.nova_plugins.push({
    'desc:pl': 'Ukryj kanały na stronie wyszukiwania',
    _runtime: user_settings => {
 
+      // textarea to array
       const keywords = user_settings.search_filter_channel_blocklist
          ?.split(/[\n,;]/)
          .map(e => e.toString().trim().toLowerCase())
@@ -36,7 +37,7 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: [
             'ytd-video-renderer', // results
-            'ytd-playlist-renderer',
+            'ytd-playlist-renderer', // playlist group
             'ytm-compact-video-renderer' // mobile
          ],
          attr_mark: 'thumb-search-filtered',
@@ -45,6 +46,8 @@ window.nova_plugins.push({
                // if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')?.textContent.toLowerCase().includes(keyword)) {
                if (thumb.$['channel-name']?.innerText.toLowerCase().includes(keyword)) {
                   thumb.remove();
+                  // thumb.style.display = 'none';
+
                   // thumb.style.border = '2px solid red'; // mark for test
                   // console.log('filter removed', keyword, thumb);
                }

@@ -23,6 +23,8 @@ window.nova_plugins.push({
 
       // alt - https://greasyfork.org/en/scripts/415542-youtube-prevent-playlist-autoplay
 
+      if (window.nova_playlistReversed) return; // conflict with plugin
+
       const
          SELECTOR_ID = 'nova-playlist-autoplay-btn', // .switcher
          SELECTOR = '#' + SELECTOR_ID; // for css
@@ -73,15 +75,20 @@ window.nova_plugins.push({
          }
          ${SELECTOR}[type=checkbox]:focus, input[type=checkbox]:focus:after {
             transition: all 200ms ease-in-out;
+         }
+         ${SELECTOR}[type=checkbox]:disabled {
+            opacity: .3;
          }`);
 
-      document.addEventListener('yt-navigate-finish', insertButton);
       // init
       insertButton();
+      // on page update
+      document.addEventListener('yt-navigate-finish', insertButton);
 
       function insertButton() {
          // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
          if (!location.search.includes('list=')) return;
+         if (window.nova_playlistReversed) return; // conflict with plugin
 
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
             .then(el => renderCheckbox(el));

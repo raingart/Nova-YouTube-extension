@@ -20,9 +20,6 @@ window.nova_plugins.push({
       // contents is empty
       // #comments:not([hidden]) > #sections > #contents:not(:empty)
 
-      // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
-      // test example: https://www.youtube.com/watch?v=CV_BR1tfdCo
-
       const COMMENTS_SELECTOR = 'html:not(:fullscreen) #comments:not([hidden])';
 
       NOVA.waitElement('#masthead-container')

@@ -28,9 +28,9 @@ window.nova_plugins.push({
    'desc:pl': 'Wyświetlaj na długich stronach',
    _runtime: user_settings => {
 
-      document.addEventListener('scroll', createBtn, { capture: true, once: true });
+      document.addEventListener('scroll', appendBtn, { capture: true, once: true });
 
-      function createBtn() {
+      function appendBtn() {
          const SELECTOR_ID = 'nova-scrollTop-btn';
 
          const btn = document.createElement('button');
@@ -93,6 +93,7 @@ window.nova_plugins.push({
          const scrollTop_btn = document.getElementById(SELECTOR_ID);
          let sOld;
          window.addEventListener('scroll', () => {
+            // trigger if (current scroll > 50% viewport)
             const sCurr = document.documentElement.scrollTop > (window.innerHeight / 2);
             if (sCurr == sOld) return;
             sOld = sCurr;

@@ -40,7 +40,7 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            resumePlayback(video);
+            resumePlayback.apply(video);
 
             video.addEventListener('loadeddata', resumePlayback.bind(video));
 
@@ -50,6 +50,7 @@ window.nova_plugins.push({
             if (user_settings.player_resume_playback_url_mark && NOVA.currentPage != 'embed') {
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.has('t')) {
+                  // for next video
                   document.addEventListener('yt-navigate-start',
                      connectSaveStateInURL.bind(video), { capture: true, once: true });
 

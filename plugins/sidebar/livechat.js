@@ -16,18 +16,28 @@ window.nova_plugins.push({
    'title:de': 'Livechat ausblenden',
    'title:pl': 'Ukryj czat na żywo',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true, // maybe the shutdown is wrong. But all for the sake of optimization
+   // restart_on_transition: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
       if (user_settings.livechat_visibility_mode == 'disable') {
-         NOVA.waitElement('#chat')
-            .then(chat => chat.remove());
+         const fn1 = () => NOVA.waitElement('#chat')
+            .then(chat => {
+               chat.remove();
+               fn1(); // restart
+            });
+
+         fn1(); // init
 
       } else {
-         NOVA.waitElement('#chat:not([collapsed]) #show-hide-button #button')
-            .then(btn => btn.click());
+         const fn2 = () => NOVA.waitElement('#chat:not([collapsed]) #show-hide-button #button')
+            .then(btn => {
+               btn.click()
+               fn2(); // restart
+            });
+
+         fn2(); // init
       }
 
    },

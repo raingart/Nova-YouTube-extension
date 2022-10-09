@@ -1,7 +1,7 @@
 // ==UserScript==
-// @namespace       https://github.com/raingart/Nova-YouTube-extension/
 // @name            Nova YouTube
-// @version         0.32.9
+// @namespace       https://github.com/raingart/Nova-YouTube-extension/
+// @version         0.32.10
 // @description     Ultimate decision for YouTube™
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
@@ -11,6 +11,8 @@
 // @homepageURL     https://github.com/raingart/Nova-YouTube-extension
 // @supportURL      https://github.com/raingart/Nova-YouTube-extension/issues
 // @contributionURL https://www.patreon.com/raingart
+// @contributionURL https://www.buymeacoffee.com/raingart
+// @contributionURL https://www.paypal.com/donate/?hosted_button_id=B44WLWHZ8AGU2
 
 // @include         http*://*.youtube.com/*
 // @include         http*://*.youtube-nocookie.com/*

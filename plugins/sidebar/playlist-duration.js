@@ -4,6 +4,8 @@
 // https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist conteiner
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 // https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
+// https://www.youtube.com/watch?v=v0PqdzLdFSk&list=OLAK5uy_m-Dv_8xLBZNZeysu7yXsw7psMf48nJ7tw - 1 unavailable video is hidden
+// https://www.youtube.com/watch?v=RhxF9Qg5mOU&list=RDEMd-ObnI9A_YffTMufAPhAHQ&index=9 - infinite playlist
 
 window.nova_plugins.push({
    id: 'playlist-duration',
@@ -120,7 +122,12 @@ window.nova_plugins.push({
                      // console.assert(playingIdx == playingIdx2, 'playingIdx diff:', playingIdx + '/' + playingIdx2);
                      // if (playingIdx !== playingIdx2) alert(1)
 
-                     const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected)
+                     if (window.nova_playlistReversed) vids_list = [...vids_list].reverse();
+
+                     const playingIdx = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
+                     // not available for reverse
+                     // const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
+
                      let total;
 
                      switch (user_settings.playlist_duration_progress_type) {
@@ -211,7 +218,7 @@ window.nova_plugins.push({
          // time
          outArr.push(NOVA.timeFormatTo.HMS.digit(
             (NOVA.currentPage == 'watch' && NOVA.videoElement?.playbackRate)
-            ? duration / NOVA.videoElement.playbackRate : duration
+               ? duration / NOVA.videoElement.playbackRate : duration
          ));
          // pt
          if (user_settings.playlist_duration_percentage && total) {

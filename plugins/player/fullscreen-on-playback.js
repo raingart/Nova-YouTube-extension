@@ -1,6 +1,7 @@
 window.nova_plugins.push({
    id: 'player-fullscreen-mode',
-   title: 'Auto full-screen on playback',
+   // title: 'Auto full screen player,
+   title: 'Auto full screen on playback',
    'title:zh': '播放时自动全屏',
    'title:ja': '再生時に全画面表示',
    'title:ko': '재생 시 자동 전체 화면',
@@ -17,16 +18,18 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // NOVA.waitElement('#movie_player:not(.ad-showing) video')
       NOVA.waitElement('video')
          .then(video => {
-            // video.addEventListener('canplay', setFullscreen.bind(video));
-            video.addEventListener('play', setFullscreen.bind(video));
+            // init
+            video.addEventListener('play', setFullscreen.bind(video), { capture: true, once: true });
+            // on page reload
+            video.addEventListener('loaddata', setFullscreen.bind(video));
+            video.addEventListener('ended', exitFullscreen);
 
             // exit fullscreen
-            if (user_settings.player_fullscreen_mode_exit) {
+            if (user_settings.player_fullscreen_mode_onpause) {
                // Strategy 1
-               video.addEventListener('ended', exitFullscreen);
+               video.addEventListener('play', setFullscreen.bind(video));
                video.addEventListener('pause', exitFullscreen);
                // Strategy 2
                // movie_player.addEventListener('onStateChange', state => {
@@ -56,21 +59,20 @@ window.nova_plugins.push({
 
    },
    options: {
-      player_fullscreen_mode_exit: {
+      player_fullscreen_mode_onpause: {
          _tagName: 'input',
-         // label: 'Exit Fullscreen on Video End',
-         label: 'Exit fullscreen on pause/ends',
-         'label:zh': '暂停时退出全屏',
-         'label:ja': '一時停止時に全画面表示を終了',
-         'label:ko': '일시중지 시 전체화면 종료',
-         'label:id': 'Keluar dari layar penuh saat jeda/berakhir',
-         'label:es': 'Salir de pantalla completa en pausa',
-         'label:pt': 'Sair da tela cheia na pausa',
-         'label:fr': 'Quitter le plein écran en pause',
-         'label:it': 'Esci a schermo intero in pausa/termina',
-         'label:tr': 'Duraklatma/bitişlerde tam ekrandan çık',
-         'label:de': 'Beenden Sie den Vollbildmodus bei Pause',
-         'label:pl': 'Wyjście z trybu pełnoekranowego po wstrzymaniu/zakończeniu',
+         label: 'Exit full screen mode if video is paused',
+         'label:zh': '如果视频暂停，则退出全屏模式',
+         'label:ja': 'ビデオが一時停止している場合は、全画面表示モードを終了します',
+         'label:ko': '비디오가 일시 중지되면 전체 화면 모드 종료',
+         'label:id': 'Keluar dari mode layar penuh jika video dijeda',
+         'label:es': 'Salga del modo de pantalla completa si el video está en pausa',
+         'label:pt': 'Saia do modo de tela cheia se o vídeo estiver pausado',
+         'label:fr': 'Quitter le mode plein écran si la vidéo est en pause',
+         'label:it': 'Uscire dalla modalità a schermo intero se il video è in pausa',
+         'label:tr': 'Video duraklatılırsa tam ekran modundan çıkın',
+         'label:de': 'Beenden Sie den Vollbildmodus, wenn das Video angehalten ist',
+         'label:pl': 'Wyjdź z trybu pełnoekranowego, jeśli wideo jest wstrzymane',
          type: 'checkbox',
       },
    }

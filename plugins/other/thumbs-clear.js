@@ -73,7 +73,7 @@ window.nova_plugins.push({
          document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElements({
-         selectors: ['#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"])'],
+         selectors: ['#thumbnail:not(.ytd-playlist-thumbnail):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])'],
          attr_mark: ATTR_MARK,
          callback: img => {
             // skip "premiere", "live now"
@@ -95,26 +95,39 @@ window.nova_plugins.push({
 
       // patch end card
       if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
-         NOVA.waitElement('video')
-            .then(video => {
-               // force show title
-               NOVA.css.push(
-                  `.ytp-videowall-still .ytp-videowall-still-info-content {
-                     opacity: 1 !important;
-                     text-shadow: rgb(0, 0, 0) 0 0 .1em, rgb(0, 0, 0) 0 0 .2em, rgb(0, 0, 0) 0 0 .4em;
-                  }
-                  .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-author,
-                  .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-live {
-                     opacity: 0 !important;
-                  }`);
+         // force show title
+         NOVA.css.push(
+            `.ytp-videowall-still .ytp-videowall-still-info-content {
+               opacity: 1 !important;
+               text-shadow: rgb(0, 0, 0) 0 0 .1em;
+            }
+            .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-author,
+            .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-live {
+               opacity: 0 !important;
+            }`);
 
-               video.addEventListener('ended', () => {
-                  document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
-                     .forEach(img => {
-                        img.style.backgroundImage = patchImg(img.style.backgroundImage);
-                     });
-               }, false);
+         NOVA.waitElement('#movie_player')
+            .then(movie_player => {
+               movie_player.addEventListener('onStateChange', state => {
+                  // console.debug('playerState', NOVA.getPlayerState(state));
+                  if (NOVA.getPlayerState(state) == 'ENDED') {
+                     document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
+                        .forEach(img => {
+                           img.style.backgroundImage = patchImg(img.style.backgroundImage);
+                        });
+                  }
+               });
             });
+         // Does manual change work at the end of video time
+         // NOVA.waitElement('video')
+         //    .then(video => {
+         //       video.addEventListener('ended', () => {
+         //          document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
+         //             .forEach(img => {
+         //                img.style.backgroundImage = patchImg(img.style.backgroundImage);
+         //             });
+         //       });
+         //    });
       }
 
       function patchImg(str) {

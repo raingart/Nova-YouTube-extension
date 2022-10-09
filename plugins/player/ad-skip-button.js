@@ -1,5 +1,6 @@
 // for test
 // https://www.youtube.com/watch?v=jx9LC2kyfcQ - ad rent block
+// https://www.youtube.com/watch?v=jx9LC2kyfcQ - ad rent block
 
 window.nova_plugins.push({
    id: 'ad-skip-button',
@@ -50,7 +51,7 @@ window.nova_plugins.push({
       function adSkip() {
          if (!movie_player.classList.contains('ad-showing')) return;
 
-         this.currentTime = this.duration; // set end ad video
+         this.currentTime = this.duration; // set end ad-video
 
          NOVA.waitElement('div.ytp-ad-text.ytp-ad-skip-button-text:not([hidden]), button.ytp-ad-skip-button:not([hidden])')
             .then(btn => btn.click()); // click skip-ad

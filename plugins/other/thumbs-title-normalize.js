@@ -26,8 +26,16 @@ window.nova_plugins.push({
          clearOfEmoji = str => str.replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
       // dirty fix bug with not updating thumbnails
-      document.addEventListener('yt-navigate-finish', () =>
-         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
+      let oldSortQuery = NOVA.queryURL.get('sort');
+      document.addEventListener('yt-navigate-finish', () => {
+         if ((sortQuery = NOVA.queryURL.get('sort')) && sortQuery != oldSortQuery) {
+            oldSortQuery = sortQuery;
+            location.reload();
+         }
+      });
+      // // document.addEventListener('yt-page-data-updated', () =>
+      // document.addEventListener('yt-navigate-finish', () =>
+      //    document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(
@@ -109,7 +117,6 @@ window.nova_plugins.push({
          min: 1,
          max: 10,
          value: 2,
-         'data-dependent': { 'thumbnails_title_normalize_smart': true },
       },
       thumbnails_title_clear_emoji: {
          _tagName: 'input',
@@ -126,7 +133,6 @@ window.nova_plugins.push({
          'label:de': 'Emoji löschen',
          'label:pl': 'Usuń emoji',
          type: 'checkbox',
-         'data-dependent': { 'thumbnails_title_normalize_smart': true },
       },
    }
 });

@@ -1,8 +1,3 @@
-// for test
-// https://www.youtube.com/watch?v=XKa6TpPM70E
-
-// https://www.youtube.com/watch?v=jx9LC2kyfcQ - ad rent block
-
 window.nova_plugins.push({
    id: 'player-control-autohide',
    title: 'Hide controls on player',
@@ -39,6 +34,10 @@ window.nova_plugins.push({
          }
          .ytp-chrome-bottom:hover {
             opacity: 1;
+         }
+         /* patch for plugin "player-float-progress-bar" */
+         .ytp-chrome-bottom:not(:hover) ~ #nova-player-float-progress-bar {
+            visibility: visible !important;
          }`);
 
    },

@@ -25,7 +25,7 @@ window.nova_plugins.push({
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')) return;
 
       const
-         SELECTOR_ID = 'nova-player-float-progress-bar',
+         SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin "player-control-autohide"
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
@@ -39,19 +39,10 @@ window.nova_plugins.push({
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
             renderChapters.init(video); // init
-            // is new video
-            video.addEventListener('loadeddata', function () { // update
-               // hide if is stream.
-               container.style.display = movie_player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
 
-               // reset animation state
-               container.classList.remove('transition');
-               bufferEl.style.transform = 'scaleX(0)';
-               progressEl.style.transform = 'scaleX(0)';
-               container.classList.add('transition');
-
-               renderChapters.init(this);
-            });
+            // resetBar on new video loaded
+            video.addEventListener('loadeddata', resetBar);
+            document.addEventListener('yt-navigate-finish', resetBar);
 
             // render progress
             // NOVA.waitElement(`${SELECTOR}-progress`)
@@ -99,12 +90,23 @@ window.nova_plugins.push({
             }
             // });
 
+            function resetBar() {
+               // hide if is stream.
+               container.style.display = movie_player.getVideoData().isLive ? 'none' : 'initial'; // style.visibility - overridden
+
+               // reset animation state
+               container.classList.remove('transition');
+               bufferEl.style.transform = 'scaleX(0)';
+               progressEl.style.transform = 'scaleX(0)';
+               container.classList.add('transition');
+
+               renderChapters.init(video);
+            }
+
          });
 
       function renderFloatBar(chrome_btn) {
-
          return document.getElementById(SELECTOR_ID) || (function () {
-
             movie_player?.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
                   <div class="conteiner">

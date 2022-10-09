@@ -93,7 +93,7 @@ window.nova_plugins.push({
 
       // if player fullscreen desable float mode
       document.addEventListener('fullscreenchange', () =>
-         (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE), false);
+         (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE));
 
       // toggle
       NOVA.waitElement('#player-theater-container')
@@ -284,27 +284,27 @@ window.nova_plugins.push({
             this.dragTarget = el_target;
 
             // touchs
-            // document.addEventListener('touchstart', this.dragStart.bind(this), false);
-            // document.addEventListener('touchend', this.dragEnd.bind(this), false);
-            // document.addEventListener('touchmove', this.draging.bind(this), false);
+            // document.addEventListener('touchstart', this.dragStart.bind(this));
+            // document.addEventListener('touchend', this.dragEnd.bind(this));
+            // document.addEventListener('touchmove', this.draging.bind(this));
             // mouse
-            // document.addEventListener('mousedown', this.dragStart.bind(this), false);
-            // document.addEventListener('mouseup', this.dragEnd.bind(this), false);
-            // document.addEventListener('mousemove', this.draging.bind(this), false);
+            // document.addEventListener('mousedown', this.dragStart.bind(this));
+            // document.addEventListener('mouseup', this.dragEnd.bind(this));
+            // document.addEventListener('mousemove', this.draging.bind(this));
             document.addEventListener('mousedown', evt => {
                if (!el_target.classList.contains(CLASS_VALUE)) return;
                this.dragStart.apply(this, [evt]);
-            }, false);
+            });
             document.addEventListener('mouseup', evt => {
                if (this.active) this.dragTarget.removeAttribute(this.attrNametoLock); // fix broken preventDefault
                this.dragEnd.apply(this, [evt]);
-            }, false);
+            });
             document.addEventListener('mousemove', evt => {
                if (this.active && !this.dragTarget.hasAttribute(this.attrNametoLock)) {
                   this.dragTarget.setAttribute(this.attrNametoLock, true); // fix broken preventDefault
                }
                this.draging.apply(this, [evt]);
-            }, false);
+            });
 
             // fix broken preventDefault / preventDefault patch
             NOVA.css.push(

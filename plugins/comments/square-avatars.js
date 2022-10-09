@@ -29,12 +29,15 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.css.push(
-         `yt-img-shadow,
-         .ytp-title-channel-logo,
-         #player .ytp-title-channel,
-         ytm-profile-icon {
-            border-radius: 0 !important;
-         }`);
+         [
+            'yt-img-shadow',
+            '.ytp-title-channel-logo',
+            '#player .ytp-title-channel',
+            'ytm-profile-icon',
+         ]
+            .join(',\n') + ` {
+               border-radius: 0 !important;
+            }`);
 
    },
 });

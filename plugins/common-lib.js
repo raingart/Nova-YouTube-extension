@@ -252,10 +252,10 @@ const NOVA = {
 
    //       document.cookie = Object.entries({
    //          [encodeURIComponent(name)]: value,
-   //          // domain: '.' + location.hostname.split('.').slice(-2).join('.'), // .youtube.com
+   //          // domain: '.' + location.hostname.split('.').slice(-2).join('.'),  // "www.youtube.com" => ".youtube.com"
    //          domain: location.hostname,
    //          expires: date.toUTCString(),
-   //          path: '/',
+   //          path: '/', // what matters at the end
    //       })
    //          .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
@@ -381,10 +381,18 @@ const NOVA = {
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
                ?.split('\n')
                .forEach(line => {
+                  line = line?.toString().trim(); // clear space
                   if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
-                     timestamp = timestamp[0];
-                     const sec = this.timeFormatTo.hmsToSec(timestamp);
-                     if (sec > prevSec && sec < +video_duration) {
+                     // console.debug('line', line);
+                     timestamp = timestamp[0]; // ex:"0:00"
+                     const
+                        sec = this.timeFormatTo.hmsToSec(timestamp),
+                        timestampPos = line.indexOf(timestamp);
+
+                     if (sec > prevSec && sec < +video_duration
+                        // not in the middle of the line
+                        && (timestampPos < 5 || timestampPos.length === line.length)
+                     ) {
                         // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
                         prevSec = sec;
                         timestampsCollect.push({
@@ -632,12 +640,15 @@ const NOVA = {
 
    // captureActiveVideoElement
    videoElement: (() => {
+      const videoSelector = '#movie_player:not(.ad-showing) video';
       // init
       document.addEventListener('canplay', ({ target }) => {
-         target.matches('#movie_player video') && (NOVA.videoElement = target);
+         target.matches(videoSelector) && (NOVA.videoElement = target);
       }, { capture: true, once: true });
       // update
-      document.addEventListener('play', ({ target }) => NOVA.videoElement = target, true);
+      document.addEventListener('play', ({ target }) => {
+         target.matches(videoSelector) && (NOVA.videoElement = target);
+      }, true);
    })(),
 
    async getChannelId(api_key) {
@@ -646,7 +657,7 @@ const NOVA = {
       let result = [
          document.querySelector('meta[itemprop="channelId"][content]')?.content,
          // channel page
-         (document.body.querySelector('ytd-app')?.__data?.data.response
+         (document.body.querySelector('ytd-app')?.__data?.data?.response
             || document.body.querySelector('ytd-app')?.data?.response
             || window.ytInitialData
          )

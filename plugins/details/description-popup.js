@@ -1,5 +1,6 @@
 // for test:
 // https://www.youtube.com/watch?v=FSjr2H0RDsY - empty desc
+// https://www.youtube.com/watch?v=CV_BR1tfdCo - empty desc
 
 window.nova_plugins.push({
    id: 'description-popup',
@@ -116,7 +117,7 @@ window.nova_plugins.push({
 
             descriptionEl.addEventListener('mouseenter', evt => {
                document.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click()
-            }, false);
+            });
             // }, { capture: true, once: true });
 
             document.addEventListener('yt-navigate-finish', restoreDateLine);
