@@ -87,6 +87,10 @@ const Plugins = {
    //    'details/description-popup.js',
    //    'details/videos-count.js',
    // ],
+   // list: [
+   //    'player/autopause.js',
+   //    'player/autostop.js',
+   // ],
 
    load(list) {
       (list || this.list)

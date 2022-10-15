@@ -6,24 +6,24 @@ const
    fix_undefine = v => v === 'undefined' ? undefined : v, // for Tampermonkey
    user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
 
+// Disabled script if youtube is embedded
 if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
 
-      user_settings['thumbs-hide'] = true;
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+//       user_settings['thumbs-hide'] = true;
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 if (isOptionsPage()) return;
 

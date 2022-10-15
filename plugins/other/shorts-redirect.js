@@ -39,7 +39,8 @@ window.nova_plugins.push({
 
       function redirectPageToNormal() {
          if ('shorts' == NOVA.currentPage) {
-            // alt - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
+            // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js
+            // alt2 - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
             return location.href = location.href.replace('shorts/', 'watch?v=');
             // location.replace(location.href.replace('/shorts/', '/watch?v='));
          }
@@ -147,6 +148,7 @@ window.nova_plugins.push({
       // });
 
       function getThumbTime(videoData = required()) {
+         // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js#L189 (extractLengthFromA11y fn)
          // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
          //    .forEach(videoRenderer => {
          const

@@ -109,6 +109,10 @@ const NOVA = {
       });
    },
 
+   async sleep(timeout = 100) {
+      return new Promise(resolve => setTimeout(resolve, timeout));
+   },
+
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
    // clear_watchElements(name = required()) {
@@ -227,8 +231,8 @@ const NOVA = {
       // HTMLElement.prototype.getIntValue = () {}
       // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
       getValue(selector = required(), prop_name = required()) {
-         return (el = document.body.querySelector(selector))
-            ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) udefuned return is not valid
+         return (el = document.body?.querySelector(selector))
+            ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) return "undefined" is not valid
       },
    },
 

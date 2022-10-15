@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'disable-player-sleep-mode',
-   title: 'Disable the [continue watching?] prompt',
+   title: 'Disable the [Continue watching?] popup',
    // title: 'Player stay active forever',
    // title: 'Disable player sleep mode',
    'title:zh': '玩家永远保持活跃',
@@ -34,6 +34,7 @@ window.nova_plugins.push({
       // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
       // Strategy 1
       window.setInterval(() => {
+         // window.wrappedJSObject._lact = Date.now(); - does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
          document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 }));
       }, 1000 * 60 * 5); // 5 min
 

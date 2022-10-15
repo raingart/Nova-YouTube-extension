@@ -21,48 +21,50 @@ const Conf = {
 
       function showOrHide(dependentEl, dependentsJson) {
          // console.debug('showOrHide', ...arguments);
-         for (const targetName in dependentsJson) {
+         for (const parrentName in dependentsJson) {
             // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-            const targetEl = Array.from(document.getElementsByName(targetName))
-               .find(e => (e.type == 'radio') ? e.checked : e); // return radio:checked or document.getElementsByName(targetName)[0]
+            const parrentEl = Array.from(document.getElementsByName(parrentName))
+               .find(e => (e.type == 'radio') ? e.checked : e); // return radio:checked or document.getElementsByName(parrentName)[0]
 
-            if (targetEl) {
-               const targetValues = Array.isArray(dependentsJson[targetName])
-                  ? dependentsJson[targetName]
-                  : [dependentsJson[targetName]];
+            if (parrentEl) {
+               const ruleValues = Array.isArray(dependentsJson[parrentName])
+                  ? dependentsJson[parrentName]
+                  : [dependentsJson[parrentName]];
 
-               const targetValuesList = (function () {
-                  if (options = targetEl?.selectedOptions) {
+               const currentValuesList = (function () {
+                  // for options
+                  if (options = parrentEl?.selectedOptions) {
                      return Array.from(options).map(({ value }) => value);
                   }
-                  return [targetEl.value];
+                  return [parrentEl.value];
+                  // return [parrentEl.type == 'checkbox' ? parrentEl.checked : parrentEl.value];
                })();
 
-               // if (targetName == 'player_full_viewport')
-               //    console.debug('targetValues', targetValuess, targetValues, dependentsJson[targetName]);
+               // if (parrentName == 'stop_preload_embed')
+               //    console.debug(parrentName, ruleValues, currentValuesList);
 
-               if (targetValues.length // filter value present
+               if (ruleValues.length // filter value present
                   && ( // element has value or checked
-                     (targetEl.checked && !targetEl.matches('[type="radio"]')) // skip radio (which is always checked. Unlike a checkbox)
-                     || targetValues.some(i => targetValuesList.includes(i.toString())) // has value
+                     (parrentEl.checked && !parrentEl.matches('[type="radio"]')) // skip radio (which is always checked. Unlike a checkbox)
+                     || ruleValues.some(i => currentValuesList.includes(i.toString())) // has value
                   )
-                  // || (targetValues.startsWith('!') && targetEl.value !== targetValues.replace('!', '')) // inverse value
-                  || targetValues.some(i =>
-                     i.toString().startsWith('!') && !targetValuesList.includes(i.toString().replace('!', '')) // inverse value
+                  // || (ruleValues.startsWith('!') && parrentEl.value !== ruleValues.replace('!', '')) // inverse value
+                  || ruleValues.some(i =>
+                     i.toString().startsWith('!') && !currentValuesList.includes(i.toString().replace('!', '')) // inverse value
                   )
                ) {
-                  // console.debug('show:', targetName);
+                  // console.debug('show:', parrentName);
                   dependentEl.classList.remove('hide');
                   childInputDisable(false);
 
                } else {
-                  // console.debug('hide:', targetName);
+                  // console.debug('hide:', parrentName);
                   dependentEl.classList.add('hide');
                   childInputDisable(true);
                }
 
             } else {
-               console.error('error showOrHide:', targetName);
+               console.error('error showOrHide:', parrentName);
             }
          }
 

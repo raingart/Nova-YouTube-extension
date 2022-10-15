@@ -15,7 +15,7 @@ const App = {
             }
          }
          this.settingsStore = settings;
-         // in the iframe
+         // Disabled script if youtube is embedded
          if (settings?.exclude_iframe && (window.self !== window.top)) { // window.frameElement
             return console.warn('processed in the iframe disable');
          }

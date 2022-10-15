@@ -74,7 +74,6 @@ window.nova_plugins.push({
                      video.play();
                   }
                });
-               // window.addEventListener('blur', pause);
             }
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
@@ -87,6 +86,24 @@ window.nova_plugins.push({
                   video.pause();
                }
             });
+            // pause on tab unfocuse
+            if (user_settings.pause_background_tab_autopause_unfocus) {
+               window.addEventListener('blur', () => {
+                  if ('PLAYING' == NOVA.getPlayerState()) {
+                     video.pause();
+                  }
+               });
+               // window.addEventListener('blur', async () => {
+               //    await NOVA.sleep(100); // dirty fix. document.visibilityState update AFTER blur
+
+               //    if (document.visibilityState == 'hidden'
+               //       && 'PLAYING' == NOVA.getPlayerState()
+               //    ) {
+               //       // console.debug('document.visibilityState', document.visibilityState);
+               //       video.pause();
+               //    }
+               // });
+            }
 
          });
 
@@ -193,6 +210,23 @@ window.nova_plugins.push({
          'label:tr': 'Sekme odağında otomatik oynatma',
          'label:de': 'Autoplay bei Tab-Fokus',
          'label:pl': 'Autoodtwarzanie po wybraniu karty',
+         type: 'checkbox',
+         // title: '',
+      },
+      pause_background_tab_autopause_unfocus: {
+         _tagName: 'input',
+         label: 'Autopause video if tab loses focus',
+         'label:zh': '如果选项卡失去焦点，则自动暂停视频',
+         'label:ja': 'タブがフォーカスを失った場合にビデオを自動一時停止',
+         'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',
+         'label:id': 'Jeda otomatis video jika tab kehilangan fokus',
+         'label:es': 'Pausa automática del video si la pestaña pierde el foco',
+         'label:pt': 'Pausar automaticamente o vídeo se a guia perder o foco',
+         'label:fr': "Pause automatique de la vidéo si l'onglet perd le focus",
+         'label:it': 'Metti automaticamente in pausa il video se la scheda perde la messa a fuoco',
+         'label:tr': 'Sekme odağı kaybederse videoyu otomatik duraklat',
+         'label:de': 'Video automatisch pausieren, wenn der Tab den Fokus verliert',
+         'label:pl': 'Automatycznie wstrzymaj wideo, jeśli karta straci ostrość',
          type: 'checkbox',
          // title: '',
       },

@@ -85,8 +85,8 @@ window.nova_plugins.push({
          NOVA.waitElement('ytd-grid-video-renderer')
             .then(async () => {
                const
-                  liveSelector = '#badges [class*="live-now"], #thumbnail img[src*="qdefault_live.jpg"]',
-                  soonSelector = '#overlays [overlay-style="UPCOMING"], #overlays [aria-label="PREMIERE"]';
+                  liveSelector = '#thumbnail img[src*="_live.jpg"]',
+                  premieresSelector = '#thumbnail #overlays [aria-label="Premiere"], #thumbnail #overlays [aria-label="Upcoming"]';
 
                // wait all stream
                await NOVA.waitUntil(() => document.querySelectorAll(liveSelector).length > 1, 500);
@@ -96,8 +96,8 @@ window.nova_plugins.push({
                }
 
                function sortByStream(a, b) {
-                  const ai = a.querySelector(liveSelector) ? 2 : a.querySelector(soonSelector) ? 1 : 0;
-                  const bi = b.querySelector(liveSelector) ? 2 : b.querySelector(soonSelector) ? 1 : 0;
+                  const ai = a.querySelector(liveSelector) ? 2 : a.querySelector(premieresSelector) ? 1 : 0;
+                  const bi = b.querySelector(liveSelector) ? 2 : b.querySelector(premieresSelector) ? 1 : 0;
                   return (ai > bi) ? -1 : (ai < bi) ? 1 : 0;
                }
             });

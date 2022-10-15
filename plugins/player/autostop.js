@@ -33,7 +33,7 @@ window.nova_plugins.push({
             let disableStop;
 
             try {
-               movie_player.stopVideo(); // init before update onStateChange
+               movie_player?.stopVideo(); // init before update onStateChange
                // reset disableStop
                document.addEventListener('yt-navigate-start', () => disableStop = false);
             } catch (err) { }
@@ -48,6 +48,8 @@ window.nova_plugins.push({
                //    // console.debug('cancel stop in active tab');
                //    return;
                // }
+
+               if (user_settings.stop_preload_ignore_live && movie_player.getVideoData().isLive) return;
 
                // -1: unstarted
                // 0: ended
@@ -89,22 +91,60 @@ window.nova_plugins.push({
          'label:de': 'Wiedergabeliste ignorieren',
          'label:pl': 'Zignoruj listę odtwarzania',
          type: 'checkbox',
+         'data-dependent': { 'stop_preload_embed': false },
       },
-      stop_preload_embed: {
+      stop_preload_ignore_live: {
          _tagName: 'input',
-         label: 'Only for embedded videos',
-         'label:zh': '仅适用于嵌入式视频',
-         'label:ja': '埋め込みビデオのみ',
-         'label:ko': '삽입된 동영상에만 해당',
-         'label:id': 'Hanya untuk video tersemat',
-         'label:es': 'Solo para videos incrustados',
-         'label:pt': 'Apenas para vídeos incorporados',
-         'label:fr': 'Uniquement pour les vidéos intégrées',
-         'label:it': 'Solo per i video incorporati',
-         'label:tr': 'Yalnızca gömülü videolar için',
-         'label:de': 'Nur für eingebettete Videos',
-         'label:pl': 'Tylko dla osadzonych filmów',
+         label: 'Ignore live',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
          type: 'checkbox',
+         title: 'not applicable for embedded video',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'label:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         'data-dependent': { 'stop_preload_embed': false },
+      },
+      // stop_preload_embed: {
+      //    _tagName: 'input',
+      //    label: 'Only for embedded videos',
+      //    'label:zh': '仅适用于嵌入式视频',
+      //    'label:ja': '埋め込みビデオのみ',
+      //    'label:ko': '삽입된 동영상에만 해당',
+      //    'label:id': 'Hanya untuk video tersemat',
+      //    'label:es': 'Solo para videos incrustados',
+      //    'label:pt': 'Apenas para vídeos incorporados',
+      //    'label:fr': 'Uniquement pour les vidéos intégrées',
+      //    'label:it': 'Solo per i video incorporati',
+      //    'label:tr': 'Yalnızca gömülü videolar için',
+      //    'label:de': 'Nur für eingebettete Videos',
+      //    'label:pl': 'Tylko dla osadzonych filmów',
+      //    type: 'checkbox',
+      // },
+      stop_preload_embed: {
+         _tagName: 'select',
+         label: 'Apply to video',
+         options: [
+            { label: 'all', value: false, selected: true, },
+            { label: 'embed', value: 'on' },
+         ],
       },
       // stop_preload_ignore_active_tab: {
       //    _tagName: 'input',

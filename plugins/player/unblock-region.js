@@ -3,6 +3,12 @@
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
 // https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
 
+// warn "The following content may contain suicide or self-harm topics."
+// https://www.youtube.com/watch?v=MEZ-0nyiago
+// https://www.youtube.com/watch?v=MiQozY6jR0I
+// https://www.youtube.com/watch?v=ek7JK6pattE
+// https://www.youtube.com/watch?v=qAYlTiV-Zf8
+
 window.nova_plugins.push({
    id: 'video-unblock-region',
    title: 'Try unblock if video not available in your country',

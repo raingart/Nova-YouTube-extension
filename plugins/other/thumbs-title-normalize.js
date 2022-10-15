@@ -16,7 +16,7 @@ window.nova_plugins.push({
    // run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed, -results',
    section: 'other',
-   // desc: '',
+   // desc: 'Lowercase the title',
    _runtime: user_settings => {
 
       const
