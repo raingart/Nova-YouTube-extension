@@ -63,9 +63,10 @@ window.nova_plugins.push({
                   margin: 0 1%;
                   overflow-y: auto;
                   max-height: 88vh;
-                  padding: 10px 15px;
+                  max-width: 90%;
                   background-color: #222;
                   border: 1px solid #333;
+                  border-radius: 0 !important;
                }
 
                ${DESCRIPTION_SELECTOR}:not(:hover) {
@@ -146,7 +147,7 @@ window.nova_plugins.push({
                            if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
                            // first 3 div. ex:
                            // [6,053 views] [Premiered] [Oct 8, 2022]
-                           // [14,051] [views] [Mar 2, 2017]
+                           // [14,051 views] [] [Mar 2, 2017]
                               .slice(0, 3)
                               .map(e => e.textContent).join('').trim())
                               && text != oldDateText

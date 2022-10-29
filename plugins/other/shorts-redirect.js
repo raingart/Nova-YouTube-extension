@@ -158,8 +158,8 @@ window.nova_plugins.push({
             viewCountText = videoData.viewCountText?.simpleText;
 
          let
-            [minutes, seconds] = title.split(publishedTimeText)[1].split(viewCountText)[0] // "12 minutes, 17 seconds "
-               .split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+            [minutes, seconds] = title.split(publishedTimeText)[1]?.split(viewCountText)[0] // "12 minutes, 17 seconds "
+               ?.split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
          if (!seconds) { // fix mixed up in places
             seconds = minutes;

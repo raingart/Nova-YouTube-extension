@@ -15,7 +15,8 @@ window.nova_plugins.push({
    run_on_pages: 'results, watch, embed, -mobile',
    section: 'other',
    // desc: "turn off 'card' in https://www.youtube.com/account_playback",
-   desc: 'remove the annoying stuff at the end of the videos',
+   desc: 'remove the annoying stuff',
+   // desc: 'remove the annoying stuff at the end of the videos',
    _runtime: user_settings => {
 
       let selectorsList = [
@@ -37,16 +38,20 @@ window.nova_plugins.push({
          default:
             selectorsList.push([
                /* for 'results' page: */
-               '.ytd-search-pyv-renderer', // fix blank space (https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
+               'ytd-search-pyv-renderer', // fix blank space (https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
                '[class^="ytd-promoted-"]', // suggest site (https://www.youtube.com/results?search_query=mmersive+Simmulator)
                // '.ytd-promoted-sparkles-text-search-renderer', // suggest something (I do not remember)
-               // 'ytd-promoted-video-renderer', // suggest ad-video
+               // 'ytd-search-pyv-renderer ytd-promoted-video-renderer', // suggest ad-video
                'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block
                // 'ytd-video-renderer + ytd-horizontal-card-list-renderer', // "People also search for" block
 
                /* for 'watch' page: */
                '[class^="ytp-ce-"]', // suggest video/channel for the end cards
                '.ytp-cards-teaser-text', // "next video suggestion" (title) in the top-right corner
+
+               'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations"
+
+               // 'ytd-popup-container ytp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.
             ]);
       }
 

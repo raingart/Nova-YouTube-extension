@@ -29,16 +29,16 @@ window.nova_plugins.push({
       }
 
       NOVA.waitElement('#movie_player')
-         .then(movie_player => {
+         .then(async movie_player => {
             let disableStop;
 
-            try {
-               movie_player?.stopVideo(); // init before update onStateChange
-               // reset disableStop
-               document.addEventListener('yt-navigate-start', () => disableStop = false);
-            } catch (err) { }
+            // reset disableStop
+            document.addEventListener('yt-navigate-start', () => disableStop = false);
 
             movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));
+
+            await NOVA.waitUntil(() => movie_player.hasOwnProperty('stopVideo')); // fix specific error for firefox
+            movie_player.stopVideo(); // init before update onStateChange
 
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', NOVA.getPlayerState(state), document.visibilityState);

@@ -273,8 +273,8 @@ window.nova_plugins.push({
                      canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
                      // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
                   } catch (error) {
-                     alert("The video is protected. Can't take screenshot due to security policy");
-                     container.remove();
+                     // alert("The video is protected. Can't take screenshot due to security policy");
+                     // container.remove();
                   }
                   // create
                   if (!container.id) {

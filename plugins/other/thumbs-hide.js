@@ -132,20 +132,19 @@ window.nova_plugins.push({
 
             // streaming
             // #overlays > :not(ytd-thumbnail-overlay-time-status-renderer)
-            document.body.querySelectorAll('#thumbnail #video-badges')
-               // && !el.querySelector('#overlays > ytd-thumbnail-overlay-time-status-renderer')
-               .forEach(el => {
-                  if (el.classList.includes('live-now') // .badge-style-type-live-now-alternate
-                     && el.querySelector('#repeat')
-                     && (thumb = el.closest(thumbsSelectors))
-                  ) {
-                     thumb.remove();
-                     // thumb.style.display = 'none';
+            // #video-badges > .badge-style-type-live-now-alternate
+            document.body.querySelectorAll('#video-badges > [class*="live-now"]')
+               .forEach(el => el.closest(thumbsSelectors)?.remove());
+               // for test
+               // .forEach(el => {
+               //    if (thumb = el.closest(thumbsSelectors)) {
+               //       // thumb.remove();
+               //       // thumb.style.display = 'none';
 
-                     // console.debug('Premieres:', thumb);
-                     // thumb.style.border = '2px solid red'; // mark for test
-                  }
-               });
+               //       console.debug('Premieres:', thumb);
+               //       thumb.style.border = '2px solid violet'; // mark for test
+               //    }
+               // });
          },
 
          live() {

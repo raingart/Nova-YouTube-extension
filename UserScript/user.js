@@ -141,7 +141,7 @@ function landerPlugins() {
 
          clearInterval(plugins_lander);
          // force page reload. Dirty hack to page reset hack to clean up junk (for playlist)
-         playlistPageReload();
+         // playlistPageReload();
 
          console.groupCollapsed('plugins status');
 
@@ -158,43 +158,43 @@ function landerPlugins() {
    // skip first page transition
    document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
 
-   function playlistPageReload(sec = 5) {
-      if (location.search.includes('list=')) {
-         playlist_page_transition_count++;
-         // console.debug('playlist_page_transition_count:', playlist_page_transition_count);
+   // function playlistPageReload(sec = 5) {
+   //    if (location.search.includes('list=')) {
+   //       playlist_page_transition_count++;
+   //       // console.debug('playlist_page_transition_count:', playlist_page_transition_count);
 
-         if (playlist_page_transition_count === 30) {
-            const notice = document.createElement('div');
-            Object.assign(notice.style, {
-               position: 'fixed',
-               top: 0,
-               right: '50%',
-               transform: 'translateX(50%)',
-               margin: '50px',
-               'z-index': 9999,
-               'border-radius': '2px',
-               'background-color': 'tomato',
-               'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
-               'font-size': '12px',
-               color: '#fff',
-               padding: '10px',
-               cursor: 'pointer',
-            });
-            notice.addEventListener('click', () => {
-               playlist_page_transition_count = 0;
-               notice.remove();
-               clearTimeout(playlist_reload);
-            });
-            notice.innerHTML =
-               `<h4 style="margin:0;">Attention! ${GM_info.script.name}</h4>
-               <div>The page will be automatically reloaded within ${sec} sec</div>
-               <div><i>Click for cancel</i></div>`;
-            document.body.append(notice);
+   //       if (playlist_page_transition_count === 30) {
+   //          const notice = document.createElement('div');
+   //          Object.assign(notice.style, {
+   //             position: 'fixed',
+   //             top: 0,
+   //             right: '50%',
+   //             transform: 'translateX(50%)',
+   //             margin: '50px',
+   //             'z-index': 9999,
+   //             'border-radius': '2px',
+   //             'background-color': 'tomato',
+   //             'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
+   //             'font-size': '12px',
+   //             color: '#fff',
+   //             padding: '10px',
+   //             cursor: 'pointer',
+   //          });
+   //          notice.addEventListener('click', () => {
+   //             playlist_page_transition_count = 0;
+   //             notice.remove();
+   //             clearTimeout(playlist_reload);
+   //          });
+   //          notice.innerHTML =
+   //             `<h4 style="margin:0;">Attention! ${GM_info.script.name}</h4>
+   //             <div>The page will be automatically reloaded within ${sec} sec</div>
+   //             <div><i>Click for cancel</i></div>`;
+   //          document.body.append(notice);
 
-            const playlist_reload = setTimeout(() => location.reload(), 1000 * +sec); // 5sec
-         }
-      }
-   }
+   //          const playlist_reload = setTimeout(() => location.reload(), 1000 * +sec); // 5sec
+   //       }
+   //    }
+   // }
 }
 
 function renderSettingButton() {

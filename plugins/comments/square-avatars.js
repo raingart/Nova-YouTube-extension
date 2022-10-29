@@ -34,6 +34,13 @@ window.nova_plugins.push({
             '.ytp-title-channel-logo',
             '#player .ytp-title-channel',
             'ytm-profile-icon',
+
+            // after 10.27.22
+            'a.ytd-thumbnail',
+            // '#description',
+            // '.ytd-searchbox', // searchbox
+            // '.yt-spec-button-shape-next--size-m', // comment replay, subscribe like , , etc btn
+
          ]
             .join(',\n') + ` {
                border-radius: 0 !important;

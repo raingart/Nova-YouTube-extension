@@ -45,7 +45,7 @@ window.nova_plugins.push({
 
                // case 'always':
                default:
-                  moreExpand()
+                  moreExpand();
                   break;
             }
          },
@@ -56,7 +56,9 @@ window.nova_plugins.push({
          selectors: ['#more-replies'],
          attr_mark: 'replies-expanded',
          callback: el => {
-            const moreExpand = () => el.querySelector('#button')?.click();
+            // const moreExpand = () => el.querySelector('#button')?.click();
+            const moreExpand = () => el.click();
+
             // on hover auto expand
             switch (user_settings.comments_view_reply) {
                case 'onhover':
@@ -65,7 +67,7 @@ window.nova_plugins.push({
 
                // case 'always':
                default:
-                  moreExpand()
+                  moreExpand();
                   break;
             }
          },

@@ -148,7 +148,7 @@ window.nova_plugins.push({
                   NOVA.waitElement('.ytp-progress-bar')
                      .then(progress_bar => {
                         ['mousedown', 'mouseup'].forEach(evt => {
-                           video.addEventListener(evt, () => {
+                           progress_bar.addEventListener(evt, () => {
                               //    // if (movie_player.contains(document.activeElement)) {
                               // if (document.activeElement.matches('.ytp-progress-bar')) {
                               movie_player.classList.add(CLASS_OVER_PAUSED)

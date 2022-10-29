@@ -88,8 +88,9 @@ const Plugins = {
    //    'details/videos-count.js',
    // ],
    // list: [
-   //    'player/autopause.js',
+   //    'comments/square-avatars.js',
    //    'player/autostop.js',
+   //    'sidebar/-playlist-skip-liked.js',
    // ],
 
    load(list) {

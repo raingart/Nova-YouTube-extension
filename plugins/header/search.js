@@ -34,6 +34,7 @@ window.nova_plugins.push({
       //          const patchLocation = () => location.href = `/results?search_query=${input.value}&sp=` + sp;
       //          // press "Enter"
       //          input.addEventListener('keydown', ({ keyCode }) => (keyCode === 13) && patchLocation());
+      //          input.addEventListener('keydown', ({ key }) => (key === 'Enter') && patchLocation());
       //          // click on button
       //          NOVA.waitElement('button#search-icon-legacy')
       //             .then(button => button.addEventListener('click', patchLocation));
