@@ -31,9 +31,9 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: ['#contents #expander[collapsed] #more:not([hidden])'],
          attr_mark: 'comment-expanded',
-         callback: more_btn => {
-            const moreExpand = () => more_btn.click();
-            const comment = more_btn.closest('#expander[collapsed]');
+         callback: btn => {
+            const moreExpand = () => btn.click();
+            const comment = btn.closest('#expander[collapsed]');
             // console.debug('contents expander:', comment);
             // comment.style.border = '2px solid red'; // mark for test
 
@@ -53,16 +53,15 @@ window.nova_plugins.push({
 
       // comment replies
       NOVA.watchElements({
-         selectors: ['#more-replies'],
+         selectors: ['#more-replies button'],
          attr_mark: 'replies-expanded',
-         callback: el => {
-            // const moreExpand = () => el.querySelector('#button')?.click();
-            const moreExpand = () => el.click();
+         callback: btn => {
+            const moreExpand = () => btn.click();
 
             // on hover auto expand
             switch (user_settings.comments_view_reply) {
                case 'onhover':
-                  el.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
+                  btn.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
                   break;
 
                // case 'always':

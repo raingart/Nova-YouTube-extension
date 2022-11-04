@@ -344,7 +344,7 @@ window.nova_plugins.push({
                // function getThumb() {
                //    const thumbnail_url =
                //       [
-               //          document.querySelector('[href*="maxresdefault"]')?.href,
+               //          document.body.querySelector('[href*="maxresdefault"]')?.href,
                //          window.ytplayer.config.args.raw_player_response.videoDetails.thumbnail.thumbnails.pop(),
                //          window.ytplayer.config.args.raw_player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0],
                //       ]
@@ -415,36 +415,68 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('watch-later')) {
-               const watchLaterBtn = document.createElement('button');
 
-               watchLaterBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               watchLaterBtn.title = 'Watch later';
-               Object.assign(watchLaterBtn.style, {
-                  padding: '0 .5em',
-                  position: 'relative',
-               });
-               updateSVG();
-               watchLaterBtn.addEventListener('click', () => {
-                  if (watchLater = document.querySelector('#movie_player .ytp-watch-later-button')) {
-                     watchLater.click();
-                     updateSVG();
-                     setTimeout(updateSVG, 1000); // 1 sec
-                  }
-               });
-               container.prepend(watchLaterBtn);
+               NOVA.waitElement('.ytp-watch-later-button')
+                  .then(watchLaterDefault => {
 
-               function updateSVG() {
-                  // return alt
-                  //    ? `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
-                  //          <use class="ytp-svg-shadow" xlink:href="#ytp-id-25"></use>
-                  //          <path class="ytp-svg-fill"
-                  //             d="M18,8 C12.47,8 8,12.47 8,18 C8,23.52 12.47,28 18,28 C23.52,28 28,23.52 28,18 C28,12.47 23.52,8 18,8 L18,8 Z M16,19.02 L16,12.00 L18,12.00 L18,17.86 L23.10,20.81 L22.10,22.54 L16,19.02 Z"
-                  //             id="ytp-id-25"></path>
-                  //       </svg>`
-                  //    : watchLater.querySelector('.ytp-watch-later-icon').innerHTML;
-                  watchLaterBtn.innerHTML = document.querySelector('#movie_player .ytp-watch-later-button')
-                     ?.querySelector('.ytp-watch-later-icon')?.innerHTML;
-               }
+                     NOVA.css.push(
+                        `.${SELECTOR_BTN_CLASS_NAME} .ytp-spinner-container {
+                           position: relative;
+                           top: 0;
+                           left: 0;
+                           scale: .5;
+                           margin: 0;
+                        }
+                        .${SELECTOR_BTN_CLASS_NAME}.watch-later-btn svg {
+                           scale: .85;
+                        }`);
+
+                     const watchLaterBtn = document.createElement('button');
+
+                     watchLaterBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} watch-later-btn`;
+                     watchLaterBtn.title = 'Watch later';
+                     renderIcon();
+                     watchLaterBtn.addEventListener('click', () => {
+                        watchLaterDefault.click();
+                        renderIcon(); // render loading (.ytp-spinner)
+                        const waitStatus = setInterval(() => {
+                           // console.debug('wait svg. current show div ".ytp-spinner"');
+                           if (watchLaterDefault.querySelector('svg')) {
+                              // console.debug('svg ready');
+                              clearInterval(waitStatus);
+                              renderIcon();
+                           }
+                        }, 100); // check evry 100ms
+                        // setTimeout(renderIcon, 1000); // 1 sec
+                     });
+                     //
+                     // container.append(watchLaterBtn);
+                     [...document.getElementsByClassName(SELECTOR_BTN_CLASS_NAME)].pop() // last custom btn
+                        .after(watchLaterBtn);
+
+                     function renderIcon() {
+                        // <div class="ytp-spinner-container">
+                        //    <div class="ytp-spinner-rotator">
+                        //       <div class="ytp-spinner-left">
+                        //          <div class="ytp-spinner-circle"></div>
+                        //       </div>
+                        //       <div class="ytp-spinner-right">
+                        //          <div class="ytp-spinner-circle"></div>
+                        //       </div>
+                        //    </div>
+                        // </div>
+
+                        // return alt
+                        //    ? `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
+                        //          <use class="ytp-svg-shadow" xlink:href="#ytp-id-25"></use>
+                        //          <path class="ytp-svg-fill"
+                        //             d="M18,8 C12.47,8 8,12.47 8,18 C8,23.52 12.47,28 18,28 C23.52,28 28,23.52 28,18 C28,12.47 23.52,8 18,8 L18,8 Z M16,19.02 L16,12.00 L18,12.00 L18,17.86 L23.10,20.81 L22.10,22.54 L16,19.02 Z"
+                        //             id="ytp-id-25"></path>
+                        //       </svg>`
+                        //    : watchLater.querySelector('.ytp-watch-later-icon').innerHTML;
+                        watchLaterBtn.innerHTML = watchLaterDefault.querySelector('.ytp-watch-later-icon')?.innerHTML;
+                     }
+                  });
             }
 
             if (user_settings.player_buttons_custom_items?.includes('quick-quality')) {
@@ -491,7 +523,7 @@ window.nova_plugins.push({
                      left: -2em;
                      list-style: none;
                      padding-bottom: .5em;
-                     z-index: ${+getComputedStyle(document.querySelector('.ytp-progress-bar'))['z-index'] + 1};
+                     z-index: ${+getComputedStyle(document.body.querySelector('.ytp-progress-bar'))['z-index'] + 1};
                   }
 
                   /* for embed */

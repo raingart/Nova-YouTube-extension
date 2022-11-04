@@ -32,18 +32,18 @@ window.nova_plugins.push({
    'title:pl': 'Skok czasowy',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   desc: 'Use to skip ad inserts',
-   'desc:zh': '用于跳过广告插入',
-   'desc:ja': '広告の挿入をスキップするために使用',
-   'desc:ko': '광고 삽입을 건너뛸 때 사용',
-   'desc:id': 'Gunakan untuk melewati sisipan iklan',
-   'desc:es': 'Úselo para omitir inserciones de anuncios',
-   'desc:pt': 'Use para pular inserções de anúncios',
-   'desc:fr': 'Utiliser pour ignorer les insertions publicitaires',
-   'desc:it': 'Utilizzare per saltare gli inserti pubblicitari',
-   'desc:tr': 'Reklam eklerini atlamak için kullanın',
-   'desc:de': 'Zum Überspringen von Anzeigeninsertionen verwenden',
-   'desc:pl': 'Użyj, aby pominąć wstawki reklamowe',
+   desc: 'Use to skip the intro or ad inserts',
+   'desc:zh': '用于跳过介绍或广告插入',
+   'desc:ja': 'イントロや広告挿入をスキップするために使用します',
+   'desc:ko': '인트로 또는 광고 삽입을 건너뛸 때 사용',
+   'desc:id': 'Gunakan untuk melewati intro atau sisipan iklan',
+   // 'desc:es': 'Úselo para omitir la introducción o las inserciones de anuncios.',
+   'desc:pt': 'Use para pular a introdução ou inserções de anúncios',
+   'desc:fr': "Utiliser pour ignorer l'intro ou les encarts publicitaires",
+   // 'desc:it': "Utilizzare per saltare l'introduzione o gli inserti pubblicitari",
+   'desc:tr': 'Girişi veya reklam eklerini atlamak için kullanın',
+   // 'desc:de': 'Verwenden Sie diese Option, um das Intro oder Werbeeinblendungen zu überspringen',
+   'desc:pl': 'Służy do pomijania wstępu lub wstawek reklamowych',
    _runtime: user_settings => {
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
@@ -167,7 +167,7 @@ window.nova_plugins.push({
                content: attr(data-before);
                color: #ffcc00;
             }`);
-         // color: ${getComputedStyle(document.querySelector('.ytp-swatch-background-color'))['background-color'] || '#f00'};
+         // color: ${getComputedStyle(document.body.querySelector('.ytp-swatch-background-color'))['background-color'] || '#f00'};
 
          NOVA.waitElement('.ytp-progress-bar')
             .then(progressContainer => {

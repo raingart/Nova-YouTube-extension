@@ -262,7 +262,7 @@ window.nova_plugins.push({
                channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
                titleStr = movie_player.getVideoData().title
                   // add playlist title check
-                  + ((playlistTitle = document.querySelector('#secondary #playlist #header-description a[href*="/playlist"]:not(:empty)')?.textContent) ? '.' + playlistTitle : ''), // https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
+                  + ((playlistTitle = document.body.querySelector('#secondary #playlist #header-description a[href*="/playlist"]:not(:empty)')?.textContent) ? '.' + playlistTitle : ''), // https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
                titleWords = titleStr?.match(/\w+/g);
 
             if (user_settings.rate_default_apply_music == 'expanded') {
@@ -282,7 +282,7 @@ window.nova_plugins.push({
 
                // ALL BELOW - not updated after page transition!
                // window.ytplayer?.config?.args.title,
-               // document.querySelector('meta[itemprop="genre"][content]')?.content,
+               // document.body.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
                document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
             ]

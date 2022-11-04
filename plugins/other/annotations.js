@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'disable-video-cards',
-   title: 'Hide the annotations, endcards etc',
+   title: 'Hide garbage: annotations, endcards etc',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -51,7 +51,8 @@ window.nova_plugins.push({
 
                'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations"
 
-               // 'ytd-popup-container ytp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.
+               // 'ytd-popup-container tp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.
+               'ytd-popup-container tp-yt-paper-dialog ytd-single-option-survey-renderer', // "How is YouTube today?" - Absolutely outstanding, Extremely good, Very good, Good, Not good
             ]);
       }
 

@@ -35,7 +35,7 @@ window.nova_plugins.push({
       });
       // // document.addEventListener('yt-page-data-updated', () =>
       // document.addEventListener('yt-navigate-finish', () =>
-      //    document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
+      //    document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(

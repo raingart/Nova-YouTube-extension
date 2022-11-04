@@ -139,7 +139,7 @@ window.nova_plugins.push({
                   NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
                   // NOVA.css.getValue('#description', 'z-index'), // consider plugin "description-popup"
                   // getComputedStyle(document.getElementById('chat'))['z-index'],
-                  // getComputedStyle(document.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
+                  // getComputedStyle(document.body.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
                   // // getComputedStyle(document.getElementById('description'))['z-index'], // consider plugin "description-popup"
                   601) + 1};
                }

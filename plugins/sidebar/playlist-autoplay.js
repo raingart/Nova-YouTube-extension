@@ -117,7 +117,7 @@ window.nova_plugins.push({
             // function setAssociatedAutoplay(state) {
             function setAssociatedAutoplay() {
                // get playlist manager
-               if ([manager] = document.getElementsByTagName('yt-playlist-manager')) {
+               if (manager = document.body.querySelector('yt-playlist-manager')) {
                   manager.interceptedForAutoplay = true;
                   manager.canAutoAdvance_ = checkboxBtn.checked;
                   // let currentExpected = true

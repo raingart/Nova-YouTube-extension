@@ -52,7 +52,7 @@ window.nova_plugins.push({
       //          cursor: 'pointer',
       //       });
       //       sortBtn.addEventListener('click', () => {
-      //          if (container = document.querySelector('#contents #items')) {
+      //          if (container = document.body.querySelector('#contents #items')) {
       //             container.append(...Array.from(container.childNodes).sort(sortBy));
 
       //          } else console.error('sortBtn container items is empty');
@@ -86,12 +86,14 @@ window.nova_plugins.push({
             .then(async () => {
                const
                   liveSelector = '#thumbnail img[src*="_live.jpg"]',
-                  premieresSelector = '#thumbnail #overlays [aria-label="Premiere"], #thumbnail #overlays [aria-label="Upcoming"]';
+                  premieresSelector =
+                     `#thumbnail #overlays [aria-label="Premiere"],
+                     #thumbnail #overlays [aria-label="Upcoming"]`;
 
                // wait all stream
-               await NOVA.waitUntil(() => document.querySelectorAll(liveSelector).length > 1, 500);
+               await NOVA.waitUntil(() => document.body.querySelectorAll(liveSelector).length > 1, 500);
 
-               if (container = document.querySelector('#page-manager #primary #items')) {
+               if (container = document.body.querySelector('#page-manager #primary #items')) {
                   container.append(...Array.from(container.childNodes).sort(sortByStream));
                }
 

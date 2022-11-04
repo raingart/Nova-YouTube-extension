@@ -653,6 +653,7 @@ const NOVA = {
       document.addEventListener('play', ({ target }) => {
          target.matches(videoSelector) && (NOVA.videoElement = target);
       }, true);
+      // document.dispatchEvent(new CustomEvent('nova-video-loaded'));
    })(),
 
    async getChannelId(api_key) {
@@ -672,7 +673,7 @@ const NOVA = {
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
          document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
-         // document.querySelector('#owner #channel-name a[href]')?.href.split('/')[4],
+         // document.body.querySelector('#owner #channel-name a[href]')?.href.split('/')[4],
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId

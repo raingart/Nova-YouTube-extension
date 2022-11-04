@@ -22,6 +22,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // if (user_settings['video-description-expand']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
+
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
       const
@@ -63,7 +65,7 @@ window.nova_plugins.push({
                   margin: 0 1%;
                   overflow-y: auto;
                   max-height: 88vh;
-                  max-width: 90%;
+                  max-width: 55%;
                   background-color: #222;
                   border: 1px solid #333;
                   border-radius: 0 !important;
@@ -118,7 +120,7 @@ window.nova_plugins.push({
             let oldDateText;
 
             descriptionEl.addEventListener('mouseenter', evt => {
-               document.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click()
+               document.body.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click()
             });
             // }, { capture: true, once: true });
 

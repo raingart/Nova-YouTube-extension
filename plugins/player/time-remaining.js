@@ -52,7 +52,8 @@ window.nova_plugins.push({
                   || movie_player.getVideoData().isLive // stream. Doesn't work in embed
                   || (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream'))
                   || document.visibilityState == 'hidden' // tab inactive
-                  || (movie_player || document.body).querySelector('.ytp-autohide video')) return;
+                  || movie_player.classList.contains('ytp-autohide')
+               ) return;
 
                const
                   getProgressPt = () => {

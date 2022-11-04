@@ -92,7 +92,7 @@ window.nova_plugins.push({
                `#${SELECTOR_ID} {
                   --color: #fff;
                   --bg-color: rgba(0,0,0,0.3);
-                  --zindex: ${getComputedStyle(document.querySelector('.ytp-chrome-top'))['z-index'] || 60};
+                  --zindex: ${getComputedStyle(document.body.querySelector('.ytp-chrome-top'))['z-index'] || 60};
 
                   position: absolute;
                   right: 0;

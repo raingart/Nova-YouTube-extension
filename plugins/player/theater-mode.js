@@ -161,8 +161,8 @@ window.nova_plugins.push({
 
             // add scroll-down behavior on player control panel
             function addScrollDownBehavior() {
-               if (activateScrollElement = document.querySelector('.ytp-chrome-controls')) {
-                  // const player = document.querySelector(PLAYER_SELECTOR);
+               if (activateScrollElement = document.body.querySelector('.ytp-chrome-controls')) {
+                  // const player = document.body.querySelector(PLAYER_SELECTOR);
                   activateScrollElement.addEventListener('wheel', evt => {
                      switch (Math.sign(evt.wheelDelta)) {
                         // case 1: // up

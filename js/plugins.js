@@ -50,6 +50,7 @@ const Plugins = {
       'other/playlist-rss.js',
       'other/thumbs-sort.js',
       'other/stop-channel-trailer.js',
+      'other/miniplayer-disable.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -88,8 +89,8 @@ const Plugins = {
    //    'details/videos-count.js',
    // ],
    // list: [
-   //    'comments/square-avatars.js',
-   //    'player/autostop.js',
+   //    // 'comments/square-avatars.js',
+   //    // 'player/autostop.js',
    //    'sidebar/-playlist-skip-liked.js',
    // ],
 

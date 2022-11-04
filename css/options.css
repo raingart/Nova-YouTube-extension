@@ -198,7 +198,8 @@ input[type=search]:focus, input[type=text]:focus {
    grid-gap: 15px;
    overflow-x: hidden;
    overflow-y: auto;
-   max-height: 83vh;
+   max-height: 84vh;
+   /* max-height: 83vh; */
    padding-right: 8px;
    padding-left: 5px;
 }

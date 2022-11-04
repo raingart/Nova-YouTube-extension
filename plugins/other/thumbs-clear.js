@@ -67,17 +67,35 @@ window.nova_plugins.push({
       //       });
       // }
 
+      let DISABLE_YT_IMG_DELAY_LOADING_default = false; // fix conflict with yt-flags
+
       // Strategy 2
       // dirty fix bug with not updating thumbnails
       document.addEventListener('yt-navigate-finish', () =>
-         document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
+         document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElements({
          selectors: ['#thumbnail:not(.ytd-playlist-thumbnail):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])'],
          attr_mark: ATTR_MARK,
-         callback: img => {
+         callback: async img => {
+            // fix conflict with yt-flags
+            if (window.yt?.config_?.DISABLE_YT_IMG_DELAY_LOADING
+               && DISABLE_YT_IMG_DELAY_LOADING_default !== window.yt?.config_?.DISABLE_YT_IMG_DELAY_LOADING
+            ) {
+               // alert('Plugin "Clear thumbnails" not available with current page config');
+               DISABLE_YT_IMG_DELAY_LOADING_default = window.yt?.config_?.DISABLE_YT_IMG_DELAY_LOADING;
+
+               await NOVA.sleep(100); // dirty fix.
+               // Hard reset fn
+               document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK));
+            }
+
             // skip "premiere", "live now"
-            if ((thumb = img.closest(thumbsSelectors)) && thumb.querySelector('#badges [class*="live-now"], ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"], #overlays [aria-label="PREMIERE"]')
+            if ((thumb = img.closest(thumbsSelectors))
+               && thumb.querySelector(
+                  `#badges [class*="live-now"],
+                  #overlays [aria-label="PREMIERE"],
+                  ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"]`)
             ) {
                // console.debug('skiped thumbnails-preview-cleared', parent);
                return;
@@ -94,41 +112,41 @@ window.nova_plugins.push({
       }
 
       // patch end card
-      if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
-         // force show title
-         NOVA.css.push(
-            `.ytp-videowall-still .ytp-videowall-still-info-content {
-               opacity: 1 !important;
-               text-shadow: rgb(0, 0, 0) 0 0 .1em;
-            }
-            .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-author,
-            .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-live {
-               opacity: 0 !important;
-            }`);
+      // if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
+      //    // force show title
+      //    NOVA.css.push(
+      //       `.ytp-videowall-still .ytp-videowall-still-info-content {
+      //          opacity: 1 !important;
+      //          text-shadow: rgb(0, 0, 0) 0 0 .1em;
+      //       }
+      //       .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-author,
+      //       .ytp-videowall-still:not(:hover) .ytp-videowall-still-info-live {
+      //          opacity: 0 !important;
+      //       }`);
 
-         NOVA.waitElement('#movie_player')
-            .then(movie_player => {
-               movie_player.addEventListener('onStateChange', state => {
-                  // console.debug('playerState', NOVA.getPlayerState(state));
-                  if (NOVA.getPlayerState(state) == 'ENDED') {
-                     document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
-                        .forEach(img => {
-                           img.style.backgroundImage = patchImg(img.style.backgroundImage);
-                        });
-                  }
-               });
-            });
-         // Does manual change work at the end of video time
-         // NOVA.waitElement('video')
-         //    .then(video => {
-         //       video.addEventListener('ended', () => {
-         //          document.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
-         //             .forEach(img => {
-         //                img.style.backgroundImage = patchImg(img.style.backgroundImage);
-         //             });
-         //       });
-         //    });
-      }
+      //    NOVA.waitElement('#movie_player')
+      //       .then(movie_player => {
+      //          movie_player.addEventListener('onStateChange', state => {
+      //             // console.debug('playerState', NOVA.getPlayerState(state));
+      //             if (NOVA.getPlayerState(state) == 'ENDED') {
+      //                document.body.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
+      //                   .forEach(img => {
+      //                      img.style.backgroundImage = patchImg(img.style.backgroundImage);
+      //                   });
+      //             }
+      //          });
+      //       });
+      //    // Does manual change work at the end of video time
+      //    // NOVA.waitElement('video')
+      //    //    .then(video => {
+      //    //       video.addEventListener('ended', () => {
+      //    //          document.body.querySelectorAll('.ytp-videowall-still-image[style*="qdefault.jpg"]')
+      //    //             .forEach(img => {
+      //    //                img.style.backgroundImage = patchImg(img.style.backgroundImage);
+      //    //             });
+      //    //       });
+      //    //    });
+      // }
 
       function patchImg(str) {
          // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
@@ -189,21 +207,21 @@ window.nova_plugins.push({
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',
       },
-      thumbnails_clear_videowall: {
-         _tagName: 'input',
-         label: 'Apply for thumbnails after video ends',
-         'label:zh': '视频结束后申请缩略图',
-         'label:ja': '動画終了後にサムネイルを申請する',
-         'label:ko': '영상 종료 후 썸네일 신청',
-         'label:id': 'Terapkan untuk thumbnail setelah video berakhir',
-         'label:es': 'Solicitar miniaturas después de que termine el video',
-         'label:pt': 'Candidate-se a miniaturas após o término do vídeo',
-         'label:fr': 'Demander des vignettes après la fin de la vidéo',
-         'label:it': 'Richiedi le miniature al termine del video',
-         'label:tr': 'Video bittikten sonra küçük resimler için başvurun',
-         'label:de': 'Bewerben Sie sich nach dem Ende des Videos für Thumbnails',
-         'label:pl': 'Złóż wniosek o miniatury po zakończeniu filmu',
-         type: 'checkbox',
-      },
+      // thumbnails_clear_videowall: {
+      //    _tagName: 'input',
+      //    label: 'Apply for thumbnails after video ends',
+      //    'label:zh': '视频结束后申请缩略图',
+      //    'label:ja': '動画終了後にサムネイルを申請する',
+      //    'label:ko': '영상 종료 후 썸네일 신청',
+      //    'label:id': 'Terapkan untuk thumbnail setelah video berakhir',
+      //    'label:es': 'Solicitar miniaturas después de que termine el video',
+      //    'label:pt': 'Candidate-se a miniaturas após o término do vídeo',
+      //    'label:fr': 'Demander des vignettes après la fin de la vidéo',
+      //    'label:it': 'Richiedi le miniature al termine del video',
+      //    'label:tr': 'Video bittikten sonra küçük resimler için başvurun',
+      //    'label:de': 'Bewerben Sie sich nach dem Ende des Videos für Thumbnails',
+      //    'label:pl': 'Złóż wniosek o miniatury po zakończeniu filmu',
+      //    type: 'checkbox',
+      // },
    }
 });

@@ -18,6 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      if (user_settings['description-popup']) return; // conflict with plugin
+
       // Doesn't work after page transition
       // NOVA.waitElement('#meta [collapsed] #more, [description-collapsed] #description #expand')
       //    .then(btn => {

@@ -15,17 +15,17 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed',
    // restart_on_transition: true,
    section: 'player',
-   // desc: 'Prevent the player from auto-playing videos',
+   desc: 'Prevent the player from buffering video before playing',
    _runtime: user_settings => {
 
+      // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
+
       if (user_settings.stop_preload_embed) {
-         // console.debug('test video-stop-preload url:', location.search);
-         if (NOVA.currentPage != 'embed'
-            // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
-            || (NOVA.currentPage == 'embed' && ['0', 'false'].includes(NOVA.queryURL.get('autoplay')))
-         ) {
-            return;
-         }
+         // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
+         if (NOVA.currentPage == 'embed' && !['0', 'false'].includes(NOVA.queryURL.get('autoplay'))) {
+            location.assign(NOVA.queryURL.set({ 'autoplay': false }));
+
+         } else return;
       }
 
       NOVA.waitElement('#movie_player')
@@ -108,18 +108,6 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          type: 'checkbox',
-         title: 'not applicable for embedded video',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'label:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
-         // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
          'data-dependent': { 'stop_preload_embed': false },
       },
       // stop_preload_embed: {

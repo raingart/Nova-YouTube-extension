@@ -36,14 +36,15 @@ const App = {
       // skip first page transition
       // Strategy 1
       document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
-      // document.addEventListener('yt-navigate-finish', () => this.isURLChange() && this.run());
       // Strategy 2
       // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
 
       // for test
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
       // document.addEventListener('yt-navigate-finish', () => console.debug('yt-navigate-finish'));
+      // document.addEventListener('yt-page-data-updated', () => console.debug('yt-page-data-updated'));
       // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && console.debug('transitionend'));
+      // window.addEventListener('load', () => console.debug('window load')); // once on page init
 
       this.storage.load.apply(this);
       // load all Plugins

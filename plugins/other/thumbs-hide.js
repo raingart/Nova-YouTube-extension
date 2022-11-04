@@ -117,7 +117,10 @@ window.nova_plugins.push({
          premieres() {
             if (!user_settings.premieres_disable) return;
             // announced
-            document.body.querySelectorAll('#thumbnail #overlays [aria-label="Premiere"], #thumbnail #overlays [aria-label="Upcoming"]')
+            document.body.querySelectorAll(
+               `#thumbnail #overlays [aria-label="Premiere"],
+               #thumbnail #overlays [aria-label="Upcoming"]`
+            )
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {
@@ -135,16 +138,16 @@ window.nova_plugins.push({
             // #video-badges > .badge-style-type-live-now-alternate
             document.body.querySelectorAll('#video-badges > [class*="live-now"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
-               // for test
-               // .forEach(el => {
-               //    if (thumb = el.closest(thumbsSelectors)) {
-               //       // thumb.remove();
-               //       // thumb.style.display = 'none';
+            // for test
+            // .forEach(el => {
+            //    if (thumb = el.closest(thumbsSelectors)) {
+            //       // thumb.remove();
+            //       // thumb.style.display = 'none';
 
-               //       console.debug('Premieres:', thumb);
-               //       thumb.style.border = '2px solid violet'; // mark for test
-               //    }
-               // });
+            //       console.debug('Premieres:', thumb);
+            //       thumb.style.border = '2px solid violet'; // mark for test
+            //    }
+            // });
          },
 
          live() {
@@ -168,7 +171,7 @@ window.nova_plugins.push({
          streamed() {
             if (!user_settings.streamed_disable) return;
 
-            document.querySelectorAll('#metadata-line > span:nth-child(2)')
+            document.body.querySelectorAll('#metadata-line > span:nth-child(2)')
                .forEach(el => {
                   if (el.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
                      && (thumb = el.closest(thumbsSelectors))) {
@@ -184,7 +187,10 @@ window.nova_plugins.push({
          mix() {
             if (!user_settings.thumb_mix_disable) return;
 
-            document.body.querySelectorAll('a[href*="list="][href*="start_radio="]:not([hidden]), a[title^="Mix -"]:not([hidden])')
+            document.body.querySelectorAll(
+               `a[href*="list="][href*="start_radio="]:not([hidden]),
+               a[title^="Mix -"]:not([hidden])`
+            )
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {

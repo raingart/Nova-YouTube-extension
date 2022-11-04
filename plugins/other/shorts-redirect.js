@@ -115,7 +115,7 @@ window.nova_plugins.push({
       // fix clear thumb on page update (change sort etc.)
       // document.addEventListener('yt-page-data-updated', () =>
       // document.addEventListener('yt-navigate-finish', () =>
-      // document.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
+      // document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK))
       // , { capture: true, once: true });
 
       // NOVA.watchElements({

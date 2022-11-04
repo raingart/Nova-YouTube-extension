@@ -21,6 +21,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://chrome.google.com/webstore/detail/tweaks-for-youtube/ogkoifddpkoabehfemkolflcjhklmkge
+
       // Doesn't work in embed - movie_player.getVideoData().isLive
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')) return;
 
@@ -32,9 +34,9 @@ window.nova_plugins.push({
       NOVA.waitElement('video')
          .then(async video => {
             const
-               // async fix embed when disable chrome-bottom
-               chromeBtn = await NOVA.waitUntil(() => document.querySelector('.ytp-chrome-bottom')),
-               container = renderFloatBar(chromeBtn),
+               // async fix embed when disable chrome-bottom (example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
+               chromeBtn_zIndex = await NOVA.waitUntil(() => (chromeBtn = document.body.querySelector('.ytp-chrome-bottom')) && getComputedStyle(chromeBtn)['z-index']),
+               container = renderFloatBar(chromeBtn_zIndex),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
@@ -48,8 +50,7 @@ window.nova_plugins.push({
             // NOVA.waitElement(`${SELECTOR}-progress`)
             //    .then(progressEl => {
             video.addEventListener('timeupdate', function () {
-               if (document.visibilityState == 'hidden' // tab inactive
-                  || movie_player.getVideoData().isLive) return;
+               if (notInteractiveToRender()) return;
 
                // Strategy 1 HTML5
                if (!isNaN(this.duration)) {
@@ -69,8 +70,7 @@ window.nova_plugins.push({
             video.addEventListener('seeking', renderBuffer.bind(video));
 
             function renderBuffer() {
-               if (document.visibilityState == 'hidden' // tab inactive
-                  || movie_player.getVideoData().isLive) return;
+               if (notInteractiveToRender()) return;
 
                // Strategy 1 HTML5
                // for (let i = 0; i < this.buffered.length; i++) {
@@ -103,9 +103,16 @@ window.nova_plugins.push({
                renderChapters.init(video);
             }
 
+            function notInteractiveToRender() {
+               return (document.visibilityState == 'hidden' // tab inactive
+                  || movie_player.getVideoData().isLive
+                  // || !movie_player.classList.contains('ytp-autohide') // dubious optimization hack
+               );
+            }
+
          });
 
-      function renderFloatBar(chrome_btn) {
+      function renderFloatBar(z_index = 60) {
          return document.getElementById(SELECTOR_ID) || (function () {
             movie_player?.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
@@ -116,9 +123,7 @@ window.nova_plugins.push({
                   <div id="${SELECTOR_ID}-chapters"></div>
                </div>`);
 
-            const zIndex = (chrome_btn && chrome_btn instanceof HTMLElement)
-               ? getComputedStyle(chrome_btn)['z-index'] : 60;
-            // const bufferColor = getComputedStyle(document.querySelector('.ytp-load-progress'))['background-color'] || 'rgba(255,255,255,.4)';
+            // const bufferColor = getComputedStyle(document.body.querySelector('.ytp-load-progress'))['background-color'] || 'rgba(255,255,255,.4)';
 
             NOVA.css.push(
                `[id|=${SELECTOR_ID}] {
@@ -129,8 +134,8 @@ window.nova_plugins.push({
                ${SELECTOR} {
                   --opacity: ${+user_settings.player_float_progress_bar_opacity || .7};
                   --height: ${+user_settings.player_float_progress_bar_height || 3}px;
-                  --bg-color: ${getComputedStyle(document.querySelector('.ytp-progress-list'))['background-color'] || 'rgba(255,255,255,.2)'};
-                  --zindex: ${zIndex};
+                  --bg-color: ${getComputedStyle(document.body.querySelector('.ytp-progress-list'))['background-color'] || 'rgba(255,255,255,.2)'};
+                  --zindex: ${z_index};
 
                   opacity: var(--opacity)
                   z-index: var(--zindex);
@@ -177,7 +182,7 @@ window.nova_plugins.push({
 
                ${SELECTOR}-chapters span {
                   height: var(--height);
-                  z-index: ${+zIndex + 1};
+                  z-index:  calc(var(--zindex) + 1);
                   border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
                   /* border-left: ${CHAPTERS_MARK_WIDTH_PX} solid #000; */
                   margin-left: -${CHAPTERS_MARK_WIDTH_PX};
