@@ -379,7 +379,9 @@ const NOVA = {
       let prevSec = -1;
 
       // description and first(pinned) comment
-      document.body.querySelectorAll('#primary-inner #description, #comments ytd-comment-thread-renderer:first-child #content')
+      document.body.querySelectorAll(
+         `#description.ytd-watch-metadata,
+         #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
             (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
                // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
@@ -426,7 +428,7 @@ const NOVA = {
    //    let timestampList = [];
    //    let prevSec = -1;
 
-   //    document.body.querySelectorAll(`#primary-inner #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
+   //    document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
    //          const sec = parseInt(this.queryURL.get('t', link.href));

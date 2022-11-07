@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': "Shorts'ları normal (watch) URL'lerine yönlendirin",
    'title:de': 'Leiten Sie Shorts zu regulären (watch) URLs um',
    'title:pl': 'Przełączaj Shorts na zwykłe adresy URL',
+   'title:ua': 'Перенаправляйте прев`ю на звичайні URL-адреси (для перегляду)',
    run_on_pages: 'results, feed, channel, shorts',
    // restart_on_transition: true,
    section: 'other',
@@ -30,6 +31,7 @@ window.nova_plugins.push({
    'desc:tr': 'Shorts videosunu normal oynatıcıya yönlendir',
    'desc:de': 'Shorts-Video auf normalen Player umleiten',
    'desc:pl': 'Przełącza krótkie filmy do normalnego odtwarzacza',
+   'desc:ua': 'Перенаправляйте прев`ю відео у звичайний відтворювач',
    _runtime: user_settings => {
 
       // page init
@@ -91,8 +93,8 @@ window.nova_plugins.push({
 
                   NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
                      .then(async overlay => {
-                        if ((thumb = link.closest(thumbsSelectors))
-                           && (time = getThumbTime(thumb.data))
+                        if ((thumb = link.closest(thumbsSelectors)?.data)
+                           && (time = getThumbTime(thumb))
                         ) {
                            // console.debug('time', time);
                            overlay.setAttribute('overlay-style', 'DEFAULT');
@@ -177,18 +179,19 @@ window.nova_plugins.push({
    options: {
       shorts_thumbnails_time: {
          _tagName: 'input',
-         label: 'Add time to overlay',
-         'label:zh': '添加时间叠加',
-         'label:ja': 'オーバーレイする時間を追加する',
-         'label:ko': '오버레이 시간 추가',
-         'label:id': 'Tambahkan waktu untuk overlay',
-         'label:es': 'Agregar tiempo para superponer',
-         'label:pt': 'Adicionar tempo à sobreposição',
-         'label:fr': 'Ajouter du temps à la superposition',
-         'label:it': 'Aggiungi tempo per la sovrapposizione',
-         'label:tr': 'Bindirme için zaman ekleyin',
-         'label:de': 'Zeit zum Überlagern hinzufügen',
-         'label:pl': 'Pokaż nakładkę z czasem',
+         label: 'Add time on thumbnails overlay',
+         'label:zh': '在缩略图叠加上添加时间',
+         'label:ja': 'サムネイルオーバーレイに時間を追加',
+         'label:ko': '썸네일 오버레이에 시간 추가',
+         'label:id': 'Tambahkan waktu pada hamparan gambar mini',
+         'label:es': 'Agregar tiempo en la superposición de miniaturas',
+         'label:pt': 'Adicionar tempo na sobreposição de miniaturas',
+         'label:fr': 'Ajouter du temps sur la superposition des vignettes',
+         'label:it': 'Aggiungi tempo sulla sovrapposizione delle miniature',
+         'label:tr': 'Küçük resim yer paylaşımına zaman ekleyin',
+         'label:de': 'Fügen Sie Zeit für die Überlagerung von Miniaturansichten hinzu',
+         'label:pl': 'Dodaj czas na nakładce miniatur',
+         'label:ua': 'Додайте час на накладення мініатюр',
          type: 'checkbox',
          // title: '',
       },

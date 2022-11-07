@@ -16,6 +16,7 @@ window.nova_plugins.push({
    'title:tr': 'Şeffaf altyazılar',
    'title:de': 'Transparente Untertitel',
    'title:pl': 'Napisy przezroczyste',
+   'title:ua': 'Прозорі субтитри',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
@@ -37,6 +38,7 @@ window.nova_plugins.push({
       NOVA.css.push(css, `.ytp-caption-segment`, 'important');
 
       if (user_settings.subtitle_fixed) {
+         // alt - https://greasyfork.org/en/scripts/442033-fix-youtube-caption-position
          NOVA.css.push(
             // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
             `.caption-window {
@@ -46,6 +48,8 @@ window.nova_plugins.push({
       }
 
       if (user_settings.subtitle_selectable) {
+         // alt - https://greasyfork.org/en/scripts/451626-make-youtube-caption-selectable
+         // alt2 - https://greasyfork.org/en/scripts/435955-youtube%E5%AD%97%E5%B9%95%E5%8D%95%E8%AF%8D%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E9%80%89%E4%B8%AD-%E6%96%B9%E4%BE%BFmac%E7%94%B5%E8%84%91%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BF%BB%E8%AF%91%E5%8D%95%E8%AF%8D
          NOVA.watchElements({
             selectors: [
                '.ytp-caption-segment:not([selectable="true"]',
@@ -80,6 +84,7 @@ window.nova_plugins.push({
          'label:tr': 'Kalın yazı',
          'label:de': 'Fetter Text',
          'label:pl': 'Tekst pogrubiony',
+         'label:ua': 'Жирний текст',
          type: 'checkbox',
       },
       subtitle_fixed: {
@@ -96,22 +101,24 @@ window.nova_plugins.push({
          'label:tr': 'Risolto dal basso',
          'label:de': 'Von unten befestigt',
          'label:pl': 'Przyklejone na dole',
+         'label:ua': 'Фіксація знизу',
          type: 'checkbox',
       },
       subtitle_selectable: {
          _tagName: 'input',
-         label: 'Make caption selectable',
+         label: 'Make subtitles selectable',
          'label:zh': '使字幕可选',
-         'label:ja': 'キャプションを選択可能にする',
-         'label:ko': '캡션을 선택 가능하게 만들기',
-         'label:id': 'Jadikan teks dapat dipilih',
+         'label:ja': '字幕を選択可能にする',
+         'label:ko': '자막을 선택 가능하게 만들기',
+         'label:id': 'Jadikan subtitle dapat dipilih',
          'label:es': 'Hacer subtítulos seleccionables',
-         'label:pt': 'Tornar a legenda selecionável',
-         'label:fr': 'Rendre la légende sélectionnable',
-         'label:it': 'Rendi selezionabile la didascalia',
-         'label:tr': 'Altyazıyı seçilebilir yap',
-         'label:de': 'Bildunterschrift auswählbar machen',
-         'label:pl': 'Ustaw podpis do wyboru',
+         'label:pt': 'Faça legendas selecionáveis',
+         'label:fr': 'Rendre les sous-titres sélectionnables',
+         'label:it': 'Rendi selezionabili i sottotitoli',
+         'label:tr': 'Altyazıları seçilebilir yap',
+         'label:de': 'Untertitel wählbar machen',
+         'label:pl': 'Ustaw napisy do wyboru',
+         'label:ua': 'Зробити субтитри доступними для вибору',
          type: 'checkbox',
       },
    }

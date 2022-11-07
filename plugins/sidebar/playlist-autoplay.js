@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatma listesi otomatik oynatma kontrolü',
    'title:de': 'Steuerung der automatischen Wiedergabe von Wiedergabelisten',
    'title:pl': 'Kontrola autoodtwarzania listy odtwarzania',
+   'title:ua': 'Кнопка керування автовідтворенням',
    run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
@@ -149,6 +150,7 @@ window.nova_plugins.push({
          'label:tr': 'Varsayılan',
          'label:de': 'Standardzustand',
          'label:pl': 'Stan domyślny',
+         'label:ua': 'Cтан за замовчуваням',
          options: [
             { label: 'play', value: true, selected: true },
             { label: 'stop', value: false },

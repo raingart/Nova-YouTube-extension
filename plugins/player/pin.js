@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Kaydırırken oynatıcıyı sabitle',
    'title:de': 'Pin-Player beim Scrollen',
    'title:pl': 'Przypnij odtwarzacz podczas przewijania',
+   'title:ua': 'Закріпити відтворювач коли гортаєш сторінку',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Mini player',
@@ -26,9 +27,15 @@ window.nova_plugins.push({
    // 'desc:it': '',
    // 'desc:tr': 'Kaydırma sırasında oyuncu her zaman görünür kalır',
    // 'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
+   // 'desc:ua': 'Відтворювач завжди залишається видимим коли гортаєш',
    _runtime: user_settings => {
 
-      if (!('IntersectionObserver' in window)) return alert('Pin player Error!\IntersectionObserver not supported.');
+      if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
+
+      if (user_settings['description-popup']
+         && (user_settings['comments-popup'] || user_settings['comments-visibility'])
+         && user_settings['related-visibility']
+      ) return alert('Nova\nSimultaneous activation of such plugins as:\n- description-popup\n- comments-popup/visibility\n- related-visibility\n\nconflict with the plugin "Pin player"');
 
       // alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
       // only for PWA
@@ -113,7 +120,9 @@ window.nova_plugins.push({
 
                window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
             }, {
-               threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+               // https://github.com/raingart/Nova-YouTube-extension/issues/28
+               // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+               threshold: .5, // set offset 0.X means trigger if atleast X0% of element in viewport
             })
                .observe(container);
          });
@@ -416,6 +425,7 @@ window.nova_plugins.push({
          'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
          'label:pl': 'Rozmiar odtwarzacza',
+         'label:ua': 'Розмір відтворювача',
          type: 'number',
          title: 'less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
@@ -429,6 +439,7 @@ window.nova_plugins.push({
          'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          'title:pl': 'Mniejsza wartość - większy rozmiar',
+         'title:ua': 'Менше значення - більший розмір',
          placeholder: '2-5',
          step: 0.1,
          min: 2,
@@ -450,6 +461,7 @@ window.nova_plugins.push({
          'label:tr': 'Oyuncu pozisyonu',
          'label:de': 'Spielerposition',
          'label:pl': 'Pozycja odtwarzacza',
+         'label:ua': 'Позиція відтворювача',
          options: [
             { label: 'left-top', value: 'top-left' },
             { label: 'left-bottom', value: 'bottom-left' },
@@ -458,29 +470,30 @@ window.nova_plugins.push({
          ],
          // 'data-dependent': { 'player_pin_mode': ['float'] },
       },
-      player_float_scroll_sensivity_range: {
-         _tagName: 'input',
-         label: 'Player sensitivity visibility range',
-         'label:zh': '播放器灵敏度可见范围',
-         'label:ja': 'プレイヤーの感度の可視範囲',
-         'label:ko': '플레이어 감도 가시 범위',
-         'label:id': 'Rentang visibilitas sensitivitas pemain',
-         'label:es': 'Rango de visibilidad de la sensibilidad del jugador',
-         'label:pt': 'Faixa de visibilidade da sensibilidade do jogador',
-         'label:fr': 'Plage de visibilité de la sensibilité du joueur',
-         'label:it': 'Intervallo di visibilità della sensibilità del giocatore',
-         'label:tr': 'Oyuncu duyarlılığı görünürlük aralığı',
-         'label:de': 'Sichtbarkeitsbereich der Spielerempfindlichkeit',
-         'label:pl': 'Pozycja odtwarzacza',
-         type: 'number',
-         title: 'in %',
-         placeholder: '%',
-         step: 10,
-         min: 10,
-         max: 100,
-         value: 80,
-         // 'data-dependent': { 'player_pin_mode': ['float'] },
-      },
+      // player_float_scroll_sensivity_range: {
+      //    _tagName: 'input',
+      //    label: 'Player sensitivity visibility range',
+      //    'label:zh': '播放器灵敏度可见范围',
+      //    'label:ja': 'プレイヤーの感度の可視範囲',
+      //    'label:ko': '플레이어 감도 가시 범위',
+      //    'label:id': 'Rentang visibilitas sensitivitas pemain',
+      //    'label:es': 'Rango de visibilidad de la sensibilidad del jugador',
+      //    'label:pt': 'Faixa de visibilidade da sensibilidade do jogador',
+      //    'label:fr': 'Plage de visibilité de la sensibilité du joueur',
+      //    'label:it': 'Intervallo di visibilità della sensibilità del giocatore',
+      //    'label:tr': 'Oyuncu duyarlılığı görünürlük aralığı',
+      //    'label:de': 'Sichtbarkeitsbereich der Spielerempfindlichkeit',
+      //    'label:pl': 'Pozycja odtwarzacza',
+      //    'label:ua': 'Діапазон видимості чутливості відтворювача',
+      //    type: 'number',
+      //    title: 'in %',
+      //    placeholder: '%',
+      //    step: 10,
+      //    min: 10,
+      //    max: 100,
+      //    value: 80,
+      //    // 'data-dependent': { 'player_pin_mode': ['float'] },
+      // },
       // 'player_float_scroll_pause_video': {
       //    _tagName: 'input',
       //    label: 'Pause pinned video',

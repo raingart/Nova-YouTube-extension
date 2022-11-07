@@ -14,6 +14,7 @@ window.nova_plugins.push({
    'title:tr': 'Kanal fragmanını durdur',
    'title:de': 'Kanaltrailer stoppen',
    'title:pl': 'Zatrzymaj zwiastun kanału',
+   'title:ua': 'Не відтворювати трейлер каналу',
    run_on_pages: 'channel, -mobile',
    restart_on_transition: true,
    section: 'channel',

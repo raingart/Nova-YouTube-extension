@@ -12,11 +12,14 @@ window.nova_plugins.push({
    'title:tr': 'Kanal sayfasındaki varsayılan sekme',
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    'title:pl': 'Domyślna karta na stronie kanału',
+   'title:ua': 'Вкладка за умовчанням на сторінці каналу',
    run_on_pages: 'channel, -mobile',
    restart_on_transition: true,
    section: 'channel',
    // desc: '',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
 
       // if not - home page channel/user
       if (location.pathname.split('/').filter(i => i).length !== 2) return;
@@ -36,7 +39,7 @@ window.nova_plugins.push({
                   default: tab_nth = 4;
                }
                // select tab
-               document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"`)
+               document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`)
                   ?.click();
             });
       }
@@ -57,10 +60,11 @@ window.nova_plugins.push({
          'label:tr': 'Varsayılan sekme',
          'label:de': 'Standard-Tab',
          'label:pl': 'Domyślna karta',
+         'label:ua': 'Вкладка за умовчанням',
          options: [
-            { label: 'videos', value: 'videos', selected: true, 'label:pl': 'wideo' },
-            { label: 'playlists', value: 'playlists', 'label:pl': 'playlista' },
-            { label: 'about', value: 'about', 'label:pl': 'o kanale' },
+            { label: 'videos', value: 'videos', selected: true, 'label:pl': 'wideo', 'label:ua': 'Відео' },
+            { label: 'playlists', value: 'playlists', 'label:pl': 'playlista', 'label:ua': 'Плейлисти' },
+            { label: 'about', value: 'about', 'label:pl': 'o kanale', 'label:ua': 'Про канал' },
          ],
       },
       channel_default_tab_mode: {
@@ -77,6 +81,7 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          title: 'Redirect is safer but slower',
          'title:zh': '重定向是安全的，但速度很慢',
          'title:ja': 'リダイレクトは安全ですが遅くなります',
@@ -89,9 +94,10 @@ window.nova_plugins.push({
          'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
          'title:de': 'Redirect ist sicherer, aber langsamer',
          'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
+         'title:ua': 'Перенаправлення безпечніше, але повільніше',
          options: [
-            { label: 'redirect', value: 'redirect', 'label:pl': 'przekierowanie' },
-            { label: 'click', /*value: '',*/ selected: true, 'label:pl': 'klik' },
+            { label: 'redirect', value: 'redirect', 'label:pl': 'przekierowanie', 'label:ua': 'Перенаправити' },
+            { label: 'click', /*value: '',*/ selected: true, 'label:pl': 'klik', 'label:ua': 'Клік' },
          ],
       },
    }

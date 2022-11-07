@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Kanal video sayısını göster',
    'title:de': 'Anzahl der Kanalvideos anzeigen',
    'title:pl': 'Pokaż liczbę filmów na kanale',
+   'title:ua': 'Показати кількість відео на каналі',
    run_on_pages: 'watch, channel',
    restart_on_transition: true,
    section: 'details',
@@ -28,6 +29,7 @@ window.nova_plugins.push({
    'desc:tr': 'Yüklenen videoları kanalda göster',
    'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    'desc:pl': 'Wyświetla przesłane filmy na kanale',
+   'desc:ua': 'Показує завантажені відео на каналі',
    _runtime: user_settings => {
 
       const

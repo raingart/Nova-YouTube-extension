@@ -21,6 +21,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatma listesi süresini göster',
    'title:de': 'Wiedergabelistendauer anzeigen',
    'title:pl': 'Pokaż czas trwania playlisty',
+   'title:ua': 'Показувати тривалість списку відтворення',
    run_on_pages: 'watch, playlist, -mobile',
    restart_on_transition: true,
    section: 'sidebar',
@@ -264,10 +265,11 @@ window.nova_plugins.push({
          'label:tr': 'Zaman görüntüleme modu',
          'label:de': 'Zeitanzeigemodus',
          'label:pl': 'Tryb wyświetlania czasu',
+         'label:ua': 'Режим відображення часу',
          options: [
-            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', /*'label:id': '',*/ 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', /*'label:it': '',*/ 'label:tr': 'tamamlamak', 'label:de': 'fertig', 'label:pl': 'zakończone' },
-            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', /*'label:it': '',*/'label:tr': 'sola', 'label:de': 'links', 'label:pl': 'pozostało' },
-            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:id': '', 'label:es': '','label:pt': '',*/  'label:fr': 'le total', /*'label:it': '',*/ 'label:tr': 'toplam', 'label:de': 'gesamt', 'label:pl': 'w sumie' },
+            { label: 'done', value: 'done', 'label:zh': '结束', 'label:ja': '終わり', 'label:ko': '보았다', /*'label:id': '',*/ 'label:es': 'hecho', 'label:pt': 'feito', 'label:fr': 'regardé', /*'label:it': '',*/ 'label:tr': 'tamamlamak', 'label:de': 'fertig', 'label:pl': 'zakończone', 'label': 'Завершено' },
+            { label: 'left', value: 'left', 'label:zh': '剩下', 'label:ja': '残り', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'À gauche', /*'label:it': '',*/'label:tr': 'sola', 'label:de': 'links', 'label:pl': 'pozostało', 'label': 'Залишилось' },
+            { label: 'total', value: false, selected: true, 'label:zh': '全部的', 'label:ja': '全て', 'label:ko': '총', /*'label:id': '', 'label:es': '','label:pt': '',*/  'label:fr': 'le total', /*'label:it': '',*/ 'label:tr': 'toplam', 'label:de': 'gesamt', 'label:pl': 'w sumie', 'label': 'Загалом' },
          ],
       },
       playlist_duration_percentage: {
@@ -284,6 +286,7 @@ window.nova_plugins.push({
          'label:tr': 'Yüzde ekle',
          'label:de': 'Prozent hinzufügen',
          'label:pl': 'Pokaż procenty',
+         'label:ua': 'Показати %',
          type: 'checkbox',
       },
    }

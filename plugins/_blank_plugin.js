@@ -35,6 +35,7 @@ window.nova_plugins.push({
    // 'title:tr': '',
    // 'title:de': '',
    // 'title:pl': '',
+   // 'title:ua': '',
 
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -47,6 +48,7 @@ window.nova_plugins.push({
    // 'desc:tr': '',
    // 'desc:de': '',
    // 'desc:pl': '',
+   // 'desc:ua': '',
    /* optional GIU in options page: end */
 
 
@@ -123,6 +125,7 @@ window.nova_plugins.push({
          // 'label:tr': '',
          // 'label:de': '',
          // 'label:pl': '',
+         // 'label:ua': '',
          type: 'number',
          title: 'sec',
          // 'title:zh': '',
@@ -136,6 +139,7 @@ window.nova_plugins.push({
          // 'title:tr': '',
          // 'title:de': '',
          // 'title:pl': '',
+         // 'title:ua': '',
          placeholder: 'sec',
          step: 1,
          min: 1,

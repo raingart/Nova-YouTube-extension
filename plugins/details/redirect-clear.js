@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Yönlendirmeden bağlantıları temizle',
    'title:de': 'Links aus Weiterleitungen löschen',
    'title:pl': 'Wyczyść linki z przekierowań',
+   'title:ua': 'Очистити посилання від перенаправлення',
    run_on_pages: 'watch, channel',
    section: 'details',
    desc: 'Direct external links',
@@ -26,6 +27,7 @@ window.nova_plugins.push({
    'desc:tr': 'Doğrudan harici bağlantılar',
    'desc:de': 'Direkte externe Links',
    'desc:pl': 'Bezpośrednie łącza zewnętrzne',
+   'desc:ua': 'Прямі зовнішні посилання',
    _runtime: user_settings => {
 
       // mouse left click

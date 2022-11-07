@@ -13,6 +13,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatma süresi konumunu devam ettir',
    'title:de': 'Wiedergabezeitposition fortsetzen',
    'title:pl': 'Powrót do pozycji czasowej odtwarzania',
+   'title:ua': 'Запам`ятати час відтворення',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'On page reload - resume playback',
@@ -27,6 +28,7 @@ window.nova_plugins.push({
    'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',
+   'desc:ua': 'Після завантаження - продовжити відтворення',
    _runtime: user_settings => {
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
@@ -122,6 +124,7 @@ window.nova_plugins.push({
          'label:tr': "Duraklatıldığında zamanı URL'de işaretleyin",
          'label:de': 'Zeit in URL markieren, wenn pausiert',
          'label:pl': 'Zaznacz czas w adresie URL po wstrzymaniu',
+         'label:ua': 'Маркувати час в URL-посиланні під час паузи',
          type: 'checkbox',
          title: 'update ?t=',
       },

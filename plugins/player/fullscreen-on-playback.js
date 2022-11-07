@@ -13,6 +13,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatmada otomatik tam ekran',
    'title:de': 'Automatischer Vollbildmodus bei Wiedergabe',
    'title:pl': 'Pełny ekran podczas odtwarzania',
+   'title:ua': 'Автоматичне ввімкнення повного екрану при відтворенні',
    run_on_pages: 'watch',
    section: 'player',
    // desc: '',
@@ -24,13 +25,13 @@ window.nova_plugins.push({
             video.addEventListener('play', setFullscreen.bind(video), { capture: true, once: true });
             // on page reload
             video.addEventListener('loaddata', setFullscreen.bind(video));
-            video.addEventListener('ended', exitFullscreen);
+            video.addEventListener('ended', exitFullscreen.bind(video));
 
             // exit fullscreen
             if (user_settings.player_fullscreen_mode_onpause) {
                // Strategy 1
                video.addEventListener('play', setFullscreen.bind(video));
-               video.addEventListener('pause', exitFullscreen);
+               video.addEventListener('pause', exitFullscreen.bind(video));
                // Strategy 2
                // movie_player.addEventListener('onStateChange', state => {
                //    if (document.fullscreen && movie_player.isFullscreen() && (NOVA.getPlayerState(state) == 'ENDED')) {
@@ -54,7 +55,8 @@ window.nova_plugins.push({
       }
 
       function exitFullscreen() {
-         document.fullscreenElement && document.exitFullscreen()
+         // WTF - TypeError: Failed to execute 'exitFullscreen' on 'Document': Illegal invocation
+         document.fullscreenElement && document?.exitFullscreen();
       }
 
    },
@@ -73,6 +75,7 @@ window.nova_plugins.push({
          'label:tr': 'Video duraklatılırsa tam ekran modundan çıkın',
          'label:de': 'Beenden Sie den Vollbildmodus, wenn das Video angehalten ist',
          'label:pl': 'Wyjdź z trybu pełnoekranowego, jeśli wideo jest wstrzymane',
+         'label:ua': 'Вихід з повного екрану зупиняє відео',
          type: 'checkbox',
       },
    }

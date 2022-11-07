@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': 'Canlı sohbeti gizle',
    'title:de': 'Livechat ausblenden',
    'title:pl': 'Ukryj czat na żywo',
+   'title:ua': 'Приховати чат',
    run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',
@@ -56,9 +57,10 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
-            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
-            { label: 'remove', value: 'disable', 'label:pl': 'usuń' },
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń', 'label': 'Приховати' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń', 'label': 'Вимкнути' },
          ],
       },
    }

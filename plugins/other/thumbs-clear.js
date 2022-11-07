@@ -16,6 +16,7 @@ window.nova_plugins.push({
    'title:tr': 'Küçük resimleri temizle',
    'title:de': 'Miniaturansichten löschen',
    'title:pl': 'Wyczyść miniatury',
+   'title:ua': 'Очистити мініатюри',
    run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed',
    section: 'other',
@@ -31,6 +32,7 @@ window.nova_plugins.push({
    'desc:tr': 'Önceden tanımlanmış küçük resmi değiştirir',
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    'desc:pl': 'Zastępuje predefiniowaną miniaturkę',
+   'desc:ua': 'Замінює попередньо визначені мініатюри клікбейти',
    _runtime: user_settings => {
 
       const
@@ -172,6 +174,7 @@ window.nova_plugins.push({
          'label:tr': 'Küçük resim zaman damgaları',
          'label:de': 'Thumbnail-Zeitstempel',
          'label:pl': 'Znaczniki czasowe miniatur',
+         'label:ua': 'Мітки часу мініатюр',
          title: 'Show thumbnail from video time position',
          'title:zh': '从视频时间位置显示缩略图',
          'title:ja': 'ビデオの時間位置からサムネイルを表示',
@@ -184,10 +187,11 @@ window.nova_plugins.push({
          'title:tr': 'Video zaman konumundan küçük resmi göster',
          'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
          'title:pl': 'Pokaż miniaturkę z pozycji czasu wideo',
+         'title:ua': 'Показати мініатюру з часової позиції відео',
          options: [
-            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', /*'label:id': '',*/ 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', /*'label:it': '',*/ 'label:tr': 'başlat', 'label:de': 'anfang', 'label:pl': 'początek' }, // often shows intro
-            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', /*'label:id': '',*/ 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', /*'label:it': '',*/ 'label:tr': 'orta', 'label:de': 'mitte', 'label:pl': 'środek' },
-            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', /*'label:id': '',*/ 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', /*'label:it': '',*/ 'label:tr': 'son', 'label:de': 'ende', 'label:pl': 'koniec' }
+            { label: 'start', value: 'hq1', 'label:zh': '开始', 'label:ja': '始まり', 'label:ko': '시작', /*'label:id': '',*/ 'label:es': 'comienzo', 'label:pt': 'começar', 'label:fr': 'le début', /*'label:it': '',*/ 'label:tr': 'başlat', 'label:de': 'anfang', 'label:pl': 'początek', 'label:ua': 'Початок' }, // often shows intro
+            { label: 'middle', value: 'hq2', selected: true, 'label:zh': '中间', 'label:ja': '真ん中', 'label:ko': '~ 아니다', /*'label:id': '',*/ 'label:es': 'medio', 'label:pt': 'meio', 'label:fr': 'ne pas', /*'label:it': '',*/ 'label:tr': 'orta', 'label:de': 'mitte', 'label:pl': 'środek', 'label:ua': 'Середина' },
+            { label: 'end', value: 'hq3', 'label:zh': '结尾', 'label:ja': '終わり', 'label:ko': '끝', /*'label:id': '',*/ 'label:es': 'fin', 'label:pt': 'fim', 'label:fr': 'finir', /*'label:it': '',*/ 'label:tr': 'son', 'label:de': 'ende', 'label:pl': 'koniec', 'label:ua': 'Кінець' }
          ],
       },
       thumbnails_clear_overlay: {
@@ -204,6 +208,7 @@ window.nova_plugins.push({
          'label:tr': 'Küçük resimdeki bindirme düğmelerini gizle',
          'label:de': 'Überlagerungsschaltflächen auf einer Miniaturansicht ausblenden',
          'label:pl': 'Ukryj przyciski nakładki na miniaturce',
+         'label:ua': 'Приховати кнопки на мініатюрі',
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',
       },
@@ -221,6 +226,7 @@ window.nova_plugins.push({
       //    'label:tr': 'Video bittikten sonra küçük resimler için başvurun',
       //    'label:de': 'Bewerben Sie sich nach dem Ende des Videos für Thumbnails',
       //    'label:pl': 'Złóż wniosek o miniatury po zakończeniu filmu',
+      //    'label:ua': 'Активувати для мініатюр після перегляду відео',  
       //    type: 'checkbox',
       // },
    }

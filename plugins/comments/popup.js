@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Açılır pencerede yorumlar bölümü',
    'title:de': 'Kommentarbereich im Popup',
    'title:pl': 'Sekcja komentarzy w osobnym oknie',
+   'title:ua': 'Розділ коментарів у спливаючому вікні',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
    // desc: '',

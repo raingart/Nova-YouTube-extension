@@ -1,0 +1,149 @@
+{
+   "localization": {
+      "message": "ua"
+   },
+   "app_description": {
+      "message": "Найкраще рішення для YouTube™"
+   },
+   "tab_map": {
+      "message": "Мапа"
+   },
+   "tab_plugins": {
+      "message": "Плагіни"
+   },
+   "tab_plugins_tooltip": {
+      "message": "Усі плагіни"
+   },
+   "tab_other": {
+      "message": "Інше"
+   },
+   "plugins_search_placeholder": {
+      "message": "Пошук..."
+   },
+   "btn_plugins_search_clear_tooltip": {
+      "message": "Очистити пошук"
+   },
+   "opt_btn_save_settings": {
+      "message": "Зберегти"
+   },
+   "opt_btn_save_settings_process": {
+      "message": "Збереження..."
+   },
+   "opt_btn_save_settings_processed": {
+      "message": "Збережено!"
+   },
+   "opt_appearance_header": {
+      "message": "Шапка сайту"
+   },
+   "opt_appearance_player": {
+      "message": "Відтворювач"
+   },
+   "opt_appearance_sidebar": {
+      "message": "Бічна панель"
+   },
+   "opt_appearance_details": {
+      "message": "Деталі"
+   },
+   "opt_appearance_comments": {
+      "message": "Коментарі"
+   },
+   "opt_appearance_other": {
+      "message": "Інше"
+   },
+   "opt_legend_settings_transfer": {
+      "message": "Перенесення налаштувань:"
+   },
+   "opt_title_help_link": {
+      "message": "Більше інформації"
+   },
+   "opt_btn_import_settings": {
+      "message": "Імпортувати"
+   },
+   "opt_prompt_import_settings": {
+      "message": "Немає доступу у спливаючому вікні! та/або Відкрити сторінку налаштувань?"
+   },
+   "opt_alert_import_successfully": {
+      "message": "Налаштування імпортовані успішно!"
+   },
+   "opt_btn_export_settings": {
+      "message": "Експортувати"
+   },
+   "opt_btn_reset_settings": {
+      "message": "Скинути налаштування"
+   },
+   "opt_prompt_reset_settings": {
+      "message": "Перш ніж продовжити, рекомендується створити резервну копію ваших поточних налаштувань та/або видалити всі налаштування?"
+   },
+   "opt_btn_save_settings_tooltip": {
+      "message": "Відкриті вкладки не змінюються"
+   },
+   "opt_btn_api_key_input": {
+      "message": "персональний Youtube API ключ"
+   },
+   "opt_api_key_generate": {
+      "message": "Згенерувати API ключ"
+   },
+   "opt_userscript_disable_setting_button": {
+      "message": "Вимкнути кнопку налаштування"
+   },
+   "opt_userscript_disable_setting_button_tooltip": {
+      "message": "На сторінках Youtube"
+   },
+   "opt_exclude_iframe": {
+      "message": "Вимкнути підтримку вбудованих програвачів"
+   },
+   "opt_exclude_iframe_tooltip": {
+      "message": "Розширення не працюватиме у вбудованому відео"
+   },
+   "opt_report_issues": {
+      "message": "Показати підказку для звіту про помилки"
+   },
+   "opt_report_issues_tooltip": {
+      "message": "Потрібно дозволити спливаючі вікна на YouTube для підказок"
+   },
+   "opt_api_key_warn": {
+      "message": "Використовуйте свій [API key] для стабільної роботи"
+   },
+   "lang_code_tooltip": {
+      "message": "Вибір перекладу"
+   },
+   "lang_code": {
+      "message": "Мова"
+   },
+   "github_page": {
+      "message": "Вихідний код"
+   },
+   "github_page_tooltip": {
+      "message": "Відкрити"
+   },
+   "github_page_issues": {
+      "message": "Повідомити про помилки"
+   },
+   "github_page_issues_tooltip": {
+      "message": "Повідомити"
+   },
+   "email": {
+      "message": "Контактна електронна адреса"
+   },
+   "email_tooltip": {
+      "message": "Відгукнутися"
+   },
+   "donate_patreon_tooltip": {
+      "message": "Підтримати Patreon"
+   },
+   "donate_patreon": {
+      "message": "Пожертвувати (Patreon)"
+   },
+   "donate_buymeacoffee_tooltip": {
+      "message": "Підтримати buymeacoffee"
+   },
+   "donate_buymeacoffee": {
+      "message": "Пожертвувати (buymeacoffee)"
+   },
+   "donate_paypal_tooltip": {
+      "message": "Підтримати Paypal"
+   },
+   "donate_paypal": {
+      "message": "Пожертвувати (Paypal)"
+   }
+}

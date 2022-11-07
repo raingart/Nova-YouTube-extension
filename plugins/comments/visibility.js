@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Yorumlar bölümünü daralt',
    'title:de': 'Kommentarbereich minimieren',
    'title:pl': 'Zwiń sekcję komentarzy',
+   'title:ua': 'Згорнути розділ коментарів',
    run_on_pages: 'watch, -mobile',
    restart_on_transition: true,
    section: 'comments',
@@ -40,9 +41,10 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
-            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
-            { label: 'remove', value: 'disable', 'label:pl': 'usuń'},
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń', 'label:ua': 'сховати' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń', 'label:ua': 'усунути'},
          ],
       },
    }

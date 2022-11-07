@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Sekme başlığında zamanı göster',
    'title:de': 'Zeit im Tab-Titel anzeigen',
    'title:pl': 'Pokaż czas w tytule karty',
+   'title:ua': 'Відображення часу в заголовку вкладки',
    run_on_pages: 'watch',
    section: 'other',
    // desc: 'Show the current time of the video on the title',
@@ -115,10 +116,11 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
-            // { label: 'current', value: 'current', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', label:id': '', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:it': '', 'label:tr': 'akım', 'label:de': 'strom' },
-            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', /*'label:it': '',*/ 'label:tr': 'o ayrıldı', 'label:de': 'links', 'label:pl': 'pozostało' },
-            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', /*'label:id': '',*/ 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', /*'label:it': '',*/ 'label:tr': 'akım/süre', 'label:de': 'strom/dauer', 'label:pl': 'bieżący czas' },
+            // { label: 'current', value: 'current', 'label:ua': 'поточний', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', label:id': '', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:it': '', 'label:tr': 'akım', 'label:de': 'strom' },
+            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', /*'label:it': '',*/ 'label:tr': 'o ayrıldı', 'label:de': 'links', 'label:pl': 'pozostało', 'label:ua': 'Лишилось' },
+            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', /*'label:id': '',*/ 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', /*'label:it': '',*/ 'label:tr': 'akım/süre', 'label:de': 'strom/dauer', 'label:pl': 'bieżący czas', 'label:ua': 'Поточний/Тривалість' },
          ],
       },
    }

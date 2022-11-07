@@ -37,5 +37,12 @@ if [ ! -z "$1" ]; then
    ver="$1"
 fi
 git commit -m "$ver"
-git tag "v${ver}"
+# git tag "v$(echo "${ver}" | sed 's/1/0/1')" -m "$(cat "./-changelog.md")"
+# git push origin master --tags
 git push origin master
+
+# echo "Uploading release file..."
+# releases_ver=
+# releases_out="/tmp/novaTube_v${releases_ver}.user.js"
+# git release create "v${releases_ver}" -F releases_out
+# git release upload "v${releases_ver}" releases_out

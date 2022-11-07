@@ -30,6 +30,7 @@ window.nova_plugins.push({
    'title:tr': 'Zaman atlama',
    'title:de': 'Zeitsprung',
    'title:pl': 'Skok czasowy',
+   'title:ua': 'Стрибок часу',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: 'Use to skip the intro or ad inserts',
@@ -44,6 +45,7 @@ window.nova_plugins.push({
    'desc:tr': 'Girişi veya reklam eklerini atlamak için kullanın',
    // 'desc:de': 'Verwenden Sie diese Option, um das Intro oder Werbeeinblendungen zu überspringen',
    'desc:pl': 'Służy do pomijania wstępu lub wstawek reklamowych',
+   'desc:ua': 'Використовуйте щоб пропустити інтро',
    _runtime: user_settings => {
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
@@ -237,6 +239,7 @@ window.nova_plugins.push({
          'label:tr': 'Adım süresi',
          'label:de': 'Schrittzeit',
          'label:pl': 'Krok czasowy',
+         'label:ua': 'Крок часу',
          type: 'number',
          title: 'in seconds',
          placeholder: 'sec',
@@ -258,6 +261,7 @@ window.nova_plugins.push({
          'label:tr': 'Kısayol tuşu (çift tıklama)',
          'label:de': 'Hotkey (Doppelklick)',
          'label:pl': 'Klawisz skrótu (podwójne kliknięcie)',
+         'label:ua': 'Гаряча клавіша (двічі натиснути)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'alt', value: 18 },
@@ -279,6 +283,7 @@ window.nova_plugins.push({
          'label:tr': 'İlerleme çubuğunda zaman ofsetini göster',
          'label:de': 'Zeitverschiebung im Fortschrittsbalken anzeigen',
          'label:pl': 'Pokaż przesunięcie czasu na pasku postępu',
+         'label:ua': 'Показувати часовий зсув на панелі прогресу',
          type: 'checkbox',
          // title: 'When you hover offset current playback time',
          title: 'Time offset from current playback time',
@@ -293,6 +298,7 @@ window.nova_plugins.push({
          'title:tr': 'Geçerli oynatma süresinden zaman farkı',
          'title:de': 'Zeitverschiebung zur aktuellen Wiedergabezeit',
          'title:pl': 'Przesunięcie czasu względem bieżącego czasu odtwarzania',
+         'title:ua': 'Часовий зсув відносно поточного часу відтворення',
       },
       // time_jump_chapters_list_show: {
       //    _tagName: 'input',
@@ -308,6 +314,7 @@ window.nova_plugins.push({
       //    'label:tr': 'Bölüm listesi bölümünü göster',
       //    'label:de': 'Kapitellistenblock anzeigen',
       //    'label:pl': 'Pokaż sekcję listy rozdziałów',
+      //    'label:ua': 'Показати розділ списку розділів',
       //    type: 'checkbox',
       // },
    }

@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Özel düğmeler',
    'title:de': 'Benutzerdefinierte Schaltflächen',
    'title:pl': 'Własne przyciski odtwarzacza',
+   'title:ua': 'Власні кнопки відтворювання',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
@@ -723,6 +724,7 @@ window.nova_plugins.push({
          'label:tr': 'Düğmeler',
          'label:de': 'Tasten',
          'label:pl': 'Przyciski',
+         'label:ua': 'Кнопки',
          title: '[Ctrl+Click] to select several',
          'title:zh': '[Ctrl+Click] 选择多个',
          'title:ja': '「Ctrl+Click」して、いくつかを選択します',
@@ -735,6 +737,7 @@ window.nova_plugins.push({
          'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
          'title:de': '[Ctrl+Click] um mehrere auszuwählen',
          'title:pl': 'Ctrl+kliknięcie, aby zaznaczyć kilka',
+         'title:ua': '[Ctrl+Click] щоб обрати декілька',
          multiple: null, // dont use - selected: true
          required: true, // dont use - selected: true
          size: 4, // = options.length
@@ -753,6 +756,7 @@ window.nova_plugins.push({
                'label:tr': 'hızlı kalite',
                'label:de': 'qualität',
                'label:pl': 'jakość',
+               'label:ua': 'Якість',
             },
             {
                value: 'toggle-speed',
@@ -768,6 +772,7 @@ window.nova_plugins.push({
                'label:tr': 'geçiş hızı',
                'label:de': 'geschwindigkeit umschalten',
                'label:pl': 'szybkość',
+               'label:ua': 'Швидкість',
             },
             {
                value: 'screenshot',
@@ -783,6 +788,7 @@ window.nova_plugins.push({
                'label:tr': 'ekran görüntüsü',
                'label:de': 'bildschirmfoto',
                // 'label:pl': 'screenshot'
+               'label:ua': 'Фото екрану',
             },
             {
                value: 'picture-in-picture',
@@ -798,6 +804,7 @@ window.nova_plugins.push({
                // 'label:tr': '',
                // 'label:de': ''
                'label:pl': 'obraz w obrazie',
+               'label:ua': 'Картинка в картинці',
             },
             {
                value: 'popup',
@@ -813,6 +820,7 @@ window.nova_plugins.push({
                'label:tr': 'pop-up oynatıcı',
                // 'label:de': ''
                'label:pl': 'w okienku',
+               'label:ua': 'Спливаюче повідомлення',
             },
             {
                value: 'rotate',
@@ -828,6 +836,7 @@ window.nova_plugins.push({
                'label:tr': 'döndürmek',
                'label:de': 'drehen',
                'label:pl': 'obróć',
+               'label:ua': 'Повернути',
             },
             {
                value: 'watch-later',
@@ -843,6 +852,7 @@ window.nova_plugins.push({
                // 'label:tr': '',
                // 'label:de': '',
                // 'label:pl': '',
+               'label:ua': 'Переглянути пізніше',
             },
             {
                value: 'thumbnail',
@@ -858,6 +868,7 @@ window.nova_plugins.push({
                'label:tr': 'küçük resim',
                'label:de': 'bildschirmfoto',
                'label:pl': 'miniaturka',
+               'label:ua': 'Мініатюра',
             },
          ],
       },
@@ -875,6 +886,7 @@ window.nova_plugins.push({
          'label:tr': 'Oyuncu penceresi boyutu en boy oranı',
          'label:de': 'Seitenverhältnis der Player-Fenstergröße',
          'label:pl': 'Rozmiar okna odtwarzacza',
+         'label:ua': 'Співвідношення розміру вікна відтворювача',
          type: 'number',
          title: 'less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
@@ -888,6 +900,7 @@ window.nova_plugins.push({
          'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          'title:pl': 'mniejsza wartość - większy rozmiar',
+         'title:ua': 'Менше значення - більший розмір',
          // title: '',
          placeholder: '1.5-4',
          step: 0.1,
@@ -910,6 +923,7 @@ window.nova_plugins.push({
          'label:tr': 'Kısayol geçiş hızı',
          'label:de': 'Hotkey-Umschaltgeschwindigkeit',
          'label:pl': 'Skrót przełączania prędkości',
+         'label:ua': 'Гаряча клавіша увімкнути швидкість',
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },

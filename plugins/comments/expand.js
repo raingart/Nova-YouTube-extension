@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Yorumları genişlet',
    'title:de': 'Kommentare erweitern',
    'title:pl': 'Rozwiń komentarze',
+   'title:ua': 'Розгорнути коментарі',
    run_on_pages: 'watch, -mobile',
    section: 'comments',
    // desc: '',
@@ -104,10 +105,11 @@ window.nova_plugins.push({
          'label:tr': 'Yorumu genişlet',
          'label:de': 'Kommentar erweitern',
          'label:pl': 'Rozwiń komentarz',
+         'label:ua': 'Розгорнути коментар',
          // title: '',
          options: [
-            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', /*'label:id': '',*/ 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', /*'label:it': '',*/ 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze' },
-            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에',/*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'po najechaniu', },
+            { label: 'always', value: 'always', selected: true, 'label:ua': 'Завжди', 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', /*'label:id': '',*/ 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', /*'label:it': '',*/ 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze' },
+            { label: 'on hover', value: 'onhover', 'label:ua': 'При наведенні', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에',/*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'po najechaniu', },
          ],
       },
       comments_view_reply: {
@@ -124,10 +126,11 @@ window.nova_plugins.push({
          'label:tr': 'Cevabı genişlet',
          'label:de': 'Antwort erweitern',
          'label:pl': 'Rozwiń odpowiedź',
+         'label:ua': 'Розгорнути відповідь',
          // title: '',
          options: [
-            { label: 'always', value: 'always', 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:id': 'selalu', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:it': 'sempre', 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze' },
-            { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', /*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'przy najechaniu' },
+            { label: 'always', value: 'always', 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:id': 'selalu', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:it': 'sempre', 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze', 'label:ua': 'Завжди' },
+            { label: 'on hover', value: 'onhover', selected: true, 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', /*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'en vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'przy najechaniu', 'label:ua': 'При наведенні' },
          ],
       },
    }

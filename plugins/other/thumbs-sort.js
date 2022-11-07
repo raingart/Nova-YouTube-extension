@@ -21,6 +21,7 @@ window.nova_plugins.push({
    'title:tr': 'Küçük resimleri görünümlere göre sıralamak için Ekle düğmesi',
    'title:de': 'Schaltfläche "Hinzufügen", um Miniaturansichten nach Ansichten zu sortieren',
    'title:pl': 'Dodaj przycisk sortowania miniatur według wyświetleń',
+   'title:ua': 'Додати кнопку для сортування мініатюр за переглядами',
    run_on_pages: 'channel, -mobile',
    // restart_on_transition: true, // dirty fix. required to use. But for optimization it is disabled and the code is not adapted
    section: 'other',
@@ -120,6 +121,7 @@ window.nova_plugins.push({
          'label:tr': 'Akışlar ve prömiyerler ilk sırada',
          'label:de': 'Streams und Premieren stehen an erster Stelle',
          'label:pl': 'Streamy i premiery jako pierwsze',
+         'label:ua': 'Стріми та прем`єри на початку',
          type: 'checkbox',
       },
    }

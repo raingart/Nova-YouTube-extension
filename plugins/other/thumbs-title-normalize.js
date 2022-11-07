@@ -12,11 +12,13 @@ window.nova_plugins.push({
    'title:tr': 'Küçük resim başlığının büyük harflerini kaldır',
    'title:de': 'Thumbnails-Titel entfernen',
    'title:pl': 'Zmniejsz czcionkę w tytule miniatur',
+   'title:ua': 'Завжди маленькі літери для назв мініатюр',
    run_on_pages: 'home, feed, channel, watch, -results',
    // run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed, -results',
    section: 'other',
-   // desc: 'Lowercase the title',
+   desc: 'Upper Case thumbnails title back to normal',
+   'desc:ua': 'Зняти слова з великої літери для назв мініатюр',
    _runtime: user_settings => {
 
       const
@@ -95,6 +97,7 @@ window.nova_plugins.push({
          'label:tr': 'Tam başlığı göster',
          'label:de': 'Vollständigen Titel anzeigen',
          'label:pl': 'Pokaż pełny tytuł',
+         'label:ua': 'Показати повну назву',
          type: 'checkbox'
       },
       thumbnails_title_normalize_smart_max_words: {
@@ -111,6 +114,7 @@ window.nova_plugins.push({
          'label:tr': 'Büyük harfli maksimum kelime',
          'label:de': 'Maximale Wörter in Großbuchstaben',
          'label:pl': 'Maksymalna liczba słów pisanych wielkimi literami',
+         'label:ua': 'Максимальна кількість слів ВЕЛИКИМИ літерами',
          type: 'number',
          // title: '',
          placeholder: '1-10',
@@ -132,6 +136,7 @@ window.nova_plugins.push({
          'label:tr': 'Emojiyi temizle',
          'label:de': 'Emoji löschen',
          'label:pl': 'Usuń emoji',
+         'label:ua': 'Очистити емодзі',
          type: 'checkbox',
       },
    }

@@ -16,6 +16,7 @@ window.nova_plugins.push({
    'title:tr': 'Kayan oyuncu ilerleme çubuğu',
    'title:de': 'Float-Player-Fortschrittsbalken',
    'title:pl': 'Pływający pasek postępu odtwarzacza',
+   'title:ua': 'Плаваючий індикатор прогресу відтворення',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -215,7 +216,7 @@ window.nova_plugins.push({
             // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
             const selectorTimestampLink = 'a[href*="&t="]';
             // search in description
-            NOVA.waitElement(`#primary-inner #description ${selectorTimestampLink}`)
+            NOVA.waitElement(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
                .then(() => renderChaptersMarks(duration));
 
             // search in first/pinned comment
@@ -279,6 +280,7 @@ window.nova_plugins.push({
          'label:tr': 'Yükseklik',
          'label:de': 'Höhe',
          'label:pl': 'Wysokość',
+         'label:ua': 'Висота',
          type: 'number',
          title: 'in pixels',
          placeholder: 'px',
@@ -300,6 +302,7 @@ window.nova_plugins.push({
          'label:tr': 'Opaklık',
          'label:de': 'Opazität',
          'label:pl': 'Przejrzystość',
+         'label:ua': 'Прозорість',
          type: 'number',
          // title: '',
          placeholder: '0-1',

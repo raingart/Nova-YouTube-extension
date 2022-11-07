@@ -16,10 +16,12 @@ window.nova_plugins.push({
    'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
    'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
    'title:pl': 'Brak przejścia do odtwarzacza na znacznikach czasu',
+   'title:ua': 'Немає прокрутки до відтворювача на часових мітках',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    desc: 'Disable scrolling to player when clicking on timestamps',
    'desc:pl': 'Wyłącza przewijanie do odtwarzacza podczas klikania znaczników czasu',
+   'desc:ua': 'Вимикає прокрутку до відтворювача при натисканні на часову мітку',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/438943-youtube-no-scroll-to-top-on-timestamps

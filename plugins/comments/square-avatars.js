@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Kare avatarlar',
    'title:de': 'Quadratische Avatare',
    'title:pl': 'Kwadratowe awatary',
+   'title:ua': 'Квадратні аватарки',
    run_on_pages: 'all',
    section: 'comments',
    desc: 'Make user images squared',
@@ -26,6 +27,7 @@ window.nova_plugins.push({
    'desc:tr': 'Kullanıcı resimlerini kare haline getirin',
    'desc:de': 'Machen Sie Benutzerbilder quadriert',
    'desc:pl': 'Awatary użytkowniów będą kwadratowe',
+   'desc:ua': 'Зробіть зображення користувачів квадратними',
    _runtime: user_settings => {
 
       NOVA.css.push(

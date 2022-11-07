@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': 'Ekle düğmesi ters çalma listesi sırası',
    'title:de': 'Umgekehrte Playlist-Reihenfolge hinzufügen',
    'title:pl': 'Dodaj przycisk odtwarzania w odwrotnej kolejności',
+   'title:ua': 'Кнопка додавання списку відтворення у зворотному порядку',
    run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'sidebar',

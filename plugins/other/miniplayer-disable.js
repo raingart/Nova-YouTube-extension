@@ -12,6 +12,7 @@ window.nova_plugins.push({
    // 'title:tr': '',
    // 'title:de': '',
    // 'title:pl': '',
+   'title:ua': 'Вимкнути мінівідтворювач',
    run_on_pages: 'watch',
    section: 'other',
    // desc: '',

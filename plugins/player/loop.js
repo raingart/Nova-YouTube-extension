@@ -16,6 +16,7 @@ window.nova_plugins.push({
    'title:tr': 'Döngü oynatma düğmesi ekle',
    'title:de': 'Füge einen Loop-Play-Button hinzu',
    'title:pl': 'Dodaj przycisk odtwarzania pętli',
+   'title:ua': 'Додати кнопку повтор',
    run_on_pages: 'watch',
    section: 'player',
    // desc: 'Loop video playback',
@@ -30,6 +31,7 @@ window.nova_plugins.push({
    // 'desc:tr': 'Döngü video oynatma',
    // 'desc:de': 'Loop-Videowiedergabe',
    // 'desc:pl': 'Odtwarzanie filmów w pętli',
+   // 'desc:ua': 'Зациклювання відео',
    _runtime: user_settings => {
 
       // createPlayerButton

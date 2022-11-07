@@ -12,6 +12,7 @@ window.nova_plugins.push({
    // 'title:tr': '',
    // 'title:de': '',
    // 'title:pl': '',
+   'title:ua': 'YouTube лого',
    run_on_pages: 'all, -embed, -mobile',
    section: 'header',
    // desc: '',

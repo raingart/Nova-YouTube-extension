@@ -17,6 +17,7 @@ window.nova_plugins.push({
    'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
    'title:pl': 'Zatrzymanie kart w tle oprócz aktywnej',
+   'title:ua': 'Автобауза усіх фонових вкладок окрім активної',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Supports iframes and other windows',
@@ -31,6 +32,7 @@ window.nova_plugins.push({
    'desc:tr': "iframe'leri ve diğer pencereleri destekler",
    'desc:de': 'Unterstützt iframes und andere Fenster',
    'desc:pl': 'Obsługa ramek iframe i innych okien',
+   'desc:ua': 'Підтримує iframe та інші вікна',
    _runtime: user_settings => {
 
       // redirect for localStorage common storage space
@@ -210,6 +212,7 @@ window.nova_plugins.push({
          'label:tr': 'Sekme odağında otomatik oynatma',
          'label:de': 'Autoplay bei Tab-Fokus',
          'label:pl': 'Autoodtwarzanie po wybraniu karty',
+         'label:ua': 'Автовідтворення при виборі вкладки',
          type: 'checkbox',
          // title: '',
       },
@@ -227,6 +230,7 @@ window.nova_plugins.push({
          'label:tr': 'Sekme odağı kaybederse videoyu otomatik duraklat',
          'label:de': 'Video automatisch pausieren, wenn der Tab den Fokus verliert',
          'label:pl': 'Automatycznie wstrzymaj wideo, jeśli karta straci ostrość',
+         'label:ua': 'Автопауза при зміні вкладки',
          type: 'checkbox',
          // title: '',
       },

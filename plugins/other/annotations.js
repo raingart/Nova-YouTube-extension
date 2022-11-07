@@ -12,11 +12,13 @@ window.nova_plugins.push({
    // 'title:tr': '',
    // 'title:de': '',
    // 'title:pl': '',
+   'title:ua': 'Приховайте сміття: анотації, кінцеві заставки тощо',
    run_on_pages: 'results, watch, embed, -mobile',
    section: 'other',
    // desc: "turn off 'card' in https://www.youtube.com/account_playback",
    desc: 'remove the annoying stuff',
    // desc: 'remove the annoying stuff at the end of the videos',
+   'desc:ua': 'Приховайте набридливий контент',
    _runtime: user_settings => {
 
       let selectorsList = [
@@ -46,13 +48,16 @@ window.nova_plugins.push({
                // 'ytd-video-renderer + ytd-horizontal-card-list-renderer', // "People also search for" block
 
                /* for 'watch' page: */
-               '[class^="ytp-ce-"]', // suggest video/channel for the end cards
+               '.ytp-autohide > [class^="ytp-ce-"]', // suggest video/channel for the end cards
                '.ytp-cards-teaser-text', // "next video suggestion" (title) in the top-right corner
 
                'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations"
 
                // 'ytd-popup-container tp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.
                'ytd-popup-container tp-yt-paper-dialog ytd-single-option-survey-renderer', // "How is YouTube today?" - Absolutely outstanding, Extremely good, Very good, Good, Not good
+
+               // sidebar ad block
+               // '.sparkles-light-cta',
             ]);
       }
 

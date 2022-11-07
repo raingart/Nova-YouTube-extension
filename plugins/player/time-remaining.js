@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': 'Kalan süre',
    'title:de': 'Verbleibende Zeit',
    'title:pl': 'Pozostały czas',
+   'title:ua': 'Час, що залишився',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Remaining time until the end of the video',
@@ -29,6 +30,7 @@ window.nova_plugins.push({
    'desc:tr': 'Videonun sonuna kalan süre',
    'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    'desc:pl': 'Czas pozostały do końca filmu',
+   'desc:ua': 'Час, що залишився до кінця відео',
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'nova-player-time-remaining';
@@ -116,6 +118,7 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
             { label: 'time+(%)', value: 'full' },
             { label: 'time', value: 'time', selected: true },

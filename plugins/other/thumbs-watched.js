@@ -15,6 +15,7 @@ window.nova_plugins.push({
    'title:tr': 'İzlenen küçük resimleri işaretle',
    'title:de': 'Angesehene Miniaturansichten markieren',
    'title:pl': 'Oznacz obejrzane miniaturki',
+   'title:ua': 'Позначити переглянуті мініатюри',
    run_on_pages: 'home, results, feed, channel, watch, -mobile',
    // run_on_pages: 'all, -embed',
    section: 'other',
@@ -43,7 +44,7 @@ window.nova_plugins.push({
       if (user_settings.thumbnails_watched_title) {
          NOVA.css.push(
             `a#video-title:visited:not(:hover),
-            #primary-inner #description a:visited {
+            #description a:visited {
                color: ${user_settings.thumbnails_watched_title_color} !important;
             }`);
       }
@@ -80,6 +81,7 @@ window.nova_plugins.push({
          'label:tr': 'Çerçeve rengi',
          'label:de': 'Rahmenfarbe',
          'label:pl': 'Kolor ramki',
+         'label:ua': 'Колір рамки',
          type: 'color',
          value: '#FF0000',
       },
@@ -97,6 +99,7 @@ window.nova_plugins.push({
          'label:tr': 'Başlık rengini ayarla',
          'label:de': 'Titelfarbe festlegen',
          'label:pl': 'Ustaw kolor tytułu',
+         'label:ua': 'Встановити колір заголовку',
          type: 'checkbox',
          // title: 'Link',
       },
@@ -114,6 +117,7 @@ window.nova_plugins.push({
          'label:tr': 'Başlık rengini seçin',
          'label:de': 'Titelfarbe auswählen',
          'label:pl': 'Wybierz kolor tytułu',
+         'label:ua': 'Обрати колір заголовку',
          type: 'color',
          value: '#ff4500',
          'data-dependent': { 'thumbnails_watched_title': true },

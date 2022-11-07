@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
    'title:de': 'Deaktivieren Sie das Scrollen im Vollbildmodus',
    'title:pl': 'Wyłącz przewijanie w trybie pełnoekranowym',
+   'title:ua': 'Вимкнути прокрутку у повноекранному режимі',
    run_on_pages: 'watch',
    section: 'player',
    // desc: '',

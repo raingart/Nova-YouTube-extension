@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Video otomatik duraklatma',
    'title:de': 'Automatische Pause des Videos',
    'title:pl': 'Automatyczne zatrzymanie wideo',
+   'title:ua': 'Автопауза',
    run_on_pages: 'watch, embed',
    restart_on_transition: true,
    section: 'player',
@@ -27,6 +28,7 @@ window.nova_plugins.push({
    'desc:tr': 'Otomatik oynatmayı devre dışı bırak',
    'desc:de': 'Deaktiviere Autoplay',
    'desc:pl': 'Wyłącz autoodtwarzanie',
+   'desc:ua': 'Вимкнути автовідтворення',
    _runtime: user_settings => {
 
       // better use this flag when launching the chrome/imum:
@@ -90,6 +92,7 @@ window.nova_plugins.push({
          'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
          'label:pl': 'Zignoruj listę odtwarzania',
+         'label:ua': 'Ігнорувати список відтворення',
          type: 'checkbox',
          'data-dependent': { 'video_autopause_embed': false },
       },
@@ -107,6 +110,7 @@ window.nova_plugins.push({
          // 'label:tr': '',
          // 'label:de': '',
          // 'label:pl': '',
+         'label:ua': 'Ігнорувти живі трансляції',
          type: 'checkbox',
          'data-dependent': { 'video_autopause_embed': false },
       },
@@ -124,14 +128,16 @@ window.nova_plugins.push({
       //    'label:tr': 'Yalnızca gömülü videolar için',
       //    'label:de': 'Nur für eingebettete Videos',
       //    'label:pl': 'Tylko dla osadzonych filmów',
+      //    'label:ua': 'Тільки для вбудованих відео',
       //    type: 'checkbox',
       // },
       video_autopause_embed: {
          _tagName: 'select',
          label: 'Apply to video',
+         'label:ua': 'Застосувати до відео',
          options: [
-            { label: 'all', value: false, selected: true, },
-            { label: 'embed', value: 'on' },
+            { label: 'all', value: false, selected: true, 'label:ua': 'всіх' },
+            { label: 'embed', value: 'on', 'label:ua': 'вбудованих' },
          ],
       },
    }

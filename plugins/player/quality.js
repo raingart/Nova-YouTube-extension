@@ -17,6 +17,7 @@ window.nova_plugins.push({
    'title:tr': 'Video kalitesi',
    'title:de': 'Videoqualität',
    'title:pl': 'Jakość wideo',
+   'title:ua': 'Якість відео',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -120,6 +121,7 @@ window.nova_plugins.push({
          'label:tr': 'Varsayılan kalite',
          'label:de': 'Standardvideoqualität',
          'label:pl': 'Domyślna jakość',
+         'label:ua': 'Звичайна якість',
          title: 'If unavailable, set max available quality',
          'title:zh': '如果不可用，将选择可用的最高质量。',
          'title:ja': '利用できない場合は、利用可能な最高の品質が選択されます。',
@@ -132,6 +134,7 @@ window.nova_plugins.push({
          'title:tr': 'Mevcut değilse, maksimum kullanılabilir kaliteyi ayarlayın',
          // 'title:de': 'Wenn nicht verfügbar, stellen Sie die maximal verfügbare Qualität ein',
          'title:pl': 'Jeśli nie dostępna, ustaw maksymalną dostępną jakość',
+         'title:ua': 'Якщо недоступно, обрати максимальну доступну якість',
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
@@ -163,6 +166,7 @@ window.nova_plugins.push({
          'label:tr': 'Aynı sekme için manuel olarak seçili kaydet',
          'label:de': 'Manuell für dieselbe Registerkarte ausgewählt speichern',
          'label:pl': 'Właściwości dla obecnej karty',
+         'label:ua': 'Зберігати власноруч обрану якість для вкладки',
          type: 'checkbox',
          title: 'Affects to next videos',
          'title:zh': '对下一个视频的影响',
@@ -176,6 +180,7 @@ window.nova_plugins.push({
          'title:tr': 'Sonraki videoları etkiler',
          'title:de': 'Beeinflusst die nächsten Videos',
          'title:pl': 'Zmiany w następnych filmach',
+         'title:ua': 'Впливає на наступні відео',
       },
    }
 });

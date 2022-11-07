@@ -1,7 +1,7 @@
 # bash: make build
 
 # All .js compiled into a single one.
-out="/tmp/super-nova.user.js"
+out="/tmp/novaTube.user.js"
 
 # example of searching in a directory listing
 # find . -type f -name "*.txt" ! -path "./Movies/*" ! -path "./Downloads/*" ! -path "./Music/*"

@@ -21,6 +21,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatma hızı kontrolü',
    'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    'title:pl': 'Kontrola prędkości odtwarzania',
+   'title:ua': 'Контроль швидкості відтворення',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
@@ -36,6 +37,7 @@ window.nova_plugins.push({
    'desc:tr': 'fare tekerleği ile',
    'desc:de': 'mit mausrad',
    'desc:pl': 'za pomocą kółka myszy',
+   'desc:ua': 'За допомогою колеса мишки',
    _runtime: user_settings => {
 
       // NOVA.waitElement('#movie_player')
@@ -407,6 +409,7 @@ window.nova_plugins.push({
          'label:tr': 'Başlangıçta hız',
          'label:de': 'Geschwindigkeit beim Start',
          'label:pl': 'Prędkość przy uruchamianiu',
+         'label:ua': 'Звичайна швидкість',
          type: 'number',
          title: '1 - default',
          // placeholder: '1-3',
@@ -429,6 +432,7 @@ window.nova_plugins.push({
          'label:tr': 'Müzik tarzı',
          'label:de': 'Musikrichtung',
          'label:pl': 'Gatunek muzyczny',
+         'label:ua': 'Жарн музики',
          title: 'extended detection - may trigger falsely',
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
@@ -441,10 +445,11 @@ window.nova_plugins.push({
          'title:tr': 'genişletilmiş algılama - yanlış tetiklenebilir',
          'title:de': 'erweiterte Erkennung - kann fälschlicherweise auslösen',
          'title:pl': 'rozszerzona detekcja - może działać błędnie',
+         'title:ua': 'Розширене виявлення - може спрацювати помилково',
          options: [
-            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:ko': '건너 뛰기', /*'label:id': '',*/ 'label:es': 'saltar', 'label:pt': 'pular', 'label:fr': 'sauter', /*'label:it': '',*/ 'label:tr': 'atlamak', 'label:de': 'überspringen'/*, 'label:pl': ''*/ },
-            { label: 'skip (extended)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:ko': '건너뛰다(확장)', /*'label:id': '',*/ 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:fr': 'sauter (étendu)', /*'label:it': '',*/ 'label:tr': 'atlamak (genişletilmiş)', 'label:de': 'überspringen (erweitert)'/*, 'label:pl': ''*/ },
-            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:ko': '강제 적용', /*'label:id': '',*/ 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:fr': 'appliquer la force', /*'label:it': '',*/ 'label:tr': 'zorlamak', 'label:de': 'kraft anwenden'/*, 'label:pl': ''*/ },
+            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:ko': '건너 뛰기', /*'label:id': '',*/ 'label:es': 'saltar', 'label:pt': 'pular', 'label:fr': 'sauter', /*'label:it': '',*/ 'label:tr': 'atlamak', 'label:de': 'überspringen'/*, 'label:pl': ''*/, 'label:ua': 'Пропустити' },
+            { label: 'skip (extended)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:ko': '건너뛰다(확장)', /*'label:id': '',*/ 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:fr': 'sauter (étendu)', /*'label:it': '',*/ 'label:tr': 'atlamak (genişletilmiş)', 'label:de': 'überspringen (erweitert)'/*, 'label:pl': ''*/, 'label:ua': 'Пропустити (розширено)' },
+            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:ko': '강제 적용', /*'label:id': '',*/ 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:fr': 'appliquer la force', /*'label:it': '',*/ 'label:tr': 'zorlamak', 'label:de': 'kraft anwenden'/*, 'label:pl': ''*/, 'label:ua': 'Примусово активувати' },
          ],
          'data-dependent': { 'rate_default': '!1' },
       },
@@ -462,6 +467,7 @@ window.nova_plugins.push({
          'label:tr': 'Adım',
          'label:de': 'Schritt',
          'label:pl': 'Krok',
+         'label:ua': 'Крок',
          type: 'number',
          title: '0.25 - default',
          placeholder: '0.1-1',
@@ -484,6 +490,7 @@ window.nova_plugins.push({
          'label:tr': 'Kısayol tuşu',
          'label:de': 'Schnelltaste',
          'label:pl': 'Klawisz skrótu',
+         'label:ua': 'Гаряча клавіша',
          options: [
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },

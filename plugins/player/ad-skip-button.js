@@ -17,6 +17,8 @@ window.nova_plugins.push({
    'title:tr': 'Reklam Atlama',
    'title:de': 'Anzeigen überspringen',
    'title:pl': 'Pomiń początkową reklamę',
+   //'title:ua': 'Натиснути пропустити рекламу',
+   'title:ua': 'Кнопка пропустити рекламу',
    run_on_pages: 'watch',
    section: 'player',
    desc: 'Auto click on [Skip Ad] button',
@@ -31,6 +33,7 @@ window.nova_plugins.push({
    'desc:tr': "Clic automatique sur le bouton [Ignorer l'annonce]",
    // 'desc:de': 'Klicken Sie automatisch auf die Schaltfläche [Anzeige überspringen]',
    'desc:pl': 'Auto kliknięcie przycisku [Pomiń reklamę]',
+   'desc:ua': 'Автоматично натискати кнопку для пропуску реклами',
    _runtime: user_settings => {
 
       // NOVA.css.push( // hides the appearance when playing on the next video

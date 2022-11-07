@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Oyuncu kısayol tuşları her zaman etkin',
    'title:de': 'Player-Hotkeys immer aktiv',
    'title:pl': 'Klawisze skrótów dla graczy zawsze aktywne',
+   'title:ua': 'Гарячі клавіші відтворювача завжди активні',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: 'Player hotkeys always active【SPACE/F】etc.',

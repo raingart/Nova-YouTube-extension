@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Başlık sabitlenmemiş',
    'title:de': 'Kopfleiste nicht fixiert',
    'title:pl': 'Przewijany nagłówek',
+   'title:ua': 'Відкріпити шапку сайту',
    // run_on_pages: 'watch, channel',
    run_on_pages: 'all, -embed, -mobile',
    // restart_on_transition: true,
@@ -28,6 +29,7 @@ window.nova_plugins.push({
    'desc:tr': 'Başlığın yapışmasını önleyin',
    'desc:de': 'Verhindert das Ankleben des Headers',
    'desc:pl': 'Nagłówek będzie przewijany wraz ze stroną',
+   'desc:ua': 'Відкріпляє шапку при прокрутці сайту',
    _runtime: user_settings => {
 
       NOVA.css.push(
@@ -89,6 +91,7 @@ window.nova_plugins.push({
          'label:tr': 'Başlıktan sonra kaydır',
          'label:de': 'Nach der Kopfzeile scrollen',
          'label:pl': 'Przewiń nagłówek',
+         'label:ua': 'Прокручувати після шапки сайту',
          title: 'Makes sense on a small screen',
          'title:zh': '在小屏幕上有意义',
          'title:ja': '小さな画面で意味があります',
@@ -101,6 +104,7 @@ window.nova_plugins.push({
          'title:tr': 'Küçük ekranda mantıklı',
          'title:de': 'Macht auf einem kleinen Bildschirm Sinn',
          'title:pl': 'Przydatne na małym ekranie',
+         'title:ua': 'Ефективно на малому екрані',
          type: 'checkbox',
       },
    }

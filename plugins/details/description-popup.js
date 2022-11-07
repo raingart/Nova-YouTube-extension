@@ -17,6 +17,7 @@ window.nova_plugins.push({
    'title:tr': 'Açılır pencerede açıklama bölümü',
    'title:de': 'Beschreibungsabschnitt im Popup',
    'title:pl': 'Opis w osobnym oknie',
+   'title:ua': 'Розділ опису у спливаючому вікні',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
@@ -27,7 +28,7 @@ window.nova_plugins.push({
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
       const
-         DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #primary-inner #description:not([hidden]):not(:empty)',
+         DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #description.ytd-watch-metadata:not([hidden]):not(:empty)',
          DATE_SELECTOR_ID = 'nova-description-date';
 
       NOVA.waitElement('#masthead-container')

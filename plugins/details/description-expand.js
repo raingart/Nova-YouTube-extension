@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Açıklamayı genişlet',
    'title:de': 'Beschreibung erweitern',
    'title:pl': 'Rozwiń opis',
+   'title:ua': 'Розширити опис',
    run_on_pages: 'watch, -mobile',
    // restart_on_transition: true,
    section: 'details',
@@ -70,9 +71,10 @@ window.nova_plugins.push({
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          // title: '',
+         'label:ua': 'Режим',
          options: [
-            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:id': 'selalu', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:it': 'sempre', 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze' },
-            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', /*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'En vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'po najechaniu' },
+            { label: 'always', value: 'always', selected: true, 'label:zh': '每次', 'label:ja': 'いつも', 'label:ko': '언제나', 'label:id': 'selalu', 'label:es': 'siempre', 'label:pt': 'sempre', 'label:fr': 'toujours', 'label:it': 'sempre', 'label:tr': 'her zaman', 'label:de': 'stets', 'label:pl': 'zawsze', 'label:ua': 'Завжди' },
+            { label: 'on hover', value: 'onhover', 'label:zh': '悬停时', 'label:ja': 'ホバー時に', 'label:ko': '호버에', /*'label:id': '',*/ 'label:es': 'en vuelo estacionario', 'label:pt': 'pairando', 'label:fr': 'En vol stationnaire', /*'label:it': '',*/ 'label:tr': 'üzerinde gezinme', 'label:de': 'auf schweben', 'label:pl': 'po najechaniu', 'label:ua': 'При наведенні' },
          ],
       },
    }

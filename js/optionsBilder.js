@@ -13,11 +13,15 @@ const Opt = {
    // lang_code = 'zh',
    // lang_code = 'ja',
    // lang_code = 'ko',
+   // lang_code = 'id',
    // lang_code = 'es',
    // lang_code = 'pt',
    // lang_code = 'fr',
+   // lang_code = 'it',
+   // lang_code = 'tr',
    // lang_code = 'de',
    // lang_code = 'pl',
+   // lang_code = 'ua',
 
    UI: {
       pluginsContainer: '#plugins',
@@ -94,7 +98,7 @@ const Opt = {
                   const li = document.createElement('li');
                   li.className = 'item';
                   li.innerHTML =
-                     `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc.replace(/"/g,"'")}" flow="up"` : ''}>
+                     `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc.replace(/"/g, "'")}" flow="up"` : ''}>
                         <label for="${plugin.id}">${plugin.title}</label>
                         <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
                         ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}

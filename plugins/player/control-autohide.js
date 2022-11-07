@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Oynatıcıdaki kontrolleri otomatik gizle',
    'title:de': 'Blendet das Player-Bedienfeld aus',
    'title:pl': 'Ukrywaj elementy w odtwarzaczu',
+   'title:ua': 'Приховати панель керування у відтворювачі',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    desc: 'Hover controls to display it',
@@ -26,6 +27,7 @@ window.nova_plugins.push({
    'desc:tr': 'Görüntülemek için üzerine gelin',
    'desc:de': 'Bewegen Sie den Mauszeiger darüber, um es anzuzeigen',
    'desc:pl': 'Najedź, aby wyświetlić',
+   'desc:ua': 'Наведіть мишкою щоб показати',
    _runtime: user_settings => {
 
       NOVA.css.push(

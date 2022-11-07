@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Varsayılan göstergeyi değiştir',
    'title:de': 'Standardkennzeichen ersetzen',
    'title:pl': 'Zamień wskaźnik standardowy',
+   'title:ua': 'Замінити стандартний інтерфейс',
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
@@ -226,6 +227,7 @@ window.nova_plugins.push({
          'label:tr': 'Varsayılan göstergeyi değiştir',
          'label:de': 'Indikatortyp',
          'label:pl': 'Typ wskaźnika',
+         'label:ua': 'Тип індикатора',
          options: [
             { label: 'text-top', value: 'text-top', selected: true },
             { label: 'bar-top', value: 'bar-top' },
@@ -235,9 +237,21 @@ window.nova_plugins.push({
       },
       player_indicator_color: {
          _tagName: 'input',
-         label: 'Color',
          type: 'color',
          value: '#ff0000', // red
+         label: 'Color',
+         'label:zh': '颜色',
+         'label:ja': '色',
+         'label:ko': '색깔',
+         'label:id': 'Warna',
+         // 'label:es': 'Color',
+         'label:pt': 'Cor',
+         'label:fr': 'Couleur',
+         'label:it': 'Colore',
+         'label:tr': 'Renk',
+         'label:de': 'Farbe',
+         'label:pl': 'Kolor',
+         'label:ua': 'Колір',
          'data-dependent': { 'player_indicator_type': '!text-top' },
       },
    }

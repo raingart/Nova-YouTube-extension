@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Kenar çubuğunda kanal bağlantılarını düzeltin',
    'title:de': 'Korrigieren Sie die Kanallinks in der Seitenleiste',
    'title:pl': 'Napraw linki do kanałów na pasku bocznym',
+   'title:ua': 'Виправити посилання на канали на бічній панелі',
    run_on_pages: 'watch, -mobile',
    section: 'sidebar',
    // desc: '',

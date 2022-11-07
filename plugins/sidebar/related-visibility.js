@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'İlgili bölümü daralt',
    'title:de': 'Zugehörigen Abschnitt minimieren',
    'title:pl': 'Zwiń powiązaną sekcję',
+   'title:ua': 'Згорнути розділ "пов`язано"',
    run_on_pages: 'watch, -mobile',
    section: 'sidebar',
    // desc: '',
@@ -39,9 +40,10 @@ window.nova_plugins.push({
          'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
-            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń' },
-            { label: 'remove', value: 'disable', 'label:pl': 'usuń' },
+            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń', 'label:ua': 'Приховати' },
+            { label: 'remove', value: 'disable', 'label:pl': 'usuń', 'label:ua': 'Вимкнути' },
          ],
       },
    }

@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Üst düğmeye kaydır',
    'title:de': 'Nach oben scrollen',
    'title:pl': 'Przycisk przewijania do góry',
+   'title:ua': 'Прокрутити до гори',
    run_on_pages: 'all, -embed, -mobile',
    section: 'other',
    desc: 'Displayed on long pages',
@@ -26,6 +27,7 @@ window.nova_plugins.push({
    'desc:tr': 'Uzun sayfalarda görüntüleniyor',
    'desc:de': 'Wird auf langen Seiten angezeigt',
    'desc:pl': 'Wyświetlaj na długich stronach',
+   'desc:ua': 'Відображається на довгих сторінках',
    _runtime: user_settings => {
 
       document.addEventListener('scroll', appendBtn, { capture: true, once: true });
@@ -118,6 +120,7 @@ window.nova_plugins.push({
          'label:tr': 'Düz',
          'label:de': 'Glatt',
          'label:pl': 'Płynnie',
+         'label:ua': 'Плавно',
          type: 'checkbox',
       },
       scroll_to_top_autoplay: {
@@ -134,6 +137,7 @@ window.nova_plugins.push({
          'label:tr': 'Videoyu Duraklat',
          'label:de': 'Video wieder anhalten',
          'label:pl': 'Wyłącz wstrzymanie odtwarzania filmu',
+         'label:ua': 'Продовжити програвання відео',
          type: 'checkbox',
       },
    }

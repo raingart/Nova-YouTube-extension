@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Video önyüklemesini durdur',
    'title:de': 'Beenden Sie das Vorladen des Videos',
    'title:pl': 'Zatrzymaj ładowanie wideo',
+   'title:ua': 'Зупинити передзавантаження відео',
    run_on_pages: 'watch, embed',
    // restart_on_transition: true,
    section: 'player',
@@ -90,6 +91,7 @@ window.nova_plugins.push({
          'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
          'label:pl': 'Zignoruj listę odtwarzania',
+         'label:ua': 'Ігнорувати список відтворення',
          type: 'checkbox',
          'data-dependent': { 'stop_preload_embed': false },
       },
@@ -107,6 +109,7 @@ window.nova_plugins.push({
          // 'label:tr': '',
          // 'label:de': '',
          // 'label:pl': '',
+         'label:ua': 'Ігнорувати живі трансляції',
          type: 'checkbox',
          'data-dependent': { 'stop_preload_embed': false },
       },
@@ -129,9 +132,9 @@ window.nova_plugins.push({
       stop_preload_embed: {
          _tagName: 'select',
          label: 'Apply to video',
-         options: [
-            { label: 'all', value: false, selected: true, },
-            { label: 'embed', value: 'on' },
+          options: [
+            { label: 'all', value: false, selected: true, 'label:ua': 'всіх' },
+            { label: 'embed', value: 'on', 'label:ua': 'вбудованих' },
          ],
       },
       // stop_preload_ignore_active_tab: {
@@ -148,6 +151,7 @@ window.nova_plugins.push({
       //    // 'label:tr': '',
       //    // 'label:de': '',
       //    // 'label:pl': '',
+      //    // 'label:ua': '',
       //    type: 'checkbox',
       //    title: 'Ignore active tab',
       //    // 'title:zh': '',
@@ -161,6 +165,7 @@ window.nova_plugins.push({
       //    // 'title:tr': '',
       //    // 'title:de': '',
       //    // 'title:pl': '',
+      //    // 'label:ua': '',
       // },
    }
 });

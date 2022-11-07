@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'RSS Beslemesi bağlantısı ekle',
    'title:de': 'RSS-Feed-Link hinzufügen',
    'title:pl': 'Dodaj kanał RSS',
+   'title:ua': 'Додати RSS-посилання',
    run_on_pages: 'channel, playlist, -mobile',
    restart_on_transition: true,
    section: 'channel',

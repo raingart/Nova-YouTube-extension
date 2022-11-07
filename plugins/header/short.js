@@ -12,6 +12,7 @@ window.nova_plugins.push({
    'title:tr': 'Başlık kompakt',
    'title:de': 'Header kompakt',
    'title:pl': 'Kompaktowy nagłówek',
+   'title:ua': 'Компактна шапка сайту',
    run_on_pages: 'all, -embed, -mobile',
    section: 'header',
    // desc: '',

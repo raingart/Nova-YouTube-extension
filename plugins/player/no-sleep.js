@@ -14,6 +14,7 @@ window.nova_plugins.push({
    'title:tr': 'Sayfa uykusunu devre dışı bırak',
    'title:de': 'Spieler bleiben für immer aktiv',
    'title:pl': 'Wyłącz tryb uśpienia odtwarzacza',
+   'title:ua': 'Вимкнути режим сну відтворювача',
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: 'prevent asking you to click "yes" to continue playing?',
@@ -29,6 +30,7 @@ window.nova_plugins.push({
    // 'desc:tr': '[Video duraklatıldı] uyarısını engelle',
    // 'desc:de': 'Warnung [Video pausiert] verhindern',
    // 'desc:pl': 'zapobiega wyświetlaniu alertu [Film wstrzymany]',
+   // 'desc:ua': 'Вимикає спливаюче вікно "продовжити перегляд?"',
    _runtime: user_settings => {
 
       // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
