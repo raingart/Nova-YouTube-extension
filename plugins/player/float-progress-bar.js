@@ -24,8 +24,9 @@ window.nova_plugins.push({
 
       // alt - https://chrome.google.com/webstore/detail/tweaks-for-youtube/ogkoifddpkoabehfemkolflcjhklmkge
 
-      // Doesn't work in embed - movie_player.getVideoData().isLive
-      if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')) return;
+      if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
+         // && (window.self.location.href.includes('live_stream') || movie_player.getVideoData().isLive)
+      ) return;
 
       const
          SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin "player-control-autohide"

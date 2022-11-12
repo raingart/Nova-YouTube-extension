@@ -24,18 +24,6 @@ window.nova_plugins.push({
             display: none !important;
          }`);
 
-      // document.addEventListener('keydown', ({ keyCode }) => (keyCode === 13)
-      // document.addEventListener('keydown', ({ key }) => {
-      // document.addEventListener('keydown', evt => {
-      //    // console.debug('key', key === 'i', NOVA.currentPage);
-      //    if (NOVA.currentPage == 'watch' && evt.key === 'i') {
-      //       alert(1);
-      //       evt.preventDefault(); // Doesn't work. Replace to preventDefault patch
-      //       evt.stopImmediatePropagation(); // Doesn't work. Replace to preventDefault patch
-      //       evt.stopPropagation(); // Doesn't work. Replace to preventDefault patch
-      //    }
-      // });
-
       document.addEventListener('yt-action', evt => {
          if (NOVA.currentPage != 'watch' && evt.detail?.actionName.includes('miniplayer')) {
             // console.log(evt.detail?.actionName);
@@ -46,6 +34,27 @@ window.nova_plugins.push({
             document.body.querySelector('#movie_player button.ytp-miniplayer-close-button')?.click();
          }
       });
+
+      // remove from page
+      // NOVA.waitElement('.ytp-chrome-bottom button[class^="ytp-miniplayer"]')
+      //    .then(() => {
+      //       document.querySelectorAll('[class^="ytp-miniplayer"]')
+      //          .forEach(el => el.remove());
+      //    });
+
+      // disable hotkey
+      // document.addEventListener('keydown', ({ keyCode }) => (keyCode === 13)
+      // document.addEventListener('keydown', ({ key }) => {
+      // document.addEventListener('keydown', evt => {
+      //    if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
+      //    // if (NOVA.currentPage == 'watch' && evt.code === 'KeyI') {
+      //    if (NOVA.currentPage == 'watch' && evt.key === 'i') {
+      //       alert(1);
+      //       evt.preventDefault(); // Doesn't work. Replace to preventDefault patch
+      //       evt.stopImmediatePropagation(); // Doesn't work. Replace to preventDefault patch
+      //       evt.stopPropagation(); // Doesn't work. Replace to preventDefault patch
+      //    }
+      // });
 
    },
 });

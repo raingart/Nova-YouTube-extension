@@ -33,17 +33,20 @@ window.nova_plugins.push({
    // 'desc:ua': 'Вимикає спливаюче вікно "продовжити перегляд?"',
    _runtime: user_settings => {
 
-      // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
-      // Strategy 1
       window.setInterval(() => {
-         // window.wrappedJSObject._lact = Date.now(); - does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
-         document.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 }));
+         // Strategy 1
+         document.dispatchEvent(
+            // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
+            new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })
+         );
+         // Strategy 2
+         // does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
+         // window.wrappedJSObject._lact = Date.now();
       }, 1000 * 60 * 5); // 5 min
 
 
-      // Strategy 2
+      // Strategy 3
       // function skipConfirmDialog() {
-      //    // NOVA.waitElement('yt-confirm-dialog-renderer #confirm-button, a.yt-simple-endpoint.style-scope.yt-button-renderer')
       //    // NOVA.waitElement('[role="dialog"] #confirm-button')
       //    NOVA.waitElement('#confirm-button')
       //       .then(btn => {

@@ -407,8 +407,8 @@ window.nova_plugins.push({
       //    'label:pl': 'Tryb',
       //    // title: '',
       //    options: [
-      //       { label: 'Picture-in-Picture', value: 'pip', selected: true },
-      //       { label: 'Float', value: 'float' },
+      //       { label: 'picture-in-picture', value: 'pip', selected: true },
+      //       { label: 'float', value: 'float' },
       //    ],
       // },
       player_float_scroll_size_ratio: {

@@ -1,6 +1,7 @@
 // https://www.youtube.com/watch?v=9EvbqxBUG_c - great for testing
 // https://www.youtube.com/watch?v=Il0S8BoucSA&t=99 - subtitle alignment bug
 // https://youtu.be/XvJRE6Sm-lM - has sub
+// https://www.youtube.com/watch?v=s1ipx-4oTKA - color (red) subtitles
 
 window.nova_plugins.push({
    id: 'subtitle-transparent',

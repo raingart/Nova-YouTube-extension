@@ -42,8 +42,16 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
          options: [
-            { label: 'collapse', value: 'hide', selected: true, 'label:pl': 'zwiń', 'label:ua': 'Приховати' },
-            { label: 'remove', value: 'disable', 'label:pl': 'usuń', 'label:ua': 'Вимкнути' },
+            {
+               label: 'collapse', value: 'hide', selected: true,
+               'label:pl': 'zwiń',
+               'label:ua': 'приховати',
+            },
+            {
+               label: 'remove', value: 'disable',
+               'label:pl': 'usuń',
+               'label:ua': 'вимкнути',
+            },
          ],
       },
    }

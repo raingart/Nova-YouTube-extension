@@ -73,9 +73,9 @@ window.nova_plugins.push({
          // ATTR_MARK = 'nova-thumb-shorts-pathed',
          linkQueryPatch = '&list=RDSH',
          thumbsSelectors = [
-            // 'ytd-rich-item-renderer', // home
+            'ytd-rich-item-renderer', // home, channel
             'ytd-video-renderer', // results
-            'ytd-grid-video-renderer', // feed, channel
+            'ytd-grid-video-renderer', // feed
             // 'ytd-compact-video-renderer', // sidepanel in watch
             'ytm-compact-video-renderer', // mobile
          ]

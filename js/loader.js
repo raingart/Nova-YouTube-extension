@@ -144,7 +144,7 @@ const App = {
                   + '?entry.35504208=' + encodeURIComponent(trace_name)
                   + '&entry.151125768=' + encodeURIComponent(err_stack)
                   + '&entry.744404568=' + encodeURIComponent(location.href)
-                  + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent)
+                  + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
                   , '_blank');
             }
          };
@@ -213,6 +213,7 @@ App.init();
 // example url new embed page
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
+// https://www.youtube.com/embed/yWUMMg3dmFY?enablejsapi=1&autoplay=0&cc_load_policy=0&cc_lang_pref=&iv_load_policy=1&loop=0&modestbranding=0&rel=1&fs=1&playsinline=0&autohide=2&theme=dark&color=red&controls=1&
 
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded

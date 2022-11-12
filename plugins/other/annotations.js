@@ -40,11 +40,12 @@ window.nova_plugins.push({
          default:
             selectorsList.push([
                /* for 'results' page: */
+               '.sparkles-light-cta', // ad buy (https://www.youtube.com/results?search_query=Canon+Pixma+MG2520)
                'ytd-search-pyv-renderer', // fix blank space (https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
                '[class^="ytd-promoted-"]', // suggest site (https://www.youtube.com/results?search_query=mmersive+Simmulator)
                // '.ytd-promoted-sparkles-text-search-renderer', // suggest something (I do not remember)
                // 'ytd-search-pyv-renderer ytd-promoted-video-renderer', // suggest ad-video
-               'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block
+               'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block (alt - https://greasyfork.org/en/scripts/454513-youtube-search-results-cleaner)
                // 'ytd-video-renderer + ytd-horizontal-card-list-renderer', // "People also search for" block
 
                /* for 'watch' page: */
@@ -52,6 +53,8 @@ window.nova_plugins.push({
                '.ytp-cards-teaser-text', // "next video suggestion" (title) in the top-right corner
 
                'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations"
+
+               '.ytd-watch-flexy.attached-message', // message "BBC World Service is a British public broadcast service. Wikipedia"
 
                // 'ytd-popup-container tp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.
                'ytd-popup-container tp-yt-paper-dialog ytd-single-option-survey-renderer', // "How is YouTube today?" - Absolutely outstanding, Extremely good, Very good, Good, Not good

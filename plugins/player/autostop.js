@@ -19,11 +19,15 @@ window.nova_plugins.push({
    desc: 'Prevent the player from buffering video before playing',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable/code
+
       // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 
       if (user_settings.stop_preload_embed) {
          // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
-         if (NOVA.currentPage == 'embed' && !['0', 'false'].includes(NOVA.queryURL.get('autoplay'))) {
+         if (NOVA.currentPage == 'embed' && window.self !== window.top// window.frameElement // is iframe?
+            && !['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
+         ) {
             location.assign(NOVA.queryURL.set({ 'autoplay': false }));
 
          } else return;
@@ -132,9 +136,15 @@ window.nova_plugins.push({
       stop_preload_embed: {
          _tagName: 'select',
          label: 'Apply to video',
-          options: [
-            { label: 'all', value: false, selected: true, 'label:ua': 'всіх' },
-            { label: 'embed', value: 'on', 'label:ua': 'вбудованих' },
+         options: [
+            {
+               label: 'all', value: false, selected: true,
+               'label:ua': 'всіх',
+            },
+            {
+               label: 'embed', value: 'on',
+               'label:ua': 'вбудованих',
+            },
          ],
       },
       // stop_preload_ignore_active_tab: {

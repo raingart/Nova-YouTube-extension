@@ -42,16 +42,14 @@ window.nova_plugins.push({
             if (this.backup
                || movie_player.getVideoData().isLive // live
                || movie_player.classList.contains('ad-showing') // ad-video
-               || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|','\\|')})`, '').test(document.title) // title has time "0:00:00${this.strSplit}"
+               || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|',
+                  '\\|')})`, '').test(document.title) // title has time "0:00:00${this.strSplit}"
             ) {
                return;
             }
-            this.backup = document.title; // getVideoTitle();
+            // this.backup = document.title;
+            this.backup = movie_player.getVideoData().title;
             // console.debug('save', this.backup);
-
-            // function getVideoTitle() {
-            //    return movie_player.getVideoData().title || document.body.querySelector('#info h1.title')?.content;
-            // }
          },
 
          update(video = NOVA.videoElement) {
@@ -118,9 +116,50 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
          options: [
-            // { label: 'current', value: 'current', 'label:ua': 'поточний', 'label:zh': '现在', 'label:ja': '現在', 'label:ko': '현재의', label:id': '', 'label:es': 'actual', 'label:pt': 'atual', 'label:fr': 'courant', 'label:it': '', 'label:tr': 'akım', 'label:de': 'strom' },
-            { label: 'left', value: 'left', selected: true, 'label:zh': '剩下', 'label:ja': '左', 'label:ko': '왼쪽', /*'label:id': '',*/ 'label:es': 'izquierda', 'label:pt': 'deixou', 'label:fr': 'à gauche', /*'label:it': '',*/ 'label:tr': 'o ayrıldı', 'label:de': 'links', 'label:pl': 'pozostało', 'label:ua': 'Лишилось' },
-            { label: 'current/duration', value: 'current-duration', 'label:zh': '现在/期间', 'label:ja': '現在/期間', 'label:ko': '현재/기간', /*'label:id': '',*/ 'label:es': 'actual/duración', 'label:pt': 'atual/duração', 'label:fr': 'courant/durée', /*'label:it': '',*/ 'label:tr': 'akım/süre', 'label:de': 'strom/dauer', 'label:pl': 'bieżący czas', 'label:ua': 'Поточний/Тривалість' },
+            // {
+            //    label: 'current', value: 'current',
+            //    'label:ua': 'поточний',
+            //    'label:zh': '现在',
+            //    'label:ja': '現在',
+            //    'label:ko': '현재의',
+            //    // 'label:id': '',
+            //    'label:es': 'actual',
+            //    'label:pt': 'atual',
+            //    'label:fr': 'courant',
+            //    // 'label:it': '',
+            //    'label:tr': 'akım',
+            //    'label:de': 'strom',
+            // },
+            {
+               label: 'left', value: 'left', selected: true,
+               'label:zh': '剩下',
+               'label:ja': '左',
+               'label:ko': '왼쪽',
+               // 'label:id': '',
+               'label:es': 'izquierda',
+               'label:pt': 'deixou',
+               'label:fr': 'à gauche',
+               // 'label:it': '',
+               'label:tr': 'o ayrıldı',
+               'label:de': 'links',
+               'label:pl': 'pozostało',
+               'label:ua': 'лишилось',
+            },
+            {
+               label: 'current/duration', value: 'current-duration',
+               'label:zh': '现在/期间',
+               'label:ja': '現在/期間',
+               'label:ko': '현재/기간',
+               // 'label:id': '',
+               'label:es': 'actual/duración',
+               'label:pt': 'atual/duração'
+               , 'label:fr': 'courant/durée',
+               // 'label:it': '',
+               'label:tr': 'akım/süre',
+               'label:de': 'strom/dauer',
+               'label:pl': 'bieżący czas',
+               'label:ua': 'поточний/тривалість',
+            },
          ],
       },
    }

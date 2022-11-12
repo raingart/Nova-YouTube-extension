@@ -1,7 +1,7 @@
 ---
 name: Feature Request
 about: Create a suggestions
-title: ''
+title: '[Feature]'
 labels: Support
 assignees: ''
 

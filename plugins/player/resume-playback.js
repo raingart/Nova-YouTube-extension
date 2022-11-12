@@ -36,7 +36,7 @@ window.nova_plugins.push({
       // TODO adSkip alt. - add comparison by duration. Need stream test
       const
          CACHE_PREFIX = 'resume-playback-time',
-         getCacheName = () => CACHE_PREFIX + ':' + (document.getElementById('movie_player')?.getVideoData().video_id || NOVA.queryURL.get('v'));
+         getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
       let cacheName = getCacheName(); // for optimization
 
@@ -72,7 +72,10 @@ window.nova_plugins.push({
       }
 
       function resumePlayback() {
-         if (NOVA.queryURL.has('t')) return;
+         if (NOVA.queryURL.has('t')
+            // https://www.youtube.com/watch?time_continue=68&v=yWUMMg3dmFY&feature=emb_title
+            // || NOVA.queryURL.has('time_continue')
+         ) return;
          cacheName = getCacheName(); // for optimization
 
          if ((time = +sessionStorage.getItem(cacheName))

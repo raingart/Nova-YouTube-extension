@@ -175,8 +175,9 @@ window.nova_plugins.push({
             .then(progressContainer => {
                if (tooltipEl = document.body.querySelector('.ytp-tooltip-text')) {
                   progressContainer.addEventListener('mousemove', () => {
-                     if (movie_player.getVideoData().isLive // stream. Doesn't work in embed
-                        || (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream'))) return;
+                     if (movie_player.getVideoData().isLive
+                        || (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream'))
+                     ) return;
 
                      const
                         cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),

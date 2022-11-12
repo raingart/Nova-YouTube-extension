@@ -24,9 +24,9 @@ window.nova_plugins.push({
 
       const
          thumbsSelectors = [
-            'ytd-rich-item-renderer', // home
+            'ytd-rich-item-renderer', // home, channel
             'ytd-video-renderer', // results
-            'ytd-grid-video-renderer', // feed, channel
+            'ytd-grid-video-renderer', // feed
             'ytd-compact-video-renderer', // sidepanel in watch
             'ytm-compact-video-renderer', // mobile
          ]
@@ -85,6 +85,8 @@ window.nova_plugins.push({
       const thumbRemove = {
          shorts() {
             if (!user_settings.shorts_disable) return;
+            // exсlude "short" tab in channel
+            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'shorts') return;
 
             document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
@@ -153,6 +155,8 @@ window.nova_plugins.push({
 
          live() {
             if (!user_settings.live_disable) return;
+            // exсlude "LIVE" tab in channel
+            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'streams') return;
 
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
@@ -171,8 +175,10 @@ window.nova_plugins.push({
 
          streamed() {
             if (!user_settings.streamed_disable) return;
+            // exсlude "LIVE" tab in channel
+            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'streams') return;
 
-            document.body.querySelectorAll('#metadata-line > span:nth-child(2)')
+            document.body.querySelectorAll('#metadata-line > span.inline-metadata-item:last-of-type')
                .forEach(el => {
                   if (el.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
                      && (thumb = el.closest(thumbsSelectors))) {

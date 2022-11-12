@@ -62,9 +62,21 @@ window.nova_plugins.push({
          'label:pl': 'Domyślna karta',
          'label:ua': 'Вкладка за умовчанням',
          options: [
-            { label: 'videos', value: 'videos', selected: true, 'label:pl': 'wideo', 'label:ua': 'Відео' },
-            { label: 'playlists', value: 'playlists', 'label:pl': 'playlista', 'label:ua': 'Плейлисти' },
-            { label: 'about', value: 'about', 'label:pl': 'o kanale', 'label:ua': 'Про канал' },
+            {
+               label: 'videos', value: 'videos', selected: true,
+               'label:pl': 'wideo',
+               'label:ua': 'відео',
+            },
+            {
+               label: 'playlists', value: 'playlists',
+               'label:pl': 'playlista',
+               'label:ua': 'плейлисти',
+            },
+            {
+               label: 'about', value: 'about',
+               'label:pl': 'o kanale',
+               'label:ua': 'про канал',
+            },
          ],
       },
       channel_default_tab_mode: {
@@ -96,8 +108,16 @@ window.nova_plugins.push({
          'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
          'title:ua': 'Перенаправлення безпечніше, але повільніше',
          options: [
-            { label: 'redirect', value: 'redirect', 'label:pl': 'przekierowanie', 'label:ua': 'Перенаправити' },
-            { label: 'click', /*value: '',*/ selected: true, 'label:pl': 'klik', 'label:ua': 'Клік' },
+            {
+               label: 'redirect', value: 'redirect',
+               'label:pl': 'przekierowanie',
+               'label:ua': 'перенаправити',
+            },
+            {
+               label: 'click', /*value: '',*/ selected: true,
+               'label:pl': 'klik',
+               'label:ua': 'клік',
+            },
          ],
       },
    }

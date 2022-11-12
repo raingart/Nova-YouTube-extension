@@ -281,12 +281,12 @@ window.nova_plugins.push({
                titleStr,
                location.href, // 'music.youtube.com' or 'youtube.com#music'
                channelName,
-
+               document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat.playerMicroformatRenderer.category, // exclude embed page
                // ALL BELOW - not updated after page transition!
                // window.ytplayer?.config?.args.title,
                // document.body.querySelector('meta[itemprop="genre"][content]')?.content,
                // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
-               document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
+               // document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
             ]
                .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
                // 'Official Artist' badge
@@ -447,9 +447,51 @@ window.nova_plugins.push({
          'title:pl': 'rozszerzona detekcja - może działać błędnie',
          'title:ua': 'Розширене виявлення - може спрацювати помилково',
          options: [
-            { label: 'skip', value: true, selected: true, 'label:zh': '跳过', 'label:ja': 'スキップ', 'label:ko': '건너 뛰기', /*'label:id': '',*/ 'label:es': 'saltar', 'label:pt': 'pular', 'label:fr': 'sauter', /*'label:it': '',*/ 'label:tr': 'atlamak', 'label:de': 'überspringen'/*, 'label:pl': ''*/, 'label:ua': 'Пропустити' },
-            { label: 'skip (extended)', value: 'expanded', 'label:zh': '跳过（扩展检测）', 'label:ja': 'スキップ（拡張検出）', 'label:ko': '건너뛰다(확장)', /*'label:id': '',*/ 'label:es': 'omitir (extendida)', 'label:pt': 'pular (estendido)', 'label:fr': 'sauter (étendu)', /*'label:it': '',*/ 'label:tr': 'atlamak (genişletilmiş)', 'label:de': 'überspringen (erweitert)'/*, 'label:pl': ''*/, 'label:ua': 'Пропустити (розширено)' },
-            { label: 'force apply', value: false, 'label:zh': '施力', 'label:ja': '力を加える', 'label:ko': '강제 적용', /*'label:id': '',*/ 'label:es': 'aplicar fuerza', 'label:pt': 'aplicar força', 'label:fr': 'appliquer la force', /*'label:it': '',*/ 'label:tr': 'zorlamak', 'label:de': 'kraft anwenden'/*, 'label:pl': ''*/, 'label:ua': 'Примусово активувати' },
+            {
+               label: 'skip', value: true, selected: true,
+               'label:zh': '跳过',
+               'label:ja': 'スキップ',
+               'label:ko': '건너 뛰기',
+               // 'label:id': '',
+               'label:es': 'saltar',
+               'label:pt': 'pular',
+               'label:fr': 'sauter',
+               // 'label:it': '',
+               'label:tr': 'atlamak',
+               'label:de': 'überspringen',
+               // 'label:pl': '',
+               'label:ua': 'пропустити',
+            },
+            {
+               label: 'skip (extended)', value: 'expanded',
+               'label:zh': '跳过（扩展检测）',
+               'label:ja': 'スキップ（拡張検出）',
+               'label:ko': '건너뛰다(확장)',
+               // 'label:id': '',
+               'label:es': 'omitir (extendida)',
+               'label:pt': 'pular (estendido)',
+               'label:fr': 'sauter (étendu)',
+               // 'label:it': '',
+               'label:tr': 'atlamak (genişletilmiş)',
+               'label:de': 'überspringen (erweitert)',
+               // 'label:pl': '',
+               'label:ua': 'пропустити (розширено)',
+            },
+            {
+               label: 'force apply', value: false,
+               'label:zh': '施力',
+               'label:ja': '力を加える',
+               'label:ko': '강제 적용',
+               // 'label:id': '',
+               'label:es': 'aplicar fuerza',
+               'label:pt': 'aplicar força',
+               'label:fr': 'appliquer la force',
+               // 'label:it': '',
+               'label:tr': 'zorlamak',
+               'label:de': 'kraft anwenden',
+               // 'label:pl': '',
+               'label:ua': 'примусово активувати',
+            },
          ],
          'data-dependent': { 'rate_default': '!1' },
       },

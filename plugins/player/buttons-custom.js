@@ -94,6 +94,13 @@ window.nova_plugins.push({
                //       <path d="M8 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-3z"/>
                //    </g>
                // </svg>`;
+               // `<svg viewBox="0 -5 24 30" height="100%" width="100%">
+               //    <g transform="translate(0,2)">
+               //       <polygon fill-rule="nonzero" points="1.85008844 1.51464844 18.2421138 1.51464844 18.2421138 7.74121094 19.2421138 7.74121094 19.2421138 0.514648438 0.850088443 0.514648438 0.850088443 11.7244572 9.16539331 11.7758693 9.17157603 10.7758885 1.85008844 10.7306209" />
+               //       <rect x="10.5" y="9" width="9.5" height="6" />
+               //       <path d="M8.49517931,6.9934339 L4.58268904,3.10539669 L3.87780235,3.81471662 L7.75590296,7.6685791 L5.14025649,7.6685791 L5.14025649,8.6685791 L9.49517931,8.6685791 L9.49517931,4.64446771 L8.49517931,4.64446771 L8.49517931,6.9934339 Z" fill-rule="nonzero" />
+               //    </g>
+               // </svg>`;
                pipBtn.addEventListener('click', () => document.pictureInPictureElement
                   ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
                );
@@ -121,22 +128,21 @@ window.nova_plugins.push({
 
             // Pop-up player
             if (user_settings.player_buttons_custom_items?.indexOf('popup') !== -1 && !NOVA.queryURL.has('popup')) {
+               // alt - https://greasyfork.org/en/scripts/401907-youtube-popout-button-mashup
                const popupBtn = document.createElement('button');
                popupBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                popupBtn.title = 'Open in popup';
                popupBtn.innerHTML =
-                  `<svg viewBox="-8 -8 36 36" height="100%" width="100%">
+                  // `<svg viewBox="-8 -8 36 36" height="100%" width="100%">
+                  //    <g fill="currentColor">
+                  //       <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
+                  //    </g>
+                  // </svg>`;
+                  `<svg viewBox="0 -1 38 38" height="100%" width="100%">
                      <g fill="currentColor">
-                        <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
+                        <path d="M 27.020989,25.020001 H 9.0209895 v -14.05 L 20.278056,10.969089 20.27853,8.9999999 H 8.9544297 c -1.0730594,0 -1.9334402,0.9 -1.9334402,2.0000001 v 14 c 0,1.1 0.8603808,2 1.9334402,2 H 27.045569 c 1.063393,0 1.97421,-0.885891 1.968683,-1.985877 l 0.0018,-7.014124 h -1.991386 z m -4.80902,-16.0200011 -0.01053,1.9774681 3.525926,-0.0018 -9.547729,9.854341 1.363076,1.41 9.481183,-9.799226 v 3.59 l 1.993516,-0.0095 0.0039,-7.0250141 z" />
                      </g>
                   </svg>`;
-               // `<svg viewBox="0 -5 24 30" height="100%" width="100%">
-               //    <g transform="translate(0,2)">
-               //       <polygon fill-rule="nonzero" points="1.85008844 1.51464844 18.2421138 1.51464844 18.2421138 7.74121094 19.2421138 7.74121094 19.2421138 0.514648438 0.850088443 0.514648438 0.850088443 11.7244572 9.16539331 11.7758693 9.17157603 10.7758885 1.85008844 10.7306209" />
-               //       <rect x="10.5" y="9" width="9.5" height="6" />
-               //       <path d="M8.49517931,6.9934339 L4.58268904,3.10539669 L3.87780235,3.81471662 L7.75590296,7.6685791 L5.14025649,7.6685791 L5.14025649,8.6685791 L9.49517931,8.6685791 L9.49517931,4.64446771 L8.49517931,4.64446771 L8.49517931,6.9934339 Z" fill-rule="nonzero" />
-               //    </g>
-               // </svg>`;
                popupBtn.addEventListener('click', () => {
                   const
                      // width = window.innerWidth / 2,
@@ -327,10 +333,11 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('thumbnail')) {
+               // alt - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               // thumbBtn.setAttribute('data-tooltip', 'Open thumbnail');
-               thumbBtn.title = 'Open thumbnail';
+               // thumbBtn.setAttribute('data-tooltip', 'View Thumbnail');
+               thumbBtn.title = 'View Thumbnail';
                thumbBtn.innerHTML =
                   `<svg viewBox="0 -10 21 40" height="100%" width="100%">
                      <g fill="currentColor">
@@ -340,23 +347,17 @@ window.nova_plugins.push({
                      </g>
                   </svg>`;
 
-               // simplified implementation
-               // thumbBtn.addEventListener('click', getThumb);
-               // function getThumb() {
-               //    const thumbnail_url =
-               //       [
-               //          document.body.querySelector('[href*="maxresdefault"]')?.href,
-               //          window.ytplayer.config.args.raw_player_response.videoDetails.thumbnail.thumbnails.pop(),
-               //          window.ytplayer.config.args.raw_player_response.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0],
-               //       ]
-               //          .filter(Boolean)
-               //    window.open(thumbnail_url);
-               // }
-
                // getMaxThumbnailAvailable
                thumbBtn.addEventListener('click', async () => {
+                  // Strategy 1 (API). skip embed
+                  if (NOVA.currentPage == 'watch'
+                     && (imgUrl = document.body.querySelector('ytd-watch, ytd-watch-flexy')
+                        ?.playerData?.videoDetails?.thumbnail.thumbnails.pop().url)
+                  ) return window.open(imgUrl);
+
+                  // Strategy 2 (fetch)
                   const
-                     videoId = movie_player.getVideoData().video_id,
+                     videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v'),
                      thumbSizeTemplate = [
                         // Warn! "maxresdefault" is not available everywhere. etc:
                         // https://i.ytimg.com/vi_webp/<VIDEO_ID>/maxresdefault.webp
@@ -571,6 +572,7 @@ window.nova_plugins.push({
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   document.getElementById(SELECTOR_QUALITY_BTN_ID)
                      .textContent = qualityFormatList[quality]?.label || '[out of range]';
+                  // .textContent = movie_player.getVideoData().video_quality
                   // dirty hack (clear list) replaces this prototype code
                   // document.getElementById(SELECTOR_QUALITY_LIST_ID li..) li.className = 'active';
                });
@@ -591,6 +593,7 @@ window.nova_plugins.push({
                      movie_player.getAvailableQualityLevels()
                         .forEach(quality => {
                            const qualityItem = document.createElement('li');
+                           // if (movie_player.getVideoData().video_quality == quality) qualityItem.className = 'active';
                            if (movie_player.getPlaybackQuality() == quality) qualityItem.className = 'active';
                            // qualityList.innerHTML =
                            //    `<span class="quality-menu-item-text">1080p</span>
@@ -743,8 +746,7 @@ window.nova_plugins.push({
          size: 4, // = options.length
          options: [
             {
-               value: 'quick-quality',
-               label: 'quick quality',
+               label: 'quick quality', value: 'quick-quality',
                'label:zh': '质量',
                'label:ja': '品質',
                'label:ko': '품질',
@@ -756,11 +758,10 @@ window.nova_plugins.push({
                'label:tr': 'hızlı kalite',
                'label:de': 'qualität',
                'label:pl': 'jakość',
-               'label:ua': 'Якість',
+               'label:ua': 'якість',
             },
             {
-               value: 'toggle-speed',
-               label: 'toggle speed',
+               label: 'toggle speed', value: 'toggle-speed',
                'label:zh': '切换速度',
                'label:ja': 'トグル速度',
                'label:ko': '토글 속도',
@@ -772,11 +773,10 @@ window.nova_plugins.push({
                'label:tr': 'geçiş hızı',
                'label:de': 'geschwindigkeit umschalten',
                'label:pl': 'szybkość',
-               'label:ua': 'Швидкість',
+               'label:ua': 'швидкість',
             },
             {
-               value: 'screenshot',
-               label: 'screenshot',
+               label: 'screenshot', value: 'screenshot',
                'label:zh': '截屏',
                'label:ja': 'スクリーンショット',
                'label:ko': '스크린샷',
@@ -788,11 +788,10 @@ window.nova_plugins.push({
                'label:tr': 'ekran görüntüsü',
                'label:de': 'bildschirmfoto',
                // 'label:pl': 'screenshot'
-               'label:ua': 'Фото екрану',
+               'label:ua': 'фото екрану',
             },
             {
-               value: 'picture-in-picture',
-               label: 'picture-in-picture',
+               label: 'picture-in-picture', value: 'picture-in-picture',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -804,11 +803,10 @@ window.nova_plugins.push({
                // 'label:tr': '',
                // 'label:de': ''
                'label:pl': 'obraz w obrazie',
-               'label:ua': 'Картинка в картинці',
+               'label:ua': 'картинка в картинці',
             },
             {
-               value: 'popup',
-               label: 'popup',
+               label: 'popup', value: 'popup',
                'label:zh': '弹出式播放器',
                'label:ja': 'ポップアッププレーヤー',
                'label:ko': '썸네일',
@@ -820,11 +818,10 @@ window.nova_plugins.push({
                'label:tr': 'pop-up oynatıcı',
                // 'label:de': ''
                'label:pl': 'w okienku',
-               'label:ua': 'Спливаюче повідомлення',
+               'label:ua': 'спливаюче повідомлення',
             },
             {
-               value: 'rotate',
-               label: 'rotate',
+               label: 'rotate', value: 'rotate',
                'label:zh': '旋转',
                'label:ja': '回転する',
                'label:ko': '회전',
@@ -836,11 +833,10 @@ window.nova_plugins.push({
                'label:tr': 'döndürmek',
                'label:de': 'drehen',
                'label:pl': 'obróć',
-               'label:ua': 'Повернути',
+               'label:ua': 'повернути',
             },
             {
-               value: 'watch-later',
-               label: 'watch later',
+               label: 'watch later', value: 'watch-later',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -852,11 +848,10 @@ window.nova_plugins.push({
                // 'label:tr': '',
                // 'label:de': '',
                // 'label:pl': '',
-               'label:ua': 'Переглянути пізніше',
+               'label:ua': 'переглянути пізніше',
             },
             {
-               value: 'thumbnail',
-               label: 'thumbnail',
+               label: 'thumbnail', value: 'thumbnail',
                'label:zh': '缩略图',
                'label:ja': 'サムネイル',
                'label:ko': '썸네일',
@@ -868,7 +863,7 @@ window.nova_plugins.push({
                'label:tr': 'küçük resim',
                'label:de': 'bildschirmfoto',
                'label:pl': 'miniaturka',
-               'label:ua': 'Мініатюра',
+               'label:ua': 'мініатюра',
             },
          ],
       },
@@ -927,7 +922,8 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },
-            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
+            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+         ],
          'data-dependent': { 'player_buttons_custom_items': ['toggle-speed'] },
       },
    }

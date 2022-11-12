@@ -48,7 +48,7 @@ const Plugins = {
       // 'other/thumbnails-mix-hide.js',
       // 'other/streams-hide.js',
       'other/playlist-rss.js',
-      'other/thumbs-sort.js',
+      // 'other/thumbs-sort.js',
       'other/stop-channel-trailer.js',
       'other/miniplayer-disable.js',
 
@@ -143,7 +143,7 @@ const Plugins = {
             // fix non-standard link:
             // https://www.youtube.com/pencilmation
             // https://www.youtube.com/rhino
-            || ['featured', 'videos', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+            || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
             // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
          ) ? 'channel' : page == 'clip' ? 'watch' : page || 'home';
       })();

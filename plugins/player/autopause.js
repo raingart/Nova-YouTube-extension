@@ -136,8 +136,14 @@ window.nova_plugins.push({
          label: 'Apply to video',
          'label:ua': 'Застосувати до відео',
          options: [
-            { label: 'all', value: false, selected: true, 'label:ua': 'всіх' },
-            { label: 'embed', value: 'on', 'label:ua': 'вбудованих' },
+            {
+               label: 'all', value: false, selected: true,
+               'label:ua': 'всіх',
+            },
+            {
+               label: 'embed', value: 'on',
+               'label:ua': 'вбудованих',
+            },
          ],
       },
    }

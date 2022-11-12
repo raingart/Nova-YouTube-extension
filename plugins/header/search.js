@@ -60,10 +60,22 @@ window.nova_plugins.push({
          'label:pl': 'Sortuj według',
          'label:ua': 'Сортувати за',
          options: [
-            { label: 'Relevance', value: false, selected: true, 'label:ua': 'Актуальність' },
-            { label: 'Upload date', value: 'CAI%253D', 'label:ua': 'Дата завантаження' },
-            { label: 'View count', value: 'CAM%253D', 'label:ua': 'Кількість переглядів' },
-            { label: 'Rating', value: 'CAE%253D', 'label:ua': 'Вподобайки' },
+            {
+               label: 'relevance', value: false, selected: true,
+               'label:ua': 'актуальність',
+            },
+            {
+               label: 'upload date', value: 'cai%253d',
+               'label:ua': 'дата завантаження',
+            },
+            {
+               label: 'view count', value: 'cam%253d',
+               'label:ua': 'кількість переглядів',
+            },
+            {
+               label: 'rating', value: 'cae%253d',
+               'label:ua': 'вподобайки',
+            },
          ],
          'data-dependent': { 'search_query_date': [false] },
       },
@@ -83,12 +95,30 @@ window.nova_plugins.push({
          'label:pl': 'Data przesłania',
          'label:ua': 'Дата завантаження',
          options: [
-            { label: 'All time', value: false, selected: true, 'label:ua': 'За увесь час' },
-            { label: 'Last hour', value: 'EgIIAQ%253D%253D', 'label:ua': 'За останню годину' },
-            { label: 'Today', value: 'EgIIAg%253D%253D', 'label:ua': 'Сьогодні' },
-            { label: 'This week', value: 'EgIIAw%253D%253D', 'label:ua': 'Цього тижня' },
-            { label: 'This month', value: 'EgIIBA%253D%253D', 'label:ua': 'Цього місяця' },
-            { label: 'This year', value: 'EgIIBQ%253D%253D', 'label:ua': 'Цього року' },
+            {
+               label: 'all time', value: false, selected: true,
+               'label:ua': 'за увесь час',
+            },
+            {
+               label: 'last hour', value: 'egiiaq%253d%253d',
+               'label:ua': 'за останню годину',
+            },
+            {
+               label: 'today', value: 'egiiag%253d%253d',
+               'label:ua': 'сьогодні',
+            },
+            {
+               label: 'this week', value: 'egiiaw%253d%253d',
+               'label:ua': 'цього тижня',
+            },
+            {
+               label: 'this month', value: 'egiiba%253d%253d',
+               'label:ua': 'цього місяця',
+            },
+            {
+               label: 'this year', value: 'egiibq%253d%253d',
+               'label:ua': 'цього року',
+            },
          ],
          'data-dependent': { 'search_query_sort': [false] },
       },

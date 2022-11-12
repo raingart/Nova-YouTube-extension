@@ -262,7 +262,7 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
          '?entry.35504208=' + encodeURIComponent(trace_name) +
          '&entry.151125768=' + encodeURIComponent(err_stack) +
          '&entry.744404568=' + encodeURIComponent(location.href) +
-         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent), '_blank'
+         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
          , { active: true });
    }
 };

@@ -206,11 +206,11 @@ window.nova_plugins.push({
          'label:pl': 'Typ',
          'label:ua': 'Обрати режим',
          options: [
-            { label: 'Default', /*value: false,*/ selected: true },
-            { label: 'Cinema', value: 'cinema_mode' },
-            { label: 'Full-viewport (auto)', value: 'smart' },
-            { label: 'Full-viewport', value: 'force' },
-            { label: 'Redirect to embedded', value: 'redirect_watch_to_embed' },
+            { label: 'default', /*value: '',*/ selected: true },
+            { label: 'cinema', value: 'cinema_mode' },
+            { label: 'full-viewport (auto)', value: 'smart' },
+            { label: 'full-viewport', value: 'force' },
+            { label: 'redirect to embedded', value: 'redirect_watch_to_embed' },
          ],
       },
       player_full_viewport_mode_exit: {

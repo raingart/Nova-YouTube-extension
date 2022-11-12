@@ -380,11 +380,13 @@ const NOVA = {
 
       // description and first(pinned) comment
       document.body.querySelectorAll(
-         `#description.ytd-watch-metadata,
+         // `#primary-inner #description (old, has a bug with several hidden instances),
+         // `#description.ytd-watch-metadata (invalid due to formatting [since 9 nov 2022]),
+         `ytd-watch, ytd-watch-flexy,
          #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
-            (el.textContent || window.ytplayer?.config?.args.raw_player_response.videoDetails.shortDescription)
-               // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.shortDescription
+             // exclude embed page
+            (el.playerData?.videoDetails.shortDescription || el.textContent)
                ?.split('\n')
                .forEach(line => {
                   line = line?.toString().trim(); // clear space
@@ -397,7 +399,7 @@ const NOVA = {
 
                      if (sec > prevSec && sec < +video_duration
                         // not in the middle of the line
-                        && (timestampPos < 5 || timestampPos.length === line.length)
+                        && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                      ) {
                         // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
                         prevSec = sec;
@@ -662,6 +664,7 @@ const NOVA = {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
       // local search
       let result = [
+         // global
          document.querySelector('meta[itemprop="channelId"][content]')?.content,
          // channel page
          (document.body.querySelector('ytd-app')?.__data?.data?.response
@@ -675,7 +678,8 @@ const NOVA = {
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
          document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
-         // document.body.querySelector('#owner #channel-name a[href]')?.href.split('/')[4],
+         document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.videoDetails.channelId, // exclude embed page
+         // document.body.querySelector('#owner #channel-name a[href]')?.href.split('/')[4], // outdated
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId

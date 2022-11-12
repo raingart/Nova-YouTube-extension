@@ -4,7 +4,7 @@
 
 window.nova_plugins.push({
    id: 'ad-skip-button',
-   // title: 'Auto click skip ads',
+   // title: 'Auto click [skip ad]',
    title: 'Ad intro Skip',
    'title:zh': '广告视频跳过',
    'title:ja': '広告スキップ',
