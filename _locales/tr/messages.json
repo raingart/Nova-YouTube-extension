@@ -6,16 +6,16 @@
       "message": "Ultimate decision for YouTube™"
    },
    "tab_map": {
-      "message": "Map"
+      "message": "Harita"
    },
    "tab_plugins": {
-      "message": "Plugins"
+      "message": "Eklentiler"
    },
    "tab_plugins_tooltip": {
-      "message": "All plugins"
+      "message": "Tüm eklentiler"
    },
    "tab_other": {
-      "message": "Other"
+      "message": "Diğer"
    },
    "plugins_search_placeholder": {
       "message": "Ara..."
@@ -33,22 +33,22 @@
       "message": "Kaydedildi!"
    },
    "opt_appearance_header": {
-      "message": "Header"
+      "message": "Başlık"
    },
    "opt_appearance_player": {
-      "message": "Player"
+      "message": "Oynatıcı"
    },
    "opt_appearance_sidebar": {
-      "message": "Sidebar"
+      "message": "Kenar çubuğu"
    },
    "opt_appearance_details": {
-      "message": "Details"
+      "message": "Ayrıntılar"
    },
    "opt_appearance_comments": {
-      "message": "Comments"
+      "message": "Yorumlar"
    },
    "opt_appearance_other": {
-      "message": "Other"
+      "message": "Diğer"
    },
    "opt_legend_settings_transfer": {
       "message": "Ayar aktarımı:"
@@ -57,7 +57,7 @@
       "message": "Daha fazla bilgi"
    },
    "opt_btn_import_settings": {
-      "message": "Import"
+      "message": "İçe Aktar"
    },
    "opt_prompt_import_settings": {
       "message": "Açılır pencereden erişilemiyor!\nAyar sayfası açılsın mı?"
@@ -66,10 +66,10 @@
       "message": "Ayarlar başarıyla içe aktarıldı!"
    },
    "opt_btn_export_settings": {
-      "message": "Export"
+      "message": "Dışa Aktar"
    },
    "opt_btn_reset_settings": {
-      "message": "Reset"
+      "message": "Sıfırla"
    },
    "opt_prompt_reset_settings": {
       "message": "Devam etmeden önce mevcut ayarlarınızı yedeklemeniz önerilir.\nTüm ayarlar silinsin mi?"
@@ -78,10 +78,10 @@
       "message": "Açık sekmeler değişmez"
    },
    "opt_btn_api_key_input": {
-      "message": "custom Youtube API key"
+      "message": "özel Youtube API anahtarı"
    },
    "opt_api_key_generate": {
-      "message": "Generate API key"
+      "message": "API anahtarı oluştur"
    },
    "opt_userscript_disable_setting_button": {
       "message": "Ayar düğmesini devre dışı bırak"
@@ -111,13 +111,13 @@
       "message": "Dil"
    },
    "github_page": {
-      "message": "Source code"
+      "message": "Kaynak kodu"
    },
    "github_page_tooltip": {
       "message": "Aç"
    },
    "github_page_issues": {
-      "message": "Hataları bildir"
+      "message": "Hata bildir"
    },
    "github_page_issues_tooltip": {
       "message": "Bildirmek için"
@@ -129,21 +129,21 @@
       "message": "Geri bildirim için"
    },
    "donate_patreon_tooltip": {
-      "message": "Patreon ile Destek"
+      "message": "Patreon ile destekleyin"
    },
    "donate_patreon": {
-      "message": "Bağış yap (Patreon)"
+      "message": "Bağış yapın (Patreon)"
    },
    "donate_buymeacoffee_tooltip": {
-      "message": "Buymeacoffee ile destek"
+      "message": "Buymeacoffee ile destekleyin"
    },
    "donate_buymeacoffee": {
-      "message": "Bağış yap (buymeacoffee)"
+      "message": "Bağış yapın (buymeacoffee)"
    },
    "donate_paypal_tooltip": {
-      "message": "Paypal ile destek"
+      "message": "Paypal ile destekleyin"
    },
    "donate_paypal": {
-      "message": "Bağış yap  (Paypal)"
+      "message": "Bağış yapın  (Paypal)"
    }
 }
