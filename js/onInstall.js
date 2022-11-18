@@ -46,16 +46,15 @@ chrome.runtime.onInstalled.addListener(details => {
                   'premieres-disable': 'premieres_disable',
                   'streams-disable': 'live_disable',
                   'streams_disable': 'live_disable',
-                  'thumbnails-mix-hide': 'thumb_mix_disable',
-                  'thumbnails_mix_hide': 'thumb_mix_disable',
+                  'thumbnails-mix-hide': 'mix_disable',
+                  'thumb_mix_disable': 'mix_disable',
                   'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
+                  'subtitle-transparent': 'subtitle_transparent',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {
                      console.log(oldKey, '=>', newKey);
                      delete Object.assign(settings, { [newKey]: settings[oldKey] })[oldKey];
-
-                     user_settings['thumbs-hide'] = true;
                   }
                }
                console.debug('new updated settings:', settings);

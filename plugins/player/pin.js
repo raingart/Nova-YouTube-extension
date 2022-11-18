@@ -427,7 +427,7 @@ window.nova_plugins.push({
          'label:pl': 'Rozmiar odtwarzacza',
          'label:ua': 'Розмір відтворювача',
          type: 'number',
-         title: 'less value - larger size',
+         title: 'Less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
          'title:ja': '小さい値-大きいサイズ',
          'title:ko': '더 작은 값 - 더 큰 크기',

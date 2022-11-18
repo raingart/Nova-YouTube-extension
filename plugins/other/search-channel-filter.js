@@ -30,32 +30,82 @@ window.nova_plugins.push({
    'desc:ua': 'Приховує канали на сторінці пошуку',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/405325-youtube-search-filter
+
       // textarea to array
       const keywords = user_settings.search_filter_channel_blocklist
          ?.split(/[\n,;]/)
          .map(e => e.toString().trim().toLowerCase())
          .filter(e => e.length);
 
-      NOVA.watchElements({
-         selectors: [
-            'ytd-video-renderer', // results
-            'ytd-playlist-renderer', // playlist group
-            'ytm-compact-video-renderer' // mobile
-         ],
-         attr_mark: 'thumb-search-filtered',
-         callback: thumb => {
-            keywords.forEach(keyword => {
-               // if (thumb.querySelector('ytd-channel-name:not(:empty), .compact-media-item-byline:not(:empty)')?.textContent.toLowerCase().includes(keyword)) {
-               if (thumb.$['channel-name']?.innerText.toLowerCase().includes(keyword)) {
-                  thumb.remove();
-                  // thumb.style.display = 'none';
+      const thumbsSelectors = [
+         // 'ytd-rich-item-renderer', // home, channel
+         'ytd-video-renderer', // results
+         // 'ytd-grid-video-renderer', // feed
+         // 'ytd-compact-video-renderer', // sidepanel in watch
+         'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
+         // 'ytm-item-section-renderer' // mobile /subscriptions page
+      ]
+         .join(',');
 
-                  // thumb.style.border = '2px solid red'; // mark for test
-                  // console.log('filter removed', keyword, thumb);
-               }
-            });
-         }
-      });
+      if (NOVA.isMobile) {
+         // Strategy 1 (slowdown but work in mobile and pc)
+         NOVA.watchElements({
+            selectors: ['.subhead > [class*="media-item-byline"]:not(:empty)'],
+            // selectors: [
+            //    // '#channel-name', // for pc
+            //    '.subhead > [class*="media-item-byline"]' // mobile /subscriptions page
+            // ]
+            //    .map(i => i + ':not(:empty)'),
+            attr_mark: 'thumb-channel-filtered',
+            callback: channel_name => {
+               keywords.forEach(keyword => {
+                  if (channel_name.textContent.trim().toLowerCase().includes(keyword)
+                     && (thumb = channel_name.closest(thumbsSelectors))
+                  ) {
+                     thumb.remove();
+                     // thumb.style.display = 'none';
+
+                     // thumb.style.border = '2px solid red'; // mark for test
+                     // console.log('filter removed', keyword, thumb);
+                  }
+               });
+            }
+         });
+
+      } else {
+         // Strategy 2 (optimize but doesn't work in mobile)
+         // page update event
+         document.addEventListener('yt-action', evt => {
+            // console.log(evt.detail?.actionName);
+            if ([
+               'yt-append-continuation-items-action', // home, results, feed, channel, watch
+               // 'ytd-update-grid-state-action', // feed, channel
+               'yt-service-request', // results, watch
+               // 'ytd-rich-item-index-update-action', // home
+            ]
+               .includes(evt.detail?.actionName)
+            ) {
+               document.body.querySelectorAll(
+                  '#channel-name',
+                  // '.subhead > [class*="media-item-byline"]' // mobile /subscriptions page
+               )
+                  .forEach(channel_name => {
+                     keywords.forEach(keyword => {
+                        if (channel_name.textContent.trim().toLowerCase().includes(keyword)
+                           && (thumb = channel_name.closest(thumbsSelectors))
+                        ) {
+                           thumb.remove();
+                           // thumb.style.display = 'none';
+
+                           // thumb.style.border = '2px solid red'; // mark for test
+                           // console.log('filter removed', keyword, thumb);
+                        }
+                     });
+                  });
+            }
+         });
+      }
 
    },
    options: {

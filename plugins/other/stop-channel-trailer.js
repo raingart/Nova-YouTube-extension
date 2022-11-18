@@ -2,7 +2,8 @@
 
 window.nova_plugins.push({
    id: 'channel-trailer-stop-preload',
-   title: 'Stop channel trailer',
+   // title: 'Stop channel trailer playback',
+   title: 'Stop play channel trailer',
    'title:zh': '停止频道预告片',
    'title:ja': 'チャンネルの予告編を停止する',
    'title:ko': '채널 예고편 중지',

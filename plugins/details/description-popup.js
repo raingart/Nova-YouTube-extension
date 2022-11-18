@@ -125,9 +125,7 @@ window.nova_plugins.push({
             });
             // }, { capture: true, once: true });
 
-            document.addEventListener('yt-navigate-finish', restoreDateLine);
-            // init
-            restoreDateLine();
+            NOVA.runOnEveryPageTransition(restoreDateLine);
 
             function restoreDateLine() {
                // Strategy 1
@@ -148,9 +146,9 @@ window.nova_plugins.push({
                            // }
                            // Strategy 2 HTML
                            if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
-                           // first 3 div. ex:
-                           // [6,053 views] [Premiered] [Oct 8, 2022]
-                           // [14,051 views] [] [Mar 2, 2017]
+                              // first 3 div. ex:
+                              // [6,053 views] [Premiered] [Oct 8, 2022]
+                              // [14,051 views] [] [Mar 2, 2017]
                               .slice(0, 3)
                               .map(e => e.textContent).join('').trim())
                               && text != oldDateText

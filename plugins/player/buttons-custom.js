@@ -171,7 +171,9 @@ window.nova_plugins.push({
                   // bottom right corner
                   // left = window.innerWidth;
                   // top = window.innerHeight;
-                  return window.open(url, title, `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no, scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
+                  const newWindow = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
+                  // win.document.title = title;
+                  return;
                }
             }
 
@@ -334,6 +336,7 @@ window.nova_plugins.push({
 
             if (user_settings.player_buttons_custom_items?.includes('thumbnail')) {
                // alt - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
+               // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // thumbBtn.setAttribute('data-tooltip', 'View Thumbnail');
@@ -883,7 +886,7 @@ window.nova_plugins.push({
          'label:pl': 'Rozmiar okna odtwarzacza',
          'label:ua': 'Співвідношення розміру вікна відтворювача',
          type: 'number',
-         title: 'less value - larger size',
+         title: 'Less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
          'title:ja': '小さい値-大きいサイズ',
          'title:ko': '더 작은 값 - 더 큰 크기',
@@ -891,10 +894,10 @@ window.nova_plugins.push({
          'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
-         'title:it': 'meno valore - dimensioni maggiori',
+         'title:it': 'Meno valore - dimensioni maggiori',
          'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
-         'title:pl': 'mniejsza wartość - większy rozmiar',
+         'title:pl': 'Mniejsza wartość - większy rozmiar',
          'title:ua': 'Менше значення - більший розмір',
          // title: '',
          placeholder: '1.5-4',

@@ -5,6 +5,8 @@ const App = {
       return this.lastURL === location.href ? false : this.lastURL = location.href;
    },
 
+   isMobile: location.host == 'm.youtube.com',
+
    // settingsStore: null,
    storage: {
       set(settings) {
@@ -35,9 +37,9 @@ const App = {
 
       // skip first page transition
       // Strategy 1
-      document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
+      if (this.isMobile) window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
       // Strategy 2
-      // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
+      else document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
 
       // for test
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
@@ -171,7 +173,7 @@ App.init();
 // for testing
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
-// https://www.youtube.com/watch?v=ir6nk2zrMG0- wide
+// https://www.youtube.com/watch?v=ir6nk2zrMG0 - wide
 
 // wide-screen video
 // https://www.youtube.com/watch?v=B4yuZhKRW1c
@@ -214,6 +216,7 @@ App.init();
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1
 // https://www.youtube.com/embed/yWUMMg3dmFY?enablejsapi=1&autoplay=0&cc_load_policy=0&cc_lang_pref=&iv_load_policy=1&loop=0&modestbranding=0&rel=1&fs=1&playsinline=0&autohide=2&theme=dark&color=red&controls=1&
+// https://www.youtube.com/embed/IiJ3m82AOFg?rel=0&wmode=opaque&enablejsapi=1
 
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded

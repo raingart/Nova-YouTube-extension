@@ -75,30 +75,38 @@ window.nova_plugins.push({
                      // has chapters and chapters not ended
                      if (chapterList?.length && nextChapterIndex !== -1) {
                         // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
-                        if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
-                           // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
-                           movie_player.seekToChapterWithAnimation(nextChapterIndex);
+                        // if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
+                        //    // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
 
-                           // querySelector update after seek
-                           // const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
+                        // // failure in https://www.youtube.com/watch?v=reNLNZtfosI
+                        // // the reason is that the markers in the description do not correspond to those marked by the author in the player. Skipped - "05:04: Реклама"
+                        // // TODO: Compare embedded and marked chapter lists. And if there is a discrepancy, preortize a larger one
+                        // movie_player.seekToChapterWithAnimation(nextChapterIndex);
 
-                           // msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
-                           //    + separator + chapterList[nextChapterIndex].time;
+                        //    console.assert(chapterList[nextChapterIndex].sec === +movie_player.getCurrentTime()?.toFixed(0), 'nextChapterIndex.time != getCurrentTime:'
+                        //       , nextChapterIndex, +movie_player.getCurrentTime()?.toFixed(0), chapterList[nextChapterIndex]);
 
-                           msg = chapterList[nextChapterIndex].title + separator + chapterList[nextChapterIndex].time;
 
-                           // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
-                           //    chapterTitleEl.click()
-                           // }
+                        //    // querySelector update after seek
+                        //    // const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
 
-                        } else { // chapters blocks none, but has timestamp
-                           const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
-                           // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
-                           // +0.5 fix paused jump (ex: https://www.youtube.com/watch?v=Xt2sbtvBuk8)
-                           movie_player.seekTo(nextChapterData.sec + .5);
+                        //    // msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
+                        //    //    + separator + chapterList[nextChapterIndex].time;
 
-                           msg = nextChapterData.title + separator + nextChapterData.time;
-                        }
+                        //    msg = chapterList[nextChapterIndex].title + separator + chapterList[nextChapterIndex].time;
+
+                        //    // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
+                        //    //    chapterTitleEl.click()
+                        //    // }
+
+                        // } else { // chapters blocks none, but has timestamp
+                        const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
+                        // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
+                        // +0.5 fix paused jump (ex: https://www.youtube.com/watch?v=Xt2sbtvBuk8)
+                        movie_player.seekTo(nextChapterData.sec + .5);
+
+                        msg = nextChapterData.title + separator + nextChapterData.time;
+                        // }
 
                      } else { // chapters none
                         movie_player.seekBy(+user_settings.time_jump_step);
@@ -224,6 +232,34 @@ window.nova_plugins.push({
          document.addEventListener('keyup', keyPress);
       }
 
+      if (+user_settings.skip_into_step) {
+
+         NOVA.waitElement('video')
+            .then(video => {
+               NOVA.runOnEveryPageTransition(() => {
+                  video.addEventListener('canplay', timeLeapInto.bind(video), { capture: true, once: true });
+               });
+
+               function timeLeapInto() {
+                  // start - fix conflict with plugin. "player-resume-playback"
+                  const
+                     CACHE_PREFIX = 'resume-playback-time',
+                     getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
+
+                  if (user_settings['player-resume-playback']
+                     && (saveTime = +sessionStorage.getItem(getCacheName()))
+                     && (saveTime > (this.duration - 3)) // fix if (saveTime == this.duration))
+                  ) return;
+                  /* end - fix */
+
+                  if (this.duration > 30 && this.currentTime < +user_settings.skip_into_step) {
+                     // console.debug('ad intro seek', +user_settings.skip_into_step);
+                     this.currentTime = +user_settings.skip_into_step || 10;
+                  }
+               }
+            });
+      }
+
    },
    options: {
       time_jump_step: {
@@ -242,7 +278,7 @@ window.nova_plugins.push({
          'label:pl': 'Krok czasowy',
          'label:ua': 'Крок часу',
          type: 'number',
-         title: 'in seconds',
+         title: 'In seconds',
          placeholder: 'sec',
          min: 3,
          max: 300,
@@ -318,5 +354,29 @@ window.nova_plugins.push({
       //    'label:ua': 'Показати розділ списку розділів',
       //    type: 'checkbox',
       // },
+      skip_into_step: {
+         _tagName: 'input',
+         label: 'Start playback at',
+         // label: 'Set play start time',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'number',
+         title: 'sec',
+         placeholder: '1-30',
+         step: 1,
+         min: 0,
+         max: 30,
+         value: 0,
+      },
    }
 });

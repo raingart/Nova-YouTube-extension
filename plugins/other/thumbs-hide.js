@@ -16,7 +16,7 @@ window.nova_plugins.push({
    'title:de': 'Filtrowanie miniatur',
    'title:pl': 'Ukryj kilka miniatur',
    'title:ua': 'Фільтрування мініатюр',
-   run_on_pages: 'home, results, feed, channel, watch',
+   run_on_pages: 'home, results, feed, channel, watch, -mobile',
    section: 'other',
    _runtime: user_settings => {
 
@@ -28,7 +28,8 @@ window.nova_plugins.push({
             'ytd-video-renderer', // results
             'ytd-grid-video-renderer', // feed
             'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer', // mobile
+            'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
+            'ytm-item-section-renderer' // mobile /subscriptions page
          ]
             .join(',');
 
@@ -46,12 +47,13 @@ window.nova_plugins.push({
             switch (NOVA.currentPage) {
                case 'home':
                   thumbRemove.live();
-                  thumbRemove.mix()
+                  thumbRemove.mix();
                   break;
 
                case 'results':
                   thumbRemove.live();
                   thumbRemove.shorts();
+                  thumbRemove.mix();
                   break;
 
                case 'feed':
@@ -59,7 +61,7 @@ window.nova_plugins.push({
                   thumbRemove.streamed();
                   thumbRemove.shorts();
                   thumbRemove.premieres();
-                  thumbRemove.mix()
+                  thumbRemove.mix();
                   break;
 
                case 'channel':
@@ -71,7 +73,7 @@ window.nova_plugins.push({
 
                case 'watch':
                   thumbRemove.live();
-                  thumbRemove.mix()
+                  thumbRemove.mix();
                   break;
 
                // default:
@@ -80,7 +82,6 @@ window.nova_plugins.push({
             }
          }
       });
-
 
       const thumbRemove = {
          shorts() {
@@ -178,7 +179,7 @@ window.nova_plugins.push({
             // exсlude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'streams') return;
 
-            document.body.querySelectorAll('#metadata-line > span.inline-metadata-item:last-of-type')
+            document.body.querySelectorAll('#metadata-line > span:last-of-type')
                .forEach(el => {
                   if (el.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
                      && (thumb = el.closest(thumbsSelectors))) {
@@ -192,7 +193,7 @@ window.nova_plugins.push({
          },
 
          mix() {
-            if (!user_settings.thumb_mix_disable) return;
+            if (!user_settings.mix_disable) return;
 
             document.body.querySelectorAll(
                `a[href*="list="][href*="start_radio="]:not([hidden]),
@@ -201,7 +202,7 @@ window.nova_plugins.push({
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {
-            //    if (thumb = el.closest(thumbsSelectors)) {
+            //    if (thumb = el.closest('ytd-radio-renderer,' + thumbsSelectors)) {
             //       // thumb.style.display = 'none';
             //       console.debug('has Mix:', thumb);
             //       thumb.style.border = '2px solid red'; // mark for test
@@ -209,6 +210,13 @@ window.nova_plugins.push({
             // });
          },
       };
+
+      if (user_settings.mix_disable) {
+         NOVA.css.push(
+            `ytd-radio-renderer {
+               display: none !important;
+            }`);
+      }
 
    },
    options: {
@@ -276,7 +284,7 @@ window.nova_plugins.push({
       },
       live_disable: {
          _tagName: 'input',
-         label: 'Hide Live Streams',
+         label: 'Hide Live streams',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -290,28 +298,40 @@ window.nova_plugins.push({
          'label:pl': 'Ukryj strumień (na żywo)',
          'label:ua': 'Приховати живі трансляції',
          type: 'checkbox',
-         title: 'airing',
+         title: 'Now airing',
+         'title:zh': '正在播出',
+         'title:ja': '放映中',
+         'title:ko': '지금 방영중',
+         'title:id': 'Sekarang ditayangkan',
+         'title:es': 'Ahora al aire',
+         'title:pt': 'Agora no ar',
+         'title:fr': 'Diffusion en cours',
+         'title:it': 'Ora in onda',
+         'title:tr': 'Şimdi yayınlanıyor',
+         'title:de': 'Jetzt Lüften',
+         'title:pl': 'Teraz wietrzenie',
+         'title:ua': 'Зараз в ефірі',
       },
       streamed_disable: {
          _tagName: 'input',
-         label: 'Finished streams',
-         'label:zh': '已完成的广播',
-         'label:ja': '放送終了',
-         'label:ko': '방송 후',
-         'label:id': 'Siaran selesai Aliran selesai',
-         'label:es': 'Emisiones completadas',
-         'label:pt': 'Transmissões concluídas',
-         'label:fr': 'Flux terminés',
-         'label:it': 'Stream finiti',
-         'label:tr': 'Bitmiş akışlar',
-         'label:de': 'nach der Sendung',
-         'label:pl': 'Po streamie',
-         'label:ua': 'Завершені трансляції',
+         label: 'Hide finished streams',
+         'label:zh': '隐藏完成的流',
+         'label:ja': '終了したストリームを非表示にする',
+         'label:ko': '완료된 스트림 숨기기',
+         'label:id': 'Sembunyikan aliran yang sudah selesai',
+         'label:es': 'Ocultar flujos terminados',
+         'label:pt': 'Ocultar streams concluídos',
+         'label:fr': 'Masquer les flux terminés',
+         'label:it': 'Nascondi i flussi finiti',
+         'label:tr': 'Bitmiş akışları gizle',
+         'label:de': 'Fertige Streams ausblenden',
+         'label:pl': 'Ukryj po streamie',
+         'label:ua': 'Сховати завершені трансляції',
          type: 'checkbox',
          //title: '',
          'data-dependent': { 'live_disable': true },
       },
-      thumbnails_mix_hide: {
+      mix_disable: {
          _tagName: 'input',
          label: "Hide 'Mix' thumbnails",
          'label:zh': '隐藏[混合]缩略图',

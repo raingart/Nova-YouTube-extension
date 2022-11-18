@@ -23,7 +23,7 @@ const Plugins = {
       'player/resume-playback.js',
       // 'player/-thumb-pause.js',
       'player/buttons-custom.js',
-      'player/subtitle-transparent.js',
+      'player/subtitle-style.js',
       // 'player/subtitle-lang.js',
       // 'player/miniplayer-disable.js',
       'player/unblock-region.js',
@@ -31,17 +31,17 @@ const Plugins = {
       'player/fullscreen-scroll.js',
 
       'other/annotations.js',
+      'other/search-channel-filter.js',
+      'other/thumbs-hide.js',
+      'other/thumbs-title-filter.js',
       'other/thumbs-clear.js',
       'other/thumbs-title-normalize.js',
-      // 'other/thumbs-rating.js',
       'other/thumbs-watched.js',
+      // 'other/thumbs-rating.js',
       'other/channel-tab.js',
       // 'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
-      'other/thumb-title-filter.js',
-      'other/search-channel-filter.js',
-      'other/thumbs-hide.js',
       'other/shorts-redirect.js',
       // 'other/shorts-hide.js',
       // 'other/premieres-hide.js',
@@ -140,6 +140,7 @@ const Plugins = {
       NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          return (['channel', 'c', 'user'].includes(page)
+            || page?.startsWith('@') // https://m.youtube.com/@YouTube
             // fix non-standard link:
             // https://www.youtube.com/pencilmation
             // https://www.youtube.com/rhino
@@ -147,9 +148,9 @@ const Plugins = {
             // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
          ) ? 'channel' : page == 'clip' ? 'watch' : page || 'home';
       })();
-      // console.debug('NOVA.currentPage', NOVA.currentPage);
+      // console.debug('NOVA.currentPage:', NOVA.currentPage);
 
-      const isMobile = location.host == 'm.youtube.com';
+      NOVA.isMobile = location.host == 'm.youtube.com';
 
       let logTableArray = [],
          logTableStatus,
@@ -179,7 +180,7 @@ const Plugins = {
                pagesAllowList?.includes(NOVA.currentPage)
                || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + NOVA.currentPage))
             )
-            && (!isMobile || (isMobile && !pagesAllowList?.includes('-mobile')))
+            && (!NOVA.isMobile || (NOVA.isMobile && !pagesAllowList?.includes('-mobile')))
          ) {
             try {
                const startTableTime = performance.now();

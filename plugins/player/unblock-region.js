@@ -26,7 +26,7 @@ window.nova_plugins.push({
    'title:ua': 'Спробувати розблокувати якщо відео не доступне у країні',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   desc: "attempt fix 'is not available in your country'",
+   desc: "Attempt fix 'is not available in your country'",
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
@@ -37,8 +37,8 @@ window.nova_plugins.push({
    // 'desc:it': '',
    // 'desc:tr': '',
    // 'desc:de': '',
-   'desc:pl': 'próba naprawienia nie jest dostępna w Twoim kraju',
-   'desc:ua': 'спроба розблокувати доступ до відео',
+   'desc:pl': 'Próba naprawienia nie jest dostępna w Twoim kraju',
+   'desc:ua': 'Спроба розблокувати доступ до відео',
    _runtime: user_settings => {
 
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')

@@ -42,7 +42,8 @@ window.nova_plugins.push({
             'ytd-video-renderer', // results
             'ytd-grid-video-renderer', // feed
             // 'ytd-compact-video-renderer', // sidepanel in watch
-            // 'ytm-compact-video-renderer', // mobile
+            'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
+            'ytm-item-section-renderer' // mobile /subscriptions page
          ];
 
       // Doesn't work
@@ -73,11 +74,14 @@ window.nova_plugins.push({
 
       // Strategy 2
       // dirty fix bug with not updating thumbnails
-      document.addEventListener('yt-navigate-finish', () =>
-         document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
+      // document.addEventListener('yt-navigate-finish', () =>
+      //    document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       NOVA.watchElements({
-         selectors: ['#thumbnail:not(.ytd-playlist-thumbnail):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])'],
+         selectors: [
+            '#thumbnail:not(.ytd-playlist-thumbnail):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])',
+            'a:not([href*="/shorts/"]) img.video-thumbnail-img[src]:not([src*="qdefault_live.jpg"])'
+         ],
          attr_mark: ATTR_MARK,
          callback: async img => {
             // fix conflict with yt-flags
@@ -102,7 +106,8 @@ window.nova_plugins.push({
                // console.debug('skiped thumbnails-preview-cleared', parent);
                return;
             }
-            img.src = patchImg(img.src);
+
+            if (src = patchImg(img.src)) img.src = patchImg(src);
          },
       });
 
@@ -111,6 +116,36 @@ window.nova_plugins.push({
             `#hover-overlays {
                visibility: hidden !important;
             }`);
+      }
+
+      if (user_settings.thumbnails_overlay_playing) {
+         // alt - https://greasyfork.org/en/scripts/454694-disable-youtube-inline-playback-on-all-pages/code
+
+         // Strategy 1
+         document.addEventListener('yt-action', evt => {
+            // console.log(evt.detail?.actionName);
+            if ([
+               'yt-append-continuation-items-action', // home, results, feed, channel, watch
+               'ytd-update-grid-state-action', // feed, channel
+               'yt-service-request', // results, watch
+               'ytd-rich-item-index-update-action', // home
+            ]
+               .includes(evt.detail?.actionName)
+            ) {
+               document.body.querySelectorAll('#mouseover-overlay')
+                  .forEach(el => el.remove());
+            }
+         });
+         // Strategy 2
+         // NOVA.watchElements({
+         //    selectors: ['#mouseover-overlay'],
+         //    // attr_mark: 'disable-thumb-inline-playback',
+         //    callback: el => {
+         //       el.remove();
+         //       // console.debug('thumb-inline-playback:', el);
+         //       // el.style.border = '2px solid green'; // mark for test
+         //    }
+         // });
       }
 
       // patch end card
@@ -153,8 +188,12 @@ window.nova_plugins.push({
       function patchImg(str) {
          // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
          // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
-         if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(str)) {
-            return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
+         // if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(str)) { // for pc
+         //    return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
+         // }
+         // https://i.ytimg.com/vi/ir6nk2zrMG0/sddefault.jpg
+         if ((re = /(\w{2}default|hq\d+)./i) && re.test(str)) { // for mobile and pc
+            return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.');
          }
       }
 
@@ -253,6 +292,35 @@ window.nova_plugins.push({
          'label:ua': 'Приховати кнопки на мініатюрі',
          type: 'checkbox',
          title: 'Hide [ADD TO QUEUE] [WATCH LATER]',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+      },
+      thumbnails_overlay_playing: {
+         _tagName: 'input',
+         label: 'Disable thumbnail preview on hover',
+         'label:zh': '悬停时禁用缩略图预览',
+         'label:ja': 'ホバー時のサムネイル プレビューを無効にする',
+         'label:ko': '호버에서 썸네일 미리보기 비활성화',
+         'label:id': 'Nonaktifkan pratinjau thumbnail saat melayang',
+         'label:es': 'Deshabilitar la vista previa en miniatura al pasar el mouse',
+         'label:pt': 'Desativar a visualização de miniaturas ao passar o mouse',
+         'label:fr': "Désactiver l'aperçu des vignettes au survol",
+         'label:it': "Disabilita l'anteprima in miniatura al passaggio del mouse",
+         'label:tr': 'Fareyle üzerine gelindiğinde küçük resim önizlemesini devre dışı bırak',
+         'label:de': 'Deaktivieren Sie die Thumbnail-Vorschau beim Hover',
+         'label:pl': 'Wyłącz podgląd miniatur po najechaniu myszką',
+         'label:ua': 'Вимкнути попередній перегляд ескізів при наведенні',
+         type: 'checkbox',
       },
       // thumbnails_clear_videowall: {
       //    _tagName: 'input',

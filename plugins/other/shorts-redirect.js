@@ -34,10 +34,7 @@ window.nova_plugins.push({
    'desc:ua': 'Перенаправляйте прев`ю відео у звичайний відтворювач',
    _runtime: user_settings => {
 
-      // page init
-      redirectPageToNormal();
-      // page update
-      document.addEventListener('yt-navigate-finish', redirectPageToNormal);
+      NOVA.runOnEveryPageTransition(redirectPageToNormal);
 
       function redirectPageToNormal() {
          if ('shorts' == NOVA.currentPage) {
@@ -77,7 +74,8 @@ window.nova_plugins.push({
             'ytd-video-renderer', // results
             'ytd-grid-video-renderer', // feed
             // 'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer', // mobile
+            'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
+            'ytm-item-section-renderer' // mobile /subscriptions page
          ]
             .join(',');
 
@@ -161,7 +159,7 @@ window.nova_plugins.push({
 
          let
             [minutes, seconds] = title.split(publishedTimeText)[1]?.split(viewCountText)[0] // "12 minutes, 17 seconds "
-               ?.split(/\D/, 2).filter(Number).map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+               ?.split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
          if (!seconds) { // fix mixed up in places
             seconds = minutes;

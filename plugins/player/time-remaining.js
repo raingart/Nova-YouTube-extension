@@ -16,7 +16,7 @@ window.nova_plugins.push({
    'title:de': 'Verbleibende Zeit',
    'title:pl': 'Pozostały czas',
    'title:ua': 'Час, що залишився',
-   run_on_pages: 'watch, embed',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    desc: 'Remaining time until the end of the video',
    'desc:zh': '距离视频结束的剩余时间',
@@ -35,6 +35,7 @@ window.nova_plugins.push({
 
       const SELECTOR_ID = 'nova-player-time-remaining';
 
+      // NOVA.waitElement('.ytp-time-duration, ytm-time-display .time-display-content, .player-controls-bottom .ytm-time-display .time-display-content')
       NOVA.waitElement('.ytp-time-duration, ytm-time-display .time-display-content')
          .then(container => {
 

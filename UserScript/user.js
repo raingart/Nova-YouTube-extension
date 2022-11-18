@@ -12,18 +12,19 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 }
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-
-//       user_settings['thumbs-hide'] = true;
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'thumbnails-mix-hide': 'mix_disable',
+   'thumb_mix_disable': 'mix_disable',
+   'subtitle-transparent': 'subtitle_transparent',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (isOptionsPage()) return;
 
@@ -264,6 +265,7 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
          '&entry.744404568=' + encodeURIComponent(location.href) +
          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
          , { active: true });
+      // , '_blank');
    }
 };
 

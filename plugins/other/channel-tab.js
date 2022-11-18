@@ -1,3 +1,9 @@
+// for test
+// https://www.youtube.com/pencilmation
+// https://www.youtube.com/rhino
+// https://www.youtube.com/@YouTube?app=desktop
+// https://www.youtube.com/c/YouTube
+
 window.nova_plugins.push({
    id: 'channel-default-tab',
    title: 'Default tab on channel page',
@@ -13,7 +19,8 @@ window.nova_plugins.push({
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    'title:pl': 'Domyślna karta na stronie kanału',
    'title:ua': 'Вкладка за умовчанням на сторінці каналу',
-   run_on_pages: 'channel, -mobile',
+   // run_on_pages: 'channel, -mobile',
+   run_on_pages: 'channel',
    restart_on_transition: true,
    section: 'channel',
    // desc: '',
@@ -22,7 +29,7 @@ window.nova_plugins.push({
       // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
 
       // if not - home page channel/user
-      if (location.pathname.split('/').filter(i => i).length !== 2) return;
+      if (NOVA.currentPage == 'channel' && location.pathname.split('/').filter(i => i).length > 2) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
          location.href += '/' + user_settings.channel_default_tab;
@@ -42,6 +49,22 @@ window.nova_plugins.push({
                document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`)
                   ?.click();
             });
+
+         // for mobile
+         // NOVA.waitElement('.scbrr-tabs > a[role="tab"]')
+         //    .then(() => {
+         //       if (document.body.querySelector(`.scbrr-tabs > a[aria-selected="true"]`)) return;
+         //       let tab_nth;
+         //       switch (user_settings.channel_default_tab) {
+         //          // case 'playlists': tab_nth = 6; break;
+         //          // case 'about': tab_nth = 12; break;
+         //          case 'videos': tab_nth = 2; break;
+         //          // default: tab_nth = 2;
+         //       }
+         //       // select tab
+         //       document.body.querySelector(`.scbrr-tabs > a:nth-child(${tab_nth})`)
+         //          ?.click();
+         //    });
       }
 
    },

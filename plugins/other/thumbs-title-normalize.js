@@ -22,26 +22,35 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const
-         VIDEO_TITLE_SELECTOR = '#video-title:not(:empty):not([hidden]), a > h3.large-media-item-headline:not(:empty):not([hidden]), h1.title',
+         VIDEO_TITLE_SELECTOR = [
+            '#video-title', // results
+            // 'ytm-media-item a > [class$="media-item-headline"]', // mobile /subscriptions
+            // 'ytm-rich-item-renderer a > [class$="media-item-headline"]', // mobile /channel
+            'a > [class*="media-item-headline"]', // mobile
+            // for title in watch page
+            // 'h2.slim-video-information-title', // mobile
+            // 'ytd-watch-metadata #title h1' // watch
+         ]
+            .map(i => i + ':not(:empty)'),
          MAX_CAPS_LETTERS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'nova-thumb-title-normalized',
          clearOfEmoji = str => str.replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
       // dirty fix bug with not updating thumbnails
-      let oldSortQuery = NOVA.queryURL.get('sort');
-      document.addEventListener('yt-navigate-finish', () => {
-         if ((sortQuery = NOVA.queryURL.get('sort')) && sortQuery != oldSortQuery) {
-            oldSortQuery = sortQuery;
-            location.reload();
-         }
-      });
+      // let oldSortQuery = NOVA.queryURL.get('sort');
+      // document.addEventListener('yt-navigate-finish', () => {
+      //    if ((sortQuery = NOVA.queryURL.get('sort')) && sortQuery != oldSortQuery) {
+      //       oldSortQuery = sortQuery;
+      //       location.reload();
+      //    }
+      // });
       // // document.addEventListener('yt-page-data-updated', () =>
       // document.addEventListener('yt-navigate-finish', () =>
       //    document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
 
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(
-            VIDEO_TITLE_SELECTOR + `{
+            VIDEO_TITLE_SELECTOR.join(',') + `{
                display: block !important;
                max-height: unset !important;
             }`);

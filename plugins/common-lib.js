@@ -112,7 +112,6 @@ const NOVA = {
    async sleep(timeout = 100) {
       return new Promise(resolve => setTimeout(resolve, timeout));
    },
-
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
    // clear_watchElements(name = required()) {
@@ -120,6 +119,9 @@ const NOVA = {
    //       && clearInterval(this.watchElements_list[name])
    //       && delete this.watchElements_list[name];
    // },
+
+   // alt:
+   // https://github.com/uzairfarooq/arrive (https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js)
 
    watchElements({ selectors = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
@@ -160,6 +162,19 @@ const NOVA = {
             }
          });
 
+   },
+
+   runOnEveryPageTransition(callback) {
+      if (!callback || typeof callback !== 'function') {
+         return console.error('runOnEveryPageTransition > callback not function:', ...arguments);
+      }
+      // on page update
+      document.addEventListener('yt-navigate-finish', () => {
+         this.runOnEveryPageTransition_pageInited = true;
+         callback();
+      });
+      // on page init
+      this.runOnEveryPageTransition_pageInited || callback();
    },
 
    css: {
@@ -375,8 +390,10 @@ const NOVA = {
    },
 
    getChapterList(video_duration = required()) {
-      let timestampsCollect = [];
-      let prevSec = -1;
+      let
+         timestampsCollect = [],
+         prevSec = -1,
+         parentSource;
 
       // description and first(pinned) comment
       document.body.querySelectorAll(
@@ -385,11 +402,14 @@ const NOVA = {
          `ytd-watch, ytd-watch-flexy,
          #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
-             // exclude embed page
+            // parentSource = el.id == 'content' ? 'comment' : 'description';
+            parentSource = el.hasOwnProperty('playerData') ? 'description' : 'comment';
+
+            // exclude embed page
             (el.playerData?.videoDetails.shortDescription || el.textContent)
                ?.split('\n')
                .forEach(line => {
-                  line = line?.toString().trim(); // clear space
+                  line = line?.toString().trim(); // clear spaces
                   if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
                      // console.debug('line', line);
                      timestamp = timestamp[0]; // ex:"0:00"
@@ -397,7 +417,9 @@ const NOVA = {
                         sec = this.timeFormatTo.hmsToSec(timestamp),
                         timestampPos = line.indexOf(timestamp);
 
-                     if (sec > prevSec && sec < +video_duration
+                     if ((parentSource == 'comment'
+                        || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU)
+                     )
                         // not in the middle of the line
                         && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                      ) {
@@ -419,6 +441,10 @@ const NOVA = {
          });
 
       if (timestampsCollect.length) {
+         if (parentSource == 'comment') {
+            // sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
+            timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
+         }
          // console.debug('timestampsCollect', timestampsCollect);
          return timestampsCollect;
       }
@@ -698,6 +724,7 @@ const NOVA = {
                }
                break;
             case 'watch':
+               // channelLink = await this.waitElement('#owner #channel-name a[href], ytm-slim-owner-renderer > a[href]');
                channelLink = await this.waitElement('#owner #channel-name a[href]');
                channelArr = channelLink?.href.split('/');
                if (channelArr.length && ['c', 'user'].includes(channelArr[3])) {

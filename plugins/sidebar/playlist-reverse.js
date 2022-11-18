@@ -49,15 +49,12 @@ window.nova_plugins.push({
          ${SELECTOR}:active svg,
          ${SELECTOR}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
-      document.addEventListener('yt-navigate-finish', () => {
+      NOVA.runOnEveryPageTransition(() => {
          // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
          if (!location.search.includes('list=')) return;
          insertButton();
-         reverseControl(); // add events
+         reverseControl(); // set event
       });
-      // init
-      // if (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/) insertButton();
-      if (location.search.includes('list=')) insertButton();
 
       function insertButton() {
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')

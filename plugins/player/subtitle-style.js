@@ -4,20 +4,20 @@
 // https://www.youtube.com/watch?v=s1ipx-4oTKA - color (red) subtitles
 
 window.nova_plugins.push({
-   id: 'subtitle-transparent',
-   title: 'Transparent subtitles (captions)',
-   'title:zh': '透明字幕',
-   'title:ja': '透明な字幕',
-   'title:ko': '투명한 자막',
-   'title:id': 'Subtitle transparan',
-   'title:es': 'Subtítulos transparentes',
-   'title:pt': 'Legendas transparentes',
-   'title:fr': 'Sous-titres transparents',
-   'title:it': 'Sottotitoli trasparenti',
-   'title:tr': 'Şeffaf altyazılar',
-   'title:de': 'Transparente Untertitel',
-   'title:pl': 'Napisy przezroczyste',
-   'title:ua': 'Прозорі субтитри',
+   id: 'subtitle-style',
+   title: 'Subtitles (captions) style',
+   'title:zh': '字幕样式',
+   'title:ja': '字幕スタイル',
+   'title:ko': '자막 스타일',
+   'title:id': 'Gaya subtitel',
+   'title:es': 'Estilo de subtítulos',
+   'title:pt': 'estilo de legenda',
+   'title:fr': 'Style de sous-titre',
+   'title:it': 'Stile dei sottotitoli',
+   'title:tr': 'Altyazı stili',
+   'title:de': 'Untertitelstil',
+   'title:pl': 'Styl napisów',
+   'title:ua': 'Стиль субтитрів',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
@@ -26,17 +26,20 @@ window.nova_plugins.push({
       // movie_player.getSubtitlesUserSettings();
       // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color
 
-      let css = {
-         'background': 'transparent',
-         'text-shadow':
-            `rgb(0, 0, 0) 0 0 .1em,
-            rgb(0, 0, 0) 0 0 .2em,
-            rgb(0, 0, 0) 0 0 .4em`,
-      };
+      const SELECTOR = '.ytp-caption-segment';
+      let css = {}
+
+      if (user_settings.subtitle_transparent) {
+         css = {
+            'background': 'Transparent',
+            'text-shadow':
+               `rgb(0, 0, 0) 0 0 .1em,
+               rgb(0, 0, 0) 0 0 .2em,
+               rgb(0, 0, 0) 0 0 .4em`,
+         };
+      }
 
       if (user_settings.subtitle_bold) css['font-weight'] = 'bold';
-
-      NOVA.css.push(css, `.ytp-caption-segment`, 'important');
 
       if (user_settings.subtitle_fixed) {
          // alt - https://greasyfork.org/en/scripts/442033-fix-youtube-caption-position
@@ -53,7 +56,7 @@ window.nova_plugins.push({
          // alt2 - https://greasyfork.org/en/scripts/435955-youtube%E5%AD%97%E5%B9%95%E5%8D%95%E8%AF%8D%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E9%80%89%E4%B8%AD-%E6%96%B9%E4%BE%BFmac%E7%94%B5%E8%84%91%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BF%BB%E8%AF%91%E5%8D%95%E8%AF%8D
          NOVA.watchElements({
             selectors: [
-               '.ytp-caption-segment:not([selectable="true"]',
+               SELECTOR + ':not([selectable="true"]',
                //    'div.caption-window',
                //    '#caption-window-1:not([selectable="true"]'
             ],
@@ -63,14 +66,45 @@ window.nova_plugins.push({
                el.setAttribute('draggable', 'false');
                el.setAttribute('selectable', 'true');
                el.style.userSelect = 'text';
-               elem.style.WebkitUserSelect = 'text'; // for Safari
+               el.style.WebkitUserSelect = 'text'; // for Safari
                el.style.cursor = 'text';
             }
          });
+
+         NOVA.css.push(
+            // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
+            `#ytp-caption-window-container {
+               z-index: ${Math.max(
+               (el = document.querySelector('.ytp-chrome-bottom')) && getComputedStyle(el)['z-index'],
+               // getComputedStyle(movie_player)['z-index'], // movie_player is not defined
+               59) + 1};
+            }`);
+      }
+
+      if (Object.keys(css).length) {
+         NOVA.css.push(css, SELECTOR, 'important');
       }
 
    },
    options: {
+      subtitle_transparent: {
+         _tagName: 'input',
+         label: 'Transparent',
+         'label:zh': '透明的',
+         'label:ja': '透明',
+         'label:ko': '투명한',
+         'label:id': 'Transparan',
+         'label:es': 'Transparentes',
+         'label:pt': 'Transparentes',
+         'label:fr': 'Transparents',
+         'label:it': 'Trasparenti',
+         'label:tr': 'Şeffaf',
+         'label:de': 'Transparente',
+         // 'label:pl': 'Przezroczysty',
+         'label:pl': 'Przezroczyste',
+         'label:ua': 'Прозорі',
+         type: 'checkbox',
+      },
       subtitle_bold: {
          _tagName: 'input',
          label: 'Bold text',
@@ -110,16 +144,16 @@ window.nova_plugins.push({
          label: 'Make subtitles selectable',
          'label:zh': '使字幕可选',
          'label:ja': '字幕を選択可能にする',
-         'label:ko': '자막을 선택 가능하게 만들기',
+         'label:ko': '자막 선택 가능',
          'label:id': 'Jadikan subtitle dapat dipilih',
          'label:es': 'Hacer subtítulos seleccionables',
-         'label:pt': 'Faça legendas selecionáveis',
+         'label:pt': 'Tornar as legendas selecionáveis',
          'label:fr': 'Rendre les sous-titres sélectionnables',
-         'label:it': 'Rendi selezionabili i sottotitoli',
+         'label:it': 'Rendi i sottotitoli selezionabili',
          'label:tr': 'Altyazıları seçilebilir yap',
-         'label:de': 'Untertitel wählbar machen',
+         'label:de': 'Untertitel auswählbar machen',
          'label:pl': 'Ustaw napisy do wyboru',
-         'label:ua': 'Зробити субтитри доступними для вибору',
+         'label:ua': 'Зробити субтитри доступними для виділення',
          type: 'checkbox',
       },
    }

@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Standardkennzeichen ersetzen',
    'title:pl': 'Zamień wskaźnik standardowy',
    'title:ua': 'Замінити стандартний інтерфейс',
-   run_on_pages: 'watch, embed',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {

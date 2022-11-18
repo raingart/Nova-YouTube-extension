@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:de': 'Float-Player-Fortschrittsbalken',
    'title:pl': 'Pływający pasek postępu odtwarzacza',
    'title:ua': 'Плаваючий індикатор прогресу відтворення',
-   run_on_pages: 'watch, embed',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {
@@ -46,7 +46,7 @@ window.nova_plugins.push({
 
             // resetBar on new video loaded
             video.addEventListener('loadeddata', resetBar);
-            document.addEventListener('yt-navigate-finish', resetBar);
+            // document.addEventListener('yt-navigate-finish', resetBar);
 
             // render progress
             // NOVA.waitElement(`${SELECTOR}-progress`)
