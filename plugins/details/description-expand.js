@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'video-description-expand',
+   id: 'description-expand',
    title: 'Expand description',
    'title:zh': '展开说明',
    'title:ja': '説明を展開',
@@ -43,7 +43,7 @@ window.nova_plugins.push({
          // attr_mark: ATTR_MARK,
          callback: btn => {
             if (user_settings.description_expand_mode == 'onhover') {
-               btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });
+               btn.addEventListener('mouseenter', ({ target }) => btn.click(), { capture: true, once: true });
             }
             // else if (user_settings.description_expand_mode == 'always') {
             else {

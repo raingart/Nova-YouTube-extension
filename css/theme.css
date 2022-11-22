@@ -3,13 +3,16 @@
    --bg: oldlace;
    --fg: slategrey; */
    /* --scrollbar-bg: #fff; */
-   --input-bg: #fff;
+   /* --input-bg: #fff; */
+   --input-bg: #fdfdfd;
    --input-border: #cccccc;
+   --checkbox-bg: #27a6e5;
    --btn-bg: silver;
    --btn-fg: #fff;
    --li-item: #e0e0e0;
    --hr: #B7B7B7;
    --href: #00b7fc;
+   /* --href: #68cbf8; */
 
    --plugins-before: slategrey;
    --plugins-section-hover: silver;
@@ -18,13 +21,14 @@
 }
 
 /* turn on dark mode by default */
-/* @media (prefers-color-scheme:dark) { */
+@media (prefers-color-scheme:dark) {
    :root {
       --bg: #1c1c1c;
       --fg: slategrey;
       /* --scrollbar-bg: #1a1a1a; */
       --input-bg: #171717;
       --input-border: #2d2d2d;
+      --checkbox-bg: #188cc3;
       --li-item: #353535;
       --hr: #3d3d3d;
       --btn-bg: #3e3e3e;
@@ -34,7 +38,7 @@
       --label1: initial;
       --label2: #8c8b8b;
    }
-/* } */
+}
 
 
 body {
@@ -92,12 +96,13 @@ input[type=button]:hover {
    height: 8px;
 }
 
-/* ::-webkit-scrollbar-thumb {
-   background: #ccc;
+::-webkit-scrollbar-thumb {
+   /* background: #ccc; */
+   background: #bbb;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-   background: #bbb;
+   background: #aaa;
 }
 
 ::-webkit-scrollbar-thumb:active {
@@ -106,7 +111,7 @@ input[type=button]:hover {
 
 ::-webkit-scrollbar-track {
    background: #ddd;
-} */
+}
 
 /* ::-webkit-scrollbar-button:single-button {
    background: radial-gradient(circle at center, #333 40%, var(--scrollbar-bg) 0)

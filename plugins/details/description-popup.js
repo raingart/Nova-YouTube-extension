@@ -114,70 +114,65 @@ window.nova_plugins.push({
                }`);
          });
 
+      NOVA.runOnEveryPageTransition(restoreDateLine);
+
       // expand
       NOVA.waitElement(DESCRIPTION_SELECTOR)
          .then(descriptionEl => {
-            // Strategy 2
-            let oldDateText;
-
             descriptionEl.addEventListener('mouseenter', evt => {
-               document.body.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click()
+               document.body.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')
+                  ?.click();
             });
             // }, { capture: true, once: true });
+         });
 
-            NOVA.runOnEveryPageTransition(restoreDateLine);
+      let oldDateText;
 
-            function restoreDateLine() {
-               // Strategy 1
-               // const dataEl = document.getElementById(DATE_SELECTOR_ID);
-
+      function restoreDateLine() {
+         // NOVA.waitElement('#info-container:not(:empty)', descriptionEl)
+         NOVA.waitElement('#info-container #info:not(:empty)')
+            .then(textDateEl => {
                NOVA.waitElement('#title h1')
                   .then(async container => {
-                     const
-                        textDate = await NOVA.waitUntil(() => {
-                           // Strategy 1 regex. Does work in Premiered - "613 views Premiered 2 hours ago"
-                           // if (
-                           //    (text = descriptionEl.textContent.trim())
-                           //    && (dateIdx = text.search(/\d{4}/)) && dateIdx > -1
-                           //    && (dt = text.substring(0, dateIdx + 4))
-                           //    && dt && dt != dataEl?.textContent
-                           // ) {
-                           //    return dt;
-                           // }
-                           // Strategy 2 HTML
-                           if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
-                              // first 3 div. ex:
-                              // [6,053 views] [Premiered] [Oct 8, 2022]
-                              // [14,051 views] [] [Mar 2, 2017]
-                              .slice(0, 3)
-                              .map(e => e.textContent).join('').trim())
-                              && text != oldDateText
-                           ) {
-                              // console.debug('1', oldDateText);
-                              // console.debug('2', text);
-                              oldDateText = text;
-                              return text;
-                           }
-                        }, 1000); // 1sec
-
-                     // console.debug('textDate', textDate);
-                     insertToHTML({ 'text': textDate, 'container': container });
-
-                     function insertToHTML({ text = '', container = required() }) {
-                        // console.debug('insertToHTML', ...arguments);
-                        if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
-
-                        (document.getElementById(DATE_SELECTOR_ID) || (function () {
-                           container.insertAdjacentHTML('afterend',
-                              `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${textDate}</span>`);
-                           return document.getElementById(DATE_SELECTOR_ID);
-                        })())
-                           .textContent = text;
-                     }
-
+                     await NOVA.waitUntil(() => textDateEl.textContent != oldDateText, 1000); // 1sec
+                     oldDateText = textDateEl.textContent;
+                     insertToHTML({ 'text': oldDateText, 'container': container });
                   });
-            }
-         });
+               // Strategy 2
+               // const dataEl = document.getElementById(DATE_SELECTOR_ID);
+               // const
+               //    textDate = await NOVA.waitUntil(() => {
+               //       if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
+               //          // first 3 div. ex:
+               //          // [6,053 views] [Premiered] [Oct 8, 2022]
+               //          // [14,051 views] [] [Mar 2, 2017]
+               //          .slice(0, 3)
+               //          .map(e => e.textContent).join('').trim())
+               //          && text != oldDateText
+               //       ) {
+               //          // console.debug('1', oldDateText);
+               //          // console.debug('2', text);
+               //          oldDateText = text;
+               //          return text;
+               //       }
+               //    }, 1000); // 1sec
+
+               // console.debug('textDate', textDate);
+            });
+
+         function insertToHTML({ text = '', container = required() }) {
+            // console.debug('insertToHTML', ...arguments);
+            if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+
+            (document.getElementById(DATE_SELECTOR_ID) || (function () {
+               container.insertAdjacentHTML('afterend',
+                  `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${text}</span>`);
+               return document.getElementById(DATE_SELECTOR_ID);
+            })())
+               .textContent = text;
+         }
+
+      }
 
    },
 });

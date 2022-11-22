@@ -402,6 +402,7 @@ const NOVA = {
          `ytd-watch, ytd-watch-flexy,
          #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
+            if (timestampsCollect.length) return; // skip if exist in priroty
             // parentSource = el.id == 'content' ? 'comment' : 'description';
             parentSource = el.hasOwnProperty('playerData') ? 'description' : 'comment';
 

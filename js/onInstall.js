@@ -50,6 +50,7 @@ chrome.runtime.onInstalled.addListener(details => {
                   'thumb_mix_disable': 'mix_disable',
                   'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
                   'subtitle-transparent': 'subtitle_transparent',
+                  'video-description-expand': 'description-expand',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

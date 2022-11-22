@@ -17,6 +17,7 @@ const keyRenameTemplate = {
    'thumbnails-mix-hide': 'mix_disable',
    'thumb_mix_disable': 'mix_disable',
    'subtitle-transparent': 'subtitle_transparent',
+   'video-description-expand': 'description-expand',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {

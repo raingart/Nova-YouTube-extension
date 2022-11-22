@@ -151,26 +151,36 @@ window.nova_plugins.push({
          // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js#L189 (extractLengthFromA11y fn)
          // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
          //    .forEach(videoRenderer => {
-         const
-            // videoData = videoRenderer.data,
-            title = videoData.title.accessibility.accessibilityData?.label,
-            publishedTimeText = videoData.publishedTimeText?.simpleText,
-            viewCountText = videoData.viewCountText?.simpleText;
+         // const videoData = videoRenderer.data;
 
-         let
-            [minutes, seconds] = title.split(publishedTimeText)[1]?.split(viewCountText)[0] // "12 minutes, 17 seconds "
-               ?.split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+         if ((title = videoData.title.accessibility.accessibilityData?.label)
+            && (publishedTimeText = videoData.publishedTimeText?.simpleText)
+            && (viewCountText = videoData.viewCountText?.simpleText)
+         ) {
+            const
+               from = title.search(publishedTimeText) + publishedTimeText.length,
+               to = title.search(videoData.viewCountText?.simpleText);
 
-         if (!seconds) { // fix mixed up in places
-            seconds = minutes;
-            minutes = null;
+            let
+               [minutes, seconds] = title.substring(from, to).trim()
+                  .split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+
+            if (!seconds) { // fix mixed up in places
+               seconds = minutes;
+               minutes = null;
+            }
+            if (String(seconds).length === 1) {// fix "0:3" > "0:30"
+               seconds += '0';
+            }
+            // console.debug('>', [minutes, seconds]);
+            return [minutes || 0, seconds].join(':');
+
+         } else {
+            console.error('getThumbTime empty:',
+               '\ntitle:', title,
+               '\npublishedTimeText:', publishedTimeText,
+               '\nviewCountText:', viewCountText);
          }
-         if (String(seconds).length === 1) {// fix "0:3" > "0:30"
-            seconds += '0';
-         }
-         // console.debug('>', [minutes, seconds]);
-         return [minutes || 0, seconds].join(':');
-         // });
       }
 
    },

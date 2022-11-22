@@ -358,6 +358,7 @@ window.nova_plugins.push({
          _tagName: 'input',
          label: 'Start playback at',
          // label: 'Set play start time',
+         // label: 'Skip intro time at',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

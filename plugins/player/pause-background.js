@@ -110,7 +110,7 @@ window.nova_plugins.push({
          });
 
       // PiP auto enable
-      // alt https://chrome.google.com/webstore/detail/always-video-%E1%B4%B4%E1%B4%B7-beta-pip/gcfcmfbcpibcjmcinnimklngkpkkcing?hl=en
+      // alt https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
       // NOVA.waitElement('video')
       //    .then(video => {
       //       // Detect Picture-in-Picture Support

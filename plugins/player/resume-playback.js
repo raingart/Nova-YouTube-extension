@@ -38,10 +38,12 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'resume-playback-time',
          getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
-      let cacheName = getCacheName(); // for optimization
+      let cacheName;
 
       NOVA.waitElement('video')
          .then(video => {
+            cacheName = getCacheName(); // for optimization
+
             resumePlayback.apply(video);
 
             video.addEventListener('loadeddata', resumePlayback.bind(video));

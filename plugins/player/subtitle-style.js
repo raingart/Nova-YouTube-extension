@@ -75,7 +75,7 @@ window.nova_plugins.push({
             // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
             `#ytp-caption-window-container {
                z-index: ${Math.max(
-               (el = document.querySelector('.ytp-chrome-bottom')) && getComputedStyle(el)['z-index'],
+               (el = document.body.querySelector('.ytp-chrome-bottom')) && getComputedStyle(el)['z-index'],
                // getComputedStyle(movie_player)['z-index'], // movie_player is not defined
                59) + 1};
             }`);

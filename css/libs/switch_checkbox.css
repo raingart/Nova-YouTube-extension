@@ -64,7 +64,8 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]:checked {
-   background-color: #188cc3;
+   background-color: var(--checkbox-bg);
+   /* background-color: #188cc3; */
    /* background-color: #27a6e5; */
    /* background-color: #00b7fc; */
    /* background-color: #4cd964; */

@@ -56,6 +56,7 @@ button, [type=submit], [type=reset], input[type=button] {
    white-space: nowrap;
    background-color: transparent;
    padding: 5px 20px;
+   transition: background-color 170ms linear;
 }
 
 /* :is(button, [type=submit], [type=reset], input[type=button], select, textarea):hover { chrome >=88 */

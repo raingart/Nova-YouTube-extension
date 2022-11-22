@@ -4,7 +4,8 @@
 
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
-   title: 'Float player progress bar',
+   // title: 'Float player progress bar',
+   title: 'Always display a tiny progress bar',
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
    'title:ko': '플로팅 플레이어 진행률 표시줄',
@@ -22,7 +23,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://chrome.google.com/webstore/detail/tweaks-for-youtube/ogkoifddpkoabehfemkolflcjhklmkge
+      // alt - https://chrome.google.com/webstore/detail/dammfdepmngjjoidfdbhkjboecgceamb
+      // alt2 - https://chrome.google.com/webstore/detail/ogkoifddpkoabehfemkolflcjhklmkge
 
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
          // && (window.self.location.href.includes('live_stream') || movie_player.getVideoData().isLive)
@@ -85,9 +87,10 @@ window.nova_plugins.push({
 
                // Strategy 2
                if ((totalDuration = movie_player.getDuration()) && !isNaN(totalDuration)) {
-                  bufferEl.style.transform = `scaleX(${
-                     (movie_player.getVideoBytesLoaded() / totalDuration) * totalDuration
-                     })`;
+                  // bufferEl.style.transform = `scaleX(${
+                  // (movie_player.getVideoBytesLoaded() / totalDuration) * totalDuration
+                  // })`;
+                  bufferEl.style.transform = `scaleX(${movie_player.getVideoLoadedFraction()})`;
                }
             }
             // });
@@ -169,6 +172,9 @@ window.nova_plugins.push({
 
                ${SELECTOR}-progress {
                   z-index: calc(var(--zindex) + 1);
+                  ${user_settings.player_float_progress_bar_color == '#ff0000'
+                  ? '' // default color
+                  : 'background-color: ' + user_settings.player_float_progress_bar_color};
                }
 
                /*${SELECTOR}-buffer {
@@ -311,6 +317,25 @@ window.nova_plugins.push({
          min: 0,
          max: 1,
          value: .7,
+      },
+      player_float_progress_bar_color: {
+         _tagName: 'input',
+         type: 'color',
+         value: '#ff0000', // red
+         label: 'Color',
+         'label:zh': '颜色',
+         'label:ja': '色',
+         'label:ko': '색깔',
+         'label:id': 'Warna',
+         // 'label:es': 'Color',
+         'label:pt': 'Cor',
+         'label:fr': 'Couleur',
+         'label:it': 'Colore',
+         'label:tr': 'Renk',
+         'label:de': 'Farbe',
+         'label:pl': 'Kolor',
+         'label:ua': 'Колір',
+         title: 'default - #ff0000',
       },
    }
 });
