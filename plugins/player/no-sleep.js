@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'disable-player-sleep-mode',
-   title: 'Disable the [Continue watching?] popup',
+   title: 'Disable the "Continue watching?" popup',
    // title: 'Player stay active forever',
    // title: 'Disable player sleep mode',
    'title:zh': '玩家永远保持活跃',

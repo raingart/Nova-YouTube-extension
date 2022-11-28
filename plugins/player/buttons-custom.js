@@ -133,16 +133,16 @@ window.nova_plugins.push({
                popupBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                popupBtn.title = 'Open in popup';
                popupBtn.innerHTML =
-                  // `<svg viewBox="-8 -8 36 36" height="100%" width="100%">
-                  //    <g fill="currentColor">
-                  //       <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
-                  //    </g>
-                  // </svg>`;
-                  `<svg viewBox="0 -1 38 38" height="100%" width="100%">
+                  `<svg viewBox="-8 -8 36 36" height="100%" width="100%">
                      <g fill="currentColor">
-                        <path d="M 27.020989,25.020001 H 9.0209895 v -14.05 L 20.278056,10.969089 20.27853,8.9999999 H 8.9544297 c -1.0730594,0 -1.9334402,0.9 -1.9334402,2.0000001 v 14 c 0,1.1 0.8603808,2 1.9334402,2 H 27.045569 c 1.063393,0 1.97421,-0.885891 1.968683,-1.985877 l 0.0018,-7.014124 h -1.991386 z m -4.80902,-16.0200011 -0.01053,1.9774681 3.525926,-0.0018 -9.547729,9.854341 1.363076,1.41 9.481183,-9.799226 v 3.59 l 1.993516,-0.0095 0.0039,-7.0250141 z" />
+                        <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
                      </g>
                   </svg>`;
+                  // `<svg viewBox="0 -1 38 38" height="100%" width="100%">
+                  //    <g fill="currentColor">
+                  //       <path d="M 27.020989,25.020001 H 9.0209895 v -14.05 L 20.278056,10.969089 20.27853,8.9999999 H 8.9544297 c -1.0730594,0 -1.9334402,0.9 -1.9334402,2.0000001 v 14 c 0,1.1 0.8603808,2 1.9334402,2 H 27.045569 c 1.063393,0 1.97421,-0.885891 1.968683,-1.985877 l 0.0018,-7.014124 h -1.991386 z m -4.80902,-16.0200011 -0.01053,1.9774681 3.525926,-0.0018 -9.547729,9.854341 1.363076,1.41 9.481183,-9.799226 v 3.59 l 1.993516,-0.0095 0.0039,-7.0250141 z" />
+                  //    </g>
+                  // </svg>`;
                popupBtn.addEventListener('click', () => {
                   const
                      // width = window.innerWidth / 2,
@@ -151,7 +151,10 @@ window.nova_plugins.push({
                      // height = Math.round(width / aspectRatio);
                      height = Math.round(width / (16 / 9));
 
-                  url = new URL(document.querySelector('link[itemprop="embedUrl"][href]')?.href || ('/embed/' + movie_player.getVideoData().video_id));
+                  url = new URL(
+                     document.querySelector('link[itemprop="embedUrl"][href]')?.href
+                     || (location.origin + '/embed/' + movie_player.getVideoData().video_id)
+                  );
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
@@ -178,6 +181,7 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('screenshot')) {
+               // alt - https://greasyfork.org/en/scripts/455155-youtube-screenshot
                const
                   // bar
                   SELECTOR_SCREENSHOT_ID = 'nova-screenshot-result',

@@ -40,6 +40,10 @@ window.nova_plugins.push({
                });
             }
 
+            if (user_settings.video_quality_in_music && NOVA.isMusic()) {
+               selectedQuality = user_settings.video_quality_in_music_quality;
+            }
+
             setQuality(); // init
 
             movie_player.addEventListener('onStateChange', setQuality); // update
@@ -181,6 +185,68 @@ window.nova_plugins.push({
          'title:de': 'Beeinflusst die nächsten Videos',
          'title:pl': 'Zmiany w następnych filmach',
          'title:ua': 'Впливає на наступні відео',
+      },
+      video_quality_in_music: {
+         _tagName: 'input',
+         label: 'Diff quality for music',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         title: 'to save traffic / increase speed',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+      },
+      video_quality_in_music_quality: {
+         _tagName: 'select',
+         label: 'Quality for music',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // multiple: null,
+         options: [
+            // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
+            { label: '8K/4320p', value: 'highres' },
+            // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            { label: '4K/2160p', value: 'hd2160' },
+            { label: 'QHD/1440p', value: 'hd1440' },
+            { label: 'FHD/1080p', value: 'hd1080' },
+            { label: 'HD/720p', value: 'hd720' },
+            { label: 'SD/480p', value: 'large', selected: true },
+            { label: 'SD/360p', value: 'medium' },
+            { label: 'SD/240p', value: 'small' },
+            { label: 'SD/144p', value: 'tiny' },
+            // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
+         ],
+         'data-dependent': { 'video_quality_in_music': true },
       },
    }
 });

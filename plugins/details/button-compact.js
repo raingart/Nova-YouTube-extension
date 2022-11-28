@@ -20,9 +20,28 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.css.push(
-         `#top-row #actions button [class*="--button-text-content"] {
+         `#top-row #actions button ${user_settings.buttons_hide ? '' : '[class*="--button-text-content"]'} {
             display: none;
          }`);
 
    },
+   options: {
+      buttons_hide: {
+         _tagName: 'input',
+         label: 'Hide buttons',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+      },
+   }
 });

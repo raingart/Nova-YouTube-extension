@@ -42,10 +42,11 @@ window.nova_plugins.push({
          default:
             selectorsList.push([
                // home page
-               'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
+               // 'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
 
 
                // results page
+               // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // ad buy
                'ytd-search-pyv-renderer', // fix blank space (https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
 
                '[class^="ytd-promoted-"]', // suggest site (https://www.youtube.com/results?search_query=mmersive+Simmulator)

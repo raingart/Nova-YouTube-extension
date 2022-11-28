@@ -113,85 +113,85 @@ window.nova_plugins.push({
       }
 
       // Strategy 1 (api way)
-      async function reverseControl() {
-         if (!window.nova_playlistReversed) return;
-
-         const
-            ytdWatch = await NOVA.waitElement(('ytd-watch, ytd-watch-flexy')),
-            data = await NOVA.waitUntil(() => ytdWatch?.data.contents?.twoColumnWatchNextResults),
-            playlist = data.playlist.playlist,
-            autoplay = data.autoplay.autoplay;
-
-         playlist.contents.reverse();
-
-         playlist.currentIndex = (playlist.totalVideos - playlist.currentIndex) - 1;
-         playlist.localCurrentIndex = (playlist.contents.length - playlist.localCurrentIndex) - 1;
-
-         for (const i of autoplay.sets) {
-            i.autoplayVideo = i.previousButtonVideo;
-            i.previousButtonVideo = i.nextButtonVideo;
-            i.nextButtonVideo = i.autoplayVideo;
-         }
-
-         ytdWatch.updatePageData_(data);
-
-         if ((manager = document.body.querySelector('yt-playlist-manager'))
-            && (ytdPlayer = document.getElementById('ytd-player'))
-         ) {
-            ytdPlayer.updatePlayerComponents(null, autoplay, null, playlist);
-            manager.autoplayData = autoplay;
-            manager.setPlaylistData(playlist);
-            ytdPlayer.updatePlayerPlaylist_(playlist);
-         }
-
-         scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
-      }
-
-      // Strategy 2 (html5 way)
-      // function reverseControl() {
+      // async function reverseControl() {
       //    if (!window.nova_playlistReversed) return;
 
-      //    // auto next click
-      //    NOVA.videoElement?.addEventListener('ended', () =>
-      //       window.nova_playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
+      //    const
+      //       ytdWatch = await NOVA.waitElement(('ytd-watch, ytd-watch-flexy')),
+      //       data = await NOVA.waitUntil(() => ytdWatch?.data.contents?.twoColumnWatchNextResults),
+      //       playlist = data.playlist.playlist,
+      //       autoplay = data.autoplay.autoplay;
 
-      //    // update UI
-      //    // Strategy 1
-      //    reverseElement(document.body.querySelector('#secondary #playlist #items.playlist-items, ytm-playlist lazy-list'));
+      //    playlist.contents.reverse();
+
+      //    playlist.currentIndex = (playlist.totalVideos - playlist.currentIndex) - 1;
+      //    playlist.localCurrentIndex = (playlist.contents.length - playlist.localCurrentIndex) - 1;
+
+      //    for (const i of autoplay.sets) {
+      //       i.autoplayVideo = i.previousButtonVideo;
+      //       i.previousButtonVideo = i.nextButtonVideo;
+      //       i.nextButtonVideo = i.autoplayVideo;
+      //    }
+
+      //    ytdWatch.updatePageData_(data);
+
+      //    if ((manager = document.body.querySelector('yt-playlist-manager'))
+      //       && (ytdPlayer = document.getElementById('ytd-player'))
+      //    ) {
+      //       ytdPlayer.updatePlayerComponents(null, autoplay, null, playlist);
+      //       manager.autoplayData = autoplay;
+      //       manager.setPlaylistData(playlist);
+      //       ytdPlayer.updatePlayerPlaylist_(playlist);
+      //    }
+
       //    scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
-      //    // Strategy 2: scroll doesn't work
-      //    // NOVA.css.push(
-      //    //    `#playlist #items.playlist-items {
-      //    //       display: flex;
-      //    //       flex-direction: column-reverse;
-      //    //    }`);
-
-      //    updateNextButton();
-
-
-      //    function updateNextButton() {
-      //       const
-      //          nextItem = document.body.querySelector('#secondary #playlist [selected] + * a'),
-      //          nextURL = nextItem?.querySelector('a')?.href;
-
-      //       if (!nextURL) return;
-
-      //       if (next_button = document.body.querySelector('.ytp-next-button')) {
-      //          next_button.href = nextURL;
-      //          next_button.dataset.preview = nextItem.querySelector('img').src;
-      //          next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
-      //       }
-      //       if (manager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
-      //          manager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');
-      //          manager.watchEndpoint.videoId = NOVA.queryURL.get('v', nextURL);
-      //       }
-      //    }
-
-      //    function reverseElement(container = required()) {
-      //       if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
-      //       container.append(...Array.from(container.childNodes).reverse());
-      //    }
       // }
+
+      // Strategy 2 (html5 way)
+      function reverseControl() {
+         if (!window.nova_playlistReversed) return;
+
+         // auto next click
+         NOVA.videoElement?.addEventListener('ended', () =>
+            window.nova_playlistReversed && movie_player.previousVideo(), { capture: true, once: true });
+
+         // update UI
+         // Strategy 1
+         reverseElement(document.body.querySelector('#secondary #playlist #items.playlist-items, ytm-playlist lazy-list'));
+         scrollToElement(document.body.querySelector('#secondary #playlist-items[selected], ytm-playlist .item[selected=true]'));
+         // Strategy 2: scroll doesn't work
+         // NOVA.css.push(
+         //    `#playlist #items.playlist-items {
+         //       display: flex;
+         //       flex-direction: column-reverse;
+         //    }`);
+
+         updateNextButton();
+
+
+         function updateNextButton() {
+            const
+               nextItem = document.body.querySelector('#secondary #playlist [selected] + * a'),
+               nextURL = nextItem?.querySelector('a')?.href;
+
+            if (!nextURL) return;
+
+            if (next_button = document.body.querySelector('.ytp-next-button')) {
+               next_button.href = nextURL;
+               next_button.dataset.preview = nextItem.querySelector('img').src;
+               next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
+            }
+            if (manager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
+               manager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');
+               manager.watchEndpoint.videoId = NOVA.queryURL.get('v', nextURL);
+            }
+         }
+
+         function reverseElement(container = required()) {
+            if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+            container.append(...Array.from(container.childNodes).reverse());
+         }
+      }
 
       function scrollToElement(targetEl = required()) {
          if (!(targetEl instanceof HTMLElement)) return console.error('targetEl not HTMLElement:', targetEl);

@@ -87,7 +87,7 @@ window.nova_plugins.push({
          shorts() {
             if (!user_settings.shorts_disable) return;
             // exсlude "short" tab in channel
-            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'shorts') return;
+            if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'shorts') return;
 
             document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
@@ -157,7 +157,7 @@ window.nova_plugins.push({
          live() {
             if (!user_settings.live_disable) return;
             // exсlude "LIVE" tab in channel
-            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'streams') return;
+            if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
@@ -177,7 +177,7 @@ window.nova_plugins.push({
          streamed() {
             if (!user_settings.streamed_disable) return;
             // exсlude "LIVE" tab in channel
-            if (NOVA.currentPage == 'channel' && location.pathname.split('/').pop() == 'streams') return;
+            if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             document.body.querySelectorAll('#metadata-line > span:last-of-type')
                .forEach(el => {

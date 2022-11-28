@@ -28,8 +28,15 @@ window.nova_plugins.push({
 
       // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
 
+      const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+
       // if not - home page channel/user
-      if (NOVA.currentPage == 'channel' && location.pathname.split('/').filter(i => i).length > 2) return;
+      if (NOVA.currentPage == 'channel'
+         &&
+         ([page, channelTab].length > 2
+            || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+         )
+      ) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
          location.href += '/' + user_settings.channel_default_tab;

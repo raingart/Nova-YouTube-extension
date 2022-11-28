@@ -449,8 +449,8 @@ window.addEventListener('load', () => {
          .addEventListener(evt, function () {
             searchFilter({
                'keyword': this.value,
-               'in_selector': `${Opt.UI.pluginsContainer} li.item`,
-               'highlight_filter_selector': 'label'
+               'filter_selectors': `${Opt.UI.pluginsContainer} li.item`,
+               'highlight_selector': 'label'
             });
          });
       document.getElementById('search_clear')
@@ -473,11 +473,11 @@ window.addEventListener('load', () => {
          });
    }
 
-   function searchFilter({ keyword = required(), in_selector = required(), highlight_filter_selector }) {
+   function searchFilter({ keyword = required(), filter_selectors = required(), highlight_selector }) {
       // console.debug('searchFilter:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
-      document.body.querySelectorAll(in_selector)
+      document.body.querySelectorAll(filter_selectors)
          .forEach(item => {
             const
                text = item.textContent,
@@ -495,7 +495,7 @@ window.addEventListener('load', () => {
                   }
                };
 
-            (highlight_filter_selector ? item.querySelectorAll(highlight_filter_selector) : [item])
+            (highlight_selector ? item.querySelectorAll(highlight_selector) : [item])
                .forEach(highlight);
          });
 

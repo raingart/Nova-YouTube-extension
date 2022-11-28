@@ -50,9 +50,14 @@ window.nova_plugins.push({
             btn.innerHTML =
                `<svg viewBox="-6 -6 36 36" height="100%" width="100%">
                   <g fill="currentColor">
-                     <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>
+                     <path d="M 7 7 L 17 7 L 17 10 L 21 6 L 17 2 L 17 5 L 5 5 L 5 11 L 7 11 L 7 7 Z M 7.06 17 L 7 14 L 3 18 L 7 22 L 7 19 L 19 19 L 19 13 L 17 13 L 17 17 L 7.06 17 Z"/>
                   </g>
                </svg>`;
+               // `<svg viewBox="-6 -6 36 36" height="100%" width="100%">
+               //    <g fill="currentColor">
+               //       <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>
+               //    </g>
+               // </svg>`;
             btn.addEventListener('click', () => {
                if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
 
@@ -64,6 +69,11 @@ window.nova_plugins.push({
             });
 
             container.after(btn);
+
+            // button visible toggle
+            if (user_settings.player_loop_in_music) {
+               NOVA.runOnEveryPageTransition(() => btn.style.display = NOVA.isMusic() ? '' : 'none');
+            }
          });
 
       // NOVA.waitElement('video')
@@ -77,4 +87,23 @@ window.nova_plugins.push({
       //    .then(movie_player => movie_player.setLoop());
 
    },
+   options: {
+      player_loop_in_music: {
+         _tagName: 'input',
+         label: 'Show only in music',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+      },
+   }
 });

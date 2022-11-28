@@ -485,6 +485,73 @@ const NOVA = {
    //    }
    // },
 
+   isMusic() {
+      const
+         CACHE_PREFIX = 'nova-music-type',
+         cacheName = CACHE_PREFIX + ':' + (this.queryURL.get('v') || movie_player.getVideoData().video_id);
+
+      // fix (Disable cache) - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
+      if (!navigator.cookieEnabled && this.currentPage == 'embed') return checkType();
+
+      if (storage = sessionStorage.getItem(cacheName)) {
+         // console.debug(CACHE_PREFIX, 'cache:', storage);
+         return storage;
+
+      } else {
+         const state = checkType();
+         // console.debug(CACHE_PREFIX, 'gen:', state);
+         sessionStorage.setItem(cacheName, state); // save
+         return state;
+      }
+
+      function checkType() {
+         const
+            channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
+            titleStr = movie_player.getVideoData().title
+               // add playlist title
+               + ((playlistTitle = document.body.querySelector('#secondary #playlist #header-description a[href*="/playlist"]:not(:empty)')?.textContent) ? '.' + playlistTitle : ''), // https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
+            titleWords = titleStr?.match(/\w+/g);
+
+         // if (user_settings.rate_default_apply_music == 'expanded') {
+         //    // 【MAD】,『MAD』,「MAD」
+         //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
+         //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
+         //       || ['【', '『', '「', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+         //    ) {
+         //       return true;
+         //    }
+         // }
+
+         return [
+            titleStr,
+            location.href, // 'music.youtube.com' or 'youtube.com#music'
+            channelName,
+            document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.category, // exclude embed page
+            // ALL BELOW - not updated after page transition!
+            // window.ytplayer?.config?.args.title,
+            // document.body.querySelector('meta[itemprop="genre"][content]')?.content,
+            // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
+            // document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
+         ]
+            .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
+            // 'Official Artist' badge
+            || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
+            // channelNameVEVO
+            || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
+            // specific channel
+            || ['MontageRock'].includes(channelName)
+            // word
+            || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
+               .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
+            // words
+            || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
+               .some(i => titleStr.toUpperCase().includes(i))
+            // word (case sensitive)
+            || titleWords?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+               .some(i => titleWords.includes(i));
+      }
+   },
+
    // findTimestamps(text) {
    //    const result = []
    //    const timestampPattern = /((\d?\d:){1,2}\d{2})/g
@@ -715,36 +782,38 @@ const NOVA = {
          .find(i => isChannelId(i))
       // console.debug('channelId (local):', result);
 
-      if (!result) { // request
-         let channelName;
-         switch (this.currentPage) {
-            case 'channel':
-               channelLink = location.pathname.split('/');
-               if (['c', 'user'].includes(channelLink[1])) {
-                  channelName = channelLink[2];
-               }
-               break;
-            case 'watch':
-               // channelLink = await this.waitElement('#owner #channel-name a[href], ytm-slim-owner-renderer > a[href]');
-               channelLink = await this.waitElement('#owner #channel-name a[href]');
-               channelArr = channelLink?.href.split('/');
-               if (channelArr.length && ['c', 'user'].includes(channelArr[3])) {
-                  channelName = channelArr[4];
-               }
-               break;
-         }
-         // console.debug('channelName:', channelName);
-         if (!channelName) return
-         // https://www.googleapis.com/youtube/v3/channels?key={YOUR_API_KEY}&forUsername={USER_NAME}&part=id
-         const res = await this.request.API({
-            request: 'channels',
-            params: { 'forUsername': channelName, 'part': 'id' },
-            api_key: api_key,
-         });
-         // console.debug('res', res);
-         if (res?.items?.length && isChannelId(res.items[0]?.id)) result = res.items[0].id;
-         // console.debug('channelId (request):', result);
-      }
+      // if (!result) { // request
+      //    let channelName;
+      //    switch (this.currentPage) {
+      //       case 'channel':
+      //          if ((channelName_ = document.body.querySelector('#channel-handle')?.textContent)
+      //             && channelName_.startsWith('@')
+      //          ) {
+      //             channelName = channelName_.substring(1);
+      //          }
+
+      //          break;
+      //       // case 'watch':
+      //       //    // channelLinkArr = await this.waitElement('#owner #channel-name a[href], ytm-slim-owner-renderer > a[href]');
+      //       //    channelLinkArr = await this.waitElement('#owner #channel-name a[href]');
+      //       //    channelArr = channelLinkArr?.href.split('/');
+      //       //    if (channelArr.length && ['c', 'user'].includes(channelArr[3])) {
+      //       //       channelName = channelArr[4];
+      //       //    }
+      //       //    break;
+      //    }
+      //    console.debug('channelName:', channelName);
+      //    if (!channelName) return
+      //    // https://www.googleapis.com/youtube/v3/channels?key={YOUR_API_KEY}&forUsername={USER_NAME}&part=id
+      //    const res = await this.request.API({
+      //       request: 'channels',
+      //       params: { 'forUsername': channelName, 'part': 'id' },
+      //       api_key: api_key,
+      //    });
+      //    // console.debug('res', res);
+      //    if (res?.items?.length && isChannelId(res.items[0]?.id)) result = res.items[0].id;
+      //    // console.debug('channelId (request):', result);
+      // }
       return result;
    },
 

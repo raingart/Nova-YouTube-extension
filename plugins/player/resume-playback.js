@@ -30,12 +30,15 @@ window.nova_plugins.push({
    'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',
    'desc:ua': 'Після завантаження - продовжити відтворення',
    _runtime: user_settings => {
+
+      // Alt - https://greasyfork.org/en/scripts/455475-youtube-resumer
+
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
 
       // TODO adSkip alt. - add comparison by duration. Need stream test
       const
-         CACHE_PREFIX = 'resume-playback-time',
+         CACHE_PREFIX = 'nova-resume-playback-time',
          getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
       let cacheName;

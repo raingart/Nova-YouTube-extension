@@ -61,6 +61,8 @@ window.nova_plugins.push({
             ]
                .includes(evt.detail?.actionName)
             ) {
+               if (NOVA.currentPage == 'channel' && !['shorts'].includes(NOVA.channelTab)) return;
+
                patchThumbShort();
             }
          });

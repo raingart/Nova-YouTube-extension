@@ -54,6 +54,7 @@ const Plugins = {
       'details/button-compact.js',
       'details/timestamps-scroll.js',
       'details/redirect-clear.js',
+      'details/save-to-playlist.js',
       // 'details/quick-menu.js',
 
       'comments/visibility.js',
@@ -136,6 +137,7 @@ const Plugins = {
 
       NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+         NOVA.channelTab = channelTab;
          return (['channel', 'c', 'user'].includes(page)
             || page?.startsWith('@') // https://m.youtube.com/@YouTube
             // fix non-standard link:

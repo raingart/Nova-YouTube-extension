@@ -28,7 +28,8 @@ window.nova_plugins.push({
          if (NOVA.currentPage == 'embed' && window.self !== window.top// window.frameElement // is iframe?
             && !['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
          ) {
-            location.assign(NOVA.queryURL.set({ 'autoplay': false }));
+            // works. But annoying iframe reload
+            // location.assign(NOVA.queryURL.set({ 'autoplay': false }));
 
          } else return;
       }

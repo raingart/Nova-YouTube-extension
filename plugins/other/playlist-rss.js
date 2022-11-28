@@ -16,6 +16,7 @@ window.nova_plugins.push({
    run_on_pages: 'channel, playlist, -mobile',
    restart_on_transition: true,
    section: 'channel',
+   // opt_api_key_warn: true,
    // desc: '',
    _runtime: user_settings => {
 
@@ -31,17 +32,26 @@ window.nova_plugins.push({
             // NOVA.waitElement('#channel-header #channel-name')
             NOVA.waitElement('#links-holder #primary-links')
                .then(async container => {
-                  if (channelId = await NOVA.getChannelId()) {
-                     insertToHTML({ 'url': genChannelURL(channelId), 'container': container });
+                  // Doesn't work.
+                  // https://www.youtube.com/feeds/videos.xml?user=<username>
+
+                  // if ((channelName_ = document.body.querySelector('#channel-handle')?.textContent)
+                  //    && channelName_.startsWith('@')
+                  // ) {
+                  //    channelName = channelName_.substring(1);
+                  // }
+
+                  if (url = document.querySelector('link[type="application/rss+xml"][href]')?.href
+                     || await genChannelURL(NOVA.getChannelId(user_settings['user-api-key']))
+                  ) {
+                     insertToHTML({ 'url': url, 'container': container });
                   }
-                  // console.debug('channelId:', channelId);
                });
             break;
 
          case 'playlist':
             NOVA.waitElement('#owner-container')
                .then(container => {
-                  // playlist page
                   insertToHTML({ 'url': playlistURL, 'container': container });
                });
             break;
@@ -51,11 +61,9 @@ window.nova_plugins.push({
          // console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-         // (document.getElementById(SELECTOR_ID) || (function () {
-         (container.querySelector('#' + SELECTOR_ID) || (function () {
+         (document.getElementById(SELECTOR_ID) || (function () {
             const link = document.createElement('a');
             link.id = SELECTOR_ID;
-            link.href = url;
             link.target = '_blank';
             // btn.className = `ytp-button ${SELECTOR_CLASS}`;
             link.innerHTML =
@@ -71,19 +79,17 @@ window.nova_plugins.push({
                padding: '5px',
             });
             container.prepend(link);
-            return document.getElementById(SELECTOR_ID);
-            // return container.appendChild(link);
+            return link;
          })())
             .href = url;
 
-         addMetaLink();
+         // addMetaLink(channel_id);
 
-         async function addMetaLink() {
-            if (channelId = await NOVA.getChannelId()) {
-               document.head.insertAdjacentHTML('beforeend',
-                  `<link rel="alternate" type="application/rss+xml" title="RSS" href="${genChannelURL(channelId)}">`);
-            }
-         }
+         // async function addMetaLink(channelId) {
+         //    channelId = channelId || await NOVA.getChannelId(user_settings['user-api-key']);
+         //    document.head.insertAdjacentHTML('beforeend',
+         //       `<link rel="alternate" type="application/rss+xml" title="RSS" href="${genChannelURL(channelId)}">`);
+         // }
       }
 
    },

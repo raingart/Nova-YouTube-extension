@@ -32,9 +32,9 @@ window.nova_plugins.push({
          fn1(); // init
 
       } else {
-         const fn2 = () => NOVA.waitElement('#chat:not([collapsed]) #show-hide-button #button')
+         const fn2 = () => NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
             .then(btn => {
-               btn.click()
+               btn.click();
                fn2(); // restart
             });
 

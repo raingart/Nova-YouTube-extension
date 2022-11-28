@@ -12,20 +12,20 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 }
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'thumbnails-mix-hide': 'mix_disable',
-   'thumb_mix_disable': 'mix_disable',
-   'subtitle-transparent': 'subtitle_transparent',
-   'video-description-expand': 'description-expand',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+//    'thumbnails-mix-hide': 'mix_disable',
+//    'thumb_mix_disable': 'mix_disable',
+//    'subtitle-transparent': 'subtitle_transparent',
+//    'video-description-expand': 'description-expand',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 if (isOptionsPage()) return;
 
@@ -209,7 +209,7 @@ function renderSettingButton() {
          a.innerHTML =
             // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 -2 20 20">
+               <svg viewBox="0 0 20 16">
                   <g fill="deepskyblue">
                      <polygon points="0,16 14,8 0,0"/>
                   </g>
