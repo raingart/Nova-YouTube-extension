@@ -43,7 +43,7 @@ const Plugins = {
       'other/title-time.js',
       'other/scroll-to-top.js',
       'other/shorts-redirect.js',
-      'other/playlist-rss.js',
+      'other/rss.js',
       // 'other/thumbs-sort.js',
       'other/stop-channel-trailer.js',
       'other/miniplayer-disable.js',
@@ -61,6 +61,7 @@ const Plugins = {
       'comments/square-avatars.js',
       'comments/popup.js',
       'comments/expand.js',
+      'comments/sort.js',
 
       'sidebar/related-visibility.js',
       'sidebar/playlist-autoplay.js',

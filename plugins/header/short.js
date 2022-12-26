@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Cabeçalho compacto',
    'title:fr': 'En-tête compact',
    'title:it': 'Testata compatta',
-   'title:tr': 'Başlık kompakt',
+   // 'title:tr': 'Başlık kompakt',
    'title:de': 'Header kompakt',
    'title:pl': 'Kompaktowy nagłówek',
    'title:ua': 'Компактна шапка сайту',

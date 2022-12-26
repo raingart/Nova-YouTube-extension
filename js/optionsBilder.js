@@ -100,7 +100,7 @@ const Opt = {
                   li.innerHTML =
                      `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc.replace(/"/g, "'")}" flow="up"` : ''}>
                         <label for="${plugin.id}">${plugin.title}</label>
-                        <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target=”_blank” title="${i18n('opt_title_help_link')}">?</a>
+                        <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target="_blank" title="${i18n('opt_title_help_link')}">?</a>
                         ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}
                      </div>
                      <div class="opt">

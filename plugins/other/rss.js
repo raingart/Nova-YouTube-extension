@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Adicionar link de feed RSS',
    'title:fr': 'Ajouter un lien de flux RSS',
    'title:it': 'Aggiungi collegamento al feed RSS',
-   'title:tr': 'RSS Beslemesi bağlantısı ekle',
+   // 'title:tr': 'RSS Beslemesi bağlantısı ekle',
    'title:de': 'RSS-Feed-Link hinzufügen',
    'title:pl': 'Dodaj kanał RSS',
    'title:ua': 'Додати RSS-посилання',
@@ -19,6 +19,11 @@ window.nova_plugins.push({
    // opt_api_key_warn: true,
    // desc: '',
    _runtime: user_settings => {
+
+      // alt1 - https://greasyfork.org/en/scripts/1760-youtube-rss-feed
+      // alt2 - hhttps://greasyfork.org/en/scripts/412949-youtube-rss-feed
+      // alt3 - hhttps://greasyfork.org/en/scripts/32384-youtube-rss
+      // alt4 - hhttps://greasyfork.org/en/scripts/36357-youtube-copy-channel-rss-feed-url-to-clipboard
 
       const
          SELECTOR_ID = 'nova-rss-link',

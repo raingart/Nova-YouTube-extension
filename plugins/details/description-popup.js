@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pt': 'Seção de descrição no pop-up',
    'title:fr': 'Section de description dans la fenêtre contextuelle',
    'title:it': 'Sezione Descrizione nel popup',
-   'title:tr': 'Açılır pencerede açıklama bölümü',
+   // 'title:tr': 'Açılır pencerede açıklama bölümü',
    'title:de': 'Beschreibungsabschnitt im Popup',
    'title:pl': 'Opis w osobnym oknie',
    'title:ua': 'Розділ опису у спливаючому вікні',
@@ -134,30 +134,29 @@ window.nova_plugins.push({
             .then(textDateEl => {
                NOVA.waitElement('#title h1')
                   .then(async container => {
-                     await NOVA.waitUntil(() => textDateEl.textContent != oldDateText, 1000); // 1sec
-                     oldDateText = textDateEl.textContent;
-                     insertToHTML({ 'text': oldDateText, 'container': container });
-                  });
-               // Strategy 2
-               // const dataEl = document.getElementById(DATE_SELECTOR_ID);
-               // const
-               //    textDate = await NOVA.waitUntil(() => {
-               //       if ((text = [...descriptionEl.querySelectorAll('.bold.yt-formatted-string')]
-               //          // first 3 div. ex:
-               //          // [6,053 views] [Premiered] [Oct 8, 2022]
-               //          // [14,051 views] [] [Mar 2, 2017]
-               //          .slice(0, 3)
-               //          .map(e => e.textContent).join('').trim())
-               //          && text != oldDateText
-               //       ) {
-               //          // console.debug('1', oldDateText);
-               //          // console.debug('2', text);
-               //          oldDateText = text;
-               //          return text;
-               //       }
-               //    }, 1000); // 1sec
+                     await NOVA.waitUntil(() => {
+                        if (
+                           // Strategy 1
+                           // clear tags - "286K views 3 years ago #dualshock" But not link ex - https://www.youtube.com/watch?v=DQL6x_Lfbm4
+                           // (text = textDateEl.textContent?.split('#', 1)[0].trim())
 
-               // console.debug('textDate', textDate);
+                           // Strategy 2
+                           (text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]
+                              // first 3 div. ex:
+                              // [6,053 views] [Premiered] [Oct 8, 2022]
+                              // [14,051 views] [] [Mar 2, 2017]
+                              .slice(0, 3)
+                              .map(e => e.textContent).join('').trim())
+
+                           // common
+                           // speed test - https://jsbench.me/zvlbs2xht2/1
+                           && text && text != oldDateText
+                        ) {
+                           oldDateText = text;
+                           insertToHTML({ 'text': oldDateText, 'container': container });
+                        }
+                     }, 1000); // 1sec
+                  });
             });
 
          function insertToHTML({ text = '', container = required() }) {

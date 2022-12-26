@@ -12,7 +12,7 @@ window.nova_plugins.push({
    'title:pt': 'Adicionar ordem inversa da lista de reprodução',
    'title:fr': 'Ajouter un ordre de lecture inversé',
    'title:it': "Aggiungi il pulsante dell'ordine inverso della playlist",
-   'title:tr': 'Ekle düğmesi ters çalma listesi sırası',
+   // 'title:tr': 'Ekle düğmesi ters çalma listesi sırası',
    'title:de': 'Umgekehrte Playlist-Reihenfolge hinzufügen',
    'title:pl': 'Dodaj przycisk odtwarzania w odwrotnej kolejności',
    'title:ua': 'Кнопка додавання списку відтворення у зворотному порядку',

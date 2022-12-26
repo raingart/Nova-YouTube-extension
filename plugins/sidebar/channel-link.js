@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Corrigir links de canais na barra lateral',
    'title:fr': 'Correction des liens de chaîne dans la barre latérale',
    'title:it': 'Correggi i collegamenti ai canali nella barra laterale',
-   'title:tr': 'Kenar çubuğunda kanal bağlantılarını düzeltin',
+   // 'title:tr': 'Kenar çubuğunda kanal bağlantılarını düzeltin',
    'title:de': 'Korrigieren Sie die Kanallinks in der Seitenleiste',
    'title:pl': 'Napraw linki do kanałów na pasku bocznym',
    'title:ua': 'Виправити посилання на канали на бічній панелі',

@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Fixar jogador enquanto rola',
    'title:fr': 'Épingler le lecteur pendant le défilement',
    'title:it': 'Blocca il lettore durante lo scorrimento',
-   'title:tr': 'Kaydırırken oynatıcıyı sabitle',
+   // 'title:tr': 'Kaydırırken oynatıcıyı sabitle',
    'title:de': 'Pin-Player beim Scrollen',
    'title:pl': 'Przypnij odtwarzacz podczas przewijania',
    'title:ua': 'Закріпити відтворювач коли гортаєш сторінку',
@@ -388,6 +388,45 @@ window.nova_plugins.push({
          },
       };
 
+      /**
+      * Makes an elemenet draggable around the screen.
+      * @param {string} el Select an element from the DOM to become draggable
+      */
+      // function dragElement(el) {
+      //    let pos1 = pos2 = pos3 = pos4 = 0;
+
+      //    if (document.querySelector(".js-inject-header")) {
+      //       document.querySelector(".js-inject-header").onmousedown = dragMouseDown;
+
+      //    } else {
+      //       el.onmousedown = dragMouseDown;
+      //    }
+
+      //    function dragMouseDown(e) {
+      //       e = e || window.event;
+      //       e.preventDefault();
+      //       pos3 = e.clientX;
+      //       pos4 = e.clientY;
+      //       document.onmouseup = closeDragElement;
+      //       document.onmousemove = elementDrag;
+      //    }
+
+      //    function elementDrag(e) {
+      //       e = e || window.event;
+      //       e.preventDefault();
+      //       pos1 = pos3 - e.clientX;
+      //       pos2 = pos4 - e.clientY;
+      //       pos3 = e.clientX;
+      //       pos4 = e.clientY;
+      //       el.style.top = (el.offsetTop - pos2) + "px";
+      //       el.style.left = (el.offsetLeft - pos1) + "px";
+      //    }
+
+      //    function closeDragElement() {
+      //       document.onmouseup = document.onmousemove = null;
+      //    }
+      // }
+
    },
    options: {
       // player_pin_mode: {
@@ -422,7 +461,7 @@ window.nova_plugins.push({
          'label:pt': 'Tamanho do jogador',
          'label:fr': 'Taille du joueur',
          'label:it': 'Dimensioni del giocatore',
-         'label:tr': 'Oyuncu boyutu',
+         // 'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
          'label:pl': 'Rozmiar odtwarzacza',
          'label:ua': 'Розмір відтворювача',
@@ -436,7 +475,7 @@ window.nova_plugins.push({
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
          'title:it': 'Meno valore - dimensioni maggiori',
-         'title:tr': 'Daha az değer - daha büyük boyut',
+         // 'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          'title:pl': 'Mniejsza wartość - większy rozmiar',
          'title:ua': 'Менше значення - більший розмір',
@@ -458,7 +497,7 @@ window.nova_plugins.push({
          'label:pt': 'Posição do jogador',
          'label:fr': 'La position du joueur',
          'label:it': 'Posizione del giocatore',
-         'label:tr': 'Oyuncu pozisyonu',
+         // 'label:tr': 'Oyuncu pozisyonu',
          'label:de': 'Spielerposition',
          'label:pl': 'Pozycja odtwarzacza',
          'label:ua': 'Позиція відтворювача',

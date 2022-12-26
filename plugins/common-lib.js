@@ -418,9 +418,13 @@ const NOVA = {
                         sec = this.timeFormatTo.hmsToSec(timestamp),
                         timestampPos = line.indexOf(timestamp);
 
-                     if ((parentSource == 'comment'
-                        || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU)
-                     )
+                     // if ((parentSource == 'comment'
+                     //    || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU , https://www.youtube.com/watch?v=nkyXwDU97ms)
+                     // )
+                     //    // not in the middle of the line
+                     //    && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
+                     // ) {
+                     if ((sec > prevSec && sec < +video_duration)
                         // not in the middle of the line
                         && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                      ) {
@@ -485,6 +489,47 @@ const NOVA = {
    //    }
    // },
 
+   searchFilter({ keyword = required(), filter_selectors = required(), highlight_selector }) {
+      // console.debug('searchFilter:', ...arguments);
+      keyword = keyword.toString().toLowerCase();
+
+      document.body.querySelectorAll(filter_selectors)
+         .forEach(item => {
+            const
+               text = item.textContent,
+               // text = item.querySelector(highlight_selector).getAttribute('title'),
+               hasText = text?.toLowerCase().includes(keyword),
+               highlight = el => {
+                  // el.innerHTML = el.textContent
+                  el.innerHTML = el.innerHTML
+                     .replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  item.style.display = hasText ? '' : 'none'; // hide el out of search
+                  if (hasText && keyword) {
+                     highlightTerm({
+                        'target': el,
+                        'keyword': keyword,
+                        // 'highlightClass':,
+                     });
+                  }
+               };
+
+            (highlight_selector ? item.querySelectorAll(highlight_selector) : [item])
+               .forEach(highlight);
+         });
+
+      function highlightTerm({ target = required(), keyword = required(), highlightClass }) {
+         // console.debug('highlightTerm:', ...arguments);
+         const
+            content = target.innerHTML,
+            pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
+            highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
+            replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
+            marked = content.replaceAll(pattern, replaceWith);
+
+         return (target.innerHTML = marked) !== content;
+      }
+   },
+
    isMusic() {
       const
          CACHE_PREFIX = 'nova-music-type',
@@ -495,12 +540,12 @@ const NOVA = {
 
       if (storage = sessionStorage.getItem(cacheName)) {
          // console.debug(CACHE_PREFIX, 'cache:', storage);
-         return storage;
+         return JSON.parse(storage);
 
       } else {
          const state = checkType();
          // console.debug(CACHE_PREFIX, 'gen:', state);
-         sessionStorage.setItem(cacheName, state); // save
+         sessionStorage.setItem(cacheName, Boolean(state)); // save
          return state;
       }
 
@@ -537,7 +582,7 @@ const NOVA = {
             // 'Official Artist' badge
             || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
             // channelNameVEVO
-            || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA
+            || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
             // specific channel
             || ['MontageRock'].includes(channelName)
             // word
@@ -681,12 +726,12 @@ const NOVA = {
 
          const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
          // combine GET
-         const query = (request == 'videos' ? 'videos' : 'channels') + '?'
-            + Object.keys(params)
-               .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-               .join('&');
+         // const query = (request == 'videos' ? 'videos' : 'channels') + '?' +
+         const query = Object.keys(params)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+            .join('&');
 
-         const URL = `https://www.googleapis.com/youtube/v3/${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
+         const URL = `https://www.googleapis.com/youtube/v3/${request}?${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
          // console.debug('URL', URL);
          // request
          return await fetch(URL)

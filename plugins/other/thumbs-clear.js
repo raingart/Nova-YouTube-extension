@@ -13,11 +13,12 @@ window.nova_plugins.push({
    'title:pt': 'Limpar miniaturas',
    'title:fr': 'Effacer les vignettes',
    'title:it': 'Cancella miniature',
-   'title:tr': 'Küçük resimleri temizle',
+   // 'title:tr': 'Küçük resimleri temizle',
    'title:de': 'Miniaturansichten löschen',
    'title:pl': 'Wyczyść miniatury',
    'title:ua': 'Очистити мініатюри',
-   run_on_pages: 'home, results, feed, channel, watch',
+   run_on_pages: 'home, feed, channel, watch',
+   // run_on_pages: 'home, results, feed, channel, watch',
    // run_on_pages: 'all, -embed',
    section: 'other',
    desc: 'Replaces the predefined clickbait thumbnails',
@@ -29,7 +30,7 @@ window.nova_plugins.push({
    'desc:pt': 'Substitui a miniatura predefinida',
    // 'desc:fr': 'Remplace la vignette prédéfinie',
    'desc:it': 'Sostituisce la miniatura predefinita',
-   'desc:tr': 'Önceden tanımlanmış küçük resmi değiştirir',
+   // 'desc:tr': 'Önceden tanımlanmış küçük resmi değiştirir',
    'desc:de': 'Ersetzt das vordefinierte Thumbnail',
    'desc:pl': 'Zastępuje predefiniowaną miniaturkę',
    'desc:ua': 'Замінює попередньо визначені мініатюри клікбейти',
@@ -79,11 +80,13 @@ window.nova_plugins.push({
 
       NOVA.watchElements({
          selectors: [
-            '#thumbnail:not(.ytd-playlist-thumbnail):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])',
+            '#thumbnail:not(.ytd-playlist-thumbnail):not([class*=markers]):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])',
             'a:not([href*="/shorts/"]) img.video-thumbnail-img[src]:not([src*="qdefault_live.jpg"])'
          ],
          attr_mark: ATTR_MARK,
          callback: async img => {
+            if (NOVA.currentPage == 'results') return;
+
             // fix conflict with yt-flags
             if (window.yt?.config_?.DISABLE_YT_IMG_DELAY_LOADING
                && DISABLE_YT_IMG_DELAY_LOADING_default !== window.yt?.config_?.DISABLE_YT_IMG_DELAY_LOADING
@@ -210,7 +213,7 @@ window.nova_plugins.push({
          'label:pt': 'Carimbos de data e hora em miniatura',
          'label:fr': 'Horodatages des vignettes',
          'label:it': 'Timestamp in miniatura',
-         'label:tr': 'Küçük resim zaman damgaları',
+         // 'label:tr': 'Küçük resim zaman damgaları',
          'label:de': 'Thumbnail-Zeitstempel',
          'label:pl': 'Znaczniki czasowe miniatur',
          'label:ua': 'Мітки часу мініатюр',
@@ -223,7 +226,7 @@ window.nova_plugins.push({
          'title:pt': 'Mostrar miniatura da posição no tempo do vídeo',
          'title:fr': 'Afficher la vignette à partir de la position temporelle de la vidéo',
          'title:it': "Mostra la miniatura dalla posizione dell'ora del video",
-         'title:tr': 'Video zaman konumundan küçük resmi göster',
+         // 'title:tr': 'Video zaman konumundan küçük resmi göster',
          'title:de': 'Miniaturansicht von der Videozeitposition anzeigen',
          'title:pl': 'Pokaż miniaturkę z pozycji czasu wideo',
          'title:ua': 'Показати мініатюру з часової позиції відео',
@@ -238,7 +241,7 @@ window.nova_plugins.push({
                'label:pt': 'começar',
                'label:fr': 'le début',
                // 'label:it': '',
-               'label:tr': 'başlat',
+               // 'label:tr': 'başlat',
                'label:de': 'anfang',
                'label:pl': 'początek',
                'label:ua': 'початок',
@@ -253,7 +256,7 @@ window.nova_plugins.push({
                'label:pt': 'meio',
                'label:fr': 'ne pas',
                // 'label:it': '',
-               'label:tr': 'orta',
+               // 'label:tr': 'orta',
                'label:de': 'mitte',
                'label:pl': 'środek',
                'label:ua': 'середина',
@@ -268,7 +271,7 @@ window.nova_plugins.push({
                'label:pt': 'fim',
                'label:fr': 'finir',
                // 'label:it': '',
-               'label:tr': 'son',
+               // 'label:tr': 'son',
                'label:de': 'ende',
                'label:pl': 'koniec',
                'label:ua': 'кінець',
@@ -286,7 +289,7 @@ window.nova_plugins.push({
          'label:pt': 'Ocultar botões de sobreposição em uma miniatura',
          'label:fr': 'Masquer les boutons de superposition sur une vignette',
          'label:it': 'Nascondi pulsanti sovrapposti su una miniatura',
-         'label:tr': 'Küçük resimdeki bindirme düğmelerini gizle',
+         // 'label:tr': 'Küçük resimdeki bindirme düğmelerini gizle',
          'label:de': 'Überlagerungsschaltflächen auf einer Miniaturansicht ausblenden',
          'label:pl': 'Ukryj przyciski nakładki na miniaturce',
          'label:ua': 'Приховати кнопки на мініатюрі',
@@ -316,7 +319,7 @@ window.nova_plugins.push({
          'label:pt': 'Desativar a visualização de miniaturas ao passar o mouse',
          'label:fr': "Désactiver l'aperçu des vignettes au survol",
          'label:it': "Disabilita l'anteprima in miniatura al passaggio del mouse",
-         'label:tr': 'Fareyle üzerine gelindiğinde küçük resim önizlemesini devre dışı bırak',
+         // 'label:tr': 'Fareyle üzerine gelindiğinde küçük resim önizlemesini devre dışı bırak',
          'label:de': 'Deaktivieren Sie die Thumbnail-Vorschau beim Hover',
          'label:pl': 'Wyłącz podgląd miniatur po najechaniu myszką',
          'label:ua': 'Вимкнути попередній перегляд ескізів при наведенні',

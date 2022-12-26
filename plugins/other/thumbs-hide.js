@@ -12,7 +12,7 @@ window.nova_plugins.push({
    'title:pt': 'Filtragem de miniaturas',
    'title:fr': 'Filtrage des vignettes',
    'title:it': 'Filtraggio miniature',
-   'title:tr': 'Küçük resim filtreleme',
+   // 'title:tr': 'Küçük resim filtreleme',
    'title:de': 'Filtrowanie miniatur',
    'title:pl': 'Ukryj kilka miniatur',
    'title:ua': 'Фільтрування мініатюр',
@@ -67,7 +67,7 @@ window.nova_plugins.push({
                case 'channel':
                   thumbRemove.live();
                   thumbRemove.streamed();
-                  thumbRemove.shorts();
+                  // thumbRemove.shorts();
                   thumbRemove.premieres();
                   break;
 
@@ -231,7 +231,7 @@ window.nova_plugins.push({
          'label:pt': 'Ocultar shorts',
          'label:fr': 'Masquer les shorts',
          'label:it': 'Nascondi pantaloncini',
-         'label:tr': 'Şort Gizle',
+         // 'label:tr': 'Şort Gizle',
          'label:de': 'Shorts verstecken',
          'label:pl': 'Ukryj YouTube Shorts',
          'label:ua': 'Приховати прев`ю',
@@ -249,7 +249,7 @@ window.nova_plugins.push({
          'label:pt': 'Duração mínima em segundos',
          'label:fr': 'Durée minimale en secondes',
          'label:it': 'Meno durata in sec',
-         'label:tr': 'Saniye cinsinden minimum süre',
+         // 'label:tr': 'Saniye cinsinden minimum süre',
          'label:de': 'Mindestdauer in Sekunden',
          'label:pl': 'Poniżej czasu trwania w sekundach',
          'label:ua': 'Мінімальна тривалість в секундах',
@@ -307,7 +307,7 @@ window.nova_plugins.push({
          'title:pt': 'Agora no ar',
          'title:fr': 'Diffusion en cours',
          'title:it': 'Ora in onda',
-         'title:tr': 'Şimdi yayınlanıyor',
+         // 'title:tr': 'Şimdi yayınlanıyor',
          'title:de': 'Jetzt Lüften',
          'title:pl': 'Teraz wietrzenie',
          'title:ua': 'Зараз в ефірі',
@@ -323,7 +323,7 @@ window.nova_plugins.push({
          'label:pt': 'Ocultar streams concluídos',
          'label:fr': 'Masquer les flux terminés',
          'label:it': 'Nascondi i flussi finiti',
-         'label:tr': 'Bitmiş akışları gizle',
+         // 'label:tr': 'Bitmiş akışları gizle',
          'label:de': 'Fertige Streams ausblenden',
          'label:pl': 'Ukryj po streamie',
          'label:ua': 'Сховати завершені трансляції',
@@ -342,7 +342,7 @@ window.nova_plugins.push({
          'label:pt': "Ocultar miniaturas de 'Mix'",
          'label:fr': 'Masquer les vignettes "Mix"',
          'label:it': 'Nascondi le miniature "Mix".',
-         'label:tr': "'Karıştır' küçük resimlerini gizle",
+         // 'label:tr': "'Karıştır' küçük resimlerini gizle",
          'label:de': '„Mix“-Thumbnails ausblenden',
          'label:pl': 'Ukryj miniaturki "Mix"',
          'label:ua': 'Приховати мікс мініатюр',
@@ -355,7 +355,7 @@ window.nova_plugins.push({
          'title:es': '[Mix] ofrece volver a ver lo que ya vio',
          'title:pt': '[Mix] se oferece para rever o que já viu',
          'title:it': '[Mix] si offre di rivedere ciò che ha già visto',
-         'title:tr': '[Mix], daha önce görmüş olanı yeniden izlemeyi teklif ediyor',
+         // 'title:tr': '[Mix], daha önce görmüş olanı yeniden izlemeyi teklif ediyor',
          'title:de': '[Mix] bietet an, bereits Gesehenes noch einmal anzuschauen',
          'title:pl': '[Mix] proponuje ponowne obejrzenie już obejrzanych filmów',
          'title:ua': '[Mix] пропонує передивитися вже побачене',

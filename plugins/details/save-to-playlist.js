@@ -78,7 +78,7 @@ window.nova_plugins.push({
          ['change', 'keyup'].forEach(evt => {
             searchInput
                .addEventListener(evt, function () {
-                  searchFilter({
+                  NOVA.searchFilter({
                      'keyword': this.value,
                      'filter_selectors': 'ytd-playlist-add-to-option-renderer',
                      'highlight_selector': '#label'
@@ -94,45 +94,6 @@ window.nova_plugins.push({
          container.prepend(searchInput);
       };
 
-      function searchFilter({ keyword = required(), filter_selectors = required(), highlight_selector }) {
-         // console.debug('searchFilter:', ...arguments);
-         keyword = keyword.toString().toLowerCase();
-
-         document.body.querySelectorAll(filter_selectors)
-            .forEach(item => {
-               const
-                  text = item.textContent,
-                  // text = item.querySelector(highlight_selector).getAttribute('title'),
-                  hasText = text?.toLowerCase().includes(keyword),
-                  highlight = el => {
-                     // el.innerHTML = el.textContent.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
-                     item.style.display = hasText ? '' : 'none'; // hide el out of search
-                     // if (hasText && keyword) {
-                     //    highlightTerm({
-                     //       'target': el,
-                     //       'keyword': keyword,
-                     //       // 'highlightClass':,
-                     //    });
-                     // }
-                  };
-
-               (highlight_selector ? item.querySelectorAll(highlight_selector) : [item])
-                  .forEach(highlight);
-            });
-
-         // function highlightTerm({ target = required(), keyword = required(), highlightClass }) {
-         //    // console.debug('highlightTerm:', ...arguments);
-         //    const
-         //       content = target.innerHTML,
-         //       pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
-         //       highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
-         //       replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
-         //       marked = content.replaceAll(pattern, replaceWith);
-
-         //    return (target.innerHTML = marked) !== content;
-         // }
-      }
-
    },
    options: {
       save_to_playlist_sort: {
@@ -146,7 +107,7 @@ window.nova_plugins.push({
          'label:pt': 'Classificação padrão em ordem alfabética',
          'label:fr': 'Tri par défaut par ordre alphabétique',
          'label:it': 'Ordinamento predefinito in ordine alfabetico',
-         'label:tr': 'Alfabetik olarak varsayılan sıralama',
+         // 'label:tr': 'Alfabetik olarak varsayılan sıralama',
          'label:de': 'Standardsortierung alphabetisch',
          'label:pl': 'Domyślne sortowanie alfabetyczne',
          'label:ua': 'Сортування за замовчуванням за алфавітом',

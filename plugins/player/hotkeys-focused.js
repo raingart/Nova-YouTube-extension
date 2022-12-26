@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Teclas de atalho do jogador sempre ativas',
    'title:fr': 'Les raccourcis clavier du joueur sont toujours actifs',
    'title:it': 'Tasti di scelta rapida del giocatore sempre attivi',
-   'title:tr': 'Oyuncu kısayol tuşları her zaman etkin',
+   // 'title:tr': 'Oyuncu kısayol tuşları her zaman etkin',
    'title:de': 'Player-Hotkeys immer aktiv',
    'title:pl': 'Klawisze skrótów dla graczy zawsze aktywne',
    'title:ua': 'Гарячі клавіші відтворювача завжди активні',

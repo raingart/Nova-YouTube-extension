@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'title:pt': 'Controle de velocidade de reprodução',
    'title:fr': 'Contrôle de la vitesse de lecture',
    'title:it': 'Controllo della velocità di riproduzione',
-   'title:tr': 'Oynatma hızı kontrolü',
+   // 'title:tr': 'Oynatma hızı kontrolü',
    'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    'title:pl': 'Kontrola prędkości odtwarzania',
    'title:ua': 'Контроль швидкості відтворення',
@@ -34,11 +34,13 @@ window.nova_plugins.push({
    'desc:pt': 'Com roda do mouse',
    'desc:fr': 'Avec molette de la souris',
    'desc:it': 'Con rotellina del mouse',
-   'desc:tr': 'Fare tekerleği ile',
+   // 'desc:tr': 'Fare tekerleği ile',
    'desc:de': 'Mit mausrad',
    'desc:pl': 'Za pomocą kółka myszy',
    'desc:ua': 'За допомогою колеса мишки',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/421610-youtube-speed-up
 
       // NOVA.waitElement('#movie_player')
       //    .then(movie_player => {
@@ -260,6 +262,7 @@ window.nova_plugins.push({
          }
       }
 
+      // alt - https://greasyfork.org/en/scripts/433222-improved-speed-slider-for-youtube-fix
       function renderSlider() {
          const
             SELECTOR_ID = 'nova-rate-slider-menu',
@@ -354,12 +357,12 @@ window.nova_plugins.push({
          'label:zh': '启动速度',
          'label:ja': '起動時の速度',
          'label:ko': '시작 시 속도',
-         'label:id': '',
+         'label:id': 'Kecepatan saat startup',
          'label:es': 'Velocidad al inicio',
          'label:pt': 'Velocidade na inicialização',
          'label:fr': 'Rapidité au démarrage',
-         'label:it': '',
-         'label:tr': 'Başlangıçta hız',
+         'label:it': "Velocità all'avvio",
+         // 'label:tr': 'Başlangıçta hız',
          'label:de': 'Geschwindigkeit beim Start',
          'label:pl': 'Prędkość przy uruchamianiu',
          'label:ua': 'Звичайна швидкість',
@@ -382,7 +385,7 @@ window.nova_plugins.push({
          'label:pt': 'Gênero musical',
          'label:fr': 'Genre de musique',
          'label:it': 'Genere musicale',
-         'label:tr': 'Müzik tarzı',
+         // 'label:tr': 'Müzik tarzı',
          'label:de': 'Musikrichtung',
          'label:pl': 'Gatunek muzyczny',
          'label:ua': 'Жарн музики',
@@ -395,7 +398,7 @@ window.nova_plugins.push({
          'title:pt': 'Detecção estendida - pode disparar falsamente',
          'title:fr': 'Détection étendue - peut se déclencher par erreur',
          'title:it': 'Rilevamento esteso - potrebbe attivarsi in modo errato',
-         'title:tr': 'Genişletilmiş algılama - yanlış tetiklenebilir',
+         // 'title:tr': 'Genişletilmiş algılama - yanlış tetiklenebilir',
          'title:de': 'Erweiterte Erkennung - kann fälschlicherweise auslösen',
          'title:pl': 'Rozszerzona detekcja - może działać błędnie',
          'title:ua': 'Розширене виявлення - може спрацювати помилково',
@@ -410,7 +413,7 @@ window.nova_plugins.push({
                'label:pt': 'pular',
                'label:fr': 'sauter',
                // 'label:it': '',
-               'label:tr': 'atlamak',
+               // 'label:tr': 'atlamak',
                'label:de': 'überspringen',
                // 'label:pl': '',
                'label:ua': 'пропустити',
@@ -425,7 +428,7 @@ window.nova_plugins.push({
                'label:pt': 'pular (estendido)',
                'label:fr': 'sauter (étendu)',
                // 'label:it': '',
-               'label:tr': 'atlamak (genişletilmiş)',
+               // 'label:tr': 'atlamak (genişletilmiş)',
                'label:de': 'überspringen (erweitert)',
                // 'label:pl': '',
                'label:ua': 'пропустити (розширено)',
@@ -440,7 +443,7 @@ window.nova_plugins.push({
                'label:pt': 'aplicar força',
                'label:fr': 'appliquer la force',
                // 'label:it': '',
-               'label:tr': 'zorlamak',
+               // 'label:tr': 'zorlamak',
                'label:de': 'kraft anwenden',
                // 'label:pl': '',
                'label:ua': 'примусово активувати',
@@ -459,7 +462,7 @@ window.nova_plugins.push({
          'label:pt': 'Degrau',
          'label:fr': 'Étape',
          'label:it': 'Fare un passo',
-         'label:tr': 'Adım',
+         // 'label:tr': 'Adım',
          'label:de': 'Schritt',
          'label:pl': 'Krok',
          'label:ua': 'Крок',
@@ -482,7 +485,7 @@ window.nova_plugins.push({
          'label:pt': 'Tecla de atalho',
          'label:fr': 'Raccourci',
          'label:it': 'Tasto di scelta rapida',
-         'label:tr': 'Kısayol tuşu',
+         // 'label:tr': 'Kısayol tuşu',
          'label:de': 'Schnelltaste',
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',

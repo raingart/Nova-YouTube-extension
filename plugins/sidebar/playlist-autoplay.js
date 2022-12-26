@@ -12,7 +12,7 @@ window.nova_plugins.push({
    'title:pt': 'Controle de reprodução automática da lista de reprodução',
    'title:fr': 'Contrôle de lecture automatique de la liste de lecture',
    'title:it': 'Pulsante di controllo della riproduzione automatica della playlist',
-   'title:tr': 'Oynatma listesi otomatik oynatma kontrolü',
+   // 'title:tr': 'Oynatma listesi otomatik oynatma kontrolü',
    'title:de': 'Steuerung der automatischen Wiedergabe von Wiedergabelisten',
    'title:pl': 'Kontrola autoodtwarzania listy odtwarzania',
    'title:ua': 'Кнопка керування автовідтворенням',
@@ -22,7 +22,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/415542-youtube-prevent-playlist-autoplay
+      // alt1 - https://greasyfork.org/en/scripts/415542-youtube-prevent-playlist-autoplay
+      // alt2 - https://greasyfork.org/en/scripts/375429-youtube-disable-playlist-autoplay
 
       if (window.nova_playlistReversed) return; // conflict with plugin
 
@@ -144,7 +145,7 @@ window.nova_plugins.push({
          'label:pt': 'Estado padrão',
          'label:fr': 'État par défaut',
          'label:it': 'Stato predefinito',
-         'label:tr': 'Varsayılan',
+         // 'label:tr': 'Varsayılan',
          'label:de': 'Standardzustand',
          'label:pl': 'Stan domyślny',
          'label:ua': 'Cтан за замовчуваням',

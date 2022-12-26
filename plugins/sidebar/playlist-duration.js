@@ -18,7 +18,7 @@ window.nova_plugins.push({
    'title:pt': 'Mostrar duração da lista de reprodução',
    'title:fr': 'Afficher la durée de la liste de lecture',
    'title:it': 'Mostra la durata della playlist',
-   'title:tr': 'Oynatma listesi süresini göster',
+   // 'title:tr': 'Oynatma listesi süresini göster',
    'title:de': 'Wiedergabelistendauer anzeigen',
    'title:pl': 'Pokaż czas trwania playlisty',
    'title:ua': 'Показувати тривалість списку відтворення',
@@ -28,8 +28,12 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/408966-display-remaining-youtube-playlist-time
+      // alt1 - https://greasyfork.org/en/scripts/408966-display-remaining-youtube-playlist-time
       // alt2 - https://greasyfork.org/en/scripts/407457-youtube-playlist-duration-calculator
+      // alt3 - https://greasyfork.org/en/scripts/439291-youtube-playlist-length
+      // alt4 - https://greasyfork.org/en/scripts/427936-youtube-playlist-duration
+      // alt5 - https://greasyfork.org/en/scripts/418188-youtube-playlist-total-duration
+      // alt6 - https://greasyfork.org/en/scripts/11712-youtube-playlist-time
 
       const
          SELECTOR_ID = 'nova-playlist-duration',
@@ -262,7 +266,7 @@ window.nova_plugins.push({
          'label:pt': 'Modo de exibição de tempo',
          'label:fr': "Mode d'affichage de l'heure",
          'label:it': "Modalità di visualizzazione dell'ora",
-         'label:tr': 'Zaman görüntüleme modu',
+         // 'label:tr': 'Zaman görüntüleme modu',
          'label:de': 'Zeitanzeigemodus',
          'label:pl': 'Tryb wyświetlania czasu',
          'label:ua': 'Режим відображення часу',
@@ -275,9 +279,9 @@ window.nova_plugins.push({
                // 'label:id': '',
                'label:es': 'hecho',
                'label:pt': 'feito',
-               'label:fr': 'regardé',
+                'label:fr': 'regardé',
                // 'label:it': '',
-               'label:tr': 'tamamlamak',
+               // 'label:tr': 'tamamlamak',
                'label:de': 'fertig',
                'label:pl': 'zakończone',
                'label:ua': 'завершено',
@@ -290,9 +294,9 @@ window.nova_plugins.push({
                // 'label:id': '',
                'label:es': 'izquierda',
                'label:pt': 'deixou',
-               'label:fr': 'à gauche',
+                'label:fr': 'à gauche',
                // 'label:it': '',
-               'label:tr': 'sola',
+               // 'label:tr': 'sola',
                'label:de': 'links',
                'label:pl': 'pozostało',
                'label:ua': 'залишилось',
@@ -305,9 +309,9 @@ window.nova_plugins.push({
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
-               'label:fr': 'le total',
+                'label:fr': 'le total',
                // 'label:it': '',
-               'label:tr': 'toplam',
+               // 'label:tr': 'toplam',
                'label:de': 'gesamt',
                'label:pl': 'w sumie',
                'label:ua': 'загалом',
@@ -325,7 +329,7 @@ window.nova_plugins.push({
          'label:pt': 'Adicionar porcentagem',
          'label:fr': 'Ajouter un pourcentage',
          'label:it': 'Aggiungi percentuale',
-         'label:tr': 'Yüzde ekle',
+         // 'label:tr': 'Yüzde ekle',
          'label:de': 'Prozent hinzufügen',
          'label:pl': 'Pokaż procenty',
          'label:ua': 'Показати %',

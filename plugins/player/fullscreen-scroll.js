@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Desabilitar rolagem em tela cheia',
    'title:fr': 'Désactiver le défilement plein écran',
    'title:it': 'Disabilita lo scorrimento del lettore in modalità a schermo intero',
-   'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
+   // 'title:tr': 'Tam ekran kaydırmayı devre dışı bırak',
    'title:de': 'Deaktivieren Sie das Scrollen im Vollbildmodus',
    'title:pl': 'Wyłącz przewijanie w trybie pełnoekranowym',
    'title:ua': 'Вимкнути прокрутку у повноекранному режимі',

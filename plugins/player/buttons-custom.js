@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Botões personalizados',
    'title:fr': 'Boutons personnalisés',
    'title:it': 'Pulsanti personalizzati del giocatore',
-   'title:tr': 'Özel düğmeler',
+   // 'title:tr': 'Özel düğmeler',
    'title:de': 'Benutzerdefinierte Schaltflächen',
    'title:pl': 'Własne przyciski odtwarzacza',
    'title:ua': 'Власні кнопки відтворювання',
@@ -73,6 +73,10 @@ window.nova_plugins.push({
                   color: #fff;
                   font-weight: bold;
                   white-space: nowrap;
+               }
+               /* for embed */
+               html[data-cast-api-enabled] ${SELECTOR_BTN}[title]:hover::before {
+                  font-weight: normal;
                }`);
 
             // picture-in-picture player
@@ -138,11 +142,11 @@ window.nova_plugins.push({
                         <path d="M18 2H6v4H2v12h12v-4h4V2z M12 16H4V8h2v6h6V16z M16 12h-2h-2H8V8V6V4h8V12z" />
                      </g>
                   </svg>`;
-                  // `<svg viewBox="0 -1 38 38" height="100%" width="100%">
-                  //    <g fill="currentColor">
-                  //       <path d="M 27.020989,25.020001 H 9.0209895 v -14.05 L 20.278056,10.969089 20.27853,8.9999999 H 8.9544297 c -1.0730594,0 -1.9334402,0.9 -1.9334402,2.0000001 v 14 c 0,1.1 0.8603808,2 1.9334402,2 H 27.045569 c 1.063393,0 1.97421,-0.885891 1.968683,-1.985877 l 0.0018,-7.014124 h -1.991386 z m -4.80902,-16.0200011 -0.01053,1.9774681 3.525926,-0.0018 -9.547729,9.854341 1.363076,1.41 9.481183,-9.799226 v 3.59 l 1.993516,-0.0095 0.0039,-7.0250141 z" />
-                  //    </g>
-                  // </svg>`;
+               // `<svg viewBox="0 -1 38 38" height="100%" width="100%">
+               //    <g fill="currentColor">
+               //       <path d="M 27.020989,25.020001 H 9.0209895 v -14.05 L 20.278056,10.969089 20.27853,8.9999999 H 8.9544297 c -1.0730594,0 -1.9334402,0.9 -1.9334402,2.0000001 v 14 c 0,1.1 0.8603808,2 1.9334402,2 H 27.045569 c 1.063393,0 1.97421,-0.885891 1.968683,-1.985877 l 0.0018,-7.014124 h -1.991386 z m -4.80902,-16.0200011 -0.01053,1.9774681 3.525926,-0.0018 -9.547729,9.854341 1.363076,1.41 9.481183,-9.799226 v 3.59 l 1.993516,-0.0095 0.0039,-7.0250141 z" />
+               //    </g>
+               // </svg>`;
                popupBtn.addEventListener('click', () => {
                   const
                      // width = window.innerWidth / 2,
@@ -424,6 +428,7 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('watch-later')) {
+               // alt https://openuserjs.org/scripts/zachhardesty7/YouTube_-_Add_Watch_Later_Button
 
                NOVA.waitElement('.ytp-watch-later-button')
                   .then(watchLaterDefault => {
@@ -731,7 +736,7 @@ window.nova_plugins.push({
          'label:pt': 'Botões',
          'label:fr': 'Boutons',
          'label:it': 'Bottoni',
-         'label:tr': 'Düğmeler',
+         // 'label:tr': 'Düğmeler',
          'label:de': 'Tasten',
          'label:pl': 'Przyciski',
          'label:ua': 'Кнопки',
@@ -744,7 +749,7 @@ window.nova_plugins.push({
          'title:pt': '[Ctrl+Click] para selecionar vários',
          'title:fr': '[Ctrl+Click] pour sélectionner plusieurs',
          'title:it': '[Ctrl+Clic] per selezionarne diversi',
-         'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
+         // 'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
          'title:de': '[Ctrl+Click] um mehrere auszuwählen',
          'title:pl': 'Ctrl+kliknięcie, aby zaznaczyć kilka',
          'title:ua': '[Ctrl+Click] щоб обрати декілька',
@@ -757,12 +762,12 @@ window.nova_plugins.push({
                'label:zh': '质量',
                'label:ja': '品質',
                'label:ko': '품질',
-               // 'label:id': '',
+               'label:id': 'kualitas',
                'label:es': 'calidad',
                'label:pt': 'qualidade',
                'label:fr': 'qualité',
-               // 'label:it': '',
-               'label:tr': 'hızlı kalite',
+               'label:it': 'qualità',
+               // 'label:tr': 'hızlı kalite',
                'label:de': 'qualität',
                'label:pl': 'jakość',
                'label:ua': 'якість',
@@ -772,12 +777,12 @@ window.nova_plugins.push({
                'label:zh': '切换速度',
                'label:ja': 'トグル速度',
                'label:ko': '토글 속도',
-               // 'label:id': '',
+               'label:id': 'beralih kecepatan',
                'label:es': 'alternar velocidad',
                'label:pt': 'velocidade de alternância',
                'label:fr': 'basculer la vitesse',
-               // 'label:it': '',
-               'label:tr': 'geçiş hızı',
+               'label:it': 'alternare la velocità',
+               // 'label:tr': 'geçiş hızı',
                'label:de': 'geschwindigkeit umschalten',
                'label:pl': 'szybkość',
                'label:ua': 'швидкість',
@@ -787,12 +792,12 @@ window.nova_plugins.push({
                'label:zh': '截屏',
                'label:ja': 'スクリーンショット',
                'label:ko': '스크린샷',
-               // 'label:id': '',
+               'label:id': 'tangkapan layar',
                'label:es': 'captura de pantalla',
                'label:pt': 'captura de tela',
                'label:fr': "capture d'écran",
-               // 'label:it': '',
-               'label:tr': 'ekran görüntüsü',
+               'label:it': 'immagine dello schermo',
+               // 'label:tr': 'ekran görüntüsü',
                'label:de': 'bildschirmfoto',
                // 'label:pl': 'screenshot'
                'label:ua': 'фото екрану',
@@ -808,7 +813,7 @@ window.nova_plugins.push({
                // 'label:fr': '',
                // 'label:it': '',
                // 'label:tr': '',
-               // 'label:de': ''
+               // 'label:de': '',
                'label:pl': 'obraz w obrazie',
                'label:ua': 'картинка в картинці',
             },
@@ -817,13 +822,13 @@ window.nova_plugins.push({
                'label:zh': '弹出式播放器',
                'label:ja': 'ポップアッププレーヤー',
                'label:ko': '썸네일',
-               // 'label:id': '',
+               'label:id': 'muncul',
                // 'label:es': 'jugadora emergente',
                'label:pt': 'jogador pop-up',
                'label:fr': 'lecteur contextuel',
-               // 'label:it': '',
-               'label:tr': 'pop-up oynatıcı',
-               // 'label:de': ''
+               'label:it': 'apparire',
+               // 'label:tr': 'pop-up oynatıcı',
+               'label:de': 'auftauchen',
                'label:pl': 'w okienku',
                'label:ua': 'спливаюче повідомлення',
             },
@@ -832,12 +837,12 @@ window.nova_plugins.push({
                'label:zh': '旋转',
                'label:ja': '回転する',
                'label:ko': '회전',
-               // 'label:id': '',
+               'label:id': 'memutar',
                'label:es': 'girar',
                'label:pt': 'girar',
                'label:fr': 'tourner',
-               // 'label:it': '',
-               'label:tr': 'döndürmek',
+               'label:it': 'ruotare',
+               // 'label:tr': 'döndürmek',
                'label:de': 'drehen',
                'label:pl': 'obróć',
                'label:ua': 'повернути',
@@ -862,12 +867,12 @@ window.nova_plugins.push({
                'label:zh': '缩略图',
                'label:ja': 'サムネイル',
                'label:ko': '썸네일',
-               // 'label:id': '',
+               // 'label:id': 'miniatura',
                'label:es': 'miniatura',
                'label:pt': 'captura de tela',
                'label:fr': 'la vignette',
-               // 'label:it': '',
-               'label:tr': 'küçük resim',
+               'label:it': 'miniatura',
+               // 'label:tr': 'küçük resim',
                'label:de': 'bildschirmfoto',
                'label:pl': 'miniaturka',
                'label:ua': 'мініатюра',
@@ -885,7 +890,7 @@ window.nova_plugins.push({
          'label:pt': 'Proporção do tamanho da janela do jogador',
          'label:fr': "Rapport d'aspect de la taille de la fenêtre du lecteur",
          'label:it': 'Proporzioni della dimensione della finestra del lettore',
-         'label:tr': 'Oyuncu penceresi boyutu en boy oranı',
+         // 'label:tr': 'Oyuncu penceresi boyutu en boy oranı',
          'label:de': 'Seitenverhältnis der Player-Fenstergröße',
          'label:pl': 'Rozmiar okna odtwarzacza',
          'label:ua': 'Співвідношення розміру вікна відтворювача',
@@ -899,7 +904,7 @@ window.nova_plugins.push({
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
          'title:it': 'Meno valore - dimensioni maggiori',
-         'title:tr': 'Daha az değer - daha büyük boyut',
+         // 'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          'title:pl': 'Mniejsza wartość - większy rozmiar',
          'title:ua': 'Менше значення - більший розмір',
@@ -922,7 +927,7 @@ window.nova_plugins.push({
          'label:pt': 'Velocidade de alternância da tecla de atalho',
          'label:fr': 'Vitesse de basculement des raccourcis clavier',
          'label:it': 'Tasto di scelta rapida per attivare/disattivare la velocità',
-         'label:tr': 'Kısayol geçiş hızı',
+         // 'label:tr': 'Kısayol geçiş hızı',
          'label:de': 'Hotkey-Umschaltgeschwindigkeit',
          'label:pl': 'Skrót przełączania prędkości',
          'label:ua': 'Гаряча клавіша увімкнути швидкість',

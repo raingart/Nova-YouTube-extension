@@ -9,12 +9,11 @@ window.nova_plugins.push({
    'title:pt': 'Decapitalize o título das miniaturas',
    'title:fr': 'Démajuscule le titre des vignettes',
    'title:it': 'Decapitalizza il titolo delle miniature',
-   'title:tr': 'Küçük resim başlığının büyük harflerini kaldır',
+   // 'title:tr': 'Küçük resim başlığının büyük harflerini kaldır',
    'title:de': 'Thumbnails-Titel entfernen',
    'title:pl': 'Zmniejsz czcionkę w tytule miniatur',
    'title:ua': 'Завжди маленькі літери для назв мініатюр',
-   run_on_pages: 'home, feed, channel, watch, -results',
-   // run_on_pages: 'home, results, feed, channel, watch',
+   run_on_pages: 'home, feed, channel, watch',
    // run_on_pages: 'all, -embed, -results',
    section: 'other',
    desc: 'Upper Case thumbnails title back to normal',
@@ -69,6 +68,9 @@ window.nova_plugins.push({
          selectors: VIDEO_TITLE_SELECTOR,
          attr_mark: ATTR_MARK,
          callback: title => {
+            // if (['home, feed, channel, watch'].includes(NOVA.currentPage)) return;
+            if (NOVA.currentPage == 'results') return;
+
             let countCaps = 0;
 
             if (user_settings.thumbnails_title_clear_emoji) { // need before count
@@ -104,7 +106,7 @@ window.nova_plugins.push({
          'label:pt': 'Mostrar título completo',
          'label:fr': 'Afficher le titre complet',
          'label:it': 'Mostra il titolo completo',
-         'label:tr': 'Tam başlığı göster',
+         // 'label:tr': 'Tam başlığı göster',
          'label:de': 'Vollständigen Titel anzeigen',
          'label:pl': 'Pokaż pełny tytuł',
          'label:ua': 'Показати повну назву',
@@ -121,7 +123,7 @@ window.nova_plugins.push({
          'label:pt': 'Máximo de palavras em maiúsculas',
          'label:fr': 'Mots maximum en majuscules',
          'label:it': 'Max parole in maiuscolo',
-         'label:tr': 'Büyük harfli maksimum kelime',
+         // 'label:tr': 'Büyük harfli maksimum kelime',
          'label:de': 'Maximale Wörter in Großbuchstaben',
          'label:pl': 'Maksymalna liczba słów pisanych wielkimi literami',
          'label:ua': 'Максимальна кількість слів ВЕЛИКИМИ літерами',
@@ -143,7 +145,7 @@ window.nova_plugins.push({
          'label:pt': 'Limpar emoji',
          'label:fr': 'Emoji clair',
          'label:it': 'Emoji trasparenti',
-         'label:tr': 'Emojiyi temizle',
+         // 'label:tr': 'Emojiyi temizle',
          'label:de': 'Emoji löschen',
          'label:pl': 'Usuń emoji',
          'label:ua': 'Очистити емодзі',

@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:pt': 'Sem rolar para o jogador em timestamps',
    'title:fr': 'Pas de défilement vers le joueur sur les horodatages',
    'title:it': 'Nessun passaggio al giocatore sui timestamp',
-   'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
+   // 'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
    'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
    'title:pl': 'Brak przejścia do odtwarzacza na znacznikach czasu',
    'title:ua': 'Немає прокрутки до відтворювача на часових мітках',
