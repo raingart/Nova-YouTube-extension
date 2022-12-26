@@ -35,7 +35,7 @@ landerPlugins();
 
 function isOptionsPage() {
    // GM_registerMenuCommand('Settings', () => window.open(optionsPage));
-   GM_registerMenuCommand('Settings', () => GM_openInTab(optionsPage, { active: true }));
+   GM_registerMenuCommand('Settings', () => GM_openInTab(optionsPage));
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
       d.style.display = 'none';
@@ -121,7 +121,7 @@ function isOptionsPage() {
       user_settings['report_issues'] = 'on'; // default plugins settings
       GM_setValue(configStoreName, user_settings);
       // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
-      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(optionsPage, { active: true });
+      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(optionsPage);
 
    } else { // is not optionsPage
       return false;
@@ -264,8 +264,7 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
          '?entry.35504208=' + encodeURIComponent(trace_name) +
          '&entry.151125768=' + encodeURIComponent(err_stack) +
          '&entry.744404568=' + encodeURIComponent(location.href) +
-         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
-         , { active: true });
+         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']'));
       // , '_blank');
    }
 };

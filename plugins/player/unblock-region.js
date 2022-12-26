@@ -20,7 +20,7 @@ window.nova_plugins.push({
    'title:pt': 'Tente desbloquear vídeos para sua região',
    'title:fr': 'Débloquer la vidéo de la région',
    'title:it': 'Prova a sbloccare se il video non è disponibile nel tuo paese',
-   'title:tr': 'Bölgeniz için videoların engellemesini kaldırmayı deneyin',
+   // 'title:tr': 'Bölgeniz için videoların engellemesini kaldırmayı deneyin',
    'title:de': 'Versuchen Sie, Videos für Ihre Region zu entsperren',
    'title:pl': 'Spróbuj odblokować, jeśli film nie jest dostępny w Twoim kraju',
    'title:ua': 'Спробувати розблокувати якщо відео не доступне у країні',

@@ -15,7 +15,7 @@ window.nova_plugins.push({
    'title:pt': 'A guia padrão na página do canal',
    'title:fr': 'Onglet par défaut sur la page de la chaîne',
    'title:it': 'Scheda predefinita nella pagina del canale',
-   'title:tr': 'Kanal sayfasındaki varsayılan sekme',
+   // 'title:tr': 'Kanal sayfasındaki varsayılan sekme',
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    'title:pl': 'Domyślna karta na stronie kanału',
    'title:ua': 'Вкладка за умовчанням на сторінці каналу',
@@ -27,6 +27,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
+      // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
 
       const [page, channelTab] = location.pathname.split('/').filter(Boolean);
 
@@ -82,12 +83,12 @@ window.nova_plugins.push({
          'label:zh': '默认标签页',
          'label:ja': 'デフォルトのタブ',
          'label:ko': '기본 탭',
-         'label:id': '',
+         'label:id': 'tab bawaan',
          'label:es': 'Ficha predeterminada',
          'label:pt': 'Aba padrão',
          'label:fr': 'Onglet par défaut',
-         'label:it': '',
-         'label:tr': 'Varsayılan sekme',
+         'label:it': 'Scheda predefinita',
+         // 'label:tr': 'Varsayılan sekme',
          'label:de': 'Standard-Tab',
          'label:pl': 'Domyślna karta',
          'label:ua': 'Вкладка за умовчанням',
@@ -120,7 +121,7 @@ window.nova_plugins.push({
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
          'label:it': 'Modalità',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
@@ -133,7 +134,7 @@ window.nova_plugins.push({
          'title:pt': 'O redirecionamento é mais seguro, mas mais lento',
          'title:fr': 'La redirection est plus sûre mais plus lente',
          'title:it': 'Il reindirizzamento è più sicuro ma più lento',
-         'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
+         // 'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
          'title:de': 'Redirect ist sicherer, aber langsamer',
          'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
          'title:ua': 'Перенаправлення безпечніше, але повільніше',

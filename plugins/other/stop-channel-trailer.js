@@ -12,7 +12,7 @@ window.nova_plugins.push({
    'title:pt': 'Parar o trailer do canal',
    'title:fr': 'Arrêter la bande-annonce de la chaîne',
    'title:it': 'Interrompi il trailer del canale',
-   'title:tr': 'Kanal fragmanını durdur',
+   // 'title:tr': 'Kanal fragmanını durdur',
    'title:de': 'Kanaltrailer stoppen',
    'title:pl': 'Zatrzymaj zwiastun kanału',
    'title:ua': 'Не відтворювати трейлер каналу',

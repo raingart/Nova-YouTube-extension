@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Seção de comentários no pop-up',
    'title:fr': 'Section des commentaires dans la fenêtre contextuelle',
    'title:it': 'Sezione commenti nel popup',
-   'title:tr': 'Açılır pencerede yorumlar bölümü',
+   // 'title:tr': 'Açılır pencerede yorumlar bölümü',
    'title:de': 'Kommentarbereich im Popup',
    'title:pl': 'Sekcja komentarzy w osobnym oknie',
    'title:ua': 'Розділ коментарів у спливаючому вікні',

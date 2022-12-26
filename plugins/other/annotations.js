@@ -47,14 +47,16 @@ window.nova_plugins.push({
 
                // results page
                // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // ad buy
-               'ytd-search-pyv-renderer', // fix blank space (https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
+               'ytd-search-pyv-renderer', // fix blank space - https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
 
-               '[class^="ytd-promoted-"]', // suggest site (https://www.youtube.com/results?search_query=mmersive+Simmulator)
+               '[class^="ytd-promoted-"]', // suggest site - https://www.youtube.com/results?search_query=mmersive+Simmulator
                // '.ytd-promoted-sparkles-text-search-renderer', // suggest something (I do not remember)
                // 'ytd-search-pyv-renderer ytd-promoted-video-renderer', // suggest ad-video
 
-               'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block (alt - https://greasyfork.org/en/scripts/454513-youtube-search-results-cleaner)
+               'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block - https://greasyfork.org/en/scripts/454513-youtube-search-results-cleaner
                // 'ytd-video-renderer + ytd-horizontal-card-list-renderer', // "People also search for" block
+
+               'ytd-video-renderer + ytd-reel-shelf-renderer', // Shorts - https://www.youtube.com/results?search_query=+WE+DON%27T+HAVE+TO+TAKE+OUR+CLOTHES+OFF
 
 
                // watch page
@@ -70,7 +72,7 @@ window.nova_plugins.push({
 
 
                // results, sidebar page
-               '.sparkles-light-cta', // ad buy (https://www.youtube.com/results?search_query=Canon+Pixma+MG2520)
+               '.sparkles-light-cta', // ad buy - https://www.youtube.com/results?search_query=Canon+Pixma+MG2520
 
 
                // home, watch page

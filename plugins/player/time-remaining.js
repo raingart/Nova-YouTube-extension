@@ -12,7 +12,7 @@ window.nova_plugins.push({
    'title:pt': 'Tempo restante',
    'title:fr': 'Temps restant',
    'title:it': 'Tempo rimanente',
-   'title:tr': 'Kalan süre',
+   // 'title:tr': 'Kalan süre',
    'title:de': 'Verbleibende Zeit',
    'title:pl': 'Pozostały czas',
    'title:ua': 'Час, що залишився',
@@ -27,11 +27,13 @@ window.nova_plugins.push({
    'desc:pt': 'Tempo restante até o final do vídeo',
    'desc:fr': "Temps restant jusqu'à la fin de la vidéo",
    'desc:it': 'Tempo rimanente fino alla fine del video',
-   'desc:tr': 'Videonun sonuna kalan süre',
+   // 'desc:tr': 'Videonun sonuna kalan süre',
    'desc:de': 'Verbleibende Zeit bis zum Ende des Videos',
    'desc:pl': 'Czas pozostały do końca filmu',
    'desc:ua': 'Час, що залишився до кінця відео',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/432706-youtube-speeder
 
       const SELECTOR_ID = 'nova-player-time-remaining';
 
@@ -116,7 +118,7 @@ window.nova_plugins.push({
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
          'label:it': 'Modalità',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          'label:ua': 'Режим',

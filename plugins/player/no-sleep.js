@@ -11,7 +11,7 @@ window.nova_plugins.push({
    'title:pt': 'Jogador permanece ativo para sempre',
    'title:fr': 'Le joueur reste actif pour toujours',
    'title:it': 'Il giocatore resta attivo per sempre',
-   'title:tr': 'Sayfa uykusunu devre dışı bırak',
+   // 'title:tr': 'Sayfa uykusunu devre dışı bırak',
    'title:de': 'Spieler bleiben für immer aktiv',
    'title:pl': 'Wyłącz tryb uśpienia odtwarzacza',
    'title:ua': 'Вимкнути режим сну відтворювача',

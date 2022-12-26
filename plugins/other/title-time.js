@@ -9,7 +9,7 @@ window.nova_plugins.push({
    'title:pt': 'Mostrar tempo no título da guia',
    'title:fr': "Afficher l'heure dans le titre de l'onglet",
    'title:it': "Mostra l'ora nel titolo della scheda",
-   'title:tr': 'Sekme başlığında zamanı göster',
+   // 'title:tr': 'Sekme başlığında zamanı göster',
    'title:de': 'Zeit im Tab-Titel anzeigen',
    'title:pl': 'Pokaż czas w tytule karty',
    'title:ua': 'Відображення часу в заголовку вкладки',
@@ -42,8 +42,9 @@ window.nova_plugins.push({
             if (this.backup
                || movie_player.getVideoData().isLive // live
                || movie_player.classList.contains('ad-showing') // ad-video
-               || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|',
-                  '\\|')})`, '').test(document.title) // title has time "0:00:00${this.strSplit}"
+               || document.title.includes(strSplit) // less accurate but more speed up
+               // || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|', '\\|')})`, '')
+               // .test(document.title) // title has time "0:00:00${this.strSplit}"
             ) {
                return;
             }
@@ -111,7 +112,7 @@ window.nova_plugins.push({
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
          'label:it': 'Modalità',
-         'label:tr': 'Mod',
+         // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
@@ -135,12 +136,12 @@ window.nova_plugins.push({
                'label:zh': '剩下',
                'label:ja': '左',
                'label:ko': '왼쪽',
-               // 'label:id': '',
+               'label:id': 'tetap',
                'label:es': 'izquierda',
                'label:pt': 'deixou',
                'label:fr': 'à gauche',
-               // 'label:it': '',
-               'label:tr': 'o ayrıldı',
+               'label:it': 'è rimasta',
+               // 'label:tr': 'o ayrıldı',
                'label:de': 'links',
                'label:pl': 'pozostało',
                'label:ua': 'лишилось',
@@ -150,12 +151,12 @@ window.nova_plugins.push({
                'label:zh': '现在/期间',
                'label:ja': '現在/期間',
                'label:ko': '현재/기간',
-               // 'label:id': '',
+               'label:id': 'saat ini/durasi',
                'label:es': 'actual/duración',
-               'label:pt': 'atual/duração'
-               , 'label:fr': 'courant/durée',
-               // 'label:it': '',
-               'label:tr': 'akım/süre',
+               'label:pt': 'atual/duração',
+               'label:fr': 'courant/durée',
+               'label:it': 'corrente/durata',
+               // 'label:tr': 'akım/süre',
                'label:de': 'strom/dauer',
                'label:pl': 'bieżący czas',
                'label:ua': 'поточний/тривалість',

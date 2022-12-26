@@ -12,7 +12,7 @@ window.nova_plugins.push({
    // 'title:pt': 'Volume',
    'title:fr': 'Le volume',
    // 'title:it': 'Volume',
-   'title:tr': 'Hacim',
+   // 'title:tr': 'Hacim',
    'title:de': 'Volumen',
    'title:pl': 'Głośność',
    'title:ua': 'Гучність',
@@ -28,11 +28,27 @@ window.nova_plugins.push({
    'desc:pt': 'Com roda do mouse',
    'desc:fr': 'Avec molette de la souris',
    'desc:it': 'Con rotellina del mouse',
-   'desc:tr': 'Fare tekerleği ile',
+   // 'desc:tr': 'Fare tekerleği ile',
    'desc:de': 'Mit mausrad',
    'desc:pl': 'Za pomocą kółka myszy',
    'desc:ua': 'З допомогою колеса мишки',
    _runtime: user_settings => {
+
+      // wheel
+      // alt1 - https://github.com/wdwind/YouTubeVolumeMouseController
+      // alt2 - https://greasyfork.org/en/scripts/376155-youtube-scroll-volume
+      // alt3 -https://greasyfork.org/en/scripts/376002-youtube-volume-mouse-controller
+
+      // hotkey
+      // alt - https://greasyfork.org/en/scripts/418121-yt-fixed
+
+      // volume curve
+      // alt1 - https://greasyfork.org/en/scripts/397686-youtube-music-fix-volume-ratio
+      // alt2 - https://greasyfork.org/en/scripts/404756-youtube-volume-curve-designer
+      // alt3 - https://greasyfork.org/en/scripts/426684-youtube-music-logarithmic-exponential-volume/code
+
+      // max level?
+      // https://greasyfork.org/en/scripts/427173-maximum-audio-output-for-youtube
 
       NOVA.waitElement('video')
          .then(video => {
@@ -99,6 +115,7 @@ window.nova_plugins.push({
             return newLevel === movie_player.getVolume() && newLevel;
          },
 
+         // alt - https://greasyfork.org/en/scripts/429143-auto-set-youtube-volume
          saveInSession(level = required()) {
             const storageData = {
                creation: Date.now(),
@@ -143,7 +160,7 @@ window.nova_plugins.push({
             }
             // console.debug('unlimit', this.node.gain.value);
          },
-
+         // alt - https://greasyfork.org/en/scripts/420723-youtube-better-player
          buildVolumeSlider(timeout_ms = 800) {
             if (volumeArea = movie_player?.querySelector('.ytp-volume-area')) {
                // reset hide
@@ -211,7 +228,7 @@ window.nova_plugins.push({
          'label:pt': 'Volume padrão',
          'label:fr': 'Volume par défaut',
          'label:it': 'Livello predefinito',
-         'label:tr': 'Varsayılan ses',
+         // 'label:tr': 'Varsayılan ses',
          'label:de': 'Standardlautstärke',
          'label:pl': 'Poziom domyślny',
          'label:ua': 'Базовий рівень',
@@ -235,7 +252,7 @@ window.nova_plugins.push({
          'label:pt': 'Degrau',
          'label:fr': 'Étape',
          'label:it': 'Fare un passo',
-         'label:tr': 'Adım',
+         // 'label:tr': 'Adım',
          'label:de': 'Schritt',
          'label:pl': 'Krok',
          'label:ua': 'Крок',
@@ -258,7 +275,7 @@ window.nova_plugins.push({
          'label:pt': 'Tecla de atalho',
          'label:fr': 'Raccourci',
          'label:it': 'Tasto di scelta rapida',
-         'label:tr': 'Kısayol tuşu',
+         // 'label:tr': 'Kısayol tuşu',
          'label:de': 'Schnelltaste',
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',
@@ -281,7 +298,7 @@ window.nova_plugins.push({
          'label:pt': 'Permitir acima de 100%',
          'label:fr': 'Autoriser au-dessus de 100 %',
          'label:it': 'Consenti oltre il 100%',
-         'label:tr': "%100'ün üzerinde izin ver",
+         // 'label:tr': "%100'ün üzerinde izin ver",
          'label:de': 'Über 100 % zulassen',
          'label:pl': 'Zezwól powyżej 100%',
          'label:ua': 'Дозволити більше 100%',
@@ -314,7 +331,7 @@ window.nova_plugins.push({
          'label:pt': 'Não salve o modo silencioso',
          'label:fr': 'Ne pas enregistrer le mode silencieux',
          'label:it': 'Non salvare la modalità silenziosa',
-         'label:tr': 'Ne pas enregistrer le mode silencieux',
+         // 'label:tr': 'Ne pas enregistrer le mode silencieux',
          'label:de': 'Silent-Modus nicht speichern',
          'label:pl': 'Nie zachowuj wyciszonego stanu',
          'label:ua': 'Не зберігати беззвучний режим',
@@ -328,7 +345,7 @@ window.nova_plugins.push({
          'title:pt': 'Afeta apenas novas guias',
          'title:fr': "N'affecte que les nouveaux onglets",
          'title:it': 'Riguarda solo le nuove schede',
-         'title:tr': 'Yalnızca yeni sekmeleri etkiler',
+         // 'title:tr': 'Yalnızca yeni sekmeleri etkiler',
          'title:de': 'Wirkt sich nur auf neue Registerkarten aus',
          'title:pl': 'Dotyczy tylko nowych kart',
          'title:ua': 'Діє лише на нові вкладки',

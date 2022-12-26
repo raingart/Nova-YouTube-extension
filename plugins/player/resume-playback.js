@@ -10,7 +10,7 @@ window.nova_plugins.push({
    'title:pt': 'Retomar a posição do tempo de reprodução',
    'title:fr': 'Reprendre la position de temps de lecture',
    'title:it': 'Riprende la posizione del tempo di riproduzione',
-   'title:tr': 'Oynatma süresi konumunu devam ettir',
+   // 'title:tr': 'Oynatma süresi konumunu devam ettir',
    'title:de': 'Wiedergabezeitposition fortsetzen',
    'title:pl': 'Powrót do pozycji czasowej odtwarzania',
    'title:ua': 'Запам`ятати час відтворення',
@@ -25,13 +25,13 @@ window.nova_plugins.push({
    'desc:pt': 'Recarregar na página - retomar a reprodução',
    'desc:fr': 'Lors du rechargement de la page - reprendre la lecture',
    'desc:it': 'Ricarica alla pagina: riprende la riproduzione',
-   'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
+   // 'desc:tr': 'Sayfayı yeniden yükle - oynatmaya devam et',
    'desc:de': 'Auf Seite neu laden - Wiedergabe fortsetzen',
    'desc:pl': 'Przy ponownym załadowaniu strony - wznawiaj odtwarzanie',
    'desc:ua': 'Після завантаження - продовжити відтворення',
    _runtime: user_settings => {
 
-      // Alt - https://greasyfork.org/en/scripts/455475-youtube-resumer
+      // alt - https://greasyfork.org/en/scripts/455475-youtube-resumer
 
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
@@ -129,7 +129,7 @@ window.nova_plugins.push({
          'label:pt': 'Marcar tempo no URL quando pausado',
          'label:fr': "Marquer l'heure dans l'URL en pause",
          'label:it': "Segna il tempo nell'URL quando è in pausa",
-         'label:tr': "Duraklatıldığında zamanı URL'de işaretleyin",
+         // 'label:tr': "Duraklatıldığında zamanı URL'de işaretleyin",
          'label:de': 'Zeit in URL markieren, wenn pausiert',
          'label:pl': 'Zaznacz czas w adresie URL po wstrzymaniu',
          'label:ua': 'Маркувати час в URL-посиланні під час паузи',
