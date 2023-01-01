@@ -49,7 +49,7 @@ window.nova_plugins.push({
          ${SELECTOR}:active svg,
          ${SELECTOR}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
-      NOVA.runOnEveryPageTransition(() => {
+      NOVA.runOnPageInitOrTransition(() => {
          // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
          if (!location.search.includes('list=')) return;
          insertButton();

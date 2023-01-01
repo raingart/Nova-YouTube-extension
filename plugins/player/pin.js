@@ -146,7 +146,7 @@ window.nova_plugins.push({
                   --zIndex: ${Math.max(
                   NOVA.css.getValue('#chat', 'z-index'),
                   NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
-                  // NOVA.css.getValue('#description', 'z-index'), // consider plugin "description-popup"
+                  // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin "description-popup"
                   // getComputedStyle(document.getElementById('chat'))['z-index'],
                   // getComputedStyle(document.body.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
                   // // getComputedStyle(document.getElementById('description'))['z-index'], // consider plugin "description-popup"

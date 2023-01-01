@@ -42,7 +42,7 @@ window.nova_plugins.push({
             if (this.backup
                || movie_player.getVideoData().isLive // live
                || movie_player.classList.contains('ad-showing') // ad-video
-               || document.title.includes(strSplit) // less accurate but more speed up
+               || document.title.includes(this.strSplit) // less accurate but more speed up
                // || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|', '\\|')})`, '')
                // .test(document.title) // title has time "0:00:00${this.strSplit}"
             ) {

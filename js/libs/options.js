@@ -88,7 +88,13 @@ const Conf = {
             newSettings[key] = newSettings[key].split(','); // to array [old, new]
 
          } else {
-            newSettings[key] = value;
+            // convert string to boolean
+            switch (value) {
+               case 'true': newSettings[key] = true; break;
+               case 'false': newSettings[key] = false; break;
+               case 'undefined': newSettings[key] = undefined; break;
+               default: newSettings[key] = value;
+            }
          };
       }
 

@@ -10,12 +10,6 @@ const App = {
    // settingsStore: null,
    storage: {
       set(settings) {
-         for (const property in settings) { // convert string to boolean
-            switch (settings[property]) {
-               case 'true': settings[property] = true; break;
-               case 'false': settings[property] = false; break;
-            }
-         }
          this.settingsStore = settings;
          // Disabled script if youtube is embedded
          if (settings?.exclude_iframe && (window.self !== window.top)) { // window.frameElement

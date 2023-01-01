@@ -114,7 +114,7 @@ window.nova_plugins.push({
                }`);
          });
 
-      NOVA.runOnEveryPageTransition(restoreDateLine);
+      NOVA.runOnPageInitOrTransition(restoreDateLine);
 
       // expand
       NOVA.waitElement(DESCRIPTION_SELECTOR)
@@ -129,8 +129,7 @@ window.nova_plugins.push({
       let oldDateText;
 
       function restoreDateLine() {
-         // NOVA.waitElement('#info-container:not(:empty)', descriptionEl)
-         NOVA.waitElement('#info-container #info:not(:empty)')
+         NOVA.waitElement('#description.ytd-watch-metadata #info:not(:empty)')
             .then(textDateEl => {
                NOVA.waitElement('#title h1')
                   .then(async container => {
@@ -145,15 +144,17 @@ window.nova_plugins.push({
                               // first 3 div. ex:
                               // [6,053 views] [Premiered] [Oct 8, 2022]
                               // [14,051 views] [] [Mar 2, 2017]
-                              .slice(0, 3)
-                              .map(e => e.textContent).join('').trim())
-
+                              ?.slice(0, 3)
+                              .map(e => e.textContent)
+                              ?.join('')?.trim()
+                           )
                            // common
                            // speed test - https://jsbench.me/zvlbs2xht2/1
                            && text && text != oldDateText
                         ) {
                            oldDateText = text;
                            insertToHTML({ 'text': oldDateText, 'container': container });
+                           return true;
                         }
                      }, 1000); // 1sec
                   });

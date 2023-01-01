@@ -164,17 +164,16 @@ const NOVA = {
 
    },
 
-   runOnEveryPageTransition(callback) {
+   runOnPageInitOrTransition(callback) {
       if (!callback || typeof callback !== 'function') {
-         return console.error('runOnEveryPageTransition > callback not function:', ...arguments);
+         return console.error('runOnPageInitOrTransition > callback not function:', ...arguments);
       }
-      // on page update
-      document.addEventListener('yt-navigate-finish', () => {
-         this.runOnEveryPageTransition_pageInited = true;
-         callback();
-      });
-      // on page init
-      this.runOnEveryPageTransition_pageInited || callback();
+      let lastURL = location.href;
+      const isURLChange = () => lastURL === location.href ? false : lastURL = location.href;
+      // init
+      isURLChange() || callback();
+      // update
+      window.addEventListener('transitionend', () => isURLChange() && callback());
    },
 
    css: {
@@ -398,7 +397,7 @@ const NOVA = {
       // description and first(pinned) comment
       document.body.querySelectorAll(
          // `#primary-inner #description (old, has a bug with several hidden instances),
-         // `#description.ytd-watch-metadata (invalid due to formatting [since 9 nov 2022]),
+         // `#description.ytd-watch-metadata (invalid(commn comnteiner) due to formatting [since 9 nov 2022]),
          `ytd-watch, ytd-watch-flexy,
          #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
@@ -726,7 +725,6 @@ const NOVA = {
 
          const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
          // combine GET
-         // const query = (request == 'videos' ? 'videos' : 'channels') + '?' +
          const query = Object.keys(params)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
             .join('&');

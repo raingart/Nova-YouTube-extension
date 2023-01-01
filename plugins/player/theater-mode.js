@@ -26,10 +26,7 @@ window.nova_plugins.push({
       NOVA.waitElement('ytd-watch-flexy')
          .then(el => el.theaterModeChanged_(true));
 
-      // for legacy user_settings
-      if (!user_settings.player_full_viewport_mode && user_settings.cinema_mode) {
-         user_settings.player_full_viewport_mode = 'cinema_mode';
-      }
+      if (user_settings.player_full_viewport_mode == '') return; // for optimization
 
       NOVA.waitElement('#movie_player')
          .then(movie_player => {

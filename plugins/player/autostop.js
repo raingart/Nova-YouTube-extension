@@ -1,3 +1,6 @@
+// for  test
+// https://www.youtube.com/embed/668nUCeBHyY?autoplay=1 - skip stoped embed
+
 window.nova_plugins.push({
    id: 'video-stop-preload',
    title: 'Stop video preload',
@@ -23,16 +26,8 @@ window.nova_plugins.push({
 
       // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 
-      if (user_settings.stop_preload_embed) {
-         // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
-         if (NOVA.currentPage == 'embed' && window.self !== window.top// window.frameElement // is iframe?
-            && !['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
-         ) {
-            // works. But annoying iframe reload
-            // location.assign(NOVA.queryURL.set({ 'autoplay': false }));
-
-         } else return;
-      }
+      // if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
+      if (user_settings.stop_preload_embed == 'on' && NOVA.currentPage != 'embed') return; // for legacy user_settings - https://github.com/raingart/Nova-YouTube-extension/issues/42
 
       NOVA.waitElement('#movie_player')
          .then(async movie_player => {
@@ -132,6 +127,7 @@ window.nova_plugins.push({
       //    'label:tr': 'Yalnızca gömülü videolar için',
       //    'label:de': 'Nur für eingebettete Videos',
       //    'label:pl': 'Tylko dla osadzonych filmów',
+      //    'label:ua': 'Тільки для вбудованих відео',
       //    type: 'checkbox',
       // },
       stop_preload_embed: {

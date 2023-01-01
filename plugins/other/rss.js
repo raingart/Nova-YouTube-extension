@@ -47,7 +47,7 @@ window.nova_plugins.push({
                   // }
 
                   if (url = document.querySelector('link[type="application/rss+xml"][href]')?.href
-                     || await genChannelURL(NOVA.getChannelId(user_settings['user-api-key']))
+                     || genChannelURL(await NOVA.getChannelId(user_settings['user-api-key']))
                   ) {
                      insertToHTML({ 'url': url, 'container': container });
                   }
@@ -63,7 +63,7 @@ window.nova_plugins.push({
       }
 
       function insertToHTML({ url = required(), container = required() }) {
-         // console.debug('insertToHTML', ...arguments);
+         console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
          (document.getElementById(SELECTOR_ID) || (function () {

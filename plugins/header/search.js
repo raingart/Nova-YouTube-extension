@@ -77,7 +77,7 @@ window.nova_plugins.push({
                'label:ua': 'вподобайки',
             },
          ],
-         'data-dependent': { 'search_query_date': [false] },
+         'data-dependent': { 'search_query_date': false },
       },
       search_query_date: {
          _tagName: 'select',
@@ -120,7 +120,7 @@ window.nova_plugins.push({
                'label:ua': 'цього року',
             },
          ],
-         'data-dependent': { 'search_query_sort': [false] },
+         'data-dependent': { 'search_query_sort': false },
       },
    }
 });

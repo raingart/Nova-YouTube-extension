@@ -92,7 +92,13 @@ function isOptionsPage() {
                obj[key] = obj[key].split(','); // to array [old, new]
 
             } else {
-               obj[key] = value;
+               // convert string to boolean
+               switch (value) {
+                  case 'true': obj[key] = true; break;
+                  case 'false': obj[key] = false; break;
+                  case 'undefined': obj[key] = undefined; break;
+                  default: obj[key] = value;
+               }
             };
          }
          // fix tab reassignment

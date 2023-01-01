@@ -236,7 +236,7 @@ window.nova_plugins.push({
 
          NOVA.waitElement('video')
             .then(video => {
-               NOVA.runOnEveryPageTransition(() => {
+               NOVA.runOnPageInitOrTransition(() => {
                   video.addEventListener('canplay', timeLeapInto.bind(video), { capture: true, once: true });
                });
 
@@ -359,18 +359,18 @@ window.nova_plugins.push({
          label: 'Start playback at',
          // label: 'Set play start time',
          // label: 'Skip intro time at',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
+         'label:zh': '设置开始时间',
+         'label:ja': '開始時刻を設定',
+         'label:ko': '시작 시간 설정',
+         'label:id': 'Tetapkan waktu mulai',
+         'label:es': 'Establecer hora de inicio',
+         'label:pt': 'Definir horário de início',
+         'label:fr': "Définir l'heure de début",
+         'label:it': "Imposta l'ora di inizio",
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
+         'label:de': 'Startzeit festlegen',
+         'label:pl': 'Ustaw czas rozpoczęcia',
+         'label:ua': 'Встановіть час початку',
          type: 'number',
          title: 'sec',
          placeholder: '1-30',

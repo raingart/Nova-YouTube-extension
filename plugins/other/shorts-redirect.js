@@ -34,7 +34,7 @@ window.nova_plugins.push({
    'desc:ua': 'Перенаправляйте прев`ю відео у звичайний відтворювач',
    _runtime: user_settings => {
 
-      NOVA.runOnEveryPageTransition(redirectPageToNormal);
+      NOVA.runOnPageInitOrTransition(redirectPageToNormal);
 
       function redirectPageToNormal() {
          if ('shorts' == NOVA.currentPage) {

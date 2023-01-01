@@ -35,7 +35,9 @@ window.nova_plugins.push({
       //  --autoplay-policy=user-gesture-required
 
       if (user_settings['video-stop-preload'] && !user_settings.stop_preload_embed) return; // disable if a similar plugin of higher priority is active
-      if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
+
+      if (user_settings.video_autopause_embed == 'on' && NOVA.currentPage != 'embed') return; // for legacy user_settings - https://github.com/raingart/Nova-YouTube-extension/issues/42
+      // if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
 
       // NOVA.waitElement('video')
       NOVA.waitElement('#movie_player video')

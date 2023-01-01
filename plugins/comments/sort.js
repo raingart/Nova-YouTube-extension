@@ -27,7 +27,14 @@ window.nova_plugins.push({
       renderButton();
 
       function renderButton() {
-         NOVA.waitElement('#comments ytd-comments-header-renderer #title')
+         NOVA.waitElement(
+            user_settings['comments-popup']
+               // ? '#masthead-container'
+               ? '#movie_player'
+               // ? '#comments'
+               // ? 'html:not(:fullscreen) #description.ytd-watch-metadata:not([hidden])'
+               : '#comments ytd-comments-header-renderer #title'
+         )
             .then(menu => {
                const a = document.createElement('span');
                a.setAttribute('data-open-modal', 'nova-modal-comments');
@@ -35,40 +42,29 @@ window.nova_plugins.push({
                // a.href = '#';
                // a.target = '_blank';
                // a.innerHTML =
-               // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
                a.textContent = '►';
                a.addEventListener('click', () => {
                   // once if not inited
                   if (!document.querySelector(`#${SELECTOR_ID} table`)) genTable();
                });
 
-
+               // append
                if (user_settings['comments-popup']) {
-                  NOVA.waitElement('#masthead-container')
-                     .then(masthead => {
-                        Object.assign(a.style, {
-                           /*transform: rotate(-90deg) translateX(-100%);*/
-                           position: 'fixed',
-                           top: (masthead.offsetHeight || 56) + 'px',
-                           right: '1em',
-                           'z-index':
-                              Math.max(
-                                 getComputedStyle(masthead)['z-index'],
-                                 // getComputedStyle(movie_player)['z-index'], // movie_player is not defined
-                                 601) + 2,
-                           'font-size': '18px',
-                           color: 'orange',
-                           cursor: 'pointer',
-                        });
-
-                        if (conteiner = document.querySelector('html:not(:fullscreen) #comments:not([hidden])')) {
-                           // .insertAdjacentHTML('beforebegin', a.outerHTML);
-                           conteiner.parentNode.insertBefore(a, conteiner);
-                        }
-
-                        insertModal();
-                        connectSortable();
-                     })
+                  Object.assign(a.style, {
+                     /*transform: rotate(-90deg) translateX(-100%);*/
+                     position: 'fixed',
+                     right: '1em',
+                     'z-index':
+                        Math.max(
+                           // getComputedStyle(menu)['z-index'],
+                           getComputedStyle(document.body.querySelector('.ytp-chrome-top'))['z-index'],
+                           60) + 1,
+                     right: '1em',
+                     'font-size': '18px',
+                     color: 'orange',
+                     cursor: 'pointer',
+                  });
+                  menu.append(a);
 
                } else {
                   Object.assign(a.style, {
@@ -82,6 +78,14 @@ window.nova_plugins.push({
                   });
                   menu.append(a);
                }
+
+               insertModal();
+               connectSortable();
+               // clear after page transition
+               NOVA.runOnPageInitOrTransition(() => {
+                  document.getElementById(SELECTOR_ID).innerHTML = '<pre>Loading data...</pre>';
+               });
+
             });
       }
 
@@ -189,7 +193,7 @@ window.nova_plugins.push({
                            <th class="sorttable_numeric">replys</th>
                            <th class="sorttable_numeric">date</th>
                            <th class="sorttable_nosort">avatars</th>
-                           <th class="sorttable_alpha">comments</th>
+                           <th class="sorttable_alpha">comments (${res.pageInfo.totalResults})</th>
                         </tr>
                      </thead>
                      ${ul.innerHTML}

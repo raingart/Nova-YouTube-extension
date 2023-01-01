@@ -64,7 +64,7 @@ window.nova_plugins.push({
       // });
 
       // function patchThumb() {
-      //    document.body.querySelectorAll(`#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="qdefault_live.jpg"]):not([${ATTR_MARK}])`)
+      //    document.body.querySelectorAll(`#thumbnail:not(.ytd-playlist-thumbnail) img[src]:not([src*="_live.jpg"]):not([${ATTR_MARK}])`)
       //       .forEach(img => {
       //          img.setAttribute(ATTR_MARK, true);
       //          img.src = patchImg(img.src);
@@ -80,8 +80,8 @@ window.nova_plugins.push({
 
       NOVA.watchElements({
          selectors: [
-            '#thumbnail:not(.ytd-playlist-thumbnail):not([class*=markers]):not([href*="/shorts/"]) img[src]:not([src*="qdefault_live.jpg"])',
-            'a:not([href*="/shorts/"]) img.video-thumbnail-img[src]:not([src*="qdefault_live.jpg"])'
+            '#thumbnail:not(.ytd-playlist-thumbnail):not([class*=markers]):not([href*="/shorts/"]) img[src]:not([src*="_live.jpg"])',
+            'a:not([href*="/shorts/"]) img.video-thumbnail-img[src]:not([src*="_live.jpg"])'
          ],
          attr_mark: ATTR_MARK,
          callback: async img => {

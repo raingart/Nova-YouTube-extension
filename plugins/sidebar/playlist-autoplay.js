@@ -82,7 +82,7 @@ window.nova_plugins.push({
             opacity: .3;
          }`);
 
-      NOVA.runOnEveryPageTransition(insertButton);
+      NOVA.runOnPageInitOrTransition(insertButton);
 
       function insertButton() {
          // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
