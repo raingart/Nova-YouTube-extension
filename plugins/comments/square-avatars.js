@@ -30,6 +30,10 @@ window.nova_plugins.push({
    'desc:ua': 'Зробіть зображення користувачів квадратними',
    _runtime: user_settings => {
 
+      // alt experiment flags:
+      // window.yt?.config_?.EXPERIMENT_FLAGS?.web_rounded_containers = false;
+      // window.yt?.config_?.EXPERIMENT_FLAGS?.web_rounded_thumbnails = false;
+
       NOVA.css.push(
          [
             'yt-img-shadow',
@@ -47,6 +51,13 @@ window.nova_plugins.push({
             .join(',\n') + ` {
                border-radius: 0 !important;
             }`);
+
+      NOVA.waitUntil(() => {
+         if ((obj = yt?.config_?.EXPERIMENT_FLAGS) && Object.keys(obj).length) {
+            yt.config_.EXPERIMENT_FLAGS.web_rounded_thumbnails = false;
+            return true;
+         }
+      });
 
    },
 });

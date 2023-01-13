@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Przełączaj Shorts na zwykłe adresy URL',
    'title:ua': 'Перенаправляйте прев`ю на звичайні URL-адреси (для перегляду)',
    run_on_pages: 'results, feed, channel, shorts',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'other',
    desc: 'Redirect Shorts video to normal player',
    'desc:zh': '将 Shorts 视频重定向到普通播放器',
@@ -38,8 +38,9 @@ window.nova_plugins.push({
 
       function redirectPageToNormal() {
          if ('shorts' == NOVA.currentPage) {
-            // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js
+            // alt1 - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js
             // alt2 - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
+            // alt3 - https://openuserjs.org/scripts/Kraust/Youtube_Shorts_Redirect
             return location.href = location.href.replace('shorts/', 'watch?v=');
             // location.replace(location.href.replace('/shorts/', '/watch?v='));
          }
@@ -110,7 +111,7 @@ window.nova_plugins.push({
 
       // Strategy 2
 
-      // clear before restart_on_transition
+      // clear before restart_on_location_change
       // document.addEventListener('yt-navigate-start', () =>
       //    NOVA.clear_watchElements(ATTR_MARK), { capture: true, once: true });
 

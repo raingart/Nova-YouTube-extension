@@ -40,7 +40,11 @@ window.nova_plugins.push({
                });
             }
 
-            if (user_settings.video_quality_in_music && NOVA.isMusic()) {
+            if (user_settings.video_quality_in_music_playlist
+               && location.search.includes('list=')
+               // && (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/)
+               && NOVA.isMusic()
+            ) {
                selectedQuality = user_settings.video_quality_in_music_quality;
             }
 
@@ -186,9 +190,9 @@ window.nova_plugins.push({
          'title:pl': 'Zmiany w następnych filmach',
          'title:ua': 'Впливає на наступні відео',
       },
-      video_quality_in_music: {
+      video_quality_in_music_playlist: {
          _tagName: 'input',
-         label: 'Diff quality for music',
+         label: 'Diff quality for music in playlists',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -246,7 +250,7 @@ window.nova_plugins.push({
             { label: 'SD/144p', value: 'tiny' },
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
-         'data-dependent': { 'video_quality_in_music': true },
+         'data-dependent': { 'video_quality_in_music_playlist': true },
       },
    }
 });

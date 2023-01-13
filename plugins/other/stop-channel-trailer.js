@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Zatrzymaj zwiastun kanału',
    'title:ua': 'Не відтворювати трейлер каналу',
    run_on_pages: 'channel, -mobile',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'channel',
    // desc: '',
    _runtime: user_settings => {

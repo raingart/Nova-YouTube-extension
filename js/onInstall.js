@@ -51,6 +51,7 @@ chrome.runtime.onInstalled.addListener(details => {
                   'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
                   'subtitle-transparent': 'subtitle_transparent',
                   'video-description-expand': 'description-expand',
+                  'video_quality_in_music': 'video_quality_in_music_playlist',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

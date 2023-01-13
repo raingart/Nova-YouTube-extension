@@ -28,5 +28,35 @@ window.nova_plugins.push({
          // console.debug('active element', target.localName);
       });
 
+      // if (user_settings.hotkeys_disable_numpad) {
+      //    document.addEventListener('keydown', evt => {
+      //       if (evt.code.startsWith('Numpad')) {
+      //          console.debug('evt.code', evt.code);
+      //          evt.preventDefault();
+      //          evt.stopPropagation();
+      //          evt.stopImmediatePropagation();
+      //       }
+      //    });
+      // }
+
    },
+   // options: {
+   //    hotkeys_disable_numpad: {
+   //       _tagName: 'input',
+   //       label: 'Disable numpad hotkeys',
+   //       // 'label:zh': '',
+   //       // 'label:ja': '',
+   //       // 'label:ko': '',
+   //       // 'label:id': '',
+   //       // 'label:es': '',
+   //       // 'label:pt': '',
+   //       // 'label:fr': '',
+   //       // 'label:it': '',
+   //       // 'label:tr': '',
+   //       // 'label:de': '',
+   //       // 'label:pl': '',
+   //       // 'label:ua': '',
+   //       type: 'checkbox',
+   //    },
+   // }
 });

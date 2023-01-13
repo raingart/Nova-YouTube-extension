@@ -215,6 +215,7 @@ App.init();
 
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded
+// https://www.youtube.com/channel/UCG6TrwqzkWwvWiY2eUny8TA - does not have a "video" tab
 
 // clear history
 // https://www.youtube.com/feed/history/community_history

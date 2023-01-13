@@ -16,7 +16,7 @@ window.nova_plugins.push({
    run_on_pages: 'all, home, results, feed, channel, watch, -embed',
 
    // deactivate if use NOVA.HTMLElement.watch
-   restart_on_transition: true, // optional. Restart plugin on every url change
+   restart_on_location_change: true, // optional. Restart plugin on every url change
 
    /* optional GIU in options page: start */
    section: 'player', // optional. Visual section in settings where the plugin belongs. Available list of values: header, player, details, comments, sidebar, other, channel

@@ -26,6 +26,20 @@ window.nova_plugins.push({
       // movie_player.getSubtitlesUserSettings();
       // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color
 
+      // alt caption style
+      // const storeName = 'yt-player-caption-display-settings';
+      // if (data = localStorage.getItem(storeName)) {
+      //    obj = JSON.parse(data) || {};
+      // }
+      // else {
+      //    obj = {};
+      //    now = Date.now();
+      //    obj.data = { creation: now, expiration: now + 30 * 864e5 };
+      // }
+      // localStorage.setItem(storeName, JSON.stringify(
+      //    Object.assign({ fontSizeIncrement: 1, color: '#ff0' }, obj.data)
+      // ));
+
       const SELECTOR = '.ytp-caption-segment';
       let css = {}
 

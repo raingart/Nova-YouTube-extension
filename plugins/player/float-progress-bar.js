@@ -35,7 +35,7 @@ window.nova_plugins.push({
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitElement('video')
+         NOVA.waitElement('#movie_player video')
          .then(async video => {
             const
                // async fix embed when disable chrome-bottom (example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
@@ -121,7 +121,7 @@ window.nova_plugins.push({
          return document.getElementById(SELECTOR_ID) || (function () {
             movie_player?.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
-                  <div class="conteiner">
+                  <div class="container">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
                      <div id="${SELECTOR_ID}-progress" class="ytp-swatch-background-color"></div>
                   </div>
@@ -154,7 +154,7 @@ window.nova_plugins.push({
                   visibility: visible;
                }
 
-               /*${SELECTOR} .conteiner {
+               /*${SELECTOR} .container {
                   position: relative;
                   margin: 0 15px;
                }*/
@@ -232,8 +232,8 @@ window.nova_plugins.push({
 
             function renderChaptersMarks(duration) {
                // console.debug('renderChaptersMarks', ...arguments);
-               if (chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`)) {
-                  chaptersConteiner.innerHTML = ''; // clear old
+               if (chaptersContainer = document.getElementById(`${SELECTOR_ID}-chapters`)) {
+                  chaptersContainer.innerHTML = ''; // clear old
                   // if (!isNaN(duration)) {
                   NOVA.getChapterList(duration)
                      ?.forEach((chapter, i, chapters_list) => {
@@ -245,7 +245,7 @@ window.nova_plugins.push({
                         if (chapter.title) newChapter.title = chapter.title;
                         newChapter.setAttribute('time', chapter.time);
 
-                        chaptersConteiner.append(newChapter);
+                        chaptersContainer.append(newChapter);
                      });
                   // }
                }
@@ -256,7 +256,7 @@ window.nova_plugins.push({
             if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
             const
                progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
-               chaptersConteiner = document.getElementById(`${SELECTOR_ID}-chapters`);
+               chaptersOut = document.getElementById(`${SELECTOR_ID}-chapters`);
 
             for (const chapter of chaptersContainer.children) {
                const
@@ -266,7 +266,7 @@ window.nova_plugins.push({
 
                newChapter.style.width = (((width + chapterMargin) / progressContainerWidth) * 100) + '%';
 
-               chaptersConteiner.append(newChapter);
+               chaptersOut.append(newChapter);
             }
          },
       };

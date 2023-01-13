@@ -33,6 +33,8 @@ window.nova_plugins.push({
    // 'desc:ua': 'Вимикає спливаюче вікно "продовжити перегляд?"',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
+
       window.setInterval(() => {
          // Strategy 1
          document.dispatchEvent(

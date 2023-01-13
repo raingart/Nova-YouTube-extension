@@ -1,8 +1,10 @@
 // for test
-// https://www.youtube.com/pencilmation
-// https://www.youtube.com/rhino
+// https://www.youtube.com/pencilmation - unsupported
+// https://www.youtube.com/rhino - unsupported
 // https://www.youtube.com/@YouTube?app=desktop
 // https://www.youtube.com/c/YouTube
+// https://www.youtube.com/channel/UCK9X9JACEsonjbqaewUtICA - old
+// https://www.youtube.com/channel/UCG6TrwqzkWwvWiY2eUny8TA - does not have a "video" tab
 
 window.nova_plugins.push({
    id: 'channel-default-tab',
@@ -21,7 +23,7 @@ window.nova_plugins.push({
    'title:ua': 'Вкладка за умовчанням на сторінці каналу',
    // run_on_pages: 'channel, -mobile',
    run_on_pages: 'channel',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'channel',
    // desc: '',
    _runtime: user_settings => {
@@ -29,18 +31,17 @@ window.nova_plugins.push({
       // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
 
-      const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+      const
+         urlArr = location.pathname.split('/').filter(Boolean),
+         [page, channelTab, channelTabOld] = urlArr;
 
-      // if not - home page channel/user
-      if (NOVA.currentPage == 'channel'
-         &&
-         ([page, channelTab].length > 2
-            || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
-         )
+      // if not - home page in channel/user
+      if (urlArr.length > 2
+         || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTabOld || channelTab)
       ) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
-         location.href += '/' + user_settings.channel_default_tab;
+         location.pathname += '/' + user_settings.channel_default_tab;
 
       } else {
          // tab select

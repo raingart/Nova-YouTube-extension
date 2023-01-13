@@ -30,17 +30,57 @@ window.nova_plugins.push({
    'desc:ua': 'Наведіть мишкою щоб показати',
    _runtime: user_settings => {
 
+      let selector, selectorControlHover, selectorFloatProgressBar;
+
+      switch (user_settings.player_control_autohide_container) {
+         case 'player':
+            selector = '#movie_player';
+            selectorControlHover = '#movie_player:hover .ytp-chrome-bottom';
+            selectorFloatProgressBar = '#movie_player:not(:hover)';
+            break;
+
+         // case 'control':
+         default:
+            selector = '.ytp-chrome-bottom';
+            selectorControlHover = '.ytp-chrome-bottom:hover';
+            selectorFloatProgressBar = '.ytp-chrome-bottom:not(:hover) ~';
+            break;
+      }
+      // Do not forget check selector name in "player-float-progress-bar"
       NOVA.css.push(
-         `.ytp-chrome-bottom {
+         `.ytp-chrome-bottom, .ytp-gradient-bottom {
             opacity: 0;
          }
-         .ytp-chrome-bottom:hover {
+         ${selectorControlHover},
+         ${selector}:hover .ytp-gradient-bottom {
             opacity: 1;
          }
          /* patch for plugin "player-float-progress-bar" */
-         .ytp-chrome-bottom:not(:hover) ~ #nova-player-float-progress-bar {
+         ${selectorFloatProgressBar} #nova-player-float-progress-bar {
             visibility: visible !important;
          }`);
 
    },
+   options: {
+      player_control_autohide_container: {
+         _tagName: 'select',
+         label: 'Hover container',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         options: [
+            { label: 'player', value: 'player', selected: true },
+            { label: 'control', value: 'control' },
+         ],
+      },
+   }
 });

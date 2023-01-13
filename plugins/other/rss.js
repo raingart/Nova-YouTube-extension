@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Dodaj kanał RSS',
    'title:ua': 'Додати RSS-посилання',
    run_on_pages: 'channel, playlist, -mobile',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'channel',
    // opt_api_key_warn: true,
    // desc: '',
@@ -63,7 +63,7 @@ window.nova_plugins.push({
       }
 
       function insertToHTML({ url = required(), container = required() }) {
-         console.debug('insertToHTML', ...arguments);
+         // console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
          (document.getElementById(SELECTOR_ID) || (function () {

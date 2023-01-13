@@ -25,6 +25,13 @@ const NOVA = {
    //    });
    // },
 
+   // waitElement(selector = required(), container) {
+   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+   //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
+   //    // console.debug('waitElement:', selector);
+
+   //    return Promise.resolve((container || document.body).querySelector(selector));
+   // },
    // untilDOM
    waitElement(selector = required(), container) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
@@ -38,6 +45,7 @@ const NOVA = {
       // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
       // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
       // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
+      // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur/code)
 
       // There is a more correct method - transitionend.
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
@@ -173,7 +181,8 @@ const NOVA = {
       // init
       isURLChange() || callback();
       // update
-      window.addEventListener('transitionend', () => isURLChange() && callback());
+      // window.addEventListener('transitionend', () => isURLChange() && callback());
+      window.addEventListener('yt-navigate-finish', () => isURLChange() && callback());
    },
 
    css: {
@@ -364,7 +373,7 @@ const NOVA = {
       if (!bezelEl) return console.warn(`bezelTrigger ${text}=>${bezelEl}`);
 
       const
-         bezelConteiner = bezelEl.parentElement.parentElement,
+         bezelContainer = bezelEl.parentElement.parentElement,
          CLASS_VALUE_TOGGLE = 'ytp-text-root';
 
       if (!this.bezel_css_inited) {
@@ -380,10 +389,10 @@ const NOVA = {
       }
 
       bezelEl.textContent = text;
-      bezelConteiner.classList.add(CLASS_VALUE_TOGGLE);
+      bezelContainer.classList.add(CLASS_VALUE_TOGGLE);
 
       this.fateBezel = setTimeout(() => {
-         bezelConteiner.classList.remove(CLASS_VALUE_TOGGLE);
+         bezelContainer.classList.remove(CLASS_VALUE_TOGGLE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
       }, 600); // 600ms
    },
@@ -397,7 +406,7 @@ const NOVA = {
       // description and first(pinned) comment
       document.body.querySelectorAll(
          // `#primary-inner #description (old, has a bug with several hidden instances),
-         // `#description.ytd-watch-metadata (invalid(commn comnteiner) due to formatting [since 9 nov 2022]),
+         // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
          `ytd-watch, ytd-watch-flexy,
          #comments ytd-comment-thread-renderer:first-child #content`)
          .forEach(el => {
@@ -585,7 +594,7 @@ const NOVA = {
             // specific channel
             || ['MontageRock'].includes(channelName)
             // word
-            || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
+            || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
                .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
             // words
             || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'

@@ -169,7 +169,7 @@ const Plugins = {
             alert('Plugin invalid: ' + plugin?.id);
             logTableStatus = 'INVALID';
 
-         } else if (plugin.was_init && !plugin.restart_on_transition) {
+         } else if (plugin.was_init && !plugin.restart_on_location_change) {
             logTableStatus = 'skiped';
 
          } else if (!user_settings.hasOwnProperty(plugin.id)) {

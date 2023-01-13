@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Rozwiń opis',
    'title:ua': 'Розширити опис',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'details',
    // desc: '',
    _runtime: user_settings => {

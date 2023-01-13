@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Filtry wyszukiwania',
    'title:ua': 'Фільтр пошуку',
    run_on_pages: 'results',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'header',
    // desc: '',
    _runtime: user_settings => {

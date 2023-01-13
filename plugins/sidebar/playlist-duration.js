@@ -1,11 +1,12 @@
 // for test:
 // https://www.youtube.com/playlist?list=WL
 // https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
-// https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist conteiner
+// https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist container
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 // https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
 // https://www.youtube.com/watch?v=v0PqdzLdFSk&list=OLAK5uy_m-Dv_8xLBZNZeysu7yXsw7psMf48nJ7tw - 1 unavailable video is hidden
 // https://www.youtube.com/watch?v=RhxF9Qg5mOU&list=RDEMd-ObnI9A_YffTMufAPhAHQ&index=9 - infinite playlist
+// https://www.youtube.com/watch?v=30PcoavqFq0&list=PLS3XGZxi7cBXnYfJpUas1ud6XATvWATHb&index=305 - big playlist
 
 window.nova_plugins.push({
    id: 'playlist-duration',
@@ -23,7 +24,7 @@ window.nova_plugins.push({
    'title:pl': 'Pokaż czas trwania playlisty',
    'title:ua': 'Показувати тривалість списку відтворення',
    run_on_pages: 'watch, playlist, -mobile',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
