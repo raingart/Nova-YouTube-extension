@@ -6,7 +6,7 @@ The extension is based on the plugin files themselves. The rest of the files onl
 - ease of extensibility
 - low probability of conflict with other extensions.
 
-![Nova YouTube-extension](https://lh3.googleusercontent.com/NUJv5yIT-6NUT7YiBgkNu8kCULGkbG8YL3XXjNiB_Q3XW87rvfyYDbPj55u2RTqJihtX_94Y=w640-h400-e365)
+![Nova YouTube-extension](https://user-images.githubusercontent.com/13064767/212359552-117dde00-d0a7-42be-b719-4bd1745687e4.png)
 
 ## Installation
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/users/miiheelkbegpkflplpmmkidaklfgjecb?style=flat-square&label=Chrome%20Web%20Store)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
