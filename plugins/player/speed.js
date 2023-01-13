@@ -40,7 +40,9 @@ window.nova_plugins.push({
    'desc:ua': 'За допомогою колеса мишки',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/421610-youtube-speed-up
+      // alt1 - https://greasyfork.org/en/scripts/421610-youtube-speed-up
+      // alt2 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
+      // alt3 - https://greasyfork.org/en/scripts/427369-speed-up-for-youtube
 
       // NOVA.waitElement('#movie_player')
       //    .then(movie_player => {
@@ -53,8 +55,8 @@ window.nova_plugins.push({
 
       NOVA.waitElement('video')
          .then(video => {
-            const sliderConteiner = renderSlider.apply(video);
-            // console.debug('sliderConteiner', sliderConteiner);
+            const sliderContainer = renderSlider.apply(video);
+            // console.debug('sliderContainer', sliderContainer);
 
             // trigger default indicator
             // Strategy 2
@@ -63,10 +65,10 @@ window.nova_plugins.push({
                NOVA.bezelTrigger(this.playbackRate + 'x');
 
                // slider update
-               if (Object.keys(sliderConteiner).length) {
-                  sliderConteiner.slider.value = this.playbackRate;
-                  sliderConteiner.sliderLabel.textContent = `Speed (${this.playbackRate})`;
-                  sliderConteiner.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
+               if (Object.keys(sliderContainer).length) {
+                  sliderContainer.slider.value = this.playbackRate;
+                  sliderContainer.sliderLabel.textContent = `Speed (${this.playbackRate})`;
+                  sliderContainer.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
                }
             });
 
@@ -74,16 +76,20 @@ window.nova_plugins.push({
 
             video.addEventListener('loadeddata', setDefaultRate); // update
 
-            if (Object.keys(sliderConteiner).length) {
-               sliderConteiner.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
-               sliderConteiner.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
-               sliderConteiner.slider.addEventListener('wheel', evt => {
+            if (Object.keys(sliderContainer).length) {
+               sliderContainer.slider.addEventListener('input', ({ target }) => playerRate.set(target.value));
+               sliderContainer.slider.addEventListener('change', ({ target }) => playerRate.set(target.value));
+               sliderContainer.slider.addEventListener('wheel', evt => {
                   evt.preventDefault();
                   const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
                   // console.debug('current rate:', rate);
                });
-               sliderConteiner.sliderCheckbox.addEventListener('change', ({ target }) => target.checked || playerRate.set(1));
+               sliderContainer.sliderCheckbox.addEventListener('change', ({ target }) => {
+                  target.checked || playerRate.set(1)
+               });
             }
+            // expand memu
+            expandAvailableRatesMenu();
          });
 
       // mousewheel in player area
@@ -346,6 +352,53 @@ window.nova_plugins.push({
          //             <input type="range" min="0.5" max="4" step="0.1" class="ytp-menuitem-slider">
          //          </div>
          //       </div>`);
+      }
+
+      function expandAvailableRatesMenu() {
+         if (typeof _yt_player !== 'object') {
+            return console.error('expandAvailableRatesMenu > _yt_player is empty', _yt_player);
+         }
+         let path;
+
+         findPathPlaybackRates(_yt_player);
+         setAvailableRates(_yt_player, 0, path.split('.'));
+
+         function findPathPlaybackRates(obj, prep) {
+            const setPath = data => (prep ? prep + '.' : '') + data;
+            let count = 0;
+
+            for (const p in obj) {
+               if ((data = Object.keys(obj)[count]) && obj[data]) {
+                  if (data == 'getAvailablePlaybackRates') {
+                     path = setPath(data);
+                     return path;
+                  }
+                  // in deeper
+                  if ((objOfObj = obj[data])
+                     && obj[p].constructor.name == 'Function'
+                     && Object.keys(objOfObj).length
+                  ) {
+                     let inCount = 0;
+                     for (const j in objOfObj) {
+                        if (typeof objOfObj !== 'undefined') {
+                           // recursive
+                           findPathPlaybackRates(objOfObj[j], setPath(data) + '.' + Object.keys(objOfObj)[inCount]);
+                        }
+                        if (path) return path;
+                        inCount++;
+                     }
+                  }
+               }
+               count++;
+            }
+         }
+
+         function setAvailableRates(path, idx, arr) {
+            if (arr.length - 1 == idx) {
+               path[splitted[idx]] = () => [.25, .5, .75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 10];
+
+            } else setAvailableRates(path[arr[idx]], idx + 1, arr);
+         }
       }
 
    },

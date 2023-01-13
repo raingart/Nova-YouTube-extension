@@ -13,7 +13,7 @@ build:
 
 	cat ./UserScript/check-browser-support.js >> $(out)
 
-	# plugins conteiner
+	# plugins container
 	echo -e 'window.nova_plugins = [];' >> $(out)
 	# all plugins
 	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "_blank_plugin.js" | xargs cat >> $(out)

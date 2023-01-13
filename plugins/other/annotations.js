@@ -27,6 +27,9 @@ window.nova_plugins.push({
          // channel icon in the bottom-right corner
          '.iv-branding',
          // '.iv-promo',
+
+         // mobile
+         'ytm-paid-content-overlay-renderer', // message "Includes paid promotion"
       ];
 
       switch (NOVA.currentPage) {

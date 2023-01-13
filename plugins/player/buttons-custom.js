@@ -343,8 +343,9 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('thumbnail')) {
-               // alt - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
+               // alt1 - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
                // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
+               // alt3 - https://greasyfork.org/en/scripts/457800-youtube-thumbnail-viewer
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // thumbBtn.setAttribute('data-tooltip', 'View Thumbnail');
@@ -495,10 +496,10 @@ window.nova_plugins.push({
 
             if (user_settings.player_buttons_custom_items?.includes('quick-quality')) {
                const
-                  // conteiner <a>
+                  // container <a>
                   SELECTOR_QUALITY_CLASS_NAME = 'nova-quick-quality',
                   SELECTOR_QUALITY = '.' + SELECTOR_QUALITY_CLASS_NAME,
-                  qualityConteinerBtn = document.createElement('a'),
+                  qualityContainerBtn = document.createElement('a'),
                   // list <ul>
                   SELECTOR_QUALITY_LIST_ID = SELECTOR_QUALITY_CLASS_NAME + '-list',
                   SELECTOR_QUALITY_LIST = '#' + SELECTOR_QUALITY_LIST_ID,
@@ -571,9 +572,9 @@ window.nova_plugins.push({
                   ${SELECTOR_QUALITY_LIST} li.active { background: #720000; }
                   ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background: #c00; }`);
                // ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: var(--yt-spec-brand-button-background); }`);
-               // conteiner <a>
-               qualityConteinerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_QUALITY_CLASS_NAME}`;
-               // qualityConteinerBtn.title = 'Change quality';
+               // container <a>
+               qualityContainerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_QUALITY_CLASS_NAME}`;
+               // qualityContainerBtn.title = 'Change quality';
                // btn <span>
                qualityBtn.id = SELECTOR_QUALITY_BTN_ID;
                qualityBtn.textContent = qualityFormatList[movie_player.getPlaybackQuality()]?.label || '[out of range]';
@@ -589,10 +590,10 @@ window.nova_plugins.push({
                   // document.getElementById(SELECTOR_QUALITY_LIST_ID li..) li.className = 'active';
                });
 
-               qualityConteinerBtn.prepend(qualityBtn);
-               qualityConteinerBtn.append(listQuality);
+               qualityContainerBtn.prepend(qualityBtn);
+               qualityContainerBtn.append(listQuality);
 
-               container.prepend(qualityConteinerBtn);
+               container.prepend(qualityContainerBtn);
 
                fillQualityMenu(); // init
 

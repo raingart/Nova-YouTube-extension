@@ -31,9 +31,9 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(movie_player => {
             const
-               PLAYER_CONTEINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-theater-container', // fix for "player-pin-scroll" plugin
+               PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-theater-container', // fix for "player-pin-scroll" plugin
                PLAYER_SCROLL_LOCK_CLASS_NAME = 'nova-lock-scroll',
-               PLAYER_SELECTOR = `${PLAYER_CONTEINER_SELECTOR} #movie_player:not(.player-float):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for "player-pin-scroll" plugin
+               PLAYER_SELECTOR = `${PLAYER_CONTAINER_SELECTOR} #movie_player:not(.player-float):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for "player-pin-scroll" plugin
                zIindex = Math.max(
                   // getComputedStyle(document.getElementById('masthead-container'))['z-index'],
                   getComputedStyle(movie_player)['z-index'],
@@ -76,7 +76,7 @@ window.nova_plugins.push({
                case 'cinema_mode':
                   // alt - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
                   NOVA.css.push(
-                     PLAYER_CONTEINER_SELECTOR + `{ z-index: ${zIindex}; }
+                     PLAYER_CONTAINER_SELECTOR + `{ z-index: ${zIindex}; }
 
                      ${PLAYER_SELECTOR}:before {
                         content: '';
@@ -135,6 +135,7 @@ window.nova_plugins.push({
 
                // for fix
                if (user_settings.player_full_viewport_mode_exit) {
+
                   NOVA.waitElement('video')
                      .then(video => {
                         // fix restore video size

@@ -14,9 +14,22 @@ window.nova_plugins.push({
    'title:pl': 'Sortowanie komentarzy',
    'title:ua': 'Сортування коментарів',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
+   opt_api_key_warn: true,
    section: 'comments',
    desc: 'add modal',
+   // 'title:zh': '',
+   // 'title:ja': '',
+   // 'title:ko': '',
+   // 'title:id': '',
+   // 'title:es': '',
+   // 'title:pt': '',
+   // 'title:fr': '',
+   // 'title:it': '',
+   // 'title:tr': '',
+   // 'title:de': '',
+   // 'title:pl': '',
+   // 'title:ua': '',
    _runtime: user_settings => {
 
       const
@@ -30,58 +43,57 @@ window.nova_plugins.push({
          NOVA.waitElement(
             user_settings['comments-popup']
                // ? '#masthead-container'
-               ? '#movie_player'
+               // ? '#movie_player'
+               ? 'ytd-watch-flexy'
                // ? '#comments'
                // ? 'html:not(:fullscreen) #description.ytd-watch-metadata:not([hidden])'
                : '#comments ytd-comments-header-renderer #title'
          )
             .then(menu => {
-               const a = document.createElement('span');
-               a.setAttribute('data-open-modal', 'nova-modal-comments');
-               a.title = 'Nova Comments';
-               // a.href = '#';
-               // a.target = '_blank';
-               // a.innerHTML =
-               a.textContent = '►';
-               a.addEventListener('click', () => {
+               const btn = document.createElement('span');
+               btn.setAttribute('data-open-modal', 'nova-modal-comments');
+               btn.title = 'Nova Comments';
+               // btn.innerHTML =
+               btn.textContent = '►';
+               btn.addEventListener('click', () => {
                   // once if not inited
                   if (!document.querySelector(`#${SELECTOR_ID} table`)) genTable();
                });
 
-               // append
-               if (user_settings['comments-popup']) {
-                  Object.assign(a.style, {
-                     /*transform: rotate(-90deg) translateX(-100%);*/
-                     position: 'fixed',
-                     right: '1em',
-                     'z-index':
-                        Math.max(
-                           // getComputedStyle(menu)['z-index'],
-                           getComputedStyle(document.body.querySelector('.ytp-chrome-top'))['z-index'],
-                           60) + 1,
-                     right: '1em',
-                     'font-size': '18px',
+               // append css
+               Object.assign(btn.style,
+                  user_settings['comments-popup']
+                     ? {
+                        /*transform: rotate(-90deg) translateX(-100%);*/
+                        position: 'fixed',
+                        right: '1em',
+                        'z-index':
+                           Math.max(
+                              // getComputedStyle(menu)['z-index'],
+                              // getComputedStyle(document.body.querySelector('yt-live-chat-app'))['z-index'],
+                              (el = document.body.querySelector('.ytp-chrome-top')) && getComputedStyle(el)['z-index'],
+                              60) + 1,
+                        'font-size': '18px',
+                     }
+                     : {
+                        'font-size': '24px',
+                        'text-decoration': 'none',
+                        padding: '0 10px',
+                        background: 'transparent',
+                        border: 'none',
+                     },
+                  // common
+                  {
                      color: 'orange',
                      cursor: 'pointer',
                   });
-                  menu.append(a);
 
-               } else {
-                  Object.assign(a.style, {
-                     'font-size': '24px',
-                     color: 'orange',
-                     'text-decoration': 'none',
-                     padding: '0 10px',
-                     background: 'transparent',
-                     border: 'none',
-                     cursor: 'pointer',
-                  });
-                  menu.append(a);
-               }
+               //menu.append(btn);
+               menu.prepend(btn);
 
                insertModal();
                connectSortable();
-               // clear after page transition
+               // clear table after page transition
                NOVA.runOnPageInitOrTransition(() => {
                   document.getElementById(SELECTOR_ID).innerHTML = '<pre>Loading data...</pre>';
                });
@@ -179,7 +191,7 @@ window.nova_plugins.push({
 
                      } catch (error) {
                         console.error('Error comment generate:\n', error.stack + '\n', comment);
-                        alert('Error comment generate\n' + comment);
+                        // alert('Error comment generate\n' + comment);
                      }
                   });
 
@@ -206,9 +218,9 @@ window.nova_plugins.push({
       }
 
       function timeSince(date = required()) {
-         if (typeof date !== 'object') return console.error('date invalid type:', date);
+         if (!(date instanceof Date)) return console.error('Not date type:', date);
          ;
-         const intervals = [
+         const samples = [
             { label: 'year', seconds: 31536000 },
             { label: 'month', seconds: 2592000 },
             { label: 'day', seconds: 86400 },
@@ -216,11 +228,14 @@ window.nova_plugins.push({
             { label: 'minute', seconds: 60 },
             { label: 'second', seconds: 1 }
          ];
-         const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-         const interval = intervals.find(i => i.seconds < seconds);
-         const count = Math.floor(seconds / interval.seconds);
-         // return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
-         return `${count} ${interval.label}${count !== 1 ? 's' : ''}`;
+         const
+            now = date.getTime(),
+            seconds = Math.floor((Date.now() - Math.abs(now)) / 1000),
+            interval = samples.find(i => i.seconds < seconds),
+            time = Math.floor(seconds / interval.seconds);
+
+         // return `${time} ${interval.label}${time !== 1 ? 's' : ''} ago`;
+         return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
       }
 
       function renderFilterInput(selector_id_parent = required()) {
@@ -376,17 +391,15 @@ window.nova_plugins.push({
             }`);
 
          // html
-         // document.body
-         // document.getElementById('comments')
-         document.querySelector('ytd-app')
+         document.body
+            // document.getElementById('comments')
+            // document.querySelector('ytd-app')
             .insertAdjacentHTML('beforeend',
                `<div id="nova-modal-comments" class="modal" data-modal>
                   <div class="modal-container">
                      <div class="modal-close" data-close-modal></div>
 
-                     <div class="modal-content" id="modal-content">
-                        <pre>Loading data...</pre>
-                     </div>
+                     <div class="modal-content" id="modal-content"></div>
                   </div>
                </div>`);
 

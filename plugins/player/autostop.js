@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Zatrzymaj ładowanie wideo',
    'title:ua': 'Зупинити передзавантаження відео',
    run_on_pages: 'watch, embed',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'player',
    desc: 'Prevent the player from buffering video before playing',
    _runtime: user_settings => {
@@ -44,6 +44,7 @@ window.nova_plugins.push({
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', NOVA.getPlayerState(state), document.visibilityState);
                if (user_settings.stop_preload_ignore_playlist && location.search.includes('list=')) return;
+               // if (user_settings.stop_preload_ignore_playlist && (NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/)) return;
                // // stop inactive tab
                // if (user_settings.stop_preload_ignore_active_tab && document.visibilityState == 'visible') {
                //    // console.debug('cancel stop in active tab');

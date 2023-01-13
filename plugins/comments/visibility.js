@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Zwiń sekcję komentarzy',
    'title:ua': 'Згорнути розділ коментарів',
    run_on_pages: 'watch, -mobile',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'comments',
    // desc: '',
    _runtime: user_settings => {

@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Dodaj przycisk odtwarzania w odwrotnej kolejności',
    'title:ua': 'Кнопка додавання списку відтворення у зворотному порядку',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {

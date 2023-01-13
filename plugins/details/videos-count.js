@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Pokaż liczbę filmów na kanale',
    'title:ua': 'Показати кількість відео на каналі',
    run_on_pages: 'watch, channel, -mobile',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'details',
    opt_api_key_warn: true,
    desc: 'Display uploaded videos on channel',

@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Automatyczne zatrzymanie wideo',
    'title:ua': 'Автопауза',
    run_on_pages: 'watch, embed',
-   restart_on_transition: true,
+   restart_on_location_change: true,
    section: 'player',
    desc: 'Disable autoplay',
    'desc:zh': '禁用自动播放',
@@ -50,7 +50,7 @@ window.nova_plugins.push({
 
       function forceVideoPause() {
          if (user_settings.video_autopause_ignore_playlist && location.search.includes('list=')) return;
-         // if (user_settings.video_autopause_ignore_playlist && NOVA.queryURL.has('list')) return;
+         // if (user_settings.video_autopause_ignore_playlist && NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
 
          this.pause();
 

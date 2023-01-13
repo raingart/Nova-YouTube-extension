@@ -36,7 +36,7 @@ const Opt = {
          && plugin._runtime && typeof plugin._runtime === 'function'
          // optional
          && (!plugin.section || plugin.section?.split(' ').length === 1)
-         && (!plugin.restart_on_transition || 'boolean' === typeof plugin.restart_on_transition)
+         && (!plugin.restart_on_location_change || 'boolean' === typeof plugin.restart_on_location_change)
          && (!plugin.opt_api_key_warn || 'boolean' === typeof plugin.opt_api_key_warn)
          && (!plugin.options || 'object' === typeof plugin.options)
          && (!plugin.desc || 'string' === typeof plugin.desc);
@@ -46,7 +46,7 @@ const Opt = {
             id: plugin.id,
             run_on_pages: plugin.run_on_pages?.split(',').length,
             section: plugin.section?.split(' ').length === 1 || undefined,
-            restart_on_transition: 'boolean' === typeof plugin.restart_on_transition || undefined,
+            restart_on_location_change: 'boolean' === typeof plugin.restart_on_location_change || undefined,
             opt_api_key_warn: 'boolean' === typeof plugin.opt_api_key_warn || undefined,
             desc: 'string' === typeof plugin.desc || undefined,
             options: 'object' === typeof plugin.options || undefined,

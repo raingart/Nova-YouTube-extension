@@ -17,28 +17,33 @@ window.nova_plugins.push({
    'title:pl': 'Ukryj czat na żywo',
    'title:ua': 'Приховати чат',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings.livechat_visibility_mode == 'disable') {
-         const fn1 = () => NOVA.waitElement('#chat')
-            .then(chat => {
-               chat.remove();
-               fn1(); // restart
-            });
+      let lock;
 
-         fn1(); // init
+      NOVA.runOnPageInitOrTransition(initWaitChat);
 
-      } else {
-         const fn2 = () => NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
-            .then(btn => {
-               btn.click();
-               fn2(); // restart
-            });
+      function initWaitChat() {
+         if (lock) return;
+         lock = true;
 
-         fn2(); // init
+         if (user_settings.livechat_visibility_mode == 'disable') {
+            NOVA.waitElement('#chat')
+               .then(chat => {
+                  chat.remove();
+                  lock = false;
+               });
+
+         } else {
+            NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
+               .then(btn => {
+                  btn.click();
+                  lock = false;
+               });
+         }
       }
 
    },

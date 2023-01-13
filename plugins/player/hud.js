@@ -73,7 +73,7 @@ window.nova_plugins.push({
 
       const HUD = {
          get() {
-            return this.conteiner || this.create();
+            return this.container || this.create();
          },
          // TODO The idea of ​​copying the progress bar. To display segments of time markers
          // a = el.cloneNode(true)
@@ -107,15 +107,15 @@ window.nova_plugins.push({
             // template
             movie_player.insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
 
-            this.conteiner = document.getElementById(SELECTOR_ID);
-            this.hudSpan = this.conteiner.querySelector('span'); // export el
+            this.container = document.getElementById(SELECTOR_ID);
+            this.hudSpan = this.container.querySelector('span'); // export el
 
             // add to div user_settings.player_indicator_type style
             // const [indicator_type, span_align] = user_settings.player_indicator_type.split('=', 2); // 2 = max param;
             // switch (indicator_type) {
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
-                  Object.assign(this.conteiner.style, {
+                  Object.assign(this.container.style, {
                      left: 0,
                      bottom: '20%',
                      width: '30%',
@@ -134,7 +134,7 @@ window.nova_plugins.push({
                   break;
 
                case 'bar-vertical':
-                  Object.assign(this.conteiner.style, {
+                  Object.assign(this.container.style, {
                      top: 0,
                      height: '100%',
                      width: '25px',
@@ -154,21 +154,21 @@ window.nova_plugins.push({
 
                // case 'text-top':
                default:
-                  Object.assign(this.conteiner.style, {
+                  Object.assign(this.container.style, {
                      top: 0,
                      width: '100%',
                      padding: '.2em',
                      'font-size': '1.55em',
                   });
             }
-            return this.conteiner;
+            return this.container;
          },
 
          set({ pt = 100, suffix = '', timeout_ms = 800 }) {
             // console.debug('HUD set', ...arguments);
             if (typeof this.fateNovaHUD === 'number') clearTimeout(this.fateNovaHUD); // reset hide
 
-            let hudConteiner = this.get();
+            let hudContainer = this.get();
             const text = pt + suffix;
 
             if (suffix == 'x') { // rate to pt
@@ -189,7 +189,7 @@ window.nova_plugins.push({
                   break;
 
                case 'bar-top':
-                  hudConteiner.style.background = `linear-gradient(to right, ${COLOR_HUD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
+                  hudContainer.style.background = `linear-gradient(to right, ${COLOR_HUD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
                   this.hudSpan.style.width = pt + '%';
                   this.hudSpan.textContent = text;
                   break;
@@ -199,15 +199,15 @@ window.nova_plugins.push({
                   this.hudSpan.textContent = text;
             }
 
-            hudConteiner.style.transition = 'none';
-            hudConteiner.style.opacity = 1;
-            // hudConteiner.style.visibility = 'visible';
+            hudContainer.style.transition = 'none';
+            hudContainer.style.opacity = 1;
+            // hudContainer.style.visibility = 'visible';
 
             this.fateNovaHUD = setTimeout(() => {
-               hudConteiner.style.transition = 'opacity 200ms ease-in';
-               hudConteiner.style.opacity = null;
-               // hudConteiner.style.visibility = 'hidden';
-            }, timeout_ms); //total 1s = 800ms + 200ms(hudConteiner.style.transition)
+               hudContainer.style.transition = 'opacity 200ms ease-in';
+               hudContainer.style.opacity = null;
+               // hudContainer.style.visibility = 'hidden';
+            }, timeout_ms); //total 1s = 800ms + 200ms(hudContainer.style.transition)
          }
       };
 

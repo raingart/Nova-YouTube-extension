@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Kontrola autoodtwarzania listy odtwarzania',
    'title:ua': 'Кнопка керування автовідтворенням',
    run_on_pages: 'watch, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {

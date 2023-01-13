@@ -15,7 +15,7 @@ window.nova_plugins.push({
    'title:ua': 'Відкріпити шапку сайту',
    // run_on_pages: 'watch, channel',
    run_on_pages: 'all, -embed, -mobile',
-   // restart_on_transition: true,
+   // restart_on_location_change: true,
    section: 'header',
    desc: 'Prevent header from sticking',
    'desc:zh': '防止头部粘连',
