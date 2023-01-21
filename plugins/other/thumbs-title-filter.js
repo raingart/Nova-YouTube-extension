@@ -61,7 +61,7 @@ window.nova_plugins.push({
             'yt-append-continuation-items-action', // home, results, feed, channel, watch
             'ytd-update-grid-state-action', // feed, channel
             'yt-service-request', // results, watch
-            // 'ytd-rich-item-index-update-action', // home
+            'ytd-rich-item-index-update-action', // home, channel
          ]
             .includes(evt.detail?.actionName)
          ) {

@@ -33,7 +33,9 @@ window.nova_plugins.push({
    // 'desc:ua': 'Вимикає спливаюче вікно "продовжити перегляд?"',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
+      // alt1 - https://greasyfork.org/en/scripts/390352-youtube-stay-active-and-play-forever
+      // alt2- https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
+      // alt3 - https://greasyfork.org/en/scripts/458173-youtube-don-t-stop
 
       window.setInterval(() => {
          // Strategy 1

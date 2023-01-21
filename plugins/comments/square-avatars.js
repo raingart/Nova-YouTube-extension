@@ -14,6 +14,8 @@ window.nova_plugins.push({
    'title:pl': 'Kwadratowe awatary',
    'title:ua': 'Квадратні аватарки',
    run_on_pages: 'all',
+   // run_on_pages: 'all -embed',
+   // run_on_pages: 'results, watch, channel',
    section: 'comments',
    desc: 'Make user images squared',
    'desc:zh': '方形用户形象',
@@ -29,6 +31,8 @@ window.nova_plugins.push({
    'desc:pl': 'Awatary użytkowniów będą kwadratowe',
    'desc:ua': 'Зробіть зображення користувачів квадратними',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/453802-youtube-non-rounded-design
 
       // alt experiment flags:
       // window.yt?.config_?.EXPERIMENT_FLAGS?.web_rounded_containers = false;
@@ -53,7 +57,7 @@ window.nova_plugins.push({
             }`);
 
       NOVA.waitUntil(() => {
-         if ((obj = yt?.config_?.EXPERIMENT_FLAGS) && Object.keys(obj).length) {
+         if (window.yt && (obj = yt?.config_?.EXPERIMENT_FLAGS) && Object.keys(obj).length) {
             yt.config_.EXPERIMENT_FLAGS.web_rounded_thumbnails = false;
             return true;
          }

@@ -18,6 +18,8 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/450646-youtube-better-window-title
+
       NOVA.waitElement('video')
          .then(video => {
             // remove saved title

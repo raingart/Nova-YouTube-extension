@@ -147,11 +147,12 @@ window.nova_plugins.push({
             if (this.testDefault(level)) {
                this.log('set:default');
                movie_player.setPlaybackRate(+level) && this.saveInSession(level);
-
-            } else {
+            }
+            else {
                this.log('set:html5');
                NOVA.videoElement = await NOVA.waitElement('video');
-               if (NOVA.videoElement) { // fix - Uncaught SyntaxError: Invalid left-hand side in assignment
+               // fix - Uncaught SyntaxError: Invalid left-hand side in assignment
+               if (NOVA.videoElement) {
                   NOVA.videoElement.playbackRate = +level;
                   this.clearInSession();
                }
@@ -183,8 +184,8 @@ window.nova_plugins.push({
 
                if (newRate === movie_player.getPlaybackRate()) {
                   this.saveInSession(newRate);
-
-               } else {
+               }
+               else {
                   console.error('playerRate:default different: %s!=%s', newRate, movie_player.getPlaybackRate());
                }
             }
@@ -209,8 +210,8 @@ window.nova_plugins.push({
 
                if (newRate === NOVA.videoElement.playbackRate) {
                   this.clearInSession();
-
-               } else {
+               }
+               else {
                   console.error('playerRate:html5 different: %s!=%s', newRate, NOVA.videoElement.playbackRate);
                }
             }
@@ -255,13 +256,15 @@ window.nova_plugins.push({
          // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
          if (+user_settings.rate_default !== 1) {
             const is_music = NOVA.isMusic();
+            // console.debug('isMusic', is_music);
             if (NOVA.videoElement?.playbackRate !== +user_settings.rate_default
                && (!user_settings.rate_default_apply_music || !is_music)
             ) {
                // console.debug('update rate_default');
                playerRate.set(user_settings.rate_default);
-
-            } else if (NOVA.videoElement?.playbackRate !== 1 && is_music) { // reset
+            }
+            // reset
+            else if (NOVA.videoElement?.playbackRate !== 1 && is_music) {
                // console.debug('reset rate_default');
                playerRate.set(1);
             }
@@ -396,8 +399,10 @@ window.nova_plugins.push({
          function setAvailableRates(path, idx, arr) {
             if (arr.length - 1 == idx) {
                path[arr[idx]] = () => [.25, .5, .75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 10];
-
-            } else setAvailableRates(path[arr[idx]], idx + 1, arr);
+            }
+            else {
+               setAvailableRates(path[arr[idx]], idx + 1, arr);
+            }
          }
       }
 

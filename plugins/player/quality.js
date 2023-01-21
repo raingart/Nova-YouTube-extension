@@ -28,7 +28,9 @@ window.nova_plugins.push({
       NOVA.waitElement('#movie_player')
          .then(movie_player => {
             // keep save manual quality in the session
-            if (user_settings.video_quality_manual_save_in_tab && NOVA.currentPage == 'watch') { // no sense if in the embed
+            if (user_settings.video_quality_manual_save_in_tab
+               && NOVA.currentPage == 'watch' // no sense if in the embed
+            ) {
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
                   if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
@@ -36,16 +38,9 @@ window.nova_plugins.push({
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
                      selectedQuality = quality;
+                     user_settings.video_quality_in_music_playlist = false; // overwrite for music
                   }
                });
-            }
-
-            if (user_settings.video_quality_in_music_playlist
-               && location.search.includes('list=')
-               // && (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/)
-               && NOVA.isMusic()
-            ) {
-               selectedQuality = user_settings.video_quality_in_music_quality;
             }
 
             setQuality(); // init
@@ -56,6 +51,15 @@ window.nova_plugins.push({
       function setQuality(state) {
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
          // console.debug('playerState', NOVA.getPlayerState(state));
+
+         // checkMusicType
+         if (user_settings.video_quality_in_music_playlist
+            && location.search.includes('list=')
+            // && (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/)
+            && NOVA.isMusic()
+         ) {
+            selectedQuality = user_settings.video_quality_in_music_quality;
+         }
 
          // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
          if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
@@ -95,8 +99,9 @@ window.nova_plugins.push({
                }
             }, 50); // 50ms
 
-            // } else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
-         } else if (state <= 0) {
+         }
+         // else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
+         else if (state <= 0) {
             setQuality.quality_busy = false;
          }
       }

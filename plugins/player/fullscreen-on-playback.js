@@ -47,8 +47,8 @@ window.nova_plugins.push({
          if (!movie_player.isFullscreen()) {
             if (location.host == 'm.youtube.com') {
                document.body.querySelector('button.fullscreen-icon')?.click();
-
-            } else {
+            }
+            else {
                movie_player.toggleFullscreen();
             }
          }

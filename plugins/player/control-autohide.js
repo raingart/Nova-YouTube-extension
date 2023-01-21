@@ -30,6 +30,9 @@ window.nova_plugins.push({
    'desc:ua': 'Наведіть мишкою щоб показати',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/435487-youtube-always-hoverable-progressbar
+      // alt2 - https://greasyfork.org/en/scripts/446045-youtube-hide-controls-until-hover
+
       let selector, selectorControlHover, selectorFloatProgressBar;
 
       switch (user_settings.player_control_autohide_container) {

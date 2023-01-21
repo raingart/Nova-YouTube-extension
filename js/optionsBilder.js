@@ -153,11 +153,12 @@ const Opt = {
             if (property.hasOwnProperty('name')) {
                if (property.type?.toLowerCase() == 'radio') {
                   property.id = property.value; // for radio
-               } else {
+               }
+               else {
                   console.error('property.name not defined for radio element', property);
                }
-
-            } else {
+            }
+            else {
                property.name = key;
                property.id = key;
             }
@@ -268,7 +269,8 @@ const Opt = {
          // url.searchParams.set('tab', tabId);
          // document.location = url.href;
          document.location = location.pathname + '?tabs=' + tabId;
-      } else {
+      }
+      else {
          document.getElementById(tabId).checked = true;
       }
    },
@@ -280,8 +282,8 @@ const Opt = {
             // group is empty
             if (document.body.querySelector(this.UI.pluginsContainer + `>#${mapZone.id}:empty`)) {
                mapZone.classList.add('empty');
-
-            } else {
+            }
+            else {
                // add click event
                mapZone.addEventListener('click', () => {
                   // show mapZone, hide other section
@@ -324,7 +326,8 @@ const Opt = {
                'remove_to_selector': `${this.UI.pluginsContainer} li.item`,
                'class_name': 'hide'
             });
-            // if (search = document.body.querySelector('form input[type=search]')) { // clear
+            // clear searchInput
+            // if (search = document.body.querySelector('form input[type=search]')) {
             //    searchInput.value = '';
             //    searchInput.dispatchEvent(new Event('change'));
             // }
@@ -332,7 +335,7 @@ const Opt = {
          });
 
       // group spoiler
-      if (document.body.clientWidth < 350) { // in popup
+      if (document.body.clientWidth < 350) { // check in popup
          document.body.querySelectorAll(this.UI.pluginsContainer + '> ul')
             .forEach(ul => ul.addEventListener('click', ({ target }) => {
                target.classList.toggle('collapse')
@@ -358,7 +361,8 @@ const Opt = {
       // import setting
       document.getElementById('settings_import')
          ?.addEventListener('click', () => {
-            if (document.body.clientWidth < 350) { // in popup
+            // check in popup
+            if (document.body.clientWidth < 350) {
                // if (confirm(i18n('opt_import_popup'))) chrome.runtime.openOptionsPage();
                if (confirm(i18n('opt_prompt_import_settings'))) {
                   // chrome.runtime.openOptionsPage();
@@ -447,7 +451,7 @@ window.addEventListener('load', () => {
    ['change', 'keyup'].forEach(evt => {
       searchInput
          .addEventListener(evt, function () {
-            searchFilter({
+            searchFilterHTML({
                'keyword': this.value,
                'filter_selectors': `${Opt.UI.pluginsContainer} li.item`,
                'highlight_selector': 'label'
@@ -456,7 +460,7 @@ window.addEventListener('load', () => {
       document.getElementById('search_clear')
          .addEventListener('click', () => {
             searchInput.value = '';
-            searchInput.dispatchEvent(new Event('change')); // run searchFilter
+            searchInput.dispatchEvent(new Event('change')); // run searchFilterHTML
          });
    });
 
@@ -473,8 +477,8 @@ window.addEventListener('load', () => {
          });
    }
 
-   function searchFilter({ keyword = required(), filter_selectors = required(), highlight_selector }) {
-      // console.debug('searchFilter:', ...arguments);
+   function searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector }) {
+      // console.debug('searchFilterHTML:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
       document.body.querySelectorAll(filter_selectors)

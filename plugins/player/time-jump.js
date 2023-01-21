@@ -5,7 +5,7 @@
 // https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
 // https://www.youtube.com/watch?v=hLXIK9DBxAo - very long text line of timestamp
 // correct chapters:
-// https://www.youtube.com/watch?v=egAB2qtVWFQ - ctitle of chapters before timestamp. Manual chapter numbering
+// https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
 // false detect:
@@ -50,127 +50,131 @@ window.nova_plugins.push({
 
       if (user_settings.time_jump_title_offset) addTitleOffset();
 
-      switch (NOVA.currentPage) {
-         case 'watch':
+      // reset chapterList
+      NOVA.waitElement('video')
+         .then(video => video.addEventListener('loadeddata', () => chapterList = []));
+
+      NOVA.waitElement('#movie_player')
+         .then(movie_player => {
             let chapterList;
 
-            // reset chapterList
-            NOVA.waitElement('video')
-               .then(video => video.addEventListener('loadeddata', () => chapterList = []));
+            doubleKeyPressListener(timeLeap, user_settings.time_jump_hotkey);
 
-            NOVA.waitElement('#movie_player')
-               .then(movie_player => {
-                  doubleKeyPressListener(timeLeap, user_settings.time_jump_hotkey);
+            function timeLeap() {
+               // null - chapterList is init: skiping
+               if (chapterList !== null && !chapterList?.length) {
+                  chapterList = NOVA.getChapterList(movie_player.getDuration()) || null;
+                  // console.debug('chapterList:', chapterList);
+               }
+               const
+                  nextChapterIndex = chapterList?.findIndex(c => c.sec > movie_player.getCurrentTime()),
+                  separator = ' • ';
+               // console.debug('nextChapterIndex', nextChapterIndex);
+               let msg;
 
-                  function timeLeap() {
-                     if (chapterList !== null && !chapterList?.length) { // null - chapterList is init: skiping
-                        chapterList = NOVA.getChapterList(movie_player.getDuration()) || null;
-                        // console.debug('chapterList:', chapterList);
-                     }
-                     const
-                        nextChapterIndex = chapterList?.findIndex(c => c.sec > movie_player.getCurrentTime()),
-                        separator = ' • ';
-                     // console.debug('nextChapterIndex', nextChapterIndex);
-                     let msg;
-                     // has chapters and chapters not ended
-                     if (chapterList?.length && nextChapterIndex !== -1) {
-                        // has chapters blocks (Important! more than 1. See e.g. "(bug has 1 chapters blocks)"
-                        // if (movie_player.querySelectorAll('.ytp-chapter-hover-container')?.length > 1) {
-                        //    // console.debug(`nextChapterIndex jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${chapterList[nextChapterIndex].sec} sec`);
+               if (chapterList?.length // has chapters
+                  && nextChapterIndex !== -1 // chapters not ended
+               ) {
+                  const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
+                  // console.debug(`nextChapter jump [${nextChapterIndex}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
 
-                        // // failure in https://www.youtube.com/watch?v=reNLNZtfosI
-                        // // the reason is that the markers in the description do not correspond to those marked by the author in the player. Skipped - "05:04: Реклама"
-                        // // TODO: Compare embedded and marked chapter lists. And if there is a discrepancy, preortize a larger one
-                        // movie_player.seekToChapterWithAnimation(nextChapterIndex);
+                  movie_player.seekTo(nextChapterData.sec + .5); // +0.5 fix paused jump (like https://www.youtube.com/watch?v=Xt2sbtvBuk8)
 
-                        //    console.assert(chapterList[nextChapterIndex].sec === +movie_player.getCurrentTime()?.toFixed(0), 'nextChapterIndex.time != getCurrentTime:'
-                        //       , nextChapterIndex, +movie_player.getCurrentTime()?.toFixed(0), chapterList[nextChapterIndex]);
+                  // movie_player.seekToChapterWithAnimation(nextChapterIndex); // wrong way!
+                  // Chapters blocks none, but has timestamp. The reason is that the markers in the description do not correspond to the markers marked by the author in the player. Missed - "05:04: Advertisement" - https://www.youtube.com/watch?v=reNLNZtfosI
+                  // console.assert(chapterList[nextChapterIndex].sec === +movie_player.getCurrentTime()?.toFixed(0), 'nextChapterIndex.time != getCurrentTime:', nextChapterIndex, +movie_player.getCurrentTime()?.toFixed(0), chapterList[nextChapterIndex]);
+                  // TODO: Compare embedded and marked chapter lists. And if there is a discrepancy, preortize a larger one
+
+                  msg = nextChapterData.title + separator + nextChapterData.time;
+
+                  // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) chapterTitleEl.click();
+               }
+               // chapters empty
+               else {
+                  movie_player.seekBy(+user_settings.time_jump_step);
+                  // Attention! after seek
+                  msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
+               }
+
+               NOVA.bezelTrigger(msg); // trigger default indicator
+            }
+         });
 
 
-                        //    // querySelector update after seek
-                        //    // const chapterTitleEl = movie_player.querySelector('.ytp-chapter-title-content');
+      // Strategy 2. Alt
+      // NOVA.waitElement('video')
+      //    .then(video => {
+      //       doubleKeyPressListener(timeLeap.bind(video), user_settings.time_jump_hotkey);
 
-                        //    // msg = (chapterTitleEl?.textContent || chapterList[nextChapterIndex].title)
-                        //    //    + separator + chapterList[nextChapterIndex].time;
+      //       function timeLeap() {
+      //          let sec = +user_settings.time_jump_step + this.currentTime;
 
-                        //    msg = chapterList[nextChapterIndex].title + separator + chapterList[nextChapterIndex].time;
+      //          if (secNextChapter = seekToNextChapter.apply(this)) {
+      //             sec = secNextChapter;
+      //             // wait chapter-title update
+      //             document.body.querySelector('.ytp-chapter-title-content')
+      //                ?.addEventListener('DOMNodeInserted', ({ target }) => {
+      //                   NOVA.bezelTrigger(
+      //                      target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
+      //                   );// trigger default indicator
+      //                }, { capture: true, once: true });
+      //          }
+      //          else {
+      //             NOVA.bezelTrigger(`+${user_settings.time_jump_step} sec`); // trigger default indicator
+      //          }
+      //          // console.debug('seekTo', sec);
+      //          this.currentTime = sec;
 
-                        //    // if (chapterTitleEl && user_settings.time_jump_chapters_list_show) {
-                        //    //    chapterTitleEl.click()
-                        //    // }
+      //          // alt - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked/code
+      //          // Strategy 1. API
+      //          function seekToNextChapter() {
+      //             return Object.values((
+      //                ytPubsubPubsubInstance.i // embed
+      //                || ytPubsubPubsubInstance.j // normal
+      //                || ytPubsubPubsubInstance.subscriptions_ // navigation
+      //             )
+      //                .find(a => a?.player)
+      //                .player.app
+      //             )
+      //                .find(a => a?.videoData)
+      //                ?.videoData.multiMarkersPlayerBarRenderer?.markersMap[0].value.chapters
+      //                // .forEach(c => {
+      //                //    c.chapterRenderer.title.simpleText;
+      //                //    c.chapterRenderer.timeRangeStartMillis / 1000;
+      //                // });
+      //                .findIndex(c =>
+      //                   (c.chapterRenderer.timeRangeStartMillis / 1000) > movie_player.getCurrentTime()
+      //                );
+      //          }
+      //          // Strategy 2. HTML
+      //          // function seekToNextChapter() {
+      //          //    if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
+      //          //       && chaptersContainer?.children.length > 1
+      //          //       && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
+      //          //    ) {
+      //          //       const progressRatio = this.currentTime / this.duration;
+      //          //       let passedWidth = 0;
+      //          //       for (const chapter of chaptersContainer.children) {
+      //          //          const
+      //          //             { width, marginLeft, marginRight } = getComputedStyle(chapter),
+      //          //             chapterWidth = parseInt(width),
+      //          //             chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
+      //          //             chapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
 
-                        // } else { // chapters blocks none, but has timestamp
-                        const nextChapterData = chapterList?.find(({ sec }) => sec >= movie_player.getCurrentTime());
-                        // console.debug(`nextChapterData jump [${nextChapterData.index}] ${movie_player.getCurrentTime()?.toFixed(0)} > ${nextChapterData.sec} sec`);
-                        // +0.5 fix paused jump (ex: https://www.youtube.com/watch?v=Xt2sbtvBuk8)
-                        movie_player.seekTo(nextChapterData.sec + .5);
+      //          //          // console.debug('Chapter', chapterRatio, chapterWidth);
+      //          //          if (chapterRatio >= progressRatio && chapterRatio < 1) {
+      //          //             return ~~(chapterRatio * this.duration) + chapterMargin + 1;
+      //          //          }
+      //          //          // accumulate passed
+      //          //          passedWidth += chapterWidth + chapterMargin;
+      //          //       }
+      //          //       // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chaptersContainer?.children.length, progressContainerWidth, '/', progressRatio);
+      //          //    }
+      //          // }
+      //       }
+      //    });
 
-                        msg = nextChapterData.title + separator + nextChapterData.time;
-                        // }
-
-                     } else { // chapters none
-                        movie_player.seekBy(+user_settings.time_jump_step);
-
-                        msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(movie_player.getCurrentTime());
-                     }
-
-                     NOVA.bezelTrigger(msg); // trigger default indicator
-                  }
-               });
-            break;
-
-         case 'embed':
-            NOVA.waitElement('video')
-               .then(video => {
-                  doubleKeyPressListener(timeLeap.bind(video), user_settings.time_jump_hotkey);
-
-                  function timeLeap() {
-                     let sec = +user_settings.time_jump_step + this.currentTime;
-
-                     if (secNextChapter = seekToNextChapter.apply(this)) {
-                        sec = secNextChapter;
-                        // wait chapter-title update
-                        document.body.querySelector('.ytp-chapter-title-content')
-                           ?.addEventListener('DOMNodeInserted', ({ target }) => {
-                              NOVA.bezelTrigger(
-                                 target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
-                              );// trigger default indicator
-                           }, { capture: true, once: true });
-                     } else {
-                        NOVA.bezelTrigger(`+${user_settings.time_jump_step} sec`); // trigger default indicator
-                     }
-                     // console.debug('seekTo', sec);
-                     this.currentTime = sec;
-
-                     function seekToNextChapter() {
-                        if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
-                           && chaptersContainer?.children.length > 1
-                           && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
-                        ) {
-                           const progressRatio = this.currentTime / this.duration;
-                           let passedWidth = 0;
-                           for (const chapter of chaptersContainer.children) {
-                              const
-                                 { width, marginLeft, marginRight } = getComputedStyle(chapter),
-                                 chapterWidth = parseInt(width),
-                                 chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
-                                 chapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
-
-                              // console.debug('Chapter', chapterRatio, chapterWidth);
-                              if (chapterRatio >= progressRatio && chapterRatio < 1) {
-                                 return ~~(chapterRatio * this.duration) + chapterMargin + 1;
-                              }
-                              // accumulate passed
-                              passedWidth += chapterWidth + chapterMargin;
-                           }
-                           // console.debug('passedWidth', 'total=' + passedWidth, 'chapter count=' + chaptersContainer?.children.length, progressContainerWidth, '/', progressRatio);
-                        }
-                     }
-                  }
-               });
-            break;
-      }
-
+      // alt - https://chrome.google.com/webstore/detail/ofbfdabicijcdjoeemcgabeeapciibbf
       function addTitleOffset() {
          NOVA.css.push(
             `.ytp-tooltip-text:after {
@@ -222,7 +226,8 @@ window.nova_plugins.push({
             if (isDoublePress && pressed === lastPressed) {
                isDoublePress = false;
                handleDoublePresss(evt);
-            } else {
+            }
+            else {
                isDoublePress = true;
                timeOut();
             }

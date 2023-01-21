@@ -18,6 +18,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/407475-youtube-disable-fullscreen-scroll
+      // alt2 - https://greasyfork.org/en/scripts/438943-youtube-no-scroll-to-top-on-timestamps
+
       // hide "Scroll for details" button
       NOVA.css.push(`.ytp-fullerscreen-edu-button { display: none !important; }`);
 

@@ -32,6 +32,12 @@ const NOVA = {
 
    //    return Promise.resolve((container || document.body).querySelector(selector));
    // },
+
+   /**
+    * @param  {string} selector
+    * @param  {HTMLElement*} container
+    * @return {Promise}
+   */
    // untilDOM
    waitElement(selector = required(), container) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
@@ -66,8 +72,8 @@ const NOVA = {
                      // console.debug('[2]', mutation.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(node);
-
-                  } else if ( // inside node
+                  }
+                  else if ( // inside node
                      (parentEl = node.parentElement || node)
                      && (parentEl instanceof HTMLElement)
                      && (element = parentEl.querySelector(selector))
@@ -78,10 +84,10 @@ const NOVA = {
                   }
                }
             }
-            // after loop
+            // after loop. In global
             if (document?.readyState != 'loading' // fix slowdown page
                && (element = (container || document?.body || document).querySelector(selector))
-            ) { // in global
+            ) {
                // console.debug('[4]', selector);
                observer.disconnect();
                return resolve(element);
@@ -94,6 +100,11 @@ const NOVA = {
       });
    },
 
+   /**
+    * @param  {function} condition
+    * @param  {int*} timeout
+    * @return {Promise}
+   */
    /** wait for every DOM change until a condition becomes true */
    // await NOVA.waitUntil(?, 500) // 500ms
    async waitUntil(condition = required(), timeout = 100) {
@@ -103,8 +114,8 @@ const NOVA = {
          if (result = condition()) {
             // console.debug('waitUntil[1]', result, condition, timeout);
             resolve(result);
-
-         } else {
+         }
+         else {
             const interval = setInterval(() => {
                if (result = condition()) {
                   // console.debug('waitUntil[2]', result, condition, timeout);
@@ -120,6 +131,7 @@ const NOVA = {
    async sleep(timeout = 100) {
       return new Promise(resolve => setTimeout(resolve, timeout));
    },
+
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
    // clear_watchElements(name = required()) {
@@ -131,6 +143,12 @@ const NOVA = {
    // alt:
    // https://github.com/uzairfarooq/arrive (https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js)
 
+   /**
+    * @param  {array/string} condition
+    * @param  {string*} attr_mark
+    * @param  {function} callback
+    * @return {}
+   */
    watchElements({ selectors = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
       if (!Array.isArray(selectors) && typeof selectors !== 'string') return console.error('watch > selector:', typeof selectors);
@@ -172,6 +190,10 @@ const NOVA = {
 
    },
 
+   /**
+    * @param  {function} callback
+    * @return {}
+   */
    runOnPageInitOrTransition(callback) {
       if (!callback || typeof callback !== 'function') {
          return console.error('runOnPageInitOrTransition > callback not function:', ...arguments);
@@ -185,6 +207,12 @@ const NOVA = {
       window.addEventListener('yt-navigate-finish', () => isURLChange() && callback());
    },
 
+   /**
+    * @param  {obj/string} css
+    * @param  {string*} selector
+    * @param  {boolean*} important
+    * @return {}
+   */
    css: {
       push(css = required(), selector, important) {
          // console.debug('css\n', ...arguments);
@@ -205,16 +233,16 @@ const NOVA = {
                   });
                return `{ ${css} }`;
             }
-
-         } else if (css && typeof css === 'string') {
+         }
+         else if (css && typeof css === 'string') {
             if (document.head) {
                injectCss(css);
-
-            } else {
+            }
+            else {
                window.addEventListener('load', () => injectCss(css), { capture: true, once: true });
             }
-
-         } else {
+         }
+         else {
             console.error('addStyle > css:', typeof css);
          }
 
@@ -225,8 +253,8 @@ const NOVA = {
                sheet = document.createElement('link');
                sheet.rel = 'sheet';
                sheet.href = source;
-
-            } else {
+            }
+            else {
                const sheetId = 'NOVA-style';
                sheet = document.getElementById(sheetId) || (function () {
                   const style = document.createElement('style');
@@ -250,6 +278,11 @@ const NOVA = {
          }
       },
 
+      /**
+       * @param  {string} selector
+       * @param  {string} prop_name
+       * @return {string}
+      */
       // https://developer.mozilla.org/ru/docs/Web/API/CSSStyleDeclaration
       // HTMLElement.prototype.getIntValue = () {}
       // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
@@ -317,6 +350,12 @@ const NOVA = {
          remove: true,
          remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
    }); */
+   /**
+    * @param  {string} selector
+    * @param  {string} title
+    * @param  {boolean} remove
+    * @return {}
+   */
    collapseElement({ selector = required(), title = required(), remove }) {
       // console.debug('collapseElement', ...arguments);
       const selector_id = `${title.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
@@ -352,6 +391,10 @@ const NOVA = {
          });
    },
 
+   /**
+    * @param  {object} 4 int
+    * @return {object} 2 int
+   */
    calculateAspectRatioFit({
       srcWidth = 0, srcHeight = 0,
       maxWidth = window.innerWidth,
@@ -365,6 +408,10 @@ const NOVA = {
       };
    },
 
+   /**
+    * @param  {string} text
+    * @return {}
+   */
    bezelTrigger(text) {
       // console.debug('bezelTrigger', ...arguments);
       if (!text) return;
@@ -397,69 +444,110 @@ const NOVA = {
       }, 600); // 600ms
    },
 
+   /**
+    * @param  {int} video_duration
+    * @return {array}
+   */
    getChapterList(video_duration = required()) {
-      let
-         timestampsCollect = [],
-         prevSec = -1,
-         parentSource;
+      return NOVA.currentPage != 'embed'
+         // Strategy 1
+         ? getFromDescription() // does not work in embed
+         // Strategy 2
+         : getFromAPI();
 
-      // description and first(pinned) comment
-      document.body.querySelectorAll(
-         // `#primary-inner #description (old, has a bug with several hidden instances),
-         // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
-         `ytd-watch, ytd-watch-flexy,
-         #comments ytd-comment-thread-renderer:first-child #content`)
-         .forEach(el => {
-            if (timestampsCollect.length) return; // skip if exist in priroty
-            // parentSource = el.id == 'content' ? 'comment' : 'description';
-            parentSource = el.hasOwnProperty('playerData') ? 'description' : 'comment';
+      function getFromDescription() {
+         let
+            timestampsCollect = [],
+            prevSec = -1,
+            parentSource;
 
-            // exclude embed page
-            (el.playerData?.videoDetails.shortDescription || el.textContent)
-               ?.split('\n')
-               .forEach(line => {
-                  line = line?.toString().trim(); // clear spaces
-                  if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
-                     // console.debug('line', line);
-                     timestamp = timestamp[0]; // ex:"0:00"
-                     const
-                        sec = this.timeFormatTo.hmsToSec(timestamp),
-                        timestampPos = line.indexOf(timestamp);
+         // description and first(pinned) comment
+         document.body.querySelectorAll(
+            // `#primary-inner #description (old, has a bug with several hidden instances),
+            // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
+            `ytd-watch, ytd-watch-flexy,
+            #comments ytd-comment-thread-renderer:first-child #content`
+         )
+            .forEach(el => {
+               if (timestampsCollect.length) return; // skip if exist in priroty
+               // parentSource = el.id == 'content' ? 'comment' : 'description';
+               parentSource = el.hasOwnProperty('playerData') ? 'description' : 'comment';
 
-                     // if ((parentSource == 'comment'
-                     //    || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU , https://www.youtube.com/watch?v=nkyXwDU97ms)
-                     // )
-                     //    // not in the middle of the line
-                     //    && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
-                     // ) {
-                     if ((sec > prevSec && sec < +video_duration)
-                        // not in the middle of the line
-                        && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
-                     ) {
-                        // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-                        prevSec = sec;
-                        timestampsCollect.push({
-                           'sec': sec,
-                           'time': timestamp,
-                           'title': line
-                              .replace(timestamp, '')
-                              .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '') // clear of quotes and list characters
-                              //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?|[:\-–—.;|]$/g, '') // clear numeric list prefix
-                              // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
-                              .trim()
-                        });
+               // exclude embed page
+               (el.playerData?.videoDetails.shortDescription || el.textContent)
+                  ?.split('\n')
+                  .forEach(line => {
+                     line = line?.toString().trim(); // clear spaces
+                     if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
+                        // console.debug('line', line);
+                        timestamp = timestamp[0]; // ex:"0:00"
+                        const
+                           sec = NOVA.timeFormatTo.hmsToSec(timestamp),
+                           timestampPos = line.indexOf(timestamp);
+
+                        // if ((parentSource == 'comment'
+                        //    || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU , https://www.youtube.com/watch?v=nkyXwDU97ms)
+                        // )
+                        //    // not in the middle of the line
+                        //    && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
+                        // ) {
+                        if ((sec > prevSec && sec < +video_duration)
+                           // not in the middle of the line
+                           && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
+                        ) {
+                           // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
+                           prevSec = sec;
+                           timestampsCollect.push({
+                              'sec': sec,
+                              'time': timestamp,
+                              'title': line
+                                 .replace(timestamp, '')
+                                 .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '') // clear of quotes and list characters
+                                 //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?|[:\-–—.;|]$/g, '') // clear numeric list prefix
+                                 // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
+                                 .trim()
+                           });
+                        }
                      }
-                  }
-               });
-         });
+                  });
+            });
 
-      if (timestampsCollect.length) {
-         if (parentSource == 'comment') {
-            // sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
-            timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
+         if (timestampsCollect.length) {
+            if (parentSource == 'comment') {
+               // sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
+               timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
+            }
+            // console.debug('timestampsCollect', timestampsCollect);
+            return timestampsCollect;
          }
-         // console.debug('timestampsCollect', timestampsCollect);
-         return timestampsCollect;
+      }
+      // alt - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked/code
+      function getFromAPI() {
+         // console.debug('getFromAPI');
+         if (!window.ytPubsubPubsubInstance) {
+            return console.error('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
+         }
+
+         return Object.values((
+            ytPubsubPubsubInstance.i // embed
+            || ytPubsubPubsubInstance.j // watch
+            || ytPubsubPubsubInstance.subscriptions_ // navigation
+         )
+            .find(a => a?.player)
+            .player.app
+         )
+            .find(a => a?.videoData)
+            ?.videoData.multiMarkersPlayerBarRenderer?.markersMap[0].value.chapters
+            .map(c => {
+               const sec = c.chapterRenderer.timeRangeStartMillis / 1000;
+               return {
+                  'sec': sec,
+                  'time': NOVA.timeFormatTo.HMS.digit(sec),
+                  'title':
+                     c.chapterRenderer.title.simpleText // watch
+                     || c.chapterRenderer.title.runs[0].text, // embed
+               };
+            });
       }
    },
 
@@ -497,8 +585,14 @@ const NOVA = {
    //    }
    // },
 
-   searchFilter({ keyword = required(), filter_selectors = required(), highlight_selector }) {
-      // console.debug('searchFilter:', ...arguments);
+   /**
+    * @param  {string} keyword
+    * @param  {string} filter_selectors
+    * @param  {boolean*} highlight_selector
+    * @return {}
+   */
+   searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector }) {
+      // console.debug('searchFilterHTML:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
       document.body.querySelectorAll(filter_selectors)
@@ -538,38 +632,47 @@ const NOVA = {
       }
    },
 
+   /**
+    * @return {boolean}
+   */
    isMusic() {
-      const
-         CACHE_PREFIX = 'nova-music-type',
-         cacheName = CACHE_PREFIX + ':' + (this.queryURL.get('v') || movie_player.getVideoData().video_id);
+      return checkMusicType();
+      // const
+      //    CACHE_PREFIX = 'nova-music-type',
+      //    cacheName = CACHE_PREFIX + ':' + (this.queryURL.get('v') || movie_player.getVideoData().video_id);
 
-      // fix (Disable cache) - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
-      if (!navigator.cookieEnabled && this.currentPage == 'embed') return checkType();
+      // // fix (Disable cache) - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
+      // if (!navigator.cookieEnabled && this.currentPage == 'embed') return checkMusicType();
 
-      if (storage = sessionStorage.getItem(cacheName)) {
-         // console.debug(CACHE_PREFIX, 'cache:', storage);
-         return JSON.parse(storage);
+      // if (storage = sessionStorage.getItem(cacheName)) {
+      //    // console.debug(CACHE_PREFIX, 'cache:', storage);
+      //    return JSON.parse(storage);
+      // }
+      // else {
+      //    const state = checkMusicType();
+      //    // console.debug(CACHE_PREFIX, 'gen:', state);
+      //    sessionStorage.setItem(cacheName, Boolean(state)); // save
+      //    return state;
+      // }
 
-      } else {
-         const state = checkType();
-         // console.debug(CACHE_PREFIX, 'gen:', state);
-         sessionStorage.setItem(cacheName, Boolean(state)); // save
-         return state;
-      }
+      // document.addEventListener('yt-page-data-updated', () => {
+      //    checkMusicType();
+      // });
 
-      function checkType() {
+      function checkMusicType() {
          const
-            channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
-            titleStr = movie_player.getVideoData().title
-               // add playlist title
-               + ((playlistTitle = document.body.querySelector('#secondary #playlist #header-description a[href*="/playlist"]:not(:empty)')?.textContent) ? '.' + playlistTitle : ''), // https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
-            titleWords = titleStr?.match(/\w+/g);
+            // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
+            // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.videoDetails.author,
+            // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
+            channelName = movie_player.getVideoData().author,
+            titleStr = movie_player.getVideoData().title,
+            titleWordsArr = titleStr?.match(/\w+/g);
 
          // if (user_settings.rate_default_apply_music == 'expanded') {
          //    // 【MAD】,『MAD』,「MAD」
          //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
          //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-         //       || ['【', '『', '「', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWords?.map(w => w.toUpperCase()).includes(i))
+         //       || ['【', '『', '「', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsArr?.map(w => w.toUpperCase()).includes(i))
          //    ) {
          //       return true;
          //    }
@@ -579,7 +682,11 @@ const NOVA = {
             titleStr,
             location.href, // 'music.youtube.com' or 'youtube.com#music'
             channelName,
+            // video genre
             document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.category, // exclude embed page
+            // playlistTitle
+            document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playlistData?.title, // ex. - https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
+
             // ALL BELOW - not updated after page transition!
             // window.ytplayer?.config?.args.title,
             // document.body.querySelector('meta[itemprop="genre"][content]')?.content,
@@ -589,19 +696,20 @@ const NOVA = {
             .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
             // 'Official Artist' badge
             || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
+            // https://yt.lemnoslife.com/channels?part=approval&id=CHANNEL_ID (items[0].approval == 'Official Artist Channel') (https://github.com/Benjamin-Loison/YouTube-operational-API)
             // channelNameVEVO
-            || /(VEVO|Topic|Records|AMV)$/.test(channelName) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
+            || (channelName && /(VEVO|Topic|Records|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
             // specific channel
-            || ['MontageRock'].includes(channelName)
+            || (channelName && ['ROCK'].includes(channelName.toUpperCase()))
             // word
-            || titleWords?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
-               .some(i => titleWords.map(w => w.toUpperCase()).includes(i))
+            || titleWordsArr?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
+               .some(i => titleWordsArr.map(w => w.toUpperCase()).includes(i))
             // words
             || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
                .some(i => titleStr.toUpperCase().includes(i))
             // word (case sensitive)
-            || titleWords?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
-               .some(i => titleWords.includes(i));
+            || titleWordsArr?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+               .some(i => titleWordsArr.includes(i));
       }
    },
 
@@ -620,14 +728,35 @@ const NOVA = {
 
    // dateFormatter
    timeFormatTo: {
+      /**
+       * 00:00:00形式の時間を秒に変換する
+       *
+       * @param  {string} str
+       * @return {int}
+      */
+      // 13.19% slower
+      // hmsToSec(str) { // format out "h:mm:ss" > "sec"
+      //    // str = ':00:00am'; // for test
+      //    if ((arr = str?.split(':')) && arr.length) {
+      //       return arr.reduce((acc, time) => (60 * acc) + +time);
+      //    }
+      // },
       hmsToSec(str) { // format out "h:mm:ss" > "sec"
-         // str = ':00:00am'; // for test
-         if ((arr = str?.split(':')) && arr.length) {
-            return arr.reduce((acc, time) => (60 * acc) + +time);
+         let
+            parts = str.split(':'),
+            sec = 0;
+         switch (parts.length) {
+            case 2: sec = parts[0] * 60 + parts[1] * 1; break;
+            case 3: sec = parts[0] * 60 * 60 + parts[1] * 60 + parts[2] * 1; break;
          }
+         return sec;
       },
 
       HMS: {
+         /**
+          * @param  {int} time_sec
+          * @return {string}
+         */
          // 65.77 % slower
          // digit(ts = required()) { // format out "h:mm:ss"
          //    const
@@ -662,6 +791,10 @@ const NOVA = {
             //       .join(':'); // format "h:m:s"
          },
 
+         /**
+          * @param  {int} time_sec
+          * @return {string}
+         */
          abbr(time_sec = required()) { // format out "999h00m00s"
             const
                ts = Math.abs(+time_sec),
@@ -695,6 +828,11 @@ const NOVA = {
 
       get: (query = required(), url_string) => new URL(url_string || location).searchParams.get(query.toString()),
 
+      /**
+       * @param  {object} query_obj
+       * @param  {string*} url_string
+       * @return {string}
+      */
       set(query_obj = {}, url_string) {
          // console.log('queryURL.set:', ...arguments);
          if (!Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
@@ -714,7 +852,13 @@ const NOVA = {
 
       API_STORE_NAME: 'YOUTUBE_API_KEYS',
 
-      async API({ request, params, api_key }) {
+      /**
+       * @param  {string} request
+       * @param  {object} params
+       * @param  {string*} api_key
+       * @return {object}
+      */
+      async API({ request = required(), params = required(), api_key }) {
          // NOVA.log('request.API:', ...arguments); // err
          // console.debug('API:', ...arguments);
          // get API key
@@ -751,6 +895,7 @@ const NOVA = {
             .catch(error => {
                localStorage.removeItem(this.API_STORE_NAME);
                console.error(`Request API failed:${URL}\n${error}`);
+               if (error?.message) return { error: JSON.parse(error.message) };
                // alert('Problems with the YouTube API:'
                //    + '\n' + error?.message
                //    + '\n\nIf this error is repeated:'
@@ -764,12 +909,14 @@ const NOVA = {
          // see https://gist.github.com/raingart/ff6711fafbc46e5646d4d251a79d1118/
          return await fetch('https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json')
             .then(res => res.text())
-            .then(keys => { // save
+            // save
+            .then(keys => {
                NOVA.log(`get and save keys in localStorage`, keys);
                localStorage.setItem(this.API_STORE_NAME, keys);
                return JSON.parse(keys);
             })
-            .catch(error => { // clear
+            // clear
+            .catch(error => {
                localStorage.removeItem(this.API_STORE_NAME);
                throw error;
                // throw new Error(error);
@@ -778,6 +925,10 @@ const NOVA = {
       },
    },
 
+   /**
+    * @param  {string*} state
+    * @return {string}
+   */
    getPlayerState(state) {
       // movie_player.getPlayerState() === 2 // 2: PAUSED
       // NOVA.getPlayerState() == 'PLAYING'
@@ -806,6 +957,10 @@ const NOVA = {
       // document.dispatchEvent(new CustomEvent('nova-video-loaded'));
    })(),
 
+   /**
+    * @param  {string*} api_key
+    * @return {string}
+   */
    async getChannelId(api_key) {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
       // local search

@@ -42,8 +42,8 @@ window.nova_plugins.push({
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
          location.pathname += '/' + user_settings.channel_default_tab;
-
-      } else {
+      }
+      else {
          // tab select
          NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected=true]')
             .then(() => {

@@ -73,14 +73,16 @@ window.nova_plugins.push({
          // has in cache
          if (storage = sessionStorage.getItem(CACHE_PREFIX + channelId)) {
             insertToHTML({ 'text': storage, 'container': container });
-
-         } else {
+         }
+         else {
             NOVA.request.API({
                request: 'channels',
                params: { 'id': channelId, 'part': 'statistics' },
                api_key: user_settings['user-api-key'],
             })
                .then(res => {
+                  if (res?.error) return alert(`Error ${res.error.code}: ${res.error.message}`);
+
                   res?.items?.forEach(item => {
                      if (videoCount = +item.statistics.videoCount) {
                         insertToHTML({ 'text': videoCount, 'container': container });

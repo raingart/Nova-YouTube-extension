@@ -18,6 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
+
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') {
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));
       }
@@ -134,6 +136,7 @@ window.nova_plugins.push({
                   }`);
 
                // for fix
+               // alt - https://greasyfork.org/en/scripts/436168-youtube-exit-fullscreen-on-video-end
                if (user_settings.player_full_viewport_mode_exit) {
 
                   NOVA.waitElement('video')

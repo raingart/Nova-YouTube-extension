@@ -171,7 +171,8 @@ window.nova_plugins.push({
             let hudContainer = this.get();
             const text = pt + suffix;
 
-            if (suffix == 'x') { // rate to pt
+            // rate to pt
+            if (suffix == 'x') {
                const maxPercent = (+user_settings.rate_step % .25) === 0 ? 2 : 3;
                pt = (+pt / maxPercent) * 100;
             }

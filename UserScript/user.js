@@ -14,7 +14,7 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'video_quality_in_music': 'video_quality_in_music_playlist',
+   'player_float_progress_bar_color': 'player_progress_bar_color',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -38,7 +38,8 @@ function isOptionsPage() {
          GM_setValue(configStoreName, json);
          alert('Settings imported');
          location.reload();
-      } else alert('Import failed');
+      }
+      else alert('Import failed');
    });
    // GM_registerMenuCommand('Import settings', () => {
    //    let f = document.createElement('input');
@@ -84,11 +85,12 @@ function isOptionsPage() {
 
          let obj = {};
          for (let [key, value] of new FormData(event.target)) {
-            if (obj.hasOwnProperty(key)) { // SerializedArray
+            // SerializedArray
+            if (obj.hasOwnProperty(key)) {
                obj[key] += ',' + value; // add new
                obj[key] = obj[key].split(','); // to array [old, new]
-
-            } else {
+            }
+            else {
                // convert string to boolean
                switch (value) {
                   case 'true': obj[key] = true; break;
@@ -119,16 +121,16 @@ function isOptionsPage() {
                target.href += '?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent);
             });
       });
-
-   } else if (!user_settings || !Object.keys(user_settings).length) { // is user_settings empty
+   }
+   // is user_settings empty
+   else if (!user_settings || !Object.keys(user_settings).length) {
       user_settings['report_issues'] = 'on'; // default plugins settings
       GM_setValue(configStoreName, user_settings);
       // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
       if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(optionsPage);
-
-   } else { // is not optionsPage
-      return false;
    }
+   // is not optionsPage
+   else return false;
 
    return true;
 }

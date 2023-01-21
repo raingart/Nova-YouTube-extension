@@ -23,8 +23,11 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://chrome.google.com/webstore/detail/dammfdepmngjjoidfdbhkjboecgceamb
-      // alt2 - https://chrome.google.com/webstore/detail/ogkoifddpkoabehfemkolflcjhklmkge
+      // alt1 - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked
+      // alt2 - https://greasyfork.org/en/scripts/30046-youtube-always-show-progress-bar
+      // alt3 - https://chrome.google.com/webstore/detail/dammfdepmngjjoidfdbhkjboecgceamb
+      // alt4 - https://greasyfork.org/en/scripts/394512-youtube-progressbar-preserver
+      // alt5 - https://chrome.google.com/webstore/detail/ogkoifddpkoabehfemkolflcjhklmkge
 
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
          // && (window.self.location.href.includes('live_stream') || movie_player.getVideoData().isLive)
@@ -172,13 +175,10 @@ window.nova_plugins.push({
 
                ${SELECTOR}-progress {
                   z-index: calc(var(--zindex) + 1);
-                  ${user_settings.player_float_progress_bar_color == '#ff0000'
-                  ? '' // default color
-                  : 'background-color: ' + user_settings.player_float_progress_bar_color};
                }
 
                /*${SELECTOR}-buffer {
-                  background: var(--buffer-color);
+                  background-color: var(--buffer-color);
                }*/
 
                ${SELECTOR}-chapters {
@@ -200,6 +200,7 @@ window.nova_plugins.push({
          })();
       }
 
+      // alt - https://chrome.google.com/webstore/detail/jahmafmcpgdedfjfknmfkhaiejlfdcfc
       const renderChapters = {
          async init(vid) {
             if (NOVA.currentPage == 'watch' && !(vid instanceof HTMLElement)) return console.error('vid not HTMLElement:', chaptersContainer);
@@ -317,25 +318,6 @@ window.nova_plugins.push({
          min: 0,
          max: 1,
          value: .7,
-      },
-      player_float_progress_bar_color: {
-         _tagName: 'input',
-         type: 'color',
-         value: '#ff0000', // red
-         label: 'Color',
-         'label:zh': '颜色',
-         'label:ja': '色',
-         'label:ko': '색깔',
-         'label:id': 'Warna',
-         // 'label:es': 'Color',
-         'label:pt': 'Cor',
-         'label:fr': 'Couleur',
-         'label:it': 'Colore',
-         // 'label:tr': 'Renk',
-         'label:de': 'Farbe',
-         'label:pl': 'Kolor',
-         'label:ua': 'Колір',
-         title: 'default - #ff0000',
       },
    }
 });

@@ -28,6 +28,9 @@ window.nova_plugins.push({
          '.iv-branding',
          // '.iv-promo',
 
+         '.ytp-autohide > [class^="ytp-ce-"]', // suggest video/channel for the end cards
+         '.ytp-cards-teaser-text', // "video suggestion" (title) in the top-right corner
+
          // mobile
          'ytm-paid-content-overlay-renderer', // message "Includes paid promotion"
       ];
@@ -63,10 +66,6 @@ window.nova_plugins.push({
 
 
                // watch page
-               '.ytp-autohide > [class^="ytp-ce-"]', // suggest video/channel for the end cards
-               '.ytp-cards-teaser-text', // "next video suggestion" (title) in the top-right corner
-
-
                '.ytd-watch-flexy.attached-message', // message "BBC World Service is a British public broadcast service. Wikipedia"
 
                // 'ytd-popup-container tp-yt-paper-dialog yt-mealbar-promo-renderer', // 'Ambient mode' You're watching in our more immersive ambient mode.

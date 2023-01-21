@@ -31,10 +31,11 @@ window.nova_plugins.push({
                   if (user_settings.save_to_playlist_sort) sortPlaylistsMenu(playlists);
 
                   if (!searchInput) renderFilterInput(playlists);
-
-               } else if (searchInput) { // (fix menu) reset state
+               }
+               // (fix menu) reset state
+               else if (searchInput) {
                   searchInput.value = '';
-                  searchInput.dispatchEvent(new Event('change')); // run searchFilter
+                  searchInput.dispatchEvent(new Event('change')); // run searchFilterHTML
                }
             })
                .observe(container);
@@ -78,7 +79,7 @@ window.nova_plugins.push({
          ['change', 'keyup'].forEach(evt => {
             searchInput
                .addEventListener(evt, function () {
-                  NOVA.searchFilter({
+                  NOVA.searchFilterHTML({
                      'keyword': this.value,
                      'filter_selectors': 'ytd-playlist-add-to-option-renderer',
                      'highlight_selector': '#label'
@@ -87,7 +88,7 @@ window.nova_plugins.push({
             searchInput
                .addEventListener('click', () => {
                   searchInput.value = '';
-                  searchInput.dispatchEvent(new Event('change')); // run searchFilter
+                  searchInput.dispatchEvent(new Event('change')); // run searchFilterHTML
                });
          });
 

@@ -12,6 +12,7 @@ const Plugins = {
       'player/theater-mode.js',
       'player/pause-background.js',
       'player/fullscreen-on-playback.js',
+      'player/progress-bar-color.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
       'player/pin.js',
@@ -39,6 +40,7 @@ const Plugins = {
       'other/thumbs-watched.js',
       // 'other/thumbs-rating.js',
       'other/channel-tab.js',
+      // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
       'other/title-time.js',
       'other/scroll-to-top.js',
@@ -111,8 +113,9 @@ const Plugins = {
          script.src = source;
          script.defer = true; // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-defer:~:text=defer,-This
          // script.async = true;
-
-      } else { // injectCode
+      }
+      // injectCode
+      else {
          script.textContent = source.toString();
          // script.src = "data:text/plain;base64," + btoa(source);
          // script.src = 'data:text/javascript,' + encodeURIComponent(source)
@@ -168,14 +171,14 @@ const Plugins = {
             console.error('Plugin invalid\n', plugin);
             alert('Plugin invalid: ' + plugin?.id);
             logTableStatus = 'INVALID';
-
-         } else if (plugin.was_init && !plugin.restart_on_location_change) {
+         }
+         else if (plugin.was_init && !plugin.restart_on_location_change) {
             logTableStatus = 'skiped';
-
-         } else if (!user_settings.hasOwnProperty(plugin.id)) {
+         }
+         else if (!user_settings.hasOwnProperty(plugin.id)) {
             logTableStatus = 'off';
-
-         } else if (
+         }
+         else if (
             (
                pagesAllowList?.includes(NOVA.currentPage)
                || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + NOVA.currentPage))

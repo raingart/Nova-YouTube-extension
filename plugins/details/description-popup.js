@@ -23,6 +23,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/446269-youtube-sticky-show-less-button
+
       // if (user_settings['video-description-expand']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
@@ -126,37 +128,24 @@ window.nova_plugins.push({
             // }, { capture: true, once: true });
          });
 
-      let oldDateText;
-
+      // alt1 - https://greasyfork.org/en/scripts/457850-youtube-video-info
+      // alt2 - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
       function restoreDateLine() {
-         NOVA.waitElement('#description.ytd-watch-metadata #info:not(:empty)')
-            .then(textDateEl => {
-               NOVA.waitElement('#title h1')
-                  .then(async container => {
-                     await NOVA.waitUntil(() => {
-                        if (
-                           // Strategy 1
-                           // clear tags - "286K views 3 years ago #dualshock" But not link ex - https://www.youtube.com/watch?v=DQL6x_Lfbm4
-                           // (text = textDateEl.textContent?.split('#', 1)[0].trim())
-
-                           // Strategy 2
-                           (text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]
-                              // first 3 div. ex:
-                              // [6,053 views] [Premiered] [Oct 8, 2022]
-                              // [14,051 views] [] [Mar 2, 2017]
-                              ?.slice(0, 3)
-                              .map(e => e.textContent)
-                              ?.join('')?.trim()
-                           )
-                           // common
-                           // speed test - https://jsbench.me/zvlbs2xht2/1
-                           && text && text != oldDateText
-                        ) {
-                           oldDateText = text;
-                           insertToHTML({ 'text': oldDateText, 'container': container });
-                           return true;
-                        }
-                     }, 1000); // 1sec
+         NOVA.waitElement('#title h1')
+            .then(container => {
+               // date = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
+               NOVA.waitElement('#description #info.ytd-watch-metadata:not(:empty)')
+                  .then(textDateEl => {
+                     if ((text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]
+                        // first 3 div. ex:
+                        // [6,053 views] [Premiered] [Oct 8, 2022]
+                        // [14,051 views] [] [Mar 2, 2017]
+                        ?.slice(0, 3)
+                        .map(e => e.textContent)
+                        ?.join('')?.trim()
+                     )) {
+                        insertToHTML({ 'text': text, 'container': container });
+                     }
                   });
             });
 

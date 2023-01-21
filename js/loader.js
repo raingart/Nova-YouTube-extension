@@ -31,9 +31,13 @@ const App = {
 
       // skip first page transition
       // Strategy 1
-      if (this.isMobile) window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
+      if (this.isMobile) {
+         window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
+      }
       // Strategy 2
-      else document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
+      else {
+         document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
+      }
 
       // for test
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
@@ -113,8 +117,8 @@ const App = {
          if (typeof NOVA === 'object' && window.nova_plugins.length === plugins_count) {
             clearInterval(forceLander);
             processLander();
-
-         } else console.debug('loading plugins:', window.nova_plugins.length + '/' + plugins_count);
+         }
+         else console.debug('loading plugins:', window.nova_plugins.length + '/' + plugins_count);
 
       }, 100); // 100ms
 

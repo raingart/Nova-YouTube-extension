@@ -50,8 +50,8 @@ window.nova_plugins.push({
                .then(el => {
                   if (duration = getPlaylistDuration()) {
                      insertToHTML({ 'container': el, 'text': duration });
-
-                  } else {
+                  }
+                  else {
                      // getPlaylistDurationFromThumbs()
                      getPlaylistDurationFromThumbnails({
                         'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
@@ -96,8 +96,9 @@ window.nova_plugins.push({
 
                         if (duration = getPlaylistDuration(vids_list)) {
                            insertToHTML({ 'container': el, 'text': duration });
-
-                        } else if (!user_settings.playlist_duration_progress_type) { // this method ignores progress
+                        }
+                        // this method ignores progress
+                        else if (!user_settings.playlist_duration_progress_type) {
                            getPlaylistDurationFromThumbnails({
                               'container': document.body.querySelector('#secondary #playlist'),
                               'items_selector': '#playlist-items #unplayableText[hidden]',
@@ -192,8 +193,9 @@ window.nova_plugins.push({
                ) {
                   clearInterval(waitThumbnails);
                   resolve(outFormat(duration));
-
-               } else if (!forcePlaylistRun) { // set force calc duration
+               }
+               // set force calc duration
+               else if (!forcePlaylistRun) {
                   setTimeout(() => forcePlaylistRun = true, 1000 * 3); // 3sec
                }
 

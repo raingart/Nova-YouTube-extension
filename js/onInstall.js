@@ -52,6 +52,7 @@ chrome.runtime.onInstalled.addListener(details => {
                   'subtitle-transparent': 'subtitle_transparent',
                   'video-description-expand': 'description-expand',
                   'video_quality_in_music': 'video_quality_in_music_playlist',
+                  'player_float_progress_bar_color': 'player_progress_bar_color',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

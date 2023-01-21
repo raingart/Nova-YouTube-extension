@@ -58,7 +58,7 @@ window.nova_plugins.push({
                'yt-append-continuation-items-action', // home, results, feed, channel, watch
                'ytd-update-grid-state-action', // feed, channel
                'yt-service-request', // results, watch
-               // 'ytd-rich-item-index-update-action', // home
+               'ytd-rich-item-index-update-action', // home, channel
             ]
                .includes(evt.detail?.actionName)
             ) {
@@ -168,7 +168,8 @@ window.nova_plugins.push({
                [minutes, seconds] = title.substring(from, to).trim()
                   .split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
-            if (!seconds) { // fix mixed up in places
+            // fix mixed up in places
+            if (!seconds) {
                seconds = minutes;
                minutes = null;
             }
@@ -177,8 +178,8 @@ window.nova_plugins.push({
             }
             // console.debug('>', [minutes, seconds]);
             return [minutes || 0, seconds].join(':');
-
-         } else {
+         }
+         else {
             console.error('getThumbTime empty:',
                '\ntitle:', title,
                '\npublishedTimeText:', publishedTimeText,

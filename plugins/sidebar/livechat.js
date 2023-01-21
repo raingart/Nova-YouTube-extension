@@ -1,5 +1,5 @@
 // for test
-// https://www.youtube.com/watch?v=dq5a1GW6iVA
+// https://www.youtube.com/@TheGoodLiferadio/streams
 
 window.nova_plugins.push({
    id: 'livechat-visibility',
@@ -17,33 +17,28 @@ window.nova_plugins.push({
    'title:pl': 'Ukryj czat na żywo',
    'title:ua': 'Приховати чат',
    run_on_pages: 'watch, -mobile',
-   // restart_on_location_change: true,
+   restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
-      let lock;
+      if (window['nova-lock-live-chat']) return
 
-      NOVA.runOnPageInitOrTransition(initWaitChat);
+      window['nova-lock-live-chat'] = true;
 
-      function initWaitChat() {
-         if (lock) return;
-         lock = true;
-
-         if (user_settings.livechat_visibility_mode == 'disable') {
-            NOVA.waitElement('#chat')
-               .then(chat => {
-                  chat.remove();
-                  lock = false;
-               });
-
-         } else {
-            NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
-               .then(btn => {
-                  btn.click();
-                  lock = false;
-               });
-         }
+      if (user_settings.livechat_visibility_mode == 'disable') {
+         NOVA.waitElement('#chat')
+            .then(chat => {
+               chat.remove();
+               window['nova-lock-live-chat'] = false;
+            });
+      }
+      else {
+         NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
+            .then(btn => {
+               btn.click();
+               window['nova-lock-live-chat'] = false;
+            });
       }
 
    },

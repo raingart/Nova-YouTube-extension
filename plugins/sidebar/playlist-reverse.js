@@ -97,9 +97,8 @@ window.nova_plugins.push({
                   // movie_player.updatePlaylist();
                   renderTitle(); // refresh before page transition
                   fixConflictPlugins();
-               } else {
-                  location.reload(); // disable reverse
                }
+               else location.reload(); // disable reverse
             });
             container.append(reverseBtn);
          }

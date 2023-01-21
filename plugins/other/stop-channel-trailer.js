@@ -22,6 +22,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/453851-auto-pause-youtube-channel-homepage-video
+
       NOVA.waitElement('#c4-player')
          .then(player => player.stopVideo());
 

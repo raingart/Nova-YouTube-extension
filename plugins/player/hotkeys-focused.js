@@ -18,6 +18,9 @@ window.nova_plugins.push({
    // desc: 'Player hotkeys always active【SPACE/F】etc.',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/444329-youtube-fixed-actions
+      // alt2 - https://greasyfork.org/en/scripts/445540-youtubedisablefocusvolume
+
       document.addEventListener('keydown', ({ target }) => {
          // movie_player.contains(document.activeElement) // Dont use! stay overline
          if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;

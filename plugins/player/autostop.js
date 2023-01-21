@@ -22,7 +22,7 @@ window.nova_plugins.push({
    desc: 'Prevent the player from buffering video before playing',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable/code
+      // alt - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
 
       // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 

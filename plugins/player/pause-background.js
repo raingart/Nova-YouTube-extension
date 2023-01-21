@@ -35,6 +35,8 @@ window.nova_plugins.push({
    'desc:ua': 'Підтримує iframe та інші вікна',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/444330-youtube-autoplay-mutex
+
       // redirect for localStorage common storage space
       if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
 
@@ -165,7 +167,8 @@ window.nova_plugins.push({
       //       return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
       //    }
       // })
-      // if (NOVA.videoElement?.playing) { // checks if element is playing right now
+      // checks if element is playing right now
+      // if (NOVA.videoElement?.playing) {
       //    // Do anything you want to
       // }
 

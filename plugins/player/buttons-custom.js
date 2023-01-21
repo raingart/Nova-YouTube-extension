@@ -37,10 +37,10 @@ window.nova_plugins.push({
                ${SELECTOR_BTN}:hover { color: #66afe9 !important; }
                ${SELECTOR_BTN}:active { color: #2196f3 !important; }`);
 
-            // custon title (with animation)
+            // custon tooltip (with animation)
             // NOVA.css.push(
-            //    `${SELECTOR_BTN}[title]::before {
-            //       content: attr(title);
+            //    `${SELECTOR_BTN}[tooltip]::before {
+            //       content: attr(tooltip);
             //       position: absolute;
             //       top: -3em;
             //       line-height: normal;
@@ -57,12 +57,12 @@ window.nova_plugins.push({
             //       transition: 50ms transform;
             //       transform-origin: bottom center;
             //    }
-            //    ${SELECTOR_BTN}[title]:hover::before {
+            //    ${SELECTOR_BTN}[tooltip]:hover::before {
             //       --scale: 1
             //    }`);
             NOVA.css.push(
-               `${SELECTOR_BTN}[title]:hover::before {
-                  content: attr(title);
+               `${SELECTOR_BTN}[tooltip]:hover::before {
+                  content: attr(tooltip);
                   position: absolute;
                   top: -3em;
                   transform: translateX(-30%);
@@ -75,7 +75,7 @@ window.nova_plugins.push({
                   white-space: nowrap;
                }
                /* for embed */
-               html[data-cast-api-enabled] ${SELECTOR_BTN}[title]:hover::before {
+               html[data-cast-api-enabled] ${SELECTOR_BTN}[tooltip]:hover::before {
                   font-weight: normal;
                }`);
 
@@ -84,7 +84,8 @@ window.nova_plugins.push({
                const pipBtn = document.createElement('button');
 
                pipBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               pipBtn.title = 'Open in PictureInPicture';
+               // pipBtn.title = 'Open in PictureInPicture';
+               pipBtn.setAttribute('tooltip', 'Open in PictureInPicture');
                pipBtn.innerHTML = createSVG();
                // pipBtn.innerHTML =
                //    `<svg viewBox="-8 -6 36 36" height="100%" width="100%">
@@ -135,7 +136,8 @@ window.nova_plugins.push({
                // alt - https://greasyfork.org/en/scripts/401907-youtube-popout-button-mashup
                const popupBtn = document.createElement('button');
                popupBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               popupBtn.title = 'Open in popup';
+               // popupBtn.title = 'Open in popup';
+               popupBtn.setAttribute('tooltip', 'Open in popup');
                popupBtn.innerHTML =
                   `<svg viewBox="-8 -8 36 36" height="100%" width="100%">
                      <g fill="currentColor">
@@ -237,7 +239,8 @@ window.nova_plugins.push({
 
                const screenshotBtn = document.createElement('button');
                screenshotBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               screenshotBtn.title = 'Take screenshot';
+               // screenshotBtn.title = 'Take screenshot';
+               screenshotBtn.setAttribute('tooltip', 'Take screenshot');
                // Doesn't work defoult title
                // screenshotBtn.setAttribute('aria-pressed', 'false');
                // screenshotBtn.setAttribute('aria-label','test');
@@ -298,9 +301,12 @@ window.nova_plugins.push({
                      container.id = SELECTOR_SCREENSHOT_ID;
                      container.target = '_blank'; // useful link
                      container.title = 'Click to save';
-                     if (headerContainer = document.getElementById('masthead-container')) { // skip embed
-                        container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px'; // fix header indent
-                        container.style.zIndex = +getComputedStyle(headerContainer)['z-index'] + 1; // fix header overlapping
+                     // skip embed
+                     if (headerContainer = document.getElementById('masthead-container')) {
+                        // fix header indent
+                        container.style.marginTop = (headerContainer?.offsetHeight || 0) + 'px';
+                        // fix header overlapping
+                        container.style.zIndex = +getComputedStyle(headerContainer)['z-index'] + 1;
                      }
                      canvas.addEventListener('click', evt => {
                         evt.preventDefault();
@@ -348,8 +354,9 @@ window.nova_plugins.push({
                // alt3 - https://greasyfork.org/en/scripts/457800-youtube-thumbnail-viewer
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+               // thumbBtn.title = 'View Thumbnail';
                // thumbBtn.setAttribute('data-tooltip', 'View Thumbnail');
-               thumbBtn.title = 'View Thumbnail';
+               thumbBtn.setAttribute('tooltip', 'View Thumbnail');
                thumbBtn.innerHTML =
                   `<svg viewBox="0 -10 21 40" height="100%" width="100%">
                      <g fill="currentColor">
@@ -404,7 +411,8 @@ window.nova_plugins.push({
 
                // if (NOVA.videoElement?.videoWidth < NOVA.videoElement?.videoHeight) {
                rotateBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               rotateBtn.title = 'Rotate video';
+               // rotateBtn.title = 'Rotate video';
+               rotateBtn.setAttribute('tooltip', 'Rotate video');
                Object.assign(rotateBtn.style, {
                   padding: '0 1.1em',
                });
@@ -449,7 +457,8 @@ window.nova_plugins.push({
                      const watchLaterBtn = document.createElement('button');
 
                      watchLaterBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} watch-later-btn`;
-                     watchLaterBtn.title = 'Watch later';
+                     // watchLaterBtn.title = 'Watch later';
+                     watchLaterBtn.setAttribute('tooltip', 'Watch later');
                      renderIcon();
                      watchLaterBtn.addEventListener('click', () => {
                         watchLaterDefault.click();
@@ -467,7 +476,7 @@ window.nova_plugins.push({
                      //
                      // container.append(watchLaterBtn);
                      [...document.getElementsByClassName(SELECTOR_BTN_CLASS_NAME)].pop() // last custom btn
-                        .after(watchLaterBtn);
+                        ?.after(watchLaterBtn);
 
                      function renderIcon() {
                         // <div class="ytp-spinner-container">
@@ -575,6 +584,7 @@ window.nova_plugins.push({
                // container <a>
                qualityContainerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_QUALITY_CLASS_NAME}`;
                // qualityContainerBtn.title = 'Change quality';
+               // qualityContainerBtn.setAttribute('tooltip', 'Change quality');
                // btn <span>
                qualityBtn.id = SELECTOR_QUALITY_BTN_ID;
                qualityBtn.textContent = qualityFormatList[movie_player.getPlaybackQuality()]?.label || '[out of range]';
@@ -634,7 +644,8 @@ window.nova_plugins.push({
                const
                   speedBtn = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
-                  defaultRateText = '1x';
+                  defaultRateText = '1x',
+                  genTooltip = () => `Switch to ${NOVA.videoElement.playbackRate}>${speedBtn.textContent} (${hotkey})`;
                // `<svg viewBox="0 0 36 36" height="100%" width="100%">
                //    <g fill="currentColor">
                //       <path d="m 27.526463,13.161756 -1.400912,2.107062 a 9.1116182,9.1116182 0 0 1 -0.250569,8.633258 H 10.089103 A 9.1116182,9.1116182 0 0 1 22.059491,11.202758h24.166553,9.8018471 A 11.389523,11.389523 0 0 0 8.1301049,25.041029 2.2779046,2.2779046 0 0 0 10.089103,26.179981 H 25.863592 A 2.2779046,2.2779046 0 0 0 27.845369,25.041029 11.389523,11.389523 0 0 0 27.537852,13.150367 Zs16.376119,20.95219 a 2.2779046,2.2779046 0 0 0 3.223235,0h6.446471,-9.669705 -9.669706,6.44647 a 2.2779046,2.2779046 0 0 0 0,3.223235 z" />
@@ -647,7 +658,8 @@ window.nova_plugins.push({
                speedBtn.style.textAlign = 'center';
                speedBtn.style.fontWeight = 'bold';
                speedBtn.innerHTML = defaultRateText;
-               speedBtn.title = `Toggle speed to ${defaultRateText} (${hotkey})`;
+               // speedBtn.title = genTooltip();
+               speedBtn.setAttribute('tooltip', genTooltip());
                // hotkey
                document.addEventListener('keyup', evt => {
                   if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
@@ -663,8 +675,9 @@ window.nova_plugins.push({
                      playerRate.set(rateOrig);
                      rateOrig = {};
                      speedBtn.innerHTML = defaultRateText;
-
-                  } else { // return default
+                  }
+                  // return default
+                  else {
                      rateOrig = (movie_player && NOVA.videoElement.playbackRate % .25) === 0
                         ? { 'default': movie_player.getPlaybackRate() }
                         : { 'html5': NOVA.videoElement.playbackRate };
@@ -675,7 +688,8 @@ window.nova_plugins.push({
 
                      speedBtn.textContent = rateOrig[Object.keys(rateOrig)[0]] + 'x';
                   }
-                  speedBtn.title = `Switch to ${speedBtn.textContent} (${hotkey})`;
+                  // speedBtn.title = `Switch to ${speedBtn.textContent} (${hotkey})`;
+                  speedBtn.setAttribute('tooltip', genTooltip());
                   // console.debug('rateOrig', rateOrig);
                }
 
@@ -683,8 +697,8 @@ window.nova_plugins.push({
                   set(obj) {
                      if (obj.hasOwnProperty('html5') || !movie_player) {
                         NOVA.videoElement.playbackRate = obj.html5;
-
-                     } else {
+                     }
+                     else {
                         movie_player.setPlaybackRate(obj.default);
                      }
                      // this.saveInSession(obj.html5 || obj.default);
@@ -704,12 +718,12 @@ window.nova_plugins.push({
                };
 
                container.prepend(speedBtn);
-
-               visibilitySwitch(); // init
-
-               NOVA.videoElement?.addEventListener('ratechange', visibilitySwitch); // update #1
-               // reset speedBtn state
-               NOVA.videoElement?.addEventListener('loadeddata', () => { // update #2
+               // init
+               visibilitySwitch();
+               // update #1
+               NOVA.videoElement?.addEventListener('ratechange', visibilitySwitch);
+               // // update #2. Reset speedBtn state
+               NOVA.videoElement?.addEventListener('loadeddata', () => {
                   rateOrig = {};
                   speedBtn.textContent = defaultRateText;
                   visibilitySwitch();

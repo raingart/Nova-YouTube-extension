@@ -32,6 +32,8 @@ window.nova_plugins.push({
    // 'title:ua': '',
    _runtime: user_settings => {
 
+      // #comments #contents #submessage[is-empty] - "Comments are turned off."
+
       const
          // CACHE_PREFIX = 'nova-channel-videos-count:',
          SELECTOR_ID = 'modal-content';
@@ -126,6 +128,11 @@ window.nova_plugins.push({
             api_key: user_settings['user-api-key'],
          })
             .then(res => {
+               if (res?.error) {
+                  return document.getElementById(SELECTOR_ID).innerHTML =
+                     `<pre>Error ${res.error.code}: ${res.error.message}</pre>`;
+               }
+
                let commentList = []
                res?.items?.forEach(item => {
                   if (comment = item.snippet?.topLevelComment?.snippet) {
@@ -159,9 +166,16 @@ window.nova_plugins.push({
                            comment,
                         )
                      );
-
-                  } else console.warn('API is change', item);
+                  }
+                  else {
+                     console.warn('API is change', item);
+                  }
                });
+
+               if (!commentList.length) {
+                  return document.getElementById(SELECTOR_ID).innerHTML =
+                     `<pre>Total number of comments: ${res.pageInfo.totalResults}</pre>`;
+               }
 
                const ul = document.createElement('tbody');
 
@@ -278,7 +292,7 @@ window.nova_plugins.push({
          ['change', 'keyup'].forEach(evt => {
             searchInput
                .addEventListener(evt, function () {
-                  NOVA.searchFilter({
+                  NOVA.searchFilterHTML({
                      'keyword': this.value,
                      'filter_selectors': 'tr',
                      'highlight_selector': '.text-overflow-dynamic-ellipsis'
@@ -287,7 +301,7 @@ window.nova_plugins.push({
             searchInput
                .addEventListener('click', () => {
                   searchInput.value = '';
-                  searchInput.dispatchEvent(new Event('change')); // run searchFilter
+                  searchInput.dispatchEvent(new Event('change')); // run searchFilterHTML
                });
          });
 

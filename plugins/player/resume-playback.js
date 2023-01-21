@@ -60,8 +60,8 @@ window.nova_plugins.push({
                   // for next video
                   document.addEventListener('yt-navigate-start',
                      connectSaveStateInURL.bind(video), { capture: true, once: true });
-
-               } else {
+               }
+               else {
                   connectSaveStateInURL.apply(video);
                }
             }
@@ -102,7 +102,8 @@ window.nova_plugins.push({
          let delaySaveOnPauseURL; // fix glitch update url when rewinding video
          // save
          this.addEventListener('pause', () => {
-            if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) { // fix video ended
+            // fix video ended
+            if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) {
                delaySaveOnPauseURL = setTimeout(() => {
                   changeUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
                }, 100); // 100ms

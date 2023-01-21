@@ -20,6 +20,9 @@ window.nova_plugins.push({
    'desc:ua': 'Зняти слова з великої літери для назв мініатюр',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/445780-youtube-remove-caps-from-videos-titles
+      // alt2 - https://chrome.google.com/webstore/detail/pgpdaocammeipkkgaeelifgakbhjoiel
+
       const
          VIDEO_TITLE_SELECTOR = [
             '#video-title', // results
@@ -70,10 +73,10 @@ window.nova_plugins.push({
          callback: title => {
             // if (['home, feed, channel, watch'].includes(NOVA.currentPage)) return;
             if (NOVA.currentPage == 'results') return;
-
             let countCaps = 0;
 
-            if (user_settings.thumbnails_title_clear_emoji) { // need before count
+            // need before count
+            if (user_settings.thumbnails_title_clear_emoji) {
                title.textContent = clearOfEmoji(title.textContent).trim();
             }
 

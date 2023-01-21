@@ -56,14 +56,14 @@ const Conf = {
                   // console.debug('show:', parrentName);
                   dependentEl.classList.remove('hide');
                   childInputDisable(false);
-
-               } else {
+               }
+               else {
                   // console.debug('hide:', parrentName);
                   dependentEl.classList.add('hide');
                   childInputDisable(true);
                }
-
-            } else {
+            }
+            else {
                console.error('error showOrHide:', parrentName);
             }
          }
@@ -83,11 +83,12 @@ const Conf = {
       let newSettings = {};
 
       for (let [key, value] of new FormData(form)) {
-         if (newSettings.hasOwnProperty(key)) { // SerializedArray
+         // SerializedArray
+         if (newSettings.hasOwnProperty(key)) {
             newSettings[key] += ',' + value; // add new
             newSettings[key] = newSettings[key].split(','); // to array [old, new]
-
-         } else {
+         }
+         else {
             // convert string to boolean
             switch (value) {
                case 'true': newSettings[key] = true; break;

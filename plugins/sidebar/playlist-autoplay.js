@@ -125,8 +125,8 @@ window.nova_plugins.push({
                   // checkbox update state
                   checkboxBtn.checked = manager?.canAutoAdvance_;
                   checkboxBtn.title = `Playlist Autoplay is ${manager?.canAutoAdvance_ ? 'ON' : 'OFF'}`;
-
-               } else console.error('Error playlist-autoplay. Playlist manager is', manager);
+               }
+               else console.error('Error playlist-autoplay. Playlist manager is', manager);
             }
 
          }

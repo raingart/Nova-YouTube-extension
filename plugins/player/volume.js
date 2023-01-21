@@ -107,8 +107,8 @@ window.nova_plugins.push({
                if (newLevel === movie_player.getVolume()) {
                   this.saveInSession(newLevel);
                   // this.buildVolumeSlider();
-
-               } else {
+               }
+               else {
                   console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
                }
             }
@@ -150,12 +150,11 @@ window.nova_plugins.push({
 
                NOVA.bezelTrigger(movie_player.getVolume() * this.node.gain.value + '%');
                // this.buildVolumeSlider();
-
-            } else {
+            }
+            else {
                if (this.audioCtx && this.node.gain.value !== 1) {
                   this.node.gain.value = 1; // reset
                }
-
                this.set(level);
             }
             // console.debug('unlimit', this.node.gain.value);

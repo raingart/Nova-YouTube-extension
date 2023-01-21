@@ -111,9 +111,9 @@ window.nova_plugins.push({
                if (entry.isIntersecting) {
                   movie_player.classList.remove(CLASS_VALUE);
                   drag.reset(); // save old pos. Clear curr pos
-
-               } else if (!movie_player.isFullscreen()) { // enter viewport // fix bug on scroll in fullscreen player mode
-                  // } else { // enter viewport
+               }
+               // enter viewport. fix bug on scroll in fullscreen player mode
+               else if (!movie_player.isFullscreen()) {
                   movie_player.classList.add(CLASS_VALUE);
                   drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
                }
@@ -286,7 +286,7 @@ window.nova_plugins.push({
             else this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
          },
 
-         init(el_target = required(), callbackExport) { // init
+         init(el_target = required(), callbackExport) {
             this.log('drag init', ...arguments);
             if (!(el_target instanceof HTMLElement)) return console.error('el_target not HTMLElement:', el_target);
 
@@ -397,8 +397,8 @@ window.nova_plugins.push({
 
       //    if (document.querySelector(".js-inject-header")) {
       //       document.querySelector(".js-inject-header").onmousedown = dragMouseDown;
-
-      //    } else {
+      //    }
+      //    else {
       //       el.onmousedown = dragMouseDown;
       //    }
 
