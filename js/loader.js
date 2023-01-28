@@ -174,6 +174,9 @@ App.init();
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 // https://www.youtube.com/watch?v=ir6nk2zrMG0 - wide
 
+// live
+// https://www.youtube.com/watch?v=tNkZsRW7h2c - live
+
 // wide-screen video
 // https://www.youtube.com/watch?v=B4yuZhKRW1c
 // https://www.youtube.com/watch?v=zEk3A1fA0gc
@@ -198,6 +201,8 @@ App.init();
 // warn "The following content may contain suicide or self-harm topics."
 // https://www.youtube.com/watch?v=MEZ-0nyiago
 // https://www.youtube.com/watch?v=MiQozY6jR0I
+// https://www.youtube.com/watch?v=vcw5THyM7Jo
+// https://www.youtube.com/watch?v=4QXCPuwBz2E
 
 // test normal lite
 // https://www.youtube.com/watch?v=eWwBkA0GqaY 144 MUSIC

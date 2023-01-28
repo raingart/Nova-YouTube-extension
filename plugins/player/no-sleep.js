@@ -33,19 +33,23 @@ window.nova_plugins.push({
    // 'desc:ua': 'Вимикає спливаюче вікно "продовжити перегляд?"',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/390352-youtube-stay-active-and-play-forever
-      // alt2- https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
-      // alt3 - https://greasyfork.org/en/scripts/458173-youtube-don-t-stop
+      // alt1 - https://greasyfork.org/en/scripts/443234-background-youtube-music
+      // alt2 - https://greasyfork.org/en/scripts/390352-youtube-stay-active-and-play-forever
+      // alt3 - https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
+      // alt4 - https://greasyfork.org/en/scripts/458173-youtube-don-t-stop
+      // alt5 - https://greasyfork.org/en/scripts/458929-youtube-background-nonstop
 
       window.setInterval(() => {
-         // Strategy 1
-         document.dispatchEvent(
-            // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
-            new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })
-         );
-         // Strategy 2
-         // does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
-         // window.wrappedJSObject._lact = Date.now();
+         if (document.visibilityState == 'hidden') {
+            // Strategy 1
+            document.dispatchEvent(
+               // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
+               new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })
+            );
+            // Strategy 2
+            // does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
+            // window.wrappedJSObject._lact = Date.now();
+         }
       }, 1000 * 60 * 5); // 5 min
 
 

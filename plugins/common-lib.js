@@ -449,32 +449,52 @@ const NOVA = {
     * @return {array}
    */
    getChapterList(video_duration = required()) {
-      return NOVA.currentPage != 'embed'
-         // Strategy 1
-         ? getFromDescription() // does not work in embed
-         // Strategy 2
-         : getFromAPI();
+
+      let timestampsCollect = [];
+
+      // Strategy 1
+      if (NOVA.currentPage != 'embed') {
+         // export to timestampsCollect
+         getFromDescription(); // does not work in embed
+      }
+
+      return timestampsCollect.length ? timestampsCollect
+         : getFromAPI(); // Strategy 2
+
 
       function getFromDescription() {
+         const selectorTimestampLink = 'a[href*="&t="]';
          let
-            timestampsCollect = [],
-            prevSec = -1,
-            parentSource;
+            nowComment,
+            prevSec = -1;
 
          // description and first(pinned) comment
-         document.body.querySelectorAll(
-            // `#primary-inner #description (old, has a bug with several hidden instances),
-            // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
-            `ytd-watch, ytd-watch-flexy,
-            #comments ytd-comment-thread-renderer:first-child #content`
-         )
-            .forEach(el => {
-               if (timestampsCollect.length) return; // skip if exist in priroty
-               // parentSource = el.id == 'content' ? 'comment' : 'description';
-               parentSource = el.hasOwnProperty('playerData') ? 'description' : 'comment';
+         // document.body.querySelectorAll(
+         //    // `#primary-inner #description (old, has a bug with several hidden instances),
+         //    // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
+         //    `ytd-watch, ytd-watch-flexy,
+         //    #comments ytd-comment-thread-renderer:first-child #content`
+         // )
+         [
+            // description
+            (
+               document.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.shortDescription
+               || document.querySelector('#description.ytd-watch-metadata')?.textContent
+            ),
+            // comments
+            ...[...document.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
+               // .map(el => el.closest('#comment')?.textContent),
+               .map(el => ({
+                  'source': 'comment',
+                  'text': el.closest('#comment')?.textContent,
+               })),
+         ]
+            .forEach(data => {
+               if (timestampsCollect.length) return; // skip if exist in priority selector (#1 description, #2 comments)
+               // needed for check, applying sorting by timestamps
+               nowComment = Boolean(data?.source);
 
-               // exclude embed page
-               (el.playerData?.videoDetails.shortDescription || el.textContent)
+               (data?.text || data)
                   ?.split('\n')
                   .forEach(line => {
                      line = line?.toString().trim(); // clear spaces
@@ -485,18 +505,17 @@ const NOVA = {
                            sec = NOVA.timeFormatTo.hmsToSec(timestamp),
                            timestampPos = line.indexOf(timestamp);
 
-                        // if ((parentSource == 'comment'
-                        //    || (sec > prevSec && sec < +video_duration) // fix like (ex: https://www.youtube.com/watch?v=S66Q7T7qqxU , https://www.youtube.com/watch?v=nkyXwDU97ms)
-                        // )
-                        //    // not in the middle of the line
-                        //    && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
-                        // ) {
-                        if ((sec > prevSec && sec < +video_duration)
+                        if (
+                           // fix invalid sort timestamp
+                           // ex: https://www.youtube.com/watch?v=S66Q7T7qqxU https://www.youtube.com/watch?v=nkyXwDU97ms
+                           (nowComment ? true
+                              : (sec > prevSec && sec < +video_duration)
+                           )
                            // not in the middle of the line
                            && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                         ) {
-                           // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-                           prevSec = sec;
+                           if (nowComment) prevSec = sec;
+
                            timestampsCollect.push({
                               'sec': sec,
                               'time': timestamp,
@@ -513,8 +532,8 @@ const NOVA = {
             });
 
          if (timestampsCollect.length) {
-            if (parentSource == 'comment') {
-               // sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
+            if (nowComment) {
+               // apply sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
                timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
             }
             // console.debug('timestampsCollect', timestampsCollect);
@@ -538,7 +557,7 @@ const NOVA = {
          )
             .find(a => a?.videoData)
             ?.videoData.multiMarkersPlayerBarRenderer?.markersMap[0].value.chapters
-            .map(c => {
+            ?.map(c => {
                const sec = c.chapterRenderer.timeRangeStartMillis / 1000;
                return {
                   'sec': sec,
@@ -664,15 +683,16 @@ const NOVA = {
             // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
             // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.videoDetails.author,
             // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
-            channelName = movie_player.getVideoData().author,
+            channelName = movie_player.getVideoData().author.toUpperCase(), // UpperCase
             titleStr = movie_player.getVideoData().title,
-            titleWordsArr = titleStr?.match(/\w+/g);
+            titleWordsList = titleStr?.toUpperCase().match(/\w+/g), // UpperCase
+            playerData = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData;
 
          // if (user_settings.rate_default_apply_music == 'expanded') {
          //    // 【MAD】,『MAD』,「MAD」
-         //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', TEASER
+         //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', 'Remix OS, TEASER
          //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-         //       || ['【', '『', '「', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsArr?.map(w => w.toUpperCase()).includes(i))
+         //       || ['【', '『', '「', 'REMIX', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
          //    ) {
          //       return true;
          //    }
@@ -683,9 +703,9 @@ const NOVA = {
             location.href, // 'music.youtube.com' or 'youtube.com#music'
             channelName,
             // video genre
-            document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.category, // exclude embed page
+            playerData?.microformat?.playerMicroformatRenderer.category, // exclude embed page
             // playlistTitle
-            document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playlistData?.title, // ex. - https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
+            playerData?.title, // ex. - https://www.youtube.com/watch?v=cEdVLDfV1e0&list=PLVrIzE02N3EE9mplAPO8BGleeenadCSNv&index=2
 
             // ALL BELOW - not updated after page transition!
             // window.ytplayer?.config?.args.title,
@@ -693,23 +713,29 @@ const NOVA = {
             // window.ytplayer?.config?.args.raw_player_response.microformat?.playerMicroformatRenderer.category,
             // document.body.querySelector('ytd-player')?.player_?.getCurrentVideoConfig()?.args.raw_player_response?.microformat.playerMicroformatRenderer.category
          ]
-            .some(i => i?.toUpperCase().includes('MUSIC') || i?.toUpperCase().includes('SOUND'))
+            .some(i => i?.toUpperCase().includes('MUSIC'))
+
             // 'Official Artist' badge
             || document.body.querySelector('#upload-info #channel-name .badge-style-type-verified-artist')
             // https://yt.lemnoslife.com/channels?part=approval&id=CHANNEL_ID (items[0].approval == 'Official Artist Channel') (https://github.com/Benjamin-Loison/YouTube-operational-API)
+
             // channelNameVEVO
             || (channelName && /(VEVO|Topic|Records|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
-            // specific channel
-            || (channelName && ['ROCK'].includes(channelName.toUpperCase()))
+
+            // specific word in channel
+            || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName)) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
+
             // word
-            || titleWordsArr?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'REMIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CINEMATIC']
-               .some(i => titleWordsArr.map(w => w.toUpperCase()).includes(i))
+            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+               .some(i => titleWordsList.includes(i))
+
             // words
-            || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
-               .some(i => titleStr.toUpperCase().includes(i))
+            || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'ROCK N ROLL', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
+               .some(i => titleStr.includes(i))
+
             // word (case sensitive)
-            || titleWordsArr?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
-               .some(i => titleWordsArr.includes(i));
+            || titleWordsList?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+               .some(i => titleWordsList.includes(i));
       }
    },
 

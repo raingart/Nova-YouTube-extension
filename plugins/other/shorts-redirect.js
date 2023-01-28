@@ -71,16 +71,17 @@ window.nova_plugins.push({
 
       const
          // ATTR_MARK = 'nova-thumb-shorts-pathed',
-         linkQueryPatch = '&list=RDSH',
-         thumbsSelectors = [
-            'ytd-rich-item-renderer', // home, channel
-            'ytd-video-renderer', // results
-            'ytd-grid-video-renderer', // feed
-            // 'ytd-compact-video-renderer', // sidepanel in watch
-            'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
-            'ytm-item-section-renderer' // mobile /subscriptions page
-         ]
-            .join(',');
+         linkQueryPatch = '&list=RDSH';
+      // linkQueryPatch = '&list=RDSH',
+      // thumbsSelectors = [
+      //    'ytd-rich-item-renderer', // home, channel
+      //    'ytd-video-renderer', // results
+      //    'ytd-grid-video-renderer', // feed
+      //    // 'ytd-compact-video-renderer', // sidepanel in watch
+      //    'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
+      //    'ytm-item-section-renderer' // mobile /subscriptions page
+      // ]
+      //    .join(',');
 
       function patchThumbShort() {
          document.body.querySelectorAll(`a[href*="/shorts/"]:not([href$="${linkQueryPatch}"])`)
@@ -88,24 +89,24 @@ window.nova_plugins.push({
                link.href += linkQueryPatch; // fix href redirect to watch
                // link.href = link.href.replace('shorts/', 'watch?v=');
 
-               if (thumb = link.closest(thumbsSelectors)) {
-                  // console.debug('has #shorts:', thumb);
-                  // thumb.style.border = '2px solid orange'; // mark for test
+               // if (thumb = link.closest(thumbsSelectors)) {
+               //    // console.debug('has #shorts:', thumb);
+               //    // thumb.style.border = '2px solid orange'; // mark for test
 
-                  NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
-                     .then(async overlay => {
-                        if ((thumb = link.closest(thumbsSelectors)?.data)
-                           && (time = getThumbTime(thumb))
-                        ) {
-                           // console.debug('time', time);
-                           overlay.setAttribute('overlay-style', 'DEFAULT');
-                           // if (timeLabelEl = overlay.querySelector('#text')) {
-                           if (timeLabelEl = overlay.$['text']) {
-                              timeLabelEl.textContent = time;
-                           }
-                        }
-                     });
-               }
+               //    NOVA.waitElement('ytd-thumbnail-overlay-time-status-renderer', link)
+               //       .then(async overlay => {
+               //          if ((thumb = link.closest(thumbsSelectors)?.data)
+               //             && (time = getThumbTime(thumb))
+               //          ) {
+               //             // console.debug('time', time);
+               //             overlay.setAttribute('overlay-style', 'DEFAULT');
+               //             // if (timeLabelEl = overlay.querySelector('#text')) {
+               //             if (timeLabelEl = overlay.$['text']) {
+               //                timeLabelEl.textContent = time;
+               //             }
+               //          }
+               //       });
+               // }
             });
       }
 
@@ -150,62 +151,66 @@ window.nova_plugins.push({
       //    },
       // });
 
-      function getThumbTime(videoData = required()) {
-         // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js#L189 (extractLengthFromA11y fn)
-         // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
-         //    .forEach(videoRenderer => {
-         // const videoData = videoRenderer.data;
+      // function getThumbTime(videoData = required()) {
+      //    // alt - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js#L189 (extractLengthFromA11y fn)
 
-         if ((title = videoData.title.accessibility.accessibilityData?.label)
-            && (publishedTimeText = videoData.publishedTimeText?.simpleText)
-            && (viewCountText = videoData.viewCountText?.simpleText)
-         ) {
-            const
-               from = title.search(publishedTimeText) + publishedTimeText.length,
-               to = title.search(videoData.viewCountText?.simpleText);
+      //    // has time
+      //    if ((location.pathname + location.search) == '/playlist?list=WL') return;
 
-            let
-               [minutes, seconds] = title.substring(from, to).trim()
-                  .split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+      //    // document.body.querySelectorAll("ytd-video-renderer, ytd-grid-video-renderer")
+      //    //    .forEach(videoRenderer => {
+      //    // const videoData = videoRenderer.data;
 
-            // fix mixed up in places
-            if (!seconds) {
-               seconds = minutes;
-               minutes = null;
-            }
-            if (String(seconds).length === 1) {// fix "0:3" > "0:30"
-               seconds += '0';
-            }
-            // console.debug('>', [minutes, seconds]);
-            return [minutes || 0, seconds].join(':');
-         }
-         else {
-            console.error('getThumbTime empty:',
-               '\ntitle:', title,
-               '\npublishedTimeText:', publishedTimeText,
-               '\nviewCountText:', viewCountText);
-         }
-      }
+      //    if ((title = videoData.title?.accessibility.accessibilityData?.label)
+      //       && (publishedTimeText = videoData.publishedTimeText?.simpleText)
+      //       && (viewCountText = videoData.viewCountText?.simpleText)
+      //    ) {
+      //       const
+      //          from = title.search(publishedTimeText) + publishedTimeText.length,
+      //          to = title.search(viewCountText);
+
+      //       let
+      //          [minutes, seconds] = title.substring(from, to).trim()
+      //             .split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+
+      //       // fix mixed up in places
+      //       if (!seconds) {
+      //          seconds = minutes;
+      //          minutes = null;
+      //       }
+      //       if (String(seconds).length === 1) {// fix "0:3" > "0:30"
+      //          seconds += '0';
+      //       }
+      //       // console.debug('>', [minutes, seconds]);
+      //       return [minutes || 0, seconds].join(':');
+      //    }
+      //    else {
+      //       console.error('getThumbTime empty:',
+      //          '\ntitle:', title,
+      //          '\npublishedTimeText:', publishedTimeText,
+      //          '\nviewCountText:', viewCountText);
+      //    }
+      // }
 
    },
-   options: {
-      shorts_thumbnails_time: {
-         _tagName: 'input',
-         label: 'Add time on thumbnails overlay',
-         'label:zh': '在缩略图叠加上添加时间',
-         'label:ja': 'サムネイルオーバーレイに時間を追加',
-         'label:ko': '썸네일 오버레이에 시간 추가',
-         'label:id': 'Tambahkan waktu pada hamparan gambar mini',
-         'label:es': 'Agregar tiempo en la superposición de miniaturas',
-         'label:pt': 'Adicionar tempo na sobreposição de miniaturas',
-         'label:fr': 'Ajouter du temps sur la superposition des vignettes',
-         'label:it': 'Aggiungi tempo sulla sovrapposizione delle miniature',
-         // 'label:tr': 'Küçük resim yer paylaşımına zaman ekleyin',
-         'label:de': 'Fügen Sie Zeit für die Überlagerung von Miniaturansichten hinzu',
-         'label:pl': 'Dodaj czas na nakładce miniatur',
-         'label:ua': 'Додайте час на накладення мініатюр',
-         type: 'checkbox',
-         // title: '',
-      },
-   }
+   // options: {
+   //    shorts_thumbnails_time: {
+   //       _tagName: 'input',
+   //       label: 'Add time on thumbnails overlay',
+   //       'label:zh': '在缩略图叠加上添加时间',
+   //       'label:ja': 'サムネイルオーバーレイに時間を追加',
+   //       'label:ko': '썸네일 오버레이에 시간 추가',
+   //       'label:id': 'Tambahkan waktu pada hamparan gambar mini',
+   //       'label:es': 'Agregar tiempo en la superposición de miniaturas',
+   //       'label:pt': 'Adicionar tempo na sobreposição de miniaturas',
+   //       'label:fr': 'Ajouter du temps sur la superposition des vignettes',
+   //       'label:it': 'Aggiungi tempo sulla sovrapposizione delle miniature',
+   //       // 'label:tr': 'Küçük resim yer paylaşımına zaman ekleyin',
+   //       'label:de': 'Fügen Sie Zeit für die Überlagerung von Miniaturansichten hinzu',
+   //       'label:pl': 'Dodaj czas na nakładce miniatur',
+   //       'label:ua': 'Додайте час на накладення мініатюр',
+   //       type: 'checkbox',
+   //       // title: '',
+   //    },
+   // }
 });

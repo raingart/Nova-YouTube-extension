@@ -1,7 +1,7 @@
 window.nova_plugins.push({
    id: 'player-fullscreen-mode',
-   // title: 'Auto full screen player,
-   title: 'Auto full screen on playback',
+   // title: 'Auto fullscreen player,
+   title: 'Auto fullscreen on playback',
    'title:zh': '播放时自动全屏',
    'title:ja': '再生時に全画面表示',
    'title:ko': '재생 시 자동 전체 화면',
@@ -14,27 +14,33 @@ window.nova_plugins.push({
    'title:de': 'Automatischer Vollbildmodus bei Wiedergabe',
    'title:pl': 'Pełny ekran podczas odtwarzania',
    'title:ua': 'Автоматичне ввімкнення повного екрану при відтворенні',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {
 
-      NOVA.waitElement('video')
+      // embed but not iframe
+      if (NOVA.currentPage == 'embed' && (window.self === window.top)) return; // !window.frameElement
+
+      if (user_settings.player_fullscreen_mode_embed == 'on' && NOVA.currentPage != 'embed') return; // for legacy user_settings - https://github.com/raingart/Nova-YouTube-extension/issues/42
+      // if (user_settings.player_fullscreen_mode_embed && NOVA.currentPage != 'embed') return;
+
+      NOVA.waitElement('#movie_player video')
          .then(video => {
             // init
             video.addEventListener('play', setFullscreen.bind(video), { capture: true, once: true });
-            // on page reload
+            // on page change (new video)
             video.addEventListener('loaddata', setFullscreen.bind(video));
+
             video.addEventListener('ended', exitFullscreen.bind(video));
 
             // exit fullscreen
             if (user_settings.player_fullscreen_mode_onpause) {
                // Strategy 1
-               video.addEventListener('play', setFullscreen.bind(video));
                video.addEventListener('pause', exitFullscreen.bind(video));
                // Strategy 2
                // movie_player.addEventListener('onStateChange', state => {
-               //    if (document.fullscreen && movie_player.isFullscreen() && (NOVA.getPlayerState(state) == 'ENDED')) {
+               //    if (document.fullscreen && movie_player.isFullscreen() && (getPlayerState(state) == 'ENDED')) {
                //       movie_player.toggleFullscreen();
                //    }
                // });
@@ -44,13 +50,15 @@ window.nova_plugins.push({
       function setFullscreen() {
          if (movie_player.classList.contains('ad-showing')) return;
 
-         if (!movie_player.isFullscreen()) {
-            if (location.host == 'm.youtube.com') {
-               document.body.querySelector('button.fullscreen-icon')?.click();
-            }
-            else {
-               movie_player.toggleFullscreen();
-            }
+         if (!document.fullscreenElement) {
+            // Strategy 1
+            movie_player.requestFullscreen()
+               .catch(error => console.error('Fullscreen not allowed', error)); // fix. silent error
+            // Strategy 2
+            // if (location.host == 'm.youtube.com') {
+            //    document.body.querySelector('button.fullscreen-icon')?.click();
+            // }
+            // else movie_player.toggleFullscreen();
          }
       }
 
@@ -61,6 +69,32 @@ window.nova_plugins.push({
 
    },
    options: {
+      player_fullscreen_mode_embed: {
+         _tagName: 'select',
+         label: 'Apply to video',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         'label:ua': 'Застосувати до відео',
+         options: [
+            {
+               label: 'all', value: false, selected: true,
+               'label:ua': 'всіх',
+            },
+            {
+               label: 'embed', value: 'on',
+               'label:ua': 'вбудованих',
+            },
+         ],
+      },
       player_fullscreen_mode_onpause: {
          _tagName: 'input',
          label: 'Exit full screen mode if video is paused',
@@ -77,6 +111,19 @@ window.nova_plugins.push({
          'label:pl': 'Wyjdź z trybu pełnoekranowego, jeśli wideo jest wstrzymane',
          'label:ua': 'Вихід з повного екрану зупиняє відео',
          type: 'checkbox',
+         title: 'Unavailable if fullscreen mode is not allow',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
       },
    }
 });

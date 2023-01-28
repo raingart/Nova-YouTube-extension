@@ -1,20 +1,26 @@
 // for test:
-// https://www.youtube.com/watch?v=Xt2sbtvBuk8 - have 3-digit timestamps in description, Manual chapter numbering
-// https://www.youtube.com/watch?v=SgQ_Jk49FRQ - timestamp in pinned comment
-// https://www.youtube.com/watch?v=tlICDvcCkog - timestamp in pinned comment#3 (bug has 1 chapters blocks). Manual chapter numbering
-// https://www.youtube.com/watch?v=IvZOmE36PLc - many extra characters. Manual chapter numbering
-// https://www.youtube.com/watch?v=hLXIK9DBxAo - very long text line of timestamp
-// correct chapters:
-// https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp. Manual chapter numbering
+// MANUAL CHAPTER
+
+// timestamp in (description + comment):
+// https://www.youtube.com/watch?v=IvZOmE36PLc&lc=UgznihSt34vx093bT9p4AaABAg
+// https://www.youtube.com/watch?v=Xt2sbtvBuk8&lc=UgzAWQZfFFq2nzZ4gtp4AaABAg - have 3-digit timestamps
+
+// timestamp in pinned comment:
+// https://www.youtube.com/watch?v=SgQ_Jk49FRQ
+// https://www.youtube.com/watch?v=tlICDvcCkog
+// https://www.youtube.com/watch?v=_-5cYbk-QYI&lc=UgxgHkAhtabuiFsFHAp4AaABAg
+
+// timestamp in description
+// https://www.youtube.com/watch?v=hLXIK9DBxAo - title of chapters before timestamp. very long text line of timestamp
+
+// CORRECT CHAPTERS + description:
+// https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp.
+// https://www.youtube.com/watch?v=t_fbcgzmxHs - title of chapters before timestamp.
 // https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
+
 // false detect:
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
-// https://www.youtube.com/watch?v=Dg30oEk5Mw0 - timestamp in pinned comment #2 (once)
-// https://www.youtube.com/watch?v=tNkZsRW7h2c - live
-
-// test TitleOffset
-// https://youtu.be/t_fbcgzmxHs
 
 window.nova_plugins.push({
    id: 'time-jump',

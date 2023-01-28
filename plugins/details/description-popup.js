@@ -130,22 +130,29 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/457850-youtube-video-info
       // alt2 - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
+      let oldDateText;
       function restoreDateLine() {
          NOVA.waitElement('#title h1')
             .then(container => {
                // date = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
                NOVA.waitElement('#description #info.ytd-watch-metadata:not(:empty)')
-                  .then(textDateEl => {
-                     if ((text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]
-                        // first 3 div. ex:
-                        // [6,053 views] [Premiered] [Oct 8, 2022]
-                        // [14,051 views] [] [Mar 2, 2017]
-                        ?.slice(0, 3)
-                        .map(e => e.textContent)
-                        ?.join('')?.trim()
-                     )) {
-                        insertToHTML({ 'text': text, 'container': container });
-                     }
+                  .then(async textDateEl => {
+                     await NOVA.waitUntil(() => {
+                        if ((text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]
+                           // first 3 div. ex:
+                           // [6,053 views] [Premiered] [Oct 8, 2022]
+                           // [14,051 views] [] [Mar 2, 2017]
+                           ?.slice(0, 3)
+                           .map(e => e.textContent)
+                           ?.join('')?.trim()
+                        )
+                           && text != oldDateText // new date
+                        ) {
+                           oldDateText = text;
+                           insertToHTML({ 'text': oldDateText, 'container': container });
+                           return true;
+                        }
+                     }, 1000); // 1sec
                   });
             });
 

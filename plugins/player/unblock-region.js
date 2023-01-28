@@ -2,6 +2,7 @@
 // https://www.youtube.com/watch?v=bTm3kwroEyw - https://watannetwork.com/tools/blocked/#url=bTm3kwroEyw
 // https://www.youtube.com/watch?v=3U2UGM0ldGg - https://watannetwork.com/tools/blocked/#url=3U2UGM0ldGg
 // https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
+// https://www.youtube.com/watch?v=bJ9r8LMU9bQ - https://watannetwork.com/tools/blocked/#url=bJ9r8LMU9bQ
 
 // warn "The following content may contain suicide or self-harm topics."
 // https://www.youtube.com/watch?v=MEZ-0nyiago

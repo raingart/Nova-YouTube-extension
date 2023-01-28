@@ -15,26 +15,13 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   // desc: '',
-   // 'desc:zh': '',
-   // 'desc:ja': '',
-   // 'desc:ko': '',
-   // 'desc:id': '',
-   // 'desc:es': '',
-   // 'desc:pt': '',
-   // 'desc:fr': '',
-   // 'desc:it': '',
-   // 'desc:tr': '',
-   // 'desc:de': '',
-   // 'desc:pl': '',
-   // 'desc:ua': '',
 
    _runtime: user_settings => {
 
       // alt - https://chrome.google.com/webstore/detail/nbkomboflhdlliegkaiepilnfmophgfg
       NOVA.css.push(
          `.ytp-swatch-background-color {
-            background-color: ${user_settings.player_progressbar_color || '#f00'} !important;
+            background-color: ${user_settings.player_progress_bar_color || '#f00'} !important;
          }`);
 
    },
@@ -43,7 +30,7 @@ window.nova_plugins.push({
          _tagName: 'input',
          type: 'color',
          // value: '#ff0000', // red
-         value: '#0089ff', // red
+         value: '#0089ff', // blue
          label: 'Color',
          'label:zh': '颜色',
          'label:ja': '色',

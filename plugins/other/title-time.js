@@ -40,13 +40,20 @@ window.nova_plugins.push({
          strSplit: ' | ',
          // strSplit: ' • ',
 
+         saveCheck() { // speed hack
+            return this.backup?.includes(this.strSplit) // check strSplit has in title
+               // deep test. // title has time "0:00:00${this.strSplit}"
+               ? new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|', '\\|')})`, '')
+                  .test(document.title)
+               // includes - less accurate but more speed up
+               : document.title.includes(this.strSplit);
+         },
+
          save() {
             if (this.backup
                || movie_player.getVideoData().isLive // live
                || movie_player.classList.contains('ad-showing') // ad-video
-               || document.title.includes(this.strSplit) // less accurate but more speed up
-               // || new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|', '\\|')})`, '')
-               // .test(document.title) // title has time "0:00:00${this.strSplit}"
+               || this.saveCheck()
             ) {
                return;
             }

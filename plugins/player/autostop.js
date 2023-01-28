@@ -134,6 +134,18 @@ window.nova_plugins.push({
       stop_preload_embed: {
          _tagName: 'select',
          label: 'Apply to video',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         'label:ua': 'Застосувати до відео',
          options: [
             {
                label: 'all', value: false, selected: true,

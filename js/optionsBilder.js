@@ -439,7 +439,7 @@ window.addEventListener('load', () => {
    Storage.getParams(settings => {
       if (settings?.lang_code) Opt.lang_code = settings.lang_code; // locale predefinitions
       Opt.init();
-      Conf.init();
+      PopulateForm.init();
       // remove api warn if has api
       if (settings && settings['user-api-key']) {
          document.body.querySelectorAll('.info b').forEach(el => el.remove());
