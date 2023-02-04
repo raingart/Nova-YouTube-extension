@@ -421,25 +421,25 @@ const NOVA = {
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
-         CLASS_VALUE_TOGGLE = 'ytp-text-root';
+         BEZEL_SELECTOR_TOGGLE = '.ytp-text-root';
 
       if (!this.bezel_css_inited) {
          this.bezel_css_inited = true;
          this.css.push(
-            `.${CLASS_VALUE_TOGGLE} { display: block !important; }
-            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text-wrapper {
+            `${BEZEL_SELECTOR_TOGGLE} { display: block !important; }
+            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel-text-wrapper {
                pointer-events: none;
                z-index: 40 !important;
             }
-            .${CLASS_VALUE_TOGGLE} .ytp-bezel-text { display: inline-block !important; }
-            .${CLASS_VALUE_TOGGLE} .ytp-bezel { display: none !important; }`);
+            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel-text { display: inline-block !important; }
+            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel { display: none !important; }`);
       }
 
       bezelEl.textContent = text;
-      bezelContainer.classList.add(CLASS_VALUE_TOGGLE);
+      bezelContainer.classList.add(BEZEL_SELECTOR_TOGGLE);
 
       this.fateBezel = setTimeout(() => {
-         bezelContainer.classList.remove(CLASS_VALUE_TOGGLE);
+         bezelContainer.classList.remove(BEZEL_SELECTOR_TOGGLE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
       }, 600); // 600ms
    },
@@ -468,21 +468,19 @@ const NOVA = {
             nowComment,
             prevSec = -1;
 
-         // description and first(pinned) comment
-         // document.body.querySelectorAll(
-         //    // `#primary-inner #description (old, has a bug with several hidden instances),
-         //    // `#description.ytd-watch-metadata (invalid(common container) due to formatting [since 9 nov 2022]),
-         //    `ytd-watch, ytd-watch-flexy,
-         //    #comments ytd-comment-thread-renderer:first-child #content`
-         // )
          [
             // description
             (
-               document.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.shortDescription
-               || document.querySelector('#description.ytd-watch-metadata')?.textContent
+               document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.shortDescription
+               || document.body.querySelector('ytd-watch-metadata #description.ytd-watch-metadata')?.textContent
             ),
-            // comments
-            ...[...document.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
+            // first comment (pinned)
+            // '#comments ytd-comment-thread-renderer:first-child #content',
+            // all comments
+            // Strategy 1. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+            //...[...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
+            // Strategy 2
+            ...[...document.body.querySelectorAll(`#comments #comment #comment-content a[href*="&t="] + *:last-child`)]
                // .map(el => el.closest('#comment')?.textContent),
                .map(el => ({
                   'source': 'comment',
@@ -490,7 +488,7 @@ const NOVA = {
                })),
          ]
             .forEach(data => {
-               if (timestampsCollect.length) return; // skip if exist in priority selector (#1 description, #2 comments)
+               if (timestampsCollect.length > 1) return; // skip if exist in priority selector (#1 description, #2 comments)
                // needed for check, applying sorting by timestamps
                nowComment = Boolean(data?.source);
 
@@ -531,7 +529,12 @@ const NOVA = {
                   });
             });
 
-         if (timestampsCollect.length) {
+         // if 1 mark < 30% video_duration. Ex skip intro info in comment
+         if (nowComment && timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 3)) {
+            return timestampsCollect;
+         }
+
+         if (timestampsCollect.length > 1) {
             if (nowComment) {
                // apply sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
                timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
@@ -576,7 +579,7 @@ const NOVA = {
    //    let timestampList = [];
    //    let prevSec = -1;
 
-   //    document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
+   //    document.body.querySelectorAll(`ytd-watch-metadata #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
    //          const sec = parseInt(this.queryURL.get('t', link.href));
@@ -874,63 +877,10 @@ const NOVA = {
       },
    },
 
-   request: {
+   request: (() => {
+      const API_STORE_NAME = 'YOUTUBE_API_KEYS'; // restrict access
 
-      API_STORE_NAME: 'YOUTUBE_API_KEYS',
-
-      /**
-       * @param  {string} request
-       * @param  {object} params
-       * @param  {string*} api_key
-       * @return {object}
-      */
-      async API({ request = required(), params = required(), api_key }) {
-         // NOVA.log('request.API:', ...arguments); // err
-         // console.debug('API:', ...arguments);
-         // get API key
-         const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(this.API_STORE_NAME) ? JSON.parse(localStorage.getItem(this.API_STORE_NAME)) : await this.keys();
-
-         if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS?.length)) {
-            localStorage.hasOwnProperty(this.API_STORE_NAME) && localStorage.removeItem(this.API_STORE_NAME);
-            // alert('I cannot access the API key.'
-            //    + '\nThe plugins that depend on it have been terminated.'
-            //    + "\n - Check your network's access to Github"
-            //    + '\n - Generate a new private key'
-            //    + '\n - Deactivate plugins that need it'
-            // );
-            // throw new Error('YOUTUBE_API_KEYS is empty:', YOUTUBE_API_KEYS);
-            return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
-         }
-
-         const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
-         // combine GET
-         const query = Object.keys(params)
-            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-            .join('&');
-
-         const URL = `https://www.googleapis.com/youtube/v3/${request}?${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
-         // console.debug('URL', URL);
-         // request
-         return await fetch(URL)
-            .then(response => response.json())
-            .then(json => {
-               if (!json?.error && Object.keys(json).length) return json;
-               console.warn('used key:', NOVA.queryURL.get('key', URL));
-               throw new Error(JSON.stringify(json?.error));
-            })
-            .catch(error => {
-               localStorage.removeItem(this.API_STORE_NAME);
-               console.error(`Request API failed:${URL}\n${error}`);
-               if (error?.message) return { error: JSON.parse(error.message) };
-               // alert('Problems with the YouTube API:'
-               //    + '\n' + error?.message
-               //    + '\n\nIf this error is repeated:'
-               //    + '\n - Disconnect the plugins that need it'
-               //    + '\n - Update your YouTube API KEY');
-            });
-      },
-
-      async keys() {
+      async function getKeys() { // restrict access
          NOVA.log('request.API: fetch to youtube_api_keys.json');
          // see https://gist.github.com/raingart/ff6711fafbc46e5646d4d251a79d1118/
          return await fetch('https://gist.githubusercontent.com/raingart/ff6711fafbc46e5646d4d251a79d1118/raw/youtube_api_keys.json')
@@ -938,18 +888,77 @@ const NOVA = {
             // save
             .then(keys => {
                NOVA.log(`get and save keys in localStorage`, keys);
-               localStorage.setItem(this.API_STORE_NAME, keys);
+               localStorage.setItem(API_STORE_NAME, keys);
                return JSON.parse(keys);
             })
             // clear
             .catch(error => {
-               localStorage.removeItem(this.API_STORE_NAME);
+               localStorage.removeItem(API_STORE_NAME);
                throw error;
                // throw new Error(error);
             })
             .catch(reason => console.error('Error get keys:', reason)); // warn
-      },
-   },
+      }
+
+      return {
+         /**
+          * @param  {string} request
+          * @param  {object} params
+          * @param  {string*} api_key
+          * @return {object}
+         */
+         async API({ request = required(), params = required(), api_key }) {
+            // NOVA.log('request.API:', ...arguments); // err
+            // console.debug('API:', ...arguments);
+            // get API key
+            const YOUTUBE_API_KEYS = localStorage.hasOwnProperty(API_STORE_NAME)
+               ? JSON.parse(localStorage.getItem(API_STORE_NAME)) : await getKeys();
+
+            if (!api_key && (!Array.isArray(YOUTUBE_API_KEYS) || !YOUTUBE_API_KEYS?.length)) {
+               localStorage.hasOwnProperty(API_STORE_NAME) && localStorage.removeItem(API_STORE_NAME);
+               // alert('I cannot access the API key.'
+               //    + '\nThe plugins that depend on it have been terminated.'
+               //    + "\n - Check your network's access to Github"
+               //    + '\n - Generate a new private key'
+               //    + '\n - Deactivate plugins that need it'
+               // );
+               // throw new Error('YOUTUBE_API_KEYS is empty:', YOUTUBE_API_KEYS);
+               return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
+            }
+
+            const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+            // combine GET
+            const query = Object.keys(params)
+               .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+               .join('&');
+
+            const URL = `https://www.googleapis.com/youtube/v3/${request}?${query}&key=` + referRandKey(YOUTUBE_API_KEYS);
+            // console.debug('URL', URL);
+            // request
+            return await fetch(URL)
+               .then(response => response.json())
+               .then(json => {
+                  if (!json?.error && Object.keys(json).length) return json;
+                  console.warn('used key:', NOVA.queryURL.get('key', URL));
+                  throw new Error(JSON.stringify(json?.error));
+               })
+               .catch(error => {
+                  localStorage.removeItem(API_STORE_NAME);
+                  console.error(`Request API failed:${URL}\n${error}`);
+                  if (error?.message) return {
+                     error: (typeof error.message === 'object'
+                        ? JSON.parse(error.message) : error.message),
+                  };
+                  // alert('Problems with the YouTube API:'
+                  //    + '\n' + error?.message
+                  //    + '\n\nIf this error is repeated:'
+                  //    + '\n - Disconnect the plugins that need it'
+                  //    + '\n - Update your YouTube API KEY');
+               });
+         },
+      };
+
+   })(),
 
    /**
     * @param  {string*} state

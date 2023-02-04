@@ -257,7 +257,7 @@ function renderSettingButton() {
 function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
-   if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Open popup to report the bug?`)) {
+   if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
       openBugReport();
    }
 
@@ -281,7 +281,8 @@ window.addEventListener('unhandledrejection', err => {
    if (user_settings.report_issues && err.reason.stack.includes('Nova'))
       _pluginsCaptureException({
          'trace_name': 'unhandledrejection',
-         'err_stack': err.reason.stack,
+         // 'err_stack': err.reason.stack,
+         'err_stack': err.stack,
          'app_ver': GM_info.script.version,
          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
       });

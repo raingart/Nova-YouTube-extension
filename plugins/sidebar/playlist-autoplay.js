@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'playlist-toggle-autoplay',
-   title: 'Playlist autoplay control button',
+   title: 'Add playlist autoplay control button',
    'title:zh': '播放列表自动播放控制',
    'title:ja': 'プレイリストの自動再生コントロール',
    'title:ko': '재생 목록 자동 재생 제어',

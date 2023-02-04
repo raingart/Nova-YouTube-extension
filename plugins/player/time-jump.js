@@ -20,6 +20,7 @@
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
 
 // false detect:
+// https://www.youtube.com/watch?v=Z9ZaEXqjZvw - broken
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 
 window.nova_plugins.push({

@@ -47,7 +47,7 @@ window.nova_plugins.push({
 
             // after 10.27.22
             'a.ytd-thumbnail',
-            // '#description.ytd-watch-metadata',
+            // 'ytd-watch-metadata #description.ytd-watch-metadata',
             // '.ytd-searchbox', // searchbox
             // '.yt-spec-button-shape-next--size-m', // comment replay, subscribe like , , etc btn
 

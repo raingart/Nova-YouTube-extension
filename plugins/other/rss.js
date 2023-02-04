@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'rss-link',
-   title: 'Add RSS Feed link',
+   title: 'Add RSS feed link',
    'title:zh': '添加 RSS 提要链接',
    'title:ja': 'RSSフィードリンクを追加',
    'title:ko': 'RSS 피드 링크 추가',

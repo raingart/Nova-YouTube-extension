@@ -221,7 +221,7 @@ window.nova_plugins.push({
       },
       pause_background_tab_autopause_unfocus: {
          _tagName: 'input',
-         label: 'Autopause video if tab loses focus',
+         label: 'Autopause if tab loses focus',
          'label:zh': '如果选项卡失去焦点，则自动暂停视频',
          'label:ja': 'タブがフォーカスを失った場合にビデオを自動一時停止',
          'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',

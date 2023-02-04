@@ -32,15 +32,21 @@ window.nova_plugins.push({
             // on page change (new video)
             video.addEventListener('loaddata', setFullscreen.bind(video));
 
-            video.addEventListener('ended', exitFullscreen.bind(video));
+            video.addEventListener('ended', exitFullscreen);
 
             // exit fullscreen
             if (user_settings.player_fullscreen_mode_onpause) {
                // Strategy 1
-               video.addEventListener('pause', exitFullscreen.bind(video));
+               video.addEventListener('pause', () => {
+                  // fix overlapped ".paused-mode" after you scroll the time in the player with the mouse
+                  if (!document.querySelector('.ytp-progress-bar')?.contains(document.activeElement)) {
+                     exitFullscreen();
+                  }
+               });
+               video.addEventListener('play', setFullscreen.bind(video));
                // Strategy 2
                // movie_player.addEventListener('onStateChange', state => {
-               //    if (document.fullscreen && movie_player.isFullscreen() && (getPlayerState(state) == 'ENDED')) {
+               //    if (document.fullscreen && movie_player.isFullscreen() && (NOVA.getPlayerState(state) == 'ENDED')) {
                //       movie_player.toggleFullscreen();
                //    }
                // });
@@ -71,7 +77,7 @@ window.nova_plugins.push({
    options: {
       player_fullscreen_mode_embed: {
          _tagName: 'select',
-         label: 'Apply to video',
+         label: 'Apply to video type',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -94,6 +100,19 @@ window.nova_plugins.push({
                'label:ua': 'вбудованих',
             },
          ],
+         title: 'Unavailable if emded fullscreen is not allow',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
       },
       player_fullscreen_mode_onpause: {
          _tagName: 'input',
@@ -111,19 +130,6 @@ window.nova_plugins.push({
          'label:pl': 'Wyjdź z trybu pełnoekranowego, jeśli wideo jest wstrzymane',
          'label:ua': 'Вихід з повного екрану зупиняє відео',
          type: 'checkbox',
-         title: 'Unavailable if fullscreen mode is not allow',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
-         // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
       },
    }
 });

@@ -72,6 +72,8 @@ window.nova_plugins.push({
 
                'ytd-popup-container tp-yt-paper-dialog ytd-single-option-survey-renderer', // "How is YouTube today?" - Absolutely outstanding, Extremely good, Very good, Good, Not good
 
+               '#donation-shelf ytd-donation-unavailable-renderer', // message "Sorry, you can't donate in this country or region yet." - https://www.youtube.com/watch?v=L_tg2u26tCU, https://www.youtube.com/watch?v=NGQ2Zhrkk4o
+
 
                // results, sidebar page
                '.sparkles-light-cta', // ad buy - https://www.youtube.com/results?search_query=Canon+Pixma+MG2520

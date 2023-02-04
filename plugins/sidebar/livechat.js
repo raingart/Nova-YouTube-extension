@@ -24,20 +24,20 @@ window.nova_plugins.push({
 
       if (window['nova-lock-live-chat']) return
 
-      window['nova-lock-live-chat'] = true;
+      window['nova-lock-live-chat'] = true; // set lock
 
       if (user_settings.livechat_visibility_mode == 'disable') {
          NOVA.waitElement('#chat')
             .then(chat => {
                chat.remove();
-               window['nova-lock-live-chat'] = false;
+               window['nova-lock-live-chat'] = false; // unlock
             });
       }
       else {
          NOVA.waitElement('#chat:not([collapsed]) #show-hide-button button')
             .then(btn => {
                btn.click();
-               window['nova-lock-live-chat'] = false;
+               window['nova-lock-live-chat'] = false; // unlock
             });
       }
 

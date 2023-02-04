@@ -133,7 +133,7 @@ window.nova_plugins.push({
       // },
       stop_preload_embed: {
          _tagName: 'select',
-         label: 'Apply to video',
+         label: 'Apply to video type',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

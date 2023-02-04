@@ -42,16 +42,18 @@ window.nova_plugins.push({
       renderButton();
 
       function renderButton() {
+         // NOVA.waitElement('#comments ytd-comments-header-renderer #title')
          NOVA.waitElement(
             user_settings['comments-popup']
-               // ? '#masthead-container'
+               ? '#masthead-container'
                // ? '#movie_player'
-               ? 'ytd-watch-flexy'
+               // ? 'ytd-watch-flexy'
                // ? '#comments'
-               // ? 'html:not(:fullscreen) #description.ytd-watch-metadata:not([hidden])'
+               // ? 'html:not(:fullscreen) ytd-watch-metadata #description.ytd-watch-metadata:not([hidden])'
                : '#comments ytd-comments-header-renderer #title'
          )
             .then(menu => {
+               // [data-open-modal="nova-modal-comments"]
                const btn = document.createElement('span');
                btn.setAttribute('data-open-modal', 'nova-modal-comments');
                btn.title = 'Nova Comments';
@@ -60,6 +62,7 @@ window.nova_plugins.push({
                btn.addEventListener('click', () => {
                   // once if not inited
                   if (!document.querySelector(`#${SELECTOR_ID} table`)) genTable();
+                  btn.dispatchEvent(new CustomEvent('nova-modal-comments', { bubbles: true, detail: 'test' }));
                });
 
                // append css
@@ -68,7 +71,10 @@ window.nova_plugins.push({
                      ? {
                         /*transform: rotate(-90deg) translateX(-100%);*/
                         position: 'fixed',
-                        right: '1em',
+                        right: '0',
+                        top: 'var(--ytd-masthead-height)',
+                        // right: '1em',
+                        visibility: 'visible',
                         'z-index':
                            Math.max(
                               // getComputedStyle(menu)['z-index'],
@@ -90,8 +96,9 @@ window.nova_plugins.push({
                      cursor: 'pointer',
                   });
 
-               //menu.append(btn);
-               menu.prepend(btn);
+               user_settings['comments-popup']
+                  ? menu.append(btn)
+                  : menu.prepend(btn);
 
                insertModal();
                connectSortable();
@@ -422,14 +429,26 @@ window.nova_plugins.push({
          // src - https://github.com/hdodov/modalite/blob/0f965bea481e1a6aefb4f272c50fece5a9836448/dist/modalite.js
          const modalShowClass = 'modal-visible';
 
-         document.addEventListener('click', ({ target }) => {
+         // addEventListener close modal
+         document.querySelectorAll('#nova-modal-comments, #nova-modal-comments [modal-content]')
+            .forEach(el => {
+               el.addEventListener('click', ({ target }) => {
+                  target.dispatchEvent(new CustomEvent('nova-modal-comments', { bubbles: true, detail: 'test' }));
+               });
+            });
+
+         // document.addEventListener('click', ({ target }) => { - blocked elm - <ytd-app guide-refresh="" darker-dark-theme=""></ytd-app>
+         document.addEventListener('nova-modal-comments', ({ target }) => {
+            // console.debug('', evt.detail);
             const
                attrModal = target.hasAttribute('data-modal'),
                attrOpen = target.getAttribute('data-open-modal'),
                attrClose = target.hasAttribute('data-close-modal');
 
             // modal overlay
-            if (attrModal) target.classList.remove(modalShowClass);
+            if (attrModal) {
+               target.classList.remove(modalShowClass);
+            }
             // activate
             else if (attrOpen && (modal = document.getElementById(attrOpen))) {
                modal.classList.add(modalShowClass);

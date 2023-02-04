@@ -32,13 +32,35 @@ window.nova_plugins.push({
    'desc:ua': 'Відкріпляє шапку при прокрутці сайту',
    _runtime: user_settings => {
 
+      const
+         CLASS_NAME_TOGGLE = 'nova-header-unfixed',
+         SELECTOR = 'html.' + CLASS_NAME_TOGGLE;
+
       NOVA.css.push(
-         `#masthead-container, ytd-mini-guide-renderer, #guide {
+         `${SELECTOR} #masthead-container,
+         ${SELECTOR} ytd-mini-guide-renderer {
             position: absolute !important;
          }
-         #chips-wrapper {
+         ${SELECTOR} #chips-wrapper {
             position: sticky !important;
+         }
+         ${SELECTOR} #header {
+            margin-top: 0 !important;
          }`);
+
+      // init add CLASS_NAME_TOGGLE in html tag
+      document.documentElement.classList.add(CLASS_NAME_TOGGLE);
+
+      if (user_settings.header_unfixed_hotkey) {
+         const hotkey = user_settings.header_unfixed_hotkey || 'v';
+         // hotkey
+         document.addEventListener('keyup', evt => {
+            if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+            if (evt.key === hotkey) {
+               document.documentElement.classList.toggle(CLASS_NAME_TOGGLE);
+            }
+         });
+      }
 
       if (user_settings.header_unfixed_scroll) {
          createArrowButton();
@@ -107,5 +129,19 @@ window.nova_plugins.push({
          'title:ua': 'Ефективно на малому екрані',
          type: 'checkbox',
       },
-   }
+      header_unfixed_hotkey: {
+         _tagName: 'select',
+         label: 'Hotkey toggle',
+         // title: '',
+         options: [
+            { label: 'V', value: 'v', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z',
+         ],
+      },
+      // header_unfixed_default_state: {
+      //    _tagName: 'input',
+      //    label: 'Default state init?',
+      //    type: 'checkbox',
+      // },
+   },
 });

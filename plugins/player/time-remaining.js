@@ -33,7 +33,9 @@ window.nova_plugins.push({
    'desc:ua': 'Час, що залишився до кінця відео',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/432706-youtube-speeder
+      // alt1 - https://greasyfork.org/en/scripts/432706-youtube-speeder
+      // alt2 - https://greasyfork.org/en/scripts/368389-youtube-time-remaining
+      // alt3 - https://greasyfork.org/en/scripts/38090-add-youtube-video-progress
 
       const SELECTOR_ID = 'nova-player-time-remaining';
 
