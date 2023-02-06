@@ -42,7 +42,6 @@ window.nova_plugins.push({
 
       const
          storeName = 'playngInstanceIDTab',
-         currentPageName = NOVA.currentPage, // watch or embed. Unchanged during the transition
          instanceID = Math.random(), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 
@@ -81,7 +80,7 @@ window.nova_plugins.push({
             }
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
-               if ((document.visibilityState == 'hidden' || currentPageName == 'embed') // tab unfocus
+               if ((document.visibilityState == 'hidden' || NOVA.currentPage == 'embed') // tab unfocus
                   && store.key === storeName && store.storageArea === localStorage // checking store target
                   && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
                   && 'PLAYING' == NOVA.getPlayerState()
@@ -221,7 +220,7 @@ window.nova_plugins.push({
       },
       pause_background_tab_autopause_unfocus: {
          _tagName: 'input',
-         label: 'Autopause video if tab loses focus',
+         label: 'Autopause if tab loses focus',
          'label:zh': '如果选项卡失去焦点，则自动暂停视频',
          'label:ja': 'タブがフォーカスを失った場合にビデオを自動一時停止',
          'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',

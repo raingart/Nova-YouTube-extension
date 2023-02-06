@@ -143,7 +143,8 @@ const Plugins = {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          NOVA.channelTab = channelTab;
          return (['channel', 'c', 'user'].includes(page)
-            || page?.startsWith('@') // https://m.youtube.com/@YouTube
+            || page?.startsWith('@') // https://www.youtube.com/@ALBO
+            || /[A-Z]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills
             // fix non-standard link:
             // https://www.youtube.com/pencilmation
             // https://www.youtube.com/rhino
@@ -202,7 +203,7 @@ const Plugins = {
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.title}"\nPlease report the bug or disable the plugin\n\nOpen popup to report the bug?`,
+                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.title}"\nPlease report the bug or disable the plugin\n\nSend the bug raport to developer?`,
                   });
                }
 

@@ -45,6 +45,7 @@ const App = {
       // document.addEventListener('yt-page-data-updated', () => console.debug('yt-page-data-updated'));
       // window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && console.debug('transitionend'));
       // window.addEventListener('load', () => console.debug('window load')); // once on page init
+      // window.addEventListener('urlchange', () => console.debug('urlchange')); // once on page init (only working in userscript space)
 
       this.storage.load.apply(this);
       // load all Plugins
@@ -167,6 +168,14 @@ const App = {
 }
 
 App.init();
+
+// grid row
+// force play video
+// fix playlist playback for unlogged
+// https://gist.github.com/lbmaian
+
+// resume playlist
+// https://greasyfork.org/en/scripts/459412-youtube-playlists-playback-tracker
 
 // for testing
 // https://www.youtube.com/watch?v=9xp1XWmJ_Wo

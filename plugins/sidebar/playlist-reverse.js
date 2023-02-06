@@ -50,10 +50,11 @@ window.nova_plugins.push({
          ${SELECTOR}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
       NOVA.runOnPageInitOrTransition(() => {
-         // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
-         if (!location.search.includes('list=')) return;
-         insertButton();
-         reverseControl(); // set event
+         if (location.search.includes('list=') && NOVA.currentPage == 'watch') {
+            // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
+            insertButton();
+            reverseControl(); // set event
+         }
       });
 
       function insertButton() {

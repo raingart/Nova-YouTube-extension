@@ -18,10 +18,47 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer-v-43
+
+      if (user_settings.comments_visibility_mode == 'disable') return // conflict with plugin "comments-visibility"
+
       // contents is empty
       // #comments:not([hidden]) > #sections > #contents:not(:empty)
 
-      const COMMENTS_SELECTOR = 'html:not(:fullscreen) #comments:not([hidden])';
+      const
+         COMMENTS_SELECTOR = 'html:not(:fullscreen) #page-manager #comments:not([hidden]):not(:empty)',
+         counterAttrName = 'data-counter';
+
+      // append count
+      NOVA.runOnPageInitOrTransition(() => {
+         if (NOVA.currentPage == 'watch') {
+            NOVA.waitElement('ytd-comments-header-renderer #title #count')
+               .then(count => {
+                  document.body.querySelector(COMMENTS_SELECTOR)
+                     ?.setAttribute(counterAttrName, roundToShortSize(parseInt(count.textContent)));
+               });
+         }
+      });
+
+      /**
+       * @param  {integer/string} num
+       * @return {string}
+      */
+      function roundToShortSize(num) { // conver number "2111" > "2k"
+         num = +num;
+         if (num === 0) return '';
+         if (num < 1000) return num; // speed up
+         const sizes = ['', 'k', 'Mil', 'Bil'];
+         const i = Math.floor(Math.log(Math.abs(num)) / Math.log(1000));
+         if (!sizes[i]) return num; // out range
+
+         return round(num / 1000 ** i, 1) + sizes[i];
+
+         function round(n, precision) {
+            const prec = 10 ** precision;
+            return Math.round(n * prec) / prec;
+         }
+      }
 
       NOVA.waitElement('#masthead-container')
          .then(masthead => {
@@ -40,12 +77,12 @@ window.nova_plugins.push({
 
                /* button */
                ${COMMENTS_SELECTOR}:not(:hover):before {
-                  content: "comments ▼";
+                  content: attr(${counterAttrName}) " comments ▼";
                   cursor: pointer;
                   visibility: visible;
                   /*transform: rotate(-90deg) translateX(-100%);*/
-                  right: 4em;
-                  padding: 0 8px 3px;
+                  right: 3em;
+                  padding: 0 6px 2px;
                   line-height: normal;
                   font-family: Roboto, Arial, sans-serif;
                   font-size: 11px;

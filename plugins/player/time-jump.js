@@ -20,6 +20,7 @@
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
 
 // false detect:
+// https://www.youtube.com/watch?v=Z9ZaEXqjZvw - broken
 // https://www.youtube.com/watch?v=E-6gg0xKTPY - lying timestamp
 
 window.nova_plugins.push({
@@ -248,7 +249,9 @@ window.nova_plugins.push({
          NOVA.waitElement('video')
             .then(video => {
                NOVA.runOnPageInitOrTransition(() => {
-                  video.addEventListener('canplay', timeLeapInto.bind(video), { capture: true, once: true });
+                  if (NOVA.currentPage == 'watch') {
+                     video.addEventListener('canplay', timeLeapInto.bind(video), { capture: true, once: true });
+                  }
                });
 
                function timeLeapInto() {

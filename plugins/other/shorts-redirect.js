@@ -39,8 +39,7 @@ window.nova_plugins.push({
       function redirectPageToNormal() {
          if ('shorts' == NOVA.currentPage) {
             // alt1 - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js
-            // alt2 - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
-            // alt3 - https://openuserjs.org/scripts/Kraust/Youtube_Shorts_Redirect
+            // alt2 - https://openuserjs.org/scripts/Kraust/Youtube_Shorts_Redirect
             return location.href = location.href.replace('shorts/', 'watch?v=');
             // location.replace(location.href.replace('/shorts/', '/watch?v='));
          }

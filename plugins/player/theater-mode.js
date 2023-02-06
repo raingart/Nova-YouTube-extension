@@ -142,7 +142,13 @@ window.nova_plugins.push({
                   NOVA.waitElement('video')
                      .then(video => {
                         // fix restore video size
-                        video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
+                        video.addEventListener('pause', () => {
+                           // fix overlapped ".paused-mode" after you scroll the time in the player with the mouse
+                           if (!document.querySelector('.ytp-progress-bar')?.contains(document.activeElement)) {
+                              window.dispatchEvent(new Event('resize'));
+                           }
+                        });
+                        // video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
                         // video.addEventListener('playing', () => window.dispatchEvent(new Event('resize')));
                      });
 

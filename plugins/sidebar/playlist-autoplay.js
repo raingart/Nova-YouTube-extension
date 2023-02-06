@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'playlist-toggle-autoplay',
-   title: 'Playlist autoplay control button',
+   title: 'Add playlist autoplay control button',
    'title:zh': '播放列表自动播放控制',
    'title:ja': 'プレイリストの自動再生コントロール',
    'title:ko': '재생 목록 자동 재생 제어',
@@ -82,13 +82,15 @@ window.nova_plugins.push({
             opacity: .3;
          }`);
 
-      NOVA.runOnPageInitOrTransition(insertButton);
+      NOVA.runOnPageInitOrTransition(() => {
+         if (window.nova_playlistReversed) return; // conflict with plugin
+         if (location.search.includes('list=') && NOVA.currentPage == 'watch') {
+            // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
+            insertButton();
+         }
+      });
 
       function insertButton() {
-         // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
-         if (!location.search.includes('list=')) return;
-         if (window.nova_playlistReversed) return; // conflict with plugin
-
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
             .then(el => renderCheckbox(el));
 

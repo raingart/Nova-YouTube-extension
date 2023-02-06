@@ -42,7 +42,7 @@ window.nova_plugins.push({
    options: {
       buttons_hide: {
          _tagName: 'input',
-         label: 'Hide buttons',
+         label: 'Hide buttons completely',
          'label:zh': '隐藏按钮',
          'label:ja': 'ボタンを隠す',
          'label:ko': '버튼 숨기기',

@@ -43,6 +43,7 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/421610-youtube-speed-up
       // alt2 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
       // alt3 - https://greasyfork.org/en/scripts/427369-speed-up-for-youtube
+      // alt4 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
 
       // NOVA.waitElement('#movie_player')
       //    .then(movie_player => {
@@ -89,7 +90,7 @@ window.nova_plugins.push({
                });
             }
             // expand memu
-            NOVA.runOnPageInitOrTransition(expandAvailableRatesMenu);
+            NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
          });
 
       // mousewheel in player area

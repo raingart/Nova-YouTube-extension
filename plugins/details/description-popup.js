@@ -23,14 +23,15 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/446269-youtube-sticky-show-less-button
+      // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer-v-43
+      // alt2 - https://greasyfork.org/en/scripts/446269-youtube-sticky-show-less-button
 
       // if (user_settings['video-description-expand']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 
       // bug if DESCRIPTION_SELECTOR is empty. Using CSS is impossible to fix. And through JS extra
 
       const
-         DESCRIPTION_SELECTOR = 'html:not(:fullscreen) #description.ytd-watch-metadata:not([hidden]):not(:empty)',
+         DESCRIPTION_SELECTOR = 'html:not(:fullscreen) ytd-watch-metadata #description.ytd-watch-metadata:not([hidden]):not(:empty)',
          DATE_SELECTOR_ID = 'nova-description-date';
 
       NOVA.waitElement('#masthead-container')
@@ -55,7 +56,7 @@ window.nova_plugins.push({
                   visibility: visible;
                   /*transform: rotate(-90deg) translateX(-100%);*/
                   right: 12em;
-                  padding: 0 8px 3px;
+                  padding: 0 8px 2px;
                   line-height: normal;
                   font-family: Roboto, Arial, sans-serif;
                   font-size: 11px;
@@ -116,7 +117,7 @@ window.nova_plugins.push({
                }`);
          });
 
-      NOVA.runOnPageInitOrTransition(restoreDateLine);
+      NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && restoreDateLine());
 
       // expand
       NOVA.waitElement(DESCRIPTION_SELECTOR)
@@ -135,7 +136,7 @@ window.nova_plugins.push({
          NOVA.waitElement('#title h1')
             .then(container => {
                // date = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
-               NOVA.waitElement('#description #info.ytd-watch-metadata:not(:empty)')
+               NOVA.waitElement('ytd-watch-metadata #description.ytd-watch-metadata')
                   .then(async textDateEl => {
                      await NOVA.waitUntil(() => {
                         if ((text = [...textDateEl.querySelectorAll('.bold.yt-formatted-string')]

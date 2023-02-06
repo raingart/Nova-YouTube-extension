@@ -207,8 +207,8 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'watch' && !(vid instanceof HTMLElement)) {
                return console.error('vid not HTMLElement:', chaptersContainer);
             }
-            // panel hides for a few seconds
-            await NOVA.waitUntil(() => !isNaN(vid.duration), 1000)
+
+            await NOVA.waitUntil(() => !isNaN(vid.duration), 1000);
 
             switch (NOVA.currentPage) {
                case 'watch':
@@ -217,8 +217,16 @@ window.nova_plugins.push({
 
                // embed dont have description
                case 'embed':
-                  // await NOVA.waitUntil(() => (chaptersContainer = document.body.querySelector('.ytp-chapters-container')) && chaptersContainer?.children.length, 1000) // panel hides for a few seconds. No need to hurry
-                  renderChaptersMarks(vid.duration);
+                  // fix loaded - window.ytPubsubPubsubInstance and chaptersContainer to from_div
+                  await NOVA.waitUntil(() => (
+                     chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
+                     && chaptersContainer?.children.length > 1
+                     , 1000);
+
+                  (
+                     this.renderChaptersMarks(vid.duration) // Strategy 1
+                     || this.from_div(chaptersContainer) // Strategy 2
+                  );
                   break;
             }
          },
@@ -230,57 +238,63 @@ window.nova_plugins.push({
             const selectorTimestampLink = 'a[href*="&t="]';
 
             // search in description
-            // NOVA.waitElement(`#description.ytd-watch-metadata #video-lockups a`)
-            NOVA.waitElement(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
-               .then(() => renderChaptersMarks(duration));
+            // NOVA.waitElement(`ytd-watch-metadata #description #video-lockups a`)
+            NOVA.waitElement(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`)
+               .then(() => this.renderChaptersMarks(duration));
 
             // search in comments
             NOVA.waitElement(`#comments #comment #comment-content ${selectorTimestampLink}`)
-               .then(() => renderChaptersMarks(duration));
+               .then(() => this.renderChaptersMarks(duration));
             // search in first/pinned comment
             // NOVA.waitElement(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
-            //    .then(() => renderChaptersMarks(duration));
+            //    .then(() => this.renderChaptersMarks(duration));
          },
 
-         // from_div(chaptersContainer = required()) {
-         //    if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
-         //    const
-         //       progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
-         //       chaptersOut = document.getElementById(`${SELECTOR_ID}-chapters`);
+         from_div(chaptersContainer = required()) {
+            if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
+            const
+               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
+               chaptersOut = document.getElementById(`${SELECTOR_ID}-chapters`);
 
-         //    for (const chapter of chaptersContainer.children) {
-         //       const
-         //          newChapter = document.createElement('span'),
-         //          { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
-         //          chapterMargin = parseInt(marginLeft) + parseInt(marginRight);
+            for (const chapter of chaptersContainer.children) {
+               const
+                  newChapter = document.createElement('span'),
+                  { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
+                  chapterMargin = parseInt(marginLeft) + parseInt(marginRight);
 
-         //       newChapter.style.width = (((width + chapterMargin) / progressContainerWidth) * 100) + '%';
+               // console.debug('chapter', chapter.style.width, width, chapterMargin);
+               newChapter.style.width = (((parseInt(width) + chapterMargin) / progressContainerWidth) * 100) + '%';
 
-         //       chaptersOut.append(newChapter);
-         //    }
-         // },
+               chaptersOut.append(newChapter);
+            }
+         },
+
+         renderChaptersMarks(duration) {
+            // console.debug('renderChaptersMarks', ...arguments);
+            if (isNaN(duration)) return console.error('duration isNaN:', duration);
+
+            if (chaptersContainer = document.getElementById(`${SELECTOR_ID}-chapters`)) {
+               chaptersContainer.innerHTML = ''; // clear old
+            }
+            const chapterList = NOVA.getChapterList(duration);
+
+            chapterList
+               ?.forEach((chapter, i, chapters_list) => {
+                  // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
+                  const newChapter = document.createElement('span');
+                  const nextChapterSec = chapters_list[i + 1]?.sec || duration;
+
+                  newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
+                  if (chapter.title) newChapter.title = chapter.title;
+                  newChapter.setAttribute('time', chapter.time);
+
+                  chaptersContainer.append(newChapter);
+               });
+
+            // console.debug('renderChaptersMarks', chapterList);
+            return chapterList; // return dependency
+         },
       };
-
-      function renderChaptersMarks(duration) {
-         // console.debug('renderChaptersMarks', ...arguments);
-         if (isNaN(duration)) return console.error('duration isNaN:', duration);
-
-         if (chaptersContainer = document.getElementById(`${SELECTOR_ID}-chapters`)) {
-            chaptersContainer.innerHTML = ''; // clear old
-         }
-         NOVA.getChapterList(duration)
-            ?.forEach((chapter, i, chapters_list) => {
-               // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
-               const newChapter = document.createElement('span');
-               const nextChapterSec = chapters_list[i + 1]?.sec || duration;
-
-               newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
-               if (chapter.title) newChapter.title = chapter.title;
-               newChapter.setAttribute('time', chapter.time);
-
-               chaptersContainer.append(newChapter);
-            });
-      }
 
    },
    options: {

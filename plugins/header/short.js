@@ -29,7 +29,8 @@ window.nova_plugins.push({
             height: ${height} !important;
          }
 
-         body {
+         body,
+         html:not(:fullscreen) #page-manager {
             --ytd-masthead-height: ${height};
          }
 

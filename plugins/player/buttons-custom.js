@@ -352,6 +352,7 @@ window.nova_plugins.push({
                // alt1 - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
                // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
                // alt3 - https://greasyfork.org/en/scripts/457800-youtube-thumbnail-viewer
+               // alt4 - https://greasyfork.org/en/scripts/459456-add-youtube-thumbnail-to-video-description
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // thumbBtn.title = 'View Thumbnail';
@@ -430,9 +431,63 @@ window.nova_plugins.push({
                   const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / NOVA.videoElement.clientWidth : 1;
                   angle += 90;
                   NOVA.videoElement.style.transform = (angle === 360) ? '' : `rotate(${angle}deg) scale(${scale})`;
-                  console.debug('rotate', angle, scale, NOVA.videoElement.style.transform);
+                  // console.debug('rotate', angle, scale, NOVA.videoElement.style.transform);
                });
                container.prepend(rotateBtn);
+               // }
+            }
+
+            if (user_settings.player_buttons_custom_items?.includes('aspect-ratio')) {
+               // alt - https://greasyfork.org/en/scripts/370586-youtube-aspect-ratio-switcher
+               const
+                  aspectRatioBtn = document.createElement('a'),
+                  // Strategy 1. https://codepen.io/JacobLett/pen/YWeOMo
+                  // aspectRatioList = [
+                  //    { '16:9': 'calc(100% / 16 * 9)' }, // HD, FHD, QHD, 4K, 8K
+                  //    { '4:3': 'calc(100% / 4 * 3)' }, // HD, FHD, QHD, 4K, 8K
+                  //    // { '9:16': 1.777777778 }, // mobile
+                  //    { '21:9': 'calc(100% / 21 * 9)' },
+                  //    // { '16:9': Math.round((NOVA.videoElement.clientWidth / 16) * 9) + 'px' }, // HD, FHD, QHD, 4K, 8K
+                  //    // { '4:3': Math.round((NOVA.videoElement.clientWidth / 4) * 3) + 'px' }, // HD, FHD, QHD, 4K, 8K
+                  //    // // { '9:16': 1.777777778 }, // mobile
+                  //    // { '21:9': Math.round((NOVA.videoElement.clientWidth / 21) * 9) + 'px' },
+                  //    // { 'default': '100%' },
+                  //    // hd720: { label: '720p', badge: 'HD' },
+                  // ];
+               // Strategy 2
+               aspectRatioList = [
+                  { '16:9': 1.335 }, // HD, FHD, QHD, 4K, 8K
+                  { '4:3': .75 }, // HD, FHD, QHD, 4K, 8K
+                  { '9:16': 1.777777778 }, // mobile
+                  { 'auto': 1 },
+                  // hd720: { label: '720p', badge: 'HD' },
+               ],
+               genTooltip = (key = 0) => `Switch aspect ratio to ` + Object.keys(aspectRatioList[key]);
+
+               // if (NOVA.videoElement?.videoWidth < NOVA.videoElement?.videoHeight) {
+               aspectRatioBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
+               aspectRatioBtn.style.textAlign = 'center';
+               aspectRatioBtn.style.fontWeight = 'bold';
+               // speedBtn.title = genTooltip(Object.keys(aspectRatioList[0])));
+               aspectRatioBtn.setAttribute('tooltip', genTooltip());
+               aspectRatioBtn.innerHTML = '1:1';
+
+               aspectRatioBtn.addEventListener('click', () => {
+                  if (!NOVA.videoElement) return;
+                  const getNextIdx = () => this.listIdx < aspectRatioList.length - 1 ? this.listIdx + 1 : 0;
+
+                  this.listIdx = getNextIdx();
+                  // Strategy 1
+                  // NOVA.videoElement.style.width = Object.values(aspectRatioList[this.listIdx]);
+                  // Object.assign(NOVA.videoElement.style, { 'object-fit': 'fill', }); // object-fit: cover;
+                  // console.debug('>', NOVA.videoElement.style.width);
+                  // Strategy 2
+                  NOVA.videoElement.style.transform = `scaleX(${Object.values(aspectRatioList[this.listIdx])})`;
+
+                  aspectRatioBtn.setAttribute('tooltip', genTooltip(getNextIdx()));
+                  aspectRatioBtn.textContent = Object.keys(aspectRatioList[this.listIdx]);
+               });
+               container.prepend(aspectRatioBtn);
                // }
             }
 
@@ -543,10 +598,10 @@ window.nova_plugins.push({
 
                   ${SELECTOR_QUALITY_LIST} {
                      position: absolute;
-                     bottom: 4em;
-                     left: -2em;
+                     bottom: 2.5em !important;
+                     left: -2.2em;
                      list-style: none;
-                     padding-bottom: .5em;
+                     padding-bottom: 1.5em !important;
                      z-index: ${+getComputedStyle(document.body.querySelector('.ytp-progress-bar'))['z-index'] + 1};
                   }
 
@@ -666,7 +721,7 @@ window.nova_plugins.push({
                   if (evt.key === hotkey) {
                      switchRate();
                   }
-               })
+               });
                speedBtn.addEventListener('click', switchRate);
 
                function switchRate() {
@@ -861,6 +916,21 @@ window.nova_plugins.push({
                'label:de': 'drehen',
                'label:pl': 'obróć',
                'label:ua': 'повернути',
+            },
+            {
+               label: 'aspect-ratio', value: 'aspect-ratio',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
             },
             {
                label: 'watch later', value: 'watch-later',

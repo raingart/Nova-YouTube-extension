@@ -52,7 +52,7 @@ const PopulateForm = {
 
       function setSelectOption(selectObj, val) {
          for (const option of selectObj.children) {
-            if (option.value === val) {
+            if (option.value === String(val)) {
                option.selected = true;
                break;
             }

@@ -72,7 +72,11 @@ window.nova_plugins.push({
 
             // button visible toggle
             if (user_settings.player_loop_in_music) {
-               NOVA.runOnPageInitOrTransition(() => btn.style.display = NOVA.isMusic() ? '' : 'none');
+               NOVA.runOnPageInitOrTransition(() => {
+                  if (NOVA.currentPage == 'watch') {
+                     btn.style.display = NOVA.isMusic() ? '' : 'none';
+                  }
+               });
             }
          });
 
