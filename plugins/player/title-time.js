@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=lZYzT3HS9L4 - has strSplit: ' | '
+
 window.nova_plugins.push({
    id: 'page-title-time',
    title: 'Show time in tab title',
@@ -14,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Pokaż czas w tytule karty',
    'title:ua': 'Відображення часу в заголовку вкладки',
    run_on_pages: 'watch',
-   section: 'other',
+   section: 'player',
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
@@ -41,12 +44,11 @@ window.nova_plugins.push({
          // strSplit: ' • ',
 
          saveCheck() { // speed hack
-            return this.backup?.includes(this.strSplit) // check strSplit has in title
+            return (result = (this.backup || document.title).includes(this.strSplit)) // check strSplit has in title
                // deep test. // title has time "0:00:00${this.strSplit}"
                ? new RegExp(`^((\\d?\\d:){1,2}\\d{2})(${this.strSplit.replace('|', '\\|')})`, '')
                   .test(document.title)
-               // includes - less accurate but more speed up
-               : document.title.includes(this.strSplit);
+               : result; // includes - less accurate but more speed up
          },
 
          save() {

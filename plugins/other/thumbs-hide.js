@@ -197,12 +197,12 @@ window.nova_plugins.push({
 
             document.body.querySelectorAll(
                `a[href*="list="][href*="start_radio="]:not([hidden]),
-               a[title^="Mix -"]:not([hidden])`
+               #video-title[title^="Mix -"]:not([hidden])`
             )
-               .forEach(el => el.closest(thumbsSelectors)?.remove());
+               .forEach(el => el.closest('ytd-radio-renderer, ytd-compact-radio-renderer, ' + thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {
-            //    if (thumb = el.closest('ytd-radio-renderer,' + thumbsSelectors)) {
+            //    if (thumb = el.closest('ytd-radio-renderer, ytd-compact-radio-renderer,' + thumbsSelectors)) {
             //       // thumb.style.display = 'none';
             //       console.debug('has Mix:', thumb);
             //       thumb.style.border = '2px solid red'; // mark for test

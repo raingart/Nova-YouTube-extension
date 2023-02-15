@@ -38,6 +38,7 @@ window.nova_plugins.push({
          .then(masthead => {
 
             NOVA.css.push(
+               // position: ${user_settings['header-unfixed'] ? 'absolute' : 'fixed' };
                `${DESCRIPTION_SELECTOR},
                ${DESCRIPTION_SELECTOR}:before {
                   position: fixed;
@@ -135,7 +136,7 @@ window.nova_plugins.push({
       function restoreDateLine() {
          NOVA.waitElement('#title h1')
             .then(container => {
-               // date = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
+               // date = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
                NOVA.waitElement('ytd-watch-metadata #description.ytd-watch-metadata')
                   .then(async textDateEl => {
                      await NOVA.waitUntil(() => {

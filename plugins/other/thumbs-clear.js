@@ -143,7 +143,7 @@ window.nova_plugins.push({
          // Strategy 2
          // NOVA.watchElements({
          //    selectors: ['#mouseover-overlay'],
-         //    // attr_mark: 'disable-thumb-inline-playback',
+         //    // attr_mark: 'nova-disable-thumb-inline-playback',
          //    callback: el => {
          //       el.remove();
          //       // console.debug('thumb-inline-playback:', el);

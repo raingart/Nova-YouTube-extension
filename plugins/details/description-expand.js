@@ -33,7 +33,7 @@ window.nova_plugins.push({
       //       }
       //    });
 
-      // const ATTR_MARK = 'nove-description-expand';
+      // const ATTR_MARK = 'nova-description-expand';
 
       NOVA.watchElements({
          selectors: [

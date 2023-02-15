@@ -38,7 +38,7 @@ window.nova_plugins.push({
       //    // Strategy 1 (slowdown but work in mobile and pc)
       //    NOVA.watchElements({
       //       selectors: ['#video-title:not(:empty)'],
-      //       attr_mark: 'thumb-title-filtered',
+      //       attr_mark: 'nova-thumb-title-filtered',
       //       callback: video_title => {
       //          keywords.forEach(keyword => {
       //             if (video_title.textContent.trim().toLowerCase().includes(keyword)

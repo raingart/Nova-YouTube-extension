@@ -30,6 +30,7 @@ const Plugins = {
       'player/unblock-region.js',
       // 'player/next-autoplay.js',
       'player/fullscreen-scroll.js',
+      'player/title-time.js',
 
       'other/annotations.js',
       'other/search-channel-filter.js',
@@ -42,13 +43,13 @@ const Plugins = {
       'other/channel-tab.js',
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
-      'other/title-time.js',
       'other/scroll-to-top.js',
       'other/shorts-redirect.js',
       'other/rss.js',
       // 'other/thumbs-sort.js',
       'other/stop-channel-trailer.js',
       'other/miniplayer-disable.js',
+      'other/embed-control.js',
 
       'details/videos-count.js',
       'details/description-expand.js',
@@ -66,6 +67,7 @@ const Plugins = {
       'comments/sort.js',
 
       'sidebar/related-visibility.js',
+      'sidebar/playlist-collapse.js',
       'sidebar/playlist-autoplay.js',
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
@@ -74,7 +76,7 @@ const Plugins = {
       // 'sidebar/playlist-skip-liked.js',
 
       'header/search.js',
-      'header/short.js',
+      'header/compact.js',
       'header/unfixed.js',
       'header/logo.js',
    ],
@@ -144,7 +146,7 @@ const Plugins = {
          NOVA.channelTab = channelTab;
          return (['channel', 'c', 'user'].includes(page)
             || page?.startsWith('@') // https://www.youtube.com/@ALBO
-            || /[A-Z]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills
+            || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
             // fix non-standard link:
             // https://www.youtube.com/pencilmation
             // https://www.youtube.com/rhino

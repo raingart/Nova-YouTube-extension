@@ -25,6 +25,11 @@ window.nova_plugins.push({
             height: ${height} !important;
          }
 
+         /*fix for plugin [player-indicator]*/
+         #masthead #background {
+            height: ${height} !important;
+         }
+
          #search-form, #search-icon-legacy {
             height: ${height} !important;
          }

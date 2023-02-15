@@ -70,7 +70,7 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: 'a#thumbnail img[src]', // use css selector (array, srting). Like document.body.querySelectorAll('a#thumbnail img[src])
          // The attribute with which the already found elements will be marked
-         attr_mark: 'timestamps-updated', // delete if you want to constantly watch
+         attr_mark: 'nova-timestamps-updated', // delete if you want to constantly watch
          callback: element => { // returns the specified selector above
             // do stuff
          },

@@ -32,6 +32,8 @@ window.nova_plugins.push({
    // 'title:ua': '',
    _runtime: user_settings => {
 
+      // alt - https://chrome.google.com/webstore/detail/pmfhcilikeembgbiadjiojgfgcfbcoaa
+
       // #comments #contents #submessage[is-empty] - "Comments are turned off."
 
       const

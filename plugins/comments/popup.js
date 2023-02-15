@@ -35,7 +35,9 @@ window.nova_plugins.push({
             NOVA.waitElement('ytd-comments-header-renderer #title #count')
                .then(count => {
                   document.body.querySelector(COMMENTS_SELECTOR)
-                     ?.setAttribute(counterAttrName, roundToShortSize(parseInt(count.textContent)));
+                     ?.setAttribute(counterAttrName, roundToShortSize(
+                        parseInt(count.textContent?.replace(/\D/g, ''), 10)
+                     ));
                });
          }
       });
@@ -48,13 +50,13 @@ window.nova_plugins.push({
          num = +num;
          if (num === 0) return '';
          if (num < 1000) return num; // speed up
-         const sizes = ['', 'k', 'Mil', 'Bil'];
+         const sizes = ['', 'K', 'Mil', 'Bil'];
          const i = Math.floor(Math.log(Math.abs(num)) / Math.log(1000));
          if (!sizes[i]) return num; // out range
 
          return round(num / 1000 ** i, 1) + sizes[i];
 
-         function round(n, precision) {
+         function round(n, precision = 2) {
             const prec = 10 ** precision;
             return Math.round(n * prec) / prec;
          }

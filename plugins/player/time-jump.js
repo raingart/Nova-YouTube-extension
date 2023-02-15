@@ -157,15 +157,15 @@ window.nova_plugins.push({
       //          // function seekToNextChapter() {
       //          //    if ((chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
       //          //       && chaptersContainer?.children.length > 1
-      //          //       && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width))
+      //          //       && (progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width), 10)
       //          //    ) {
       //          //       const progressRatio = this.currentTime / this.duration;
       //          //       let passedWidth = 0;
       //          //       for (const chapter of chaptersContainer.children) {
       //          //          const
       //          //             { width, marginLeft, marginRight } = getComputedStyle(chapter),
-      //          //             chapterWidth = parseInt(width),
-      //          //             chapterMargin = parseInt(marginLeft) + parseInt(marginRight),
+      //          //             chapterWidth = parseInt(width, 10),
+      //          //             chapterMargin = parseInt(marginLeft, 10) + parseInt(marginRight, 10),
       //          //             chapterRatio = (passedWidth + chapterWidth) / progressContainerWidth;
 
       //          //          // console.debug('Chapter', chapterRatio, chapterWidth);
@@ -216,7 +216,7 @@ window.nova_plugins.push({
          let
             pressed,
             isDoublePress,
-            lastPressed = parseInt(keyCodeFilter) || null;
+            lastPressed = parseInt(keyCodeFilter, 10) || null;
 
          const
             timeOut = () => setTimeout(() => isDoublePress = false, 500), // 500ms
