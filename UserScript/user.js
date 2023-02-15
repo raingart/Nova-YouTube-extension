@@ -281,8 +281,7 @@ window.addEventListener('unhandledrejection', err => {
    if (user_settings.report_issues && err.reason.stack.includes('Nova'))
       _pluginsCaptureException({
          'trace_name': 'unhandledrejection',
-         // 'err_stack': err.reason.stack,
-         'err_stack': err.stack,
+         'err_stack': err.reason.stack || err.stack,
          'app_ver': GM_info.script.version,
          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
       });

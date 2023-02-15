@@ -57,7 +57,7 @@ window.nova_plugins.push({
             //    '.subhead > [class*="media-item-byline"]' // mobile /subscriptions page
             // ]
             //    .map(i => i + ':not(:empty)'),
-            attr_mark: 'thumb-channel-filtered',
+            attr_mark: 'nova-thumb-channel-filtered',
             callback: channel_name => {
                keywords.forEach(keyword => {
                   if (channel_name.textContent.trim().toLowerCase().includes(keyword)

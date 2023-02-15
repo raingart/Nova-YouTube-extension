@@ -25,7 +25,7 @@ zip -q -r $filename \
                   plugins/*/*.js \
                   images/*.png \
  --exclude="*/-*.*" \
- --exclude='plugins/_blank_plugin.js'
+ --exclude='plugins/plugin_example.js'
 #  -x \*.DS_Store
 # -z $TODAY
 

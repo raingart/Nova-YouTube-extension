@@ -550,7 +550,7 @@ const NOVA = {
             return console.error('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
          }
 
-         return Object.values((
+         const data = Object.values((
             ytPubsubPubsubInstance.i // embed
             || ytPubsubPubsubInstance.j // watch
             || ytPubsubPubsubInstance.subscriptions_ // navigation
@@ -559,17 +559,21 @@ const NOVA = {
             .player.app
          )
             .find(a => a?.videoData)
-            ?.videoData.multiMarkersPlayerBarRenderer?.markersMap[0].value.chapters
-            ?.map(c => {
-               const sec = c.chapterRenderer.timeRangeStartMillis / 1000;
-               return {
-                  'sec': sec,
-                  'time': NOVA.timeFormatTo.HMS.digit(sec),
-                  'title':
-                     c.chapterRenderer.title.simpleText // watch
-                     || c.chapterRenderer.title.runs[0].text, // embed
-               };
-            });
+            ?.videoData.multiMarkersPlayerBarRenderer;
+
+         if (data?.markersMap?.length) {
+            return data.markersMap[0].value.chapters
+               ?.map(c => {
+                  const sec = +c.chapterRenderer.timeRangeStartMillis / 1000;
+                  return {
+                     'sec': sec,
+                     'time': NOVA.timeFormatTo.HMS.digit(sec),
+                     'title':
+                        c.chapterRenderer.title.simpleText // watch
+                        || c.chapterRenderer.title.runs[0].text, // embed
+                  };
+               });
+         }
       }
    },
 
@@ -582,7 +586,7 @@ const NOVA = {
    //    document.body.querySelectorAll(`ytd-watch-metadata #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-   //          const sec = parseInt(this.queryURL.get('t', link.href));
+   //          const sec = parseInt(this.queryURL.get('t', link.href), 10);
    //          if (sec > prevSec && sec < +video_duration) {
    //             prevSec = sec;
    //             // will be skip - time: '0:00'
@@ -684,12 +688,12 @@ const NOVA = {
       function checkMusicType() {
          const
             // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
-            // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.videoDetails.author,
-            // channelName = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
+            // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.author,
+            // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
             channelName = movie_player.getVideoData().author.toUpperCase(), // UpperCase
             titleStr = movie_player.getVideoData().title,
             titleWordsList = titleStr?.toUpperCase().match(/\w+/g), // UpperCase
-            playerData = document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData;
+            playerData = document.body.querySelector('ytd-watch-flexy')?.playerData;
 
          // if (user_settings.rate_default_apply_music == 'expanded') {
          //    // 【MAD】,『MAD』,「MAD」
@@ -1014,7 +1018,7 @@ const NOVA = {
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
          document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
-         document.body.querySelector('ytd-watch, ytd-watch-flexy')?.playerData?.videoDetails.channelId, // exclude embed page
+         document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.channelId, // exclude embed page
          // document.body.querySelector('#owner #channel-name a[href]')?.href.split('/')[4], // outdated
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid

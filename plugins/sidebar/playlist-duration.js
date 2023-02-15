@@ -71,7 +71,7 @@ window.nova_plugins.push({
                         ?.contents[0].itemSectionRenderer
                         ?.contents[0].playlistVideoListRenderer?.contents;
 
-                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
+                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds), 10), 0);
 
                      if (duration) return outFormat(duration);
                   }
@@ -84,7 +84,7 @@ window.nova_plugins.push({
                   const waitPlaylist = setInterval(() => {
                      const playlistLength = movie_player.getPlaylist()?.length;
 
-                     let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
+                     let vids_list = document.body.querySelector('ytd-watch-flexy')
                         ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents
                         // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated after page transition!
                         .filter(i => i.playlistPanelVideoRenderer?.hasOwnProperty('videoId')); // filter hidden
@@ -119,7 +119,7 @@ window.nova_plugins.push({
                      //    return storage;
                      // }
 
-                     // let vids_list = document.body.querySelector('ytd-watch, ytd-watch-flexy')
+                     // let vids_list = document.body.querySelector('ytd-watch-flexy')
                      // ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
 
                      // alt if current "playingIdx" always one step behind
@@ -131,7 +131,8 @@ window.nova_plugins.push({
 
                      if (window.nova_playlistReversed) vids_list = [...vids_list].reverse();
 
-                     const playingIdx = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
+                     // const playingIdx = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
+                     const playingIdx = movie_player.getPlaylistIndex();
                      // not available for reverse
                      // const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
 

@@ -1,5 +1,6 @@
 // for test:
 // https://www.youtube.com/watch?v=9JzmYISeRMA&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4
+// https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist
 
 window.nova_plugins.push({
    id: 'playlist-toggle-autoplay',
@@ -127,8 +128,31 @@ window.nova_plugins.push({
                   // checkbox update state
                   checkboxBtn.checked = manager?.canAutoAdvance_;
                   checkboxBtn.title = `Playlist Autoplay is ${manager?.canAutoAdvance_ ? 'ON' : 'OFF'}`;
+
+                  if (checkboxBtn.checked) checkHiddenVideo();
                }
                else console.error('Error playlist-autoplay. Playlist manager is', manager);
+
+               // fix (https://github.com/raingart/Nova-YouTube-extension/issues/52)
+               async function checkHiddenVideo() {
+                  let vids_list;
+                  await NOVA.waitUntil(() => {
+                     if ((vids_list = document.body.querySelector('ytd-watch-flexy')?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents)
+                        && vids_list.length) return true;
+                  }, 1000); // 1sec
+
+                  const
+                     playingIdx = movie_player.getPlaylistIndex(),
+                     lastAvailableIdx = vids_list.findIndex(i => i.hasOwnProperty('messageRenderer')) - 1;
+
+                  // console.log(playingIdx, lastAvailableIdx)
+
+                  if (playingIdx === lastAvailableIdx) {
+                     manager.canAutoAdvance_ = false;
+                     alert('Playlist has hide video. Playlist autoplay disabled');
+                     checkboxBtn.checked = false;
+                  }
+               }
             }
 
          }

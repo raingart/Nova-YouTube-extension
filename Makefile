@@ -16,7 +16,7 @@ build:
 	# plugins container
 	echo -e 'window.nova_plugins = [];' >> $(outFile)
 	# all plugins
-	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "_blank_plugin.js" | xargs cat >> $(outFile)
+	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs cat >> $(outFile)
 	# unsuccessful attempt to delete settings options:
 	# cp -r ./plugins/ /tmp/plugins/
 	# @find /tmp/plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "_blank_plugin.js" -exec sed -i '/options: {/$d' {} +

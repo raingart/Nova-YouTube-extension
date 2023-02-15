@@ -31,7 +31,7 @@ window.nova_plugins.push({
       // comment
       NOVA.watchElements({
          selectors: ['#contents #expander[collapsed] #more:not([hidden])'],
-         attr_mark: 'comment-expanded',
+         attr_mark: 'nova-comment-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
             const comment = btn.closest('#expander[collapsed]');
@@ -55,7 +55,7 @@ window.nova_plugins.push({
       // comment replies
       NOVA.watchElements({
          selectors: ['#more-replies button'],
-         attr_mark: 'replies-expanded',
+         attr_mark: 'nova-replies-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
 
@@ -76,14 +76,14 @@ window.nova_plugins.push({
       // old method. No hover
       // NOVA.watchElements({
       //    selector: ['#contents #expander[collapsed] #more'],
-      //    attr_mark: 'comment-expanded',
+      //    attr_mark: 'nova-comment-expanded',
       //    callback: btn => btn.click(),
       // });
 
       // if (user_settings.comments_view_reply) {
       //    NOVA.watchElements({
       //       selector: ['#comment #expander #more-replies'],
-      //       attr_mark: 'replies-expanded',
+      //       attr_mark: 'nova-replies-expanded',
       //       callback: btn => btn.click(),
 
       //    });

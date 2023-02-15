@@ -38,4 +38,4 @@ You can now load the extension into your browser through the browser's extension
 * [/js/libs/](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/libs) - directory of internal components of the extension. Not used by plugins, only by the extension itself.
 * [/plugins/common-lib.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/common-lib.js) - common library for all plugins.
 * [/plugins/](https://github.com/raingart/Nova-YouTube-extension/tree/master/plugins) - directory of all plugins and files available for connection to the YouTube page.
-  * [plugin example](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/_blank_plugin.js) - file use to understand basic functions
+  * [plugin example](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/plugin_example.js) - file use to understand basic functions

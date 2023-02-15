@@ -253,17 +253,17 @@ window.nova_plugins.push({
          from_div(chaptersContainer = required()) {
             if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
             const
-               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
+               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width, 10),
                chaptersOut = document.getElementById(`${SELECTOR_ID}-chapters`);
 
             for (const chapter of chaptersContainer.children) {
                const
                   newChapter = document.createElement('span'),
                   { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
-                  chapterMargin = parseInt(marginLeft) + parseInt(marginRight);
+                  chapterMargin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
 
                // console.debug('chapter', chapter.style.width, width, chapterMargin);
-               newChapter.style.width = (((parseInt(width) + chapterMargin) / progressContainerWidth) * 100) + '%';
+               newChapter.style.width = (((parseInt(width, 10) + chapterMargin) / progressContainerWidth) * 100) + '%';
 
                chaptersOut.append(newChapter);
             }

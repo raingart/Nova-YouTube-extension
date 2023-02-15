@@ -371,8 +371,7 @@ window.nova_plugins.push({
                thumbBtn.addEventListener('click', async () => {
                   // Strategy 1 (API). skip embed
                   if (NOVA.currentPage == 'watch'
-                     && (imgUrl = document.body.querySelector('ytd-watch, ytd-watch-flexy')
-                        ?.playerData?.videoDetails?.thumbnail.thumbnails.pop().url)
+                     && (imgUrl = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.thumbnail.thumbnails.pop().url)
                   ) return window.open(imgUrl);
 
                   // Strategy 2 (fetch)
@@ -426,7 +425,7 @@ window.nova_plugins.push({
                      </g>
                   </svg>`;
                rotateBtn.addEventListener('click', () => {
-                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/^\D+/g, '')) || 0;
+                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D/, ''), 10) || 0;
                   // fix ratio scale. Before angle calc
                   const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / NOVA.videoElement.clientWidth : 1;
                   angle += 90;

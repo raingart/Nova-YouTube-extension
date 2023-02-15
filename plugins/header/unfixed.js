@@ -73,8 +73,23 @@ window.nova_plugins.push({
          });
 
          function scrollAfter() {
-            if (topOffset = document.getElementById('masthead')?.offsetHeight) {
+            if ((masthead = document.getElementById('masthead'))
+               && (topOffset = masthead.offsetHeight)
+               && isInViewport(masthead)
+            ) {
                window.scrollTo({ top: topOffset });
+            }
+
+            function isInViewport(el = required()) {
+               if (el instanceof HTMLElement) {
+                  const bounding = el.getBoundingClientRect();
+                  return (
+                     bounding.top >= 0 &&
+                     bounding.left >= 0 &&
+                     bounding.bottom <= window.innerHeight &&
+                     bounding.right <= window.innerWidth
+                  );
+               }
             }
          }
 

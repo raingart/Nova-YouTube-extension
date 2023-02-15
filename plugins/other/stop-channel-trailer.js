@@ -1,4 +1,5 @@
-// for test - https://www.youtube.com/c/miyanomamoru/featured
+// for test
+// https://www.youtube.com/c/miyanomamoru/featured
 
 window.nova_plugins.push({
    id: 'channel-trailer-stop-preload',
