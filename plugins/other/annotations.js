@@ -21,6 +21,8 @@ window.nova_plugins.push({
    'desc:ua': 'Приховайте набридливий контент',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/451446-youtube-embed-remove-branding
+
       let selectorsList = [
          // '.annotation',
          '.ytp-paid-content-overlay', // message in the bottom-left corner "Includes paid promotion"
@@ -48,10 +50,12 @@ window.nova_plugins.push({
          default:
             selectorsList.push([
                // home page
+               // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
                // 'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
 
 
                // results page
+               // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
                // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // ad buy
                'ytd-search-pyv-renderer', // fix blank space - https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
 

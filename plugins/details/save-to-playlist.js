@@ -18,7 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/436123-youtube-save-to-playlist-filter
+      // alt1 - https://greasyfork.org/en/scripts/436123-youtube-save-to-playlist-filter
+      // alt2 - https://greasyfork.org/en/scripts/392141-youtube-save-to-playlist-incremental-search
 
       NOVA.waitElement('tp-yt-paper-dialog #playlists')
          .then(playlists => {

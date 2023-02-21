@@ -25,8 +25,8 @@ window.nova_plugins.push({
          // movie_player.contains(document.activeElement) // Dont use! stay overline
          if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
 
-         // NOVA.videoElement?.focus();
-         movie_player.focus();
+         // NOVA.videoElement?.focus(); // video
+         movie_player.focus(); // player
          // document.activeElement.style.border = '2px solid red'; // mark for test
          // console.debug('active element', target.localName);
       });

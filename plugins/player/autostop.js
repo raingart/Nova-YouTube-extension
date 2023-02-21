@@ -26,8 +26,9 @@ window.nova_plugins.push({
 
       // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
 
-      // if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
-      if (user_settings.stop_preload_embed == 'on' && NOVA.currentPage != 'embed') return; // for legacy user_settings - https://github.com/raingart/Nova-YouTube-extension/issues/42
+      if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
+      // fix bug in google drive
+      if (location.hostname == 'youtube.googleapis.com') return;
 
       NOVA.waitElement('#movie_player')
          .then(async movie_player => {

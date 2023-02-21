@@ -17,7 +17,7 @@ window.nova_plugins.push({
    // 'title:pl': '',
    // 'title:ua': '',
    run_on_pages: 'embed',
-   section: 'embed',
+   section: 'player',
    _runtime: user_settings => {
 
       // if (NOVA.queryURL.has('controls'))

@@ -207,12 +207,6 @@ App.init();
 // test z-index "Show chat replay" button
 // https://www.youtube.com/watch?v=9Mv1sOp0Xg8
 
-// warn "The following content may contain suicide or self-harm topics."
-// https://www.youtube.com/watch?v=MEZ-0nyiago
-// https://www.youtube.com/watch?v=MiQozY6jR0I
-// https://www.youtube.com/watch?v=vcw5THyM7Jo
-// https://www.youtube.com/watch?v=4QXCPuwBz2E
-
 // test normal lite
 // https://www.youtube.com/watch?v=eWwBkA0GqaY 144 MUSIC
 // https://www.youtube.com/watch?v=v-YQUCP-J8s 144 MUSIC
@@ -224,6 +218,8 @@ App.init();
 // https://www.youtube.com/watch?v=rFeBMv98X30 1080 PV
 // https://www.youtube.com/watch?v=s-yflRFexPc 4k short time
 
+// Fundraiser badge
+// https://www.youtube.com/watch?v=Rz1Xn1vzOM4
 
 // example url new embed page
 // https://www.youtube-nocookie.com/embed/hXTqP_o_Ylw?autoplay=1&autohide=1&fs=1&rel=0&hd=1&wmode=transparent&enablejsapi=1&html5=1

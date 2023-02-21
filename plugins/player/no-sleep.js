@@ -38,6 +38,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/457219-disable-youtube-autopause
       // alt4 - https://greasyfork.org/en/scripts/458173-youtube-don-t-stop
       // alt5 - https://greasyfork.org/en/scripts/458929-youtube-background-nonstop
+      // alt6 - https://greasyfork.org/en/scripts/444298-youtube-don-t-stop/code
 
       window.setInterval(() => {
          if (document.visibilityState == 'hidden') {
@@ -65,6 +66,9 @@ window.nova_plugins.push({
       //          skipConfirmDialog(); // recursion init state. What would work more than once
       //       });
       // }
+
+      // Strategy 4
+      // alt10 - https://greasyfork.org/en/scripts/429909-comfortable-youtube/code
 
       // skipConfirmDialog();
    },

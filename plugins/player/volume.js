@@ -39,6 +39,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/376155-youtube-scroll-volume
       // alt3 - https://greasyfork.org/en/scripts/376002-youtube-volume-mouse-controller
       // alt4 - https://greasyfork.org/en/scripts/381929-youtube-mousewheel-volume-control
+      // alt5 - https://chrome.google.com/webstore/detail/agadcopafaojndinhloilcanpfpbonbk
 
       // hotkey
       // alt - https://greasyfork.org/en/scripts/418121-yt-fixed

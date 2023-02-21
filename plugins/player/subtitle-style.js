@@ -66,14 +66,15 @@ window.nova_plugins.push({
       }
 
       if (user_settings.subtitle_selectable) {
-         // alt - https://greasyfork.org/en/scripts/451626-make-youtube-caption-selectable
-         // alt2 - https://greasyfork.org/en/scripts/435955-youtube%E5%AD%97%E5%B9%95%E5%8D%95%E8%AF%8D%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E9%80%89%E4%B8%AD-%E6%96%B9%E4%BE%BFmac%E7%94%B5%E8%84%91%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BF%BB%E8%AF%91%E5%8D%95%E8%AF%8D
+         // alt1 - https://greasyfork.org/en/scripts/451626-make-youtube-caption-selectable
+         // alt2 - https://greasyfork.org/en/scripts/456140-youtube-caption-selector
+         // alt3 - https://greasyfork.org/en/scripts/435955-youtube%E5%AD%97%E5%B9%95%E5%8D%95%E8%AF%8D%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E9%80%89%E4%B8%AD-%E6%96%B9%E4%BE%BFmac%E7%94%B5%E8%84%91%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BF%BB%E8%AF%91%E5%8D%95%E8%AF%8D
          NOVA.watchElements({
             selectors: [
-               SELECTOR + ':not([selectable="true"]',
-               //    'div.caption-window',
-               //    '#caption-window-1:not([selectable="true"]'
-            ],
+               SELECTOR,
+               '#caption-window-1', // div.caption-window
+            ]
+               .map(i => i + ':not(:empty)'),
             // attr_mark: ATTR_MARK,
             callback: el => {
                el.addEventListener('mousedown', evt => evt.stopPropagation(), true);

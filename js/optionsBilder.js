@@ -134,8 +134,8 @@ const Opt = {
          const exportHTML = document.createElement('ul');
          exportHTML.setAttribute('data-dependent', `{"${id}":[true]}`);
 
-         for (const key in obj) {
-            const property = obj[key];
+         for (const name in obj) {
+            const property = obj[name];
             this.log('property', property);
 
             if (!property._tagName) {
@@ -159,8 +159,8 @@ const Opt = {
                }
             }
             else {
-               property.name = key;
-               property.id = key;
+               property.name = name;
+               property.id = name;
             }
 
             delete property._tagName;

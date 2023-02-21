@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Nova YouTube
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
-// @version         0.37.0
+// @version         0.38.0
 // @description     Gives you more control on YouTube
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
@@ -16,6 +16,7 @@
 
 // @include         http*://*.youtube.com/*
 // @include         http*://*.youtube-nocookie.com/*
+// @include         http*://youtube.googleapis.com/*
 // @include         http*://raingart.github.io/options.html*
 
 // @exclude         http*://*.youtube.com/*.xml*

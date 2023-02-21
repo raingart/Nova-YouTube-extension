@@ -18,6 +18,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/445197-youtube-premium-logo
+      // alt2 - https://greasyfork.org/en/scripts/447775-youtube-premium-logo
+
       NOVA.waitElement('#masthead a#logo')
          .then(a => a.href = new URL(user_settings.page_logo_url_mode)?.href);
 

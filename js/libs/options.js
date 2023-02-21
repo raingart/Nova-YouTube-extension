@@ -6,14 +6,14 @@ const PopulateForm = {
    // storageMethod: 'local',
    storageMethod: 'sync',
 
-   fill(settings, parent) {
-      // console.log("Load from Storage: %s=>%s", parent?.id, JSON.stringify(settings));
+   fill(settings, container) {
+      // console.log("Load from Storage: %s=>%s", container?.id, JSON.stringify(settings));
 
       for (const key in settings) {
          const val = settings[key];
          // const el = document.body.getElementsByName(key)[0] || document.getElementById(key);
-         if (el = (parent || document.body).querySelector(`[name="${key}"]`)
-            || (parent || document.body).querySelector('#' + key)) {
+         if (el = (container || document.body).querySelector(`[name="${key}"]`)
+            || (container || document.body).querySelector('#' + key)) {
             // console.log('>opt %s#%s=%s', el.tagName, key, val);
 
             switch (el.tagName.toLowerCase()) {
@@ -62,36 +62,36 @@ const PopulateForm = {
 
    attrDependencies() {
       document.body.querySelectorAll('[data-dependent]')
-         .forEach(dependentEl => {
-            // let dependentsList = dependentEl.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-            const dependentsJson = JSON.parse(dependentEl.getAttribute('data-dependent').toString());
-            const handler = () => showOrHide(dependentEl, dependentsJson);
-            // document.getElementById(Object.keys(dependentsJson))?.addEventListener('change', handler);
-            document.getElementsByName(Object.keys(dependentsJson))
+         .forEach(targetEl => {
+            // let dependentsList = targetEl.getAttribute('data-dependent').split(',').forEach(i => i.trim());
+            const rules = JSON.parse(targetEl.getAttribute('data-dependent').toString());
+            const handler = () => showOrHide(targetEl, rules);
+            // document.getElementById(Object.keys(rules))?.addEventListener('change', handler);
+            document.getElementsByName(Object.keys(rules))
                .forEach(el => el.addEventListener('change', handler));
             // init state
             handler();
          });
 
-      function showOrHide(dependentEl, dependentsJson) {
+      function showOrHide(targetEl, rules) {
          // console.debug('showOrHide', ...arguments);
-         for (const parrentName in dependentsJson) {
+         for (const parrentName in rules) {
             // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
-            const parrentEl = Array.from(document.getElementsByName(parrentName))
+            const subtargetEl = Array.from(document.getElementsByName(parrentName))
                .find(e => (e.type == 'radio') ? e.checked : e); // return radio:checked or document.getElementsByName(parrentName)[0]
 
-            if (parrentEl) {
-               const ruleValues = Array.isArray(dependentsJson[parrentName])
-                  ? dependentsJson[parrentName]
-                  : [dependentsJson[parrentName]];
+            if (subtargetEl) {
+               const ruleValues = Array.isArray(rules[parrentName])
+                  ? rules[parrentName]
+                  : [rules[parrentName]];
 
                const currentValuesList = (function () {
                   // for options
-                  if (options = parrentEl?.selectedOptions) {
+                  if (options = subtargetEl?.selectedOptions) {
                      return Array.from(options).map(({ value }) => value);
                   }
-                  return [parrentEl.value];
-                  // return [parrentEl.type == 'checkbox' ? parrentEl.checked : parrentEl.value];
+                  return [subtargetEl.value];
+                  // return [subtargetEl.type == 'checkbox' ? subtargetEl.checked : subtargetEl.value];
                })();
 
                // if (parrentName == 'stop_preload_embed')
@@ -99,34 +99,32 @@ const PopulateForm = {
 
                if (ruleValues.length // filter value present
                   && ( // element has value or checked
-                     (parrentEl.checked && !parrentEl.matches('[type="radio"]')) // skip radio (which is always checked. Unlike a checkbox)
+                     (subtargetEl.checked && !subtargetEl.matches('[type="radio"]')) // skip radio (which is always checked. Unlike a checkbox)
                      || ruleValues.some(i => currentValuesList.includes(i.toString())) // has value
                   )
-                  // || (ruleValues.startsWith('!') && parrentEl.value !== ruleValues.replace('!', '')) // inverse value
+                  // || (ruleValues.startsWith('!') && subtargetEl.value !== ruleValues.replace('!', '')) // inverse value
                   || ruleValues.some(i =>
                      i.toString().startsWith('!') && !currentValuesList.includes(i.toString().replace('!', '')) // inverse value
                   )
                ) {
                   // console.debug('show:', parrentName);
-                  dependentEl.classList.remove('hide');
+                  targetEl.classList.remove('hide');
                   childInputDisable(false);
                }
                else {
                   // console.debug('hide:', parrentName);
-                  dependentEl.classList.add('hide');
+                  targetEl.classList.add('hide');
                   childInputDisable(true);
                }
             }
-            else {
-               console.error('error showOrHide:', parrentName);
-            }
+            else console.error('error showOrHide:', parrentName);
          }
 
          function childInputDisable(status = false) {
-            dependentEl.querySelectorAll('input, textarea, select')
+            targetEl.querySelectorAll('input, textarea, select')
                .forEach(el => {
                   el.disabled = Boolean(status);
-                  // dependentEl.readOnly = Boolean(status);
+                  // targetEl.readOnly = Boolean(status);
                });
          }
       }
@@ -136,7 +134,7 @@ const PopulateForm = {
    saveOptions(form) {
       let newSettings = {};
 
-      for (let [key, value] of new FormData(form)) {
+      for (const [key, value] of new FormData(form)) {
          // SerializedArray
          if (newSettings.hasOwnProperty(key)) {
             newSettings[key] += ',' + value; // add new
@@ -187,7 +185,7 @@ const PopulateForm = {
    },
 
    // Register the event handlers.
-   registerEventListener() {
+   registerEventListeners() {
       // form submit
       document.addEventListener('submit', evt => {
          // console.debug('submit', event.target);
@@ -212,7 +210,7 @@ const PopulateForm = {
       Storage.getParams(settings => {
          this.fill(settings);
          this.attrDependencies();
-         this.registerEventListener();
+         this.registerEventListeners();
          document.body.classList.remove('preload');
          // auto selects value on focus
          document.body.querySelectorAll('form input[type]').forEach(i => i.addEventListener('focus', i.select));

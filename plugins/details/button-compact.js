@@ -19,6 +19,10 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/443136-youtube-compact-button-labels
+      // alt2 - https://greasyfork.org/en/scripts/449799-clean-yt-interface
+      // alt3 - https://greasyfork.org/en/scripts/441087-youtube-watch-page-no-icon-labels
+
       let styles =
          `#top-row #actions button ${user_settings.buttons_hide ? '' : '[class*="--button-text-content"]'} {
             display: none;

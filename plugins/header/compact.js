@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'header-short',
+   id: 'header-compact',
    title: 'Header compact',
    'title:zh': '标题紧凑',
    'title:ja': 'ヘッダーコンパクト',
@@ -22,16 +22,16 @@ window.nova_plugins.push({
 
       NOVA.css.push(
          `#masthead #container.ytd-masthead {
-            height: ${height} !important;
+            max-height: ${height} !important;
          }
 
          /*fix for plugin [player-indicator]*/
          #masthead #background {
-            height: ${height} !important;
+            max-height: ${height} !important;
          }
 
          #search-form, #search-icon-legacy {
-            height: ${height} !important;
+            max-height: ${height} !important;
          }
 
          body,

@@ -23,6 +23,22 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/23661-youtube-hd/feedback
+      // alt2 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
+
+      const qualityFormatListWidth = {
+         highres: 4320,
+         hd2880: 2880,
+         hd2160: 2160,
+         hd1440: 1440,
+         hd1080: 1080,
+         hd720: 720,
+         large: 480,
+         medium: 360,
+         small: 240,
+         tiny: 144,
+      };
+
       let selectedQuality = user_settings.video_quality;
 
       NOVA.waitElement('#movie_player')
@@ -66,7 +82,15 @@ window.nova_plugins.push({
             setQuality.quality_busy = true;
 
             const waitQuality = setInterval(() => {
-               const availableQualityLevels = movie_player.getAvailableQualityLevels();
+               // const availableQualityLevels = movie_player.getAvailableQualityLevels();
+               // set max quality limit (viewport + 30%)
+               let availableQualityLevels = movie_player.getAvailableQualityLevels();
+               const maxQualityIdx = availableQualityLevels
+                  .findIndex(i => qualityFormatListWidth[i] <= (window.innerWidth * 1.3));
+                  // set max quality limit (screen resolution + 30%)
+                  // .findIndex(i => qualityFormatListWidth[i] <= (window.screen.width * 1.3));
+               availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
+
 
                if (availableQualityLevels?.length) {
                   clearInterval(waitQuality);

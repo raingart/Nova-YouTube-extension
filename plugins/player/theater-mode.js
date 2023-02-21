@@ -18,7 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
+      // alt1 - https://greasyfork.org/en/scripts/10523-youtube-always-theater-mode
+      // alt2 - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
 
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') {
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));

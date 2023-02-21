@@ -453,15 +453,15 @@ window.nova_plugins.push({
                   //    // { 'default': '100%' },
                   //    // hd720: { label: '720p', badge: 'HD' },
                   // ];
-               // Strategy 2
-               aspectRatioList = [
-                  { '16:9': 1.335 }, // HD, FHD, QHD, 4K, 8K
-                  { '4:3': .75 }, // HD, FHD, QHD, 4K, 8K
-                  { '9:16': 1.777777778 }, // mobile
-                  { 'auto': 1 },
-                  // hd720: { label: '720p', badge: 'HD' },
-               ],
-               genTooltip = (key = 0) => `Switch aspect ratio to ` + Object.keys(aspectRatioList[key]);
+                  // Strategy 2
+                  aspectRatioList = [
+                     { '16:9': 1.335 }, // HD, FHD, QHD, 4K, 8K
+                     { '4:3': .75 }, // HD, FHD, QHD, 4K, 8K
+                     { '9:16': 1.777777778 }, // mobile
+                     { 'auto': 1 },
+                     // hd720: { label: '720p', badge: 'HD' },
+                  ],
+                  genTooltip = (key = 0) => `Switch aspect ratio to ` + Object.keys(aspectRatioList[key]);
 
                // if (NOVA.videoElement?.videoWidth < NOVA.videoElement?.videoHeight) {
                aspectRatioBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
@@ -518,13 +518,13 @@ window.nova_plugins.push({
                         watchLaterDefault.click();
                         renderIcon(); // render loading (.ytp-spinner)
                         const waitStatus = setInterval(() => {
-                           // console.debug('wait svg. current show div ".ytp-spinner"');
+                           // console.debug('wait svg. Current show div '.ytp-spinner'
                            if (watchLaterDefault.querySelector('svg')) {
                               // console.debug('svg ready');
                               clearInterval(waitStatus);
                               renderIcon();
                            }
-                        }, 100); // check evry 100ms
+                        }, 100); // check every 100ms
                         // setTimeout(renderIcon, 1000); // 1 sec
                      });
                      //
@@ -633,6 +633,7 @@ window.nova_plugins.push({
                   }
 
                   ${SELECTOR_QUALITY_LIST} li.active { background: #720000; }
+                  ${SELECTOR_QUALITY_LIST} li.disable { color: #666; }
                   ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background: #c00; }`);
                // ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: var(--yt-spec-brand-button-background); }`);
                // container <a>
@@ -681,12 +682,22 @@ window.nova_plugins.push({
                                  qualityItem.insertAdjacentHTML('beforeend',
                                     `<span class="quality-menu-item-label-badge">${badge}</span>`);
                               }
-                              qualityItem.addEventListener('click', () => {
-                                 // console.debug('setPlaybackQuality', quality);
-                                 movie_player.setPlaybackQualityRange(quality, quality);
-                                 // movie_player.setPlaybackQuality(quality); // Doesn't work
-                                 qualityList.innerHTML = ''; // dirty hack (clear list)
-                              })
+                              // set max quality limit (viewport + 30%)
+                              // if ((+qualityData.label.replace('p', '') || 0) <= (window.innerWidth * 1.3)) {
+                              // set max quality limit (screen resolution + 30%)
+                              if ((qualityData.label.replace('p', '') || 0) <= (window.screen.width * 1.3)) {
+                                 qualityItem.addEventListener('click', () => {
+                                    // console.debug('setPlaybackQuality', quality);
+                                    movie_player.setPlaybackQualityRange(quality, quality);
+                                    // movie_player.setPlaybackQuality(quality); // Doesn't work
+                                    qualityList.innerHTML = ''; // dirty hack (clear list)
+                                 });
+                              }
+                              else {
+                                 qualityItem.className = 'disable';
+                                 qualityItem.title = 'Max (window viewport + 30%)';
+                              }
+
                               qualityList.append(qualityItem);
                            }
                         });

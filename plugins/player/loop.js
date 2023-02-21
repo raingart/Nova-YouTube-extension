@@ -34,6 +34,8 @@ window.nova_plugins.push({
    // 'desc:ua': 'Зациклювання відео',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/444241-loopbuttonyt
+
       // createPlayerButton
       NOVA.waitElement('.ytp-left-controls .ytp-play-button')
          .then(container => {

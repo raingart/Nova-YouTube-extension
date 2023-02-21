@@ -56,7 +56,7 @@ window.nova_plugins.push({
                   cursor: pointer;
                   visibility: visible;
                   /*transform: rotate(-90deg) translateX(-100%);*/
-                  right: 12em;
+                  right: 12.5em;
                   padding: 0 8px 2px;
                   line-height: normal;
                   font-family: Roboto, Arial, sans-serif;
@@ -132,6 +132,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/457850-youtube-video-info
       // alt2 - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
+      // alt3 - https://greasyfork.org/en/scripts/457478-show-youtube-s-video-date-behind-subscription-button
       let oldDateText;
       function restoreDateLine() {
          NOVA.waitElement('#title h1')

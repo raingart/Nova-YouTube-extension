@@ -53,6 +53,7 @@ window.nova_plugins.push({
                // ? '#comments'
                // ? 'html:not(:fullscreen) ytd-watch-metadata #description.ytd-watch-metadata:not([hidden])'
                : '#comments ytd-comments-header-renderer #title'
+            // : '#page-manager #owner'
          )
             .then(menu => {
                // [data-open-modal="nova-modal-comments"]
@@ -101,6 +102,9 @@ window.nova_plugins.push({
                user_settings['comments-popup']
                   ? menu.append(btn)
                   : menu.prepend(btn);
+
+               // if #page-manager #owner
+               // menu.append(btn);
 
                insertModal();
                connectSortable();

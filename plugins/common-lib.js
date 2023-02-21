@@ -64,7 +64,7 @@ const NOVA = {
          }
 
          new MutationObserver((mutations, observer) => {
-            for (let mutation of mutations) {
+            for (const mutation of mutations) {
                for (const node of mutation.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType)) continue; // speedup hack
 
@@ -841,13 +841,19 @@ const NOVA = {
                + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
                + (m ? (h ? m.toString().padStart(2, '0') : m) + 'm' : '')
                + (s ? (m ? s.toString().padStart(2, '0') : s) + 's' : '');
-            // 78.48% slower
-            // return (days ? `${days}d ` : '')
-            //    + [seconds, minutes, hours]
-            //       .filter(i => +i && !isNaN(i))
-            //       .map((item, idx, arr) => (arr.length - 1 !== idx ? item.toString().padStart(2, '0') : item) + ['s', 'm', 'h'][idx])
-            //       .reverse()
-            //       .join(''); // format "999h00m00s"
+            // 81.34 % slower
+            // const ts = Math.abs(+time_sec);
+            // return [
+            //    days = { label: 'd', time: ~~(ts / 86400) },
+            //    hours = { label: 'h', time: ~~((ts % 86400) / 3600) },
+            //    minutes = { label: 'm', time: ~~((ts % 3600) / 60) },
+            //    // { label: 's', time: ~~(Math.log(sec) / Math.log(60)) },
+            //    seconds = { label: 's', time: Math.floor(ts % 60) },
+            // ]
+            //    .map((i, idx, arr) =>
+            //       (i.time ? (arr[idx - 1] ? i.time.toString().padStart(2, '0') : i.time) + i.label : '')
+            //    )
+            //    .join('');
          },
       },
    },

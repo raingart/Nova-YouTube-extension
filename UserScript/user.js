@@ -12,16 +12,17 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 }
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'header-short': 'header-compact',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (isOptionsPage()) return;
 
@@ -32,39 +33,39 @@ landerPlugins();
 function isOptionsPage() {
    // GM_registerMenuCommand('Settings', () => window.open(optionsPage));
    GM_registerMenuCommand('Settings', () => GM_openInTab(optionsPage));
-   GM_registerMenuCommand('Import settings', () => {
-      if (json = JSON.parse(prompt('Enter json file context'))) {
-         GM_setValue(configStoreName, json);
-         alert('Settings imported');
-         location.reload();
-      }
-      else alert('Import failed');
-   });
    // GM_registerMenuCommand('Import settings', () => {
-   //    let f = document.createElement('input');
-   //    f.type = 'file';
-   //    f.accept = 'application/JSON';
-   //    f.style.display = 'none';
-   //    f.addEventListener('change', function () {
-   //       if (f.files.length !== 1) return alert('file empty');
-   //       let rdr = new FileReader();
-   //       rdr.addEventListener('load', function () {
-   //          try {
-   //             GM_setValue(configStoreName, JSON.parse(rdr.result));
-   //             alert('Settings imported');
-   //             location.reload();
-   //          }
-   //          catch (err) {
-   //             alert(`Error parsing settings\n${err.name}: ${err.message}`);
-   //          }
-   //       });
-   //       rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
-   //       rdr.readAsText(f.files[0]);
-   //    });
-   //    document.body.append(f);
-   //    f.click();
-   //    f.remove();
+   //    if (json = JSON.parse(prompt('Enter json file context'))) {
+   //       GM_setValue(configStoreName, json);
+   //       alert('Settings imported');
+   //       location.reload();
+   //    }
+   //    else alert('Import failed');
    // });
+   GM_registerMenuCommand('Import settings', () => {
+      const f = document.createElement('input');
+      f.type = 'file';
+      f.accept = 'application/JSON';
+      f.style.display = 'none';
+      f.addEventListener('change', function () {
+         if (f.files.length !== 1) return alert('file empty');
+         const rdr = new FileReader();
+         rdr.addEventListener('load', function () {
+            try {
+               GM_setValue(configStoreName, JSON.parse(rdr.result));
+               alert('Settings imported');
+               location.reload();
+            }
+            catch (err) {
+               alert(`Error parsing settings\n${err.name}: ${err.message}`);
+            }
+         });
+         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
+         rdr.readAsText(f.files[0]);
+      });
+      document.body.append(f);
+      f.click();
+      f.remove();
+   });
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
       d.style.display = 'none';
@@ -83,7 +84,7 @@ function isOptionsPage() {
          event.preventDefault();
 
          let obj = {};
-         for (let [key, value] of new FormData(event.target)) {
+         for (const [key, value] of new FormData(event.target)) {
             // SerializedArray
             if (obj.hasOwnProperty(key)) {
                obj[key] += ',' + value; // add new
@@ -278,7 +279,7 @@ window.addEventListener('unhandledrejection', err => {
    console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
-   if (user_settings.report_issues && err.reason.stack.includes('Nova'))
+   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova'))
       _pluginsCaptureException({
          'trace_name': 'unhandledrejection',
          'err_stack': err.reason.stack || err.stack,

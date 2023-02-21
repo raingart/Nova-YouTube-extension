@@ -28,8 +28,12 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
+      // TODO bug on click (https://www.youtube.com/@bluearchive_Global/community)
+      // 'shorts', 'streams', 'playlists' tabs do not exist in all channels
+
+      // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
+      // alt3 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default/code
 
       const
          urlArr = location.pathname.split('/').filter(Boolean),
@@ -40,7 +44,7 @@ window.nova_plugins.push({
          || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTabOld || channelTab)
       ) return;
 
-      if (user_settings.channel_default_tab_mode == 'redirect') {
+      if (user_settings.channel_default_tab_mode == 'redirect' || user_settings.channel_default_tab != 'videos') {
          location.pathname += '/' + user_settings.channel_default_tab;
       }
       else {
@@ -49,8 +53,8 @@ window.nova_plugins.push({
             .then(() => {
                let tab_nth;
                switch (user_settings.channel_default_tab) {
-                  case 'playlists': tab_nth = 6; break;
-                  case 'about': tab_nth = 12; break;
+                  // case 'playlists': tab_nth = 6; break;
+                  // case 'about': tab_nth = 12; break;
                   // case 'videos':
                   default: tab_nth = 4;
                }

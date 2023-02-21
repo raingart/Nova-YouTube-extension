@@ -44,10 +44,11 @@ window.nova_plugins.push({
                   comment.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
                   break;
 
-               // case 'always':
-               default:
+               case 'always':
                   moreExpand();
                   break;
+
+               // default: // disable
             }
          },
       });
@@ -65,10 +66,11 @@ window.nova_plugins.push({
                   btn.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
                   break;
 
-               // case 'always':
-               default:
+               case 'always':
                   moreExpand();
                   break;
+
+               // default: // disable
             }
          },
       });
@@ -138,6 +140,21 @@ window.nova_plugins.push({
                'label:pl': 'przy najechaniu',
                'label:ua': 'при наведенні',
             },
+            {
+               label: 'disable', value: false,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
          ],
       },
       comments_view_reply: {
@@ -186,6 +203,21 @@ window.nova_plugins.push({
                'label:de': 'auf schweben',
                'label:pl': 'przy najechaniu',
                'label:ua': 'при наведенні',
+            },
+            {
+               label: 'disable', value: false,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
             },
          ],
       },

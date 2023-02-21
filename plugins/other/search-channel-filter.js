@@ -30,7 +30,8 @@ window.nova_plugins.push({
    'desc:ua': 'Приховує канали на сторінці пошуку',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/405325-youtube-search-filter
+      // alt1 - https://greasyfork.org/en/scripts/405325-youtube-search-filter
+      // alt2 - https://greasyfork.org/en/scripts/443529-improved-blacklist-function-%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%88%E6%A9%9F%E8%83%BD%E3%81%AE%E6%94%B9%E5%96%84
 
       // textarea to array
       const keywords = user_settings.search_filter_channel_blocklist

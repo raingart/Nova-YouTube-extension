@@ -4,8 +4,7 @@
 
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
-   // title: 'Float player progress bar',
-   title: 'Always display a tiny progress bar',
+   title: 'Float player progress bar',
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
    'title:ko': '플로팅 플레이어 진행률 표시줄',

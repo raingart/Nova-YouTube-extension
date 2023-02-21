@@ -50,7 +50,7 @@ window.nova_plugins.push({
          num = +num;
          if (num === 0) return '';
          if (num < 1000) return num; // speed up
-         const sizes = ['', 'K', 'Mil', 'Bil'];
+         const sizes = ['', 'K', 'M', 'B'];
          const i = Math.floor(Math.log(Math.abs(num)) / Math.log(1000));
          if (!sizes[i]) return num; // out range
 
@@ -94,11 +94,11 @@ window.nova_plugins.push({
 
                /* comments section */
                ${COMMENTS_SELECTOR} {
-                  margin: 0 1%;
+                  ${user_settings.comments_popup_width === 100 ? 'margin: 0 1%;' : ''}
                   padding: 0 15px;
                   background-color: #222;
                   border: 1px solid #333;
-                  max-width: 550px;
+                  max-width: ${user_settings.comments_popup_width || 40}%;
                }
 
                ${COMMENTS_SELECTOR}:not(:hover) {
@@ -114,26 +114,14 @@ window.nova_plugins.push({
                ${COMMENTS_SELECTOR} > #sections > #contents {
                   overflow-y: auto;
                   max-height: 88vh;
-                  border-top: 1px solid #333;
                   padding-top: 1em;
                }
 
-               /* hide add comment textarea */
-               ${COMMENTS_SELECTOR} #header #simple-box {
-                  display: none;
-               }
-
-               /* fixs */
-               ytd-comments-header-renderer {
-                  height: 0;
-                  margin-top: 10px;
-               }
                #expander.ytd-comment-renderer {
                   overflow-x: hidden;
                }
                /* size section */
                ${COMMENTS_SELECTOR} #sections {
-                  max-width: fit-content;
                   min-width: 500px;
                }
 
@@ -163,11 +151,79 @@ window.nova_plugins.push({
                   border: 0;
                   border-radius: 0;
                }
-
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-track:hover {
                   background: #666;
                }`);
+
+            // hide add comment textarea
+            if (user_settings.comments_popup_hide_textarea) {
+               NOVA.css.push(
+                  `${COMMENTS_SELECTOR} > #sections > #contents {
+                     overflow-y: auto;
+                     max-height: 88vh;
+                     border-top: 1px solid #333;
+                     padding-top: 1em;
+                  }
+                  ${COMMENTS_SELECTOR} #header #simple-box {
+                     display: none;
+                  }
+                  /* fixs */
+                  ytd-comments-header-renderer {
+                     height: 0;
+                     margin-top: 10px;
+                  }`);
+            }
+            else {
+               NOVA.css.push(
+                  `/* fixs */
+                  ytd-comments-header-renderer {
+                     margin: 10px 0;
+                  }`);
+            }
          });
 
    },
+   options: {
+      comments_popup_width: {
+         _tagName: 'input',
+         label: 'Width',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'number',
+         title: 'in %',
+         placeholder: '%',
+         step: 5,
+         min: 10,
+         max: 100,
+         value: 40,
+      },
+      comments_popup_hide_textarea: {
+         _tagName: 'input',
+         label: 'Hide textarea',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+      },
+   }
 });

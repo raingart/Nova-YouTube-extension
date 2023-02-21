@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'player-progress-bar-color',
-   title: 'Custom player progress bar color',
+   title: 'Player progress bar color',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

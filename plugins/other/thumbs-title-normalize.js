@@ -38,18 +38,6 @@ window.nova_plugins.push({
          ATTR_MARK = 'nova-thumb-title-normalized',
          clearOfEmoji = str => str.replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
-      // dirty fix bug with not updating thumbnails
-      // let oldSortQuery = NOVA.queryURL.get('sort');
-      // document.addEventListener('yt-navigate-finish', () => {
-      //    if ((sortQuery = NOVA.queryURL.get('sort')) && sortQuery != oldSortQuery) {
-      //       oldSortQuery = sortQuery;
-      //       location.reload();
-      //    }
-      // });
-      // // document.addEventListener('yt-page-data-updated', () =>
-      // document.addEventListener('yt-navigate-finish', () =>
-      //    document.body.querySelectorAll(`[${ATTR_MARK}]`).forEach(e => e.removeAttribute(ATTR_MARK)));
-
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(
             VIDEO_TITLE_SELECTOR.join(',') + `{
@@ -70,17 +58,17 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: VIDEO_TITLE_SELECTOR,
          attr_mark: ATTR_MARK,
-         callback: title => {
+         callback: videoTitleEl => {
             // if (['home, feed, channel, watch'].includes(NOVA.currentPage)) return;
             if (NOVA.currentPage == 'results') return;
             let countCaps = 0;
 
             // need before count
             if (user_settings.thumbnails_title_clear_emoji) {
-               title.textContent = clearOfEmoji(title.textContent).trim();
+               videoTitleEl.textContent = clearOfEmoji(videoTitleEl.textContent).trim();
             }
 
-            const normalizedText = title.textContent.replace(UpperCaseLetterRegex, match => {
+            const normalizedText = videoTitleEl.textContent.replace(UpperCaseLetterRegex, match => {
                // console.debug('match', match);
                countCaps++;
                // skip hasNumber
@@ -90,11 +78,35 @@ window.nova_plugins.push({
             if (countCaps > MAX_CAPS_LETTERS
                || (countCaps > 1 && normalizedText.split(/\s+/).length === countCaps) // All letters in caps
             ) {
-               title.textContent = normalizedText;
-               // console.debug('normalize:', countCaps, '\n' + title.title, '\n' + title.textContent);
+               videoTitleEl.textContent = normalizedText;
+               // console.debug('normalize:', countCaps, '\n' + videoTitleEl.title, '\n' + videoTitleEl.textContent);
             }
          }
       });
+
+      // fix bug with not updating thumbnails
+      // document.addEventListener('click', ({ target }) => {
+      // console.debug('target', target);
+      document.addEventListener('yt-action', evt => {
+         // console.log(evt.detail?.actionName);
+         if (evt.detail?.actionName == 'yt-chip-cloud-chip-select-action') { // click on sort thumbs
+            window.addEventListener('transitionend', restoreTitle, { capture: true, once: true });
+         }
+      });
+      // }, { capture: true, once: true });
+      function restoreTitle() {
+         const selectorOldTitle = '#video-title-link[title]';
+         if (NOVA.channelTab == 'videos') {
+            document.body.querySelectorAll(`${selectorOldTitle} ${VIDEO_TITLE_SELECTOR}[${ATTR_MARK}]`)
+            // document.body.querySelectorAll(`${selectorOldTitle} [${ATTR_MARK}]`)
+               .forEach(el => {
+                  if (oldTitle = el.closest(selectorOldTitle)?.title) {
+                     el.textContent = oldTitle;
+                     el.removeAttribute(ATTR_MARK);
+                  }
+               });
+         }
+      }
 
    },
    options: {

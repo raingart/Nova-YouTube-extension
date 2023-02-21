@@ -30,6 +30,8 @@ window.nova_plugins.push({
    'desc:ua': 'Прямі зовнішні посилання',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/449286-clean-youtube-redirect-urls
+
       // mouse left click
       document.addEventListener('click', ({ target }) => patchLink(target), { capture: true });
       // mouse middle click

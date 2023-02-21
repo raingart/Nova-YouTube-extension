@@ -24,6 +24,7 @@ window.nova_plugins.push({
          && (sp = user_settings.search_query_date || user_settings.search_query_sort)
       ) {
          location.href = NOVA.queryURL.set({ 'sp': sp });
+         // location.replace(NOVA.queryURL.set({ 'sp': sp }));
       }
 
       // Strategy 2. Patch input

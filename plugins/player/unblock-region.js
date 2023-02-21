@@ -4,12 +4,6 @@
 // https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
 // https://www.youtube.com/watch?v=bJ9r8LMU9bQ - https://watannetwork.com/tools/blocked/#url=bJ9r8LMU9bQ
 
-// warn "The following content may contain suicide or self-harm topics."
-// https://www.youtube.com/watch?v=MEZ-0nyiago
-// https://www.youtube.com/watch?v=MiQozY6jR0I
-// https://www.youtube.com/watch?v=ek7JK6pattE
-// https://www.youtube.com/watch?v=qAYlTiV-Zf8
-
 window.nova_plugins.push({
    id: 'video-unblock-region',
    title: 'Try unblock if video not available in your country',
@@ -43,7 +37,9 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.waitElement('ytd-watch-flexy[player-unavailable]')
-         .then(redirect);
+      // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+      // NOVA.waitElement('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
+         .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());
 
       // Doesn't work
       // NOVA.waitElement('video')

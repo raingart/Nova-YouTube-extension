@@ -31,7 +31,9 @@ window.nova_plugins.push({
    'desc:ua': 'Після завантаження - продовжити відтворення',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/455475-youtube-resumer
+      // alt1 - https://greasyfork.org/en/scripts/455475-youtube-resumer
+      // alt2 - https://greasyfork.org/en/scripts/433474-youtube-resumer
+      // alt3 - https://greasyfork.org/en/scripts/453567-youtube-auto-player
 
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
@@ -135,7 +137,20 @@ window.nova_plugins.push({
          'label:pl': 'Zaznacz czas w adresie URL po wstrzymaniu',
          'label:ua': 'Маркувати час в URL-посиланні під час паузи',
          type: 'checkbox',
-         title: 'update ?t=',
+         // title: 'update ?t=',
+         title: 'Makes sense when saving bookmarks',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
       },
    }
 });

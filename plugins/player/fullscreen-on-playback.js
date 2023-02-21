@@ -22,8 +22,7 @@ window.nova_plugins.push({
       // embed but not iframe
       if (NOVA.currentPage == 'embed' && (window.self === window.top)) return; // !window.frameElement
 
-      if (user_settings.player_fullscreen_mode_embed == 'on' && NOVA.currentPage != 'embed') return; // for legacy user_settings - https://github.com/raingart/Nova-YouTube-extension/issues/42
-      // if (user_settings.player_fullscreen_mode_embed && NOVA.currentPage != 'embed') return;
+      if (user_settings.player_fullscreen_mode_embed && NOVA.currentPage != 'embed') return;
 
       NOVA.waitElement('#movie_player video')
          .then(video => {

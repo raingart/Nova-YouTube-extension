@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'header-unfixed',
-   title: 'Header unfixed',
+   title: 'Header unpinned',
    'title:zh': '标题未固定',
    'title:ja': 'ヘッダーは固定されていません',
    'title:ko': '헤더가 고정되지 않음',
@@ -37,8 +37,8 @@ window.nova_plugins.push({
          SELECTOR = 'html.' + CLASS_NAME_TOGGLE;
 
       NOVA.css.push(
-         `${SELECTOR} #masthead-container,
-         ${SELECTOR} ytd-mini-guide-renderer {
+         // `${SELECTOR} ytd-mini-guide-renderer,
+         `${SELECTOR} #masthead-container {
             position: absolute !important;
          }
          ${SELECTOR} #chips-wrapper {
@@ -47,6 +47,9 @@ window.nova_plugins.push({
          ${SELECTOR} #header {
             margin-top: 0 !important;
          }`);
+      // ${SELECTOR} #guide-button { // does not work
+      //    position: fixed !important;
+      // }
 
       // init add CLASS_NAME_TOGGLE in html tag
       document.documentElement.classList.add(CLASS_NAME_TOGGLE);
@@ -63,11 +66,17 @@ window.nova_plugins.push({
       }
 
       if (user_settings.header_unfixed_scroll) {
+         // alt1 - https://greasyfork.org/en/scripts/414234-youtube-auto-hide-header
+         // alt2 - https://greasyfork.org/en/scripts/405614-youtube-polymer-engine-fixes (Unstick header bar from top of the screen)
          createArrowButton();
          // scroll
          document.addEventListener('yt-action', evt => {
             // console.log(evt.detail?.actionName);
-            if (evt.detail?.actionName == 'yt-reload-continuation-items-command') {
+            if (evt.detail?.actionName == 'yt-store-grafted-ve-action'
+               // || evt.detail?.actionName == 'yt-set-page-offset'
+               // || evt.detail?.actionName.startsWith('ytd-update-')
+            ) {
+               // console.log(evt.detail?.actionName);
                scrollAfter();
             }
          });
@@ -94,6 +103,7 @@ window.nova_plugins.push({
          }
 
          // create arrow button
+         // alt - https://greasyfork.org/en/scripts/33218-new-youtube-obnoxious-bar-fix
          function createArrowButton() {
             const scrollDownButton = document.createElement('button');
             scrollDownButton.textContent = '▼';

@@ -18,6 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/376510-youtube-fix-channel-links-in-sidebar-recommendations/discussions/124290
+
       document.addEventListener('mouseover', ({ target }) => {
          //console.debug('>', target);
 

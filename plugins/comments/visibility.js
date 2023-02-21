@@ -19,6 +19,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/425221-youtube-hide-video-comments
+
       NOVA.collapseElement({
          selector: '#comments',
          title: 'comments',

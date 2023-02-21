@@ -21,6 +21,7 @@ window.nova_plugins.push({
       // alt:
       // https://greasyfork.org/en/scripts/376002-youtube-volume-mouse-controller
       // https://greasyfork.org/en/scripts/376155-youtube-scroll-volume
+
       const
          SELECTOR_ID = 'nova-player-indicator-info',
          COLOR_HUD = user_settings.player_indicator_color || '#ff0000';
@@ -81,6 +82,7 @@ window.nova_plugins.push({
 
          create() {
             // hide default indicator
+            // alt - https://greasyfork.org/en/scripts/411754-youtube%E5%81%9C%E6%AD%A2%E9%A1%AF%E7%A4%BA%E8%BD%89%E5%9C%88%E5%9C%88-%E6%9A%AB%E5%81%9C-%E6%92%A5%E6%94%BE%E7%9A%84%E5%8B%95%E7%95%AB
             NOVA.css.push(
                `.ytp-bezel-text-wrapper,
                .ytp-doubletap-ui-legacy.ytp-time-seeking,

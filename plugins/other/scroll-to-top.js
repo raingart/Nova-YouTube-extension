@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'scroll-to-top',
-   title: 'Scroll to top button',
+   title: 'Add "Scroll to top" button',
    'title:zh': '滚动到顶部按钮',
    'title:ja': 'トップボタンまでスクロール',
    'title:ko': '맨 위로 스크롤 버튼',
