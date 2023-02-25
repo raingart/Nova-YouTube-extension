@@ -60,7 +60,7 @@ window.nova_plugins.push({
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.has('t')) {
                   // for next video
-                  document.addEventListener('yt-navigate-start',
+                  document.addEventListener('yt-navigate-finish',
                      connectSaveStateInURL.bind(video), { capture: true, once: true });
                }
                else {
@@ -83,6 +83,7 @@ window.nova_plugins.push({
             // https://www.youtube.com/watch?time_continue=68&v=yWUMMg3dmFY&feature=emb_title
             // || NOVA.queryURL.has('time_continue')
          ) return;
+
          cacheName = getCacheName(); // for optimization
 
          if ((time = +sessionStorage.getItem(cacheName))
@@ -110,7 +111,7 @@ window.nova_plugins.push({
                   changeUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
                }, 100); // 100ms
             }
-         })
+         });
          // clear
          this.addEventListener('play', () => {
             if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL);

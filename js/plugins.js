@@ -12,6 +12,7 @@ const Plugins = {
       'player/theater-mode.js',
       'player/pause-background.js',
       'player/fullscreen-on-playback.js',
+      'player/resize-ratio.js',
       'player/progress-bar-color.js',
       'player/control-autohide.js',
       'player/hotkeys-focused.js',
@@ -45,6 +46,7 @@ const Plugins = {
       'other/channel-tab.js',
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
+      'other/scrollbar-hide.js',
       'other/scroll-to-top.js',
       'other/shorts-redirect.js',
       'other/rss.js',
@@ -85,18 +87,10 @@ const Plugins = {
 
    // for test
    // list: [
-   //    'other/annotations.js',
-   //    'sidebar/playlist-duration.js',
-   //    'sidebar/playlist-reverse.js',
-   //    'comments/expand.js',
-   //    'details/description-expand.js',
-   //    'details/description-popup.js',
-   //    'details/videos-count.js',
-   // ],
-   // list: [
-   //    // 'comments/square-avatars.js',
-   //    // 'player/autostop.js',
-   //    'sidebar/-playlist-skip-liked.js',
+   //    // 'header/test.js',
+   //    // 'player/test.js',
+   //    // 'sidebar/test.js',
+   //    // 'comments/test.js',
    // ],
 
    load(list) {
@@ -143,18 +137,21 @@ const Plugins = {
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
+      // alt - DetectPageType() (https://greasyfork.org/en/scripts/6034-youtube-hd-override/code)
+
       NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          NOVA.channelTab = channelTab;
-         return (['channel', 'c', 'user'].includes(page)
-            || page?.startsWith('@') // https://www.youtube.com/@ALBO
-            || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
-            // fix non-standard link:
-            // https://www.youtube.com/pencilmation
-            // https://www.youtube.com/rhino
-            || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
-            // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
-         ) ? 'channel' : page == 'clip' ? 'watch' : page || 'home';
+         return (page != 'live_chat') // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat)
+            && (['channel', 'c', 'user'].includes(page)
+               || page?.startsWith('@') // https://www.youtube.com/@ALBO
+               || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
+               // fix non-standard link:
+               // https://www.youtube.com/pencilmation
+               // https://www.youtube.com/rhino
+               || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+               // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
+            ) ? 'channel' : (page == 'clip') ? 'watch' : page || 'home';
       })();
       // console.debug('NOVA.currentPage:', NOVA.currentPage);
 

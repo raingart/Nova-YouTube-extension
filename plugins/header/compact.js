@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Header kompakt',
    'title:pl': 'Kompaktowy nagłówek',
    'title:ua': 'Компактна шапка сайту',
-   run_on_pages: 'all, -embed, -mobile',
+   run_on_pages: 'all, -embed, -mobile, -live_chat',
    section: 'header',
    // desc: '',
    _runtime: user_settings => {

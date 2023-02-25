@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Zmniejsz czcionkę w tytule miniatur',
    'title:ua': 'Завжди маленькі літери для назв мініатюр',
    run_on_pages: 'home, feed, channel, watch',
-   // run_on_pages: 'all, -embed, -results',
+   // run_on_pages: 'all, -embed, -results, -live_chat',
    section: 'other',
    desc: 'Upper Case thumbnails title back to normal',
    'desc:ua': 'Зняти слова з великої літери для назв мініатюр',
@@ -70,7 +70,7 @@ window.nova_plugins.push({
 
             const normalizedText = videoTitleEl.textContent.replace(UpperCaseLetterRegex, match => {
                // console.debug('match', match);
-               countCaps++;
+               ++countCaps;
                // skip hasNumber
                return /\d/.test(match) ? match : match.toLowerCase();
             });

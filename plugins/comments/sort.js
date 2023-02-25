@@ -38,12 +38,13 @@ window.nova_plugins.push({
 
       const
          // CACHE_PREFIX = 'nova-channel-videos-count:',
-         SELECTOR_ID = 'modal-content';
+         MODAL_NAME_SELECTOR_ID = 'nova-modal-comments',
+         MODAL_CONTENT_SELECTOR_ID = 'modal-content';
       // getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
-      renderButton();
+      insertButton();
 
-      function renderButton() {
+      function insertButton() {
          // NOVA.waitElement('#comments ytd-comments-header-renderer #title')
          NOVA.waitElement(
             user_settings['comments-popup']
@@ -58,14 +59,14 @@ window.nova_plugins.push({
             .then(menu => {
                // [data-open-modal="nova-modal-comments"]
                const btn = document.createElement('span');
-               btn.setAttribute('data-open-modal', 'nova-modal-comments');
+               btn.setAttribute('data-open-modal', MODAL_NAME_SELECTOR_ID);
                btn.title = 'Nova Comments';
                // btn.innerHTML =
                btn.textContent = '►';
                btn.addEventListener('click', () => {
                   // once if not inited
-                  if (!document.querySelector(`#${SELECTOR_ID} table`)) genTable();
-                  btn.dispatchEvent(new CustomEvent('nova-modal-comments', { bubbles: true, detail: 'test' }));
+                  if (!document.querySelector(`#${MODAL_CONTENT_SELECTOR_ID} table`)) genTable();
+                  btn.dispatchEvent(new CustomEvent(MODAL_NAME_SELECTOR_ID, { bubbles: true, detail: 'test' }));
                });
 
                // append css
@@ -111,7 +112,7 @@ window.nova_plugins.push({
                // clear table after page transition
                NOVA.runOnPageInitOrTransition(() => {
                   if (NOVA.currentPage == 'watch') {
-                     document.getElementById(SELECTOR_ID).innerHTML = '<pre>Loading data...</pre>';
+                     document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = '<pre>Loading data...</pre>';
                   }
                });
 
@@ -144,8 +145,18 @@ window.nova_plugins.push({
          })
             .then(res => {
                if (res?.error) {
-                  return document.getElementById(SELECTOR_ID).innerHTML =
-                     `<pre>Error ${res.error.code}: ${res.error.message}</pre>`;
+                   // alert message
+                  if (res.reason) {
+                     document.getElementById(MODAL_NAME_SELECTOR_ID)
+                        .dispatchEvent(new CustomEvent(MODAL_NAME_SELECTOR_ID, { bubbles: true, detail: 'test' }));
+                     return alert(`Error [${res.code}]: ${res.reason}`);
+                  }
+                  // modal message
+                  else {
+                     return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
+                        `<pre>Error [${res.code}]: ${res.reason}</pre>
+                        <pre>${res.error}</pre>`;
+                  }
                }
 
                let commentList = []
@@ -188,7 +199,7 @@ window.nova_plugins.push({
                });
 
                if (!commentList.length) {
-                  return document.getElementById(SELECTOR_ID).innerHTML =
+                  return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
                      `<pre>Total number of comments: ${res.pageInfo.totalResults}</pre>`;
                }
 
@@ -225,10 +236,10 @@ window.nova_plugins.push({
                   });
 
                // render table
-               const FILTER_SELECTOR_ID = 'nova-search-comment';
-               document.getElementById(SELECTOR_ID).innerHTML =
+               const MODAL_CONTENT_FILTER_SELECTOR_ID = 'nova-search-comment';
+               document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
                   `<table class="sortable" border="0" cellspacing="0" cellpadding="0">
-                     <thead id="${FILTER_SELECTOR_ID}">
+                     <thead id="${MODAL_CONTENT_FILTER_SELECTOR_ID}">
                         <tr>
                            <th class="sorttable_numeric">likes</th>
                            <th class="sorttable_numeric">replys</th>
@@ -242,7 +253,7 @@ window.nova_plugins.push({
                // add sort event
                sorttable.makeSortable(document.body.querySelector('.sortable'));
 
-               renderFilterInput(FILTER_SELECTOR_ID);
+               insertFilterInput(MODAL_CONTENT_FILTER_SELECTOR_ID);
             });
       }
 
@@ -267,17 +278,17 @@ window.nova_plugins.push({
          return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
       }
 
-      function renderFilterInput(selector_id_parent = required()) {
-         if (typeof selector_id_parent !== 'string') {
-            return console.error('typeof "selector_id_parent":', (typeof selector_id_parent));
+      function insertFilterInput(parent_selector_id = required()) {
+         if (typeof parent_selector_id !== 'string') {
+            return console.error('typeof "parent_selector_id":', (typeof parent_selector_id));
          }
 
          NOVA.css.push(
-            `#${selector_id_parent} {
+            `#${parent_selector_id} {
                position: relative;
             }
 
-            #${SELECTOR_ID} input {
+            #${parent_selector_id} input {
               position: absolute;
               top: 0;
               right: 0;
@@ -289,8 +300,8 @@ window.nova_plugins.push({
               /* height: 100%; */
             }
 
-            #${SELECTOR_ID} input[type=search]:focus,
-            #${SELECTOR_ID} input[type=text]:focus {
+            #${parent_selector_id} input[type=search]:focus,
+            #${parent_selector_id} input[type=text]:focus {
                outline: 1px solid #00b7fc;
             }`);
 
@@ -310,7 +321,7 @@ window.nova_plugins.push({
                   NOVA.searchFilterHTML({
                      'keyword': this.value,
                      'filter_selectors': 'tr',
-                     'highlight_selector': '.text-overflow-dynamic-ellipsis'
+                     'highlight_selector': '.text-overflow-dynamic-ellipsis',
                   });
                });
             searchInput
@@ -320,7 +331,7 @@ window.nova_plugins.push({
                });
          });
 
-         document.getElementById(selector_id_parent).append(searchInput);
+         document.getElementById(parent_selector_id).append(searchInput);
          // return searchInput;
       };
 
@@ -424,11 +435,11 @@ window.nova_plugins.push({
             // document.getElementById('comments')
             // document.querySelector('ytd-app')
             .insertAdjacentHTML('beforeend',
-               `<div id="nova-modal-comments" class="modal" data-modal>
+               `<div id="${MODAL_NAME_SELECTOR_ID}" class="modal" data-modal>
                   <div class="modal-container">
                      <div class="modal-close" data-close-modal></div>
 
-                     <div class="modal-content" id="modal-content"></div>
+                     <div class="modal-content" id="${MODAL_CONTENT_SELECTOR_ID}"></div>
                   </div>
                </div>`);
 
@@ -438,15 +449,13 @@ window.nova_plugins.push({
          const modalShowClass = 'modal-visible';
 
          // addEventListener close modal
-         document.querySelectorAll('#nova-modal-comments, #nova-modal-comments [modal-content]')
-            .forEach(el => {
-               el.addEventListener('click', ({ target }) => {
-                  target.dispatchEvent(new CustomEvent('nova-modal-comments', { bubbles: true, detail: 'test' }));
-               });
+         document.getElementById(MODAL_NAME_SELECTOR_ID)
+            .addEventListener('click', ({ target }) => {
+               target.dispatchEvent(new CustomEvent(MODAL_NAME_SELECTOR_ID, { bubbles: true, detail: 'test' }));
             });
 
          // document.addEventListener('click', ({ target }) => { - blocked elm - <ytd-app guide-refresh="" darker-dark-theme=""></ytd-app>
-         document.addEventListener('nova-modal-comments', ({ target }) => {
+         document.addEventListener(MODAL_NAME_SELECTOR_ID, ({ target }) => {
             // console.debug('', evt.detail);
             const
                attrModal = target.hasAttribute('data-modal'),
@@ -509,31 +518,31 @@ window.nova_plugins.push({
 
          // custom style
          NOVA.css.push(
-            `#${SELECTOR_ID} table {}
+            `#${MODAL_CONTENT_SELECTOR_ID} table {}
 
-            #${SELECTOR_ID} th {
+            #${MODAL_CONTENT_SELECTOR_ID} th {
                padding: 5px 3px;
                font-weight: 500;
             }
 
-            #${SELECTOR_ID} thead {
+            #${MODAL_CONTENT_SELECTOR_ID} thead {
                background-color: var(--yt-spec-text-secondary);
                background-color: var(--yt-spec-outline);
             }
 
-            #${SELECTOR_ID} tbody {
+            #${MODAL_CONTENT_SELECTOR_ID} tbody {
                margin-top: 0px;
             }
 
-            #${SELECTOR_ID} tr:nth-child(even) {
+            #${MODAL_CONTENT_SELECTOR_ID} tr:nth-child(even) {
                background-color: var(--yt-spec-menu-background);
             }
 
-            /*#${SELECTOR_ID} td {
+            /*#${MODAL_CONTENT_SELECTOR_ID} td {
                border-bottom: 1px solid rgba(255,255,255,.1);
             }*/
 
-            #${SELECTOR_ID} td .text-overflow-dynamic-ellipsis {
+            #${MODAL_CONTENT_SELECTOR_ID} td .text-overflow-dynamic-ellipsis {
                display: block;
                max-height: 25vh;
                overflow-y: auto;
@@ -543,7 +552,7 @@ window.nova_plugins.push({
                padding: 10px 5px;
                max-width: 600px;
             }
-            #${SELECTOR_ID} td a {
+            #${MODAL_CONTENT_SELECTOR_ID} td a {
                text-decoration: none;
                color: var(--yt-spec-call-to-action);
             }`);

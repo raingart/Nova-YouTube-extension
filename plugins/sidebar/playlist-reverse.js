@@ -59,9 +59,9 @@ window.nova_plugins.push({
 
       function insertButton() {
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
-            .then(el => renderBtn(el));
+            .then(el => rendeButton(el));
 
-         function renderBtn(container = required()) {
+         function rendeButton(container = required()) {
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
             document.getElementById(SELECTOR_ID)?.remove(); // clear old

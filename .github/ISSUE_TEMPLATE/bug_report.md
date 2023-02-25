@@ -11,6 +11,7 @@ assignees: ''
 
 *Describe the bug*
 
- - Browser: Chrome 999.0
- - ...monkey [ex: violentmonkey 99.1]
- - Nova version: 6.6.1
+ - Browser: Chrome 999.0 <!-- The name and version of your browser -->
+ - ...monkey 99.1 <!-- What userscript extension do you use: Tampermonkey, Violetmonkey, etc -->
+ - Nova 6.6.1 <!-- script version -->
+<!-- (optional) The url of the channel where my script fails to pause the Home video -->

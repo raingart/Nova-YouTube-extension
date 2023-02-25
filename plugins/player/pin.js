@@ -32,11 +32,6 @@ window.nova_plugins.push({
 
       if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
 
-      if (user_settings['description-popup']
-         && (user_settings['comments-popup'] || user_settings['comments-visibility'])
-         && user_settings['related-visibility']
-      ) return alert('Nova\nSimultaneous activation of such plugins as:\n- description-popup\n- comments-popup/visibility\n- related-visibility\n\nconflict with the plugin "Pin player"');
-
       // alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
       // only for PWA
       // NOVA.waitElement('video')
@@ -103,39 +98,48 @@ window.nova_plugins.push({
          (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE));
 
       // toggle
-      NOVA.waitElement('#player-theater-container')
-         .then(container => {
-            // movie_player / #ytd-player
-            new IntersectionObserver(([entry]) => {
-               // leave viewport
-               if (entry.isIntersecting) {
-                  movie_player.classList.remove(CLASS_VALUE);
-                  drag.reset(); // save old pos. Clear curr pos
-               }
-               // enter viewport. fix bug on scroll in fullscreen player mode
-               else if (!movie_player.isFullscreen()) {
-                  movie_player.classList.add(CLASS_VALUE);
-                  drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
-               }
+      document.addEventListener('scroll', () => { // fix bug when initial (document.documentElement.scrollHeight != window.innerHeight) and it's running IntersectionObserver
+         // NOVA.waitElement('#player-theater-container')
+         NOVA.waitElement('#ytd-player')
+            .then(container => {
+               // movie_player / #ytd-player
+               new IntersectionObserver(([entry]) => {
+                  // no horizontal scroll in page
+                  // if (document.documentElement.scrollHeight < window.innerHeight) return;
+                  // console.debug('', document.documentElement.scrollHeight , window.innerHeight);
+                  // leave viewport
+                  if (entry.isIntersecting) {
+                     movie_player.classList.remove(CLASS_VALUE);
+                     drag.reset(); // save old pos. Clear curr pos
+                  }
+                  // enter viewport. fix bug on scroll in fullscreen player mode
+                  else if (!movie_player.isFullscreen()) {
+                     movie_player.classList.add(CLASS_VALUE);
+                     drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
+                  }
 
-               window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
-            }, {
-               // https://github.com/raingart/Nova-YouTube-extension/issues/28
-               // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
-               threshold: .5, // set offset 0.X means trigger if atleast X0% of element in viewport
-            })
-               .observe(container);
-         });
+                  window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
+               }, {
+                  // https://github.com/raingart/Nova-YouTube-extension/issues/28
+                  // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+                  threshold: .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+               })
+                  .observe(container);
+            });
+      }, { capture: true, once: true });
 
       NOVA.waitElement(PINNED_SELECTOR)
          .then(async player => {
             // add drag
             drag.init(player);
+            // dragElement(player); // incorrect work
 
             // wait video size
             await NOVA.waitUntil(
                // movie_player.clientWidth && movie_player.clientHeight
-               () => (NOVA.videoElement?.videoWidth && NOVA.videoElement?.videoHeight)
+               () => (NOVA.videoElement?.videoWidth && !isNaN(NOVA.videoElement.videoWidth)
+                  && NOVA.videoElement?.videoHeight && !isNaN(NOVA.videoElement.videoHeight)
+               )
                // && document.getElementById('masthead-container')?.offsetHeight
                , 500) // 500ms
 
@@ -185,15 +189,23 @@ window.nova_plugins.push({
             btnUnpin.textContent = '×'; // ✖
             btnUnpin.addEventListener('click', () => {
                player.classList.remove(CLASS_VALUE);
-               drag.reset('clear_storePos');
+               drag.reset('clear storePos');
                window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
             });
             player.append(btnUnpin);
+
+            // unpin before on page change
+            document.addEventListener('yt-navigate-start', () => {
+               if (player.classList.contains(CLASS_VALUE)) {
+                  player.classList.remove(CLASS_VALUE);
+                  drag.reset('clear storePos');
+               }
+            });
          });
 
       function initMiniStyles() {
          const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
-         const miniSize = NOVA.calculateAspectRatioFit({
+         const miniSize = NOVA.calculateAspectRatio.sizeToFit({
             // 'srcWidth': movie_player.clientWidth,
             // 'srcHeight': movie_player.clientHeight,
             'srcWidth': NOVA.videoElement.videoWidth,
@@ -502,10 +514,66 @@ window.nova_plugins.push({
          'label:pl': 'Pozycja odtwarzacza',
          'label:ua': 'Позиція відтворювача',
          options: [
-            { label: 'left-top', value: 'top-left' },
-            { label: 'left-bottom', value: 'bottom-left' },
-            { label: 'right-top', value: 'top-right', selected: true },
-            { label: 'right-bottom', value: 'bottom-right' },
+            {
+               label: 'Top left', value: 'top-left',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'Bottom left', value: 'bottom-left',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'Top right', value: 'top-right', selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'Bottom right', value: 'bottom-right',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
          ],
          // 'data-dependent': { 'player_pin_mode': ['float'] },
       },

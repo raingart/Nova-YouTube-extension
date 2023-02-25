@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Przewijany nagłówek',
    'title:ua': 'Відкріпити шапку сайту',
    // run_on_pages: 'watch, channel',
-   run_on_pages: 'all, -embed, -mobile',
+   run_on_pages: 'all, -embed, -mobile, -live_chat',
    // restart_on_location_change: true,
    section: 'header',
    desc: 'Prevent header from sticking',
@@ -47,7 +47,7 @@ window.nova_plugins.push({
          ${SELECTOR} #header {
             margin-top: 0 !important;
          }`);
-      // ${SELECTOR} #guide-button { // does not work
+      // ${SELECTOR} #guide-button { // Doesn't work
       //    position: fixed !important;
       // }
 

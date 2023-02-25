@@ -13,7 +13,7 @@ window.nova_plugins.push({
    // minus in front denotes an exception
    // exclude page from launch:
    // https://www.youtube.com/embed/*** <-- -embed
-   run_on_pages: 'all, home, results, feed, channel, watch, -embed',
+   run_on_pages: 'all, home, results, feed, channel, watch, -embed, -live_chat',
 
    // deactivate if use NOVA.HTMLElement.watch
    restart_on_location_change: true, // optional. Restart plugin on every url change

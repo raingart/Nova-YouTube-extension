@@ -31,7 +31,7 @@ window.nova_plugins.push({
                if (entry.isIntersecting) {
                   if (user_settings.save_to_playlist_sort) sortPlaylistsMenu(playlists);
 
-                  if (!searchInput) renderFilterInput(playlists);
+                  if (!searchInput) insertFilterInput(playlists);
                }
                // (fix menu) reset state
                else if (searchInput) {
@@ -54,7 +54,7 @@ window.nova_plugins.push({
             const getLabel = (el = required()) => stringLocaleCompare(
                el.querySelector('#checkbox-label').textContent
             );
-            return getLabel(a) > getLabel(b) ? 1 : -1;
+            return (getLabel(a) > getLabel(b)) ? 1 : -1;
 
             function stringLocaleCompare(a, b) {
                // for sorting string with emojis icons/emojis and keeping them on top
@@ -63,7 +63,7 @@ window.nova_plugins.push({
          }
       }
 
-      function renderFilterInput(container = required()) {
+      function insertFilterInput(container = required()) {
          // console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
@@ -83,7 +83,7 @@ window.nova_plugins.push({
                   NOVA.searchFilterHTML({
                      'keyword': this.value,
                      'filter_selectors': 'ytd-playlist-add-to-option-renderer',
-                     'highlight_selector': '#label'
+                     'highlight_selector': '#label',
                   });
                });
             searchInput

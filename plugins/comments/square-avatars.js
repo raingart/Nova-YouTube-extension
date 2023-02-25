@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Quadratische Avatare',
    'title:pl': 'Kwadratowe awatary',
    'title:ua': 'Квадратні аватарки',
-   run_on_pages: 'all',
+   run_on_pages: 'all, -live_chat',
    // run_on_pages: 'all -embed',
    // run_on_pages: 'results, watch, channel',
    section: 'comments',

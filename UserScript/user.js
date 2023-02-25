@@ -3,7 +3,7 @@ console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.na
 const
    optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
-   fix_undefine = v => v === 'undefined' ? undefined : v, // for Tampermonkey
+   fix_undefine = v => (v === 'undefined') ? undefined : v, // for Tampermonkey
    user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
 
 // Disabled script if youtube is embedded
@@ -12,21 +12,20 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 }
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'header-short': 'header-compact',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 if (isOptionsPage()) return;
 
-if (!user_settings?.disable_setting_button) renderSettingButton();
+if (!user_settings?.disable_setting_button) insertSettingButton();
 
 landerPlugins();
 
@@ -204,22 +203,44 @@ function landerPlugins() {
    // }
 }
 
-function renderSettingButton() {
+// There are problems in this way / try remove initialization plugins delay (only userscript)
+// function initPlugins() {
+//    // page: init
+//    console.groupCollapsed('plugins status');
+//    Plugins.run({
+//       'user_settings': user_settings,
+//       'app_ver': GM_info.script.version,
+//    });
+//    // page: url change
+//    let lastUrl = location.href;
+//    const isURLChanged = () => (lastUrl == location.href) ? false : lastUrl = location.href;
+//    // skip first page transition
+//    document.addEventListener('yt-navigate-start', () => isURLChanged() && initPlugins());
+// }
+
+function insertSettingButton() {
    NOVA.waitElement('#masthead #end')
       .then(menu => {
+         const titleMsg = 'Nova Settings';
          const a = document.createElement('a');
-         a.title = 'Nova Settings';
+         a.id = 'nova_settings_button';
          a.href = optionsPage + '?tabs=tab-plugins';
          a.target = '_blank';
          a.innerHTML =
-            // <div style="display:inline-block;padding:var(--yt-button-icon-padding,8px);width:24px;height:24px;">
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
-               <svg viewBox="0 0 20 16">
+               <svg viewBox="-4 0 20 16">
+                  <radialGradient id="nova-gradient" gradientUnits="userSpaceOnUse" cx="6" cy="22" r="18.5">
+                     <stop class="nova-gradient-start" offset="0"/>
+                     <stop class="nova-gradient-stop" offset="1"/>
+                  </radialGradient>
                   <g fill="deepskyblue">
                      <polygon points="0,16 14,8 0,0"/>
                   </g>
                </svg>
             </yt-icon-button>`;
+         // `<svg viewBox="0 0 24 24" style="height:24px;">
+         //     <path d="M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z"/>
+         // </svg>`;
          // a.textContent = '►';
          // Object.assign(a.style, {
          //    'font-size': '24px',
@@ -230,7 +251,68 @@ function renderSettingButton() {
          a.addEventListener('click', () => {
             setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
          });
+
+         // append tooltip
+         // a.setAttribute('tooltip', titleMsg); // css (ahs bug on hover search buttom)
+         // yt-api
+         a.title = titleMsg;
+         const tooltip = document.createElement('tp-yt-paper-tooltip');
+         tooltip.className = 'style-scope ytd-topbar-menu-button-renderer';
+         // tooltip.setAttribute('role', 'tooltip');
+         tooltip.textContent = titleMsg;
+
+         a.appendChild(tooltip);
          menu.prepend(a);
+
+         NOVA.css.push(
+            `#nova_settings_button[tooltip]:hover:after {
+               position: absolute;
+               top: 50px;
+               transform: translateX(-50%);
+               content: attr(tooltip);
+               text-align: center;
+               min-width: 3em;
+               max-width: 21em;
+               white-space: nowrap;
+               overflow: hidden;
+               text-overflow: ellipsis;
+               padding: 1.8ch 1.2ch;
+               border-radius: 0.6ch;
+               background-color: #616161;
+               box-shadow: 0 1em 2em -0.5em rgb(0 0 0 / 35%);
+               color: #fff;
+               z-index: 1000;
+            }
+
+            #nova_settings_button {
+               position: relative;
+               opacity: .3;
+               transition: opacity .3s ease-out;
+            }
+
+            #nova_settings_button:hover {
+               opacity: 1 !important;
+            }
+
+            #nova_settings_button path,
+            #nova_settings_button polygon {
+               fill: url(#nova-gradient);
+            }
+
+            #nova_settings_button .nova-gradient-start,
+            #nova_settings_button .nova-gradient-stop {
+               transition: .6s;
+               stop-color: #7a7cbd;
+            }
+
+            #nova_settings_button:hover .nova-gradient-start {
+               stop-color: #0ff;
+            }
+
+            #nova_settings_button:hover .nova-gradient-stop {
+               stop-color: #0095ff;
+               /*stop-color: #fff700;*/
+            }`);
 
          // const btn = document.createElement('button');
          // btn.className = 'ytd-topbar-menu-button-renderer';

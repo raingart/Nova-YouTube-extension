@@ -24,7 +24,8 @@ window.nova_plugins.push({
 
       if (user_settings.player_fullscreen_mode_embed && NOVA.currentPage != 'embed') return;
 
-      NOVA.waitElement('#movie_player video')
+      // NOVA.waitElement('#movie_player video')
+      NOVA.waitElement('video')
          .then(video => {
             // init
             video.addEventListener('play', setFullscreen.bind(video), { capture: true, once: true });
@@ -115,7 +116,8 @@ window.nova_plugins.push({
       },
       player_fullscreen_mode_onpause: {
          _tagName: 'input',
-         label: 'Exit full screen mode if video is paused',
+         // label: 'Exit full screen mode if video is paused',
+         label: 'Exit on video pause',
          'label:zh': '如果视频暂停，则退出全屏模式',
          'label:ja': 'ビデオが一時停止している場合は、全画面表示モードを終了します',
          'label:ko': '비디오가 일시 중지되면 전체 화면 모드 종료',

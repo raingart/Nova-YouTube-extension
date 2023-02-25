@@ -237,7 +237,7 @@ const Opt = {
                         // label.textContent = value;
                         label.innerHTML = '<font>↪</font>' + value;
                         // label.innerHTML = '<font>►</font>' + value;
-                        label.htmlFor = property.type?.toLowerCase() == 'radio' ? property.value : property.name;
+                        label.htmlFor = (property.type?.toLowerCase() == 'radio') ? property.value : property.name;
                         exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
                         break;

@@ -33,15 +33,14 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
-      // alt3 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default/code
 
       const
          urlArr = location.pathname.split('/').filter(Boolean),
-         [page, channelTab, channelTabOld] = urlArr;
+         [page, channelTab, channelTabAlt] = urlArr;
 
       // if not - home page in channel/user
       if (urlArr.length > 2
-         || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTabOld || channelTab)
+         || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTabAlt || channelTab)
       ) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect' || user_settings.channel_default_tab != 'videos') {
@@ -100,16 +99,91 @@ window.nova_plugins.push({
          options: [
             {
                label: 'videos', value: 'videos', selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'wideo',
                'label:ua': 'відео',
             },
             {
+               label: 'shorts', value: 'shorts',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'live', value: 'streams',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'community', value: 'community',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
                label: 'playlists', value: 'playlists',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'playlista',
                'label:ua': 'плейлисти',
             },
             {
                label: 'about', value: 'about',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'o kanale',
                'label:ua': 'про канал',
             },
@@ -146,15 +220,36 @@ window.nova_plugins.push({
          options: [
             {
                label: 'redirect', value: 'redirect',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'przekierowanie',
                'label:ua': 'перенаправити',
             },
             {
                label: 'click', /*value: '',*/ selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'klik',
                'label:ua': 'клік',
             },
          ],
+         'data-dependent': { 'channel_default_tab': ['videos'] },
       },
    }
 });

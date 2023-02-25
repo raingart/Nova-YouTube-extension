@@ -4,7 +4,7 @@ const Storage = function () {
 
    return {
       setParams(x = required(), sync_type) {
-         let storageArea = sync_type == 'sync' ? chrome.storage.sync : chrome.storage.local;
+         let storageArea = (sync_type == 'sync') ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.clear();
          saveParams[nameApp] = x;
@@ -12,7 +12,7 @@ const Storage = function () {
       },
 
       getParams(callback, sync_type, x) {
-         let storageArea = sync_type == 'sync' ? chrome.storage.sync : chrome.storage.local;
+         let storageArea = (sync_type == 'sync') ? chrome.storage.sync : chrome.storage.local;
 
          storageArea.get(x, prefs => {
             let item = prefs[nameApp] && prefs[nameApp][prefs] ? prefs[nameApp][prefs] : prefs[nameApp] || prefs;

@@ -81,7 +81,7 @@ window.nova_plugins.push({
                api_key: user_settings['user-api-key'],
             })
                .then(res => {
-                  if (res?.error) return alert(`Error ${res.error.code}: ${res.error.message}`);
+                  if (res?.error) return alert(`Error [${res.code}]: ${res.reason}\n` + res.error);
 
                   res?.items?.forEach(item => {
                      if (videoCount = +item.statistics.videoCount) {

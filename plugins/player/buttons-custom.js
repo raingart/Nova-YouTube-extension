@@ -353,6 +353,7 @@ window.nova_plugins.push({
                // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
                // alt3 - https://greasyfork.org/en/scripts/457800-youtube-thumbnail-viewer
                // alt4 - https://greasyfork.org/en/scripts/459456-add-youtube-thumbnail-to-video-description
+               // alt5 - https://greasyfork.org/en/scripts/460610-youtube-thumbnail-viewer
                const thumbBtn = document.createElement('button');
                thumbBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // thumbBtn.title = 'View Thumbnail';
@@ -473,7 +474,7 @@ window.nova_plugins.push({
 
                aspectRatioBtn.addEventListener('click', () => {
                   if (!NOVA.videoElement) return;
-                  const getNextIdx = () => this.listIdx < aspectRatioList.length - 1 ? this.listIdx + 1 : 0;
+                  const getNextIdx = () => (this.listIdx < aspectRatioList.length - 1) ? this.listIdx + 1 : 0;
 
                   this.listIdx = getNextIdx();
                   // Strategy 1
@@ -683,14 +684,16 @@ window.nova_plugins.push({
                                     `<span class="quality-menu-item-label-badge">${badge}</span>`);
                               }
                               // set max quality limit (viewport + 30%)
-                              // if ((+qualityData.label.replace('p', '') || 0) <= (window.innerWidth * 1.3)) {
+                              // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
                               // set max quality limit (screen resolution + 30%)
-                              if ((qualityData.label.replace('p', '') || 0) <= (window.screen.width * 1.3)) {
+                              if (+(qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.screen.width * 1.3)) {
                                  qualityItem.addEventListener('click', () => {
                                     // console.debug('setPlaybackQuality', quality);
                                     movie_player.setPlaybackQualityRange(quality, quality);
                                     // movie_player.setPlaybackQuality(quality); // Doesn't work
-                                    qualityList.innerHTML = ''; // dirty hack (clear list)
+                                    if (quality != 'auto') { // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
+                                       qualityList.innerHTML = ''; // dirty hack (clear list)
+                                    }
                                  });
                               }
                               else {
@@ -797,7 +800,7 @@ window.nova_plugins.push({
                function visibilitySwitch() {
                   if (!Object.keys(rateOrig).length) {
                      // speedBtn.style.visibility = /*movie_player.getPlaybackRate() ===*/ NOVA.videoElement.playbackRate === 1 ? 'hidden' : 'visible';
-                     speedBtn.style.display = /*movie_player.getPlaybackRate() ===*/ NOVA.videoElement?.playbackRate === 1 ? 'none' : '';
+                     speedBtn.style.display = /*movie_player.getPlaybackRate() ===*/ (NOVA.videoElement?.playbackRate === 1) ? 'none' : '';
                   }
                }
             }

@@ -51,7 +51,7 @@ window.nova_plugins.push({
                   ['suspend', 'ended'].forEach(evt => {
                      video.addEventListener(evt, () => insertToHTML({ 'container': container }));
                   });
-                  document.addEventListener('yt-navigate-start', () => insertToHTML({ 'container': container }));
+                  document.addEventListener('yt-navigate-finish', () => insertToHTML({ 'container': container }));
                });
 
             function setRemaining() {
@@ -64,8 +64,8 @@ window.nova_plugins.push({
 
                const
                   getProgressPt = () => {
-                     const floatRound = pt => this.duration > 3600 ? pt.toFixed(2) // >1 hour
-                        : this.duration > 1500 ? pt.toFixed(1) // >25 Minute
+                     const floatRound = pt => (this.duration > 3600) ? pt.toFixed(2) // >1 hour
+                        : (this.duration > 1500) ? pt.toFixed(1) // >25 Minute
                            : Math.round(pt); // whats left
                      return floatRound((this.currentTime / this.duration) * 100) + '%';
                   },

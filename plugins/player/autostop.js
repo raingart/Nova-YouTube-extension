@@ -19,7 +19,20 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed',
    // restart_on_location_change: true,
    section: 'player',
-   desc: 'Prevent the player from buffering video before playing',
+   // desc: 'Prevent the player from buffering video before playing',
+   desc: 'Prevent auto-buffering',
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:id': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:it': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
+   // 'desc:pl': '',
+   // 'desc:ua': '',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
@@ -34,7 +47,7 @@ window.nova_plugins.push({
          .then(async movie_player => {
             let disableStop;
 
-            // reset disableStop
+            // reset disableStop (before on page change)
             document.addEventListener('yt-navigate-start', () => disableStop = false);
 
             movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));
@@ -150,10 +163,32 @@ window.nova_plugins.push({
          options: [
             {
                label: 'all', value: false, selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
                'label:ua': 'всіх',
             },
             {
                label: 'embed', value: 'on',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
                'label:ua': 'вбудованих',
             },
          ],

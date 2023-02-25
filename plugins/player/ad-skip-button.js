@@ -45,6 +45,7 @@ window.nova_plugins.push({
          .then(video => {
             adSkip();
 
+            video.addEventListener('loadedmetadata', adSkip.bind(video));
             video.addEventListener('loadeddata', adSkip.bind(video));
             video.addEventListener('canplay', adSkip.bind(video));
             // video.addEventListener('durationupdate', adSkip.bind(video)); // stream

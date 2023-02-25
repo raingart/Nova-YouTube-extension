@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Nach oben scrollen',
    'title:pl': 'Przycisk przewijania do góry',
    'title:ua': 'Прокрутити до гори',
-   run_on_pages: 'all, -embed, -mobile',
+   run_on_pages: 'all, -embed, -mobile, -live_chat',
    section: 'other',
    desc: 'Displayed on long pages',
    'desc:zh': '出现在长页面上',
@@ -30,9 +30,9 @@ window.nova_plugins.push({
    'desc:ua': 'Відображається на довгих сторінках',
    _runtime: user_settings => {
 
-      document.addEventListener('scroll', appendBtn, { capture: true, once: true });
+      document.addEventListener('scroll', insertButton, { capture: true, once: true });
 
-      function appendBtn() {
+      function insertButton() {
          const SELECTOR_ID = 'nova-scrollTop-btn';
 
          const btn = document.createElement('button');

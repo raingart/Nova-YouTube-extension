@@ -196,6 +196,11 @@ window.nova_plugins.push({
             if (!user_settings.mix_disable) return;
 
             document.body.querySelectorAll(
+               // .ytp-videowall-still[data-is-mix=true],
+               // ytd-browse[page-subtype=home] a[href$="start_radio=1"],
+               // ytd-browse[page-subtype=home] ytd-video-meta-block[radio-meta],
+               // ytd-compact-radio-renderer,
+               // ytd-radio-renderer,
                `a[href*="list="][href*="start_radio="]:not([hidden]),
                #video-title[title^="Mix -"]:not([hidden])`
             )

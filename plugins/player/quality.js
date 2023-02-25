@@ -23,8 +23,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/23661-youtube-hd/feedback
-      // alt2 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
+      // alt1 - https://greasyfork.org/en/scripts/6034-youtube-hd-override
+      // alt2 - https://greasyfork.org/en/scripts/23661-youtube-hd/feedback
+      // alt3 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
 
       const qualityFormatListWidth = {
          highres: 4320,
@@ -37,6 +38,7 @@ window.nova_plugins.push({
          medium: 360,
          small: 240,
          tiny: 144,
+         // auto: 0, ???
       };
 
       let selectedQuality = user_settings.video_quality;

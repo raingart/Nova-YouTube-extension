@@ -85,15 +85,6 @@ window.nova_plugins.push({
                el.style.cursor = 'text';
             }
          });
-
-         NOVA.css.push(
-            // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
-            `#ytp-caption-window-container {
-               z-index: ${Math.max(
-               (el = document.body.querySelector('.ytp-chrome-bottom')) && getComputedStyle(el)['z-index'],
-               // getComputedStyle(movie_player)['z-index'], // movie_player is not defined
-               59) + 1};
-            }`);
       }
 
       if (Object.keys(css).length) {

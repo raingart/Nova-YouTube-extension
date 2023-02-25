@@ -25,6 +25,7 @@ window.nova_plugins.push({
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));
       }
 
+      // if (ytd_watch.theater) {}
       // NOVA.waitElement('ytd-watch-flexy:not([theater])') // wrong way. Reassigns manual exit from the mode
       NOVA.waitElement('ytd-watch-flexy')
          .then(el => el.theaterModeChanged_(true));
@@ -62,7 +63,7 @@ window.nova_plugins.push({
                            if (user_settings.player_full_viewport_mode_exclude_shorts && this.videoWidth < this.videoHeight) {
                               return;
                            }
-                           const miniSize = NOVA.calculateAspectRatioFit({
+                           const miniSize = NOVA.calculateAspectRatio.sizeToFit({
                               'srcWidth': this.videoWidth,
                               'srcHeight': this.videoHeight,
                               // 'maxWidth': window.innerWidth,
@@ -160,7 +161,7 @@ window.nova_plugins.push({
                            progress_bar.addEventListener(evt, () => {
                               //    // if (movie_player.contains(document.activeElement)) {
                               // if (document.activeElement.matches('.ytp-progress-bar')) {
-                              movie_player.classList.add(CLASS_OVER_PAUSED)
+                              movie_player.classList.add(CLASS_OVER_PAUSED);
                               // }
                            });
                         });
@@ -200,25 +201,95 @@ window.nova_plugins.push({
    options: {
       player_full_viewport_mode: {
          _tagName: 'select',
-         label: 'Toggle type',
-         // 'label:zh': '模式',
-         // 'label:ja': 'モード',
-         // 'label:ko': '방법',
-         // 'label:id': '',
-         // 'label:es': 'Modo',
-         // 'label:pt': 'Modo',
-         // // 'label:fr': 'Mode',
-         // 'label:it': '',
+         label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
+         'label:ko': '방법',
+         // 'label:id': 'Mode',
+         'label:es': 'Modo',
+         'label:pt': 'Modo',
+         // 'label:fr': 'Mode',
+         'label:it': 'Modalità',
          // 'label:tr': 'Mod',
-         // 'label:de': 'Modus',
-         'label:pl': 'Typ',
-         'label:ua': 'Обрати режим',
+         'label:de': 'Modus',
+         'label:pl': 'Tryb',
+         'label:ua': 'Режим',
          options: [
-            { label: 'default', /*value: '',*/ selected: true },
-            { label: 'cinema', value: 'cinema_mode' },
-            { label: 'full-viewport (auto)', value: 'smart' },
-            { label: 'full-viewport', value: 'force' },
-            { label: 'redirect to embedded', value: 'redirect_watch_to_embed' },
+            {
+               label: 'default', /*value: '',*/ selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'cinema', value: 'cinema_mode',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'full-viewport (auto)', value: 'smart',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'full-viewport', value: 'force',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'redirect to embedded', value: 'redirect_watch_to_embed',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
          ],
       },
       player_full_viewport_mode_exit: {

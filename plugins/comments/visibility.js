@@ -24,7 +24,7 @@ window.nova_plugins.push({
       NOVA.collapseElement({
          selector: '#comments',
          title: 'comments',
-         remove: user_settings.comments_visibility_mode == 'disable' ? true : false,
+         remove: (user_settings.comments_visibility_mode == 'disable') ? true : false,
       });
 
    },

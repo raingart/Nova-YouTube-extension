@@ -1,6 +1,7 @@
 window.nova_plugins.push({
    id: 'page-logo',
-   title: 'YouTube logo',
+   // title: 'YouTube logo',
+   title: 'YouTube logo link',
    'title:zh': 'YouTube 徽标',
    'title:ja': 'YouTubeロゴ',
    'title:ko': '유튜브 로고',
@@ -13,7 +14,7 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    'title:ua': 'YouTube лого',
-   run_on_pages: 'all, -embed, -mobile',
+   run_on_pages: 'all, -embed, -mobile, -live_chat',
    section: 'header',
    // desc: '',
    _runtime: user_settings => {

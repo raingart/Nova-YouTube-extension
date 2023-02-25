@@ -94,7 +94,7 @@ window.nova_plugins.push({
 
                /* comments section */
                ${COMMENTS_SELECTOR} {
-                  ${user_settings.comments_popup_width === 100 ? 'margin: 0 1%;' : ''}
+                  ${(user_settings.comments_popup_width === 100) ? 'margin: 0 1%;' : ''}
                   padding: 0 15px;
                   background-color: #222;
                   border: 1px solid #333;

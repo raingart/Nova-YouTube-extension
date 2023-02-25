@@ -24,17 +24,23 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/441087-youtube-watch-page-no-icon-labels
 
       let styles =
-         `#top-row #actions button ${user_settings.buttons_hide ? '' : '[class*="--button-text-content"]'} {
+         // `ytd-watch-metadata #actions button ${user_settings.buttons_hide ? '' : '[class*="--button-text-content"]'} {
+         `ytd-watch-metadata #actions button ${user_settings.buttons_hide ? '' : '.cbox'} {
             display: none;
          }
-         .yt-spec-button-shape-next__icon {
+         ytd-watch-metadata #actions button .yt-spec-button-shape-next__icon {
             margin: 0 !important;
+         }
+         /* exept like-dislike */
+         ytd-watch-metadata #actions ytd-segmented-like-dislike-button-renderer ~ * button,
+         ytd-watch-metadata #actions #top-level-buttons-computed ~ * button.yt-spec-button-shape-next--size-m {
+            padding: 0 7px;
          }`;
 
       if (user_settings.button_no_labels_opacity) {
          styles +=
             `#subscribe-button:not(:hover),
-            #actions #menu:not(:hover) {
+            ytd-watch-metadata #actions #menu:not(:hover) {
                transition: opacity .2s ease-in-out;
                opacity: .1;
             }`;

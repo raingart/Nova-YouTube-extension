@@ -78,7 +78,7 @@
       "message": "열려 있는 탭은 변경되지 않습니다"
    },
    "opt_btn_api_key_input": {
-      "message": "custom Youtube API key"
+      "message": "API key"
    },
    "opt_api_key_generate": {
       "message": "Generate API key"

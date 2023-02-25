@@ -35,7 +35,7 @@ const PopulateForm = {
                   switch (el.type.toLowerCase()) {
                      case 'checkbox':
                         (Array.isArray(val) ? val : [val])
-                           .forEach(value => el.checked = value ? true : false); // multiple Check/Uncheck
+                           .forEach(value => (el.checked = value) ? true : false); // multiple Check/Uncheck
                         break;
 
                      case 'radio':
@@ -91,7 +91,7 @@ const PopulateForm = {
                      return Array.from(options).map(({ value }) => value);
                   }
                   return [subtargetEl.value];
-                  // return [subtargetEl.type == 'checkbox' ? subtargetEl.checked : subtargetEl.value];
+                  // return [(subtargetEl.type == 'checkbox') ? subtargetEl.checked : subtargetEl.value];
                })();
 
                // if (parrentName == 'stop_preload_embed')

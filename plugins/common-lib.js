@@ -63,13 +63,13 @@ const NOVA = {
             return resolve(element);
          }
 
-         new MutationObserver((mutations, observer) => {
-            for (const mutation of mutations) {
-               for (const node of mutation.addedNodes) {
+         new MutationObserver((mutationRecordsArray, observer) => {
+            for (const record of mutationRecordsArray) {
+               for (const node of record.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType)) continue; // speedup hack
 
                   if (node.matches && node.matches(selector)) { // this node
-                     // console.debug('[2]', mutation.type, node.nodeType, selector);
+                     // console.debug('[2]', record.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(node);
                   }
@@ -78,7 +78,7 @@ const NOVA = {
                      && (parentEl instanceof HTMLElement)
                      && (element = parentEl.querySelector(selector))
                   ) {
-                     // console.debug('[3]', mutation.type, node.nodeType, selector);
+                     // console.debug('[3]', record.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
                   }
@@ -155,7 +155,7 @@ const NOVA = {
       if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
 
       // async wait el. Removes the delay for init
-      this.waitElement(typeof selectors === 'string' ? selectors : selectors.join(','))
+      this.waitElement((typeof selectors === 'string') ? selectors : selectors.join(','))
          .then(video => {
             // selectors - str to array
             !Array.isArray(selectors) && (selectors = selectors.split(',').map(s => s.trim()));
@@ -199,12 +199,12 @@ const NOVA = {
          return console.error('runOnPageInitOrTransition > callback not function:', ...arguments);
       }
       let lastURL = location.href;
-      const isURLChange = () => lastURL === location.href ? false : lastURL = location.href;
+      const isURLChange = () => (lastURL === location.href) ? false : lastURL = location.href;
       // init
       isURLChange() || callback();
       // update
       // window.addEventListener('transitionend', () => isURLChange() && callback());
-      window.addEventListener('yt-navigate-finish', () => isURLChange() && callback());
+      document.addEventListener('yt-navigate-finish', () => isURLChange() && callback());
    },
 
    /**
@@ -348,7 +348,7 @@ const NOVA = {
          selector: '#secondary #related',
          title: 'related',// auto uppercase
          remove: true,
-         remove: user_settings.NAME_visibility_mode == 'remove' ? true : false,
+         remove: (user_settings.NAME_visibility_mode == 'remove') ? true : false,
    }); */
    /**
     * @param  {string} selector
@@ -391,21 +391,34 @@ const NOVA = {
          });
    },
 
-   /**
-    * @param  {object} 4 int
-    * @return {object} 2 int
-   */
-   calculateAspectRatioFit({
-      srcWidth = 0, srcHeight = 0,
-      maxWidth = window.innerWidth,
-      maxHeight = window.innerHeight
-   }) {
-      // console.debug('aspectRatioFit:', ...arguments);
-      const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
-      return {
-         width: +srcWidth * aspectRatio,
-         height: +srcHeight * aspectRatio,
-      };
+   calculateAspectRatio: {
+      /**
+       * @param  {object} 4 int
+       * @return {object} 2 int
+      */
+      sizeToFit({
+         srcWidth = 0, srcHeight = 0,
+         maxWidth = window.innerWidth,
+         maxHeight = window.innerHeight
+      }) {
+         // console.debug('aspectRatioFit:', ...arguments);
+         const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
+         return {
+            width: +srcWidth * aspectRatio,
+            height: +srcHeight * aspectRatio,
+         };
+      },
+      /**
+       * @param  {object} 2 int
+       * @return {object} string
+      */
+      fitToSize({ width = required(), height = required() }) {
+         const
+            gcd = (a, b) => b ? gcd(b, a % b) : a,
+            divisor = gcd(width, height);
+
+         return width / divisor + ':' + height / divisor;
+      },
    },
 
    /**
@@ -506,9 +519,7 @@ const NOVA = {
                         if (
                            // fix invalid sort timestamp
                            // ex: https://www.youtube.com/watch?v=S66Q7T7qqxU https://www.youtube.com/watch?v=nkyXwDU97ms
-                           (nowComment ? true
-                              : (sec > prevSec && sec < +video_duration)
-                           )
+                           (nowComment ? true : (sec > prevSec && sec < +video_duration))
                            // not in the middle of the line
                            && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                         ) {
@@ -733,11 +744,11 @@ const NOVA = {
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName)) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
             // word
-            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
             // words
-            || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'ROCK N ROLL', 'HOUR VER', 'HOURS VER'] // 'FULL ALBUM'
+            || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'ROCK N ROLL', 'HOUR VER', 'HOURS VER', 'INTRO THEME'] // 'FULL ALBUM'
                .some(i => titleStr.includes(i))
 
             // word (case sensitive)
@@ -955,10 +966,13 @@ const NOVA = {
                .catch(error => {
                   localStorage.removeItem(API_STORE_NAME);
                   console.error(`Request API failed:${URL}\n${error}`);
-                  if (error?.message) return {
-                     error: (typeof error.message === 'object'
-                        ? JSON.parse(error.message) : error.message),
-                  };
+                  if (error?.message && (err = JSON.parse(error?.message))) {
+                     return {
+                        'code': err.code,
+                        'reason': err.errors?.length && err.errors[0].reason,
+                        'error': err.message,
+                     };
+                  }
                   // alert('Problems with the YouTube API:'
                   //    + '\n' + error?.message
                   //    + '\n\nIf this error is repeated:'
@@ -1031,7 +1045,7 @@ const NOVA = {
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
          // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
       ]
-         .find(i => isChannelId(i))
+         .find(i => isChannelId(i));
       // console.debug('channelId (local):', result);
 
       // if (!result) { // request

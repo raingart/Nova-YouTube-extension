@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=eCmOkxcMgD8&list=PLuZADpUBCdIU4hiA5rpdDH6nsbaH7iqo8
+
 window.nova_plugins.push({
    id: 'miniplayer-disable',
    title: 'Disable miniplayer',
@@ -15,7 +18,19 @@ window.nova_plugins.push({
    'title:ua': 'Вимкнути мінівідтворювач',
    run_on_pages: 'watch, -mobile',
    section: 'other',
-   // desc: '',
+   desc: 'shown on changeable page when playing playlist',
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:id': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:it': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
+   // 'desc:pl': '',
+   // 'desc:ua': '',
    _runtime: user_settings => {
 
       // hide player button
@@ -24,6 +39,8 @@ window.nova_plugins.push({
             display: none !important;
          }`);
 
+      // yt.config_.EXPERIMENT_FLAGS['kevlar_miniplayer']
+
       document.addEventListener('yt-action', evt => {
          if (NOVA.currentPage != 'watch' && evt.detail?.actionName.includes('miniplayer')) {
             // console.log(evt.detail?.actionName);
@@ -31,7 +48,16 @@ window.nova_plugins.push({
             // 'yt-miniplayer-endpoint-changed'
             // 'yt-miniplayer-play-state-changed'
             // 'yt-miniplayer-active'
-            document.body.querySelector('#movie_player button.ytp-miniplayer-close-button')?.click();
+
+            document.body.querySelector('#movie_player .ytp-miniplayer-ui button.ytp-miniplayer-close-button')
+               ?.click();
+
+            // force way
+            // const btn = document.body.querySelector('#movie_player .ytp-miniplayer-ui button.ytp-miniplayer-close-button');
+            // const interval = setInterval(() => {
+            //    if (document.body.querySelector('ytd-miniplayer video')) btn.click();
+            //    else clearInterval(interval);
+            // }, 500); // 500ms
          }
       });
 

@@ -21,7 +21,7 @@ window.nova_plugins.push({
       NOVA.collapseElement({
          selector: '#secondary #related',
          title: 'related',
-         remove: user_settings.related_visibility_mode == 'disable' ? true : false,
+         remove: (user_settings.related_visibility_mode == 'disable') ? true : false,
       });
 
    },
@@ -44,11 +44,31 @@ window.nova_plugins.push({
          options: [
             {
                label: 'collapse', value: 'hide', selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'zwiń',
                'label:ua': 'приховати',
             },
             {
                label: 'remove', value: 'disable',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
                'label:pl': 'usuń',
                'label:ua': 'вимкнути',
             },

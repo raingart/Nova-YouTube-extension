@@ -69,7 +69,7 @@ window.nova_plugins.push({
                if (Object.keys(sliderContainer).length) {
                   sliderContainer.slider.value = this.playbackRate;
                   sliderContainer.sliderLabel.textContent = `Speed (${this.playbackRate})`;
-                  sliderContainer.sliderCheckbox.checked = this.playbackRate === 1 ? false : true;
+                  sliderContainer.sliderCheckbox.checked = (this.playbackRate === 1) ? false : true;
                }
             });
 
@@ -435,19 +435,19 @@ window.nova_plugins.push({
       },
       rate_default_apply_music: {
          _tagName: 'select',
-         label: 'Music genre',
-         'label:zh': '音乐流派视频',
-         'label:ja': '音楽ジャンルのビデオ',
-         'label:ko': '음악 장르',
-         'label:id': 'Genre musik',
-         'label:es': 'Género musical',
-         'label:pt': 'Gênero musical',
-         'label:fr': 'Genre de musique',
-         'label:it': 'Genere musicale',
-         // 'label:tr': 'Müzik tarzı',
-         'label:de': 'Musikrichtung',
-         'label:pl': 'Gatunek muzyczny',
-         'label:ua': 'Жарн музики',
+         label: 'For music genre',
+         // 'label:zh': '音乐流派视频',
+         // 'label:ja': '音楽ジャンルのビデオ',
+         // 'label:ko': '음악 장르',
+         // 'label:id': 'Genre musik',
+         // 'label:es': 'Género musical',
+         // 'label:pt': 'Gênero musical',
+         // 'label:fr': 'Genre de musique',
+         // 'label:it': 'Genere musicale',
+         // // 'label:tr': 'Müzik tarzı',
+         // 'label:de': 'Musikrichtung',
+         // 'label:pl': 'Gatunek muzyczny',
+         // 'label:ua': 'Жарн музики',
          title: 'Extended detection - may trigger falsely',
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
@@ -477,21 +477,21 @@ window.nova_plugins.push({
                'label:pl': 'tęsknić',
                'label:ua': 'пропустити',
             },
-            {
-               label: 'skip (extended)', value: 'expanded',
-               'label:zh': '跳过（扩展检测）',
-               'label:ja': 'スキップ（拡張検出）',
-               'label:ko': '건너뛰다(확장)',
-               'label:id': 'lewati (diperpanjang)',
-               'label:es': 'omitir (extendida)',
-               'label:pt': 'pular (estendido)',
-               'label:fr': 'sauter (étendu)',
-               'label:it': 'salta (esteso)',
-               // 'label:tr': 'atlamak (genişletilmiş)',
-               'label:de': 'überspringen (erweitert)',
-               'label:pl': 'pomiń (rozszerzony)',
-               'label:ua': 'пропустити (розширено)',
-            },
+            // {
+            //    label: 'skip (extended)', value: 'expanded',
+            //    'label:zh': '跳过（扩展检测）',
+            //    'label:ja': 'スキップ（拡張検出）',
+            //    'label:ko': '건너뛰다(확장)',
+            //    'label:id': 'lewati (diperpanjang)',
+            //    'label:es': 'omitir (extendida)',
+            //    'label:pt': 'pular (estendido)',
+            //    'label:fr': 'sauter (étendu)',
+            //    'label:it': 'salta (esteso)',
+            //    // 'label:tr': 'atlamak (genişletilmiş)',
+            //    'label:de': 'überspringen (erweitert)',
+            //    'label:pl': 'pomiń (rozszerzony)',
+            //    'label:ua': 'пропустити (розширено)',
+            // },
             {
                label: 'force apply', value: false,
                'label:zh': '施力',

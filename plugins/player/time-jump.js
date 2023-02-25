@@ -16,7 +16,8 @@
 // CORRECT CHAPTERS + description:
 // https://www.youtube.com/watch?v=egAB2qtVWFQ - title of chapters before timestamp.
 // https://www.youtube.com/watch?v=t_fbcgzmxHs - title of chapters before timestamp.
-// https://www.youtube.com/watch?v=IR0TBQV147I = lots 3-digit timestamp
+// https://www.youtube.com/watch?v=IR0TBQV147I - lots 3-digit timestamp
+// https://www.youtube.com/watch?v=fgMdiwECQSE - brackets
 // https://www.youtube.com/embed/JxTyMVPaOXY?autoplay=1 - embed
 
 // false detect:
@@ -201,7 +202,7 @@ window.nova_plugins.push({
                      const
                         cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
                         offsetTime = cursorTime - NOVA.videoElement?.currentTime,
-                        sign = offsetTime >= 1 ? '+' : Math.sign(offsetTime) === -1 ? '-' : '';
+                        sign = (offsetTime >= 1) ? '+' : (Math.sign(offsetTime) === -1) ? '-' : '';
                      // updateOffsetTime
                      // console.debug('offsetTime', offsetTime, cursorTime, sign);
                      tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS.digit(offsetTime)}`);
@@ -255,6 +256,7 @@ window.nova_plugins.push({
                });
 
                function timeLeapInto() {
+                  if (!user_settings.skip_into_step_in_music && NOVA.isMusic()) return;
                   // start - fix conflict with plugin. "player-resume-playback"
                   const
                      CACHE_PREFIX = 'resume-playback-time',
@@ -392,6 +394,24 @@ window.nova_plugins.push({
          min: 0,
          max: 30,
          value: 0,
+      },
+      skip_into_step_in_music: {
+         _tagName: 'input',
+         label: 'Apply for music genre',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         'data-dependent': { 'skip_into_step': "!0" },
       },
    }
 });

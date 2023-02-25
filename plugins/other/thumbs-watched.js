@@ -17,7 +17,7 @@ window.nova_plugins.push({
    'title:pl': 'Oznacz obejrzane miniaturki',
    'title:ua': 'Позначити переглянуті мініатюри',
    run_on_pages: 'home, results, feed, channel, watch, -mobile',
-   // run_on_pages: 'all, -embed',
+   // run_on_pages: 'all, -embed, -live_chat',
    section: 'other',
    // desc: 'Need to Turn on [YouTube History]',
    _runtime: user_settings => {

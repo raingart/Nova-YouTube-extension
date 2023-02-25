@@ -2,7 +2,7 @@ const App = {
    lastURL: location.href,
 
    isURLChange() {
-      return this.lastURL === location.href ? false : this.lastURL = location.href;
+      return (this.lastURL === location.href) ? false : this.lastURL = location.href;
    },
 
    isMobile: location.host == 'm.youtube.com',
@@ -104,7 +104,7 @@ const App = {
             notice.addEventListener('click', () => notice.remove());
             notice.innerHTML =
                `<h4 style="margin:0;">Failure on initialization ${app_name}</h4>`
-               + (typeof NOVA === 'object'
+               + ((typeof NOVA === 'object')
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
                   : `<div>Critical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
             document.body.append(notice);
@@ -178,7 +178,7 @@ App.init();
 // https://greasyfork.org/en/scripts/459412-youtube-playlists-playback-tracker
 
 // for testing
-// https://www.youtube.com/watch?v=9xp1XWmJ_Wo
+// https://www.youtube.com/watch?v=9xp1XWmJ_Wo - 30sec
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 // https://www.youtube.com/watch?v=ir6nk2zrMG0 - wide
@@ -189,6 +189,7 @@ App.init();
 // wide-screen video
 // https://www.youtube.com/watch?v=B4yuZhKRW1c
 // https://www.youtube.com/watch?v=zEk3A1fA0gc
+// https://www.youtube.com/watch?v=YKKuLzYzH2E
 
 // shorts
 // https://www.youtube.com/shorts/5ndfxasp2r0
@@ -201,7 +202,6 @@ App.init();
 // https://www.youtube.com/watch?v=v-YQUCP-J8s
 // https://www.youtube.com/watch?v=gWqENeW7EyQ
 // https://www.youtube.com/watch?v=Hlk7AzBMmOA
-// https://www.youtube.com/watch?v=bDmA8qQKhMY
 // https://www.youtube.com/watch?v=Ol8eMfmzpe0
 
 // test z-index "Show chat replay" button
@@ -211,6 +211,8 @@ App.init();
 // https://www.youtube.com/watch?v=eWwBkA0GqaY 144 MUSIC
 // https://www.youtube.com/watch?v=v-YQUCP-J8s 144 MUSIC
 // https://www.youtube.com/watch?v=FSjr2H0RDsY 240 AMV
+// https://www.youtube.com/watch?v=YSXwreNIuYE 240
+// https://www.youtube.com/channel/UCl3Cj2of3Il3j-RAs_WFtQA - all video in 240p
 // https://www.youtube.com/watch?v=qnLunQEcMn0 480 MUSIC (has title)
 // https://www.youtube.com/watch?v=w1FUjM78HAI 480 AMV
 // https://www.youtube.com/watch?v=668nUCeBHyY 720 short time
@@ -230,6 +232,10 @@ App.init();
 // abnormal pages
 // https://www.youtube.com/watch?v=DhTST3iRZyM - other elements besides the player are not loaded
 // https://www.youtube.com/channel/UCG6TrwqzkWwvWiY2eUny8TA - does not have a "video" tab
+
+
+// error open channel in new tab
+// https://www.youtube.com/watch?v=R_uS0aT0bG8 (redirect to 404 - https://www.youtube.com/user/diversityrecordings)
 
 // clear history
 // https://www.youtube.com/feed/history/community_history

@@ -19,7 +19,7 @@ window.nova_plugins.push({
    'title:ua': 'Очистити мініатюри',
    run_on_pages: 'home, feed, channel, watch',
    // run_on_pages: 'home, results, feed, channel, watch',
-   // run_on_pages: 'all, -embed',
+   // run_on_pages: 'all, -embed, -live_chat',
    section: 'other',
    desc: 'Replaces the predefined clickbait thumbnails',
    'desc:zh': '替换预定义的缩略图',

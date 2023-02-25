@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Thumbnails nach Titel blockieren',
    'title:pl': 'Blokuj miniatury według tytułu',
    'title:ua': 'Блокуйте мініатюри за назвою',
-   run_on_pages: 'all, -embed, -mobile',
+   run_on_pages: 'all, -embed, -mobile, -live_chat',
    section: 'other',
    // desc: '',
    _runtime: user_settings => {

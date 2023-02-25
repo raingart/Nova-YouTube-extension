@@ -50,13 +50,9 @@ window.nova_plugins.push({
          default:
             selectorsList.push([
                // home page
-               // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-               // 'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
 
 
                // results page
-               // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-               // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // ad buy
                'ytd-search-pyv-renderer', // fix blank space - https://www.youtube.com/results?search_query=Shubidua+-+Fed+Rock)
 
                '[class^="ytd-promoted-"]', // suggest site - https://www.youtube.com/results?search_query=mmersive+Simmulator
@@ -86,6 +82,23 @@ window.nova_plugins.push({
                // home, watch page
                'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations."
             ]);
+
+
+            // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+            NOVA.css.push(
+               [
+                  // '*:has(ytd-ad-slot-renderer)', // too general
+
+                  // home page
+                  'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
+
+                  // results page
+                  'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // Ad buy
+
+                  // watch page
+                  'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // hide off chat "Live chat replay was turned off for this video."
+               ]
+                  .join(',\n') + `{ display: none !important;}`);
       }
 
       if (selectorsList.length) {

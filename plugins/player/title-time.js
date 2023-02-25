@@ -91,7 +91,7 @@ window.nova_plugins.push({
             // if (this.playbackRate !== 1) newTitleArr.push(` (${this.playbackRate}x)`);
 
             newTitleArr = newTitleArr
-               .map(t => typeof t === 'string' ? t : NOVA.timeFormatTo.HMS.digit(t / video.playbackRate))
+               .map(t => (typeof t === 'string') ? t : NOVA.timeFormatTo.HMS.digit(t / video.playbackRate))
                .join('');
 
             this.set([newTitleArr, this.backup]);
