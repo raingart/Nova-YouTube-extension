@@ -106,7 +106,7 @@ window.nova_plugins.push({
                document.body.querySelectorAll('#thumbnail #overlays #text:not(:empty)')
                   .forEach(el => {
                      if ((thumb = el.closest(thumbsSelectors))
-                        && NOVA.timeFormatTo.hmsToSec(el.textContent.trim()) < (+user_settings.shorts_disable_min_duration || 60)
+                        && NOVA.timeFormatTo.hmsToSec(el.innerText.trim()) < (+user_settings.shorts_disable_min_duration || 60)
                      ) {
                         thumb.remove();
                         // thumb.style.display = 'none';
@@ -181,7 +181,7 @@ window.nova_plugins.push({
 
             document.body.querySelectorAll('#metadata-line > span:last-of-type')
                .forEach(el => {
-                  if (el.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
+                  if (el.innerText?.split(' ').length === 4 // "Streamed 5 days ago"
                      && (thumb = el.closest(thumbsSelectors))) {
                      thumb.remove();
                      // thumb.style.display = 'none';

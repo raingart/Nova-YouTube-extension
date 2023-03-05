@@ -58,7 +58,7 @@ const Opt = {
 
    generate: {
 
-      list(plugins_list) {
+      load(plugins_list) {
          this.log('list nova_plugins:', plugins_list);
 
          plugins_list
@@ -106,7 +106,6 @@ const Opt = {
                      <div class="opt">
                         <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
                      </div>`;
-                  // ⚠️
 
                   if (plugin.options) {
                      li.append(
@@ -347,7 +346,7 @@ const Opt = {
       document.getElementById('settings_export')
          ?.addEventListener('click', () => {
             Storage.getParams(user_settings => {
-               let d = document.createElement('a');
+               const d = document.createElement('a');
                d.style.display = 'none';
                d.setAttribute('download', 'nova-settings.json');
                d.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings)));
@@ -373,13 +372,13 @@ const Opt = {
                }
                return;
             }
-            let f = document.createElement('input');
+            const f = document.createElement('input');
             f.type = 'file';
             f.accept = 'application/JSON';
             f.style.display = 'none';
             f.addEventListener('change', ({ target }) => {
                if (f.files.length !== 1) return alert('file empty');
-               let rdr = new FileReader();
+               const rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {
                      Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
@@ -417,7 +416,7 @@ const Opt = {
    },
 
    init() {
-      this.generate.list.apply(this, [window.nova_plugins]);
+      this.generate.load.apply(this, [window.nova_plugins]);
       this.eventListener();
    },
 

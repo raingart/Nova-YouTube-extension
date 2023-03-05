@@ -21,9 +21,9 @@ outFile="/tmp/novaTube.user.js"
 # find logo.js -type f | xargs grep -v 'desc:' > 1.txt
 # AFTER build:
 # in vscode
-# 1. clear in-comment regex - "//\s.*|/\*[\s\S\n]*?\*/"
-# 2. process "
-# 3. final clear multiple-newline regex - "^\n{2,}"
+# 1. clear comments. regex - "//\s.*|/\*[\s\S\n]*?\*/"
+# 2. For clear spaces use "Format Document".
+# 3. final clear empty multiple-newlines. regex - "^\n{2,}"
 
 build:
 	rm -f $(outFile)

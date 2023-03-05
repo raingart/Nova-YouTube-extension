@@ -72,7 +72,7 @@ window.nova_plugins.push({
                   .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
-                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)) {
                         // console.debug('hotkey caught');
                         if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
                            playerVolume.adjust(step);
@@ -95,7 +95,6 @@ window.nova_plugins.push({
             const level = movie_player?.getVolume() + +delta;
             return user_settings.volume_unlimit ? this.unlimit(level) : this.set(level);
          },
-         // Strategy 1
          set(level = 50) {
             if (typeof movie_player === 'undefined' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
 

@@ -2,10 +2,10 @@
 
 window.nova_plugins.push({
    id: 'pause-background-tab',
-   // title: 'Autopause when switching tabs',
+   title: 'Autopause when switching tabs',
    // title: 'Pauses playing videos in other tabs',
    // title: 'Autopause all background tabs except the active one',
-   title: 'Only one player instance playing',
+   // title: 'Only one player instance playing',
    'title:zh': '自动暂停除活动选项卡以外的所有选项卡',
    'title:ja': 'アクティブなタブを除くすべてのタブを自動一時停止',
    'title:ko': '활성 탭을 제외한 모든 탭 자동 일시 중지',

@@ -93,7 +93,7 @@ window.nova_plugins.push({
                   'ytd-rich-item-renderer:has(ytd-ad-slot-renderer)', // Ad site
 
                   // results page
-                  'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // Ad buy
+                  // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // Doesn't work. Ad buy
 
                   // watch page
                   'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // hide off chat "Live chat replay was turned off for this video."

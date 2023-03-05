@@ -2,6 +2,8 @@
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
 // https://radio.nv.ua/online-radio-nv - live embed
 
+// https://www.youtube.com/watch?v=PtSNcZLyNaU - for chapter render
+
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
    title: 'Float player progress bar',
@@ -50,6 +52,7 @@ window.nova_plugins.push({
             renderChapters.init(video); // init
 
             // resetBar on new video loaded
+            // video.addEventListener('canplay', resetBar); // bug. Animation reset on seek
             video.addEventListener('loadeddata', resetBar);
             // document.addEventListener('yt-navigate-finish', resetBar);
 

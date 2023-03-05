@@ -48,28 +48,30 @@ window.nova_plugins.push({
       // Listener default indicator
       NOVA.waitElement('.ytp-bezel-text')
          .then(target => {
-            new MutationObserver(mutations => {
+            new MutationObserver(mutationRecordsArray => {
+               // for (const record of mutationRecordsArray) {
+               //    console.debug('Old value:', record.oldValue);
+               // }
                let timeout_ms; // ms
-               for (const mutation of mutations) {
-                  // console.log('bezel mutation detected', mutation.type, target.textContent);
-                  if (target.textContent) {
-                     // increase delay for plugin "time-jump"
-                     // target.textContent #1:"+30 sec • 10:00" - skip
-                     // target.textContent #2:"chapter name • 10:00" - ok
-                     if (!target.textContent.startsWith('+') && target.textContent.includes(' • ')) {
-                        timeout_ms = 1800; // ms
-                        // console.debug(`HUD delay increased: ${timeout_ms}ms`);
-                     }
-                     HUD.set({
-                        'pt': target.textContent,
-                        // 'suffix': '',
-                        'timeout_ms': timeout_ms,
-                     });
-                     break;
+               // console.log('bezel mutation detected', record.type, target.textContent);
+               if (target.textContent) {
+                  // increase delay for plugin "time-jump"
+                  // target.textContent #1:"+30 sec • 10:00" - skip
+                  // target.textContent #2:"chapter name • 10:00" - ok
+                  if (!target.textContent.startsWith('+') && target.textContent.includes(' • ')) {
+                     timeout_ms = 1800; // ms
+                     // console.debug(`HUD delay increased: ${timeout_ms}ms`);
                   }
+                  HUD.set({
+                     'pt': target.textContent,
+                     // 'suffix': '',
+                     'timeout_ms': timeout_ms,
+                  });
+                  break;
                }
             })
-               .observe(target, { childList: true }); // watch for textContent
+               // childList: false, subtree: false,
+               .observe(target, { attributes: true, childList: true }); // watch for textContent
          });
 
       const HUD = {

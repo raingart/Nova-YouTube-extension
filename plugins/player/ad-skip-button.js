@@ -21,7 +21,8 @@ window.nova_plugins.push({
    'title:ua': 'Кнопка пропустити рекламу',
    run_on_pages: 'watch',
    section: 'player',
-   desc: 'Auto click on [Skip Ad] button',
+   // title: 'Clicks automatically on the “Skip Ad” buttons',
+   desc: 'Auto click on the [Skip Ad] button',
    'desc:zh': '自动点击“Skip Ad”按钮',
    'desc:ja': '「Skip Ad」ボタンの自動クリック',
    'desc:ko': '【광고 건너뛰기】버튼 자동 클릭',
@@ -35,6 +36,8 @@ window.nova_plugins.push({
    'desc:pl': 'Auto kliknięcie przycisku [Pomiń reklamę]',
    'desc:ua': 'Автоматично натискати кнопку для пропуску реклами',
    _runtime: user_settings => {
+
+      // alt - https://github.com/MarcGuiselin/youtube-refined/blob/main/code/scripts/content/youtube.js#L1526-L1653
 
       // NOVA.css.push( // hides the appearance when playing on the next video
       //    `#movie_player.ad-showing video {

@@ -128,7 +128,7 @@ window.nova_plugins.push({
       //       //    width = movie_player.offsetWidth,
       //       // height = Math.round(movie_player.offsetWidth / (16 / 9));
 
-      //       const aspectRatio = Nova.calculateAspectRatio.fitToSize(video.videoWidth, video.videoHeight);
+      //       const aspectRatio = NOVA.calculateAspectRatio.fitToSize(video.videoWidth, video.videoHeight);
       //       console.debug('>', aspectRatio, video.videoWidth, height);
       //       // update only height ratio
       //       // Strategy 1

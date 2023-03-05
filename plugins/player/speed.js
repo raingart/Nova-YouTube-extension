@@ -101,7 +101,7 @@ window.nova_plugins.push({
                   evt.preventDefault();
 
                   if (evt[user_settings.rate_hotkey]
-                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)) {
                      // console.debug('hotkey caught');
                      const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
                      // console.debug('current rate:', rate);
@@ -119,7 +119,7 @@ window.nova_plugins.push({
          NOVA.waitElement('#upload-info #channel-name a[href]')
             .then(channelName => {
                // channelNameVEVO
-               if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
+               if (/(VEVO|Topic|Records|AMV)$/.test(channelName.innerText)
                   || channelName.textContent.toUpperCase().includes('MUSIC')
                ) {
                   playerRate.set(1);

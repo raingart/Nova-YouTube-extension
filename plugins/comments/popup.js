@@ -36,7 +36,7 @@ window.nova_plugins.push({
                .then(count => {
                   document.body.querySelector(COMMENTS_SELECTOR)
                      ?.setAttribute(counterAttrName, roundToShortSize(
-                        parseInt(count.textContent?.replace(/\D/g, ''), 10)
+                        parseInt(count.innerText?.replace(/\D/g, ''), 10)
                      ));
                });
          }

@@ -48,7 +48,7 @@ window.nova_plugins.push({
                new KeyboardEvent('keyup', { bubbles: true, cancelable: true, keyCode: 143, which: 143 })
             );
             // Strategy 2
-            // does work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
+            // Doesn't work (source: https://greasyfork.org/en/scripts/447802-youtube-web-tweaks)
             // window.wrappedJSObject._lact = Date.now();
          }
       }, 1000 * 60 * 5); // 5 min

@@ -146,7 +146,7 @@ window.nova_plugins.push({
                            // [6,053 views] [Premiered] [Oct 8, 2022]
                            // [14,051 views] [] [Mar 2, 2017]
                            ?.slice(0, 3)
-                           .map(e => e.textContent)
+                           .map(e => e.innerText)
                            ?.join('')?.trim()
                         )
                            && text != oldDateText // new date

@@ -170,7 +170,7 @@ window.nova_plugins.push({
 
       //       let
       //          [minutes, seconds] = title.substring(from, to).trim()
-      //             .split(/\D/, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
+      //             .split(/\D/g, 2).filter(Number)?.map(s => (+s === 1 ? 60 : +s) - 1); // fix minutes and offest
 
       //       // fix mixed up in places
       //       if (!seconds) {

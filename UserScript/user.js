@@ -12,16 +12,18 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 }
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'player-hotkeys-focused': 'player-hotkeys-active',
+   'player-buttons-custom': 'player-quick-buttons',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 if (isOptionsPage()) return;
 
@@ -159,8 +161,8 @@ function landerPlugins() {
       }, 500); // 100ms
    }
 
-   let lastUrl = location.href;
-   const isURLChanged = () => lastUrl == location.href ? false : lastUrl = location.href;
+   let prevURL = location.href;
+   const isURLChanged = () => prevURL == location.href ? false : prevURL = location.href;
    // skip first page transition
    document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
 
@@ -212,8 +214,8 @@ function landerPlugins() {
 //       'app_ver': GM_info.script.version,
 //    });
 //    // page: url change
-//    let lastUrl = location.href;
-//    const isURLChanged = () => (lastUrl == location.href) ? false : lastUrl = location.href;
+//    let prevURL = location.href;
+//    const isURLChanged = () => (prevURL == location.href) ? false : prevURL = location.href;
 //    // skip first page transition
 //    document.addEventListener('yt-navigate-start', () => isURLChanged() && initPlugins());
 // }
@@ -357,15 +359,15 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
 };
 
 window.addEventListener('unhandledrejection', err => {
-   //if (!err.reason.stack.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
-   console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
-
    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
-   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova'))
+   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
+      console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
+
       _pluginsCaptureException({
          'trace_name': 'unhandledrejection',
          'err_stack': err.reason.stack || err.stack,
          'app_ver': GM_info.script.version,
          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
       });
+   }
 });

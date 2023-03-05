@@ -39,7 +39,7 @@ window.nova_plugins.push({
          // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
          if (!evt.target.matches('a[href*="&t="]')) return;
 
-         if (sec = NOVA.timeFormatTo.hmsToSec(evt.target.textContent)) {
+         if (sec = NOVA.timeFormatTo.hmsToSec(evt.target.innerText)) {
             evt.preventDefault();
             evt.stopPropagation();
             evt.stopImmediatePropagation();

@@ -1,4 +1,7 @@
 // for test:
+// CHAPTER without description
+// https://www.youtube.com/watch?v=lQPp7xNOoe4
+
 // MANUAL CHAPTER
 
 // timestamp in (description + comment):
@@ -200,7 +203,7 @@ window.nova_plugins.push({
                      ) return;
 
                      const
-                        cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
+                        cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.innerText),
                         offsetTime = cursorTime - NOVA.videoElement?.currentTime,
                         sign = (offsetTime >= 1) ? '+' : (Math.sign(offsetTime) === -1) ? '-' : '';
                      // updateOffsetTime

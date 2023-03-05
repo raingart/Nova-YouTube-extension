@@ -206,7 +206,7 @@ window.nova_plugins.push({
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
             const arr = [...nodes]
-               .map(e => NOVA.timeFormatTo.hmsToSec(e.textContent))
+               .map(e => NOVA.timeFormatTo.hmsToSec(e.innerText))
                .filter(Number); // filter PREMIERE
 
             return arr.length && arr.reduce((acc, time) => acc + +time, 0);
@@ -214,9 +214,9 @@ window.nova_plugins.push({
          // function getTotalTime(nodes) {
          //    // console.debug('getTotalTime', ...arguments);
          //    return [...nodes]
-         //       // .map(e => NOVA.timeFormatTo.hmsToSec(e.textContent))
+         //       // .map(e => NOVA.timeFormatTo.hmsToSec(e.innerText))
          //       // .filter(t => !isNaN(+t)) // filter PREMIERE
-         //       .flatMap(e => NOVA.timeFormatTo.hmsToSec(e.textContent) || [])
+         //       .flatMap(e => NOVA.timeFormatTo.hmsToSec(e.innerText) || [])
          //       .reduce((acc, time) => acc + time, 0);
          // }
       }
