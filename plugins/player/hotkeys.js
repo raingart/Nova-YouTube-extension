@@ -1,4 +1,5 @@
 window.nova_plugins.push({
+   // id: 'shortcuts-always-active',
    id: 'player-hotkeys-focused',
    title: 'Player hotkeys always active',
    'title:zh': '播放器热键始终处于活动状态',

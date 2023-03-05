@@ -73,7 +73,7 @@ window.nova_plugins.push({
          document.body.querySelectorAll('#video-title')
             .forEach(el => {
                keywords.forEach(keyword => {
-                  if (el.textContent.toLowerCase().includes(keyword) && (thumb = el.closest(thumbsSelectors))) {
+                  if (el.innerText.toLowerCase().includes(keyword) && (thumb = el.closest(thumbsSelectors))) {
                      thumb.remove();
                      // thumb.style.display = 'none';
 

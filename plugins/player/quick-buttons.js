@@ -1,5 +1,6 @@
 window.nova_plugins.push({
-   id: 'player-buttons-custom',
+   // id: 'player-quick-controls',
+   id: 'player-quick-buttons',
    title: 'Custom player buttons',
    'title:zh': '自定义按钮',
    'title:ja': 'カスタムボタン',
@@ -286,6 +287,7 @@ window.nova_plugins.push({
                   canvas.width = NOVA.videoElement.videoWidth;
                   canvas.height = NOVA.videoElement.videoHeight
                   canvas.getContext('2d').drawImage(NOVA.videoElement, 0, 0, canvas.width, canvas.height);
+                  canvas.title = 'Click to save';
                   try {
                      // fix Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
                      // ex: https://www.youtube.com/watch?v=FZovbrEP53o
@@ -300,7 +302,6 @@ window.nova_plugins.push({
                   if (!container.id) {
                      container.id = SELECTOR_SCREENSHOT_ID;
                      container.target = '_blank'; // useful link
-                     container.title = 'Click to save';
                      // skip embed
                      if (headerContainer = document.getElementById('masthead-container')) {
                         // fix header indent
@@ -318,6 +319,7 @@ window.nova_plugins.push({
                      close.className = 'close-btn'
                      // close.textContent = 'CLOSE';
                      close.innerHTML = '<span>CLOSE</span>';
+                     close.title = 'Close';
                      close.addEventListener('click', evt => {
                         evt.preventDefault();
                         container.remove();
@@ -401,6 +403,9 @@ window.nova_plugins.push({
                         window.open(imgUrl);
                         break;
                      }
+
+                     // const thumbnail_image = new Image();
+                     // thumbnail_image.addEventListener("load", checkHighQualityThumbnail, false);
                   }
                });
                container.prepend(thumbBtn);
@@ -426,12 +431,13 @@ window.nova_plugins.push({
                      </g>
                   </svg>`;
                rotateBtn.addEventListener('click', () => {
-                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D/, ''), 10) || 0;
+                  // get first number part (rotate, without scale). Code: remove text before numbers, and extract first number group
+                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D+/, ''), 10) || 0;
                   // fix ratio scale. Before angle calc
                   const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / NOVA.videoElement.clientWidth : 1;
                   angle += 90;
                   NOVA.videoElement.style.transform = (angle === 360) ? '' : `rotate(${angle}deg) scale(${scale})`;
-                  // console.debug('rotate', angle, scale, NOVA.videoElement.style.transform);
+                  console.debug('rotate', angle, scale, NOVA.videoElement.style.transform);
                });
                container.prepend(rotateBtn);
                // }
@@ -672,8 +678,6 @@ window.nova_plugins.push({
                      movie_player.getAvailableQualityLevels()
                         .forEach(quality => {
                            const qualityItem = document.createElement('li');
-                           // if (movie_player.getVideoData().video_quality == quality) qualityItem.className = 'active';
-                           if (movie_player.getPlaybackQuality() == quality) qualityItem.className = 'active';
                            // qualityList.innerHTML =
                            //    `<span class="quality-menu-item-text">1080p</span>
                            //    <span class="quality-menu-item-label-badge">HD</span>`;
@@ -683,22 +687,28 @@ window.nova_plugins.push({
                                  qualityItem.insertAdjacentHTML('beforeend',
                                     `<span class="quality-menu-item-label-badge">${badge}</span>`);
                               }
-                              // set max quality limit (viewport + 30%)
-                              // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
-                              // set max quality limit (screen resolution + 30%)
-                              if (+(qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.screen.width * 1.3)) {
-                                 qualityItem.addEventListener('click', () => {
-                                    // console.debug('setPlaybackQuality', quality);
-                                    movie_player.setPlaybackQualityRange(quality, quality);
-                                    // movie_player.setPlaybackQuality(quality); // Doesn't work
-                                    if (quality != 'auto') { // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
+                              // if (movie_player.getVideoData().video_quality == quality) qualityItem.className = 'active';
+                              if (movie_player.getPlaybackQuality() == quality) {
+                                 qualityItem.className = 'active';
+                              } else {
+                                 // set max quality limit (viewport + 30%)
+                                 // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
+                                 // set max quality limit (screen resolution + 30%)
+                                 if (+(qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.screen.width * 1.3)) {
+                                    qualityItem.addEventListener('click', () => {
+                                       // console.debug('setPlaybackQuality', quality);
+                                       movie_player.setPlaybackQualityRange(quality, quality);
+                                       // movie_player.setPlaybackQuality(quality); // Doesn't work
+
+                                       if (quality == 'auto') return; // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
+
                                        qualityList.innerHTML = ''; // dirty hack (clear list)
-                                    }
-                                 });
-                              }
-                              else {
-                                 qualityItem.className = 'disable';
-                                 qualityItem.title = 'Max (window viewport + 30%)';
+                                    });
+                                 }
+                                 else {
+                                    qualityItem.className = 'disable';
+                                    qualityItem.title = 'Max (window viewport + 30%)';
+                                 }
                               }
 
                               qualityList.append(qualityItem);

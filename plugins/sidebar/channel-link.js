@@ -18,7 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/376510-youtube-fix-channel-links-in-sidebar-recommendations/discussions/124290
+      // alt1 - https://greasyfork.org/en/scripts/376510-youtube-fix-channel-links-in-sidebar-recommendations/discussions/124290
+      // alt2 - https://greasyfork.org/en/scripts/452335-enter-the-commenter-s-channel-by-youtube-chat
 
       document.addEventListener('mouseover', ({ target }) => {
          //console.debug('>', target);

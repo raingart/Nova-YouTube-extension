@@ -93,7 +93,7 @@ window.nova_plugins.push({
          UNPIN_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
          UNPIN_BTN_SELECTOR = '.' + UNPIN_BTN_CLASS_VALUE; // for css
 
-      // if player fullscreen desable float mode
+      // if player fullscreen disable float mode
       document.addEventListener('fullscreenchange', () =>
          (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE));
 

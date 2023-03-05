@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'player-disable-fullscreen-scroll',
-   title: 'Disable scrolling in Full Screen Mode',
+   title: 'Disable scrolling in Full Screen player',
    'title:zh': '禁用全屏滚动',
    'title:ja': 'フルスクリーンスクロールを無効にする',
    'title:ko': '전체 화면 스크롤 비활성화',

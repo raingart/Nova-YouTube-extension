@@ -2,6 +2,7 @@
 // for testing
 // https://www.youtube.com/watch?v=LhKT9NTH9HA - dont have 480p
 // https://www.youtube.com/watch?v=FZovbrEP53o - dont have 480p
+// https://www.youtube.com/watch?v=E480DjY6ve8 - only 360p
 
 window.nova_plugins.push({
    id: 'video-quality',
@@ -89,8 +90,8 @@ window.nova_plugins.push({
                let availableQualityLevels = movie_player.getAvailableQualityLevels();
                const maxQualityIdx = availableQualityLevels
                   .findIndex(i => qualityFormatListWidth[i] <= (window.innerWidth * 1.3));
-                  // set max quality limit (screen resolution + 30%)
-                  // .findIndex(i => qualityFormatListWidth[i] <= (window.screen.width * 1.3));
+               // set max quality limit (screen resolution + 30%)
+               // .findIndex(i => qualityFormatListWidth[i] <= (window.screen.width * 1.3));
                availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
 

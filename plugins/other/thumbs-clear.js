@@ -122,35 +122,35 @@ window.nova_plugins.push({
             }`);
       }
 
-      if (user_settings.thumbnails_overlay_playing) {
-         // alt - https://greasyfork.org/en/scripts/454694-disable-youtube-inline-playback-on-all-pages/code
+      // if (user_settings.thumbnails_overlay_playing) {
+      //    // alt - https://greasyfork.org/en/scripts/454694-disable-youtube-inline-playback-on-all-pages/code
 
-         // Strategy 1
-         document.addEventListener('yt-action', evt => {
-            // console.log(evt.detail?.actionName);
-            if ([
-               'yt-append-continuation-items-action', // home, results, feed, channel, watch
-               'ytd-update-grid-state-action', // feed, channel
-               'yt-service-request', // results, watch
-               'ytd-rich-item-index-update-action', // home, channel
-            ]
-               .includes(evt.detail?.actionName)
-            ) {
-               document.body.querySelectorAll('#mouseover-overlay')
-                  .forEach(el => el.remove());
-            }
-         });
-         // Strategy 2
-         // NOVA.watchElements({
-         //    selectors: ['#mouseover-overlay'],
-         //    // attr_mark: 'nova-disable-thumb-inline-playback',
-         //    callback: el => {
-         //       el.remove();
-         //       // console.debug('thumb-inline-playback:', el);
-         //       // el.style.border = '2px solid green'; // mark for test
-         //    }
-         // });
-      }
+      //    // Strategy 1
+      //    document.addEventListener('yt-action', evt => {
+      //       // console.log(evt.detail?.actionName);
+      //       if ([
+      //          'yt-append-continuation-items-action', // home, results, feed, channel, watch
+      //          'ytd-update-grid-state-action', // feed, channel
+      //          'yt-service-request', // results, watch
+      //          'ytd-rich-item-index-update-action', // home, channel
+      //       ]
+      //          .includes(evt.detail?.actionName)
+      //       ) {
+      //          document.body.querySelectorAll('#mouseover-overlay')
+      //             .forEach(el => el.remove());
+      //       }
+      //    });
+      //    // Strategy 2
+      //    // NOVA.watchElements({
+      //    //    selectors: ['#mouseover-overlay'],
+      //    //    // attr_mark: 'nova-disable-thumb-inline-playback',
+      //    //    callback: el => {
+      //    //       el.remove();
+      //    //       // console.debug('thumb-inline-playback:', el);
+      //    //       // el.style.border = '2px solid green'; // mark for test
+      //    //    }
+      //    // });
+      // }
 
       // patch end card
       // if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
@@ -309,23 +309,23 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
       },
-      thumbnails_overlay_playing: {
-         _tagName: 'input',
-         label: 'Disable thumbnail preview on hover',
-         'label:zh': '悬停时禁用缩略图预览',
-         'label:ja': 'ホバー時のサムネイル プレビューを無効にする',
-         'label:ko': '호버에서 썸네일 미리보기 비활성화',
-         'label:id': 'Nonaktifkan pratinjau thumbnail saat melayang',
-         'label:es': 'Deshabilitar la vista previa en miniatura al pasar el mouse',
-         'label:pt': 'Desativar a visualização de miniaturas ao passar o mouse',
-         'label:fr': "Désactiver l'aperçu des vignettes au survol",
-         'label:it': "Disabilita l'anteprima in miniatura al passaggio del mouse",
-         // 'label:tr': 'Fareyle üzerine gelindiğinde küçük resim önizlemesini devre dışı bırak',
-         'label:de': 'Deaktivieren Sie die Thumbnail-Vorschau beim Hover',
-         'label:pl': 'Wyłącz podgląd miniatur po najechaniu myszką',
-         'label:ua': 'Вимкнути попередній перегляд ескізів при наведенні',
-         type: 'checkbox',
-      },
+      // thumbnails_overlay_playing: {
+      //    _tagName: 'input',
+      //    label: 'Disable thumbnail preview on hover',
+      //    'label:zh': '悬停时禁用缩略图预览',
+      //    'label:ja': 'ホバー時のサムネイル プレビューを無効にする',
+      //    'label:ko': '호버에서 썸네일 미리보기 비활성화',
+      //    'label:id': 'Nonaktifkan pratinjau thumbnail saat melayang',
+      //    'label:es': 'Deshabilitar la vista previa en miniatura al pasar el mouse',
+      //    'label:pt': 'Desativar a visualização de miniaturas ao passar o mouse',
+      //    'label:fr': "Désactiver l'aperçu des vignettes au survol",
+      //    'label:it': "Disabilita l'anteprima in miniatura al passaggio del mouse",
+      //    // 'label:tr': 'Fareyle üzerine gelindiğinde küçük resim önizlemesini devre dışı bırak',
+      //    'label:de': 'Deaktivieren Sie die Thumbnail-Vorschau beim Hover',
+      //    'label:pl': 'Wyłącz podgląd miniatur po najechaniu myszką',
+      //    'label:ua': 'Вимкнути попередній перегляд ескізів при наведенні',
+      //    type: 'checkbox',
+      // },
       // thumbnails_clear_videowall: {
       //    _tagName: 'input',
       //    label: 'Apply for thumbnails after video ends',

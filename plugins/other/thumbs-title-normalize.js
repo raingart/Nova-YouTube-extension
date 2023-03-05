@@ -22,6 +22,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/445780-youtube-remove-caps-from-videos-titles
       // alt2 - https://chrome.google.com/webstore/detail/pgpdaocammeipkkgaeelifgakbhjoiel
+      // alt3 - https://github.com/MarcGuiselin/youtube-refined/blob/main/code/scripts/common/title-caps.js
 
       const
          VIDEO_TITLE_SELECTOR = [
@@ -58,28 +59,35 @@ window.nova_plugins.push({
       NOVA.watchElements({
          selectors: VIDEO_TITLE_SELECTOR,
          attr_mark: ATTR_MARK,
-         callback: videoTitleEl => {
+         callback: async videoTitleEl => {
             // if (['home, feed, channel, watch'].includes(NOVA.currentPage)) return;
             if (NOVA.currentPage == 'results') return;
             let countCaps = 0;
 
             // need before count
             if (user_settings.thumbnails_title_clear_emoji) {
-               videoTitleEl.textContent = clearOfEmoji(videoTitleEl.textContent).trim();
+               videoTitleEl.textContent = clearOfEmoji(videoTitleEl.innerText).trim();
             }
 
-            const normalizedText = videoTitleEl.textContent.replace(UpperCaseLetterRegex, match => {
+            // wtf? - document.getElementById('video-title').textContent === ''
+
+            const normalizedText = videoTitleEl.innerText.replace(UpperCaseLetterRegex, match => {
                // console.debug('match', match);
                ++countCaps;
-               // skip hasNumber
-               return /\d/.test(match) ? match : match.toLowerCase();
+
+               return (
+                  /\d/.test(match)  // skip hasNumber
+                  || (match.length === 1 && /[A-Z]/.test(match)) // one upper word (latin)
+                  || (match.length < 5 && match.length > 1 && ['USB', 'TV', 'CPU', 'GPU', 'APU', 'AMD', 'XT', 'RX', 'GTX', 'RTX', 'GT', 'FX', 'SE', 'HP', 'RAM', 'PC', 'FPS', 'RDNA', 'FSR', 'DLSS', 'MSI', 'GOTY', 'UI', 'BBC', 'WWE', 'OS', 'OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD'].includes(match)) // specific words (like: AMD RADEON VII)
+                  || (match.length < 5 && /(M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3}))/i.test(match)) // skip roman numerals
+               ) ? match : match.toLowerCase();
             });
             // Upper case
             if (countCaps > MAX_CAPS_LETTERS
                || (countCaps > 1 && normalizedText.split(/\s+/).length === countCaps) // All letters in caps
             ) {
-               videoTitleEl.textContent = normalizedText;
-               // console.debug('normalize:', countCaps, '\n' + videoTitleEl.title, '\n' + videoTitleEl.textContent);
+               videoTitleEl.innerText = normalizedText;
+               // console.debug('normalize:', countCaps, '\n' + videoTitleEl.title, '\n' + videoTitleEl.innerText);
             }
          }
       });
@@ -87,21 +95,21 @@ window.nova_plugins.push({
       // fix bug with not updating thumbnails
       // document.addEventListener('click', ({ target }) => {
       // console.debug('target', target);
-      document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
-         if (evt.detail?.actionName == 'yt-chip-cloud-chip-select-action') { // click on sort thumbs
-            window.addEventListener('transitionend', restoreTitle, { capture: true, once: true });
-         }
-      });
+      // document.addEventListener('yt-action', evt => {
+      //    // console.log(evt.detail?.actionName);
+      //    if (evt.detail?.actionName == 'yt-chip-cloud-chip-select-action') { // click on sort thumbs
+      //       window.addEventListener('transitionend', restoreTitle, { capture: true, once: true });
+      //    }
+      // });
       // }, { capture: true, once: true });
       function restoreTitle() {
          const selectorOldTitle = '#video-title-link[title]';
          if (NOVA.channelTab == 'videos') {
             document.body.querySelectorAll(`${selectorOldTitle} ${VIDEO_TITLE_SELECTOR}[${ATTR_MARK}]`)
-            // document.body.querySelectorAll(`${selectorOldTitle} [${ATTR_MARK}]`)
+               // document.body.querySelectorAll(`${selectorOldTitle} [${ATTR_MARK}]`)
                .forEach(el => {
                   if (oldTitle = el.closest(selectorOldTitle)?.title) {
-                     el.textContent = oldTitle;
+                     el.innerText = oldTitle;
                      el.removeAttribute(ATTR_MARK);
                   }
                });
@@ -151,7 +159,8 @@ window.nova_plugins.push({
       },
       thumbnails_title_clear_emoji: {
          _tagName: 'input',
-         label: 'Clear emoji',
+         label: 'Remove emoji',
+         // label: 'Remove symbols and emoji',
          'label:zh': '从表情符号中清除标题',
          'label:ja': 'クリア絵文字',
          'label:ko': '이모티콘 지우기',

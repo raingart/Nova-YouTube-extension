@@ -101,7 +101,7 @@ window.nova_plugins.push({
                   evt.preventDefault();
 
                   if (evt[user_settings.rate_hotkey]
-                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey)) {
+                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)) {
                      // console.debug('hotkey caught');
                      const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
                      // console.debug('current rate:', rate);

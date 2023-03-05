@@ -59,9 +59,9 @@ window.nova_plugins.push({
 
       function insertButton() {
          NOVA.waitElement('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed')
-            .then(el => rendeButton(el));
+            .then(el => createButton(el));
 
-         function rendeButton(container = required()) {
+         function createButton(container = required()) {
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
             document.getElementById(SELECTOR_ID)?.remove(); // clear old
@@ -74,14 +74,6 @@ window.nova_plugins.push({
             reverseBtn.id = SELECTOR_ID;
             renderTitle(); // refresh only after page transitionend
             reverseBtn.innerHTML =
-               // `<yt-icon-button>
-               //    <svg viewBox="0 0 16 20">
-               //       <g>
-               //          <polygon points="7,8 3,8 3,14 0,14 5,20 10,14 7,14"/>
-               //          <polygon points="'11,0 6,6 9,6 9,12 13,12 13,6 16,6"/>
-               //       </g>
-               //    </svg>
-               // </yt-icon-button>`;
                `<yt-icon-button>
                   <svg viewBox="0 0 381.399 381.399" height="100%" width="100%">
                      <g>
@@ -179,7 +171,7 @@ window.nova_plugins.push({
             if (next_button = document.body.querySelector('.ytp-next-button')) {
                next_button.href = nextURL;
                next_button.dataset.preview = nextItem.querySelector('img').src;
-               next_button.dataset.tooltipText = nextItem.querySelector('#video-title').textContent;
+               next_button.dataset.tooltipText = nextItem.querySelector('#video-title').innerText;
             }
             if (manager = document.body.querySelector('yt-playlist-manager')?.autoplayData.sets[0].nextButtonVideo) {
                manager.commandMetadata.webCommandMetadata.url = nextURL.replace(location.origin, '');

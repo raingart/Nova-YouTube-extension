@@ -31,23 +31,26 @@ window.nova_plugins.push({
          playlistURL = rssLinkPrefix + '?playlist_id=' + NOVA.queryURL.get('list'),
          genChannelURL = channelId => rssLinkPrefix + '?channel_id=' + channelId;
 
-
       switch (NOVA.currentPage) {
          case 'channel':
-            // NOVA.waitElement('#channel-header #channel-name')
-            NOVA.waitElement('#links-holder #primary-links')
+            NOVA.waitElement('#channel-header #links-holder #primary-links')
                .then(async container => {
                   // Doesn't work.
                   // https://www.youtube.com/feeds/videos.xml?user=<username>
-
                   // if ((channelName_ = document.body.querySelector('#channel-handle')?.textContent)
                   //    && channelName_.startsWith('@')
                   // ) {
                   //    channelName = channelName_.substring(1);
                   // }
 
-                  if (url = document.querySelector('link[type="application/rss+xml"][href]')?.href
-                     || genChannelURL(await NOVA.getChannelId(user_settings['user-api-key']))
+                  // fix https://github.com/raingart/Nova-YouTube-extension/issues/60
+                  if (!NOVA.getInt(NOVA.css.getValue('#header div.banner-visible-area', 'height'))) {
+                     // if (!NOVA.isInViewport(container)) { // incorrect definition
+                     container = document.body.querySelector('#channel-header #inner-header-container #buttons');
+                  }
+
+                  if (url = (document.querySelector('link[type="application/rss+xml"][href]')?.href
+                     || genChannelURL(await NOVA.getChannelId(user_settings['user-api-key'])))
                   ) {
                      insertToHTML({ 'url': url, 'container': container });
                   }
@@ -70,7 +73,8 @@ window.nova_plugins.push({
             const link = document.createElement('a');
             link.id = SELECTOR_ID;
             link.target = '_blank';
-            // btn.className = `ytp-button ${SELECTOR_CLASS}`;
+            link.title = 'RSS';
+            // link.className = ``;
             link.innerHTML =
                // `<svg viewBox="-28.364 -29.444 42.324 42.822" height="100%" width="100%">
                `<svg viewBox="-40 -40 55 55" height="100%" width="100%" style="width: auto;">

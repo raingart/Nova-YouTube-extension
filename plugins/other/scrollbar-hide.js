@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'scrollbar-hide',
-   title: 'Hide scrollbar',
+   title: 'Hide scrollbar in watch page',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -18,6 +18,37 @@ window.nova_plugins.push({
    section: 'other',
    _runtime: user_settings => {
 
+      const HIDE_SCROLL_ATTR = 'nova-scrollbar-hide';
+
+      NOVA.css.push(
+         `html[${HIDE_SCROLL_ATTR}] body {
+            overflow: hidden;
+         }`);
+
+      NOVA.runOnPageInitOrTransition(() => {
+         let hasAttr = document.documentElement.hasAttribute(HIDE_SCROLL_ATTR);
+         if ((NOVA.currentPage == 'watch') && !hasAttr) {
+            // document.documentElement.setAttribute(HIDE_SCROLL_ATTR, true); // add
+            document.documentElement.toggleAttribute(HIDE_SCROLL_ATTR); // add
+         }
+         else if ((NOVA.currentPage != 'watch') && hasAttr) {
+            document.documentElement.removeAttribute(HIDE_SCROLL_ATTR); // remove
+         }
+      });
+
+      // scroll event
+      // const needScroll = () => document.documentElement.scrollHeight > window.innerHeight;
+      // let scrollbarState = needScroll();
+      // window.addEventListener('scroll', () => {
+      //    console.debug('', 1);
+      //    if (NOVA.currentPage == 'watch') return;
+      //    if (scrollbarState != needScroll()) {
+      //       console.debug('', 111);
+      //       scrollbarState = needScroll()
+      //       document.documentElement.toggleAttribute(HIDE_SCROLL_ATTR);
+      //    }
+      // });
+
       if (user_settings.scrollbar_hide_livechat && NOVA.currentPage == 'live_chat') {
          return NOVA.css.push(
             `*,
@@ -31,58 +62,8 @@ window.nova_plugins.push({
             }`);
       }
 
-      if (user_settings.scrollbar_hide) {
-         const HIDE_SCROLL_ATTR = 'nova-scrollbar-hide';
-
-         NOVA.css.push(
-            `html[${HIDE_SCROLL_ATTR}] body {
-               overflow: hidden;
-            }`);
-
-         NOVA.runOnPageInitOrTransition(() => {
-            let hasAttr = document.documentElement.hasAttribute(HIDE_SCROLL_ATTR);
-            if ((NOVA.currentPage == 'watch') && !hasAttr) {
-               // document.documentElement.setAttribute(HIDE_SCROLL_ATTR, true); // add
-               document.documentElement.toggleAttribute(HIDE_SCROLL_ATTR); // add
-            }
-            else if ((NOVA.currentPage != 'watch') && hasAttr) {
-               document.documentElement.removeAttribute(HIDE_SCROLL_ATTR); // remove
-            }
-         });
-
-         // scroll event
-         // const needScroll = () => document.documentElement.scrollHeight > window.innerHeight;
-         // let scrollbarState = needScroll();
-         // window.addEventListener('scroll', () => {
-         //    console.debug('', 1);
-         //    if (NOVA.currentPage == 'watch') return;
-         //    if (scrollbarState != needScroll()) {
-         //       console.debug('', 111);
-         //       scrollbarState = needScroll()
-         //       document.documentElement.toggleAttribute(HIDE_SCROLL_ATTR);
-         //    }
-         // });
-      }
-
    },
    options: {
-      scrollbar_hide: {
-         _tagName: 'input',
-         label: 'Only in watch page',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
-         type: 'checkbox',
-      },
       scrollbar_hide_livechat: {
          _tagName: 'input',
          label: 'In live-chat',

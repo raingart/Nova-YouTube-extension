@@ -1,8 +1,8 @@
 const App = {
-   lastURL: location.href,
+   prevURL: location.href,
 
    isURLChange() {
-      return (this.lastURL === location.href) ? false : this.lastURL = location.href;
+      return (this.prevURL === location.href) ? false : this.prevURL = location.href;
    },
 
    isMobile: location.host == 'm.youtube.com',
@@ -50,7 +50,7 @@ const App = {
       this.storage.load.apply(this);
       // load all Plugins
       Plugins.injectScript('window.nova_plugins = [];');
-      Plugins.load(['common-lib.js']);
+      Plugins.load(['nova-api.js']);
       Plugins.load(); // all
    },
 
@@ -155,6 +155,7 @@ const App = {
          `const _pluginsCaptureException = ${openBugReport};
          window.addEventListener('unhandledrejection', err => {
             if (!err.reason.stack?.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+
             console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=${encodeURIComponent([chrome.runtime.getManifest().version, navigator.userAgent].join(' | '))}\`);
 
             _pluginsCaptureException({

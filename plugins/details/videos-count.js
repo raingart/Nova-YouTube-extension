@@ -52,7 +52,6 @@ window.nova_plugins.push({
             //             });
             //          });
             //    });
-            // break;
 
             NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
                .then(el => setVideoCount(el));

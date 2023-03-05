@@ -1,5 +1,46 @@
+/*
+   full fusctions list in NOVA:
+   - waitElement
+   - waitUntil
+   - sleep
+   - watchElements
+   - runOnPageInitOrTransition
+   - css.push
+   - css.getValue
+   //- cookie.get
+   //- cookie.getParamLikeObj
+   //- cookie.updateParam
+   - isInViewport
+   - collapseElement
+   - calculateAspectRatio.sizeToFit
+   - calculateAspectRatio.fitToSize
+   - bezelTrigger
+   - getChapterList
+   - searchFilterHTML
+   - isMusic
+   - timeFormatTo.hmsToSec
+   - timeFormatTo.HMS.digit
+   - timeFormatTo.HMS.abbr
+   - timeFormatTo.ago
+   - queryURL.has
+   - queryURL.get
+   - queryURL.set
+   - queryURL.remove
+   - request.API
+   - getPlayerState
+   - getChannelId
+
+   // data (not fn)
+   - videoElement
+   - currentPage
+   - isMobile;
+*/
+
+
 const NOVA = {
    // DEBUG: true,
+
+   getInt: str => str && parseInt(str.replace(/\D/g, ''), 10),
 
    // find once.
    // more optimized compared to MutationObserver
@@ -198,8 +239,8 @@ const NOVA = {
       if (!callback || typeof callback !== 'function') {
          return console.error('runOnPageInitOrTransition > callback not function:', ...arguments);
       }
-      let lastURL = location.href;
-      const isURLChange = () => (lastURL === location.href) ? false : lastURL = location.href;
+      let prevURL = location.href;
+      const isURLChange = () => (prevURL === location.href) ? false : prevURL = location.href;
       // init
       isURLChange() || callback();
       // update
@@ -281,6 +322,7 @@ const NOVA = {
       /**
        * @param  {string} selector
        * @param  {string} prop_name
+       * @param  {boolean} int
        * @return {string}
       */
       // https://developer.mozilla.org/ru/docs/Web/API/CSSStyleDeclaration
@@ -343,6 +385,23 @@ const NOVA = {
    //       }
    //    },
    // },
+
+   /**
+    * @param  {HTMLElement} el
+    * @return  {boolean}
+   */
+   isInViewport(el = required()) {
+      if (!(el instanceof HTMLElement)) return console.error('el is not HTMLElement type:', el);
+
+      if (bounding = el.getBoundingClientRect()) {
+         return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= window.innerHeight &&
+            bounding.right <= window.innerWidth
+         );
+      }
+   },
 
    /* NOVA.collapseElement({
          selector: '#secondary #related',
@@ -462,20 +521,19 @@ const NOVA = {
     * @return {array}
    */
    getChapterList(video_duration = required()) {
-
       let timestampsCollect = [];
 
       // Strategy 1
       if (NOVA.currentPage != 'embed') {
          // export to timestampsCollect
-         getFromDescription(); // does not work in embed
+         getFromDescriptionText() || getFromDescriptionChaptersBlock(); // does not work in embed
       }
 
       return timestampsCollect.length ? timestampsCollect
          : getFromAPI(); // Strategy 2
 
 
-      function getFromDescription() {
+      function getFromDescriptionText() {
          const selectorTimestampLink = 'a[href*="&t="]';
          let
             nowComment,
@@ -487,13 +545,14 @@ const NOVA = {
                document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.shortDescription
                || document.body.querySelector('ytd-watch-metadata #description.ytd-watch-metadata')?.textContent
             ),
+
             // first comment (pinned)
             // '#comments ytd-comment-thread-renderer:first-child #content',
             // all comments
             // Strategy 1. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
             //...[...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
             // Strategy 2
-            ...[...document.body.querySelectorAll(`#comments #comment #comment-content a[href*="&t="] + *:last-child`)]
+            ...[...document.body.querySelectorAll(`#comments #comment #comment-content ${selectorTimestampLink} + *:last-child`)]
                // .map(el => el.closest('#comment')?.textContent),
                .map(el => ({
                   'source': 'comment',
@@ -504,6 +563,8 @@ const NOVA = {
                if (timestampsCollect.length > 1) return; // skip if exist in priority selector (#1 description, #2 comments)
                // needed for check, applying sorting by timestamps
                nowComment = Boolean(data?.source);
+
+               console.debug('data', data);
 
                (data?.text || data)
                   ?.split('\n')
@@ -540,12 +601,11 @@ const NOVA = {
                   });
             });
 
-         // if 1 mark < 30% video_duration. Ex skip intro info in comment
-         if (nowComment && timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 3)) {
+         // if 1 mark < 25% video_duration
+         if (timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 4)) {
             return timestampsCollect;
          }
-
-         if (timestampsCollect.length > 1) {
+         else if (timestampsCollect.length > 1) {
             if (nowComment) {
                // apply sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
                timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
@@ -554,6 +614,37 @@ const NOVA = {
             return timestampsCollect;
          }
       }
+
+      async function getFromDescriptionChaptersBlock() {
+         await NOVA.sleep(500); // firty fix. Wait load all chapters
+
+         const selectorTimestampLink = 'a[href*="&t="]';
+         document.body.querySelectorAll(`#structured-description ${selectorTimestampLink}`)
+         // document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
+            .forEach(chaperLink => {
+               // console.debug('>', chaperLink);
+               if (sec = NOVA.getInt(NOVA.queryURL.get('t', chaperLink.href))) {
+                  timestampsCollect.push({
+                     'time': NOVA.timeFormatTo.HMS.digit(sec),
+                     'sec': sec,
+                     'title': chaperLink.textContent.trim().split('\n')[0].trim(),
+                     // in #structured-description
+                     // 'time': chaperLink.querySelector('#time')?.textContent,
+                     // 'title': chaperLink.querySelector('h4')?.textContent,
+                  });
+               }
+            });
+
+         // if 1 mark < 25% video_duration. Ex skip intro info in comment
+         if (timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 4)) {
+            return timestampsCollect;
+         }
+         else if (timestampsCollect.length > 1) {
+            // console.debug('timestampsCollect', timestampsCollect);
+            return timestampsCollect;
+         }
+      }
+
       // alt - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked/code
       function getFromAPI() {
          // console.debug('getFromAPI');
@@ -866,6 +957,32 @@ const NOVA = {
             //    )
             //    .join('');
          },
+      },
+
+      /**
+       * @param  {date} date
+       * @return {string}
+      */
+      // timeSince(date = required()) { // format out "1 day"
+      ago(date = required()) { // format out "1 day"
+         if (!(date instanceof Date)) return console.error('"date" is not Date type:', date);
+
+         const samples = [
+            { label: 'year', seconds: 31536000 },
+            { label: 'month', seconds: 2592000 },
+            { label: 'day', seconds: 86400 },
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 1 }
+         ];
+         const
+            now = date.getTime(),
+            seconds = Math.floor((Date.now() - Math.abs(now)) / 1000),
+            interval = samples.find(i => i.seconds < seconds),
+            time = Math.floor(seconds / interval.seconds);
+
+         // return `${time} ${interval.label}${time !== 1 ? 's' : ''} ago`;
+         return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
       },
    },
 
