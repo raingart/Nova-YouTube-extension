@@ -6,6 +6,7 @@
 
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
+   // title: 'Sticky progress bar',
    title: 'Float player progress bar',
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
@@ -45,7 +46,7 @@ window.nova_plugins.push({
             const
                // async fix embed when disable chrome-bottom (example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
                chromeBtn_zIndex = await NOVA.waitUntil(() => (chromeBtn = document.body.querySelector('.ytp-chrome-bottom')) && getComputedStyle(chromeBtn)['z-index']),
-               container = renderFloatBar(chromeBtn_zIndex),
+               container = insertFloatBar(chromeBtn_zIndex),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
@@ -115,6 +116,9 @@ window.nova_plugins.push({
             }
 
             function notInteractiveToRender() {
+               // conflict with plugin [player-control-below] (excluding fullscreen player mode)
+               if (user_settings['player-control-below'] && NOVA.isFullscreen()) return;
+
                return (document.visibilityState == 'hidden' // tab inactive
                   || movie_player.getVideoData().isLive
                   // || !movie_player.classList.contains('ytp-autohide') // dubious optimization hack
@@ -123,9 +127,9 @@ window.nova_plugins.push({
 
          });
 
-      function renderFloatBar(z_index = 60) {
+      function insertFloatBar(z_index = 60) {
          return document.getElementById(SELECTOR_ID) || (function () {
-            movie_player?.insertAdjacentHTML('beforeend',
+            movie_player.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="transition">
                   <div class="container">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
@@ -156,7 +160,7 @@ window.nova_plugins.push({
                }
 
                /*.ytp-chrome-bottom[hidden],*/
-               .ytp-autohide ${SELECTOR} {
+               #movie_player.ytp-autohide ${SELECTOR} {
                   visibility: visible;
                }
 

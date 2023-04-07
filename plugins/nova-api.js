@@ -1,8 +1,8 @@
 /*
+   NOVA - complex solutions to simple problems
    full fusctions list in NOVA:
    - waitElement
    - waitUntil
-   - sleep
    - watchElements
    - runOnPageInitOrTransition
    - css.push
@@ -10,10 +10,16 @@
    //- cookie.get
    //- cookie.getParamLikeObj
    //- cookie.updateParam
+   - delay
+   //- extractFirstInt
+   - prettyRoundInt
    - isInViewport
    - collapseElement
-   - calculateAspectRatio.sizeToFit
-   - calculateAspectRatio.fitToSize
+   - aspectRatio.sizeToFit
+   - aspectRatio.getAspectRatio
+   - aspectRatio.getAspectRatioFromList
+   - aspectRatio.calculateHeight
+   - aspectRatio.calculateWidth
    - bezelTrigger
    - getChapterList
    - searchFilterHTML
@@ -21,26 +27,28 @@
    - timeFormatTo.hmsToSec
    - timeFormatTo.HMS.digit
    - timeFormatTo.HMS.abbr
+   //- timeFormatTo.HMS.abbrFull
    - timeFormatTo.ago
+   - updateUrl
    - queryURL.has
    - queryURL.get
    - queryURL.set
    - queryURL.remove
    - request.API
    - getPlayerState
+   - isFullscreen
+   //- videoId
    - getChannelId
+   //- seachInObjectBy.key
 
    // data (not fn)
    - videoElement
    - currentPage
-   - isMobile;
+   - isMobile
 */
-
 
 const NOVA = {
    // DEBUG: true,
-
-   getInt: str => str && parseInt(str.replace(/\D/g, ''), 10),
 
    // find once.
    // more optimized compared to MutationObserver
@@ -77,7 +85,7 @@ const NOVA = {
    /**
     * @param  {string} selector
     * @param  {HTMLElement*} container
-    * @return {Promise}
+    * @return {Promise<Element>}
    */
    // untilDOM
    waitElement(selector = required(), container) {
@@ -92,7 +100,7 @@ const NOVA = {
       // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
       // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
       // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
-      // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur/code)
+      // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur)
 
       // There is a more correct method - transitionend.
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
@@ -107,7 +115,7 @@ const NOVA = {
          new MutationObserver((mutationRecordsArray, observer) => {
             for (const record of mutationRecordsArray) {
                for (const node of record.addedNodes) {
-                  if (![1, 3, 8].includes(node.nodeType)) continue; // speedup hack
+                  if (![1, 3, 8].includes(node.nodeType) || !(node instanceof HTMLElement)) continue; // speedup hack
 
                   if (node.matches && node.matches(selector)) { // this node
                      // console.debug('[2]', record.type, node.nodeType, selector);
@@ -144,11 +152,11 @@ const NOVA = {
    /**
     * @param  {function} condition
     * @param  {int*} timeout
-    * @return {Promise}
+    * @return {Promise<fn>}
    */
    /** wait for every DOM change until a condition becomes true */
    // await NOVA.waitUntil(?, 500) // 500ms
-   async waitUntil(condition = required(), timeout = 100) {
+   waitUntil(condition = required(), timeout = 100) {
       if (typeof condition !== 'function') return console.error('waitUntil > condition is not fn:', typeof condition);
 
       return new Promise((resolve) => {
@@ -169,10 +177,6 @@ const NOVA = {
       });
    },
 
-   async sleep(timeout = 100) {
-      return new Promise(resolve => setTimeout(resolve, timeout));
-   },
-
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
    // clear_watchElements(name = required()) {
@@ -188,7 +192,7 @@ const NOVA = {
     * @param  {array/string} condition
     * @param  {string*} attr_mark
     * @param  {function} callback
-    * @return {}
+    * @return {void}
    */
    watchElements({ selectors = required(), attr_mark, callback = required() }) {
       // console.debug('watch', selector);
@@ -233,7 +237,7 @@ const NOVA = {
 
    /**
     * @param  {function} callback
-    * @return {}
+    * @return {void}
    */
    runOnPageInitOrTransition(callback) {
       if (!callback || typeof callback !== 'function') {
@@ -252,7 +256,7 @@ const NOVA = {
     * @param  {obj/string} css
     * @param  {string*} selector
     * @param  {boolean*} important
-    * @return {}
+    * @return {void}
    */
    css: {
       push(css = required(), selector, important) {
@@ -301,7 +305,7 @@ const NOVA = {
                   const style = document.createElement('style');
                   style.type = 'text/css';
                   style.id = sheetId;
-                  return document.head.appendChild(style);
+                  return (document.head || document.documentElement).appendChild(style);
                })();
             }
 
@@ -386,6 +390,42 @@ const NOVA = {
    //    },
    // },
 
+   // await NOVA.delay(500);
+   delay(ms = 100) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+   },
+
+   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, ''), 10),
+
+   /**
+    * @param  {integer/string} num
+    * @return {string}
+   */
+   // prettyRoundInt(num) { // conver number "2111" > "2K" (without decimals)
+   //    num = +num;
+   //    if (num === 0) return '';
+   //    else if (num < 1000) return num;
+   //    else if (num < 990000) return Math.max(1, Math.round(num / 1000)) + 'K'; // K on youtube are never decimals
+   //    else if (num < 990000000) return Math.max(1, Math.round(num / 100000) / 10) + 'M';
+   //    else return Math.max(1, Math.round(num / 100000000) / 10) + 'B';
+   // },
+   // 81.46% slower
+   prettyRoundInt(num) { // conver number "2111" > "2.1K"
+      num = +num;
+      if (num === 0) return '';
+      if (num < 1000) return num; // speed up
+      const sizes = ['', 'K', 'M', 'B'];
+      const i = Math.floor(Math.log(Math.abs(num)) / Math.log(1000));
+      if (!sizes[i]) return num; // out range
+
+      return round(num / 1000 ** i, 1) + sizes[i];
+
+      function round(n, precision = 2) {
+         const prec = 10 ** precision;
+         return Math.floor(n * prec) / prec;
+      }
+   },
+
    /**
     * @param  {HTMLElement} el
     * @return  {boolean}
@@ -413,7 +453,7 @@ const NOVA = {
     * @param  {string} selector
     * @param  {string} title
     * @param  {boolean} remove
-    * @return {}
+    * @return {void}
    */
    collapseElement({ selector = required(), title = required(), remove }) {
       // console.debug('collapseElement', ...arguments);
@@ -450,15 +490,14 @@ const NOVA = {
          });
    },
 
-   calculateAspectRatio: {
+   aspectRatio: {
       /**
        * @param  {object} 4 int
        * @return {object} 2 int
       */
       sizeToFit({
          srcWidth = 0, srcHeight = 0,
-         maxWidth = window.innerWidth,
-         maxHeight = window.innerHeight
+         maxWidth = window.innerWidth, maxHeight = window.innerHeight
       }) {
          // console.debug('aspectRatioFit:', ...arguments);
          const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
@@ -467,22 +506,82 @@ const NOVA = {
             height: +srcHeight * aspectRatio,
          };
       },
+
       /**
        * @param  {object} 2 int
        * @return {object} string
       */
-      fitToSize({ width = required(), height = required() }) {
+      // extractRatio({ width = required(), height = required() }) {
+      getAspectRatio({ width = required(), height = required() }) {
          const
             gcd = (a, b) => b ? gcd(b, a % b) : a,
             divisor = gcd(width, height);
 
          return width / divisor + ':' + height / divisor;
       },
+
+      /**
+       * @param  {object} 2 int
+       * @return {int}
+      */
+      chooseAspectRatio({ width = required(), height = required(), layout }) {
+         // from list ['4:3', '16:9']
+         // const ratio = width / height;
+         // return (Math.abs(ratio - 4 / 3) < Math.abs(ratio - 16 / 9)) ? '4:3' : '16:9';
+
+         const acceptedRatioList = {
+            'landscape': {
+               '1:1': 1,
+               '3:2': 1.5,
+               '4:3': 1.33333333333,
+               '5:4': 1.25,
+               '5:3': 1.66666666667,
+               '16:9': 1.77777777778,
+               '16:10': 1.6,
+               '17:9': 1.88888888889,
+               '21:9': 2.33333333333,
+               '24:10': 2.4,
+            },
+            'portrait': {
+               '1:1': 1,
+               '2:3': .66666666667,
+               '3:4': .75,
+               '3:5': .6,
+               '4:5': .8,
+               '9:16': .5625,
+               '9:17': .5294117647,
+               '9:21': .4285714286,
+               '10:16': .625,
+            },
+         };
+         return choiceRatioFromList(this.getAspectRatio(...arguments)) || acceptedRatioList['landscape']['16:9'];
+
+         function choiceRatioFromList(ratio = required()) {
+            const layout_ = layout || ((ratio < 1) ? 'portrait' : 'landscape');
+            return acceptedRatioList[layout_][ratio];
+         }
+      },
+
+      /**
+       * @param  {height|width} int
+       * @param  {aspectRatio*} int
+       * @return {int}
+       * source - https://codepen.io/codemediaweb/pen/OJjmwNJ
+      */
+      calculateHeight: (width = required(), aspectRatio = (16 / 9)) => parseFloat((width / aspectRatio).toFixed(2)),
+      calculateWidth: (height = required(), aspectRatio = (16 / 9)) => parseFloat((height * aspectRatio).toFixed(2)),
+      // universale
+      // fitToSize({ width, height, aspectRatio = (16 / 9) }) {
+      // sizeToRatio({ width, height, aspectRatio = (16 / 9) }) {
+      //    if (ratio = width ? (height / aspectRatio) : width ? (height / aspectRatio) : null) {
+      //       return parseFloat(ratio).toFixed(2);
+      //    }
+      // },
    },
 
    /**
     * @param  {string} text
-    * @return {}
+    * @return {void}
    */
    bezelTrigger(text) {
       // console.debug('bezelTrigger', ...arguments);
@@ -521,21 +620,25 @@ const NOVA = {
     * @return {array}
    */
    getChapterList(video_duration = required()) {
-      let timestampsCollect = [];
-
       // Strategy 1
-      if (NOVA.currentPage != 'embed') {
-         // export to timestampsCollect
-         getFromDescriptionText() || getFromDescriptionChaptersBlock(); // does not work in embed
+      if (NOVA.currentPage != 'embed'
+         && (chapsCollect = getFromDescriptionText() || getFromDescriptionChaptersBlock()) // Doesn't work in embed
+         && chapsCollect.length
+      ) {
+         return chapsCollect;
       }
-
-      return timestampsCollect.length ? timestampsCollect
-         : getFromAPI(); // Strategy 2
+      // Strategy 2
+      else {
+         chapsCollect = getFromAPI();
+      }
+      // console.debug('chapsCollect', chapsCollect);
+      return chapsCollect;
 
 
       function getFromDescriptionText() {
          const selectorTimestampLink = 'a[href*="&t="]';
          let
+            timestampsCollect = [],
             nowComment,
             prevSec = -1;
 
@@ -556,15 +659,13 @@ const NOVA = {
                // .map(el => el.closest('#comment')?.textContent),
                .map(el => ({
                   'source': 'comment',
-                  'text': el.closest('#comment')?.textContent,
+                  'text': el.closest('#comment-content')?.textContent,
                })),
          ]
             .forEach(data => {
                if (timestampsCollect.length > 1) return; // skip if exist in priority selector (#1 description, #2 comments)
                // needed for check, applying sorting by timestamps
                nowComment = Boolean(data?.source);
-
-               console.debug('data', data);
 
                (data?.text || data)
                   ?.split('\n')
@@ -616,14 +717,15 @@ const NOVA = {
       }
 
       async function getFromDescriptionChaptersBlock() {
-         await NOVA.sleep(500); // firty fix. Wait load all chapters
+         await NOVA.delay(500); // firty fix. Wait load all chapters
 
          const selectorTimestampLink = 'a[href*="&t="]';
+         let timestampsCollect = [];
          document.body.querySelectorAll(`#structured-description ${selectorTimestampLink}`)
-         // document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
+            // document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
             .forEach(chaperLink => {
                // console.debug('>', chaperLink);
-               if (sec = NOVA.getInt(NOVA.queryURL.get('t', chaperLink.href))) {
+               if (sec = parseInt(NOVA.queryURL.get('t', chaperLink.href))) {
                   timestampsCollect.push({
                      'time': NOVA.timeFormatTo.HMS.digit(sec),
                      'sec': sec,
@@ -634,7 +736,6 @@ const NOVA = {
                   });
                }
             });
-
          // if 1 mark < 25% video_duration. Ex skip intro info in comment
          if (timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 4)) {
             return timestampsCollect;
@@ -645,11 +746,10 @@ const NOVA = {
          }
       }
 
-      // alt - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked/code
       function getFromAPI() {
          // console.debug('getFromAPI');
          if (!window.ytPubsubPubsubInstance) {
-            return console.error('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
+            return console.warn('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
          }
 
          const data = Object.values((
@@ -717,7 +817,7 @@ const NOVA = {
     * @param  {string} keyword
     * @param  {string} filter_selectors
     * @param  {boolean*} highlight_selector
-    * @return {}
+    * @return {void}
    */
    searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector }) {
       // console.debug('searchFilterHTML:', ...arguments);
@@ -727,12 +827,15 @@ const NOVA = {
          .forEach(item => {
             const
                text = item.textContent,
+               // text = item.innerText,
                // text = item.querySelector(highlight_selector).getAttribute('title'),
                hasText = text?.toLowerCase().includes(keyword),
                highlight = el => {
-                  // el.innerHTML = el.textContent
-                  el.innerHTML = el.innerHTML
-                     .replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  if (el.innerHTML.includes('<mark ')) {
+                     // el.innerHTML = el.textContent
+                     el.innerHTML = el.innerHTML
+                        .replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  }
                   item.style.display = hasText ? '' : 'none'; // hide el out of search
                   if (hasText && keyword) {
                      highlightTerm({
@@ -763,6 +866,7 @@ const NOVA = {
    /**
     * @return {boolean}
    */
+   // isMusicChannel() {
    isMusic() {
       return checkMusicType();
       // const
@@ -776,10 +880,11 @@ const NOVA = {
       //    // console.debug(CACHE_PREFIX, 'cache:', storage);
       //    return JSON.parse(storage);
       // }
+      // save
       // else {
       //    const state = checkMusicType();
       //    // console.debug(CACHE_PREFIX, 'gen:', state);
-      //    sessionStorage.setItem(cacheName, Boolean(state)); // save
+      //    sessionStorage.setItem(cacheName, Boolean(state));
       //    return state;
       // }
 
@@ -788,12 +893,13 @@ const NOVA = {
       // });
 
       function checkMusicType() {
+         // await NOVA.waitUntil(() => typeof movie_player === 'object');
          const
             // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
             // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.author,
             // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
-            channelName = movie_player.getVideoData().author.toUpperCase(), // UpperCase
-            titleStr = movie_player.getVideoData().title,
+            channelName = movie_player.getVideoData().author,
+            titleStr = movie_player.getVideoData().title.toUpperCase(),
             titleWordsList = titleStr?.toUpperCase().match(/\w+/g), // UpperCase
             playerData = document.body.querySelector('ytd-watch-flexy')?.playerData;
 
@@ -832,7 +938,7 @@ const NOVA = {
             || (channelName && /(VEVO|Topic|Records|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
 
             // specific word in channel
-            || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName)) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
+            || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
             // word
             || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
@@ -876,15 +982,16 @@ const NOVA = {
       //       return arr.reduce((acc, time) => (60 * acc) + +time);
       //    }
       // },
-      hmsToSec(str) { // format out "h:mm:ss" > "sec"
+      hmsToSec(str) { // format out "h:mm:ss" > "sec". if str dont have ":" return zero
          let
-            parts = str.split(':'),
-            sec = 0;
-         switch (parts.length) {
-            case 2: sec = parts[0] * 60 + parts[1] * 1; break;
-            case 3: sec = parts[0] * 60 * 60 + parts[1] * 60 + parts[2] * 1; break;
+            parts = str?.split(':'),
+            t = 0;
+         switch (parts?.length) {
+            case 2: t = (parts[0] * 60); break;
+            case 3: t = (parts[0] * 60 * 60) + (parts[1] * 60); break;
+            case 4: t = (parts[0] * 24 * 60 * 60) + (parts[1] * 60 * 60) + (parts[2] * 60); break;
          }
-         return sec;
+         return t + +parts.pop();
       },
 
       HMS: {
@@ -957,6 +1064,42 @@ const NOVA = {
             //    )
             //    .join('');
          },
+
+         /**
+          * @param  {ts} int
+          * @return {string}
+         */
+         // abbrFull(ts) {
+         //    const plural = (amount, name) => {
+         //       return (amount == 1 ? '1 ' + name : amount + ' ' + name + 's');
+         //    };
+         //    const pluralandplural = (amount1, name1, amount2, name2) => {
+         //       return plural(amount1, name1) + (amount2 == 0 ? '' : ' and ' + plural(amount2, name2));
+         //    };
+
+         //    if (ts >= 86400) {
+         //       const
+         //          days = Math.floor(ts / 86400),
+         //          hours = Math.round(ts / 3600 - days * 24);
+         //       return pluralandplural(days, 'day', hours, 'hour');
+         //    }
+         //    else if (ts >= 3600) {
+         //       const
+         //          hours = Math.floor(ts / 3600),
+         //          minutes = Math.round(ts / 60 - hours * 60);
+         //       return pluralandplural(hours, 'hour', minutes, 'min');
+         //    }
+         //    else if (ts >= 60) {
+         //       const
+         //          minutes = Math.floor(ts / 60),
+         //          seconds = Math.round(ts - minutes * 60);
+         //       return pluralandplural(minutes, 'min', seconds, 'sec');
+         //    }
+         //    else {
+         //       const seconds = Math.max(0, Math.floor(ts));
+         //       return plural(seconds, 'second');
+         //    }
+         // },
       },
 
       /**
@@ -985,6 +1128,12 @@ const NOVA = {
          return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
       },
    },
+
+   /**
+    * @param  {string} new_url
+    * @return {void}
+   */
+   updateUrl: (new_url = required()) => window.history.replaceState(null, null, new_url),
 
    queryURL: {
       // const videoId = new URLSearchParams(window.location.search).get('v');
@@ -1078,7 +1227,9 @@ const NOVA = {
                .then(json => {
                   if (!json?.error && Object.keys(json).length) return json;
                   console.warn('used key:', NOVA.queryURL.get('key', URL));
-                  throw new Error(JSON.stringify(json?.error));
+                  if (json?.error && Object.keys(json.error).length) {
+                     throw new Error(JSON.stringify(json?.error));
+                  }
                })
                .catch(error => {
                   localStorage.removeItem(API_STORE_NAME);
@@ -1130,8 +1281,23 @@ const NOVA = {
       document.addEventListener('play', ({ target }) => {
          target.matches(videoSelector) && (NOVA.videoElement = target);
       }, true);
+      // movie_player.addEventListener('onVideoDataChange', () => console.debug('onVideoDataChange'));
       // document.dispatchEvent(new CustomEvent('nova-video-loaded'));
    })(),
+
+   /**
+    * @param  {}
+    * @return {boolean}
+   */
+   isFullscreen: () => (
+      /*document.fullscreen || */ // site page can be in full screen mode
+      movie_player.classList.contains('ytp-fullscreen')
+      || (movie_player.hasOwnProperty('isFullscreen') && movie_player.isFullscreen()) // Doesn't work in embed
+   ),
+
+   // videoId(url = document.URL) {
+   //    return new URL(url).searchParams.get('v') || movie_player.getVideoData().video_id;
+   // },
 
    /**
     * @param  {string*} api_key
@@ -1161,6 +1327,7 @@ const NOVA = {
          // || window.ytplayer?.config?.args.ucid
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
          // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
+         // embed page
       ]
          .find(i => isChannelId(i));
       // console.debug('channelId (local):', result);
@@ -1199,6 +1366,171 @@ const NOVA = {
       // }
       return result;
    },
+
+   // currently only compatible with the [save-channel-state] plugin. It makes sense to unify for subsequent decisions
+   storage_obj_manager: {
+      // STORAGE_NAME: 'str'
+      async initName() {
+         if (!this.STORAGE_NAME) {
+            const
+               CACHE_PREFIX = 'nova-channel-state:',
+               channelId = await NOVA.getChannelId();
+
+            this.STORAGE_NAME = CACHE_PREFIX + channelId;
+         }
+         return this.STORAGE_NAME;
+      },
+      // getName() {
+      //    if (!this.STORAGE_NAME) {
+      //       console.error('STORAGE_NAME:', this.STORAGE_NAME);
+      //       throw new Error('STORAGE_NAME is empty');
+      //    }
+      //    return this.STORAGE_NAME;
+      // },
+
+      read() {
+         return JSON.parse(localStorage.getItem(this.STORAGE_NAME));
+      },
+
+      write(obj_save) {
+         localStorage.setItem(this.STORAGE_NAME, JSON.stringify(obj_save));
+      },
+
+      _getParam(key = required()) {
+         if (storage = this.read()) {
+            return storage[key];
+         }
+      },
+
+      async getParam(key = required()) {
+         await this.initName(); // wait storage name
+         return this._getParam(...arguments);
+      },
+
+      save(obj_save) {
+         // console.debug('STORAGE_OBJ_MANAGER save:', ...arguments);
+         // update storage
+         if (storage = this.read()) {
+            obj_save = Object.assign(storage, obj_save);
+         }
+         // create storage
+         this.write(obj_save);
+      },
+
+      remove(key) {
+         // update if more ones
+         if ((storage = this.read()) && Object.keys(storage).length > 1) {
+            delete storage[key];
+            this.write(storage);
+         }
+         // remove
+         else localStorage.removeItem(this.STORAGE_NAME);
+      }
+   },
+
+   // seachInObjectBy: {
+   //    // ex:
+   //    // NOVA.seachInObjectBy.key({
+   //    //    'obj': window.ytplayer,
+   //    //    'keys': 'ucid',
+   //    //    'match_fn': val => {},
+   //    // });
+   //    // ex test array: NOVA.seachInObjectBy.key({ obj: { a: [1, {"ucid": 11}] }, keys: "ucid" })
+   //    /**
+   //     * @param  {object} obj
+   //     * @param  {string} keys
+   //     * @param  {function*} match_fn
+   //     * @param  {boolean*} multiple
+   //     * @return {object} {path: '.config.args.ucid', data: 'UCMDQxm7cUx3yXkfeHa5zJIQ'}
+   //    */
+   //    key({ obj = required(), keys = required(), match_fn, multiple = false, path = '' }) {
+   //       // if (typeof obj !== 'object') {
+   //       //    return console.error('seachInObjectBy > keys is not Object:', ...arguments);
+   //       // }
+   //       const setPath = d => (path ? path + '.' : '') + d;
+   //       let hasKey, results = [];
+
+   //       for (const prop in obj) {
+   //          if (obj.hasOwnProperty(prop) && obj[prop]) {
+   //             hasKey = keys.constructor.name === 'String' ? (keys === prop) : keys.indexOf(prop) > -1;
+
+   //             if (hasKey && obj[prop].constructor.name !== 'Object' && (!match_fn || match_fn(obj[prop]))) {
+   //                if (multiple) {
+   //                   results.push({
+   //                      'path': setPath(prop),
+   //                      'data': obj[prop],
+   //                   });
+   //                }
+   //                else {
+   //                   return {
+   //                      'path': setPath(prop),
+   //                      'data': obj[prop],
+   //                   };
+   //                }
+   //             }
+   //             // in deeper (recursive)
+   //             else {
+   //                switch (obj[prop].constructor.name) {
+   //                   case 'Object':
+   //                      if (result = this.key({
+   //                         'obj': obj[prop],
+   //                         'keys': keys,
+   //                         // 'path': path + '.' + prop,
+   //                         'path': setPath(prop),
+   //                         'match_fn': match_fn,
+   //                      })) {
+   //                         if (multiple) results.push(result);
+   //                         else return result;
+   //                      }
+   //                      break;
+
+   //                   case 'Array':
+   //                      for (let i = 0; i < obj[prop].length; i++) {
+   //                         if (result = this.key({
+   //                            'obj': obj[prop][i],
+   //                            'keys': keys,
+   //                            'path': path + `[${i}]`,
+   //                            'match_fn': match_fn,
+   //                         })) {
+   //                            if (multiple) results.push(result);
+   //                            else return result;
+   //                         }
+   //                      }
+   //                      break;
+
+   //                   case 'Function':
+   //                      if (Object.keys(obj[prop]).length) {
+   //                         for (const j in obj[prop]) {
+   //                            if (typeof obj[prop] !== 'undefined') {
+   //                               // recursive
+   //                               if (result = this.key({
+   //                                  'obj': obj[prop][j],
+   //                                  'keys': keys,
+   //                                  'path': setPath(prop) + '.' + j,
+   //                                  'match_fn': match_fn,
+   //                               })) {
+   //                                  if (multiple) results.push(result);
+   //                                  else return result;
+   //                               }
+   //                            }
+   //                         }
+   //                      }
+   //                      break;
+
+   //                   // case 'String': break;
+   //                   // case 'Number': break;
+   //                   // case 'Boolean': break;
+   //                   // case 'Function': break;
+
+   //                   // default: break;
+   //                }
+   //             }
+   //          }
+   //       }
+
+   //       if (multiple) return results;
+   //    },
+   // },
 
    log() {
       if (this.DEBUG && arguments.length) {

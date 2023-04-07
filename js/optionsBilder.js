@@ -6,8 +6,6 @@ Plugins.load();
 const Opt = {
    // DEBUG: true,
 
-   storageMethod: 'sync',
-
    // https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
    lang_code: window.navigator.language.substring(0, 2),
    // lang_code = 'zh',
@@ -141,26 +139,31 @@ const Opt = {
                console.error('_tagName is missing in:', property, obj);
                continue;
             }
-            if (!property.label) {
+            if (!property.label && property._tagName != 'datalist') {
                console.error('label is missing in:', property, obj);
                continue;
+            }
+
+            if (property.type?.toLowerCase() == 'radio') {
+               if (!property.hasOwnProperty('name')) {
+                  console.error('radio element missing "name":', property, obj);
+                  continue;
+               }
             }
 
             const exportContainer = document.createElement('li');
             const exportProperty = document.createElement(property._tagName);
 
-            if (property.hasOwnProperty('name')) {
-               if (property.type?.toLowerCase() == 'radio') {
-                  property.id = property.value; // for radio
-               }
-               else {
-                  console.error('property.name not defined for radio element', property);
+            if (property.type?.toLowerCase() == 'radio') {
+               if (!property.hasOwnProperty('value')) {
+                  property.value = name;
                }
             }
             else {
                property.name = name;
-               property.id = name;
             }
+
+            property.id = name;
 
             delete property._tagName;
 
@@ -236,7 +239,7 @@ const Opt = {
                         // label.textContent = value;
                         label.innerHTML = '<font>↪</font>' + value;
                         // label.innerHTML = '<font>►</font>' + value;
-                        label.htmlFor = (property.type?.toLowerCase() == 'radio') ? property.value : property.name;
+                        label.htmlFor = (property.type?.toLowerCase() == 'radio') ? name : property.name;
                         exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
                         break;
@@ -354,7 +357,7 @@ const Opt = {
                d.click();
                console.debug('Settings file exported:', d.download);
                document.body.removeChild(d);
-            }, this.storageMethod);
+            }, storageMethod);
          });
 
       // import setting
@@ -362,11 +365,11 @@ const Opt = {
          ?.addEventListener('click', () => {
             // check in popup
             if (document.body.clientWidth < 350) {
-               // if (confirm(i18n('opt_import_popup'))) chrome.runtime.openOptionsPage();
+               // if (confirm(i18n('opt_import_popup'))) browser.runtime.openOptionsPage();
                if (confirm(i18n('opt_prompt_import_settings'))) {
-                  // chrome.runtime.openOptionsPage();
-                  const urlOptionsPage = new URL(chrome.runtime.getURL(chrome.runtime.getManifest().options_page)); // manifest v2
-                  // const urlOptionsPage = new URL(chrome.extension.getURL(chrome.runtime.getManifest().options_page)); // manifest v3
+                  // browser.runtime.openOptionsPage();
+                  const urlOptionsPage = new URL(browser.runtime.getURL(browser.runtime.getManifest().options_page)); // manifest v2
+                  // const urlOptionsPage = new URL(browser.extension.getURL(browser.runtime.getManifest().options_page)); // manifest v3
                   urlOptionsPage.searchParams.set('tabs', 'tab-other');
                   window.open(urlOptionsPage.href);
                }
@@ -381,7 +384,7 @@ const Opt = {
                const rdr = new FileReader();
                rdr.addEventListener('load', () => {
                   try {
-                     Storage.setParams(JSON.parse(rdr.result), this.storageMethod);
+                     Storage.setParams(JSON.parse(rdr.result), storageMethod);
                      alert(i18n('opt_alert_import_successfully'));
                      // location.reload();
                      this.openTab('tab-plugins', 'reload_page');
@@ -400,7 +403,7 @@ const Opt = {
       document.getElementById('settings_reset')
          ?.addEventListener('click', () => {
             if (confirm(i18n('opt_prompt_reset_settings'))) {
-               Storage.setParams(null, this.storageMethod);
+               Storage.setParams(null, storageMethod);
                // location.reload();
                this.openTab('tab-plugins', 'reload_page');
             }
@@ -443,7 +446,7 @@ window.addEventListener('load', () => {
       if (settings && settings['user-api-key']) {
          document.body.querySelectorAll('.info b').forEach(el => el.remove());
       }
-   }, Opt.storageMethod);
+   }, storageMethod);
 
    // search bar
    const searchInput = document.body.querySelector('form input[type=search]');
@@ -472,7 +475,7 @@ window.addEventListener('load', () => {
       // add script info to open issues link
       document.body.querySelector('a[href$="issues/new"]')
          .addEventListener('click', ({ target }) => {
-            target.href += '?body=' + encodeURIComponent(chrome.runtime.getManifest().version + ' | ' + navigator.userAgent);
+            target.href += '?body=' + encodeURIComponent(browser.runtime.getManifest().version + ' | ' + navigator.userAgent);
          });
    }
 
@@ -487,7 +490,11 @@ window.addEventListener('load', () => {
                // text = item.getAttribute('tooltip'),
                hasText = text?.toLowerCase().includes(keyword),
                highlight = el => {
-                  el.innerHTML = el.textContent.replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  if (el.innerHTML.includes('<mark ')) {
+                     // el.innerHTML = el.textContent
+                     el.innerHTML = el.innerHTML
+                        .replace(/<\/?mark[^>]*>/g, ''); // clear highlight tags
+                  }
                   item.style.display = hasText ? '' : 'none'; // hide el out of search
                   if (hasText && keyword) {
                      highlightTerm({

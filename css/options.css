@@ -114,6 +114,7 @@ li>ul>li {
 
 input[type=search] {
    width: -webkit-fill-available;
+   width: -moz-available;
    padding: 5px;
 }
 

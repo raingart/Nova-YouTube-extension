@@ -13,13 +13,23 @@ The extension is based on the plugin files themselves. The rest of the files onl
 [![openuserjs](https://img.shields.io/badge/dynamic/json?style=flat-square&color=eee&amp;label=OpenUserJS&amp;query=%24.OpenUserJS.installs%5B0%5D.value&amp;suffix=%20installs&amp;url=https%3A%2F%2Fopenuserjs.org%2Fmeta%2Fraingart%2FNova_YouTube.meta.json)](https://openuserjs.org/scripts/raingart/Nova_YouTube)
 [![greasyfork](https://img.shields.io/badge/dynamic/json?style=flat-square&color=blue&amp;label=GreasyFork&amp;query=total_installs&amp;suffix=%20installs&amp;url=https%3A%2F%2Fgreasyfork.org%2Fscripts%2F433360.json)](https://greasyfork.org/en/scripts/433360-nova-youtube)
 
-OR
+OR manual
 
+### Chromium-like
 You can now load the extension into your browser through the browser's extension tools page:
-1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script and extract
+1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script and extract.
 2. Type `chrome://extensions` in your address bar to bring up the extensions page.
 3. Enable __Developer Mode__ (checkbox)
 4. Click the "Load unpacked extension" button, navigate to extracted script folder, and click "OK". Or drag the script folder onto the extensions page.
+
+### Firefox
+Need one of the builds _Firefox Extended Support Release (ESR)_, _Firefox Developer Edition_ and _Nightly_
+Only this versions allow you to override the setting to enforce the extension signing requirement!
+1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script.
+2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page.
+3. Type to new top input `xpinstall.signatures.required` and change the setting to `false`.
+4. Type `about:addons` in your address bar to bring up the "Add-ons Manager" page.
+5. Click to __Gear icon__ and choose "Install Add-ons From File...".
 
 ## Building
 >Only for Unix shell**. All output will be in the `/tmp/` directory.

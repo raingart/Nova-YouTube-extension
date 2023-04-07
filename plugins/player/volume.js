@@ -40,6 +40,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/376002-youtube-volume-mouse-controller
       // alt4 - https://greasyfork.org/en/scripts/381929-youtube-mousewheel-volume-control
       // alt5 - https://chrome.google.com/webstore/detail/agadcopafaojndinhloilcanpfpbonbk
+      // alt6 - https://chrome.google.com/webstore/detail/piklelgilkpgdfohojnbkfheigoglokn
 
       // hotkey
       // alt - https://greasyfork.org/en/scripts/418121-yt-fixed
@@ -47,10 +48,12 @@ window.nova_plugins.push({
       // volume curve
       // alt1 - https://greasyfork.org/en/scripts/397686-youtube-music-fix-volume-ratio
       // alt2 - https://greasyfork.org/en/scripts/404756-youtube-volume-curve-designer
-      // alt3 - https://greasyfork.org/en/scripts/426684-youtube-music-logarithmic-exponential-volume/code
+      // alt3 - https://greasyfork.org/en/scripts/426684-youtube-music-logarithmic-exponential-volume
 
-      // max level?
-      // https://greasyfork.org/en/scripts/427173-maximum-audio-output-for-youtube
+      // max level
+      // alt1 - https://chrome.google.com/webstore/detail/nnocenjojjcnlijjjikhehebkbgbmmep
+      // alt2 - https://chrome.google.com/webstore/detail/oggiagogblgafoilijjdhcmflgekfmja
+      // alt3 - https://greasyfork.org/en/scripts/427173-maximum-audio-output-for-youtube
 
       NOVA.waitElement('video')
          .then(video => {
@@ -87,6 +90,16 @@ window.nova_plugins.push({
                //    ? playerVolume.unlimit(+user_settings.volume_level_default)
                //    : playerVolume.set(+user_settings.volume_level_default);
             }
+
+            // custom volume from [save-channel-state] plugin
+            if (user_settings['save-channel-state']) {
+               NOVA.runOnPageInitOrTransition(async () => {
+                  if (NOVA.currentPage == 'watch' && (userVolume = await NOVA.storage_obj_manager.getParam('volume'))) {
+                     video.addEventListener('canplay', () => playerVolume.set(userVolume), { capture: true, once: true });
+                  }
+               });
+            }
+
          });
 
 

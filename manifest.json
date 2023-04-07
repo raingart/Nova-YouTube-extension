@@ -3,10 +3,15 @@
    "name": "Nova YouTube™",
    "short_name": "NovaTube",
    "description": "__MSG_app_description__",
-   "update_url": "https://clients2.google.com/service/update2/crx",
    "default_locale": "en",
    "minimum_chrome_version": "80.0",
-   "version": "1.39.1",
+   "browser_specific_settings": {
+      "gecko": {
+         "id": "raingart@protonmail.com",
+         "strict_min_version": "74.0"
+      }
+   },
+   "version": "1.40.0",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",
@@ -36,6 +41,7 @@
          "run_at": "document_start",
          "all_frames": true,
          "js": [
+            "/js/libs/universal-browser.js",
             "/js/libs/storage.js",
             "/js/plugins.js",
             "/js/loader.js"
@@ -45,7 +51,10 @@
    "web_accessible_resources": [
       "/plugins/*"
    ],
-   "options_page": "/html/options.html?tabs=tab-plugins",
+   "options_ui": {
+      "page": "/html/options.html?tabs=tab-plugins",
+      "open_in_tab": true
+   },
    "browser_action": {
       "default_popup": "/html/options.html"
    }

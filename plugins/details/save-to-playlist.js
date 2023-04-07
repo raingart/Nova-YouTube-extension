@@ -1,18 +1,18 @@
 window.nova_plugins.push({
    id: 'save-to-playlist',
    title: 'Add sort/filter to "Save to playlist" menu',
-   // 'title:zh': '',
-   // 'title:ja': '',
-   // 'title:ko': '',
-   // 'title:id': '',
-   // 'title:es': '',
-   // 'title:pt': '',
-   // 'title:fr': '',
-   // 'title:it': '',
+   'title:zh': '将排序/过滤器添加到“保存到播放列表”菜单',
+   'title:ja': '「プレイリストに保存」メニューにソート/フィルターを追加',
+   'title:ko': '"재생 목록에 저장" 메뉴에 정렬/필터 추가',
+   'title:id': 'Tambahkan sortir/filter ke menu "Simpan ke daftar putar".',
+   'title:es': 'Agregar ordenar/filtrar al menú "Guardar en lista de reproducción"',
+   'title:pt': 'Adicionar classificação/filtro ao menu "Salvar na lista de reprodução"',
+   'title:fr': 'Ajouter un tri/filtre au menu "Enregistrer dans la liste de lecture"',
+   'title:it': 'Aggiungi ordinamento/filtro al menu "Salva nella playlist".',
    // 'title:tr': '',
-   // 'title:de': '',
-   // 'title:pl': '',
-   // 'title:ua': '',
+   'title:de': 'Sortieren/Filtern zum Menü „In Wiedergabeliste speichern“ hinzufügen',
+   'title:pl': 'Dodaj sortowanie/filtr do menu „Zapisz na liście odtwarzania”.',
+   'title:ua': 'Додати сортування/фільтр до меню "Зберегти до плейлиста"',
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
@@ -52,7 +52,8 @@ window.nova_plugins.push({
 
          function sortByLabel(a, b) {
             const getLabel = (el = required()) => stringLocaleCompare(
-               el.querySelector('#checkbox-label').textContent
+               // el.querySelector('#checkbox-label').textContent
+               el.textContent
             );
             return (getLabel(a) > getLabel(b)) ? 1 : -1;
 
@@ -73,8 +74,13 @@ window.nova_plugins.push({
          Object.assign(searchInput.style, {
             padding: '.4em .6em',
             border: 0,
+            outline: 0,
             // 'border-radius': '4px',
+            width: '100%',
             'margin-bottom': '1.5em',
+            height: '2.5em',
+            color: 'var(--ytd-searchbox-text-color)',
+            'background-color': 'var(--ytd-searchbox-background)',
          });
 
          ['change', 'keyup'].forEach(evt => {
@@ -82,7 +88,9 @@ window.nova_plugins.push({
                .addEventListener(evt, function () {
                   NOVA.searchFilterHTML({
                      'keyword': this.value,
-                     'filter_selectors': 'ytd-playlist-add-to-option-renderer',
+                     // 'filter_selectors': 'ytd-playlist-add-to-option-renderer',
+                     'filter_selectors': '#playlists #checkbox',
+                     // 'highlight_selector': 'yt-formatted-string',
                      'highlight_selector': '#label',
                   });
                });

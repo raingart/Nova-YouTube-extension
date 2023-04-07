@@ -68,7 +68,7 @@ window.nova_plugins.push({
          }
 
          function keyupSpace(evt) {
-            // console.debug('evt.code', evt.code); // no sense if latch wich { capture: true, once: true }
+            // console.debug('evt.code', evt.code); // no sense if lauch with "{ capture: true, once: true }"
             switch (evt.code) {
                case 'Space':
                   stopForceHoldPause()

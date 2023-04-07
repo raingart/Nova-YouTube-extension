@@ -17,7 +17,6 @@ ul {
 input[type=search],
 input[type=text],
 input[type=number],
-input[type=color],
 textarea {
    cursor: text;
 }
@@ -26,6 +25,7 @@ textarea {
 [type=reset],
 input[type=button],
 input[type=checkbox],
+input[type=color],
 input[type=radio],
 input[type=range],
 label, button, select {

@@ -40,6 +40,9 @@ window.nova_plugins.push({
          if ('shorts' == NOVA.currentPage) {
             // alt1 - https://github.com/YukisCoffee/yt-anti-shorts/blob/main/anti-shorts.user.js
             // alt2 - https://openuserjs.org/scripts/Kraust/Youtube_Shorts_Redirect
+            // alt3 - https://greasyfork.org/en/scripts/458220-better-short-player - replace to embed
+            // alt4 - https://greasyfork.org/en/scripts/444710-byts-better-youtube-shorts-greasyfork-edition
+
             return location.href = location.href.replace('shorts/', 'watch?v=');
             // location.replace(location.href.replace('/shorts/', '/watch?v='));
          }
@@ -47,7 +50,7 @@ window.nova_plugins.push({
 
       // add time to overlay
       if (user_settings.shorts_thumbnails_time
-         && !user_settings['shorts_disable'] // conflict with plugin. Attention! After shorts redirect
+         && !user_settings['shorts_disable'] // conflict with plugin [thumbs-hide] option (shorts_disable). Attention! After shorts redirect
       ) {
 
          // Strategy 1

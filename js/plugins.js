@@ -2,101 +2,110 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
-      'player/ad-skip-button.js',
+      'player/+ad-skip-button.js',
       'player/speed.js',
       'player/volume.js',
-      'player/hud.js',
+      'player/+hud.js',
       'player/quality.js',
       'player/autostop.js',
       'player/autopause.js',
-      'player/theater-mode.js',
-      'player/pause-background.js',
-      'player/fullscreen-on-playback.js',
-      'player/resize-ratio.js',
-      'player/progress-bar-color.js',
-      'player/control-autohide.js',
-      'player/embed-control.js',
-      'player/hotkeys.js',
+      'player/+theater-mode.js',
+      'player/background-pause.js',
+      'player/+fullscreen-on-playback.js',
+      'player/+resize-ratio.js',
+      'player/+progress-bar-color.js',
+      'player/progress-bar-float.js',
+      'player/+control-below.js',
+      'player/+control-autohide.js',
+      'player/+embed-control.js',
+      'player/+hotkeys.js',
       'player/pin.js',
-      'player/time-jump.js',
-      'player/float-progress-bar.js',
-      'player/no-sleep.js',
-      'player/loop.js',
+      'player/+time-jump.js',
+      'player/+no-sleep.js',
+      // // 'player/loop.js',
       'player/resume-playback.js',
-      // 'player/-thumb-pause.js',
+      // // 'player/-thumb-pause.js',
       'player/quick-buttons.js',
+      'player/+hide-elements.js',
       'player/subtitle-style.js',
-      // 'player/subtitle-lang.js',
+      // // 'player/subtitle-lang.js',
       'player/unblock-region.js',
-      'player/unblock-warn-content.js',
-      // 'player/next-autoplay.js',
-      'player/fullscreen-scroll.js',
-      'player/time-remaining.js',
+      'player/+unblock-warn-content.js',
+      // // 'player/next-autoplay.js',
+      'player/+fullscreen-scroll.js',
+      'player/+time-remaining.js',
+      'player/+live-duration.js',
       'player/title-time.js',
-      // 'player/block-embed.js',
+      'player/+save-for-channel.js',
+      // // 'player/block-embed.js',
 
-      'other/annotations.js',
-      'other/block-thumbs-title.js',
-      'other/block-channel.js',
+      'other/+annotations.js',
+      'other/+block-title.js',
+      'other/+block-channel.js',
       'other/thumbs-hide.js',
-      'other/thumbs-clear.js',
-      'other/thumbs-title-normalize.js',
-      'other/thumbs-watched.js',
-      // 'other/thumbs-rating.js',
-      'other/channel-trailer-stop.js',
+      'other/+thumbs-clear.js',
+      'other/+thumbs-title-normalize.js',
+      'other/+thumbs-watched.js',
+      'other/+thumbs-count-line.js',
+      // // 'other/thumbs-rating.js',
+      'other/+channel-trailer-stop.js',
       'other/channel-tab.js',
-      // 'other/channel-thumbs-row.js',
-      // 'other/dark-theme.js',
-      'other/scrollbar-hide.js',
-      'other/scroll-to-top.js',
+      // // 'other/channel-thumbs-row.js',
+      // // 'other/dark-theme.js',
+      // // 'other/lang.js',
+      'other/+scrollbar-hide.js',
+      'other/+scroll-to-top.js',
       'other/shorts-redirect.js',
       'other/rss.js',
-      // 'other/thumbs-sort.js',
-      'other/miniplayer-disable.js',
+      // // 'other/thumbs-sort.js',
+      'other/+miniplayer-disable.js',
 
       'details/videos-count.js',
-      'details/description-expand.js',
-      'details/description-popup.js',
-      'details/button-compact.js',
-      'details/metadata-hide.js',
-      'details/timestamps-scroll.js',
-      'details/redirect-clear.js',
+      'details/+description-expand.js',
+      'details/+description-popup.js',
+      'details/+buttons.js',
+      'details/+metadata-hide.js',
+      'details/+timestamps-scroll.js',
+      'details/+redirect-clear.js',
       'details/save-to-playlist.js',
 
       'comments/visibility.js',
       'comments/square-avatars.js',
-      'comments/popup.js',
+      'comments/+popup.js',
       'comments/expand.js',
-      'comments/sort.js',
+      'comments/+sort.js',
 
       'sidebar/related-visibility.js',
-      'sidebar/playlist-collapse.js',
-      'sidebar/playlist-autoplay.js',
+      'sidebar/+playlist-collapse.js',
+      'sidebar/+playlist-extended.js',
+      'sidebar/+playlist-autoplay.js',
       'sidebar/playlist-duration.js',
-      'sidebar/playlist-reverse.js',
-      'sidebar/livechat.js',
-      'sidebar/channel-link.js',
-      // 'sidebar/playlist-skip-liked.js',
+      'sidebar/+playlist-reverse.js',
+      'sidebar/+livechat.js',
+      'sidebar/+channel-link.js',
+      // // 'sidebar/playlist-skip-liked.js',
 
-      'header/search.js',
-      'header/compact.js',
+      'header/+search.js',
+      'header/+compact.js',
       'header/unfixed.js',
-      'header/logo.js',
+      'header/+logo.js',
    ],
 
    // for test
    // list: [
+   //    // 'plugin_example.js'
    //    // 'header/test.js',
    //    // 'player/test.js',
    //    // 'sidebar/test.js',
    //    // 'comments/test.js',
+   //    // 'other/test.js',
    // ],
 
    load(list) {
       (list || this.list)
          .forEach(plugin => {
             try {
-               this.injectScript(chrome.runtime.getURL('/plugins/' + plugin));
+               this.injectScript(browser.runtime.getURL('/plugins/' + plugin));
             } catch (error) {
                console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
             }
@@ -136,10 +145,17 @@ const Plugins = {
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
-      // alt - DetectPageType() (https://greasyfork.org/en/scripts/6034-youtube-hd-override/code)
+      // alt - DetectPageType() (https://greasyfork.org/en/scripts/6034-youtube-hd-override)
+
+      // error 404. Open the channel and refresh page (press F5)
+      // https://www.youtube.com/@glp (https://www.youtube.com/channel/UCM8XzXipyTsylZ_WsGKmdKQ)
+      // https://www.youtube.com/@divr (https://www.youtube.com/channel/UC7tD6Ifrwbiy-BoaAHEinmQ)
 
       NOVA.currentPage = (function () {
          const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+         // Strategy 1
+         // return identifyCurrentPage(page, channelTab);
+         // Strategy 2
          NOVA.channelTab = channelTab;
          return (page != 'live_chat') // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat)
             && (['channel', 'c', 'user'].includes(page)
@@ -220,6 +236,41 @@ const Plugins = {
       });
       console.table(logTableArray);
       console.groupEnd('plugins status');
+
+      // function identifyCurrentPage(page, channelTab) {
+      //    switch (page) {
+      //       case 'channel':
+      //       case 'c':
+      //       case 'user':
+      //          return 'channel';
+      //          break;
+
+      //       case 'watch':
+      //       case 'clip':
+      //          return 'watch'; break;
+      //       case 'live_chat': return 'live_chat'; break;
+      //    }
+
+      //    if (page?.startsWith('@') // https://www.youtube.com/@ALBO
+      //       || /[A-Z\d_]/.test(page) // containsUppercase(without unicode))
+      //    ) {
+      //       return 'channel'
+      //    }
+
+      //    switch (channelTab) {
+      //       case 'featured':
+      //       case 'videos':
+      //       case 'shorts':
+      //       case 'streams':
+      //       case 'playlists':
+      //       case 'community':
+      //       case 'channels':
+      //       case 'about':
+      //          return 'channel';
+      //          break;
+      //    }
+      //    return page;
+      // }
 
       function pluginChecker(plugin) {
          const result = plugin?.id && plugin.run_on_pages && 'function' === typeof plugin._runtime;

@@ -55,6 +55,8 @@ window.nova_plugins.push({
 
             video.addEventListener('timeupdate', savePlayback.bind(video));
 
+            video.addEventListener('ended', () => sessionStorage.removeItem(cacheName));
+
             // embed dont support "t=" parameter
             if (user_settings.player_resume_playback_url_mark && NOVA.currentPage != 'embed') {
                // ignore if initialized with a "t=" parameter
@@ -101,14 +103,13 @@ window.nova_plugins.push({
       // }
 
       function connectSaveStateInURL() {
-         const changeUrl = (new_url = required()) => window.history.replaceState(null, null, new_url);
          let delaySaveOnPauseURL; // fix glitch update url when rewinding video
          // save
          this.addEventListener('pause', () => {
             // fix video ended
             if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) {
                delaySaveOnPauseURL = setTimeout(() => {
-                  changeUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
+                  NOVA.updateUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
                }, 100); // 100ms
             }
          });
@@ -116,7 +117,7 @@ window.nova_plugins.push({
          this.addEventListener('play', () => {
             if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL);
 
-            if (NOVA.queryURL.has('t')) changeUrl(NOVA.queryURL.remove('t'));
+            if (NOVA.queryURL.has('t')) NOVA.updateUrl(NOVA.queryURL.remove('t'));
          });
       }
 
@@ -140,18 +141,18 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: 'update ?t=',
          title: 'Makes sense when saving bookmarks',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
+         'title:zh': '保存书签时有意义',
+         'title:ja': 'ブックマークを保存するときに意味があります',
+         'title:ko': '북마크를 저장할 때 의미가 있습니다.',
+         'title:id': 'Masuk akal saat menyimpan bookmark',
+         'title:es': 'Tiene sentido al guardar marcadores',
+         'title:pt': 'Faz sentido ao salvar favoritos',
+         'title:fr': "Cela a du sens lors de l'enregistrement de signets",
+         'title:it': 'Ha senso quando si salvano i segnalibri',
          // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
+         'title:de': 'Sinnvoll beim Speichern von Lesezeichen',
+         'title:pl': 'Ma sens podczas zapisywania zakładek',
+         'title:ua': 'Має сенс при збереженні закладок',
       },
    }
 });

@@ -1,4 +1,5 @@
 // for test
+// https://www.youtube.com/channel/UCqnWGqWpWLvnw9fowQ9Y3Uw - click error (nth-child out)
 // https://www.youtube.com/pencilmation - unsupported
 // https://www.youtube.com/rhino - unsupported
 // https://www.youtube.com/@YouTube?app=desktop
@@ -48,7 +49,7 @@ window.nova_plugins.push({
       }
       else {
          // tab select
-         NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected=true]')
+         NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
             .then(() => {
                let tab_nth;
                switch (user_settings.channel_default_tab) {

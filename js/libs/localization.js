@@ -1,4 +1,4 @@
-const i18n = msg => chrome.i18n.getMessage(msg);
+const i18n = msg => browser.i18n.getMessage(msg);
 
 function localizePage() {
    let html = document.getElementsByTagName('html')[0];

@@ -62,6 +62,15 @@ window.nova_plugins.push({
                });
             }
 
+            // custom volume from [save-channel-state] plugin
+            if (user_settings['save-channel-state']) {
+               NOVA.runOnPageInitOrTransition(async () => {
+                  if (NOVA.currentPage == 'watch' && (userQuality = await NOVA.storage_obj_manager.getParam('quality'))) {
+                     selectedQuality = userQuality; // rewrite
+                  }
+               });
+            }
+
             setQuality(); // init
 
             movie_player.addEventListener('onStateChange', setQuality); // update
@@ -88,12 +97,13 @@ window.nova_plugins.push({
                // const availableQualityLevels = movie_player.getAvailableQualityLevels();
                // set max quality limit (viewport + 30%)
                let availableQualityLevels = movie_player.getAvailableQualityLevels();
-               const maxQualityIdx = availableQualityLevels
-                  .findIndex(i => qualityFormatListWidth[i] <= (window.innerWidth * 1.3));
-               // set max quality limit (screen resolution + 30%)
-               // .findIndex(i => qualityFormatListWidth[i] <= (window.screen.width * 1.3));
-               availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
+               // incorrect window size definition in embed
+               const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
+               // set max quality limit (screen resolution + 30%)
+               const maxQualityIdx = availableQualityLevels
+                  .findIndex(i => qualityFormatListWidth[i] <= (maxWidth * 1.3));
+               availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
                if (availableQualityLevels?.length) {
                   clearInterval(waitQuality);
@@ -236,37 +246,37 @@ window.nova_plugins.push({
          // 'label:tr': '',
          // 'label:de': '',
          // 'label:pl': '',
-         // 'label:ua': '',
+         'label:ua': 'Змінити якість музики у списках відтворення',
          type: 'checkbox',
          title: 'to save traffic / increase speed',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
+         'title:zh': '节省流量/提高速度',
+         'title:ja': 'トラフィックを節約/速度を上げる',
+         'title:ko': '트래픽 절약 / 속도 향상',
+         'title:id': 'untuk menghemat lalu lintas / meningkatkan kecepatan',
+         'title:es': 'para ahorrar tráfico / aumentar la velocidad',
+         'title:pt': 'para economizar tráfego / aumentar a velocidade',
+         'title:fr': 'économiser du trafic / augmenter la vitesse',
+         'title:it': 'per risparmiare traffico / aumentare la velocità',
          // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
+         'title:de': 'um Verkehr zu sparen / Geschwindigkeit zu erhöhen',
+         'title:pl': 'aby zaoszczędzić ruch / zwiększyć prędkość',
+         'title:ua': 'для економії трафіку / збільшення швидкості',
       },
       video_quality_in_music_quality: {
          _tagName: 'select',
          label: 'Quality for music',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
+         'label:zh': '音乐品质',
+         'label:ja': '音楽の品質',
+         'label:ko': '음악 품질',
+         'label:id': 'Kualitas untuk musik',
+         'label:es': 'calidad para la musica',
+         'label:pt': 'Qualidade para música',
+         'label:fr': 'Qualité pour la musique',
+         'label:it': 'Qualità per la musica',
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
+         'label:de': 'Qualität für Musik',
+         'label:pl': 'Jakość dla muzyki',
+         'label:ua': 'Якість для музики',
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']

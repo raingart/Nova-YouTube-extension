@@ -1,7 +1,7 @@
 console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
 
 const
-   optionsPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
+   configPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
    fix_undefine = v => (v === 'undefined') ? undefined : v, // for Tampermonkey
    user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
@@ -14,8 +14,8 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'player-hotkeys-focused': 'player-hotkeys-active',
-   'player-buttons-custom': 'player-quick-buttons',
+   'button-no-labels': 'details_button_no_labels',
+   'button_no_labels_opacity': 'details_button_no_labels_opacity',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -25,15 +25,15 @@ for (const oldKey in user_settings) {
    GM_setValue(configStoreName, user_settings);
 }
 
-if (isOptionsPage()) return;
+if (isConfigPage()) return;
 
 if (!user_settings?.disable_setting_button) insertSettingButton();
 
 landerPlugins();
 
-function isOptionsPage() {
-   // GM_registerMenuCommand('Settings', () => window.open(optionsPage));
-   GM_registerMenuCommand('Settings', () => GM_openInTab(optionsPage));
+function isConfigPage() {
+   // GM_registerMenuCommand('Settings', () => window.open(configPage));
+   GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
    // GM_registerMenuCommand('Import settings', () => {
    //    if (json = JSON.parse(prompt('Enter json file context'))) {
    //       GM_setValue(configStoreName, json);
@@ -77,8 +77,8 @@ function isOptionsPage() {
       d.remove();
    });
 
-   // is optionsPage
-   if (location.hostname === new URL(optionsPage).hostname) {
+   // is configPage
+   if (location.hostname === new URL(configPage).hostname) {
       // form submit
       document.addEventListener('submit', event => {
          // console.debug('submit', event.target);
@@ -127,10 +127,10 @@ function isOptionsPage() {
    else if (!user_settings || !Object.keys(user_settings).length) {
       user_settings['report_issues'] = 'on'; // default plugins settings
       GM_setValue(configStoreName, user_settings);
-      // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(optionsPage);
-      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(optionsPage);
+      // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(configPage);
+      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(configPage);
    }
-   // is not optionsPage
+   // is not configPage
    else return false;
 
    return true;
@@ -223,10 +223,13 @@ function landerPlugins() {
 function insertSettingButton() {
    NOVA.waitElement('#masthead #end')
       .then(menu => {
-         const titleMsg = 'Nova Settings';
-         const a = document.createElement('a');
-         a.id = 'nova_settings_button';
-         a.href = optionsPage + '?tabs=tab-plugins';
+         const
+            titleMsg = 'Nova Settings',
+            a = document.createElement('a'),
+            SETTING_BTN_ID = 'nova_settings_button';
+
+         a.id = SETTING_BTN_ID;
+         a.href = configPage + '?tabs=tab-plugins';
          a.target = '_blank';
          a.innerHTML =
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
@@ -267,7 +270,7 @@ function insertSettingButton() {
          menu.prepend(a);
 
          NOVA.css.push(
-            `#nova_settings_button[tooltip]:hover:after {
+            `#${SETTING_BTN_ID}[tooltip]:hover:after {
                position: absolute;
                top: 50px;
                transform: translateX(-50%);
@@ -286,32 +289,32 @@ function insertSettingButton() {
                z-index: 1000;
             }
 
-            #nova_settings_button {
+            #${SETTING_BTN_ID} {
                position: relative;
                opacity: .3;
                transition: opacity .3s ease-out;
             }
 
-            #nova_settings_button:hover {
+            #${SETTING_BTN_ID}:hover {
                opacity: 1 !important;
             }
 
-            #nova_settings_button path,
-            #nova_settings_button polygon {
+            #${SETTING_BTN_ID} path,
+            #${SETTING_BTN_ID} polygon {
                fill: url(#nova-gradient);
             }
 
-            #nova_settings_button .nova-gradient-start,
-            #nova_settings_button .nova-gradient-stop {
+            #${SETTING_BTN_ID} .nova-gradient-start,
+            #${SETTING_BTN_ID} .nova-gradient-stop {
                transition: .6s;
                stop-color: #7a7cbd;
             }
 
-            #nova_settings_button:hover .nova-gradient-start {
+            #${SETTING_BTN_ID}:hover .nova-gradient-start {
                stop-color: #0ff;
             }
 
-            #nova_settings_button:hover .nova-gradient-stop {
+            #${SETTING_BTN_ID}:hover .nova-gradient-stop {
                stop-color: #0095ff;
                /*stop-color: #fff700;*/
             }`);
@@ -333,41 +336,43 @@ function insertSettingButton() {
          //    outline: 0,
          //    cursor: 'pointer',
          // });
-         // btn.addEventListener('click', () => parent.open(optionsPage + '?tabs=tab-plugins'));
+         // btn.addEventListener('click', () => parent.open(configPage + '?tabs=tab-plugins'));
          // // menu.insertBefore(btn, menu.lastElementChild);
          // menu.prepend(btn);
       });
 }
 
-function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
-   // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
+// function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
+//    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
-   if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
-      openBugReport();
-   }
+//    if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
+//       openBugReport();
+//    }
 
-   function openBugReport() {
-      // window.open(
-      GM_openInTab(
-         'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
-         '?entry.35504208=' + encodeURIComponent(trace_name) +
-         '&entry.151125768=' + encodeURIComponent(err_stack) +
-         '&entry.744404568=' + encodeURIComponent(location.href) +
-         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']'));
-      // , '_blank');
-   }
-};
+//    function openBugReport() {
+//       // window.open(
+//       GM_openInTab(
+//          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
+//          '?entry.35504208=' + encodeURIComponent(trace_name) +
+//          '&entry.151125768=' + encodeURIComponent(err_stack) +
+//          '&entry.744404568=' + encodeURIComponent(location.href) +
+//          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
+//          // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
+//       );
+//       // , '_blank');
+//    }
+// };
 
-window.addEventListener('unhandledrejection', err => {
-   // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
-   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
-      console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
+// window.addEventListener('unhandledrejection', err => {
+//    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
+//    if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
+//       console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
-      _pluginsCaptureException({
-         'trace_name': 'unhandledrejection',
-         'err_stack': err.reason.stack || err.stack,
-         'app_ver': GM_info.script.version,
-         'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
-      });
-   }
-});
+//       _pluginsCaptureException({
+//          'trace_name': 'unhandledrejection',
+//          'err_stack': err.reason.stack || err.stack,
+//          'app_ver': GM_info.script.version,
+//          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
+//       });
+//    }
+// });

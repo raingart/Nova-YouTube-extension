@@ -44,6 +44,8 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
       // alt3 - https://greasyfork.org/en/scripts/427369-speed-up-for-youtube
       // alt4 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
+      // alt5 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
+      // alt6 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
 
       // NOVA.waitElement('#movie_player')
       //    .then(movie_player => {
@@ -54,9 +56,9 @@ window.nova_plugins.push({
       //       });
       //    });
 
-      NOVA.waitElement('video')
+      NOVA.waitElement('#movie_player video')
          .then(video => {
-            const sliderContainer = renderSlider.apply(video);
+            const sliderContainer = insertSlider.apply(video);
             // console.debug('sliderContainer', sliderContainer);
 
             // trigger default indicator
@@ -89,8 +91,22 @@ window.nova_plugins.push({
                   target.checked || playerRate.set(1)
                });
             }
-            // expand memu
-            NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
+            // // expand memu
+            // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
+
+            NOVA.runOnPageInitOrTransition(async () => {
+               if (NOVA.currentPage == 'watch') {
+                  // custom speed from [save-channel-state] plugin
+                  if (user_settings['save-channel-state']) {
+                     if (userRate = await NOVA.storage_obj_manager.getParam('speed')) {
+                        video.addEventListener('canplay', () => playerRate.set(userRate), { capture: true, once: true });
+                     }
+                  }
+                  // expand memu
+                  expandAvailableRatesMenu();
+               }
+            });
+
          });
 
       // mousewheel in player area
@@ -110,6 +126,7 @@ window.nova_plugins.push({
             });
       }
 
+      // once execute
       // during initialization, the icon can be loaded after the video
       if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
          // 'Official Artist' badge
@@ -142,6 +159,7 @@ window.nova_plugins.push({
             && +rate <= 2
             && +user_settings.rate_default <= 2
             && (typeof movie_player !== 'undefined' && movie_player.hasOwnProperty('getPlaybackRate')),
+         // && (typeof movie_player !== 'undefined' && ('getPlaybackRate' in movie_player)),
 
          async set(level = 1) {
             this.log('set', ...arguments);
@@ -255,7 +273,7 @@ window.nova_plugins.push({
       function setDefaultRate() {
          // init rate_default
          // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
-         if (+user_settings.rate_default !== 1) {
+         if (+ user_settings.rate_default !== 1) {
             const is_music = NOVA.isMusic();
             // console.debug('isMusic', is_music);
             if (NOVA.videoElement?.playbackRate !== +user_settings.rate_default
@@ -273,7 +291,7 @@ window.nova_plugins.push({
       }
 
       // alt - https://greasyfork.org/en/scripts/433222-improved-speed-slider-for-youtube-fix
-      function renderSlider() {
+      function insertSlider() {
          const
             SELECTOR_ID = 'nova-rate-slider-menu',
             SELECTOR = '#' + SELECTOR_ID; // for css
@@ -362,40 +380,47 @@ window.nova_plugins.push({
          if (typeof _yt_player !== 'object') {
             return console.error('expandAvailableRatesMenu > _yt_player is empty', _yt_player);
          }
-         let path;
 
-         findPathPlaybackRates(_yt_player);
-         setAvailableRates(_yt_player, 0, path.split('.'));
+         // Strategy 1. local fn
+         if (path = findPathInObj({ 'obj': _yt_player, 'keys': 'getAvailablePlaybackRates' })) {
+            setAvailableRates(_yt_player, 0, path.split('.'));
+         }
 
-         function findPathPlaybackRates(obj, prep) {
-            const setPath = data => (prep ? prep + '.' : '') + data;
-            let count = 0;
+         function findPathInObj({ obj = required(), keys = required(), path }) {
+            const setPath = d => (path ? path + '.' : '') + d;
 
-            for (const p in obj) {
-               if ((data = Object.keys(obj)[count]) && obj[data]) {
-                  if (data == 'getAvailablePlaybackRates') {
-                     path = setPath(data);
-                     return path;
+            for (const prop in obj) {
+               if (obj.hasOwnProperty(prop) && obj[prop]) {
+                  if (keys === prop) {
+                     return this.path = setPath(prop)
                   }
                   // in deeper
-                  if ((objOfObj = obj[data])
-                     && obj[p].constructor.name == 'Function'
-                     && Object.keys(objOfObj).length
-                  ) {
-                     let inCount = 0;
-                     for (const j in objOfObj) {
-                        if (typeof objOfObj !== 'undefined') {
+                  if (obj[prop].constructor.name == 'Function' && Object.keys(obj[prop]).length) {
+                     for (const j in obj[prop]) {
+                        if (typeof obj[prop] !== 'undefined') {
+                           // if (prop in obj) {
                            // recursive
-                           findPathPlaybackRates(objOfObj[j], setPath(data) + '.' + Object.keys(objOfObj)[inCount]);
+                           findPathInObj({
+                              'obj': obj[prop][j],
+                              'keys': keys,
+                              'path': setPath(prop) + '.' + j,
+                           });
                         }
-                        if (path) return path;
-                        inCount++;
+                        if (this.path) return this.path;
                      }
                   }
                }
-               count++;
             }
          }
+
+         // Strategy 2. NOVA fn
+         // if (path = NOVA.seachInObjectBy.key({
+         //    'obj': _yt_player,
+         //    'keys': 'getAvailablePlaybackRates',
+         //    'match_fn': val => (typeof val === 'function') && val,
+         // })?.path) {
+         //    setAvailableRates(_yt_player, 0, path.split('.'));
+         // }
 
          function setAvailableRates(path, idx, arr) {
             if (arr.length - 1 == idx) {
@@ -405,6 +430,7 @@ window.nova_plugins.push({
                setAvailableRates(path[arr[idx]], idx + 1, arr);
             }
          }
+
       }
 
    },

@@ -18,6 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://chrome.google.com/webstore/detail/fcchghcgfeadhdmkmpkedplecikkajnp
+
       NOVA.collapseElement({
          selector: '#secondary #related',
          title: 'related',
@@ -70,7 +72,7 @@ window.nova_plugins.push({
                // 'label:tr': '',
                // 'label:de': '',
                'label:pl': 'usuń',
-               'label:ua': 'вимкнути',
+               'label:ua': 'вимк.',
             },
          ],
       },

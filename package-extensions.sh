@@ -1,7 +1,9 @@
 #!/bin/sh
 # chmod a+x release.sh
 
-ver="$(cat manifest.json | jq -r '.version')"
+ver="$(cat manifest.json | jq -r '.version')" #need installed - jq
+# need after git push
+# ver="$(git show HEAD:manifest.json | grep '"version"' | cut -d\" -f4)"
 filename="/tmp/nova-extensions_v${ver}.zip"
 # TODAY=$(date)
 

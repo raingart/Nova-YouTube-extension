@@ -23,6 +23,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // alt - https://chrome.google.com/webstore/detail/oanhbddbfkjaphdibnebkklpplclomal
+
       // movie_player.getSubtitlesUserSettings();
       // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color
 
@@ -145,22 +147,22 @@ window.nova_plugins.push({
          'label:ua': 'Фіксація знизу',
          type: 'checkbox',
          title: 'Preventing captions jumping up/down when pause/resume',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
+         'title:zh': '暂停/恢复时防止字幕跳上/跳下',
+         'title:ja': '一時停止/再開時にキャプションが上下にジャンプしないようにする',
+         'title:ko': '일시 중지/다시 시작 시 캡션이 위/아래로 점프하는 것을 방지',
+         'title:id': 'Mencegah teks melompat ke atas/bawah saat menjeda/melanjutkan',
+         'title:es': 'Evitar que los subtítulos salten hacia arriba/abajo al pausar/reanudar',
+         'title:pt': 'Evitando que as legendas subam/descem ao pausar/reiniciar',
+         'title:fr': "Empêcher les sous-titres de sauter vers le haut/bas lors d'une pause/reprise",
+         'title:it': 'Prevenire i sottotitoli che saltano su/giù durante la pausa/ripresa',
          // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
+         'title:de': 'Verhindern, dass Untertitel beim Anhalten/Fortsetzen nach oben/unten springen',
+         'title:pl': 'Zapobieganie przeskakiwaniu napisów w górę/w dół podczas pauzy/wznowienia',
+         'title:ua': 'Запобігання стрибкам титрів вгору/вниз під час паузи/продовження',
       },
       subtitle_selectable: {
          _tagName: 'input',
-         label: 'Make subtitles selectable',
+         label: 'Make selectable',
          'label:zh': '使字幕可选',
          'label:ja': '字幕を選択可能にする',
          'label:ko': '자막 선택 가능',

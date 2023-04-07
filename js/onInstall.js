@@ -1,9 +1,9 @@
 console.debug("init onInstall.js");
 
 // installed new version
-chrome.runtime.onInstalled.addListener(details => {
-   chrome.storage.sync.get(null, storage => {
-      const manifest = chrome.runtime.getManifest();
+browser.runtime.onInstalled.addListener(details => {
+   browser.storage.sync.get(null, storage => {
+      const manifest = browser.runtime.getManifest();
       console.debug(`app ${details.reason} ${details.previousVersion} to ` + manifest.version);
 
       switch (details.reason) {
@@ -23,7 +23,7 @@ chrome.runtime.onInstalled.addListener(details => {
             //    console.debug('Apply default configuration');
 
             // } else {
-            chrome.runtime.openOptionsPage();
+            browser.runtime.openOptionsPage();
             // }
             break;
 
@@ -55,8 +55,9 @@ chrome.runtime.onInstalled.addListener(details => {
                   'video_quality_in_music': 'video_quality_in_music_playlist',
                   'player_float_progress_bar_color': 'player_progress_bar_color',
                   'header-short': 'header-compact',
-                  'player-hotkeys-focused': 'player-hotkeys-active',
                   'player-buttons-custom': 'player-quick-buttons',
+                  'button-no-labels': 'details_button_no_labels',
+                  'button_no_labels_opacity': 'details_button_no_labels_opacity',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

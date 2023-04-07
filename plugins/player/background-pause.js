@@ -17,7 +17,7 @@ window.nova_plugins.push({
    // 'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
    'title:pl': 'Zatrzymanie kart w tle oprócz aktywnej',
-   'title:ua': 'Автобауза усіх фонових вкладок окрім активної',
+   'title:ua': 'Автопауза усіх фонових вкладок окрім активної',
    run_on_pages: 'watch, embed',
    section: 'player',
    desc: 'Autopause all background tabs except the active one',
@@ -33,7 +33,7 @@ window.nova_plugins.push({
    // // 'desc:tr': "iframe'leri ve diğer pencereleri destekler",
    // 'desc:de': 'Unterstützt iframes und andere Fenster',
    // 'desc:pl': 'Obsługa ramek iframe i innych okien',
-   // 'desc:ua': 'Підтримує iframe та інші вікна',
+   'desc:ua': 'Автоматично призупинити всі фонові вкладки, крім активної. Підтримує iframe та інші вікна',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/444330-youtube-autoplay-mutex
@@ -41,9 +41,13 @@ window.nova_plugins.push({
       // redirect for localStorage common storage space
       if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
 
+      // fix - Failed to read the 'localStorage' property from 'Window': Access is denied for this document. typeof
+      if (typeof window === 'undefined') return;
+      // if (window.localStorage)
+
       const
          storeName = 'playngInstanceIDTab',
-         instanceID = Math.random(), // Generate a random script instance ID
+         instanceID = String(Math.random()), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 
       NOVA.waitElement('video')
@@ -79,6 +83,41 @@ window.nova_plugins.push({
                   }
                });
             }
+            // pause video if another playing now
+            // else {
+            //    // ['loadedmetadata', 'canplay'].forEach(evt => {
+            //    //    video.addEventListener(evt, function () {
+            //    //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
+            //    //          // video.pause();
+            //    //          movie_player.stopVideo();
+            //    //          console.debug('', 3);
+            //    //       }
+            //    //    }, { capture: true, once: true });
+            //    // });
+            //    video.addEventListener('loadedmetadata', stopPlay, { capture: true, once: true });
+            //    video.addEventListener('canplay', stopPlay, { capture: true, once: true });
+
+            //    document.addEventListener('click', disableHoldStop, { capture: true, once: true });
+            //    document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop(), { capture: true, once: true });
+
+            //    function disableHoldStop() {
+            //       if (//NOVA.getPlayerState() !=  &&
+            //       movie_player.contains(document.activeElement)) {
+            //          video.removeEventListener('loadedmetadata', stopPlay, true);
+            //          video.removeEventListener('canplay', stopPlay, true);
+            //          // alert(1)
+            //          movie_player.playVideo();
+            //       }
+            //    }
+
+            //    function stopPlay() {
+            //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
+            //          video.pause();
+            //          movie_player.stopVideo();
+            //       }
+            //    }
+            // }
+
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
                if ((document.visibilityState == 'hidden' || NOVA.currentPage == 'embed') // tab unfocus
@@ -98,7 +137,7 @@ window.nova_plugins.push({
                   }
                });
                // window.addEventListener('blur', async () => {
-               //    await NOVA.sleep(100); // dirty fix. document.visibilityState update AFTER blur
+               //    await NOVA.delay(100); // dirty fix. document.visibilityState update AFTER blur
 
                //    if (document.visibilityState == 'hidden'
                //       && 'PLAYING' == NOVA.getPlayerState()

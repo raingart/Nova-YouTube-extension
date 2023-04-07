@@ -21,12 +21,12 @@ const App = {
 
       // load store user_settings
       load(callback) {
-         Storage.getParams(callback || this.storage.set.bind(this), 'sync')
+         Storage.getParams(callback || this.storage.set.bind(this), storageMethod)
       },
    },
 
    init() {
-      const manifest = chrome.runtime.getManifest();
+      const manifest = browser.runtime.getManifest();
       console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
       // skip first page transition
@@ -60,8 +60,8 @@ const App = {
             'plugins_executor': ${Plugins.run},
             'user_settings': ${JSON.stringify(this.settingsStore)},
             'plugins_count': ${Plugins.list.length},
-            'app_name': '${chrome?.runtime?.getManifest()?.name}',
-            'app_ver': '${chrome?.runtime?.getManifest()?.version}',
+            'app_name': '${browser.runtime?.getManifest()?.name}',
+            'app_ver': '${browser.runtime?.getManifest()?.version}',
          }));`
       );
 
@@ -106,7 +106,7 @@ const App = {
                `<h4 style="margin:0;">Failure on initialization ${app_name}</h4>`
                + ((typeof NOVA === 'object')
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
-                  : `<div>Critical Error: kernel library NOVA is "${typeof NOVA}"</div>`);
+                  : `<div>Critical Error: NOVA SDK is "${typeof NOVA}"</div>`);// lauch obstacted
             document.body.append(notice);
          }
       }, 1000 * 3); // 3sec
@@ -135,7 +135,7 @@ const App = {
 
    reflectException() {
       const
-         manifest = chrome.runtime.getManifest(),
+         manifest = browser.runtime.getManifest(),
          alertMsg = `Failure when async-call of one "${manifest.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
 
          openBugReport = ({ trace_name, err_stack, confirm_msg, app_ver }) => {
@@ -146,6 +146,7 @@ const App = {
                   + '&entry.151125768=' + encodeURIComponent(err_stack)
                   + '&entry.744404568=' + encodeURIComponent(location.href)
                   + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
+                  // + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
                   , '_blank');
             }
          };
@@ -154,14 +155,14 @@ const App = {
       Plugins.injectScript(
          `const _pluginsCaptureException = ${openBugReport};
          window.addEventListener('unhandledrejection', err => {
-            if (!err.reason.stack?.toString().includes(${JSON.stringify(chrome.runtime.id)})) return;
+            if (!err.reason.stack?.toString().includes(${JSON.stringify(browser.runtime.id)})) return;
 
-            console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=${encodeURIComponent([chrome.runtime.getManifest().version, navigator.userAgent].join(' | '))}\`);
+            console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=${encodeURIComponent([browser.runtime.getManifest().version, navigator.userAgent].join(' | '))}\`);
 
             _pluginsCaptureException({
                'trace_name': 'unhandledrejection',
                'err_stack': err.reason.stack,
-               'app_ver': '${chrome.runtime.getManifest().version}',
+               'app_ver': '${browser.runtime.getManifest().version}',
                'confirm_msg': \`${alertMsg}\`,
             });
          });`);
@@ -191,6 +192,7 @@ App.init();
 // https://www.youtube.com/watch?v=B4yuZhKRW1c
 // https://www.youtube.com/watch?v=zEk3A1fA0gc
 // https://www.youtube.com/watch?v=YKKuLzYzH2E
+// https://www.youtube.com/watch?v=MClg7zpm6VQ
 
 // shorts
 // https://www.youtube.com/shorts/5ndfxasp2r0
@@ -199,6 +201,7 @@ App.init();
 // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
 
 // for testing square-screen
+// https://www.youtube.com/watch?v=EZAr3jrPqR8
 // https://www.youtube.com/watch?v=lx79bS-Kl78
 // https://www.youtube.com/watch?v=v-YQUCP-J8s
 // https://www.youtube.com/watch?v=gWqENeW7EyQ

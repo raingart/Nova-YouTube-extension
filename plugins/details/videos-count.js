@@ -1,3 +1,9 @@
+// for test:
+// https://www.youtube.com/channel/UCVi6ofFy7QyJJrZ9l0-fwbQ
+// https://www.youtube.com/channel/UCBX37mqPuU2Hqmcd2kfEIvQ
+// https://www.youtube.com/channel/UCM8XzXipyTsylZ_WsGKmdKQ
+// https://www.youtube.com/channel/UCGmvywjUliYi6MSwg_FuW_g
+
 window.nova_plugins.push({
    id: 'channel-videos-count',
    title: 'Show channel videos count',
@@ -13,7 +19,8 @@ window.nova_plugins.push({
    'title:de': 'Anzahl der Kanalvideos anzeigen',
    'title:pl': 'Pokaż liczbę filmów na kanale',
    'title:ua': 'Показати кількість відео на каналі',
-   run_on_pages: 'watch, channel, -mobile',
+   // run_on_pages: 'watch, channel, -mobile',
+   run_on_pages: 'watch, -mobile',
    restart_on_location_change: true,
    section: 'details',
    opt_api_key_warn: true,
@@ -57,11 +64,11 @@ window.nova_plugins.push({
                .then(el => setVideoCount(el));
             break;
 
-         case 'channel':
-            NOVA.waitElement('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
-               // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
-               .then(el => setVideoCount(el));
-            break;
+         // case 'channel':
+         //    NOVA.waitElement('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
+         //       // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
+         //       .then(el => setVideoCount(el));
+         //    break;
       }
 
       async function setVideoCount(container = required()) {
@@ -83,7 +90,7 @@ window.nova_plugins.push({
                   if (res?.error) return alert(`Error [${res.code}]: ${res.reason}\n` + res.error);
 
                   res?.items?.forEach(item => {
-                     if (videoCount = +item.statistics.videoCount) {
+                     if (videoCount = NOVA.prettyRoundInt(item.statistics.videoCount)) {
                         insertToHTML({ 'text': videoCount, 'container': container });
                         // save cache in tabs
                         sessionStorage.setItem(CACHE_PREFIX + channelId, videoCount);

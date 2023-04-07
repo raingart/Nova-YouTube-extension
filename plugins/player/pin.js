@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=d94PwdKQ3Ag
+
 window.nova_plugins.push({
    id: 'player-pin-scroll',
    title: 'Pin player while scrolling',
@@ -30,6 +33,9 @@ window.nova_plugins.push({
    // 'desc:ua': 'Відтворювач завжди залишається видимим коли гортаєш',
    _runtime: user_settings => {
 
+      // alt1 - https://chrome.google.com/webstore/detail/aeilijiaejfdnbagnpannhdoaljpkbhe
+      // alt2 - https://chrome.google.com/webstore/detail/mcodbccegmndmnbpbgkpdkoleoagjpgk
+
       if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
 
       // alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
@@ -42,7 +48,8 @@ window.nova_plugins.push({
 
       // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
       // if (user_settings.player_pin_mode == 'pip') {
-      //    // alt - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
+      //    // alt1 - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
+      //    // alt2 - https://chrome.google.com/webstore/detail/hlbdhflagoegglpdminhlpenkdgloabe
       //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
       //    NOVA.waitElement('video')
@@ -93,11 +100,7 @@ window.nova_plugins.push({
          UNPIN_BTN_CLASS_VALUE = CLASS_VALUE + '-unpin-btn',
          UNPIN_BTN_SELECTOR = '.' + UNPIN_BTN_CLASS_VALUE; // for css
 
-      // if player fullscreen disable float mode
-      document.addEventListener('fullscreenchange', () =>
-         (document.fullscreen || movie_player.isFullscreen()) && movie_player.classList.remove(CLASS_VALUE));
-
-      // toggle
+      // toggle pin state
       document.addEventListener('scroll', () => { // fix bug when initial (document.documentElement.scrollHeight != window.innerHeight) and it's running IntersectionObserver
          // NOVA.waitElement('#player-theater-container')
          NOVA.waitElement('#ytd-player')
@@ -112,8 +115,10 @@ window.nova_plugins.push({
                      movie_player.classList.remove(CLASS_VALUE);
                      drag.reset(); // save old pos. Clear curr pos
                   }
-                  // enter viewport. fix bug on scroll in fullscreen player mode
-                  else if (!movie_player.isFullscreen()) {
+                  // enter viewport.
+                  else if (!movie_player.isFullscreen() // fix bug on scroll in fullscreen player mode
+                     && document.documentElement.scrollTop // fix bug on exit fullscreen mode (https://github.com/raingart/Nova-YouTube-extension/issues/69)
+                  ) {
                      movie_player.classList.add(CLASS_VALUE);
                      drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
                   }
@@ -145,67 +150,78 @@ window.nova_plugins.push({
 
             initMiniStyles();
 
-            NOVA.css.push(
-               PINNED_SELECTOR + ` {
-                  --zIndex: ${Math.max(
-                  NOVA.css.getValue('#chat', 'z-index'),
-                  NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
-                  // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin "description-popup"
-                  // getComputedStyle(document.getElementById('chat'))['z-index'],
-                  // getComputedStyle(document.body.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
-                  // // getComputedStyle(document.getElementById('description'))['z-index'], // consider plugin "description-popup"
-                  601) + 1};
-               }
-
-               ${UNPIN_BTN_SELECTOR} { display: none; }
-
-               ${PINNED_SELECTOR} ${UNPIN_BTN_SELECTOR} {
-                  display: initial !important;
-                  position: absolute;
-                  cursor: pointer;
-                  top: 10px;
-                  left: 10px;
-                  width: 28px;
-                  height: 28px;
-                  color: white;
-                  border: none;
-                  outline: none;
-                  opacity: .1;
-                  /* border-radius: 100%; */
-                  z-index: var(--zIndex);
-                  font-size: 24px;
-                  font-weight: bold;
-                  background-color: rgba(0, 0, 0, 0.8);
-                  /* text-transform: uppercase; */
-               }
-
-               ${PINNED_SELECTOR}:hover ${UNPIN_BTN_SELECTOR} { opacity: .7; }
-               ${UNPIN_BTN_SELECTOR}:hover { opacity: 1 !important; }`);
-
             // add unpin button
-            const btnUnpin = document.createElement('button');
-            btnUnpin.className = UNPIN_BTN_CLASS_VALUE;
-            btnUnpin.title = 'Unpin player';
-            btnUnpin.textContent = '×'; // ✖
-            btnUnpin.addEventListener('click', () => {
-               player.classList.remove(CLASS_VALUE);
-               drag.reset('clear storePos');
-               window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
-            });
-            player.append(btnUnpin);
+            insertUnpinButton(player);
 
-            // unpin before on page change
-            document.addEventListener('yt-navigate-start', () => {
-               if (player.classList.contains(CLASS_VALUE)) {
-                  player.classList.remove(CLASS_VALUE);
-                  drag.reset('clear storePos');
+            // if player fullscreen disable float mode
+            document.addEventListener('fullscreenchange', () => NOVA.isFullscreen() && movie_player.classList.remove(CLASS_VALUE));
+            // ytd-watch-flexy:not([fullscreen])
+
+            // resize on video change
+            NOVA.waitElement('#movie_player video')
+               .then(video => {
+                  video.addEventListener('loadeddata', () => {
+                     if (NOVA.currentPage != 'watch') return;
+
+                     NOVA.waitElement(PINNED_SELECTOR)
+                        .then(() => {
+                           const width = NOVA.aspectRatio.calculateWidth(
+                              movie_player.clientHeight,
+                              // chooseAspectRatio(NOVA.videoElement.videoWidth, NOVA.videoElement.videoHeight)
+                              NOVA.aspectRatio.chooseAspectRatio({
+                                 'width': NOVA.videoElement.videoWidth,
+                                 'height': NOVA.videoElement.videoHeight,
+                                 'layout': 'landscape',
+                              }),
+                           );
+                           player.style.setProperty('--width', `${width}px !important;`);
+                           // movie_player.style = `--width: ${width}px !important;`
+                           // movie_player.style = `--width: ${width}px !important; --height: ${movie_player.clientHeight}px !important`
+                        });
+                  });
+               });
+
+               // save scroll code part
+               if (user_settings.player_float_scroll_after_fullscreen_restore_srcoll_pos) {
+                  let scrollPos = 0;
+
+                  // restore scroll pos
+                  document.addEventListener('fullscreenchange', () => {
+                     if (!NOVA.isFullscreen()
+                        && scrollPos // >0
+                        && drag.storePos // not cleared yet
+                     ) {
+                        window.scrollTo({
+                           top: scrollPos,
+                           // left: window.pageXOffset,
+                           // behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
+                        });
+                     }
+                  });
+                  // save scroll pos
+                  document.addEventListener('yt-action', function (evt) {
+                     // if (evt.detail?.actionName == 'yt-fullscreen-change-action') { // to late
+                     // if (evt.detail?.actionName == 'yt-window-scrolled') {
+                     if (evt.detail?.actionName == 'yt-close-all-popups-action') { // last
+                        scrollPos = document.documentElement.scrollTop;
+                        // console.debug('1', scrollPos, document.documentElement.scrollTop);
+                     }
+                  });
+                  // clear scroll pos
+                  document.addEventListener('yt-navigate-start', () => scrollPos = 0);
                }
-            });
          });
+
+      // function chooseAspectRatio(width, height) {
+      //    const ratio = width / height;
+      //    // return (Math.abs(ratio - 4 / 3) < Math.abs(ratio - 16 / 9)) ? '4:3' : '16:9';
+      //    return (Math.abs(ratio - 1.33333) < Math.abs(ratio - 1.7778))
+      //       ? 1.33333 : 1.7778;
+      // }
 
       function initMiniStyles() {
          const scrollbarWidth = (window.innerWidth - document.documentElement.clientWidth || 0) + 'px';
-         const miniSize = NOVA.calculateAspectRatio.sizeToFit({
+         const miniSize = NOVA.aspectRatio.sizeToFit({
             // 'srcWidth': movie_player.clientWidth,
             // 'srcHeight': movie_player.clientHeight,
             'srcWidth': NOVA.videoElement.videoWidth,
@@ -215,7 +231,13 @@ window.nova_plugins.push({
          });
 
          let initcss = {
-            width: miniSize.width + 'px',
+            // width: miniSize.width + 'px',
+            width: NOVA.aspectRatio.calculateWidth(
+               miniSize.height,
+               // chooseAspectRatio(miniSize.width, miniSize.height)
+               NOVA.aspectRatio.chooseAspectRatio({ 'width': miniSize.width, 'height': miniSize.height })
+            ) + 'px',
+            // width: (movie_player.clientWidth / user_settings.player_float_scroll_size_ratio) + 'px',
             height: miniSize.height + 'px',
             position: 'fixed',
             'z-index': 'var(--zIndex)',
@@ -255,14 +277,33 @@ window.nova_plugins.push({
             PINNED_SELECTOR + `{
                --height: ${initcss.height} !important;
                --width: ${initcss.width} !important;
+
+               width: var(--width) !important;
+               height: var(--height) !important;
+
+               background-color: var(--yt-spec-base-background);
+            }
+            ${PINNED_SELECTOR} video {
+               object-fit: contain !important;
+            }
+            /* fix for [player-quick-buttons], [player-loop], [nova-player-time-remaining] plugins */
+            ${PINNED_SELECTOR} .ytp-chrome-controls .nova-right-custom-button,
+            ${PINNED_SELECTOR} .ytp-chrome-controls #nova-player-time-remaining,
+            ${PINNED_SELECTOR} .ytp-chrome-controls button.ytp-size-button,
+            ${PINNED_SELECTOR} .ytp-chrome-controls button.ytp-subtitles-button,
+            ${PINNED_SELECTOR} .ytp-chrome-controls button.ytp-settings-button,
+            ${PINNED_SELECTOR} .ytp-chrome-controls .ytp-chapter-container {
+               display: none !important;
             }`);
+
          // fix control-player panel
          NOVA.css.push(`
             ${PINNED_SELECTOR} .ytp-preview,
             ${PINNED_SELECTOR} .ytp-scrubber-container,
             ${PINNED_SELECTOR} .ytp-hover-progress,
             ${PINNED_SELECTOR} .ytp-gradient-bottom { display:none !important; }
-            ${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width) !important; }
+            /*${PINNED_SELECTOR} .ytp-chrome-bottom { width: var(--width) !important; }*/
+            ${PINNED_SELECTOR} .ytp-chrome-bottom { width: 96% !important; }
             ${PINNED_SELECTOR} .ytp-chapters-container { display: flex; }`);
 
          // fix video size in pinned
@@ -277,6 +318,66 @@ window.nova_plugins.push({
             .ended-mode video {
                visibility: hidden;
             }`);
+      }
+
+      function insertUnpinButton(player = movie_player) {
+         NOVA.css.push(
+            PINNED_SELECTOR + ` {
+               --zIndex: ${Math.max(
+               NOVA.css.getValue('#chat', 'z-index'),
+               NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
+               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin "description-popup"
+               // getComputedStyle(document.getElementById('chat'))['z-index'],
+               // getComputedStyle(document.body.querySelector('.ytp-chrome-top .ytp-cards-button'))['z-index'],
+               // // getComputedStyle(document.getElementById('description'))['z-index'], // consider plugin "description-popup"
+               601) + 1};
+            }
+
+            ${UNPIN_BTN_SELECTOR} { display: none; }
+
+            ${PINNED_SELECTOR} ${UNPIN_BTN_SELECTOR} {
+               display: initial !important;
+               position: absolute;
+               cursor: pointer;
+               top: 10px;
+               left: 10px;
+               width: 28px;
+               height: 28px;
+               color: white;
+               border: none;
+               outline: none;
+               opacity: .1;
+               /* border-radius: 100%; */
+               z-index: var(--zIndex);
+               font-size: 24px;
+               font-weight: bold;
+               background-color: rgba(0, 0, 0, 0.8);
+               /* text-transform: uppercase; */
+            }
+
+            ${PINNED_SELECTOR}:hover ${UNPIN_BTN_SELECTOR} { opacity: .7; }
+            ${UNPIN_BTN_SELECTOR}:hover { opacity: 1 !important; }`);
+
+         // add unpin button
+         const btnUnpin = document.createElement('button');
+         btnUnpin.className = UNPIN_BTN_CLASS_VALUE;
+         btnUnpin.title = 'Unpin player';
+         btnUnpin.textContent = '×'; // ✖
+         btnUnpin.addEventListener('click', () => {
+            player.classList.remove(CLASS_VALUE);
+            drag.reset('clear storePos');
+            window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
+         });
+         player.append(btnUnpin);
+
+         // unpin before on page change
+         document.addEventListener('yt-navigate-start', () => {
+            if (player.classList.contains(CLASS_VALUE)) {
+               player.classList.remove(CLASS_VALUE);
+               drag.reset(); // save storePos state
+               // drag.reset('clear storePos'); // storePos
+            }
+         });
       }
 
       const drag = {
@@ -298,7 +399,7 @@ window.nova_plugins.push({
             else this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
          },
 
-         init(el_target = required(), callbackExport) {
+         init(el_target = required()) {
             this.log('drag init', ...arguments);
             if (!(el_target instanceof HTMLElement)) return console.error('el_target not HTMLElement:', el_target);
 
@@ -331,13 +432,18 @@ window.nova_plugins.push({
             NOVA.css.push(
                `[${this.attrNametoLock}]:active {
                   pointer-events: none;
-                  cursor: grab; /* <-- Doesn't work */
-                  outline: 2px dashed #3ea6ff !important;
                }`);
+            // `[${this.attrNametoLock}]:active {
+            //    pointer-events: none;
+            //    cursor: grab; /* <-- Doesn't work */
+            //    outline: 2px dashed #3ea6ff !important;
+            // }`);
          },
 
          dragStart(evt) {
+            // console.debug('dragStart:', evt.target, this.dragTarget);
             if (!this.dragTarget.contains(evt.target)) return;
+            // if (!evt.target.querySelector(PINNED_SELECTOR)) return; // Doesn't work
             this.log('dragStart');
 
             switch (evt.type) {
@@ -351,6 +457,8 @@ window.nova_plugins.push({
                   break;
             }
             this.active = true;
+            // document.body.style.cursor = 'grab';
+            document.body.style.cursor = 'move';
          },
 
          dragEnd(evt) {
@@ -360,6 +468,7 @@ window.nova_plugins.push({
             this.initialX = this.currentX;
             this.initialY = this.currentY;
             this.active = false;
+            document.body.style.cursor = 'default';
          },
 
          draging(evt) {
@@ -375,8 +484,42 @@ window.nova_plugins.push({
                   this.currentY = evt.touches[0].clientY - this.initialY;
                   break;
                case 'mousemove':
-                  this.currentX = evt.clientX - this.initialX;
-                  this.currentY = evt.clientY - this.initialY;
+                  const
+                     rect = this.dragTarget.getBoundingClientRect();
+                  // pointOnElX = evt.clientX - rect.left,
+                  // pointOnElY = evt.clientY - rect.top;
+                  // console.debug('evt.clientX', evt.clientX, evt.clientX - pointOnElX);
+
+                  // max viewport - right
+                  if (rect.left >= document.body.clientWidth - this.dragTarget.offsetWidth) {
+                     this.currentX = Math.min(
+                        evt.clientX - this.initialX,
+                        document.body.clientWidth - this.dragTarget.offsetWidth - this.dragTarget.offsetLeft
+                     );
+                  }
+                  // max viewport - left
+                  // else if (rect.left >= 0) {
+                  else {
+                     this.currentX = Math.max(evt.clientX - this.initialX, 0 - this.dragTarget.offsetLeft);
+                  }
+
+                  // max viewport - buttom
+                  if (rect.top >= window.innerHeight - this.dragTarget.offsetHeight) {
+                     this.currentY = Math.min(
+                        evt.clientY - this.initialY,
+                        window.innerHeight - this.dragTarget.offsetHeight - this.dragTarget.offsetTop
+                     );
+                  }
+                  // max viewport - top
+                  // else if (rect.top >= 0 - this.dragTarget.offsetTop) {
+                  else {
+                     this.currentY = Math.max(evt.clientY - this.initialY, 0 - this.dragTarget.offsetTop);
+                  }
+
+                  // no limit viewport
+                  // this.currentX = evt.clientX - this.initialX;
+                  // this.currentY = evt.clientY - this.initialY;
+
                   break;
             }
 
@@ -407,8 +550,8 @@ window.nova_plugins.push({
       // function dragElement(el) {
       //    let pos1 = pos2 = pos3 = pos4 = 0;
 
-      //    if (document.querySelector(".js-inject-header")) {
-      //       document.querySelector(".js-inject-header").onmousedown = dragMouseDown;
+      //    if (document.body.querySelector(".js-inject-header")) {
+      //       document.body.querySelector(".js-inject-header").onmousedown = dragMouseDown;
       //    }
       //    else {
       //       el.onmousedown = dragMouseDown;
@@ -436,6 +579,42 @@ window.nova_plugins.push({
 
       //    function closeDragElement() {
       //       document.onmouseup = document.onmousemove = null;
+      //    }
+      // }
+
+      // function dragElement(elem) {
+      //    const handler = (e) => {
+      //       e = e || window.event
+      //       e.preventDefault()
+      //       pos3 = e.clientX
+      //       pos4 = e.clientY
+      //       document.onmouseup = closeDragger
+      //       document.onmousemove = enableDragger
+      //    }
+
+      //    const enableDragger = (e) => {
+      //       e = e || window.event
+      //       e.preventDefault()
+      //       pos1 = pos3 - e.clientX
+      //       pos2 = pos4 - e.clientY
+      //       pos3 = e.clientX
+      //       pos4 = e.clientY
+
+      //       elem.style.top = (elem.offsetTop - pos2) + "px"
+      //       elem.style.left = (elem.offsetLeft - pos1) + "px"
+      //    }
+
+      //    const closeDragger = () => {
+      //       document.onmouseup = null
+      //       document.onmousemove = null
+      //    }
+
+      //    let pos1, pos2, pos3, pos4
+
+      //    if (document.getElementsByClassName("drDrag").length > 0) {
+      //       document.getElementsByClassName("drDrag")[0].onmousedown = handler
+      //    } else {
+      //       elem.onmousedown = handler
       //    }
       // }
 
@@ -493,13 +672,14 @@ window.nova_plugins.push({
          'title:ua': 'Менше значення - більший розмір',
          placeholder: '2-5',
          step: 0.1,
-         min: 2,
+         min: 1,
          max: 5,
          value: 2.5,
          // 'data-dependent': { 'player_pin_mode': ['float'] },
       },
       player_float_scroll_position: {
          _tagName: 'select',
+         // label: 'Player position in the corner',
          label: 'Player position',
          'label:zh': '球员位置',
          'label:ja': 'プレイヤーの位置',
@@ -530,7 +710,7 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'Bottom left', value: 'bottom-left',
+               label: 'Top right', value: 'top-right', selected: true,
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -545,7 +725,7 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'Top right', value: 'top-right', selected: true,
+               label: 'Bottom left', value: 'bottom-left',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -606,5 +786,23 @@ window.nova_plugins.push({
       //    label: 'Pause pinned video',
       //    type: 'checkbox',
       // },
+      player_float_scroll_after_fullscreen_restore_srcoll_pos: {
+         _tagName: 'input',
+         label: 'Restore scrolling back there after exiting fullscreen',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+      },
    }
 });

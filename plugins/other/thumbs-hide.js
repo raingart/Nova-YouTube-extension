@@ -20,7 +20,7 @@ window.nova_plugins.push({
    section: 'other',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
+      // alt1 - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
 
       const
          thumbsSelectors = [
@@ -48,12 +48,14 @@ window.nova_plugins.push({
                case 'home':
                   thumbRemove.live();
                   thumbRemove.mix();
+                  thumbRemove.watched();
                   break;
 
                case 'results':
                   thumbRemove.live();
                   thumbRemove.shorts();
                   thumbRemove.mix();
+                  // thumbRemove.watched();
                   break;
 
                case 'feed':
@@ -62,6 +64,7 @@ window.nova_plugins.push({
                   thumbRemove.shorts();
                   thumbRemove.premieres();
                   thumbRemove.mix();
+                  thumbRemove.watched();
                   break;
 
                case 'channel':
@@ -69,11 +72,13 @@ window.nova_plugins.push({
                   thumbRemove.streamed();
                   // thumbRemove.shorts();
                   thumbRemove.premieres();
+                  thumbRemove.watched();
                   break;
 
                case 'watch':
                   thumbRemove.live();
                   thumbRemove.mix();
+                  thumbRemove.watched();
                   break;
 
                // default:
@@ -84,9 +89,10 @@ window.nova_plugins.push({
       });
 
       const thumbRemove = {
+         // alt - https://greasyfork.org/en/scripts/461568-hide-youtube-shorts/
          shorts() {
             if (!user_settings.shorts_disable) return;
-            // exсlude "short" tab in channel
+            // exclude "short" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'shorts') return;
 
             document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
@@ -118,6 +124,7 @@ window.nova_plugins.push({
             }
          },
 
+         // alt - https://greasyfork.org/en/scripts/443344-youtube-toggle-videos-buttons
          premieres() {
             if (!user_settings.premieres_disable) return;
             // announced
@@ -156,7 +163,7 @@ window.nova_plugins.push({
 
          live() {
             if (!user_settings.live_disable) return;
-            // exсlude "LIVE" tab in channel
+            // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // #thumbnail #overlays [overlay-style="LIVE"],
@@ -176,7 +183,7 @@ window.nova_plugins.push({
 
          streamed() {
             if (!user_settings.streamed_disable) return;
-            // exсlude "LIVE" tab in channel
+            // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             document.body.querySelectorAll('#metadata-line > span:last-of-type')
@@ -211,6 +218,45 @@ window.nova_plugins.push({
             //       // thumb.style.display = 'none';
             //       console.debug('has Mix:', thumb);
             //       thumb.style.border = '2px solid red'; // mark for test
+            //    }
+            // });
+         },
+
+         // alt1 - https://greasyfork.org/en/scripts/451525-youtube-hide-watched
+         // alt2 - https://greasyfork.org/en/scripts/424945-youtube-watched-subscription-hider
+         watched() {
+            if (!user_settings.watched_disable) return;
+            // conflict with plugin [thumbnails-watched]
+            if (!user_settings['thumbnails-watched']) return;
+
+            const PERCENT_COMPLETE = user_settings.watched_disable_percent_complete || 90;
+
+            // Strategy 1. API
+            // document.body.querySelectorAll(thumbsSelectors)
+            //    .forEach(thumb => {
+            //       if ((to = thumb.data?.thumbnailOverlays).length) {
+            //          if (to[0].thumbnailOverlayResumePlaybackRenderer?.percentDurationWatched >= PERCENT_COMPLETE) {
+            //             thumb.remove();
+            //             // // for test
+            //             // // thumb.style.display = 'none';
+            //             // console.debug('has watched:', thumb);
+            //             // thumb.style.border = '2px solid orange'; // mark for test
+            //          }
+            //       }
+            //    });
+            // Strategy 1. HTML
+            document.body.querySelectorAll('#thumbnail #overlays #progress')
+               .forEach(el => {
+                  if (parseInt(el.style.width) > PERCENT_COMPLETE) {
+                     el.closest(thumbsSelectors)?.remove();
+                  }
+               });
+            // for test
+            // .forEach(el => {
+            //    if (thumb = el.closest(thumbsSelectors)) {
+            //       // thumb.style.display = 'none';
+            //       console.debug('has Mix:', thumb);
+            //       thumb.style.border = '2px solid orange'; // mark for test
             //    }
             // });
          },
@@ -257,7 +303,7 @@ window.nova_plugins.push({
          // 'label:tr': 'Saniye cinsinden minimum süre',
          'label:de': 'Mindestdauer in Sekunden',
          'label:pl': 'Poniżej czasu trwania w sekundach',
-         'label:ua': 'Мінімальна тривалість в секундах',
+         'label:ua': 'Мінімальна триваліcть в cекундах',
          type: 'number',
          // title: '60 - default',
          // title: 'Minimum duration in seconds',
@@ -271,17 +317,17 @@ window.nova_plugins.push({
       },
       premieres_disable: {
          _tagName: 'input',
-         label: 'Hide Premieres',
-         // 'label:zh': '',
-         'label:ja': 'プレミア公開を非表示',
-         'label:ko': '프리미어 숨기기',
-         'label:id': 'Sembunyikan pemutaran perdana',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
+         label: 'Hide Premieres/Upcoming',
+         'label:zh': '隐藏首映/即将上映',
+         'label:ja': 'プレミア公開/近日公開を非表示',
+         'label:ko': 'Premieres/예정 숨기기',
+         'label:id': 'Sembunyikan Tayang Perdana/Mendatang',
+         'label:es': 'Ocultar estrenos/próximos',
+         'label:pt': 'Ocultar Estreias/Próximas',
+         'label:fr': 'Masquer les premières/à venir',
+         'label:it': 'Nascondi anteprime/in arrivo',
          // 'label:tr': '',
-         // 'label:de': '',
+         'label:de': 'Premieren/Kommende ausblenden',
          'label:pl': 'Ukrywaj premiery',
          'label:ua': 'Приховати прем`єри',
          type: 'checkbox',
@@ -290,18 +336,18 @@ window.nova_plugins.push({
       live_disable: {
          _tagName: 'input',
          label: 'Hide Live streams',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
+         'label:zh': '隐藏直播',
+         'label:ja': 'ライブ ストリームを非表示にする',
+         'label:ko': '라이브 스트림 숨기기',
+         'label:id': 'Sembunyikan streaming langsung',
+         'label:es': 'Ocultar transmisiones en vivo',
+         'label:pt': 'Ocultar transmissões ao vivo',
+         'label:fr': 'Masquer les flux en direct',
+         'label:it': 'Nascondi live streaming',
          // 'label:tr': '',
-         // 'label:de': '',
+         'label:de': 'Live-Streams ausblenden',
          'label:pl': 'Ukryj strumień (na żywo)',
-         'label:ua': 'Приховати живі трансляції',
+         'label:ua': 'Приховати живі транcляції',
          type: 'checkbox',
          title: 'Now airing',
          'title:zh': '正在播出',
@@ -331,7 +377,7 @@ window.nova_plugins.push({
          // 'label:tr': 'Bitmiş akışları gizle',
          'label:de': 'Fertige Streams ausblenden',
          'label:pl': 'Ukryj po streamie',
-         'label:ua': 'Сховати завершені трансляції',
+         'label:ua': 'cховати завершені транcляції',
          type: 'checkbox',
          //title: '',
          'data-dependent': { 'live_disable': true },
@@ -350,7 +396,7 @@ window.nova_plugins.push({
          // 'label:tr': "'Karıştır' küçük resimlerini gizle",
          'label:de': '„Mix“-Thumbnails ausblenden',
          'label:pl': 'Ukryj miniaturki "Mix"',
-         'label:ua': 'Приховати мікс мініатюр',
+         'label:ua': 'Приховати мікc мініатюр',
          type: 'checkbox',
          title: '[Mix] offers to rewatch what has already saw',
          'title:zh': '[混合]提供重新观看已经看过的内容',
@@ -363,7 +409,50 @@ window.nova_plugins.push({
          // 'title:tr': '[Mix], daha önce görmüş olanı yeniden izlemeyi teklif ediyor',
          'title:de': '[Mix] bietet an, bereits Gesehenes noch einmal anzuschauen',
          'title:pl': '[Mix] proponuje ponowne obejrzenie już obejrzanych filmów',
-         'title:ua': '[Mix] пропонує передивитися вже побачене',
+         'title:ua': '[Mix] пропонує передивитиcя вже побачене',
+      },
+      watched_disable: {
+         _tagName: 'input',
+         label: 'Hide watched',
+         'label:zh': '隐藏观看',
+         'label:ja': '監視対象を非表示',
+         'label:ko': '시청 숨기기',
+         'label:id': 'Sembunyikan ditonton',
+         'label:es': 'Ocultar visto',
+         'label:pt': 'Ocultar assistidos',
+         'label:fr': 'Masquer surveillé',
+         'label:it': 'Nascondi guardato',
+         // 'label:tr': '',
+         'label:de': 'Ausblenden beobachtet',
+         'label:pl': 'Ukryj oglądane',
+         'label:ua': 'cховати переглянуті відео',
+         type: 'checkbox',
+         // https://myactivity.google.com/activitycontrols?settings=youtube
+         title: 'Need to Turn on [YouTube History]',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+      },
+      watched_disable_percent_complete: {
+         _tagName: 'input',
+         label: 'Threshold percent',
+         type: 'number',
+         title: 'in %',
+         placeholder: '%',
+         step: 5,
+         min: 5,
+         max: 100,
+         value: 90,
+         'data-dependent': { 'watched_disable': true },
       },
    }
 });

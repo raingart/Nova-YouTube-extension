@@ -3,9 +3,6 @@ console.debug('init options.js');
 // window.addEventListener('load', () => {
 
 const PopulateForm = {
-   // storageMethod: 'local',
-   storageMethod: 'sync',
-
    fill(settings, container) {
       // console.log("Load from Storage: %s=>%s", container?.id, JSON.stringify(settings));
 
@@ -151,11 +148,11 @@ const PopulateForm = {
          };
       }
 
-      Storage.setParams(newSettings, this.storageMethod);
+      Storage.setParams(newSettings, storageMethod);
 
       // notify background page
-      // chrome.extension.sendMessage({ // manifest v2
-      // chrome.runtime.sendMessage({ // manifest v3
+      // browser.extension.sendMessage({ // manifest v2
+      // browser.runtime.sendMessage({ // manifest v3
       //    "action": 'setOptions',
       //    "settings": newSettings
       // });
@@ -215,7 +212,7 @@ const PopulateForm = {
          // auto selects value on focus
          document.body.querySelectorAll('form input[type]').forEach(i => i.addEventListener('focus', i.select));
          this.btnSubmitAnimation.submitBtns = document.body.querySelectorAll('form [type=submit]');
-      }, this.storageMethod);
+      }, storageMethod);
    },
 }
 

@@ -35,9 +35,10 @@ window.nova_plugins.push({
    // 'desc:ua': '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
+      // alt1 - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
+      // alt2 - https://chrome.google.com/webstore/detail/afgfpcfjdgakemlmlgadojdfnejkpegd
 
-      // if (user_settings['video-autopause']) return; // conflict with plugin. This plugin has a higher priority. that's why it's disabled/commented
+      // if (user_settings['video-autopause']) return; // conflict with plugin [video-autopause]. This plugin has a higher priority. that's why it's disabled/commented
 
       if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
       // fix bug in google drive
@@ -50,10 +51,10 @@ window.nova_plugins.push({
             // reset disableStop (before on page change)
             document.addEventListener('yt-navigate-start', () => disableStop = false);
 
-            movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));
-
-            await NOVA.waitUntil(() => movie_player.hasOwnProperty('stopVideo')); // fix specific error for firefox
+            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/ ); // fix specific error for firefox
             movie_player.stopVideo(); // init before update onStateChange
+
+            movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));
 
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', NOVA.getPlayerState(state), document.visibilityState);

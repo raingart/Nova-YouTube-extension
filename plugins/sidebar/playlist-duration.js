@@ -35,9 +35,11 @@ window.nova_plugins.push({
       // alt4 - https://greasyfork.org/en/scripts/427936-youtube-playlist-duration
       // alt5 - https://greasyfork.org/en/scripts/418188-youtube-playlist-total-duration
       // alt6 - https://greasyfork.org/en/scripts/11712-youtube-playlist-time
+      // alt7 - https://chrome.google.com/webstore/detail/pijbakhgmhhadeakaocjfockpndcpobk
 
       const
          SELECTOR_ID = 'nova-playlist-duration',
+         // SELECTOR_ID = 'nova-playlist-duration-' + NOVA.currentPage, // Strategy 11
          // CACHE_PREFIX = SELECTOR_ID + ':',
          // STORE_NAME = CACHE_PREFIX + playlistId,
          playlistId = NOVA.queryURL.get('list');
@@ -46,7 +48,10 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'playlist':
-            NOVA.waitElement('#stats yt-formatted-string:first-child')
+            // NOVA.waitElement('#stats yt-formatted-string:first-child') // old
+            // NOVA.waitElement('.metadata-stats')
+            // NOVA.waitElement('.metadata-wrapper')
+            NOVA.waitElement('#owner-text a')
                .then(el => {
                   if (duration = getPlaylistDuration()) {
                      insertToHTML({ 'container': el, 'text': duration });
@@ -71,7 +76,7 @@ window.nova_plugins.push({
                         ?.contents[0].itemSectionRenderer
                         ?.contents[0].playlistVideoListRenderer?.contents;
 
-                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds), 10), 0);
+                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
                      if (duration) return outFormat(duration);
                   }
@@ -244,7 +249,8 @@ window.nova_plugins.push({
          // console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-         (document.getElementById(SELECTOR_ID) || (function () {
+         // (document.getElementById(SELECTOR_ID) || (function () { // Strategy 11
+         (container.querySelector(`#${SELECTOR_ID}`) || (function () {
             const el = document.createElement('span');
             el.id = SELECTOR_ID;
             // el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';

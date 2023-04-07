@@ -21,7 +21,8 @@ window.nova_plugins.push({
    // desc: 'Show the current time of the video on the title',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/450646-youtube-better-window-title
+      // alt1 - https://greasyfork.org/en/scripts/450646-youtube-better-window-title
+      // alt2 - https://greasyfork.org/en/scripts/450734-youtube-com-channel-name-and-upload-date-in-tab-title-no-notification-count
 
       NOVA.waitElement('video')
          .then(video => {

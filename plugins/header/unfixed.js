@@ -145,6 +145,18 @@ window.nova_plugins.push({
       header_unfixed_hotkey: {
          _tagName: 'select',
          label: 'Hotkey toggle',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         'label:ua': 'Перемикання гарячою клавішею',
          // title: '',
          options: [
             { label: 'V', value: 'v', selected: true },

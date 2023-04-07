@@ -1,7 +1,7 @@
 # bash: make build
 
 # All .js compiled into a single one.
-outFile="/tmp/novaTube.user.js"
+outFile="/tmp/nova-tube.user.js"
 # BEGIN="   options: {"
 # END="});"
 # NEW="});"
@@ -29,15 +29,15 @@ build:
 	rm -f $(outFile)
 
    # manual copy-add
-	cat ./UserScript/meta.js > $(outFile)
+	cat ./Userscript/meta.js > $(outFile)
 
-	cat ./UserScript/check-browser-support.js >> $(outFile)
+	cat ./Userscript/check-browser-support.js >> $(outFile)
 
 	# add plugins container
 	echo -e 'window.nova_plugins = [];' >> $(outFile)
 
 	# collecting all plugins and cleaning them
-	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
+	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "+*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
 	# failed attempt to use variables
 	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | sed -e "/BEGIN/,/END/c\NEW" >> $(outFile)
 
@@ -47,7 +47,7 @@ build:
 	cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" >> $(outFile)
 	# cat ./js/plugins.js >> $(outFile)
 
-	cat ./UserScript/user.js >> $(outFile)
+	cat ./Userscript/user.js >> $(outFile)
 
-	VSCodium.AppImage $(outFile)
+	command -v VSCodium.AppImage >/dev/null && VSCodium.AppImage $(outFile) || xdg-open $(outFile)
 	# xdg-open $(outFile)
