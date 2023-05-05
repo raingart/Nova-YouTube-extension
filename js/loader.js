@@ -171,6 +171,23 @@ const App = {
 
 App.init();
 
+/**
+ * 構造
+ *
+ * #content
+ *     ytd-watch-flexy
+ *         #player-theater-container
+ *         #columns
+ *             #primary
+ *                #player
+ *                   #ytd-player
+   *                   #movie_player 通常モードのプレイヤー
+ *             #secondary
+ *                 関連動画
+ *                 チャット欄
+ * ytd-miniplayer
+ */
+
 // grid row
 // force play video
 // fix playlist playback for unlogged
@@ -184,6 +201,8 @@ App.init();
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 // https://www.youtube.com/watch?v=4Zivt4wbvoM - narrow
 // https://www.youtube.com/watch?v=ir6nk2zrMG0 - wide
+// https://www.youtube.com/watch?v=twFNTZ6Y_OI - wide
+// https://www.youtube.com/watch?v=nX2anEXG0eE - square
 
 // live
 // https://www.youtube.com/watch?v=tNkZsRW7h2c - live
@@ -201,6 +220,7 @@ App.init();
 // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
 
 // for testing square-screen
+// https://www.youtube.com/watch?v=I_2D8Eo15wE
 // https://www.youtube.com/watch?v=EZAr3jrPqR8
 // https://www.youtube.com/watch?v=lx79bS-Kl78
 // https://www.youtube.com/watch?v=v-YQUCP-J8s

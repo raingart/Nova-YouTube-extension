@@ -54,6 +54,7 @@ window.nova_plugins.push({
                case 'results':
                   thumbRemove.live();
                   thumbRemove.shorts();
+                  // thumbRemove.durationLimits();
                   thumbRemove.mix();
                   // thumbRemove.watched();
                   break;
@@ -62,6 +63,7 @@ window.nova_plugins.push({
                   thumbRemove.live();
                   thumbRemove.streamed();
                   thumbRemove.shorts();
+                  thumbRemove.durationLimits();
                   thumbRemove.premieres();
                   thumbRemove.mix();
                   thumbRemove.watched();
@@ -99,29 +101,59 @@ window.nova_plugins.push({
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {
-            //       if (thumb = el.closest(thumbsSelectors)) {
-            //          // thumb.remove();
-            //          // thumb.style.display = 'none';
+            //    if (thumb = el.closest(thumbsSelectors)) {
+            //       // thumb.remove();
+            //       // thumb.style.display = 'none';
 
-            //          // console.debug('#shorts:', thumb);
-            //          thumb.style.border = '2px solid orange'; // mark for test
+            //       // console.debug('#short:', thumb);
+            //       thumb.style.border = '2px solid orange'; // mark for test
+            //    }
+            // });
+         },
+
+         durationLimits() {
+            if (!+user_settings.shorts_disable_min_duration) return;
+            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.shorts_disable_min_duration)) return; // for input[type=text] (digit time)
+
+            // exclude "" tab in channel
+            // if (NOVA.currentPage == 'channel' && NOVA.channelTab != 'video') return;
+
+            // Strategy 1. API
+            // // document.querySelector('ytd-grid-video-renderer').data - feed page
+            // document.body.querySelectorAll(thumbsSelectors)
+            //    .forEach(thumb => {
+            //       if ((to = thumb.data?.thumbnailOverlays).length) {
+            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.shorts_disable_min_duration || 60)
+            //          ) {
+            //             // thumb.remove();
+            //             // // for test
+            //             // // thumb.style.display = 'none';
+            //             // console.debug('has watched:', thumb);
+            //             thumb.style.border = '2px solid orange'; // mark for test
+            //          }
             //       }
             //    });
 
-            if (+user_settings.shorts_disable_min_duration) {
-               document.body.querySelectorAll('#thumbnail #overlays #text:not(:empty)')
-                  .forEach(el => {
-                     if ((thumb = el.closest(thumbsSelectors))
-                        && NOVA.timeFormatTo.hmsToSec(el.textContent.trim()) < (+user_settings.shorts_disable_min_duration || 60)
-                     ) {
-                        thumb.remove();
-                        // thumb.style.display = 'none';
+            // Strategy 2. HTML
+            const OVERLAYS_TIME_SELECTOR = '#thumbnail #overlays #text:not(:empty)';
+            // wait load overlays-time
+            NOVA.waitSelector(OVERLAYS_TIME_SELECTOR)
+               .then(() => {
+                  document.body.querySelectorAll(OVERLAYS_TIME_SELECTOR)
+                     .forEach(el => {
+                        // console.debug('>', NOVA.timeFormatTo.hmsToSec(el.textContent.trim()));
+                        if ((thumb = el.closest(thumbsSelectors))
+                           && (time = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
+                           && time < (+user_settings.shorts_disable_min_duration || 60)
+                        ) {
+                           thumb.remove();
+                           // thumb.style.display = 'none';
 
-                        // console.debug('#shorts:', thumb);
-                        // thumb.style.border = '2px solid blue'; // mark for test
-                     }
-                  });
-            }
+                           // console.debug('short time:', time, el.textContent);
+                           // thumb.style.border = '2px solid blue'; // mark for test
+                        }
+                     });
+               });
          },
 
          // alt - https://greasyfork.org/en/scripts/443344-youtube-toggle-videos-buttons
@@ -288,10 +320,11 @@ window.nova_plugins.push({
          'label:ua': 'Приховати прев`ю',
          type: 'checkbox',
          // title: '',
+         // 'data-dependent': { 'thumbs-shorts-duration': '!true' },
       },
       shorts_disable_min_duration: {
          _tagName: 'input',
-         label: 'Min duration in sec',
+         label: 'Min duration in sec (for regular video)',
          'label:zh': '最短持续时间（以秒为单位）',
          'label:ja': '秒単位の最小期間',
          'label:ko': '최소 지속 시간(초)',
@@ -308,12 +341,20 @@ window.nova_plugins.push({
          // title: '60 - default',
          // title: 'Minimum duration in seconds',
          title: '0 - disable',
-         placeholder: '60-300',
+         placeholder: '60-3600',
          step: 1,
          min: 0,
-         max: 3600,
+         max: 3600, // 3600 = 1 hour
          value: 0,
-         'data-dependent': { 'shorts_disable': true },
+
+         // for input[type=text] (digit time)
+         // type: 'text',
+         // title: '0 - disable',
+         // placeholder: '00:00:00 - 01:00:00',
+         // step: 1,
+         // value: '00:00:00',
+         // pattern: '(0[0-1])(:[0-5][0-9]){2}',
+         // size: 15,
       },
       premieres_disable: {
          _tagName: 'input',

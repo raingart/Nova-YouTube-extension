@@ -39,6 +39,6 @@ if [ ! -z "$1" ]; then
    ver="$1"
 fi
 git commit -m "$ver"
-git tag "v$(echo "${ver}" | sed 's/1/0/1')" -m "\n$(cat "./-changelog.md")"
+git tag "v$(echo "${ver}" | sed 's/1/0/1')" -m "$(cat "./-changelog.md")"
 git push origin master --tags
 git push origin master

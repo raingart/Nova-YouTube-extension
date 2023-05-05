@@ -1,6 +1,6 @@
 // for test:
 // https://www.youtube.com/playlist?list=WL
-// https://www.youtube.com/watch?v=G134f9wUGcU&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
+// https://www.youtube.com/watch?v=Ohz9eumWEhY&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
 // https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist container
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 // https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
@@ -48,16 +48,15 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'playlist':
-            // NOVA.waitElement('#stats yt-formatted-string:first-child') // old
-            // NOVA.waitElement('.metadata-stats')
-            // NOVA.waitElement('.metadata-wrapper')
-            NOVA.waitElement('#owner-text a')
+            // NOVA.waitSelector('#stats yt-formatted-string:first-child') // old
+            // NOVA.waitSelector('.metadata-stats')
+            // NOVA.waitSelector('.metadata-wrapper')
+            NOVA.waitSelector('#owner-text a')
                .then(el => {
                   if (duration = getPlaylistDuration()) {
                      insertToHTML({ 'container': el, 'text': duration });
                   }
                   else {
-                     // getPlaylistDurationFromThumbs()
                      getPlaylistDurationFromThumbnails({
                         'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
                      })
@@ -78,107 +77,90 @@ window.nova_plugins.push({
 
                      const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
-                     if (duration) return outFormat(duration);
+                     if (duration) {
+                        return outFormat(duration);
+                     }
                   }
                });
             break;
 
          case 'watch':
-            NOVA.waitElement('#secondary .index-message-wrapper')
+            NOVA.waitSelector('#secondary .index-message-wrapper')
                .then(el => {
                   const waitPlaylist = setInterval(() => {
-                     const playlistLength = movie_player.getPlaylist()?.length;
+                     const
+                        playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
+                        playlistList = document.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
+                           .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
+                           .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 
-                     let vids_list = document.body.querySelector('ytd-watch-flexy')
-                        ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents
-                        // let vids_list = window.ytInitialData.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents // not updated after page transition!
-                        .filter(i => i.playlistPanelVideoRenderer?.hasOwnProperty('videoId')); // filter hidden
+                     console.assert(playlistList?.length === playlistLength, 'playlist loading:', playlistList?.length + '/' + playlistLength);
 
-                     console.assert(vids_list?.length === playlistLength, 'playlist loading:', vids_list?.length + '/' + playlistLength);
-
-                     if (vids_list?.length && playlistLength && vids_list?.length === playlistLength) {
+                     if (playlistList?.length === playlistLength) {
                         clearInterval(waitPlaylist);
 
-                        if (duration = getPlaylistDuration(vids_list)) {
+                        // Strategy 1 API
+                        if (duration = getPlaylistDuration(playlistList)) {
                            insertToHTML({ 'container': el, 'text': duration });
                         }
+                        // Strategy 2 HTML. this method ignores progress
                         // this method ignores progress
                         else if (!user_settings.playlist_duration_progress_type) {
                            getPlaylistDurationFromThumbnails({
                               'container': document.body.querySelector('#secondary #playlist'),
                               'items_selector': '#playlist-items #unplayableText[hidden]',
                            })
-                              // getPlaylistDurationFromThumbs({
-                              //    'container': document.body.querySelector('#secondary #playlist'),
-                              // })
                               .then(duration => insertToHTML({ 'container': el, 'text': duration }));
                         }
                      }
                   }, 1000); // 1 sec
 
-                  function getPlaylistDuration(vids_list = []) {
-                     // console.log('getPlaylistDuration', ...arguments);
+                  // Warning! don't use "NOVA.waitUntil" below. Incorrect update of current currentIndex
+                  // const playlistList = await NOVA.waitUntil(() => {
+                  //    const
+                  //       playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
+                  //       playlistList = document.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
+                  //          .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
+                  //          .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 
-                     // if (!user_settings.playlist_duration_progress_type && (storage = sessionStorage.getItem(STORE_NAME))) {
-                     //    // console.debug(`get from cache [${CACHE_PREFIX + playlistId}]`, storage);
-                     //    return storage;
-                     // }
+                  //    console.assert(playlistList?.length === playlistLength, 'playlist loading:', playlistList?.length + '/' + playlistLength);
 
-                     // let vids_list = document.body.querySelector('ytd-watch-flexy')
-                     // ?.data?.contents?.twoColumnWatchNextResults?.playlist?.playlist?.contents || [];
+                  //    if (playlistList?.length === playlistLength) {
+                  //       return playlistList;
+                  //    }
+                  // }, 2000);
 
-                     // alt if current "playingIdx" always one step behind
-                     // const
-                     //    videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v'),
-                     //    playingIdx2 = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.videoId == videoId);
-                     // console.assert(playingIdx == playingIdx2, 'playingIdx diff:', playingIdx + '/' + playingIdx2);
-                     // if (playingIdx !== playingIdx2) alert(1)
+                  function getPlaylistDuration(total_list) {
+                     const currentIndex = movie_player.getPlaylistIndex();// || playlistList?.findIndex(c => c.playlistPanelVideoRenderer.selected);
 
-                     if (window.nova_playlistReversed) vids_list = [...vids_list].reverse();
-
-                     // const playingIdx = vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
-                     const playingIdx = movie_player.getPlaylistIndex();
-                     // not available for reverse
-                     // const playingIdx = movie_player.getPlaylistIndex() || vids_list?.findIndex(c => c.playlistPanelVideoRenderer.selected);
-
-                     let total;
+                     let elapsedList = [...total_list];
+                     // if (window.nova_playlistReversed) playlistDuration = playlistDuration.reverse();
 
                      switch (user_settings.playlist_duration_progress_type) {
                         case 'done':
-                           total = getDurationFromList(vids_list);
-                           vids_list.splice(playingIdx);
+                           elapsedList.splice(currentIndex);
                            // console.debug('done vids_list.length:', vids_list.length);
                            break;
 
                         case 'left':
-                           total = getDurationFromList(vids_list);
-                           vids_list.splice(0, playingIdx);
+                           elapsedList.splice(0, currentIndex);
                            // console.debug('left vids_list.length:', vids_list.length);
                            break;
 
                         // case 'total': // skiping
                      }
-
-                     if ((duration = getDurationFromList(vids_list)) // disallow set zero
-                        || (duration === 0 && user_settings.playlist_duration_progress_type) // allow set zero if use playlist_duration_progress_type
-                     ) {
-                        return outFormat(duration, total);
-                     }
-
-                     function getDurationFromList(arr) {
-                        return [...arr]
-                           .filter(e => e.playlistPanelVideoRenderer?.thumbnailOverlays?.length) // filter [Private video]
-                           .flatMap(e => (time = e.playlistPanelVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer?.text.simpleText)
-                              ? NOVA.timeFormatTo.hmsToSec(time) : [])
-                           .reduce((acc, time) => acc + time, 0);
-                     }
+                     const sumArr = arr => arr.reduce((acc, time) => acc + +time, 0);
+                     return outFormat(
+                        sumArr(elapsedList),
+                        user_settings.playlist_duration_percentage ? sumArr(total_list) : false
+                     );
                   }
                });
             break;
       }
 
       function getPlaylistDurationFromThumbnails({ items_selector = required(), container }) {
-         console.log('thumbnails_method', ...arguments);
+         // console.log('thumbnails_method', ...arguments);
          if (container && !(container instanceof HTMLElement)) {
             return console.error('container not HTMLElement:', container);
          }
@@ -187,7 +169,9 @@ window.nova_plugins.push({
             let forcePlaylistRun = false;
             const waitThumbnails = setInterval(() => {
                const
-                  playlistLength = document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length || document.body.querySelectorAll(items_selector)?.length,
+                  playlistLength = movie_player.getPlaylist()?.length
+                     || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length
+                     || document.body.querySelectorAll(items_selector)?.length,
                   timeStampList = (container || document.body)
                      .querySelectorAll('.ytd-thumbnail-overlay-time-status-renderer:not(:empty)'),
                   duration = getTotalTime(timeStampList);
@@ -228,19 +212,20 @@ window.nova_plugins.push({
 
       function outFormat(duration = 0, total) {
          // console.log('outFormat', ...arguments);
-         let outArr = [];
-         // time
-         outArr.push(NOVA.timeFormatTo.HMS.digit(
-            (NOVA.currentPage == 'watch' && NOVA.videoElement?.playbackRate)
-               ? duration / NOVA.videoElement.playbackRate : duration
-         ));
+         let outArr = [
+            // time
+            NOVA.timeFormatTo.HMS.digit(
+               (NOVA.currentPage == 'watch' && NOVA.videoElement?.playbackRate)
+                  ? (duration / NOVA.videoElement.playbackRate) : duration
+            )
+         ];
          // pt
-         if (user_settings.playlist_duration_percentage && total) {
+         if (total) {
             outArr.push(`(${~~(duration * 100 / total) + '%'})`);
-         }
-         // progress type (done, left, total)
-         if (user_settings.playlist_duration_progress_type) {
-            outArr.push(user_settings.playlist_duration_progress_type);
+            // progress type (done, left, total)
+            if (user_settings.playlist_duration_progress_type) {
+               outArr.push(user_settings.playlist_duration_progress_type);
+            }
          }
          return ' - ' + outArr.join(' ');
       }
@@ -251,6 +236,8 @@ window.nova_plugins.push({
 
          // (document.getElementById(SELECTOR_ID) || (function () { // Strategy 11
          (container.querySelector(`#${SELECTOR_ID}`) || (function () {
+            // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
+            // return document.getElementById(SELECTOR_ID);
             const el = document.createElement('span');
             el.id = SELECTOR_ID;
             // el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
@@ -344,6 +331,7 @@ window.nova_plugins.push({
          'label:pl': 'Pokaż procenty',
          'label:ua': 'Показати %',
          type: 'checkbox',
+         'data-dependent': { 'playlist_duration_progress_type': ['done', 'left'] },
       },
    }
 });

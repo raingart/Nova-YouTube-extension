@@ -35,50 +35,43 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
 
-      const
-         urlArr = location.pathname.split('/').filter(Boolean),
-         [page, channelTab, channelTabAlt] = urlArr;
+      if (NOVA.channelTab) return;
 
-      // if not - home page in channel/user
-      if (urlArr.length > 2
-         || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTabAlt || channelTab)
-      ) return;
+      // if (user_settings.channel_default_tab_mode == 'redirect') {
+      location.pathname += '/' + user_settings.channel_default_tab;
+      // }
+      // else {
+      //    // tab select
+      //    NOVA.waitSelector('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
+      //       .then(() => {
+      //          let tab_nth;
+      //          switch (user_settings.channel_default_tab) {
+      //             // case 'playlists': tab_nth = 6; break;
+      //             // case 'about': tab_nth = 12; break;
+      //             // case 'videos':
+      //             default: tab_nth = 4;
+      //          }
+      //          // select tab
+      //          document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`)
+      //             ?.click();
+      //       });
 
-      if (user_settings.channel_default_tab_mode == 'redirect' || user_settings.channel_default_tab != 'videos') {
-         location.pathname += '/' + user_settings.channel_default_tab;
-      }
-      else {
-         // tab select
-         NOVA.waitElement('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]')
-            .then(() => {
-               let tab_nth;
-               switch (user_settings.channel_default_tab) {
-                  // case 'playlists': tab_nth = 6; break;
-                  // case 'about': tab_nth = 12; break;
-                  // case 'videos':
-                  default: tab_nth = 4;
-               }
-               // select tab
-               document.body.querySelector(`#tabsContent>[role="tab"]:nth-child(${tab_nth})[aria-selected="false"]`)
-                  ?.click();
-            });
-
-         // for mobile
-         // NOVA.waitElement('.scbrr-tabs > a[role="tab"]')
-         //    .then(() => {
-         //       if (document.body.querySelector(`.scbrr-tabs > a[aria-selected="true"]`)) return;
-         //       let tab_nth;
-         //       switch (user_settings.channel_default_tab) {
-         //          // case 'playlists': tab_nth = 6; break;
-         //          // case 'about': tab_nth = 12; break;
-         //          case 'videos': tab_nth = 2; break;
-         //          // default: tab_nth = 2;
-         //       }
-         //       // select tab
-         //       document.body.querySelector(`.scbrr-tabs > a:nth-child(${tab_nth})`)
-         //          ?.click();
-         //    });
-      }
+      //    // for mobile
+      //    // NOVA.waitSelector('.scbrr-tabs > a[role="tab"]')
+      //    //    .then(() => {
+      //    //       if (document.body.querySelector(`.scbrr-tabs > a[aria-selected="true"]`)) return;
+      //    //       let tab_nth;
+      //    //       switch (user_settings.channel_default_tab) {
+      //    //          // case 'playlists': tab_nth = 6; break;
+      //    //          // case 'about': tab_nth = 12; break;
+      //    //          case 'videos': tab_nth = 2; break;
+      //    //          // default: tab_nth = 2;
+      //    //       }
+      //    //       // select tab
+      //    //       document.body.querySelector(`.scbrr-tabs > a:nth-child(${tab_nth})`)
+      //    //          ?.click();
+      //    //    });
+      // }
 
    },
    options: {
@@ -190,67 +183,67 @@ window.nova_plugins.push({
             },
          ],
       },
-      channel_default_tab_mode: {
-         _tagName: 'select',
-         label: 'Mode',
-         'label:zh': '模式',
-         'label:ja': 'モード',
-         'label:ko': '방법',
-         // 'label:id': 'Mode',
-         'label:es': 'Modo',
-         'label:pt': 'Modo',
-         // 'label:fr': 'Mode',
-         'label:it': 'Modalità',
-         // 'label:tr': 'Mod',
-         'label:de': 'Modus',
-         'label:pl': 'Tryb',
-         'label:ua': 'Режим',
-         title: 'Redirect is safer but slower',
-         'title:zh': '重定向是安全的，但速度很慢',
-         'title:ja': 'リダイレクトは安全ですが遅くなります',
-         'title:ko': '리디렉션이 더 안전하지만 느립니다',
-         'title:id': 'Redirect lebih aman tetapi lebih lambat',
-         'title:es': 'La redirección es más segura pero más lenta',
-         'title:pt': 'O redirecionamento é mais seguro, mas mais lento',
-         'title:fr': 'La redirection est plus sûre mais plus lente',
-         'title:it': 'Il reindirizzamento è più sicuro ma più lento',
-         // 'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
-         'title:de': 'Redirect ist sicherer, aber langsamer',
-         'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
-         'title:ua': 'Перенаправлення безпечніше, але повільніше',
-         options: [
-            {
-               label: 'redirect', value: 'redirect',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               'label:pl': 'przekierowanie',
-               'label:ua': 'перенаправити',
-            },
-            {
-               label: 'click', /*value: '',*/ selected: true,
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               'label:pl': 'klik',
-               'label:ua': 'клік',
-            },
-         ],
-         'data-dependent': { 'channel_default_tab': ['videos'] },
-      },
+      // channel_default_tab_mode: {
+      //    _tagName: 'select',
+      //    label: 'Mode',
+      //    'label:zh': '模式',
+      //    'label:ja': 'モード',
+      //    'label:ko': '방법',
+      //    // 'label:id': 'Mode',
+      //    'label:es': 'Modo',
+      //    'label:pt': 'Modo',
+      //    // 'label:fr': 'Mode',
+      //    'label:it': 'Modalità',
+      //    // 'label:tr': 'Mod',
+      //    'label:de': 'Modus',
+      //    'label:pl': 'Tryb',
+      //    'label:ua': 'Режим',
+      //    title: 'Redirect is safer but slower',
+      //    'title:zh': '重定向是安全的，但速度很慢',
+      //    'title:ja': 'リダイレクトは安全ですが遅くなります',
+      //    'title:ko': '리디렉션이 더 안전하지만 느립니다',
+      //    'title:id': 'Redirect lebih aman tetapi lebih lambat',
+      //    'title:es': 'La redirección es más segura pero más lenta',
+      //    'title:pt': 'O redirecionamento é mais seguro, mas mais lento',
+      //    'title:fr': 'La redirection est plus sûre mais plus lente',
+      //    'title:it': 'Il reindirizzamento è più sicuro ma più lento',
+      //    // 'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
+      //    'title:de': 'Redirect ist sicherer, aber langsamer',
+      //    'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
+      //    'title:ua': 'Перенаправлення безпечніше, але повільніше',
+      //    options: [
+      //       {
+      //          label: 'redirect', value: 'redirect',
+      //          // 'label:zh': '',
+      //          // 'label:ja': '',
+      //          // 'label:ko': '',
+      //          // 'label:id': '',
+      //          // 'label:es': '',
+      //          // 'label:pt': '',
+      //          // 'label:fr': '',
+      //          // 'label:it': '',
+      //          // 'label:tr': '',
+      //          // 'label:de': '',
+      //          'label:pl': 'przekierowanie',
+      //          'label:ua': 'перенаправити',
+      //       },
+      //       {
+      //          label: 'click', /*value: '',*/ selected: true,
+      //          // 'label:zh': '',
+      //          // 'label:ja': '',
+      //          // 'label:ko': '',
+      //          // 'label:id': '',
+      //          // 'label:es': '',
+      //          // 'label:pt': '',
+      //          // 'label:fr': '',
+      //          // 'label:it': '',
+      //          // 'label:tr': '',
+      //          // 'label:de': '',
+      //          'label:pl': 'klik',
+      //          'label:ua': 'клік',
+      //       },
+      //    ],
+      //    'data-dependent': { 'channel_default_tab': ['videos'] },
+      // },
    }
 });

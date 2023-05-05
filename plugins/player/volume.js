@@ -55,7 +55,7 @@ window.nova_plugins.push({
       // alt2 - https://chrome.google.com/webstore/detail/oggiagogblgafoilijjdhcmflgekfmja
       // alt3 - https://greasyfork.org/en/scripts/427173-maximum-audio-output-for-youtube
 
-      NOVA.waitElement('video')
+      NOVA.waitSelector('video')
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {

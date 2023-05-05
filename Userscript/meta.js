@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Nova YouTube
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
-// @version         0.40.0
+// @version         0.41.0
 // @description     Gives you more control on YouTube
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
@@ -14,9 +14,11 @@
 // @contributionURL https://www.buymeacoffee.com/raingart
 // @contributionURL https://www.paypal.com/donate/?hosted_button_id=B44WLWHZ8AGU2
 
-// @include         http*://*.youtube.com/*
-// @include         http*://*.youtube-nocookie.com/*
-// @include         http*://youtube.googleapis.com/*
+// @domain          youtube.com
+// @include         http*://www.youtube.com/*
+// @include         http*://m.youtube.com/*
+// @include         http*://*.youtube-nocookie.com/embed/*
+// @include         http*://youtube.googleapis.com/embed/*
 // @include         http*://raingart.github.io/options.html*
 
 // @exclude         http*://*.youtube.com/*.xml*
@@ -24,18 +26,14 @@
 // @exclude         http*://music.youtube.com/*
 // @exclude         http*://accounts.youtube.com/*
 // @exclude         http*://studio.youtube.com/*
+// @exclude         http*://*.youtube.com/redirect?*
+// @exclude         http*://*.youtube.com/embed/?*
 
-// @grant           GM_addStyle
 // @grant           GM_getResourceText
 // @grant           GM_getResourceURL
-// @grant           GM_addValueChangeListener
-// @grant           GM_removeValueChangeListener
-// @grant           GM_listValues
 // @grant           GM_getValue
 // @grant           GM_setValue
-// @grant           GM_deleteValue
 // @grant           GM_registerMenuCommand
-// @grant           GM_unregisterMenuCommand
 // @grant           GM_notification
 // @grant           GM_openInTab
 

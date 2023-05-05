@@ -33,10 +33,11 @@ const Plugins = {
       'player/+unblock-warn-content.js',
       // // 'player/next-autoplay.js',
       'player/+fullscreen-scroll.js',
-      'player/+time-remaining.js',
+      'player/time-remaining.js',
       'player/+live-duration.js',
-      'player/title-time.js',
+      'player/+title-time.js',
       'player/+save-for-channel.js',
+      'player/+sponsor-block.js',
       // // 'player/block-embed.js',
 
       'other/+annotations.js',
@@ -46,7 +47,9 @@ const Plugins = {
       'other/+thumbs-clear.js',
       'other/+thumbs-title-normalize.js',
       'other/+thumbs-watched.js',
+      'other/+thumbs-shorts-time.js',
       'other/+thumbs-count-line.js',
+      // 'other/thumbs-quality.js',
       // // 'other/thumbs-rating.js',
       'other/+channel-trailer-stop.js',
       'other/channel-tab.js',
@@ -58,6 +61,7 @@ const Plugins = {
       'other/shorts-redirect.js',
       'other/rss.js',
       // // 'other/thumbs-sort.js',
+      'other/+thumbs-sort.js',
       'other/+miniplayer-disable.js',
 
       'details/videos-count.js',
@@ -219,7 +223,7 @@ const Plugins = {
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.title}"\nPlease report the bug or disable the plugin\n\nSend the bug raport to developer?`,
+                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.id}"\nPlease report the bug or disable the plugin\n\nSend the bug raport to developer?`,
                   });
                }
 

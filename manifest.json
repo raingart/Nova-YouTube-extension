@@ -11,7 +11,7 @@
          "strict_min_version": "74.0"
       }
    },
-   "version": "1.40.0",
+   "version": "1.41.0",
    "author": "raingart",
    "icons": {
       "16": "/icons/16.png",
@@ -28,20 +28,24 @@
    "content_scripts": [
       {
          "matches": [
-            "https://*.youtube.com/*",
-            "https://*.youtube-nocookie.com/*"
+            "https://www.youtube.com/*",
+            "https://m.youtube.com/*",
+            "https://*.youtube-nocookie.com/embed/*",
+            "https://youtube.googleapis.com/embed/*"
          ],
          "exclude_matches": [
             "https://*.youtube.com/*.xml*",
             "https://*.youtube.com/error*",
             "https://music.youtube.com/*",
             "https://accounts.youtube.com/*",
-            "https://studio.youtube.com/*"
+            "https://studio.youtube.com/*",
+            "https://*.youtube.com/redirect?*",
+            "https://*.youtube.com/embed/?*"
          ],
          "run_at": "document_start",
          "all_frames": true,
          "js": [
-            "/js/libs/universal-browser.js",
+            "/js/libs/browser-support.js",
             "/js/libs/storage.js",
             "/js/plugins.js",
             "/js/loader.js"

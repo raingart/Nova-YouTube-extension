@@ -2,7 +2,8 @@
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
 // https://radio.nv.ua/online-radio-nv - live embed
 
-// https://www.youtube.com/watch?v=PtSNcZLyNaU - for chapter render
+// Сhapters not indicated in the description block
+// https://www.youtube.com/watch?v=PtSNcZLyNaU
 
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
@@ -30,23 +31,27 @@ window.nova_plugins.push({
       // alt3 - https://chrome.google.com/webstore/detail/dammfdepmngjjoidfdbhkjboecgceamb
       // alt4 - https://greasyfork.org/en/scripts/394512-youtube-progressbar-preserver
       // alt5 - https://chrome.google.com/webstore/detail/ogkoifddpkoabehfemkolflcjhklmkge
+      // alt6 - https://greasyfork.org/en/scripts/426283-youtube-permanent-progressbar
 
       // live iframe
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
          // && (window.self.location.href.includes('live_stream') || movie_player.getVideoData().isLive)
       ) return;
 
+      // skip embed when disable chrome - bottom(example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
+      if (NOVA.currentPage == 'embed' && ['0', 'false'].includes(NOVA.queryURL.get('controls'))) return;
+
       const
          SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin "player-control-autohide"
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitElement('#movie_player video')
-         .then(async video => {
+      NOVA.waitSelector('#movie_player.ytp-autohide video')
+         .then(video => {
             const
-               // async fix embed when disable chrome-bottom (example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
-               chromeBtn_zIndex = await NOVA.waitUntil(() => (chromeBtn = document.body.querySelector('.ytp-chrome-bottom')) && getComputedStyle(chromeBtn)['z-index']),
-               container = insertFloatBar(chromeBtn_zIndex),
+               container = insertFloatBar(Math.max(
+                  NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59
+               ) + 1),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
@@ -58,12 +63,12 @@ window.nova_plugins.push({
             // document.addEventListener('yt-navigate-finish', resetBar);
 
             // render progress
-            // NOVA.waitElement(`${SELECTOR}-progress`)
+            // NOVA.waitSelector(`${SELECTOR}-progress`)
             //    .then(progressEl => {
             video.addEventListener('timeupdate', function () {
                if (notInteractiveToRender()) return;
 
-               // Strategy 1 HTML5
+               // Strategy 1 HTML
                if (!isNaN(this.duration)) {
                   progressEl.style.transform = `scaleX(${this.currentTime / this.duration})`;
                }
@@ -75,7 +80,7 @@ window.nova_plugins.push({
             // });
 
             // render buffer
-            // NOVA.waitElement(`${SELECTOR}-buffer`)
+            // NOVA.waitSelector(`${SELECTOR}-buffer`)
             //    .then(bufferEl => {
             video.addEventListener('progress', renderBuffer.bind(video));
             video.addEventListener('seeking', renderBuffer.bind(video));
@@ -83,7 +88,7 @@ window.nova_plugins.push({
             function renderBuffer() {
                if (notInteractiveToRender()) return;
 
-               // Strategy 1 HTML5
+               // Strategy 1 HTML
                // for (let i = 0; i < this.buffered.length; i++) {
                //    //    const bufferedSeconds = this.buffered.end(0) - this.buffered.start(0);
                //    //    console.debug(`${bufferedSeconds} seconds of video are ready to play.`);
@@ -138,7 +143,7 @@ window.nova_plugins.push({
                   <div id="${SELECTOR_ID}-chapters"></div>
                </div>`);
 
-            // const bufferColor = getComputedStyle(document.body.querySelector('.ytp-load-progress'))['background-color'] || 'rgba(255,255,255,.4)';
+            // const bufferColor = NOVA.css.getValue('.ytp-load-progress', 'background-color') || 'rgba(255,255,255,.4)';
 
             NOVA.css.push(
                `[id|=${SELECTOR_ID}] {
@@ -149,10 +154,10 @@ window.nova_plugins.push({
                ${SELECTOR} {
                   --opacity: ${+user_settings.player_float_progress_bar_opacity || .7};
                   --height: ${+user_settings.player_float_progress_bar_height || 3}px;
-                  --bg-color: ${getComputedStyle(document.body.querySelector('.ytp-progress-list'))['background-color'] || 'rgba(255,255,255,.2)'};
+                  --bg-color: ${NOVA.css.getValue('.ytp-progress-list', 'background-color') || 'rgba(255,255,255,.2)'};
                   --zindex: ${z_index};
 
-                  opacity: var(--opacity)
+                  opacity: var(--opacity);
                   z-index: var(--zindex);
                   background-color: var(--bg-color);
                   width: 100%;
@@ -197,10 +202,15 @@ window.nova_plugins.push({
 
                ${SELECTOR}-chapters span {
                   height: var(--height);
-                  z-index:  calc(var(--zindex) + 1);
-                  border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
+                  z-index: calc(var(--zindex) + 1);
+                  box-sizing: border-box;
+                  padding: 0;
+                  margin: 0;
+               }
+
+               ${SELECTOR}-chapters span:not(:first-child) {
                   /* border-left: ${CHAPTERS_MARK_WIDTH_PX} solid #000; */
-                  margin-left: -${CHAPTERS_MARK_WIDTH_PX};
+                  border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
                }`);
 
             return document.getElementById(SELECTOR_ID);
@@ -221,7 +231,7 @@ window.nova_plugins.push({
                   this.from_description(vid.duration);
                   break;
 
-               // embed dont have description
+               // embed don't have description
                case 'embed':
                   // fix loaded - window.ytPubsubPubsubInstance and chaptersContainer to from_div
                   await NOVA.waitUntil(() => (
@@ -244,32 +254,32 @@ window.nova_plugins.push({
             const selectorTimestampLink = 'a[href*="&t="]';
 
             // search in description
-            // NOVA.waitElement(`ytd-watch-metadata #description #video-lockups a`)
-            NOVA.waitElement(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`)
+            // NOVA.waitSelector(`ytd-watch-metadata #description #video-lockups a`)
+            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`)
                .then(() => this.renderChaptersMarks(duration));
 
             // search in comments
-            NOVA.waitElement(`#comments #comment #comment-content ${selectorTimestampLink}`)
+            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`)
                .then(() => this.renderChaptersMarks(duration));
             // search in first/pinned comment
-            // NOVA.waitElement(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
+            // NOVA.waitSelector(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
             //    .then(() => this.renderChaptersMarks(duration));
          },
 
          from_div(chaptersContainer = required()) {
             if (!(chaptersContainer instanceof HTMLElement)) return console.error('container not HTMLElement:', chaptersContainer);
             const
-               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width, 10),
+               progressContainerWidth = parseInt(getComputedStyle(chaptersContainer).width),
                chaptersOut = document.getElementById(`${SELECTOR_ID}-chapters`);
 
             for (const chapter of chaptersContainer.children) {
                const
                   newChapter = document.createElement('span'),
                   { width, marginLeft, marginRight } = getComputedStyle(chapter), // chapterWidth = width
-                  chapterMargin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
+                  chapterMargin = parseInt(marginLeft) + parseInt(marginRight);
 
                // console.debug('chapter', chapter.style.width, width, chapterMargin);
-               newChapter.style.width = (((parseInt(width, 10) + chapterMargin) / progressContainerWidth) * 100) + '%';
+               newChapter.style.width = (((parseInt(width) + chapterMargin) / progressContainerWidth) * 100) + '%';
 
                chaptersOut.append(newChapter);
             }

@@ -14,10 +14,12 @@ const PopulateForm = {
             // console.log('>opt %s#%s=%s', el.tagName, key, val);
 
             switch (el.tagName.toLowerCase()) {
-               case 'div':
-                  // el.innerHTML += val;
-                  el.textContent = val;
-                  break;
+               // case 'div': // for isContentEditable (contenteditable="true")
+               //    if (el.isContentEditable) {
+               //       // el.innerHTML = val;
+               //       el.textContent = val;
+               //    }
+               //    break;
 
                case 'textarea':
                   el.value = val;
@@ -216,5 +218,5 @@ const PopulateForm = {
    },
 }
 
-//    Form.init();
+//    PopulateForm.init();
 // });

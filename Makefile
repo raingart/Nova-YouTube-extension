@@ -24,22 +24,22 @@ outFile="/tmp/nova-tube.user.js"
 # 1. clear comments. regex - "//\s.*|/\*[\s\S\n]*?\*/"
 # 2. For clear spaces use "Format Document".
 # 3. final clear empty multiple-newlines. regex - "^\n{2,}"
+# 3.1. replace "\n^\n" to"\n"
 
 build:
 	rm -f $(outFile)
 
-   # manual copy-add
 	cat ./Userscript/meta.js > $(outFile)
 
-	cat ./Userscript/check-browser-support.js >> $(outFile)
+	cat ./Userscript/compatibility.js >> $(outFile)
 
 	# add plugins container
 	echo -e 'window.nova_plugins = [];' >> $(outFile)
 
 	# collecting all plugins and cleaning them
-	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "+*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
+	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "+*" ! -iname "plugin_example.js" | xargs sed "/title:/d" | grep -v 'desc:' | grep -v 'section:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
 	# failed attempt to use variables
-	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | sed -e "/BEGIN/,/END/c\NEW" >> $(outFile)
+	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | grep -v 'section:' | sed -e "/BEGIN/,/END/c\NEW" >> $(outFile)
 
 	# only collection without cleaning
 	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs cat >> $(outFile)

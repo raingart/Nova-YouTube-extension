@@ -368,7 +368,9 @@ const Opt = {
                // if (confirm(i18n('opt_import_popup'))) browser.runtime.openOptionsPage();
                if (confirm(i18n('opt_prompt_import_settings'))) {
                   // browser.runtime.openOptionsPage();
-                  const urlOptionsPage = new URL(browser.runtime.getURL(browser.runtime.getManifest().options_page)); // manifest v2
+                  const urlOptionsPage = new URL(browser.runtime.getURL(
+                     browser.runtime.getManifest().options_ui?.page// || options_page
+                  )); // manifest v2
                   // const urlOptionsPage = new URL(browser.extension.getURL(browser.runtime.getManifest().options_page)); // manifest v3
                   urlOptionsPage.searchParams.set('tabs', 'tab-other');
                   window.open(urlOptionsPage.href);

@@ -58,6 +58,7 @@ browser.runtime.onInstalled.addListener(details => {
                   'player-buttons-custom': 'player-quick-buttons',
                   'button-no-labels': 'details_button_no_labels',
                   'button_no_labels_opacity': 'details_button_no_labels_opacity',
+                  'shorts_thumbnails_time': 'shorts-thumbnails-time',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

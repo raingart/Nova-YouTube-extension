@@ -47,7 +47,7 @@ window.nova_plugins.push({
       // alt5 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
       // alt6 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
 
-      // NOVA.waitElement('#movie_player')
+      // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
       //       // trigger default indicator
       //       // Strategy 1. Default indicator doesn't work for html5 way (Strategy 2)
@@ -56,7 +56,7 @@ window.nova_plugins.push({
       //       });
       //    });
 
-      NOVA.waitElement('#movie_player video')
+      NOVA.waitSelector('#movie_player video')
          .then(video => {
             const sliderContainer = insertSlider.apply(video);
             // console.debug('sliderContainer', sliderContainer);
@@ -75,7 +75,7 @@ window.nova_plugins.push({
                }
             });
 
-            setDefaultRate(); // init
+            setDefaultRate.apply(video); // init
 
             video.addEventListener('loadeddata', setDefaultRate); // update
 
@@ -111,7 +111,7 @@ window.nova_plugins.push({
 
       // mousewheel in player area
       if (user_settings.rate_hotkey) {
-         NOVA.waitElement('.html5-video-container')
+         NOVA.waitSelector('.html5-video-container')
             .then(container => {
                container.addEventListener('wheel', evt => {
                   evt.preventDefault();
@@ -130,10 +130,10 @@ window.nova_plugins.push({
       // during initialization, the icon can be loaded after the video
       if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
          // 'Official Artist' badge
-         NOVA.waitElement('#upload-info #channel-name .badge-style-type-verified-artist')
+         NOVA.waitSelector('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
 
-         NOVA.waitElement('#upload-info #channel-name a[href]')
+         NOVA.waitSelector('#upload-info #channel-name a[href]')
             .then(channelName => {
                // channelNameVEVO
                if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
@@ -169,7 +169,7 @@ window.nova_plugins.push({
             }
             else {
                this.log('set:html5');
-               NOVA.videoElement = await NOVA.waitElement('video');
+               // NOVA.videoElement = await NOVA.waitSelector('video');
                // fix - Uncaught SyntaxError: Invalid left-hand side in assignment
                if (NOVA.videoElement) {
                   NOVA.videoElement.playbackRate = +level;
@@ -273,17 +273,18 @@ window.nova_plugins.push({
       function setDefaultRate() {
          // init rate_default
          // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
-         if (+ user_settings.rate_default !== 1) {
+         if (+user_settings.rate_default !== 1) {
             const is_music = NOVA.isMusic();
             // console.debug('isMusic', is_music);
-            if (NOVA.videoElement?.playbackRate !== +user_settings.rate_default
+            if (this.playbackRate !== +user_settings.rate_default
                && (!user_settings.rate_default_apply_music || !is_music)
+               && (!isNaN(this.duration) && this.duration > 25) // min 25sec
             ) {
                // console.debug('update rate_default');
                playerRate.set(user_settings.rate_default);
             }
             // reset
-            else if (NOVA.videoElement?.playbackRate !== 1 && is_music) {
+            else if (this.playbackRate !== 1 && is_music) {
                // console.debug('reset rate_default');
                playerRate.set(1);
             }

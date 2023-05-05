@@ -34,6 +34,8 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/455475-youtube-resumer
       // alt2 - https://greasyfork.org/en/scripts/433474-youtube-resumer
       // alt3 - https://greasyfork.org/en/scripts/453567-youtube-auto-player
+      // alt4 - https://greasyfork.org/en/scripts/39153-youtube-auto-resume
+      // alt5 - https://greasyfork.org/en/scripts/40517-youtube-resume
 
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
@@ -45,7 +47,7 @@ window.nova_plugins.push({
 
       let cacheName;
 
-      NOVA.waitElement('video')
+      NOVA.waitSelector('video')
          .then(video => {
             cacheName = getCacheName(); // for optimization
 
@@ -57,7 +59,7 @@ window.nova_plugins.push({
 
             video.addEventListener('ended', () => sessionStorage.removeItem(cacheName));
 
-            // embed dont support "t=" parameter
+            // embed don't support "t=" parameter
             if (user_settings.player_resume_playback_url_mark && NOVA.currentPage != 'embed') {
                // ignore if initialized with a "t=" parameter
                if (NOVA.queryURL.has('t')) {
@@ -80,11 +82,20 @@ window.nova_plugins.push({
          }
       }
 
-      function resumePlayback() {
+      async function resumePlayback() {
          if (NOVA.queryURL.has('t')
-            // https://www.youtube.com/watch?time_continue=68&v=yWUMMg3dmFY&feature=emb_title
-            // || NOVA.queryURL.has('time_continue')
-         ) return;
+            // || NOVA.queryURL.has('time_continue') // ex - https://www.youtube.com/watch?time_continue=68&v=yWUMMg3dmFY
+
+            // Due to the inability to implement the correct work of player_resume_playback_skip_music, the [save-channel-state] plugin was used
+            // Strategy 1
+            // custom volume from [save-channel-state] plugin
+            || (user_settings['save-channel-state'] && await NOVA.storage_obj_manager.getParam('ignore-playback')) // check param name in [save-channel-state] plugin
+            // Strategy 2
+            // || (user_settings.player_resume_playback_skip_music && NOVA.isMusic())
+         ) {
+            return;
+         }
+         // console.debug('resumePlayback isMusic:', NOVA.isMusic()); // always return null before 'loadeddata';
 
          cacheName = getCacheName(); // for optimization
 
@@ -154,5 +165,22 @@ window.nova_plugins.push({
          'title:pl': 'Ma sens podczas zapisywania zakładek',
          'title:ua': 'Має сенс при збереженні закладок',
       },
+      // player_resume_playback_skip_music: {
+      //    _tagName: 'input',
+      //    label: 'Ignore music genre',
+      //    // 'label:zh': '',
+      //    // 'label:ja': '',
+      //    // 'label:ko': '',
+      //    // 'label:id': '',
+      //    // 'label:es': '',
+      //    // 'label:pt': '',
+      //    // 'label:fr': '',
+      //    // 'label:it': '',
+      //    // 'label:tr': '',
+      //    // 'label:de': '',
+      //    // 'label:pl': '',
+      //    // 'label:ua': '',
+      //    type: 'checkbox',
+      // },
    }
 });

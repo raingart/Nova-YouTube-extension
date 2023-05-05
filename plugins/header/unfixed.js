@@ -58,7 +58,7 @@ window.nova_plugins.push({
          const hotkey = user_settings.header_unfixed_hotkey || 'v';
          // hotkey
          document.addEventListener('keyup', evt => {
-            if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+            if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
             if (evt.key === hotkey) {
                document.documentElement.classList.toggle(CLASS_NAME_TOGGLE);
             }

@@ -1,7 +1,7 @@
 
 // for testing
-// https://www.youtube.com/watch?v=LhKT9NTH9HA - dont have 480p
-// https://www.youtube.com/watch?v=FZovbrEP53o - dont have 480p
+// https://www.youtube.com/watch?v=LhKT9NTH9HA - don't have 480p
+// https://www.youtube.com/watch?v=FZovbrEP53o - don't have 480p
 // https://www.youtube.com/watch?v=E480DjY6ve8 - only 360p
 
 window.nova_plugins.push({
@@ -44,7 +44,7 @@ window.nova_plugins.push({
 
       let selectedQuality = user_settings.video_quality;
 
-      NOVA.waitElement('#movie_player')
+      NOVA.waitSelector('#movie_player')
          .then(movie_player => {
             // keep save manual quality in the session
             if (user_settings.video_quality_manual_save_in_tab
@@ -144,7 +144,7 @@ window.nova_plugins.push({
       }
 
       // error detector
-      NOVA.waitElement('.ytp-error [class*="reason"]')
+      NOVA.waitSelector('.ytp-error [class*="reason"]')
          .then(error_reason_el => {
             if (alertText = error_reason_el.textContent) {
                // err ex:

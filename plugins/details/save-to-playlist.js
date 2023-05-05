@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Sortieren/Filtern zum Menü „In Wiedergabeliste speichern“ hinzufügen',
    'title:pl': 'Dodaj sortowanie/filtr do menu „Zapisz na liście odtwarzania”.',
    'title:ua': 'Додати сортування/фільтр до меню "Зберегти до плейлиста"',
-   run_on_pages: 'watch, -mobile',
+   run_on_pages: 'home, feed, channel, results, watch, -mobile',
    section: 'details',
    // desc: '',
    _runtime: user_settings => {
@@ -21,7 +21,8 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/436123-youtube-save-to-playlist-filter
       // alt2 - https://greasyfork.org/en/scripts/392141-youtube-save-to-playlist-incremental-search
 
-      NOVA.waitElement('tp-yt-paper-dialog #playlists')
+      // NOVA.waitSelector('#title.ytd-add-to-playlist-renderer')
+      NOVA.waitSelector('tp-yt-paper-dialog #playlists')
          .then(playlists => {
             const container = playlists.closest('tp-yt-paper-dialog');
 
@@ -42,22 +43,26 @@ window.nova_plugins.push({
                .observe(container);
          });
 
+      // alt - https://greasyfork.org/en/scripts/450181-youtube-save-to-playlist-menu-sorted-alphabetically
       function sortPlaylistsMenu(playlists = required()) {
-         // alt - https://greasyfork.org/en/scripts/450181-youtube-save-to-playlist-menu-sorted-alphabetically
-
          // console.debug('sortPlaylistsMenu', ...arguments);
          if (!(playlists instanceof HTMLElement)) return console.error('playlists not HTMLElement:', playlists);
 
-         playlists.append(...Array.from(playlists.childNodes).sort(sortByLabel));
+         playlists.append(
+            ...Array.from(playlists.childNodes)
+               .sort(sortByLabel)
+         );
 
          function sortByLabel(a, b) {
-            const getLabel = (el = required()) => stringLocaleCompare(
-               // el.querySelector('#checkbox-label').textContent
-               el.textContent
-            );
-            return (getLabel(a) > getLabel(b)) ? 1 : -1;
+            // console.debug('a', a.textContent.trim());
+            // console.debug('b', b.textContent.trim());
 
-            function stringLocaleCompare(a, b) {
+            // const getLabel = el => el.querySelector('#checkbox-label').textContent.trim();
+            const getLabel = el => el.textContent.trim();
+            // return (getLabel(a) > getLabel(b)) ? 1 : -1;
+            return stringLocaleCompare(getLabel(a), getLabel(b));
+
+            function stringLocaleCompare(a = required(), b = required()) {
                // for sorting string with emojis icons/emojis and keeping them on top
                return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
             }

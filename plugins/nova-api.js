@@ -1,8 +1,9 @@
 /*
    NOVA - complex solutions to simple problems
    full fusctions list in NOVA:
-   - waitElement
-   - waitUntil
+   - waitSelector (async)
+   - waitUntil (async)
+   - delay (async)
    - watchElements
    - runOnPageInitOrTransition
    - css.push
@@ -10,14 +11,12 @@
    //- cookie.get
    //- cookie.getParamLikeObj
    //- cookie.updateParam
-   - delay
    //- extractFirstInt
    - prettyRoundInt
    - isInViewport
    - collapseElement
    - aspectRatio.sizeToFit
    - aspectRatio.getAspectRatio
-   - aspectRatio.getAspectRatioFromList
    - aspectRatio.calculateHeight
    - aspectRatio.calculateWidth
    - bezelTrigger
@@ -34,11 +33,12 @@
    - queryURL.get
    - queryURL.set
    - queryURL.remove
-   - request.API
+   - request.API (async)
    - getPlayerState
    - isFullscreen
    //- videoId
-   - getChannelId
+   - getChannelId (async)
+   - storage_obj_manager.getParam
    //- seachInObjectBy.key
 
    // data (not fn)
@@ -52,8 +52,8 @@ const NOVA = {
 
    // find once.
    // more optimized compared to MutationObserver
-   // waitElement(selector = required()) {
-   //    this.log('waitElement:', selector);
+   // waitSelector(selector = required()) {
+   //    this.log('waitSelector:', selector);
    //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
 
    //    return new Promise((resolve, reject) => {
@@ -69,17 +69,85 @@ const NOVA = {
    //       checkIfExists();
    //       nodeInterval = setInterval(checkIfExists, 50); // ms
    //       // } catch (err) { // does not output the reason/line to the stack
-   //       //    reject(new Error('Error waitElement', err));
+   //       //    reject(new Error('Error waitSelector', err));
    //       // }
    //    });
    // },
 
-   // waitElement(selector = required(), container) {
+   // waitSelector(selector = required(), container) {
    //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
    //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
-   //    // console.debug('waitElement:', selector);
+   //    // console.debug('waitSelector:', selector);
 
    //    return Promise.resolve((container || document.body).querySelector(selector));
+   // },
+
+   // waitSelector(selector = required(), container) {
+   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+   //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
+   //    // console.debug('waitSelector:', selector);
+
+   //    return new Promise(async (resolve) => {
+   //       if (result = await Promise.resolve((container || document.body).querySelector(selector))) {
+   //          // console.debug('waitUntil[1]', result, condition, timeout);
+   //          resolve(result);
+   //       }
+   //    });
+   // },
+
+   // waitSelector('details[data-pref]', {
+   //    recur(elems) {
+   //      for (const el of elems) {
+   //        prefs.subscribe(el.dataset.pref, updateOnPrefChange, {runNow: true});
+   //        new MutationObserver(saveOnChange)
+   //          .observe(el, {attributes: true, attributeFilter: ['open']});
+   //      }
+   //    },
+   //  });
+
+   /**
+    * @param {string} selector - beware of $ quirks with `#dotted.id` that won't work with $$
+    * @param {Object} [opt]
+    * @param {function(HTMLElement[]):boolean} [opt.recur] - called on each match until stopOnDomReady,
+      you can also return `false` to disconnect the observer
+    * @param {boolean} [opt.stopOnDomReady] - stop observing on DOM ready
+    * @returns {Promise<HTMLElement>} - resolves on first match
+   */
+   // https://github.com/openstyles/stylus/blob/master/js/dom.js#L388-L422
+   // waitSelector(selector, { recur, stopOnDomReady = true } = {}) {
+   //    let el = $(selector);
+   //    let elems;
+   //    return el && (!recur || recur(elems = $$(selector)) === false)
+   //       ? Promise.resolve(el)
+   //       : new Promise(resolve => {
+   //          new MutationObserver((mutations, observer) => {
+   //             if (!el) el = $(selector);
+   //             if (!el) return;
+   //             if (!recur ||
+   //                callRecur(mutations) === false ||
+   //                stopOnDomReady && document.readyState === 'complete') {
+   //                observer.disconnect();
+   //             }
+   //             if (resolve) {
+   //                resolve(el);
+   //                resolve = null;
+   //             }
+   //          }).observe(document, { childList: true, subtree: true });
+   //          function isMatching(n) {
+   //             return n.tagName && (n.matches(selector) || n.firstElementChild && $(selector, n));
+   //          }
+   //          function callRecur([m0, m1]) {
+   //             // Checking addedNodes if only 1 MutationRecord to skip simple mutations quickly
+   //             if (m1 || (m0 = m0.addedNodes)[3] || [].some.call(m0, isMatching)) {
+   //                const all = $$(selector); // Using one $$ call instead of ~100 calls for each node
+   //                const added = !elems ? all : all.filter(el => !elems.includes(el));
+   //                if (added.length) {
+   //                   elems = all;
+   //                   return recur(added);
+   //                }
+   //             }
+   //          }
+   //       });
    // },
 
    /**
@@ -88,10 +156,10 @@ const NOVA = {
     * @return {Promise<Element>}
    */
    // untilDOM
-   waitElement(selector = required(), container) {
+   waitSelector(selector = required(), container) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
       if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
-      // console.debug('waitElement:', selector);
+      // console.debug('waitSelector:', selector);
 
       // https://stackoverflow.com/a/68262400
       // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
@@ -145,6 +213,10 @@ const NOVA = {
             .observe(container || document.body || document.documentElement || document, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
+               attributes: true, // need to - "NOVA.waitSelector('#movie_player.ytp-autohide video')" in embed page
+               //  characterData: true,
+               //  attributeOldValue: true,
+               //  characterDataOldValue: true
             });
       });
    },
@@ -177,6 +249,11 @@ const NOVA = {
       });
    },
 
+   // await NOVA.delay(500);
+   delay(ms = 100) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+   },
+
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
    // clear_watchElements(name = required()) {
@@ -200,7 +277,7 @@ const NOVA = {
       if (typeof callback !== 'function') return console.error('watch > callback:', typeof callback);
 
       // async wait el. Removes the delay for init
-      this.waitElement((typeof selectors === 'string') ? selectors : selectors.join(','))
+      this.waitSelector((typeof selectors === 'string') ? selectors : selectors.join(','))
          .then(video => {
             // selectors - str to array
             !Array.isArray(selectors) && (selectors = selectors.split(',').map(s => s.trim()));
@@ -324,7 +401,7 @@ const NOVA = {
       },
 
       /**
-       * @param  {string} selector
+       * @param  {string/HTMLElement} selector
        * @param  {string} prop_name
        * @param  {boolean} int
        * @return {string}
@@ -333,7 +410,7 @@ const NOVA = {
       // HTMLElement.prototype.getIntValue = () {}
       // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
       getValue(selector = required(), prop_name = required()) {
-         return (el = document.body?.querySelector(selector))
+         return (el = (selector instanceof HTMLElement) ? selector : document.body?.querySelector(selector))
             ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) return "undefined" is not valid
       },
    },
@@ -390,12 +467,7 @@ const NOVA = {
    //    },
    // },
 
-   // await NOVA.delay(500);
-   delay(ms = 100) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-   },
-
-   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, ''), 10),
+   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, '')),
 
    /**
     * @param  {integer/string} num
@@ -459,7 +531,7 @@ const NOVA = {
       // console.debug('collapseElement', ...arguments);
       const selector_id = `${title.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
 
-      this.waitElement(selector.toString())
+      this.waitSelector(selector.toString())
          .then(el => {
             if (remove) el.remove();
             else {
@@ -788,7 +860,7 @@ const NOVA = {
    //    document.body.querySelectorAll(`ytd-watch-metadata #description ${selectorLinkTimestamp}, #contents ytd-comment-thread-renderer:first-child #content ${selectorLinkTimestamp}`)
    //       .forEach((link, i, arr) => {
    //          // const prev = arr[i-1] || -1; // needs to be called "hmsToSecondsOnly" again. What's not optimized
-   //          const sec = parseInt(this.queryURL.get('t', link.href), 10);
+   //          const sec = parseInt(this.queryURL.get('t', link.href));
    //          if (sec > prevSec && sec < +video_duration) {
    //             prevSec = sec;
    //             // will be skip - time: '0:00'
@@ -907,7 +979,7 @@ const NOVA = {
          //    // 【MAD】,『MAD』,「MAD」
          //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', 'Remix OS, TEASER
          //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-         //       || ['【', '『', '「', 'REMIX', 'CD', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
+         //       || ['【', '『', '「', 'REMIX', 'CD', 'PV', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
          //    ) {
          //       return true;
          //    }
@@ -941,7 +1013,7 @@ const NOVA = {
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
             // word
-            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
             // words
@@ -949,7 +1021,7 @@ const NOVA = {
                .some(i => titleStr.includes(i))
 
             // word (case sensitive)
-            || titleWordsList?.length && ['OP', 'ED', 'MV', 'PV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
+            || titleWordsList?.length && ['OP', 'ED', 'MV', 'OST', 'NCS', 'BGM', 'EDM', 'GMV', 'AMV', 'MMD', 'MAD']
                .some(i => titleWordsList.includes(i));
       }
    },
@@ -982,7 +1054,7 @@ const NOVA = {
       //       return arr.reduce((acc, time) => (60 * acc) + +time);
       //    }
       // },
-      hmsToSec(str) { // format out "h:mm:ss" > "sec". if str dont have ":" return zero
+      hmsToSec(str) { // format out "h:mm:ss" > "sec". if str don't have ":" return zero
          let
             parts = str?.split(':'),
             t = 0;
@@ -1136,9 +1208,10 @@ const NOVA = {
    updateUrl: (new_url = required()) => window.history.replaceState(null, null, new_url),
 
    queryURL: {
-      // const videoId = new URLSearchParams(window.location.search).get('v');
-      // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.href || document.URL).search).get(query),
-      // has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.href)).has(query), // Doesn't work
+      // const videoId = new URLSearchParams(location.search).get('v');
+      // const getChannelName = () => new URLSearchParams(location.search).get('ab_channel');
+      // get: (query, url) => new URLSearchParams((url ? new URL(url) : location.search || document.URL).search).get(query),
+      // has: (query = required(), url_string) => new URLSearchParams((url_string ? new URL(url_string) : location.search)).has(query), // Doesn't work
 
       has: (query = required(), url_string) => new URL(url_string || location).searchParams.has(query.toString()),
 
@@ -1151,7 +1224,7 @@ const NOVA = {
       */
       set(query_obj = {}, url_string) {
          // console.log('queryURL.set:', ...arguments);
-         if (!Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
+         if (typeof query_obj != 'object' || !Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
          const url = new URL(url_string || location);
          Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
@@ -1303,7 +1376,7 @@ const NOVA = {
     * @param  {string*} api_key
     * @return {string}
    */
-   async getChannelId(api_key) {
+   getChannelId(api_key) {
       const isChannelId = id => id && /UC([a-z0-9-_]{22})$/i.test(id);
       // local search
       let result = [
@@ -1344,8 +1417,8 @@ const NOVA = {
 
       //          break;
       //       // case 'watch':
-      //       //    // channelLinkArr = await this.waitElement('#owner #channel-name a[href], ytm-slim-owner-renderer > a[href]');
-      //       //    channelLinkArr = await this.waitElement('#owner #channel-name a[href]');
+      //       //    // channelLinkArr = await this.waitSelector('#owner #channel-name a[href], ytm-slim-owner-renderer > a[href]');
+      //       //    channelLinkArr = await this.waitSelector('#owner #channel-name a[href]');
       //       //    channelArr = channelLinkArr?.href.split('/');
       //       //    if (channelArr.length && ['c', 'user'].includes(channelArr[3])) {
       //       //       channelName = channelArr[4];
@@ -1367,33 +1440,93 @@ const NOVA = {
       return result;
    },
 
-   // currently only compatible with the [save-channel-state] plugin. It makes sense to unify for subsequent decisions
+   // storage_obj_manager - currently only compatible with the [save-channel-state] plugin. It makes sense to unify for subsequent decisions
+
+   // multiple keys in localStorage
+   // storage_obj_manager: {
+   //    // STORAGE_NAME: 'str'
+   //    async initName() {
+   //       const
+   //          CACHE_PREFIX = 'nova-channels-state:',
+   //          storageId = location.search.includes('list=')
+   //             ? (NOVA.queryURL.get('list') || movie_player?.getPlaylistId())
+   //             : await NOVA.waitUntil(NOVA.getChannelId, 1000);
+
+   //       this.STORAGE_NAME = CACHE_PREFIX + storageId;
+
+   //       return this.STORAGE_NAME;
+   //    },
+
+   //    read() {
+   //       return JSON.parse(localStorage.getItem(this.STORAGE_NAME));
+   //    },
+
+   //    write(obj_save) {
+   //       localStorage.setItem(this.STORAGE_NAME, JSON.stringify(obj_save));
+   //    },
+
+   //    _getParam(key = required()) {
+   //       if (storage = this.read()) {
+   //          return storage[key];
+   //       }
+   //    },
+
+   //    async getParam(key = required()) {
+   //       if (!this.STORAGE_NAME) await this.initName(); // wait storage name
+   //       return this._getParam(...arguments);
+   //    },
+
+   //    save(obj_save) {
+   //       // console.debug('STORAGE_OBJ_MANAGER save:', ...arguments);
+   //       // update storage
+   //       if (storage = this.read()) {
+   //          obj_save = Object.assign(storage, obj_save);
+   //       }
+   //       // create storage
+   //       this.write(obj_save);
+   //    },
+
+   //    remove(key) {
+   //       // update if more ones
+   //       if ((storage = this.read()) && Object.keys(storage).length > 1) {
+   //          delete storage[key];
+   //          this.write(storage);
+   //       }
+   //       // remove
+   //       else localStorage.removeItem(this.STORAGE_NAME);
+   //    }
+   // },
+
+   // one key in localStorage
    storage_obj_manager: {
-      // STORAGE_NAME: 'str'
-      async initName() {
-         if (!this.STORAGE_NAME) {
-            const
-               CACHE_PREFIX = 'nova-channel-state:',
-               channelId = await NOVA.getChannelId();
 
-            this.STORAGE_NAME = CACHE_PREFIX + channelId;
-         }
-         return this.STORAGE_NAME;
+      STORAGE_NAME: 'nova-channels-state',
+
+      // channelId: 'str',
+      async initStorage() {
+         //   playlist higher priority than the channel
+         this.channelId = location.search.includes('list=')
+            ? (NOVA.queryURL.get('list') || movie_player?.getPlaylistId())
+            : await NOVA.waitUntil(NOVA.getChannelId, 1000);
       },
-      // getName() {
-      //    if (!this.STORAGE_NAME) {
-      //       console.error('STORAGE_NAME:', this.STORAGE_NAME);
-      //       throw new Error('STORAGE_NAME is empty');
-      //    }
-      //    return this.STORAGE_NAME;
-      // },
 
-      read() {
-         return JSON.parse(localStorage.getItem(this.STORAGE_NAME));
+      read(return_all) {
+         if (store = JSON.parse(localStorage.getItem(this.STORAGE_NAME))) {
+            return return_all ? store : store[this.channelId];
+         }
       },
 
       write(obj_save) {
-         localStorage.setItem(this.STORAGE_NAME, JSON.stringify(obj_save));
+         // merge with other storage
+         if ((storage = this.read('all') || {})) {
+            if (Object.keys(obj_save).length) {
+               storage = Object.assign(storage, { [this.channelId]: obj_save });
+            }
+            else {
+               delete storage[this.channelId];
+            }
+         }
+         localStorage.setItem(this.STORAGE_NAME, JSON.stringify(storage));
       },
 
       _getParam(key = required()) {
@@ -1403,29 +1536,26 @@ const NOVA = {
       },
 
       async getParam(key = required()) {
-         await this.initName(); // wait storage name
+         if (!this.channelId) await this.initStorage(); // wait storage name
          return this._getParam(...arguments);
       },
 
       save(obj_save) {
-         // console.debug('STORAGE_OBJ_MANAGER save:', ...arguments);
-         // update storage
+         // console.debug('send to save:', ...arguments);
          if (storage = this.read()) {
+            // merge with saved param
             obj_save = Object.assign(storage, obj_save);
          }
-         // create storage
          this.write(obj_save);
       },
 
       remove(key) {
          // update if more ones
-         if ((storage = this.read()) && Object.keys(storage).length > 1) {
+         if ((storage = this.read())) {
             delete storage[key];
             this.write(storage);
          }
-         // remove
-         else localStorage.removeItem(this.STORAGE_NAME);
-      }
+      },
    },
 
    // seachInObjectBy: {

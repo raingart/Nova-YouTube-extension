@@ -27,10 +27,13 @@ window.nova_plugins.push({
          SELECTOR_BTN_CLASS_NAME = 'nova-right-custom-button',
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME; // for css
 
-      // NOVA.waitElement('.ytp-left-controls')
-      NOVA.waitElement('.ytp-right-controls')
+      // NOVA.waitSelector('.ytp-left-controls')
+      NOVA.waitSelector('.ytp-right-controls')
          .then(async container => {
-            NOVA.videoElement = await NOVA.waitElement('video'); // wait load video
+            // container.prepend(new-el);
+            // container.insertBefore(new-el, container.childNodes[0])
+
+            NOVA.videoElement = await NOVA.waitSelector('video'); // wait load video
 
             // global
             NOVA.css.push(
@@ -86,8 +89,8 @@ window.nova_plugins.push({
 
             // picture-in-picture player
             if (user_settings.player_buttons_custom_items?.includes('picture-in-picture')) {
+               // alt - https://greasyfork.org/en/scripts/463641-enable-the-built-in-pip-button-on-youtube-media-control
                const pipBtn = document.createElement('button');
-
                pipBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // pipBtn.title = 'Open in PictureInPicture';
                pipBtn.setAttribute('tooltip', 'Open in PictureInPicture');
@@ -356,6 +359,7 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('thumbnail')) {
+               // info https://gist.github.com/iredun/a9681c46d3d74e03fb35d9ebf198b83d
                // alt1 - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
                // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
                // alt3 - https://greasyfork.org/en/scripts/457800-youtube-thumbnail-viewer
@@ -441,7 +445,7 @@ window.nova_plugins.push({
                   </svg>`;
                rotateBtn.addEventListener('click', () => {
                   // get first number part (rotate, without scale). Code: remove text before numbers, and extract first number group
-                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D+/, ''), 10) || 0;
+                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D+/, '')) || 0;
                   // fix ratio scale. Before angle calc
                   const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / NOVA.videoElement.clientWidth : 1;
                   angle += 90;
@@ -510,7 +514,7 @@ window.nova_plugins.push({
                // alt1 https://openuserjs.org/scripts/zachhardesty7/YouTube_-_Add_Watch_Later_Button
                // alt2 https://greasyfork.org/en/scripts/419656-youtube-add-watch-later-button
                // alt3 - https://greasyfork.org/en/scripts/462336-persistent-youtube-video-queue
-               NOVA.waitElement('.ytp-watch-later-button')
+               NOVA.waitSelector('.ytp-watch-later-button')
                   .then(watchLaterDefault => {
                      NOVA.css.push(
                         `.${SELECTOR_BTN_CLASS_NAME} .ytp-spinner-container {
@@ -573,6 +577,7 @@ window.nova_plugins.push({
                   });
             }
 
+            // alt - https://greasyfork.org/en/scripts/434527-youtube-remove-overlays
             if (user_settings.player_buttons_custom_items?.includes('card-switch')
                // conflict with plugin [player-hide-elements] option (videowall+card)
                && !user_settings.player_hide_elements?.includes('videowall_endscreen')
@@ -584,6 +589,7 @@ window.nova_plugins.push({
 
                NOVA.css.push(
                   `#movie_player[${cardAttrName}] .videowall-endscreen,
+                  #movie_player[${cardAttrName}] .ytp-pause-overlay,
                   #movie_player[${cardAttrName}] [class^="ytp-ce-"] {
                      display: none !important;
                   }`);
@@ -694,7 +700,7 @@ window.nova_plugins.push({
                      left: -2.2em;
                      list-style: none;
                      padding-bottom: 1.5em !important;
-                     z-index: ${+getComputedStyle(document.body.querySelector('.ytp-progress-bar'))['z-index'] + 1};
+                     z-index: ${1 + Math.max(NOVA.css.getValue('.ytp-progress-bar', 'z-index'), 31)};
                   }
 
                   /* for embed */
@@ -809,6 +815,26 @@ window.nova_plugins.push({
                }
             }
 
+            if (user_settings.player_buttons_custom_items?.includes('clock')) {
+               const clockEl = document.createElement('span');
+               clockEl.className = 'ytp-time-display';
+               clockEl.title = 'Now time';
+               // clockEl.innerText = 'time init';
+
+               container.prepend(clockEl);
+
+               setInterval(() => {
+                  if (document.visibilityState == 'hidden' // tab inactive
+                     || movie_player.classList.contains('ytp-autohide') // dubious optimization hack
+                  ) {
+                     return;
+                  }
+
+                  const time = new Date().toTimeString().slice(0, 8);
+                  clockEl.textContent = time;
+               }, 1000); // 1sec
+            }
+
             if (user_settings.player_buttons_custom_items?.includes('toggle-speed')) {
                const
                   speedBtn = document.createElement('a'),
@@ -831,7 +857,7 @@ window.nova_plugins.push({
                speedBtn.setAttribute('tooltip', genTooltip());
                // hotkey
                document.addEventListener('keyup', evt => {
-                  if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
                   if (evt.key === hotkey) {
                      switchRate();
                   }
@@ -907,6 +933,24 @@ window.nova_plugins.push({
             }
          });
 
+      // /* Start Create SVG */
+      // const svg = document.createElement('svg');
+      // svg.setAttribute('height', '100%');
+      // svg.setAttribute('version', '1.1');
+      // svg.setAttribute('viewBox', '0 0 36 36');
+      // svg.setAttribute('width', '100%');
+      // const use = document.createElement('use');
+      // use.setAttribute('class', 'ytp-svg-shadow');
+
+      // setButton(btn, path); // Decide Which Button
+
+      // path.setAttribute('fill', '#fff');
+      // path.setAttribute('fill-rule', 'evenodd');
+      // svg.appendChild(use);
+      // svg.appendChild(path);
+
+      // const btnContent = svg.outerHTML;
+
    },
    options: {
       player_buttons_custom_items: {
@@ -937,10 +981,25 @@ window.nova_plugins.push({
          'title:de': '[Ctrl+Click] um mehrere auszuwählen',
          'title:pl': 'Ctrl+kliknięcie, aby zaznaczyć kilka',
          'title:ua': '[Ctrl+Click] щоб обрати декілька',
-         multiple: null, // dont use - selected: true
-         required: true, // dont use - selected: true
+         multiple: null, // don't use - selected: true
+         required: true, // don't use - selected: true
          size: 7, // = options.length
          options: [
+            {
+               label: 'clock', value: 'clock',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
             {
                label: 'quick quality', value: 'quick-quality',
                'label:zh': '质量',

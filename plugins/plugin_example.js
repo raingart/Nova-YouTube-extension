@@ -60,7 +60,7 @@ window.nova_plugins.push({
 
       // we wait for the effect on the page of the nuked object
       // after finding at least one element, the search will be stopped
-      NOVA.waitElement('#movie_player') // use css selector. Like document.body.querySelector
+      NOVA.waitSelector('#movie_player') // use css selector. Like document.body.querySelector
          // wait, run the code
          .then(node => { // returns the specified selector above
             // do stuff

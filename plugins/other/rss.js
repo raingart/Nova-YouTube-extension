@@ -34,8 +34,8 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'channel':
-            NOVA.waitElement('#channel-header #links-holder #primary-links')
-               .then(async container => {
+            NOVA.waitSelector('#channel-header #links-holder #primary-links')
+               .then(container => {
                   // Doesn't work.
                   // https://www.youtube.com/feeds/videos.xml?user=<username>
                   // if ((channelName_ = document.body.querySelector('#channel-handle')?.textContent)
@@ -51,7 +51,7 @@ window.nova_plugins.push({
                   }
 
                   if (url = (document.querySelector('link[type="application/rss+xml"][href]')?.href
-                     || genChannelURL(await NOVA.getChannelId(user_settings['user-api-key'])))
+                     || genChannelURL(NOVA.getChannelId(user_settings['user-api-key'])))
                   ) {
                      insertToHTML({ 'url': url, 'container': container });
                   }
@@ -59,7 +59,7 @@ window.nova_plugins.push({
             break;
 
          case 'playlist':
-            NOVA.waitElement('ytd-playlist-header-renderer .metadata-buttons-wrapper')
+            NOVA.waitSelector('ytd-playlist-header-renderer .metadata-buttons-wrapper')
                .then(container => {
                   insertToHTML({ 'url': playlistURL, 'container': container, 'is_playlist': true });
                });
@@ -113,8 +113,8 @@ window.nova_plugins.push({
 
          // addMetaLink(channel_id);
 
-         // async function addMetaLink(channelId) {
-         //    channelId = channelId || await NOVA.getChannelId(user_settings['user-api-key']);
+         // function addMetaLink(channelId) {
+         //    channelId = channelId || NOVA.getChannelId(user_settings['user-api-key']);
          //    document.head.insertAdjacentHTML('beforeend',
          //       `<link rel="alternate" type="application/rss+xml" title="RSS" href="${genChannelURL(channelId)}">`);
          // }

@@ -45,11 +45,11 @@ window.nova_plugins.push({
 
       switch (NOVA.currentPage) {
          case 'watch':
-            // NOVA.waitElement('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
+            // NOVA.waitSelector('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
             //    .then(link => {
             //       // console.debug('watch page');
-            //       NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
-            //          // NOVA.waitElement('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
+            //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
+            //          // NOVA.waitSelector('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
             //          .then(el => {
             //             if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
 
@@ -60,20 +60,20 @@ window.nova_plugins.push({
             //          });
             //    });
 
-            NOVA.waitElement('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
+            NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
                .then(el => setVideoCount(el));
             break;
 
          // case 'channel':
-         //    NOVA.waitElement('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
-         //       // NOVA.waitElement('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
+         //    NOVA.waitSelector('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
+         //       // NOVA.waitSelector('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
          //       .then(el => setVideoCount(el));
          //    break;
       }
 
-      async function setVideoCount(container = required()) {
+      function setVideoCount(container = required()) {
          // console.debug('setVideoCount:', ...arguments);
-         const channelId = await NOVA.getChannelId(user_settings['user-api-key']);
+         const channelId = NOVA.getChannelId();
          if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
 
          // has in cache

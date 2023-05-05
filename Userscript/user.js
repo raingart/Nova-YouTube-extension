@@ -1,21 +1,32 @@
 console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
 
+// for Greasemonkey
+// (async () => {
+// if (typeof GM_setValue != 'function') {
+//    GM_getValue = async (n) => await GM.getValue(n);
+//    GM_setValue = (n,d) => GM.setValue(n, d);
+//    GM_openInTab = (t) => GM.openInTab(t);
+//    //GM_registerMenuCommand = () => GM.registerMenuCommand(...arguments);
+//    GM_registerMenuCommand = (t, fn) => GM.registerMenuCommand(t, fn);
+// }
+
 const
    configPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
-   fix_undefine = v => (v === 'undefined') ? undefined : v, // for Tampermonkey
-   user_settings = fix_undefine(GM_getValue(configStoreName)) || {};
+   user_settings = GM_getValue(configStoreName, null);
+// user_settings = await GM_getValue(configStoreName) || {}; // for Greasemonkey
 
 // Disabled script if youtube is embedded
 if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
+console.debug(`current ${configStoreName}:`, user_settings);
+
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'button-no-labels': 'details_button_no_labels',
-   'button_no_labels_opacity': 'details_button_no_labels_opacity',
+   'shorts_thumbnails_time': 'shorts-thumbnails-time',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -25,121 +36,76 @@ for (const oldKey in user_settings) {
    GM_setValue(configStoreName, user_settings);
 }
 
-if (isConfigPage()) return;
+registerMenuCommand();
 
-if (!user_settings?.disable_setting_button) insertSettingButton();
+// is configPage
+if (location.hostname === new URL(configPage).hostname) setupConfigPage();
+else {
+   if (!user_settings?.disable_setting_button) insertSettingButton();
 
-landerPlugins();
-
-function isConfigPage() {
-   // GM_registerMenuCommand('Settings', () => window.open(configPage));
-   GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
-   // GM_registerMenuCommand('Import settings', () => {
-   //    if (json = JSON.parse(prompt('Enter json file context'))) {
-   //       GM_setValue(configStoreName, json);
-   //       alert('Settings imported');
-   //       location.reload();
-   //    }
-   //    else alert('Import failed');
-   // });
-   GM_registerMenuCommand('Import settings', () => {
-      const f = document.createElement('input');
-      f.type = 'file';
-      f.accept = 'application/JSON';
-      f.style.display = 'none';
-      f.addEventListener('change', function () {
-         if (f.files.length !== 1) return alert('file empty');
-         const rdr = new FileReader();
-         rdr.addEventListener('load', function () {
-            try {
-               GM_setValue(configStoreName, JSON.parse(rdr.result));
-               alert('Settings imported');
-               location.reload();
-            }
-            catch (err) {
-               alert(`Error parsing settings\n${err.name}: ${err.message}`);
-            }
-         });
-         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
-         rdr.readAsText(f.files[0]);
-      });
-      document.body.append(f);
-      f.click();
-      f.remove();
-   });
-   GM_registerMenuCommand('Export settings', () => {
-      let d = document.createElement('a');
-      d.style.display = 'none';
-      d.download = 'nova-settings.json';
-      d.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings));
-      document.body.append(d);
-      d.click();
-      d.remove();
-   });
-
-   // is configPage
-   if (location.hostname === new URL(configPage).hostname) {
-      // form submit
-      document.addEventListener('submit', event => {
-         // console.debug('submit', event.target);
-         event.preventDefault();
-
-         let obj = {};
-         for (const [key, value] of new FormData(event.target)) {
-            // SerializedArray
-            if (obj.hasOwnProperty(key)) {
-               obj[key] += ',' + value; // add new
-               obj[key] = obj[key].split(','); // to array [old, new]
-            }
-            else {
-               // convert string to boolean
-               switch (value) {
-                  case 'true': obj[key] = true; break;
-                  case 'false': obj[key] = false; break;
-                  case 'undefined': obj[key] = undefined; break;
-                  default: obj[key] = value;
-               }
-            };
-         }
-         // fix tab reassignment
-         // if (obj.tabs) delete obj.tabs;
-
-         console.debug(`update ${configStoreName}:`, obj);
-         GM_setValue(configStoreName, obj);
-      });
-
-      window.addEventListener('DOMContentLoaded', () => {
-         localizePage(user_settings?.lang_code);
-         storeData = user_settings; // export(sync) settings to page
-      });
-
-      window.addEventListener('load', () => {
-         // unlock if synchronized
-         document.body?.classList?.remove('preload');
-
-         document.body.querySelector('a[href$="issues/new"]')
-            .addEventListener('click', ({ target }) => {
-               target.href += '?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent);
-            });
-      });
-   }
    // is user_settings empty
-   else if (!user_settings || !Object.keys(user_settings).length) {
-      user_settings['report_issues'] = 'on'; // default plugins settings
-      GM_setValue(configStoreName, user_settings);
+   if (!user_settings || !Object.keys(user_settings).length) {
       // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(configPage);
       if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(configPage);
-   }
-   // is not configPage
-   else return false;
 
-   return true;
+      // default plugins settings
+      user_settings['report_issues'] = 'on';
+      GM_setValue(configStoreName, user_settings);
+   }
+   else landerPlugins();
+}
+
+function setupConfigPage() {
+   // form submit
+   document.addEventListener('submit', event => {
+      // console.debug('submit', event.target);
+      event.preventDefault();
+
+      let obj = {};
+      for (const [key, value] of new FormData(event.target)) {
+         // SerializedArray
+         if (obj.hasOwnProperty(key)) {
+            obj[key] += ',' + value; // add new
+            obj[key] = obj[key].split(','); // to array [old, new]
+         }
+         else {
+            // convert string to boolean
+            switch (value) {
+               case 'true': obj[key] = true; break;
+               case 'false': obj[key] = false; break;
+               case 'undefined': obj[key] = undefined; break;
+               default: obj[key] = value;
+            }
+         };
+      }
+      // fix tab reassignment
+      // if (obj.tabs) delete obj.tabs;
+
+      console.debug(`update ${configStoreName}:`, obj);
+      GM_setValue(configStoreName, obj);
+   });
+
+   window.addEventListener('DOMContentLoaded', () => {
+      localizePage(user_settings?.lang_code);
+      storeData = user_settings; // export(sync) settings to page
+   });
+
+   window.addEventListener('load', () => {
+      // unlock if synchronized
+      document.body?.classList?.remove('preload');
+      // alert('PopulateForm:' + typeof PopulateForm); // test for Greasemonkey
+
+      document.body.querySelector('a[href$="issues/new"]')
+         .addEventListener('click', ({ target }) => {
+            target.href += '?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent);
+         });
+   });
 }
 
 function landerPlugins() {
    processLander();
 
-   let playlist_page_transition_count = 0;
+   // let playlist_page_transition_count = 0;
 
    function processLander() {
       const plugins_lander = setInterval(() => {
@@ -163,8 +129,16 @@ function landerPlugins() {
 
    let prevURL = location.href;
    const isURLChanged = () => prevURL == location.href ? false : prevURL = location.href;
+
    // skip first page transition
-   document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
+   // Strategy 1
+   if (isMobile = (location.host == 'm.youtube.com')) {
+      window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && isURLChange() && processLander());
+   }
+   // Strategy 2
+   else {
+      document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
+   }
 
    // function playlistPageReload(sec = 5) {
    //    if (location.search.includes('list=')) {
@@ -220,8 +194,55 @@ function landerPlugins() {
 //    document.addEventListener('yt-navigate-start', () => isURLChanged() && initPlugins());
 // }
 
+function registerMenuCommand() {
+   // GM_registerMenuCommand('Settings', () => window.open(configPage));
+   GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
+   // GM_registerMenuCommand('Import settings', () => {
+   //    if (json = JSON.parse(prompt('Enter json file context'))) {
+   //       GM_setValue(configStoreName, json);
+   //       alert('Settings imported');
+   //       location.reload();
+   //    }
+   //    else alert('Import failed');
+   // });
+   GM_registerMenuCommand('Import settings', () => {
+      const f = document.createElement('input');
+      f.type = 'file';
+      f.accept = 'application/JSON';
+      f.style.display = 'none';
+      f.addEventListener('change', function () {
+         if (f.files.length !== 1) return alert('file empty');
+         const rdr = new FileReader();
+         rdr.addEventListener('load', function () {
+            try {
+               GM_setValue(configStoreName, JSON.parse(rdr.result));
+               alert('Settings imported');
+               location.reload();
+            }
+            catch (err) {
+               alert(`Error parsing settings\n${err.name}: ${err.message}`);
+            }
+         });
+         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
+         rdr.readAsText(f.files[0]);
+      });
+      document.body.append(f);
+      f.click();
+      f.remove();
+   });
+   GM_registerMenuCommand('Export settings', () => {
+      let d = document.createElement('a');
+      d.style.display = 'none';
+      d.download = 'nova-settings.json';
+      d.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings));
+      document.body.append(d);
+      d.click();
+      d.remove();
+   });
+}
+
 function insertSettingButton() {
-   NOVA.waitElement('#masthead #end')
+   NOVA.waitSelector('#masthead #end')
       .then(menu => {
          const
             titleMsg = 'Nova Settings',
@@ -342,26 +363,26 @@ function insertSettingButton() {
       });
 }
 
-// function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
-//    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
+function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
+   //    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
-//    if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
-//       openBugReport();
-//    }
+   //    if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
+   //       openBugReport();
+   //    }
 
-//    function openBugReport() {
-//       // window.open(
-//       GM_openInTab(
-//          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
-//          '?entry.35504208=' + encodeURIComponent(trace_name) +
-//          '&entry.151125768=' + encodeURIComponent(err_stack) +
-//          '&entry.744404568=' + encodeURIComponent(location.href) +
-//          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
-//          // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
-//       );
-//       // , '_blank');
-//    }
-// };
+   //    function openBugReport() {
+   //       // window.open(
+   //       GM_openInTab(
+   //          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
+   //          '?entry.35504208=' + encodeURIComponent(trace_name) +
+   //          '&entry.151125768=' + encodeURIComponent(err_stack) +
+   //          '&entry.744404568=' + encodeURIComponent(location.href) +
+   //          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
+   //          // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
+   //       );
+   //       // , '_blank');
+   //    }
+}
 
 // window.addEventListener('unhandledrejection', err => {
 //    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
@@ -376,3 +397,5 @@ function insertSettingButton() {
 //       });
 //    }
 // });
+
+// })(); // for Greasemonkey

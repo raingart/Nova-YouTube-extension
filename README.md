@@ -17,19 +17,20 @@ OR manual
 
 ### Chromium-like
 You can now load the extension into your browser through the browser's extension tools page:
-1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script and extract.
+1. Download the <a href="https://greasyfork.org/scripts/433360-nova-youtube/code/Nova%20YouTube.user.js" download>userscript</a> or [extensions](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) version of Nova.
+    * If you have downloaded the extensions ver. extract it.
 2. Type `chrome://extensions` in your address bar to bring up the extensions page.
 3. Enable __Developer Mode__ (checkbox)
-4. Click the "Load unpacked extension" button, navigate to extracted script folder, and click "OK". Or drag the script folder onto the extensions page.
+4. Drag the script onto the extensions page OR click the "Load unpacked extension" button, navigate to extracted script folder, and click "OK"..
 
 ### Firefox
 Need one of the builds _Firefox Extended Support Release (ESR)_, _Firefox Developer Edition_ and _Nightly_
 Only this versions allow you to override the setting to enforce the extension signing requirement!
-1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script.
-2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page.
-3. Type to new top input `xpinstall.signatures.required` and change the setting to `false`.
+1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script. And move the files in the directory inside the archive to the root of the archive. The file `manifest.json` etc. must be in the root of the archive (not inside folders)
+2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page. Agree with the warning
+3. Type in new input `xpinstall.signatures.required` and change the setting to `false`.
 4. Type `about:addons` in your address bar to bring up the "Add-ons Manager" page.
-5. Click to __Gear icon__ and choose "Install Add-ons From File...".
+5. Drag the script onto the "Add-ons Manager" page OR Click to __Gear icon__ and choose "Install Add-ons From File...".
 
 ## Building
 >Only for Unix shell**. All output will be in the `/tmp/` directory.

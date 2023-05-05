@@ -4,6 +4,7 @@
 // https://www.youtube.com/watch?v=OztVDJXEfpo - https://watannetwork.com/tools/blocked/#url=OztVDJXEfpo
 // https://www.youtube.com/watch?v=bJ9r8LMU9bQ - https://watannetwork.com/tools/blocked/#url=bJ9r8LMU9bQ
 // https://www.youtube.com/watch?v=6pX93dXfH9s - https://watannetwork.com/tools/blocked/#url=6pX93dXfH9s
+// https://www.youtube.com/watch?v=c8mJrbYdMWw - https://watannetwork.com/tools/blocked/#url=c8mJrbYdMWw
 
 window.nova_plugins.push({
    id: 'video-unblock-region',
@@ -45,8 +46,8 @@ window.nova_plugins.push({
 
       // switch (NOVA.currentPage) {
       //    case 'embed':
-      //       // NOVA.waitElement('#movie_player .ytp-error .ytp-error-content-wrap-reason')
-      //       NOVA.waitElement('#movie_player .ytp-error')
+      //       // NOVA.waitSelector('#movie_player .ytp-error .ytp-error-content-wrap-reason')
+      //       NOVA.waitSelector('#movie_player .ytp-error')
       //          .then(() => {
       //             document.location.hostname = 'raingart.github.io';
       //             location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
@@ -57,14 +58,14 @@ window.nova_plugins.push({
       //       break;
 
       //    default:
-      NOVA.waitElement('ytd-watch-flexy[player-unavailable]')
+      NOVA.waitSelector('ytd-watch-flexy[player-unavailable]')
          // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-         // NOVA.waitElement('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
+         // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
          .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());
       //       break;
       // }
       // Doesn't work
-      // NOVA.waitElement('video')
+      // NOVA.waitSelector('video')
       //    .then(video => {
       //       video.addEventListener('emptied', redirect);
       //    });

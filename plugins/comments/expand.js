@@ -24,15 +24,15 @@ window.nova_plugins.push({
       // dirty fix bug with not updating comments addEventListener: reset comments block
       // document.addEventListener('yt-page-data-updated', () => location.reload());
 
+      // fixs
       NOVA.css.push(
-         `/* fixs */
-         #expander.ytd-comment-renderer {
+         `#expander.ytd-comment-renderer {
             overflow-x: hidden;
          }`);
 
       // comment
       NOVA.watchElements({
-         selectors: ['#contents #expander[collapsed] #more:not([hidden])'],
+         selectors: ['#comment #expander[collapsed] #more:not([hidden])'],
          attr_mark: 'nova-comment-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
@@ -57,7 +57,8 @@ window.nova_plugins.push({
 
       // comment replies
       NOVA.watchElements({
-         selectors: ['#more-replies button'],
+         // selectors: ['#comment + #replies #more-replies button'],
+         selectors: ['#replies #more-replies button'],
          attr_mark: 'nova-replies-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
@@ -92,6 +93,17 @@ window.nova_plugins.push({
 
       //    });
       // }
+
+      // expand linked comment
+      // if (location.search.includes('$lc=')) {
+      if (NOVA.queryURL.has('lc')/* || !movie_player?.getPlaylistId()*/) {
+         // expand comment
+         NOVA.waitSelector('#comment #linked-comment-badge + #body #expander[collapsed] #more:not([hidden])')
+            .then(btn => btn.click());
+         // replies
+         NOVA.waitSelector('ytd-comment-thread-renderer:has(#linked-comment-badge) #replies #more-replies button')
+            .then(btn => btn.click());
+      }
 
    },
    options: {

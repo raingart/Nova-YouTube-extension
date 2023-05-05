@@ -44,14 +44,41 @@ window.nova_plugins.push({
       // fix bug in google drive
       if (location.hostname == 'youtube.googleapis.com') return;
 
-      NOVA.waitElement('#movie_player')
+      // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
+      if (NOVA.currentPage == 'embed'
+         && window.self !== window.top// window.frameElement // is iframe?
+         && ['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
+      ) {
+         return;
+      }
+      // works. But annoying iframe reload
+      // else location.assign(NOVA.queryURL.set({ 'autoplay': false }));
+
+      // Strategy 1
+      // NOVA.waitSelector('#movie_player')
+      //    .then(movie_player => {
+      //       // save backup
+      //       const backupFn = HTMLVideoElement.prototype.play;
+      //       // patch fn
+      //       HTMLVideoElement.prototype.play = movie_player.stopVideo;
+      //       // restore fn
+      //       document.addEventListener('click', restoreFn);
+      //       document.addEventListener('keyup', ({ code }) => (code == 'Space') && restoreFn());
+      //       function restoreFn() {
+      //          HTMLVideoElement.prototype.play = backupFn;
+      //       }
+      //    });
+
+      // Strategy 2
+      NOVA.waitSelector('#movie_player')
          .then(async movie_player => {
             let disableStop;
 
             // reset disableStop (before on page change)
             document.addEventListener('yt-navigate-start', () => disableStop = false);
 
-            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/ ); // fix specific error for firefox
+            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/); // fix specific error for firefox
+
             movie_player.stopVideo(); // init before update onStateChange
 
             movie_player.addEventListener('onStateChange', onPlayerStateChange.bind(this));

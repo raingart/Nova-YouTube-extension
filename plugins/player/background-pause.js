@@ -36,91 +36,52 @@ window.nova_plugins.push({
    'desc:ua': 'Автоматично призупинити всі фонові вкладки, крім активної. Підтримує iframe та інші вікна',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/444330-youtube-autoplay-mutex
+      // alt1 - https://greasyfork.org/en/scripts/444330-youtube-autoplay-mutex
+      // alt2 - https://greasyfork.org/en/scripts/463632-youtube-pause-background-videos
 
       // redirect for localStorage common storage space
       if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
 
       // fix - Failed to read the 'localStorage' property from 'Window': Access is denied for this document. typeof
       if (typeof window === 'undefined') return;
-      // if (window.localStorage)
+      // if (typeof localStorage !== 'object') return;
+
+      // let initPageIsBackgroundTab = !document.hasFocus();
 
       const
-         storeName = 'playngInstanceIDTab',
+         storeName = 'nova-playing-instanceIDTab',
          instanceID = String(Math.random()), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 
-      NOVA.waitElement('video')
+      // Strategy 1. Working but dangerous method. Significant delay
+      // HTMLVideoElement.prototype.play = function (c) {
+      //    return function () {
+      //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
+      //          console.debug('instanceID:', instanceID);
+      //          this.pause();
+      //       }
+      //       else {
+      //          const continuePlayingFn = c.apply(this, arguments);
+      //          localStorage.setItem(storeName, instanceID, NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
+      //          return continuePlayingFn;
+      //       }
+      //    }
+      // }(HTMLVideoElement.prototype.play);
+
+      NOVA.waitSelector('video')
          .then(video => {
-            // mark a playing
-            video.addEventListener('playing', () => localStorage.setItem(storeName, instanceID));
+            // Strategy 2. Mark a playing
+            video.addEventListener('play', checkInstance); // gaps in initialization
+            video.addEventListener('playing', checkInstance); // more reliable way
             // remove mark if video stop play
             ['pause', 'suspend', 'ended'].forEach(evt => video.addEventListener(evt, removeStorage));
             // remove mark if tab closed
             window.addEventListener('beforeunload', removeStorage);
 
-            // auto play on tab focus
-            if (user_settings.pause_background_tab_autoplay_onfocus) {
-               // document.addEventListener('visibilitychange', () => {
-               //    // if other tabs are not playing
-               //    if (document.visibilityState == 'visible'
-               //       && !localStorage.hasOwnProperty(storeName) // store empty
-               //       // && video.paused  // dont see ENDED
-               //       && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
-               //    ) {
-               //       // console.debug('play video in focus');
-               //       video.play();
-               //    }
-               // });
-               window.addEventListener('focus', () => {
-                  // if other tabs are not playing
-                  if (!localStorage.hasOwnProperty(storeName) // store empty
-                     // && video.paused  // dont see ENDED
-                     && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
-                  ) {
-                     // console.debug('play video in focus');
-                     video.play();
-                  }
-               });
-            }
-            // pause video if another playing now
-            // else {
-            //    // ['loadedmetadata', 'canplay'].forEach(evt => {
-            //    //    video.addEventListener(evt, function () {
-            //    //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
-            //    //          // video.pause();
-            //    //          movie_player.stopVideo();
-            //    //          console.debug('', 3);
-            //    //       }
-            //    //    }, { capture: true, once: true });
-            //    // });
-            //    video.addEventListener('loadedmetadata', stopPlay, { capture: true, once: true });
-            //    video.addEventListener('canplay', stopPlay, { capture: true, once: true });
-
-            //    document.addEventListener('click', disableHoldStop, { capture: true, once: true });
-            //    document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop(), { capture: true, once: true });
-
-            //    function disableHoldStop() {
-            //       if (//NOVA.getPlayerState() !=  &&
-            //       movie_player.contains(document.activeElement)) {
-            //          video.removeEventListener('loadedmetadata', stopPlay, true);
-            //          video.removeEventListener('canplay', stopPlay, true);
-            //          // alert(1)
-            //          movie_player.playVideo();
-            //       }
-            //    }
-
-            //    function stopPlay() {
-            //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
-            //          video.pause();
-            //          movie_player.stopVideo();
-            //       }
-            //    }
-            // }
-
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
-               if ((document.visibilityState == 'hidden' || NOVA.currentPage == 'embed') // tab unfocus
+               // if ((!document.hasFocus()) // tab unfocus
+               if ((!document.hasFocus() || NOVA.currentPage == 'embed') // tab unfocus
                   && store.key === storeName && store.storageArea === localStorage // checking store target
                   && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
                   && 'PLAYING' == NOVA.getPlayerState()
@@ -129,30 +90,58 @@ window.nova_plugins.push({
                   video.pause();
                }
             });
+
+            // auto play on tab focus
+            if (user_settings.pause_background_tab_autoplay_onfocus) {
+               // document.addEventListener('visibilitychange', () => {
+               //    // if other tabs are not playing
+               //    if (document.visibilityState == 'visible'
+               //       && !localStorage.hasOwnProperty(storeName) // store empty
+               //       // && video.paused  // don't see ENDED
+               //       && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
+               //    ) {
+               //       // console.debug('play video in focus');
+               //       video.play();
+               //    }
+               // });
+               window.addEventListener('focus', () => {
+                  // if other tabs are not playing
+                  if (!localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // store empty
+                     // && video.paused  // don't see ENDED
+                     && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
+                  ) {
+                     // console.debug('play video in focus');
+                     video.play();
+                  }
+               });
+            }
+
             // pause on tab unfocuse
             if (user_settings.pause_background_tab_autopause_unfocus) {
                window.addEventListener('blur', () => {
-                  if ('PLAYING' == NOVA.getPlayerState()) {
+                  // await NOVA.delay(100); // dirty fix. document.visibilityState update AFTER blur
+                  // document.visibilityState == 'visible'
+                  if (!document.hasFocus() && 'PLAYING' == NOVA.getPlayerState()) {
                      video.pause();
                   }
                });
-               // window.addEventListener('blur', async () => {
-               //    await NOVA.delay(100); // dirty fix. document.visibilityState update AFTER blur
+            }
 
-               //    if (document.visibilityState == 'hidden'
-               //       && 'PLAYING' == NOVA.getPlayerState()
-               //    ) {
-               //       // console.debug('document.visibilityState', document.visibilityState);
-               //       video.pause();
-               //    }
-               // });
+            function checkInstance() {
+               if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
+                  // console.debug('event interception instanceID:', instanceID, movie_player.getVideoData().video_id || NOVA.queryURL.get('v'));
+                  video.pause();
+               }
+               else {
+                  localStorage.setItem(storeName, instanceID);
+               }
             }
 
          });
 
       // PiP auto enable
       // alt https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
-      // NOVA.waitElement('video')
+      // NOVA.waitSelector('video')
       //    .then(video => {
       //       // Detect Picture-in-Picture Support
       //       if (!document.pictureInPictureEnabled/* || video.disablePictureInPicture*/) {
@@ -173,7 +162,7 @@ window.nova_plugins.push({
       //             return document.exitPictureInPicture();
       //          }
       //          // tab unfocus - enable PiP
-      //          if (document.visibilityState == 'hidden'
+      //          if (document.hasFocus()
       //             && !document.pictureInPictureElement // PiP not activated
       //             // && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
       //             && ['PLAYING'].includes(NOVA.getPlayerState())
@@ -215,7 +204,7 @@ window.nova_plugins.push({
       // replaced with generic HTML5 method
       // const onPlayerStateChange = state => ('PLAYING' == NOVA.getPlayerState(state)) ? localStorage.setItem(storeName, instanceID) : removeStorage();
 
-      // NOVA.waitElement('#movie_player')
+      // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
       //       movie_player.addEventListener('onStateChange', onPlayerStateChange);
 

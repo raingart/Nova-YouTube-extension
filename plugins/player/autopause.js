@@ -38,8 +38,31 @@ window.nova_plugins.push({
 
       if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
 
-      // NOVA.waitElement('video')
-      NOVA.waitElement('#movie_player video')
+      // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
+      if (NOVA.currentPage == 'embed'
+         && window.self !== window.top// window.frameElement // is iframe?
+         && ['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
+      ) {
+         return;
+      }
+
+      // Strategy 1
+      // // save backup
+      // const backupFn = HTMLVideoElement.prototype.play;
+      // // patch fn
+      // HTMLVideoElement.prototype.play = function (c) {
+      //    this.pause();
+      // };
+      // // restore fn
+      // document.addEventListener('click', restoreFn);
+      // document.addEventListener('keyup', ({ code }) => (code == 'Space') && restoreFn());
+      // function restoreFn() {
+      //    HTMLVideoElement.prototype.play = backupFn;
+      // }
+
+      // Strategy 2
+      // NOVA.waitSelector('video')
+      NOVA.waitSelector('#movie_player video')
          .then(video => {
             if (user_settings.video_autopause_ignore_live && movie_player.getVideoData().isLive) return;
 
