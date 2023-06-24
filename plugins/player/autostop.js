@@ -43,6 +43,8 @@ window.nova_plugins.push({
       if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
       // fix bug in google drive
       if (location.hostname == 'youtube.googleapis.com') return;
+      // conflict with plugin [user_settings.player_buttons_custom_items?.indexOf('popup')], [embed-redirect-popup]
+      if (NOVA.queryURL.has('popup')) return;
 
       // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
       if (NOVA.currentPage == 'embed'
@@ -107,11 +109,11 @@ window.nova_plugins.push({
                }
             }
 
-            document.addEventListener('click', disableHoldStop);
+            document.addEventListener('click', ({ isTrusted }) => isTrusted && disableHoldStop());
             document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
 
             function disableHoldStop() {
-               if (!disableStop && movie_player.contains(document.activeElement)) {
+               if (!disableStop) {
                   disableStop = true;
                   movie_player.playVideo(); // dirty fix. onStateChange starts before click/keyup
                }

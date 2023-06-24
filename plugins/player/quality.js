@@ -65,7 +65,9 @@ window.nova_plugins.push({
             // custom volume from [save-channel-state] plugin
             if (user_settings['save-channel-state']) {
                NOVA.runOnPageInitOrTransition(async () => {
-                  if (NOVA.currentPage == 'watch' && (userQuality = await NOVA.storage_obj_manager.getParam('quality'))) {
+                  if ((NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed')
+                     && (userQuality = await NOVA.storage_obj_manager.getParam('quality'))
+                  ) {
                      selectedQuality = userQuality; // rewrite
                   }
                });
@@ -144,7 +146,7 @@ window.nova_plugins.push({
       }
 
       // error detector
-      NOVA.waitSelector('.ytp-error [class*="reason"]')
+      NOVA.waitSelector('.ytp-error [class*="reason"]', { stop_on_page_change: true })
          .then(error_reason_el => {
             if (alertText = error_reason_el.textContent) {
                // err ex:

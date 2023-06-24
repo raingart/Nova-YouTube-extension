@@ -2,97 +2,99 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
-      'player/+ad-skip-button.js',
+      'player/ad-skip-button.js',
       'player/speed.js',
       'player/volume.js',
-      'player/+hud.js',
+      'player/hud.js',
       'player/quality.js',
       'player/autostop.js',
       'player/autopause.js',
-      'player/+theater-mode.js',
+      'player/theater-mode.js',
       'player/background-pause.js',
-      'player/+fullscreen-on-playback.js',
-      'player/+resize-ratio.js',
-      'player/+progress-bar-color.js',
+      'player/fullscreen-on-playback.js',
+      'player/resize-ratio.js',
+      'player/progress-bar-color.js',
       'player/progress-bar-float.js',
-      'player/+control-below.js',
-      'player/+control-autohide.js',
-      'player/+embed-control.js',
-      'player/+hotkeys.js',
+      'player/control-below.js',
+      'player/control-autohide.js',
+      'player/embed-popup.js',
+      'player/embed-control.js',
+      'player/hotkeys.js',
       'player/pin.js',
-      'player/+time-jump.js',
-      'player/+no-sleep.js',
-      // // 'player/loop.js',
+      'player/time-jump.js',
+      'player/no-sleep.js',
+      // 'player/loop.js',
       'player/resume-playback.js',
-      // // 'player/-thumb-pause.js',
+      // 'player/-thumb-pause.js',
       'player/quick-buttons.js',
-      'player/+hide-elements.js',
+      'player/hide-elements.js',
       'player/subtitle-style.js',
-      // // 'player/subtitle-lang.js',
+      // 'player/subtitle-lang.js',
       'player/unblock-region.js',
-      'player/+unblock-warn-content.js',
-      // // 'player/next-autoplay.js',
-      'player/+fullscreen-scroll.js',
+      'player/unblock-warn-content.js',
+      // 'player/next-autoplay.js',
+      'player/fullscreen-scroll.js',
       'player/time-remaining.js',
-      'player/+live-duration.js',
-      'player/+title-time.js',
-      'player/+save-for-channel.js',
-      'player/+sponsor-block.js',
-      // // 'player/block-embed.js',
+      'player/live-duration.js',
+      'player/title-time.js',
+      'player/save-for-channel.js',
+      'player/sponsor-block.js',
+      // 'player/block-embed.js',
 
-      'other/+annotations.js',
-      'other/+block-title.js',
-      'other/+block-channel.js',
+      'other/annotations.js',
+      'other/block-title.js',
+      'other/block-channel.js',
       'other/thumbs-hide.js',
-      'other/+thumbs-clear.js',
-      'other/+thumbs-title-normalize.js',
-      'other/+thumbs-watched.js',
-      'other/+thumbs-shorts-time.js',
-      'other/+thumbs-count-line.js',
+      'other/thumbs-clear.js',
+      'other/thumbs-title-normalize.js',
+      'other/thumbs-watched.js',
+      'other/thumbs-shorts-time.js',
+      'other/thumbs-count-line.js',
       // 'other/thumbs-quality.js',
-      // // 'other/thumbs-rating.js',
-      'other/+channel-trailer-stop.js',
+      // 'other/thumbs-rating.js',
+      'other/channel-trailer-stop.js',
       'other/channel-tab.js',
-      // // 'other/channel-thumbs-row.js',
-      // // 'other/dark-theme.js',
-      // // 'other/lang.js',
-      'other/+scrollbar-hide.js',
-      'other/+scroll-to-top.js',
+      // 'other/channel-thumbs-row.js',
+      // 'other/dark-theme.js',
+      // 'other/lang.js',
+      'other/scrollbar-hide.js',
+      'other/scroll-to-top.js',
       'other/shorts-redirect.js',
       'other/rss.js',
-      // // 'other/thumbs-sort.js',
-      'other/+thumbs-sort.js',
-      'other/+miniplayer-disable.js',
+      // 'other/thumbs-sort.js',
+      // 'other/thumbs-sort.js',
+      'other/miniplayer-disable.js',
+      'other/collapse-navigation-panel.js',
 
       'details/videos-count.js',
-      'details/+description-expand.js',
-      'details/+description-popup.js',
-      'details/+buttons.js',
-      'details/+metadata-hide.js',
-      'details/+timestamps-scroll.js',
-      'details/+redirect-clear.js',
+      'details/description-expand.js',
+      'details/description-popup.js',
+      'details/buttons.js',
+      'details/metadata-hide.js',
+      'details/timestamps-scroll.js',
+      'details/redirect-clear.js',
       'details/save-to-playlist.js',
 
       'comments/visibility.js',
       'comments/square-avatars.js',
-      'comments/+popup.js',
+      'comments/popup.js',
       'comments/expand.js',
-      'comments/+sort.js',
+      'comments/sort.js',
 
       'sidebar/related-visibility.js',
-      'sidebar/+playlist-collapse.js',
-      'sidebar/+playlist-extended.js',
-      'sidebar/+playlist-autoplay.js',
+      'sidebar/playlist-collapse.js',
+      'sidebar/playlist-extended.js',
+      'sidebar/playlist-autoplay.js',
       'sidebar/playlist-duration.js',
-      'sidebar/+playlist-reverse.js',
-      'sidebar/+livechat.js',
-      'sidebar/+channel-link.js',
-      // // 'sidebar/playlist-skip-liked.js',
+      'sidebar/playlist-reverse.js',
+      'sidebar/livechat.js',
+      'sidebar/channel-link.js',
+      // 'sidebar/playlist-skip-liked.js',
 
-      'header/+search.js',
-      'header/+compact.js',
+      'header/search.js',
+      'header/compact.js',
       'header/unfixed.js',
-      'header/+logo.js',
+      'header/logo.js',
    ],
 
    // for test
@@ -156,11 +158,17 @@ const Plugins = {
       // https://www.youtube.com/@divr (https://www.youtube.com/channel/UC7tD6Ifrwbiy-BoaAHEinmQ)
 
       NOVA.currentPage = (function () {
-         const [page, channelTab] = location.pathname.split('/').filter(Boolean);
+         // const [page, channelTab] = location.pathname.split('/').filter(Boolean);
          // Strategy 1
          // return identifyCurrentPage(page, channelTab);
-         // Strategy 2
-         NOVA.channelTab = channelTab;
+         // Strategy 2. Known tabs list
+         const pathnameArray = location.pathname.split('/').filter(Boolean);
+         const [page, channelTab] = [pathnameArray[0], pathnameArray.pop()];
+         NOVA.channelTab = ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab) ? channelTab : false;
+
+         // Strategy 3. Excluding channelId (https://www.youtube.com/channel/UCE5yTn9ljzSnC_oMp9Jnckg). Error in emdeb - https://www.youtube.com/embed/H-3fre7943U?enablejsapi=1&wmode=opaque&autoplay=1
+         // NOVA.channelTab = channelTab?.startsWith('UC') ? false : channelTab;
+
          return (page != 'live_chat') // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat)
             && (['channel', 'c', 'user'].includes(page)
                || page?.startsWith('@') // https://www.youtube.com/@ALBO
@@ -168,7 +176,7 @@ const Plugins = {
                // fix non-standard link:
                // https://www.youtube.com/pencilmation
                // https://www.youtube.com/rhino
-               || ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab)
+               || NOVA.channelTab
                // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
             ) ? 'channel' : (page == 'clip') ? 'watch' : page || 'home';
       })();
@@ -202,7 +210,7 @@ const Plugins = {
          else if (
             (
                pagesAllowList?.includes(NOVA.currentPage)
-               || (pagesAllowList?.includes('all') && !pagesAllowList?.includes('-' + NOVA.currentPage))
+               || (pagesAllowList?.includes('*') && !pagesAllowList?.includes('-' + NOVA.currentPage))
             )
             && (!NOVA.isMobile || (NOVA.isMobile && !pagesAllowList?.includes('-mobile')))
          ) {
@@ -223,7 +231,7 @@ const Plugins = {
                      'trace_name': plugin.id,
                      'err_stack': err.stack,
                      'app_ver': app_ver,
-                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.id}"\nPlease report the bug or disable the plugin\n\nSend the bug raport to developer?`,
+                     'confirm_msg': `ERROR in Nova YouTube™\n\nCrash plugin: "${plugin.title || plugin.id}"\nPlease report the bug or disable the plugin\n\nSend the bug raport to developer?`,
                   });
                }
 

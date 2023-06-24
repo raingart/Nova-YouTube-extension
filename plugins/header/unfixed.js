@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:pl': 'Przewijany nagłówek',
    'title:ua': 'Відкріпити шапку сайту',
    // run_on_pages: 'watch, channel',
-   run_on_pages: 'all, -embed, -mobile, -live_chat',
+   run_on_pages: '*, -embed, -mobile, -live_chat',
    // restart_on_location_change: true,
    section: 'header',
    desc: 'Prevent header from sticking',
@@ -160,7 +160,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: 'V', value: 'v', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
          ],
       },
       // header_unfixed_default_state: {

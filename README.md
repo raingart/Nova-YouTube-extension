@@ -6,10 +6,15 @@ The extension is based on the plugin files themselves. The rest of the files onl
 - ease of extensibility
 - low probability of conflict with other extensions.
 
+<!---
 ![Nova YouTube-extension](https://user-images.githubusercontent.com/13064767/212359552-117dde00-d0a7-42be-b719-4bd1745687e4.png)
+-->
 
 ## Installation
+<!---
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/users/miiheelkbegpkflplpmmkidaklfgjecb?style=flat-square&label=Chrome%20Web%20Store)](https://chrome.google.com/webstore/detail/miiheelkbegpkflplpmmkidaklfgjecb)
+-->
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/miiheelkbegpkflplpmmkidaklfgjecb?style=flat-square&label=Chrome%20Web%20Store)](https://github.com/raingart/Nova-YouTube-extension/wiki/Stop-developing-NOVA-builds-as-extensions)
 [![openuserjs](https://img.shields.io/badge/dynamic/json?style=flat-square&color=eee&amp;label=OpenUserJS&amp;query=%24.OpenUserJS.installs%5B0%5D.value&amp;suffix=%20installs&amp;url=https%3A%2F%2Fopenuserjs.org%2Fmeta%2Fraingart%2FNova_YouTube.meta.json)](https://openuserjs.org/scripts/raingart/Nova_YouTube)
 [![greasyfork](https://img.shields.io/badge/dynamic/json?style=flat-square&color=blue&amp;label=GreasyFork&amp;query=total_installs&amp;suffix=%20installs&amp;url=https%3A%2F%2Fgreasyfork.org%2Fscripts%2F433360.json)](https://greasyfork.org/en/scripts/433360-nova-youtube)
 
@@ -40,8 +45,14 @@ Only this versions allow you to override the setting to enforce the extension si
 **Userscript**: `$ make`
 
 ## Development
+
+### Making Plugin
+Please read [plugin document](https://github.com/raingart/Nova-YouTube-extension/wiki/Plugin)
+
 ### File structure
 >The extension is based on plugin files. The remaining files only serve them.
+
+<img src="https://raw.githubusercontent.com/raingart/Nova-YouTube-extension/gh-pages/wiki_images/Nova-arhirecture.jpg" width="" alt="Nova arhirecture">
 
 * [/js/loader.js](https://github.com/raingart/Nova-YouTube-extension/tree/master/js/loader.js) - initial loading and connection of plugins.
 * [/js/plugins.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/js/plugins.js) - a list of all plugins and their module to run them.

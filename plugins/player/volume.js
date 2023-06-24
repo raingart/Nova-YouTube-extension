@@ -69,7 +69,32 @@ window.nova_plugins.push({
                }
             });
 
-            if (user_settings.volume_hotkey) {
+            // keyboard
+            if (user_settings.volume_hotkey == 'keyboard') {
+               // document.addEventListener('keypress', evt => {
+               document.addEventListener('keydown', evt => {
+                  // movie_player.contains(document.activeElement) // don't use! stay overline
+                  if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+                  // console.debug('evt.code', evt.code);
+
+                  let delta;
+                  switch (evt.key) {
+                     case user_settings.volume_hotkey_custom_up: delta = 1; break;
+                     case user_settings.volume_hotkey_custom_down: delta = -1; break;
+                  }
+                  if (delta) {
+                     // evt.preventDefault();
+                     // evt.stopPropagation();
+                     // evt.stopImmediatePropagation();
+
+                     const rate = playerVolume.adjust(+user_settings.volume_step * Math.sign(delta));
+                     // console.debug('current rate:', rate);
+                  }
+               });
+            }
+            // mousewheel in player area
+            else if (user_settings.volume_hotkey) {
                // mousewheel in player area
                document.body.querySelector('.html5-video-container')
                   .addEventListener('wheel', evt => {
@@ -94,7 +119,9 @@ window.nova_plugins.push({
             // custom volume from [save-channel-state] plugin
             if (user_settings['save-channel-state']) {
                NOVA.runOnPageInitOrTransition(async () => {
-                  if (NOVA.currentPage == 'watch' && (userVolume = await NOVA.storage_obj_manager.getParam('volume'))) {
+                  if ((NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed')
+                     && (userVolume = await NOVA.storage_obj_manager.getParam('volume'))
+                  ) {
                      video.addEventListener('canplay', () => playerVolume.set(userVolume), { capture: true, once: true });
                   }
                });
@@ -297,8 +324,53 @@ window.nova_plugins.push({
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'alt+wheel', value: 'altKey' },
+            { label: 'keyboard', value: 'keyboard' },
             { label: 'disable', value: false },
          ],
+      },
+      volume_hotkey_custom_up: {
+         _tagName: 'select',
+         label: 'Hotkey up',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: ']', value: ']', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+         'data-dependent': { 'volume_hotkey': ['keyboard'] },
+      },
+      volume_hotkey_custom_down: {
+         _tagName: 'select',
+         label: 'Hotkey down',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: '[', value: '[', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ']', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+         'data-dependent': { 'volume_hotkey': ['keyboard'] },
       },
       volume_unlimit: {
          _tagName: 'input',

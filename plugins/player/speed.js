@@ -95,8 +95,9 @@ window.nova_plugins.push({
             // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
 
             NOVA.runOnPageInitOrTransition(async () => {
-               if (NOVA.currentPage == 'watch') {
+               if (NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed') {
                   // custom speed from [save-channel-state] plugin
+                  // alt - https://greasyfork.org/en/scripts/27091-youtube-speed-rememberer
                   if (user_settings['save-channel-state']) {
                      if (userRate = await NOVA.storage_obj_manager.getParam('speed')) {
                         video.addEventListener('canplay', () => playerRate.set(userRate), { capture: true, once: true });
@@ -109,8 +110,35 @@ window.nova_plugins.push({
 
          });
 
+      // keyboard
+      // alt1 - https://greasyfork.org/en/scripts/466105-youtube%E9%95%BF%E6%8C%89%E5%80%8D%E9%80%9F%E8%84%9A%E6%9C%AC
+      // alt2 - https://greasyfork.org/en/scripts/421464-html5-video-speed-controller-vlc-like
+      // alt3 - https://greasyfork.org/en/scripts/405559-youtube-playback-rate-shortcut
+      if (user_settings.rate_hotkey == 'keyboard') {
+         // document.addEventListener('keypress', evt => {
+         document.addEventListener('keydown', evt => {
+            // movie_player.contains(document.activeElement) // don't use! stay overline
+            if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+            if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+            // console.debug('evt.code', evt.code);
+
+            let delta;
+            switch (evt.key) {
+               case user_settings.rate_hotkey_custom_up: delta = 1; break;
+               case user_settings.rate_hotkey_custom_down: delta = -1; break;
+            }
+            if (delta) {
+               // evt.preventDefault();
+               // evt.stopPropagation();
+               // evt.stopImmediatePropagation();
+
+               const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(delta));
+               // console.debug('current rate:', rate);
+            }
+         });
+      }
       // mousewheel in player area
-      if (user_settings.rate_hotkey) {
+      else if (user_settings.rate_hotkey) {
          NOVA.waitSelector('.html5-video-container')
             .then(container => {
                container.addEventListener('wheel', evt => {
@@ -133,7 +161,7 @@ window.nova_plugins.push({
          NOVA.waitSelector('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
 
-         NOVA.waitSelector('#upload-info #channel-name a[href]')
+         NOVA.waitSelector('#upload-info #channel-name a[href]', { stop_on_page_change: true })
             .then(channelName => {
                // channelNameVEVO
                if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
@@ -580,8 +608,53 @@ window.nova_plugins.push({
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'wheel', value: 'none' },
+            { label: 'keyboard', value: 'keyboard' },
             { label: 'disable', value: false },
          ],
+      },
+      rate_hotkey_custom_up: {
+         _tagName: 'select',
+         label: 'Hotkey up',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: ']', value: ']', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+         'data-dependent': { 'rate_hotkey': ['keyboard'] },
+      },
+      rate_hotkey_custom_down: {
+         _tagName: 'select',
+         label: 'Hotkey down',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: '[', value: '[', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+         'data-dependent': { 'rate_hotkey': ['keyboard'] },
       },
    }
 });

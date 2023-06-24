@@ -49,9 +49,11 @@ window.nova_plugins.push({
                   video.addEventListener('timeupdate', setRemaining.bind(video));
                   video.addEventListener('ratechange', setRemaining.bind(video));
                   // clear text
-                  ['suspend', 'ended'].forEach(evt => {
-                     video.addEventListener(evt, () => insertToHTML({ 'container': container }));
-                  });
+                  // BUG - "suspend" blinking text in google drive player
+                  // ['suspend', 'ended'].forEach(evt => {
+                  //    video.addEventListener(evt, () => insertToHTML({ 'container': container }));
+                  // });
+                  video.addEventListener('ended', () => insertToHTML({ 'container': container }));
                   document.addEventListener('yt-navigate-finish', () => insertToHTML({ 'container': container }));
                });
 

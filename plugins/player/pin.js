@@ -49,53 +49,67 @@ window.nova_plugins.push({
       //    });
       // return;
 
-      // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
-      // if (user_settings.player_pin_mode == 'pip') {
-      //    // alt1 - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
-      //    // alt2 - https://chrome.google.com/webstore/detail/hlbdhflagoegglpdminhlpenkdgloabe
-      //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
+      // // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
+      // // if (user_settings.player_pin_mode == 'pip') {
+      // //    // alt1 - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
+      // //    // alt2 - https://chrome.google.com/webstore/detail/hlbdhflagoegglpdminhlpenkdgloabe
+      // //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
 
-      //    NOVA.waitSelector('video')
-      //       .then(video => {
-      //          if (video.disablePictureInPicture) return console.error('video pip is disable');
+      // NOVA.waitSelector('video')
+      //    .then(video => {
+      //       if (video.disablePictureInPicture) return console.error('video pip is disable');
 
-      //          const pipBtn = document.createElement('button');
-      //          pipBtn.style.display = 'none';
-      //          pipBtn.addEventListener('click', () => document.pictureInPictureElement
-      //             ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
-      //          );
-      //          pipBtn.addEventListener('click', () => NOVA.videoElement.requestPictureInPicture());
-      //          document.body.prepend(pipBtn);
+      //       // const pipBtn = document.createElement('button');
+      //       // pipBtn.style.display = 'none';
+      //       // // pipBtn.addEventListener('click', () => document.pictureInPictureElement
+      //       // //    ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
+      //       // // );
+      //       // pipBtn.addEventListener('click', async () => {
+      //       //    try {
+      //       //       await NOVA.videoElement.requestPictureInPicture();
+      //       //    } catch (err) {
+      //       //       console.log(err)
+      //       //    }
+      //       // });
+      //       // document.body.prepend(pipBtn);
 
-      //          new window.IntersectionObserver(async ([entry]) => {
-      //             if (entry.isIntersecting) {
-      //                if (video === document.pictureInPictureElement) {
-      //                   console.debug('exitPictureInPicture');
-      //                   // await document.exitPictureInPicture();
-      //                   simulClick(pipBtn);
+      //       new window.IntersectionObserver(async ([entry]) => {
+      //          if (entry.isIntersecting) {
+      //             if (video === document.pictureInPictureElement) {
+      //                console.debug('exitPictureInPicture');
+      //                try {
+      //                   await document.exitPictureInPicture();
+      //                } catch (err) {
+      //                   console.log(err)
       //                }
-      //                return
+      //                // clickElement(pipBtn);
       //             }
-      //             if (!document.pictureInPictureElement && video.readyState > 0) {
-      //                console.debug('requestPictureInPicture');
-      //                // await video.requestPictureInPicture();
-      //                simulClick(pipBtn);
-      //             }
-      //          }, {
-      //             root: null,
-      //             threshold: 0.2, // set offset 0.X means trigger if atleast X0% of element in viewport
-      //          })
-      //             .observe(video);
-
-      //          function simulClick(el) {
-      //             const clickEvent = document.createEvent('MouseEvents');
-      //             clickEvent.initEvent('click', true, true);
-      //             clickEvent.artificialevent = true;
-      //             el.dispatchEvent(clickEvent);
+      //             return
       //          }
-      //       });
-      //    return;
-      // }
+      //          if (!document.pictureInPictureElement && video.readyState > 0) {
+      //             console.debug('requestPictureInPicture');
+      //             try {
+      //                await video.requestPictureInPicture();
+      //             } catch (err) {
+      //                console.log(err)
+      //             }
+      //             // clickElement(pipBtn);
+      //          }
+      //       }, {
+      //          root: null,
+      //          threshold: 0.2, // set offset 0.X means trigger if atleast X0% of element in viewport
+      //       })
+      //          .observe(video);
+
+      //       function clickElement(el) {
+      //          const clickEvent = document.createEvent('MouseEvents');
+      //          clickEvent.initEvent('click', true, true);
+      //          clickEvent.artificialevent = true;
+      //          el.dispatchEvent(clickEvent);
+      //       }
+      //    });
+      // return;
+      // // }
 
       const
          CLASS_VALUE = 'nova-player-pin',
@@ -330,7 +344,7 @@ window.nova_plugins.push({
                NOVA.css.getValue('#chat', 'z-index'),
                NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
                NOVA.css.getValue('#chat', 'z-index'),
-               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin "description-popup"
+               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
                601)};
             }
 
@@ -379,6 +393,8 @@ window.nova_plugins.push({
                // drag.reset('clear storePos'); // storePos
             }
          });
+
+         // window.addEventListener('resize', updatePos);
       }
 
       const drag = {
@@ -391,7 +407,7 @@ window.nova_plugins.push({
          // dragTarget: HTMLElement,
          // active: false,
          // storePos: { X, Y },
-         attrNametoLock: 'force_fix_preventDefault', // preventDefault patch
+         attrNametoLock: 'force-fix-preventDefault', // preventDefault patch
 
          reset(clear_storePos) {
             // switchElement.style.transform = ''; // clear drag state

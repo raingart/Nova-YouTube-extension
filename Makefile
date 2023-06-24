@@ -23,8 +23,10 @@ outFile="/tmp/nova-tube.user.js"
 # in vscode
 # 1. clear comments. regex - "//\s.*|/\*[\s\S\n]*?\*/"
 # 2. For clear spaces use "Format Document".
-# 3. final clear empty multiple-newlines. regex - "^\n{2,}"
-# 3.1. replace "\n^\n" to"\n"
+# 3. replace "\n^\n" to"\n"
+
+# PluginFn=`cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" `
+# PluginFn=$(cat ./js/plugins.js)
 
 build:
 	rm -f $(outFile)
@@ -37,7 +39,8 @@ build:
 	echo -e 'window.nova_plugins = [];' >> $(outFile)
 
 	# collecting all plugins and cleaning them
-	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "+*" ! -iname "plugin_example.js" | xargs sed "/title:/d" | grep -v 'desc:' | grep -v 'section:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
+	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "+*" ! -iname "plugin_example.js" | xargs sed "/title:/d" | grep -v 'desc:' | grep -v 'section:' | sed -e "/   options: {/,/});/c\});" >> $(outFile)
+	@find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs cat >> $(outFile)
 	# failed attempt to use variables
 	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs sed "/'title:/d" | grep -v 'desc:' | grep -v 'section:' | sed -e "/BEGIN/,/END/c\NEW" >> $(outFile)
 
@@ -45,9 +48,18 @@ build:
 	# @find ./plugins/* -type f -name "*.js" ! -iname "-*" ! -iname "plugin_example.js" | xargs cat >> $(outFile)
 
 	cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" >> $(outFile)
+
 	# cat ./js/plugins.js >> $(outFile)
+	# cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" >> $(outFile)
+	# echo 'const PluginsFn = {' >> $(outFile)
+	# cat ./js/plugins.js | sed -e "/const Plugins/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" >> $(outFile)
 
 	cat ./Userscript/user.js >> $(outFile)
+
+	# sed -i 's/Plugin/$(PluginFn)/' $(outFile)
+	# sed -i 's/const Plugins/const PluginsFn/' $(outFile)
+	# sed -i 's/Plugins.run/PluginsFn.run/' $(outFile)
+	# sed -i 's/PluginFn/$(cat /tmp/__plugins.js)/' $(outFile)
 
 	command -v VSCodium.AppImage >/dev/null && VSCodium.AppImage $(outFile) || xdg-open $(outFile)
 	# xdg-open $(outFile)

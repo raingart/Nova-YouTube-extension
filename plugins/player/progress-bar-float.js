@@ -32,6 +32,7 @@ window.nova_plugins.push({
       // alt4 - https://greasyfork.org/en/scripts/394512-youtube-progressbar-preserver
       // alt5 - https://chrome.google.com/webstore/detail/ogkoifddpkoabehfemkolflcjhklmkge
       // alt6 - https://greasyfork.org/en/scripts/426283-youtube-permanent-progressbar
+      // alt7 - https://greasyfork.org/en/scripts/466345-stick-youtube-progress-bar
 
       // live iframe
       if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
@@ -42,7 +43,7 @@ window.nova_plugins.push({
       if (NOVA.currentPage == 'embed' && ['0', 'false'].includes(NOVA.queryURL.get('controls'))) return;
 
       const
-         SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin "player-control-autohide"
+         SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin [player-control-autohide]
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
@@ -121,9 +122,6 @@ window.nova_plugins.push({
             }
 
             function notInteractiveToRender() {
-               // conflict with plugin [player-control-below] (excluding fullscreen player mode)
-               if (user_settings['player-control-below'] && NOVA.isFullscreen()) return;
-
                return (document.visibilityState == 'hidden' // tab inactive
                   || movie_player.getVideoData().isLive
                   // || !movie_player.classList.contains('ytp-autohide') // dubious optimization hack
@@ -245,6 +243,14 @@ window.nova_plugins.push({
                   );
                   break;
             }
+
+            // trigger to show
+            NOVA.runOnPageInitOrTransition(() => {
+               if (NOVA.currentPage == 'watch') {
+                  NOVA.waitSelector('#meta [collapsed] #more, [description-collapsed] #description #expand')
+                     .then(btn => btn.click());
+               }
+            });
          },
 
          from_description(duration = required()) {
@@ -255,11 +261,11 @@ window.nova_plugins.push({
 
             // search in description
             // NOVA.waitSelector(`ytd-watch-metadata #description #video-lockups a`)
-            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`)
+            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { stop_on_page_change: true })
                .then(() => this.renderChaptersMarks(duration));
 
             // search in comments
-            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`)
+            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { stop_on_page_change: true })
                .then(() => this.renderChaptersMarks(duration));
             // search in first/pinned comment
             // NOVA.waitSelector(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
@@ -294,6 +300,15 @@ window.nova_plugins.push({
             }
             const chapterList = NOVA.getChapterList(duration);
 
+            // let segmentsList = [];
+            // if (user_settings['sponsor-block']) {
+            //    const CACHE_PREFIX = 'nova-videos-sponsor-block:';
+            //    const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+            //    if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
+            //       segmentsList = JSON.parse(storage);
+            //    }
+            // }
+
             chapterList
                ?.forEach((chapter, i, chapters_list) => {
                   // console.debug('chapter', (newChapter.sec / duration) * 100 + '%');
@@ -303,6 +318,11 @@ window.nova_plugins.push({
                   newChapter.style.width = ((nextChapterSec - chapter.sec) / duration) * 100 + '%';
                   if (chapter.title) newChapter.title = chapter.title;
                   newChapter.setAttribute('time', chapter.time);
+
+                  // if (user_settings['sponsor-block'] && segmentsList.length) {
+                  //    console.debug('>', segmentsList);
+                  //    // newChapter.style.backgroundColor = '';
+                  // }
 
                   chaptersContainer.append(newChapter);
                });

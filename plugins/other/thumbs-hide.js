@@ -24,9 +24,9 @@ window.nova_plugins.push({
 
       const
          thumbsSelectors = [
-            'ytd-rich-item-renderer', // home, channel
+            'ytd-rich-item-renderer', // home, channel, feed
             'ytd-video-renderer', // results
-            'ytd-grid-video-renderer', // feed
+            // 'ytd-grid-video-renderer', // feed (old)
             'ytd-compact-video-renderer', // sidepanel in watch
             'ytm-compact-video-renderer', // mobile /results page (ytm-rich-item-renderer)
             'ytm-item-section-renderer' // mobile /subscriptions page
@@ -112,6 +112,7 @@ window.nova_plugins.push({
          },
 
          durationLimits() {
+            // alt - https://greasyfork.org/en/scripts/466576-hide-longs-on-youtube
             if (!+user_settings.shorts_disable_min_duration) return;
             // if (!NOVA.timeFormatTo.hmsToSec(user_settings.shorts_disable_min_duration)) return; // for input[type=text] (digit time)
 

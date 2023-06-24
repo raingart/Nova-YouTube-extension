@@ -156,9 +156,21 @@ const NOVA = {
     * @return {Promise<Element>}
    */
    // untilDOM
-   waitSelector(selector = required(), container) {
+   // waitSelector(selector = required(), { container, stop_on_page_change }) {
+   waitSelector(selector = required(), limit_data) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-      if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
+      if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', limit_data.container);
+
+      // fix - Error: Failed to execute 'querySelector' on 'Element': 'ytd-comment-thread-renderer:has(#linked-comment-badge) #replies' is not a valid selector.
+      // https://jsfiddle.net/f6o2amjk/4/ https://www.bram.us/2023/01/04/css-has-feature-detection-with-supportsselector-you-want-has-not-has/
+      // if (selector.includes(':has(')) selector = `@supports selector(:has(*)) {${selector}}`
+      if (selector.includes(':has(') && !CSS.supports('selector(:has(*))')) {
+         // throw new Error('CSS ":has()" unsupported');
+         return new Promise((resolve, reject) => {
+            console.warn('CSS ":has()" unsupported');
+            reject('CSS ":has()" unsupported');
+         });
+      }
       // console.debug('waitSelector:', selector);
 
       // https://stackoverflow.com/a/68262400
@@ -169,18 +181,19 @@ const NOVA = {
       // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
       // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
       // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur)
+      // https://greasyfork.org/scripts/464780-global-module/code/global_module.js
 
       // There is a more correct method - transitionend.
       // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
       // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
 
       return new Promise(resolve => {
-         if (element = (container || document.body || document).querySelector(selector)) {
+         if (element = (limit_data?.container || document.body || document).querySelector(selector)) {
             // console.debug('[1]', selector);
             return resolve(element);
          }
 
-         new MutationObserver((mutationRecordsArray, observer) => {
+         const observer1 = new MutationObserver((mutationRecordsArray, observer) => {
             for (const record of mutationRecordsArray) {
                for (const node of record.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType) || !(node instanceof HTMLElement)) continue; // speedup hack
@@ -203,14 +216,16 @@ const NOVA = {
             }
             // after loop. In global
             if (document?.readyState != 'loading' // fix slowdown page
-               && (element = (container || document?.body || document).querySelector(selector))
+               && (element = (limit_data?.container || document?.body || document).querySelector(selector))
             ) {
                // console.debug('[4]', selector);
                observer.disconnect();
                return resolve(element);
             }
          })
-            .observe(container || document.body || document.documentElement || document, {
+
+         observer1
+            .observe(limit_data?.container || document.body || document.documentElement || document, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
                attributes: true, // need to - "NOVA.waitSelector('#movie_player.ytp-autohide video')" in embed page
@@ -218,6 +233,18 @@ const NOVA = {
                //  attributeOldValue: true,
                //  characterDataOldValue: true
             });
+
+         if (limit_data?.stop_on_page_change) {
+            isURLChange();
+            window.addEventListener('transitionend', ({ target }) => {
+               if (isURLChange()) {
+                  observer1.disconnect();
+               }
+            });
+            function isURLChange() {
+               return (this.prevURL === location.href) ? false : this.prevURL = location.href;
+            }
+         }
       });
    },
 
@@ -292,6 +319,12 @@ const NOVA = {
                // console.debug('watch.process', { selector, callback });
                selectors
                   .forEach(selectorItem => {
+                     // https://jsfiddle.net/f6o2amjk/4/ https://www.bram.us/2023/01/04/css-has-feature-detection-with-supportsselector-you-want-has-not-has/
+                     // if (selector.includes(':has(')) selector = `@supports selector(:has(*)) {${selector}}`
+                     if (selectorItem.includes(':has(') && !CSS.supports('selector(:has(*))')) {
+                        return console.warn('CSS ":has()" unsupported');
+                     }
+
                      if (attr_mark) selectorItem += `:not([${attr_mark}])`;
                      // if ((slEnd = ':not([hidden])') && !selectorItem.endsWith(slEnd)) {
                      //    selectorItem += slEnd;
@@ -414,6 +447,41 @@ const NOVA = {
             ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) return "undefined" is not valid
       },
    },
+
+   // cookie: {
+   //    clearAllCookies: function (domain) {
+   //       let cookies = document.cookie.split('; ');
+   //       for (let i = 0; i < cookies.length; i++) {
+   //          var cookie = cookies[i];
+   //          var eqPos = cookie.indexOf('=');
+   //          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+   //          var cookieDomain = location.hostname.replace(/^www\./i, '');
+   //          if (cookieDomain === domain || cookieDomain.endsWith('.' + domain)) {
+   //             document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;domain=' + cookieDomain + ';path=/';
+   //          }
+   //       }
+   //    },
+   //    get: function (name) {
+   //       let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+   //       return match && decodeURIComponent(match[2]);
+   //    },
+   //    set: function (name, value, days) {
+   //       if (days == null) days = 1;
+   //       let d = new Date();
+   //       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+   //       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString();
+   //    },
+   //    delete: function (name) {
+   //       this.set(name, '', -1);
+   //    },
+   //    clear: function () {
+   //       for (let key in this.get()) {
+   //          this.delete(key);
+   //       }
+   //       let domain = location.hostname.replace(/^www\./i, '');
+   //       this.clearAllCookies(domain);
+   //    }
+   // },
 
    // cookie: {
    //    get(name = required()) {
@@ -824,31 +892,32 @@ const NOVA = {
             return console.warn('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
          }
 
-         const data = Object.values((
-            ytPubsubPubsubInstance.i // embed
+         if (ytPubsubPubsubInstance = ytPubsubPubsubInstance.i // embed
             || ytPubsubPubsubInstance.j // watch
             || ytPubsubPubsubInstance.subscriptions_ // navigation
-         )
-            .find(a => a?.player)
-            .player.app
-         )
-            .find(a => a?.videoData)
-            ?.videoData.multiMarkersPlayerBarRenderer;
+         ) {
+            const data = Object.values(
+               ytPubsubPubsubInstance.find(a => a?.player)?.player.app
+            )
+               .find(a => a?.videoData)
+               ?.videoData.multiMarkersPlayerBarRenderer;
 
-         if (data?.markersMap?.length) {
-            return data.markersMap[0].value.chapters
-               ?.map(c => {
-                  const sec = +c.chapterRenderer.timeRangeStartMillis / 1000;
-                  return {
-                     'sec': sec,
-                     'time': NOVA.timeFormatTo.HMS.digit(sec),
-                     'title':
-                        c.chapterRenderer.title.simpleText // watch
-                        || c.chapterRenderer.title.runs[0].text, // embed
-                  };
-               });
+            if (data?.markersMap?.length) {
+               return data.markersMap[0].value.chapters
+                  ?.map(c => {
+                     const sec = +c.chapterRenderer.timeRangeStartMillis / 1000;
+                     return {
+                        'sec': sec,
+                        'time': NOVA.timeFormatTo.HMS.digit(sec),
+                        'title':
+                           c.chapterRenderer.title.simpleText // watch
+                           || c.chapterRenderer.title.runs[0].text, // embed
+                     };
+                  });
+            }
          }
       }
+
    },
 
    // there are problems with the video https://www.youtube.com/watch?v=SgQ_Jk49FRQ. Too lazy to continue testing because it is unclear which method is more optimal.
@@ -925,7 +994,8 @@ const NOVA = {
       function highlightTerm({ target = required(), keyword = required(), highlightClass }) {
          // console.debug('highlightTerm:', ...arguments);
          const
-            content = target.innerHTML,
+            // content = target.innerHTML,
+            content = target.textContent,
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
             highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
             replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
@@ -1007,13 +1077,13 @@ const NOVA = {
             // https://yt.lemnoslife.com/channels?part=approval&id=CHANNEL_ID (items[0].approval == 'Official Artist Channel') (https://github.com/Benjamin-Loison/YouTube-operational-API)
 
             // channelNameVEVO
-            || (channelName && /(VEVO|Topic|Records|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio
+            || (channelName && /(VEVO|Topic|Records|RECORDS|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio, https://www.youtube.com/@VisibleNoiseRecords, https://www.youtube.com/@TerribleRecords
 
             // specific word in channel
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
-            // word
-            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+            // word - https://www.youtube.com/watch?v=N67yRMOVk1s
+            || titleWordsList?.length && ['🎵', '♫', 'AUDIO', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
             // words
@@ -1366,6 +1436,7 @@ const NOVA = {
       /*document.fullscreen || */ // site page can be in full screen mode
       movie_player.classList.contains('ytp-fullscreen')
       || (movie_player.hasOwnProperty('isFullscreen') && movie_player.isFullscreen()) // Doesn't work in embed
+      // || document.body.querySelector('ytd-watch-flexy[fullscreen]')
    ),
 
    // videoId(url = document.URL) {
@@ -1401,6 +1472,11 @@ const NOVA = {
          // || window.ytplayer?.config?.args.raw_player_response.videoDetails.channelId
          // || document.body.querySelector('ytd-player')?.player_.getCurrentVideoConfig()?.args.raw_player_response.videoDetails.channelId
          // embed page
+         ((typeof ytcfg === 'object') && (obj = ytcfg.data_?.PLAYER_VARS?.embedded_player_response)
+            && NOVA.seachInObjectBy.key({
+               'obj': JSON.parse(obj),
+               'keys': 'channelId',
+            })?.data),
       ]
          .find(i => isChannelId(i));
       // console.debug('channelId (local):', result);
@@ -1558,109 +1634,109 @@ const NOVA = {
       },
    },
 
-   // seachInObjectBy: {
-   //    // ex:
-   //    // NOVA.seachInObjectBy.key({
-   //    //    'obj': window.ytplayer,
-   //    //    'keys': 'ucid',
-   //    //    'match_fn': val => {},
-   //    // });
-   //    // ex test array: NOVA.seachInObjectBy.key({ obj: { a: [1, {"ucid": 11}] }, keys: "ucid" })
-   //    /**
-   //     * @param  {object} obj
-   //     * @param  {string} keys
-   //     * @param  {function*} match_fn
-   //     * @param  {boolean*} multiple
-   //     * @return {object} {path: '.config.args.ucid', data: 'UCMDQxm7cUx3yXkfeHa5zJIQ'}
-   //    */
-   //    key({ obj = required(), keys = required(), match_fn, multiple = false, path = '' }) {
-   //       // if (typeof obj !== 'object') {
-   //       //    return console.error('seachInObjectBy > keys is not Object:', ...arguments);
-   //       // }
-   //       const setPath = d => (path ? path + '.' : '') + d;
-   //       let hasKey, results = [];
+   seachInObjectBy: {
+      // ex:
+      // NOVA.seachInObjectBy.key({
+      //    'obj': window.ytplayer,
+      //    'keys': 'ucid',
+      //    'match_fn': val => {},
+      // });
+      // ex test array: NOVA.seachInObjectBy.key({ obj: { a: [1, {"ucid": 11}] }, keys: "ucid" })
+      /**
+       * @param  {object} obj
+       * @param  {string} keys
+       * @param  {function*} match_fn
+       * @param  {boolean*} multiple
+       * @return {object} {path: '.config.args.ucid', data: 'UCMDQxm7cUx3yXkfeHa5zJIQ'}
+      */
+      key({ obj = required(), keys = required(), match_fn, multiple = false, path = '' }) {
+         // if (typeof obj !== 'object') {
+         //    return console.error('seachInObjectBy > keys is not Object:', ...arguments);
+         // }
+         const setPath = d => (path ? path + '.' : '') + d;
+         let hasKey, results = [];
 
-   //       for (const prop in obj) {
-   //          if (obj.hasOwnProperty(prop) && obj[prop]) {
-   //             hasKey = keys.constructor.name === 'String' ? (keys === prop) : keys.indexOf(prop) > -1;
+         for (const prop in obj) {
+            if (obj.hasOwnProperty(prop) && obj[prop]) {
+               hasKey = keys.constructor.name === 'String' ? (keys === prop) : keys.indexOf(prop) > -1;
 
-   //             if (hasKey && obj[prop].constructor.name !== 'Object' && (!match_fn || match_fn(obj[prop]))) {
-   //                if (multiple) {
-   //                   results.push({
-   //                      'path': setPath(prop),
-   //                      'data': obj[prop],
-   //                   });
-   //                }
-   //                else {
-   //                   return {
-   //                      'path': setPath(prop),
-   //                      'data': obj[prop],
-   //                   };
-   //                }
-   //             }
-   //             // in deeper (recursive)
-   //             else {
-   //                switch (obj[prop].constructor.name) {
-   //                   case 'Object':
-   //                      if (result = this.key({
-   //                         'obj': obj[prop],
-   //                         'keys': keys,
-   //                         // 'path': path + '.' + prop,
-   //                         'path': setPath(prop),
-   //                         'match_fn': match_fn,
-   //                      })) {
-   //                         if (multiple) results.push(result);
-   //                         else return result;
-   //                      }
-   //                      break;
+               if (hasKey && obj[prop].constructor.name !== 'Object' && (!match_fn || match_fn(obj[prop]))) {
+                  if (multiple) {
+                     results.push({
+                        'path': setPath(prop),
+                        'data': obj[prop],
+                     });
+                  }
+                  else {
+                     return {
+                        'path': setPath(prop),
+                        'data': obj[prop],
+                     };
+                  }
+               }
+               // in deeper (recursive)
+               else {
+                  switch (obj[prop].constructor.name) {
+                     case 'Object':
+                        if (result = this.key({
+                           'obj': obj[prop],
+                           'keys': keys,
+                           // 'path': path + '.' + prop,
+                           'path': setPath(prop),
+                           'match_fn': match_fn,
+                        })) {
+                           if (multiple) results.push(result);
+                           else return result;
+                        }
+                        break;
 
-   //                   case 'Array':
-   //                      for (let i = 0; i < obj[prop].length; i++) {
-   //                         if (result = this.key({
-   //                            'obj': obj[prop][i],
-   //                            'keys': keys,
-   //                            'path': path + `[${i}]`,
-   //                            'match_fn': match_fn,
-   //                         })) {
-   //                            if (multiple) results.push(result);
-   //                            else return result;
-   //                         }
-   //                      }
-   //                      break;
+                     case 'Array':
+                        for (let i = 0; i < obj[prop].length; i++) {
+                           if (result = this.key({
+                              'obj': obj[prop][i],
+                              'keys': keys,
+                              'path': path + `[${i}]`,
+                              'match_fn': match_fn,
+                           })) {
+                              if (multiple) results.push(result);
+                              else return result;
+                           }
+                        }
+                        break;
 
-   //                   case 'Function':
-   //                      if (Object.keys(obj[prop]).length) {
-   //                         for (const j in obj[prop]) {
-   //                            if (typeof obj[prop] !== 'undefined') {
-   //                               // recursive
-   //                               if (result = this.key({
-   //                                  'obj': obj[prop][j],
-   //                                  'keys': keys,
-   //                                  'path': setPath(prop) + '.' + j,
-   //                                  'match_fn': match_fn,
-   //                               })) {
-   //                                  if (multiple) results.push(result);
-   //                                  else return result;
-   //                               }
-   //                            }
-   //                         }
-   //                      }
-   //                      break;
+                     case 'Function':
+                        if (Object.keys(obj[prop]).length) {
+                           for (const j in obj[prop]) {
+                              if (typeof obj[prop] !== 'undefined') {
+                                 // recursive
+                                 if (result = this.key({
+                                    'obj': obj[prop][j],
+                                    'keys': keys,
+                                    'path': setPath(prop) + '.' + j,
+                                    'match_fn': match_fn,
+                                 })) {
+                                    if (multiple) results.push(result);
+                                    else return result;
+                                 }
+                              }
+                           }
+                        }
+                        break;
 
-   //                   // case 'String': break;
-   //                   // case 'Number': break;
-   //                   // case 'Boolean': break;
-   //                   // case 'Function': break;
+                     // case 'String': break;
+                     // case 'Number': break;
+                     // case 'Boolean': break;
+                     // case 'Function': break;
 
-   //                   // default: break;
-   //                }
-   //             }
-   //          }
-   //       }
+                     // default: break;
+                  }
+               }
+            }
+         }
 
-   //       if (multiple) return results;
-   //    },
-   // },
+         if (multiple) return results;
+      },
+   },
 
    log() {
       if (this.DEBUG && arguments.length) {

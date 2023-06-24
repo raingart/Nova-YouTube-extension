@@ -18,7 +18,8 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/446954-youtube-expand-description-and-long-comments-show-all-the-replies
+      // alt1 - https://greasyfork.org/en/scripts/467911-auto-expand-youtube-comments
+      // alt2 - https://greasyfork.org/en/scripts/446954-youtube-expand-description-and-long-comments-show-all-the-replies
 
       // Doesn't work. I don't know how to implement it better. By updating "removeEventListener/addEventListener" or reloading the entire comment block
       // dirty fix bug with not updating comments addEventListener: reset comments block

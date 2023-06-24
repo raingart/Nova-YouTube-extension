@@ -73,7 +73,8 @@ function setupConfigPage() {
             switch (value) {
                case 'true': obj[key] = true; break;
                case 'false': obj[key] = false; break;
-               case 'undefined': obj[key] = undefined; break;
+               // case 'undefined': obj[key] = undefined; break;
+               case 'undefined': delete obj[key]; break; // remove unless storage
                default: obj[key] = value;
             }
          };
@@ -88,6 +89,10 @@ function setupConfigPage() {
    window.addEventListener('DOMContentLoaded', () => {
       localizePage(user_settings?.lang_code);
       storeData = user_settings; // export(sync) settings to page
+      // allow to export plugins
+      unsafeWindow.window.nova_plugins = window.nova_plugins;
+      // unsafeWindow.Plugins.load = () => { };
+      // unsafeWindow.Plugins ={ };
    });
 
    window.addEventListener('load', () => {
@@ -119,6 +124,7 @@ function landerPlugins() {
 
          console.groupCollapsed('plugins status');
 
+         // PluginsFn.run({
          Plugins.run({
             'user_settings': user_settings,
             'app_ver': GM_info.script.version,
@@ -183,7 +189,7 @@ function landerPlugins() {
 // function initPlugins() {
 //    // page: init
 //    console.groupCollapsed('plugins status');
-//    Plugins.run({
+//    PluginsFn.run({
 //       'user_settings': user_settings,
 //       'app_ver': GM_info.script.version,
 //    });

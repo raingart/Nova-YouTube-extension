@@ -36,6 +36,7 @@ window.nova_plugins.push({
       // alt5 - https://greasyfork.org/en/scripts/418188-youtube-playlist-total-duration
       // alt6 - https://greasyfork.org/en/scripts/11712-youtube-playlist-time
       // alt7 - https://chrome.google.com/webstore/detail/pijbakhgmhhadeakaocjfockpndcpobk
+      // alt8 - https://greasyfork.org/en/scripts/465609-youtube-playlist-calculator
 
       const
          SELECTOR_ID = 'nova-playlist-duration',
@@ -73,7 +74,10 @@ window.nova_plugins.push({
                         .contents.twoColumnBrowseResultsRenderer
                         ?.tabs[0].tabRenderer?.content?.sectionListRenderer
                         ?.contents[0].itemSectionRenderer
-                        ?.contents[0].playlistVideoListRenderer?.contents;
+                        ?.contents[0].playlistVideoListRenderer?.contents
+                        || document.body.querySelector('ytd-watch-flexy')?.__data.playlistData?.contents
+                        || document.body.querySelector('ytd-watch-flexy')?.data?.playlist?.playlist?.contents
+                        ;
 
                      const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
 
@@ -85,12 +89,12 @@ window.nova_plugins.push({
             break;
 
          case 'watch':
-            NOVA.waitSelector('#secondary .index-message-wrapper')
+            NOVA.waitSelector('#secondary .index-message-wrapper', { stop_on_page_change: true })
                .then(el => {
                   const waitPlaylist = setInterval(() => {
                      const
                         playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
-                        playlistList = document.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
+                        playlistList = document.body.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
                            .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
                            .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 
@@ -113,13 +117,13 @@ window.nova_plugins.push({
                               .then(duration => insertToHTML({ 'container': el, 'text': duration }));
                         }
                      }
-                  }, 1000); // 1 sec
+                  }, 2000); // 2 sec
 
                   // Warning! don't use "NOVA.waitUntil" below. Incorrect update of current currentIndex
                   // const playlistList = await NOVA.waitUntil(() => {
                   //    const
                   //       playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
-                  //       playlistList = document.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
+                  //       playlistList = document.body.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
                   //          .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
                   //          .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 

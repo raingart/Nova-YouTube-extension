@@ -514,7 +514,8 @@ window.addEventListener('load', () => {
       function highlightTerm({ target = required(), keyword = required(), highlightClass }) {
          // console.debug('highlightTerm:', ...arguments);
          const
-            content = target.innerHTML,
+            // content = target.innerHTML,
+            content = target.textContent,
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
             highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
             replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,

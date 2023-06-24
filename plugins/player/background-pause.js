@@ -54,6 +54,7 @@ window.nova_plugins.push({
          removeStorage = () => localStorage.removeItem(storeName);
 
       // Strategy 1. Working but dangerous method. Significant delay
+      // // HTMLMediaElement.prototype.play = function (c) {
       // HTMLVideoElement.prototype.play = function (c) {
       //    return function () {
       //       if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
@@ -74,13 +75,12 @@ window.nova_plugins.push({
             video.addEventListener('play', checkInstance); // gaps in initialization
             video.addEventListener('playing', checkInstance); // more reliable way
             // remove mark if video stop play
-            ['pause', 'suspend', 'ended'].forEach(evt => video.addEventListener(evt, removeStorage));
+            ['pause', /*'suspend',*/ 'ended'].forEach(evt => video.addEventListener(evt, removeStorage)); // BUG - "suspend" in google drive player
             // remove mark if tab closed
             window.addEventListener('beforeunload', removeStorage);
 
             // if tab unfocus apply pause
             window.addEventListener('storage', store => {
-               // if ((!document.hasFocus()) // tab unfocus
                if ((!document.hasFocus() || NOVA.currentPage == 'embed') // tab unfocus
                   && store.key === storeName && store.storageArea === localStorage // checking store target
                   && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
@@ -93,6 +93,7 @@ window.nova_plugins.push({
 
             // auto play on tab focus
             if (user_settings.pause_background_tab_autoplay_onfocus) {
+               // if (user_settings.pause_background_tab_autoplay_onfocus) {
                // document.addEventListener('visibilitychange', () => {
                //    // if other tabs are not playing
                //    if (document.visibilityState == 'visible'
@@ -113,22 +114,23 @@ window.nova_plugins.push({
                      // console.debug('play video in focus');
                      video.play();
                   }
-               });
+               }, user_settings.pause_background_tab_autoplay_onfocus == 'force' ? false : { capture: true, once: true });
             }
 
             // pause on tab unfocuse
             if (user_settings.pause_background_tab_autopause_unfocus) {
                window.addEventListener('blur', () => {
                   // await NOVA.delay(100); // dirty fix. document.visibilityState update AFTER blur
-                  // document.visibilityState == 'visible'
-                  if (!document.hasFocus() && 'PLAYING' == NOVA.getPlayerState()) {
+                  if (document.visibilityState == 'hidden' && 'PLAYING' == NOVA.getPlayerState()) {
                      video.pause();
                   }
                });
             }
 
             function checkInstance() {
-               if (localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID) {
+               if (user_settings.pause_background_tab_autoplay_onfocus !== true
+                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID
+               ) {
                   // console.debug('event interception instanceID:', instanceID, movie_player.getVideoData().video_id || NOVA.queryURL.get('v'));
                   video.pause();
                }
@@ -229,8 +231,26 @@ window.nova_plugins.push({
 
    },
    options: {
+      // pause_background_tab_autoplay_onfocus: {
+      //    _tagName: 'input',
+      //    label: 'Autoplay on tab focus',
+      //    'label:zh': '在标签焦点上自动播放',
+      //    'label:ja': 'タブフォーカスでの自動再生',
+      //    'label:ko': '탭 포커스에서 자동 재생',
+      //    'label:id': 'Putar otomatis pada fokus tab',
+      //    'label:es': 'Reproducción automática en el enfoque de la pestaña',
+      //    'label:pt': 'Reprodução automática no foco da guia',
+      //    'label:fr': "Lecture automatique sur le focus de l'onglet",
+      //    'label:it': 'Riproduzione automatica su tab focus',
+      //    // 'label:tr': 'Sekme odağında otomatik oynatma',
+      //    'label:de': 'Autoplay bei Tab-Fokus',
+      //    'label:pl': 'Autoodtwarzanie po wybraniu karty',
+      //    'label:ua': 'Автовідтворення при виборі вкладки',
+      //    type: 'checkbox',
+      //    // title: '',
+      // },
       pause_background_tab_autoplay_onfocus: {
-         _tagName: 'input',
+         _tagName: 'select',
          label: 'Autoplay on tab focus',
          'label:zh': '在标签焦点上自动播放',
          'label:ja': 'タブフォーカスでの自動再生',
@@ -244,8 +264,53 @@ window.nova_plugins.push({
          'label:de': 'Autoplay bei Tab-Fokus',
          'label:pl': 'Autoodtwarzanie po wybraniu karty',
          'label:ua': 'Автовідтворення при виборі вкладки',
-         type: 'checkbox',
-         // title: '',
+         options: [
+            {
+               label: 'disable', /*value: false,*/ selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'once for new tab', value: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'always for not started', value: 'force',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+         ],
       },
       pause_background_tab_autopause_unfocus: {
          _tagName: 'input',

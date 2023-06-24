@@ -28,12 +28,12 @@ window.nova_plugins.push({
          SELECTOR_BTN = '.' + SELECTOR_BTN_CLASS_NAME; // for css
 
       // NOVA.waitSelector('.ytp-left-controls')
-      NOVA.waitSelector('.ytp-right-controls')
+      NOVA.waitSelector('#movie_player .ytp-right-controls')
          .then(async container => {
             // container.prepend(new-el);
             // container.insertBefore(new-el, container.childNodes[0])
 
-            NOVA.videoElement = await NOVA.waitSelector('video'); // wait load video
+            NOVA.videoElement = await NOVA.waitSelector('video'); // wait load video. rewrite just in case
 
             // global
             NOVA.css.push(
@@ -159,11 +159,12 @@ window.nova_plugins.push({
                //    </g>
                // </svg>`;
                popupBtn.addEventListener('click', () => {
-                  const
-                     // width = window.innerWidth / 2,
-                     width = screen.width / (+user_settings.player_buttons_custom_popup_width || 4),
-                     aspectRatio = NOVA.aspectRatio.getAspectRatio({ 'width': NOVA.videoElement.videoWidth, 'height': NOVA.videoElement.videoHeight }),
-                     height = Math.round(width / aspectRatio);
+                  const { width, height } = NOVA.aspectRatio.sizeToFit({
+                     'srcWidth': NOVA.videoElement.videoWidth,
+                     'srcHeight': NOVA.videoElement.videoHeight,
+                     'maxWidth': screen.width / (+user_settings.player_buttons_custom_popup_width || 4),
+                     // 'maxHeight': window.innerHeight,
+                  });
 
                   url = new URL(
                      document.querySelector('link[itemprop="embedUrl"][href]')?.href
@@ -189,13 +190,13 @@ window.nova_plugins.push({
                   // left = window.innerWidth;
                   // top = window.innerHeight;
                   const newWindow = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
-                  // win.document.title = title;
-                  return;
+                  newWindow.document.title = title;
                }
             }
 
             if (user_settings.player_buttons_custom_items?.includes('screenshot')) {
-               // alt - https://greasyfork.org/en/scripts/455155-youtube-screenshot
+               // alt1 - https://greasyfork.org/en/scripts/455155-youtube-screenshot
+               // alt2 - https://greasyfork.org/en/scripts/466259-youtube-video-screenshot
                const
                   // bar
                   SELECTOR_SCREENSHOT_ID = 'nova-screenshot-result',
@@ -351,7 +352,8 @@ window.nova_plugins.push({
                   downloadLink.href = canvas.toBlob(blob => URL.createObjectURL(blob));
                   // downloadLink.href = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
                   // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
-                  downloadLink.download = downloadFileName + '.png';
+                  downloadLink.download = downloadFileName +
+                     '.' + (user_settings.player_buttons_custom_screenshot || 'png');
                   downloadLink.click();
                   // URL.revokeObjectURL(downloadLink.href);
                }
@@ -426,12 +428,14 @@ window.nova_plugins.push({
             if (user_settings.player_buttons_custom_items?.includes('rotate')) {
                // alt1 - https://github.com/zhzLuke96/ytp-rotate
                // alt2 - https://greasyfork.org/en/scripts/375568-%E6%B2%B9%E7%AE%A1%E8%A7%86%E9%A2%91%E6%97%8B%E8%BD%AC
-               const rotateBtn = document.createElement('button');
+               const
+                  hotkey = user_settings.player_buttons_custom_hotkey_rotate || 'r',
+                  rotateBtn = document.createElement('button');
 
                // if (NOVA.videoElement?.videoWidth < NOVA.videoElement?.videoHeight) {
                rotateBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                // rotateBtn.title = 'Rotate video';
-               rotateBtn.setAttribute('tooltip', 'Rotate video');
+               rotateBtn.setAttribute('tooltip', `Rotate video (${hotkey})`);
                Object.assign(rotateBtn.style, {
                   padding: '0 1.1em',
                });
@@ -443,7 +447,15 @@ window.nova_plugins.push({
                         </path>
                      </g>
                   </svg>`;
-               rotateBtn.addEventListener('click', () => {
+               rotateBtn.addEventListener('click', rotateVideo);
+               // hotkey
+               document.addEventListener('keyup', evt => {
+                  if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.key === hotkey) {
+                     rotateVideo();
+                  }
+               });
+               function rotateVideo() {
                   // get first number part (rotate, without scale). Code: remove text before numbers, and extract first number group
                   let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D+/, '')) || 0;
                   // fix ratio scale. Before angle calc
@@ -451,7 +463,7 @@ window.nova_plugins.push({
                   angle += 90;
                   NOVA.videoElement.style.transform = (angle === 360) ? '' : `rotate(${angle}deg) scale(${scale})`;
                   // console.debug('rotate', angle, scale, NOVA.videoElement.style.transform);
-               });
+               }
                container.prepend(rotateBtn);
                // }
             }
@@ -487,7 +499,7 @@ window.nova_plugins.push({
                aspectRatioBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
                aspectRatioBtn.style.textAlign = 'center';
                aspectRatioBtn.style.fontWeight = 'bold';
-               // speedBtn.title = genTooltip(Object.keys(aspectRatioList[0])));
+               // aspectRatioBtn.title = genTooltip(Object.keys(aspectRatioList[0])));
                aspectRatioBtn.setAttribute('tooltip', genTooltip());
                aspectRatioBtn.innerHTML = '1:1';
 
@@ -836,6 +848,8 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('toggle-speed')) {
+               // alt1 - https://greasyfork.org/en/scripts/466690-youtube-quick-speed-interface
+               // alt2 - https://greasyfork.org/en/scripts/30506-video-speed-buttons
                const
                   speedBtn = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
@@ -1207,9 +1221,31 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: 'A', value: 'a', selected: true },
-            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
          ],
          'data-dependent': { 'player_buttons_custom_items': ['toggle-speed'] },
+      },
+      player_buttons_custom_hotkey_rotate: {
+         _tagName: 'select',
+         label: 'Hotkey rotate',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: 'R', value: 'r', selected: true },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+         'data-dependent': { 'player_buttons_custom_items': ['rotate'] },
       },
       player_buttons_custom_card_switch: {
          _tagName: 'select',
@@ -1259,6 +1295,55 @@ window.nova_plugins.push({
             },
          ],
          'data-dependent': { 'player_buttons_custom_items': ['card-switch'] },
+      },
+      player_buttons_custom_screenshot: {
+         _tagName: 'select',
+         label: 'Default screenshot format',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         options: [
+            {
+               label: 'png', value: 'png', selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'jpg', value: 'jpg',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+         ],
+         'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
       },
    }
 });

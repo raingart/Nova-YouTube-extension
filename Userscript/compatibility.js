@@ -1,4 +1,6 @@
-// support check
+// https://adguard.com/kb/general/userscripts/
+
+// support check start
 
 if (typeof GM_info === 'undefined') {
    alert('Direct Chromium is not supported now');

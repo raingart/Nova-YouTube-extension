@@ -54,11 +54,12 @@ window.nova_plugins.push({
          );
 
          function sortByLabel(a, b) {
-            // console.debug('a', a.textContent.trim());
+            // console.debug('a', a.innerText.trim());
             // console.debug('b', b.textContent.trim());
 
             // const getLabel = el => el.querySelector('#checkbox-label').textContent.trim();
-            const getLabel = el => el.textContent.trim();
+            // const getLabel = el => el.textContent.trim();
+            const getLabel = el => el.innerText.trim();
             // return (getLabel(a) > getLabel(b)) ? 1 : -1;
             return stringLocaleCompare(getLabel(a), getLabel(b));
 

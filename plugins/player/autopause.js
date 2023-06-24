@@ -82,12 +82,34 @@ window.nova_plugins.push({
          document.addEventListener('click', stopForceHoldPause);
          document.addEventListener('keyup', keyupSpace);
 
-         function stopForceHoldPause() {
-            if (movie_player.contains(document.activeElement)) {
+         function stopForceHoldPause(evt) {
+            // console.log(evt);
+            // console.log(typeof evt);
+
+            // isTrusted: false
+            // defaultPrevented: false
+            // detail: 0
+            // isTrusted: false
+            // x: 0
+            // y: 0
+            // offsetX: 0
+            // offsetY: 0
+            // screenX: 0
+            // screenY: 0
+            // pageX: 0
+            // pageY: 0
+            // clientY: 0
+            // pageY: 0
+
+            // if (evt.isTrusted
+            //    && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(selector => evt.srcElement.matches(selector))
+            // ) {
+            if (!evt || evt.isTrusted) {
                clearInterval(forceHoldPause);
                document.removeEventListener('keyup', keyupSpace);
                document.removeEventListener('click', stopForceHoldPause);
             }
+
          }
 
          function keyupSpace(evt) {

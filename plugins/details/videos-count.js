@@ -60,7 +60,7 @@ window.nova_plugins.push({
             //          });
             //    });
 
-            NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead')
+            NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
                .then(el => setVideoCount(el));
             break;
 
