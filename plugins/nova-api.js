@@ -28,6 +28,7 @@
    - timeFormatTo.HMS.abbr
    //- timeFormatTo.HMS.abbrFull
    - timeFormatTo.ago
+   - dateformat
    - updateUrl
    - queryURL.has
    - queryURL.get
@@ -46,6 +47,8 @@
    - currentPage
    - isMobile
 */
+
+// const $ = element => document.body.querySelector(element);
 
 const NOVA = {
    // DEBUG: true,
@@ -94,6 +97,18 @@ const NOVA = {
    //       }
    //    });
    // },
+
+   //    export const findElement = (selector: string): Promise<Element> => {
+   //       return new Promise((resolve) => {
+   //           const interval = setInterval(() => {
+   //               const elem = document.querySelector(selector);
+   //               if (elem !== null) {
+   //                   clearInterval(interval);
+   //                   resolve(elem);
+   //               }
+   //           });
+   //       });
+   //   };
 
    // waitSelector('details[data-pref]', {
    //    recur(elems) {
@@ -555,14 +570,14 @@ const NOVA = {
       if (num === 0) return '';
       if (num < 1000) return num; // speed up
       const sizes = ['', 'K', 'M', 'B'];
-      const i = Math.floor(Math.log(Math.abs(num)) / Math.log(1000));
+      const i = ~~(Math.log(Math.abs(num)) / Math.log(1000));
       if (!sizes[i]) return num; // out range
 
       return round(num / 1000 ** i, 1) + sizes[i];
 
       function round(n, precision = 2) {
          const prec = 10 ** precision;
-         return Math.floor(n * prec) / prec;
+         return ~~(n * prec) / prec;
       }
    },
 
@@ -1160,7 +1175,7 @@ const NOVA = {
                h = ~~((ts % 86400) / 3600),
                m = ~~((ts % 3600) / 60),
                // min = ~~(Math.log(sec) / Math.log(60)), // after sec
-               s = Math.floor(ts % 60);
+               s = ~~(ts % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
@@ -1186,7 +1201,7 @@ const NOVA = {
                h = ~~((ts % 86400) / 3600),
                m = ~~((ts % 3600) / 60),
                // min = ~~(Math.log(sec) / Math.log(60)), // after sec
-               s = Math.floor(ts % 60);
+               s = ~~(ts % 60);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')
@@ -1262,13 +1277,75 @@ const NOVA = {
          ];
          const
             now = date.getTime(),
-            seconds = Math.floor((Date.now() - Math.abs(now)) / 1000),
+            seconds = ~~((Date.now() - Math.abs(now)) / 1000),
             interval = samples.find(i => i.seconds < seconds),
-            time = Math.floor(seconds / interval.seconds);
+            time = ~~(seconds / interval.seconds);
 
          // return `${time} ${interval.label}${time !== 1 ? 's' : ''} ago`;
          return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
       },
+   },
+
+   /**
+    * @param  {this} date
+    * @param  {format} string
+    * @return {string}
+   */
+   // NOVA.dateformat.apply(new Date(text), [user_settings.video_date_format]);
+   // Date.prototype.format = function (format = 'YYYY/MM/DD') {
+   dateformat(format = 'YYYY/MM/DD') {
+      // info and alt:
+      // https://cwestblog.com/2012/09/27/javascript-date-prototype-format/
+      // https://github.com/mikebaldry/formatDate-js/blob/master/formatDate.js
+      // https://github.com/sean1093/timeSolver/blob/master/src/1.2.0/timeSolver.js
+
+      if (!(date instanceof Date)) return console.error('dateformat - is not Date type:', this);
+
+      // console.debug('format', format);
+      const
+         twoDigit = n => n.toString().padStart(2, '0'),
+         date = this.getDate(),
+         year = this.getFullYear(),
+         month = this.getMonth(),
+         day = this.getDay(),
+         hours = this.getHours(),
+         minutes = this.getMinutes(),
+         seconds = this.getSeconds();
+
+      return format
+         // .replace(/a|A|Z|S(SS)?|ss?|mm?|HH?|hh?|D{1,4}|M{1,4}|YY(YY)?|'([^']|'')*'/g, partPattern => { // full
+         .replace(/A|Z|S(SS)?|ss?|mm?|HH?|hh?|D{1,4}|M{1,4}|YY(YY)?|'([^']|'')*'/g, partPattern => { // remove "a" for "at"
+            let out;
+            switch (partPattern) {
+               case 'YY': out = year.substr(2); break;
+               case 'YYYY': out = year; break;
+               case 'M': out = month; break;
+               case 'MM': out = twoDigit(month); break;
+               case 'MMM': out = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month]; break;
+               case 'MMMM': out = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month]; break;
+               case 'D': out = date; break;
+               case 'DD': out = twoDigit(date); break;
+               case 'DDD': out = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'][day]; break;
+               case 'DDDD': out = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]; break;
+               case 'h': out = (hours % 12) || 12; break;
+               case 'H': out = hours; break;
+               case 'HH': out = twoDigit(hours); break;
+               // case 'm': out = minutes; break;
+               case 'mm': out = twoDigit(minutes); break;
+               case 's': out = seconds; break;
+               case 'ss': out = twoDigit(seconds); break;
+               case 'SS': out = twoDigit(seconds); break;
+               // case 'SSS' out = Milliseconds with leading zeros (three digits long)
+               // case 'a': out = (hours < 12 ? 'am' : 'pm'); break;
+               case 'A': out = (hours < 12 ? 'AM' : 'PM'); break;
+               case 'Z': out = ('+' + -this.getTimezoneOffset() / 60)
+                  .replace(/^\D?(\D)/, "$1")
+                  .replace(/^(.)(.)$/, "$10$2") + '00';
+                  break;
+               // default: console.debug('skiped:', partPattern); break;
+            }
+            return out;
+         });
    },
 
    /**
@@ -1356,7 +1433,7 @@ const NOVA = {
                return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
             }
 
-            const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.floor(Math.random() * arr.length)];
+            const referRandKey = arr => api_key || 'AIzaSy' + arr[~~(Math.random() * arr.length)];
             // combine GET
             const query = Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
@@ -1649,7 +1726,12 @@ const NOVA = {
        * @param  {boolean*} multiple
        * @return {object} {path: '.config.args.ucid', data: 'UCMDQxm7cUx3yXkfeHa5zJIQ'}
       */
-      key({ obj = required(), keys = required(), match_fn, multiple = false, path = '' }) {
+      key({ obj = required(),
+         keys = required(),
+         match_fn = data => data.constructor.name !== 'Object', // exclude objects type
+         multiple = false,
+         path = ''
+      }) {
          // if (typeof obj !== 'object') {
          //    return console.error('seachInObjectBy > keys is not Object:', ...arguments);
          // }
@@ -1660,7 +1742,8 @@ const NOVA = {
             if (obj.hasOwnProperty(prop) && obj[prop]) {
                hasKey = keys.constructor.name === 'String' ? (keys === prop) : keys.indexOf(prop) > -1;
 
-               if (hasKey && obj[prop].constructor.name !== 'Object' && (!match_fn || match_fn(obj[prop]))) {
+               // if (hasKey && obj[prop].constructor.name !== 'Object' && (!match_fn || match_fn(obj[prop]))) {
+               if (hasKey && (!match_fn || match_fn(obj[prop]))) {
                   if (multiple) {
                      results.push({
                         'path': setPath(prop),

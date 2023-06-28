@@ -24,6 +24,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // alt - https://chrome.google.com/webstore/detail/oanhbddbfkjaphdibnebkklpplclomal
+      // alt - https://greasyfork.org/en/scripts/433440-youtube-subtitles-under-video-frame
 
       // movie_player.getSubtitlesUserSettings();
       // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color

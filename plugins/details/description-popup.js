@@ -140,7 +140,21 @@ window.nova_plugins.push({
       function restoreDateLine() {
          NOVA.waitSelector('#title h1')
             .then(container => {
-               // date = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
+               // // Strategy 1
+               // // date = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate;
+               // if (videoDate = NOVA.seachInObjectBy.key({
+               //    'obj': (document.body.querySelector('ytd-watch-flexy')?.playerData
+               //       || document.body.querySelector('ytd-app')?.__data?.data?.response
+               //       || document.body.querySelector('ytd-app')?.data?.response
+               //       || window.ytInitialData
+               //    ),
+               //    'keys': 'publishDate',
+               //    match_fn: null,
+               // })?.data) {
+               //    insertToHTML({ 'text': videoDate.simpleText || videoDate, 'container': container });
+               // }
+               // // Strategy 2
+               // else {
                NOVA.waitSelector('ytd-watch-metadata #description.ytd-watch-metadata')
                   .then(async textDateEl => {
                      await NOVA.waitUntil(() => {
@@ -178,6 +192,7 @@ window.nova_plugins.push({
                //          }
                //       }, 1000); // 1sec
                //    });
+               // }
             });
 
          function insertToHTML({ text = '', container = required() }) {

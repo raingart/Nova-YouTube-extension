@@ -25,7 +25,7 @@ window.nova_plugins.push({
 
       // alt - https://chrome.google.com/webstore/detail/fcchghcgfeadhdmkmpkedplecikkajnp
 
-      // if (window['nova-lock-live-chat']) return
+      // if (window['nova-lock-live-chat']) return;
 
       // window['nova-lock-live-chat'] = true; // set lock
 

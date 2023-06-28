@@ -27,55 +27,44 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
-            const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
-
             let segmentsList = [];
             let muteState;
 
             // reset chapterList
             // video.addEventListener('loadeddata', async () => segmentsList = await getSkipSegments(videoId) || []);
-            video.addEventListener('loadeddata', async () => {
+            video.addEventListener('loadeddata', init.bind(video));
+
+            async function init() {
+               const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+
                segmentsList = await getSkipSegments(videoId) || [];
 
-               // mark ad in [player-float-progress-bar] plugin
                if (user_settings['player-float-progress-bar'] && segmentsList.length) {
-                  const SELECTOR = 'nova-player-float-progress-bar-chapters'; // check in [player-float-progress-bar] plugin
-
+                  const SELECTOR = 'nova-player-float-progress-bar-chapters';
                   let el;
                   await NOVA.waitUntil(() =>
                      (el = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && el.length
                      , 1000);
-
                   el.forEach(chapterEl => {
                      const sec = NOVA.timeFormatTo.hmsToSec(chapterEl.getAttribute('time'));
                      for (const [i, value] of segmentsList.entries()) {
-                        // console.debug('>>', value, i);
                         const [start, end, category] = value;
-                        if (sec >= start && sec <= end) {
-                           // console.debug('', sec, start, end, sec >= start, sec <= end);
+                        if (sec >= (~~start - 5) && sec <= (Math.ceil(end) + 5)) { // +5sec observational error
                            chapterEl.style.title = category;
                            let color;
                            switch (category) {
-                              case 'sponsor': color = 'yellow'; break;
-                              case 'interaction': color = 'coral'; break;
-                              case 'selfpromo': color = 'tomato'; break;
-                              case 'intro': color = 'orange'; break;
-                              case 'outro': color = 'orange'; break;
-                              // case 'preview' break;
-                              // case 'music_offtopic' break;
-                              // case 'exclusive_access' break;
-                              // I do not know what is this:
-                              // case 'poi_highlight' break;
-                              // case 'filler' break;
-                              // case 'chapter' break;
-                              // default: break;
+                              case 'sponsor': color = 'rgb(255,231,0,.3)'; break;
+                              case 'interaction': color = 'rgb(255,127,80,.3)'; break;
+                              case 'selfpromo': color = 'rgb(255,99,71,.3)'; break;
+                              case 'intro': color = 'rgb(255,165,0,.3)'; break;
+                              case 'outro': color = 'rgb(255,165,0,.3)'; break;
                            }
-                           chapterEl.style.backgroundColor = color;
+                           chapterEl.style.background = color;
                         }
                      }
-                  })
+                  });
                }
-            });
+            }
 
             video.addEventListener('timeupdate', function () {
                // if (!isNaN(video.duration))
@@ -88,6 +77,8 @@ window.nova_plugins.push({
                for (let i = 0; i < segmentsList.length; i++) {
                   // console.debug('>>', segmentsList, i);
                   [start, end, category] = segmentsList[i];
+                  start = ~~start;
+                  end = Math.ceil(end);
 
                   const inSegment = (this.currentTime > start && this.currentTime < end);
 
@@ -186,7 +177,7 @@ window.nova_plugins.push({
             //    "votes": 1,
             //    "description": ""
             // }]
-            const tryFetchSkipSegments = () => fetch((user_settings.sponsor_block_url || 'https://sponsor.ajay.app')
+            const fetchAPI = () => fetch((user_settings.sponsor_block_url || 'https://sponsor.ajay.app')
                + `/api/skipSegments?${query}`,
                {
                   method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -213,7 +204,7 @@ window.nova_plugins.push({
                   // console.warn(`Sponsorblock: failed fetching skipSegments for ${ videoId }, reason: ${ error } `)
                });
 
-            if (result = await tryFetchSkipSegments()) {
+            if (result = await fetchAPI()) {
                // console.debug('result sponsor', result
                //    // , (user_settings.sponsor_block_url || 'https://sponsor.ajay.app') + `/api/skipSegments?${query}`
                // );

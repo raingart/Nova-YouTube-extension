@@ -136,8 +136,8 @@ window.nova_plugins.push({
                /*&& (!user_settings['theater-mode']
                   || (this.hasAttribute('fullscreen') && !['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode))
                )*/
-               && (!user_settings['theater-mode'] && !['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode))
-            ) {
+               && (!user_settings['theater-mode'] || (user_settings['theater-mode'] && !['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)))
+               ) {
                // console.debug('moveMouse event');
                movie_player.dispatchEvent(moveMouse);
             }

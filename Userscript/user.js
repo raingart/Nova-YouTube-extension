@@ -1,4 +1,4 @@
-console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
+console.log('%c /• %s •/', 'color:#0096fa; font-weight:bold;', GM_info.script.name + ' v.' + GM_info.script.version);
 
 // for Greasemonkey
 // (async () => {
@@ -130,7 +130,7 @@ function landerPlugins() {
             'app_ver': GM_info.script.version,
          });
 
-      }, 500); // 100ms
+      }, 500); // 500ms
    }
 
    let prevURL = location.href;

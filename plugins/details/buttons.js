@@ -18,7 +18,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings.details_buttons_hide.includes('subscribe')) {
+      if (user_settings.details_buttons_hide?.includes('subscribe')) {
          stylesList.push('#below #subscribe-button');
       }
 
@@ -33,8 +33,10 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/449799-clean-yt-interface
       // alt3 - https://greasyfork.org/en/scripts/441087-youtube-watch-page-no-icon-labels
       // alt4 - https://greasyfork.org/en/scripts/440416-youtube-hide-download-and-other-buttons-under-video
+      let styles = '';
+
       if (user_settings.details_button_no_labels) {
-         let styles =
+         styles +=
             // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '[class*="--button-text-content"]'} {
             // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '.cbox'} {
             //    display: none;
@@ -50,26 +52,27 @@ window.nova_plugins.push({
             ytd-watch-metadata #actions #top-level-buttons-computed ~ * button.yt-spec-button-shape-next--size-m {
                padding: 0 7px;
             }`;
-
-         if (user_settings.details_button_no_labels_opacity) {
-            styles +=
-               `#subscribe-button:not(:hover),
-               ytd-watch-metadata #actions #menu:not(:hover) {
-                  transition: opacity .2s ease-in-out;
-                  opacity: .1;
-               }`;
-         }
-
-         if (styles) NOVA.css.push(styles);
       }
 
+      if (+user_settings.details_button_no_labels_opacity) {
+         styles +=
+            `#subscribe-button:not(:hover),
+            ytd-watch-metadata #actions #menu:not(:hover) {
+               transition: opacity .2s ease-in-out;
+               opacity: ${user_settings.details_button_no_labels_opacity || .1};
+            }`;
+      }
+
+      if (styles) {
+         NOVA.css.push(styles);
+      }
 
       // alt - https://greasyfork.org/en/scripts/447614-youtube-hide-download-clip-and-thanks-buttons
       if (user_settings.details_buttons_hide?.length) {
 
          const buttonSelectors = [
-            '#below #menu ytd-button-renderer',
-            '#below #menu button',
+            'ytd-watch-metadata #menu ytd-button-renderer',
+            'ytd-watch-metadata #menu button',
             'ytd-popup-container ytd-menu-service-item-renderer',
          ];
 
@@ -78,10 +81,19 @@ window.nova_plugins.push({
             stylesList.push('#below #sponsor-button');
          }
          if (user_settings.details_buttons_hide.includes('like_dislike')) {
-            stylesList.push('#below #menu ytd-segmented-like-dislike-button-renderer');
+            stylesList.push('ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer');
+         }
+         if (user_settings.details_buttons_hide.includes('dislike')) {
+            stylesList.push('ytd-watch-metadata #menu #segmented-dislike-button');
+            NOVA.css.push(
+               `ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer button {
+                  border-radius: 100%;
+                  width: 40px;
+                  border: 0;
+               }`);
          }
          if (user_settings.details_buttons_hide.includes('download')) {
-            stylesList.push('#below #menu ytd-download-button-renderer');
+            stylesList.push('ytd-watch-metadata #menu ytd-download-button-renderer');
          }
          // by svg To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
          if (user_settings.details_buttons_hide.includes('share')) {
@@ -163,8 +175,25 @@ window.nova_plugins.push({
          'label:de': 'Opazität',
          'label:pl': 'Przejrzystość',
          'label:ua': 'Прозорість',
-         type: 'checkbox',
-         'data-dependent': { 'details_button_no_labels': true },
+         type: 'number',
+         title: '0 - disable',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         placeholder: '0-1',
+         step: .05,
+         min: 0,
+         max: 1,
+         value: .1,
       },
       // details_buttons_hide_all: {
       //    _tagName: 'input',
@@ -214,7 +243,7 @@ window.nova_plugins.push({
          'title:ua': '[Ctrl+Click] щоб обрати декілька',
          multiple: null, // don't use - selected: true
          // required: true, // don't use - selected: true
-         size: 5, // = options.length
+         size: 8, // = options.length
          options: [
             {
                label: 'subscribe', value: 'subscribe',
@@ -232,7 +261,7 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'all', value: 'all',
+               label: 'all (below)', value: 'all',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -263,6 +292,21 @@ window.nova_plugins.push({
             },
             {
                label: 'like/dislike', value: 'like_dislike',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'dislike', value: 'dislike',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

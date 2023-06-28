@@ -22,7 +22,7 @@ OR manual
 
 ### Chromium-like
 You can now load the extension into your browser through the browser's extension tools page:
-1. Download the <a href="https://greasyfork.org/scripts/433360-nova-youtube/code/Nova%20YouTube.user.js" download>userscript</a> or [extensions](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) version of Nova.
+1. Download the <a href="https://www.userscript.zone/search?q=Nova%20YouTube" download>userscript</a> or [extensions](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) version of Nova.
     * If you have downloaded the extensions ver. extract it.
 2. Type `chrome://extensions` in your address bar to bring up the extensions page.
 3. Enable __Developer Mode__ (checkbox)

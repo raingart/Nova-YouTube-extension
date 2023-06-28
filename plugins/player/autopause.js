@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'video-autopause',
-   title: 'Video auto pause',
+   title: 'Video autopause',
    'title:zh': '视频自动暂停',
    'title:ja': 'ビデオの自動一時停止',
    'title:ko': '비디오 자동 일시 중지',
@@ -30,6 +30,8 @@ window.nova_plugins.push({
    'desc:pl': 'Wyłącz autoodtwarzanie',
    'desc:ua': 'Вимкнути автовідтворення',
    _runtime: user_settings => {
+
+      // alt - https://greasyfork.org/en/scripts/370504-youtube-stop-automatic-video-playback
 
       // better use this flag when launching the chrome/imum:
       //  --autoplay-policy=user-gesture-required
@@ -79,46 +81,20 @@ window.nova_plugins.push({
          const forceHoldPause = setInterval(() => this.paused || this.pause(), 200); // 200ms
          // setTimeout(() => clearInterval(forceHoldPause), 1000); // 1s
 
-         document.addEventListener('click', stopForceHoldPause);
-         document.addEventListener('keyup', keyupSpace);
-
-         function stopForceHoldPause(evt) {
-            // console.log(evt);
-            // console.log(typeof evt);
-
-            // isTrusted: false
-            // defaultPrevented: false
-            // detail: 0
-            // isTrusted: false
-            // x: 0
-            // y: 0
-            // offsetX: 0
-            // offsetY: 0
-            // screenX: 0
-            // screenY: 0
-            // pageX: 0
-            // pageY: 0
-            // clientY: 0
-            // pageY: 0
-
-            // if (evt.isTrusted
-            //    && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(selector => evt.srcElement.matches(selector))
-            // ) {
-            if (!evt || evt.isTrusted) {
-               clearInterval(forceHoldPause);
-               document.removeEventListener('keyup', keyupSpace);
-               document.removeEventListener('click', stopForceHoldPause);
+         document.addEventListener('keyup', ({ code }) => (code == 'Space') && stopForceHoldPause());
+         // document.addEventListener('click', ({ isTrusted }) => isTrusted && stopForceHoldPause());
+         document.addEventListener('click', evt => {
+            if (//movie_player.contains(document.activeElement) ||
+               evt.isTrusted
+               && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(s => evt.srcElement.matches(s))
+            ) {
+               stopForceHoldPause();
             }
+         });
 
-         }
-
-         function keyupSpace(evt) {
-            // console.debug('evt.code', evt.code); // no sense if lauch with "{ capture: true, once: true }"
-            switch (evt.code) {
-               case 'Space':
-                  stopForceHoldPause()
-                  break;
-            }
+         function stopForceHoldPause() {
+            clearInterval(forceHoldPause);
+            movie_player.playVideo(); // dirty fix. onStateChange starts before click/keyup
          }
       }
 

@@ -43,36 +43,45 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'nova-channel-videos-count:',
          SELECTOR_ID = 'nova-video-count';
 
-      switch (NOVA.currentPage) {
-         case 'watch':
-            // NOVA.waitSelector('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
-            //    .then(link => {
-            //       // console.debug('watch page');
-            //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
-            //          // NOVA.waitSelector('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
-            //          .then(el => {
-            //             if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
+      // switch (NOVA.currentPage) {
+      //    case 'watch':
+      // NOVA.waitSelector('#upload-info #channel-name a[href], ytm-slim-owner-renderer a[href]')
+      //    .then(link => {
+      //       // console.debug('watch page');
+      //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead') // possible positional problems
+      //          // NOVA.waitSelector('#owner-sub-count:not([hidden]):not(:empty)') // does not display when the number of subscribers is hidden
+      //          .then(el => {
+      //             if (el.hasAttribute('hidden')) el.removeAttribute('hidden'); // remove hidden attribute
 
-            //             setVideoCount({
-            //                'container': el,
-            //                'channel_id': new URL(link.href).pathname.split('/')[2],
-            //             });
-            //          });
-            //    });
+      //             setVideoCount({
+      //                'container': el,
+      //                'channel_id': new URL(link.href).pathname.split('/')[2],
+      //             });
+      //          });
+      //    });
 
-            NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
-               .then(el => setVideoCount(el));
-            break;
+      NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
+         .then(el => setVideoCount(el));
+      // NOVA.runOnPageInitOrTransition(() => {
+      //    if (NOVA.currentPage == 'watch') {
+      //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
+      //          .then(el => setVideoCount(el));
+      //    }
+      // });
+      //       break;
 
-         // case 'channel':
-         //    NOVA.waitSelector('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
-         //       // NOVA.waitSelector('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
-         //       .then(el => setVideoCount(el));
-         //    break;
-      }
+      //    case 'channel':
+      //       NOVA.waitSelector('#channel-header #subscriber-count, .c4-tabbed-header-subscriber-count') // possible positional problems
+      //          // NOVA.waitSelector('#channel-header #subscriber-count:not(:empty)') // does not display when the number of subscribers is hidden
+      //          .then(el => setVideoCount(el));
+      //       break;
+      // }
 
-      function setVideoCount(container = required()) {
+      async function setVideoCount(container = required()) {
          // console.debug('setVideoCount:', ...arguments);
+
+         await NOVA.delay(500); // dirty hack
+
          const channelId = NOVA.getChannelId();
          if (!channelId) return console.error('setVideoCount channelId: empty', channelId);
 

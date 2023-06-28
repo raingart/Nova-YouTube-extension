@@ -109,8 +109,16 @@ window.nova_plugins.push({
                }
             }
 
-            document.addEventListener('click', ({ isTrusted }) => isTrusted && disableHoldStop());
             document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
+            // document.addEventListener('click', ({ isTrusted }) => isTrusted && disableHoldStop());
+            document.addEventListener('click', evt => {
+               if (//movie_player.contains(document.activeElement) ||
+                  evt.isTrusted
+                  && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(s => evt.srcElement.matches(s))
+               ) {
+                  disableHoldStop();
+               }
+            });
 
             function disableHoldStop() {
                if (!disableStop) {

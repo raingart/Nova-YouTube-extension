@@ -23,7 +23,7 @@ outFile="/tmp/nova-tube.user.js"
 # in vscode
 # 1. clear comments. regex - "//\s.*|/\*[\s\S\n]*?\*/"
 # 2. For clear spaces use "Format Document".
-# 3. replace "\n^\n" to"\n"
+# 3. replace "\n^\n+" to"\n"
 
 # PluginFn=`cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" `
 # PluginFn=$(cat ./js/plugins.js)
