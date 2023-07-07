@@ -97,7 +97,7 @@ window.nova_plugins.push({
 
       // expand linked comment
       // if (location.search.includes('$lc=')) {
-      if (NOVA.queryURL.has('lc')/* || !movie_player?.getPlaylistId()*/) {
+      if (NOVA.queryURL.has('lc')) {
          // expand comment
          NOVA.waitSelector('#comment #linked-comment-badge + #body #expander[collapsed] #more:not([hidden])')
             .then(btn => btn.click());

@@ -19,40 +19,23 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      if (user_settings['description-popup']) return; // conflict with plugin [description-popup]
+      // alt - https://greasyfork.org/en/scripts/452405-youtube-scrollable-right-side-description
 
-      // Doesn't work after page transition
-      // NOVA.waitSelector('#meta [collapsed] #more, [description-collapsed] #description #expand')
-      //    .then(btn => {
-      //       if (user_settings.description_expand_mode == 'onhover') {
-      //          btn.addEventListener('mouseenter', ({ target }) => target.click(), { capture: true, once: true });
-      //       }
-      //       // else if (user_settings.description_expand_mode == 'always') {
-      //       else {
-      //          btn.click();
-      //       }
-      //    });
+      if (user_settings['description-popup']) return; // conflict with [description-popup] plugin
+      if (user_settings['comments-sidebar-position-exchange']) return; // conflict with [comments-sidebar-position-exchange] plugin
 
-      // const ATTR_MARK = 'nova-description-expand';
+      NOVA.waitSelector(`[description-collapsed] #description ${user_settings.description_expand_mode == 'onhover' ? '' : '#expand'}`)
+         .then(btn => {
+            switch (user_settings.description_expand_mode) {
+               case 'onhover':
+                  btn.addEventListener('mouseenter', btn.click);
+                  break;
 
-      NOVA.watchElements({
-         selectors: [
-            '#meta [collapsed] #more',
-            '[description-collapsed] #description #expand',
-         ],
-         // attr_mark: ATTR_MARK,
-         callback: btn => {
-            if (user_settings.description_expand_mode == 'onhover') {
-               btn.addEventListener('mouseenter', ({ target }) => btn.click(), { capture: true, once: true });
+               case 'always':
+                  NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && btn.click());
+                  break;
             }
-            // else if (user_settings.description_expand_mode == 'always') {
-            else {
-               btn.click();
-            }
-            // NOVA.clear_watchElements(ATTR_MARK);
-         }
-
-      });
+         });
 
    },
    options: {

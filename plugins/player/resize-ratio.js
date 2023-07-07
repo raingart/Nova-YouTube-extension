@@ -36,6 +36,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/421396-youtube-sizerd
       // alt2 - https://greasyfork.org/en/scripts/428733-youtube-ultrawide
+      // alt3 - https://greasyfork.org/en/scripts/976-youtube-right-side-description
 
       // fit thumbnail cover
       // NOVA.css.push(
@@ -64,6 +65,7 @@ window.nova_plugins.push({
                   // Strategy 1 API
                   if (ytd_watch.calculateCurrentPlayerSize_ && ytd_watch.updateStyles) {
                      const backupFn = ytd_watch.calculateCurrentPlayerSize_;
+                     // const backupFn = ytd_watch.calculateNormalPlayerSize_;
                      // init
                      patchYtCalculateFn();
                      // update video

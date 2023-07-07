@@ -600,19 +600,19 @@ const NOVA = {
 
    /* NOVA.collapseElement({
          selector: '#secondary #related',
-         title: 'related',// auto uppercase
+         label: 'related',// auto uppercase
          remove: true,
          remove: (user_settings.NAME_visibility_mode == 'remove') ? true : false,
    }); */
    /**
     * @param  {string} selector
-    * @param  {string} title
+    * @param  {string} label
     * @param  {boolean} remove
     * @return {void}
    */
-   collapseElement({ selector = required(), title = required(), remove }) {
+   collapseElement({ selector = required(), label = required(), remove }) {
       // console.debug('collapseElement', ...arguments);
-      const selector_id = `${title.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
+      const selector_id = `${label.match(/[a-z]+/gi).join('')}-prevent-load-btn`;
 
       this.waitSelector(selector.toString())
          .then(el => {
@@ -623,7 +623,7 @@ const NOVA = {
                el.style.display = 'none';
                // create button
                const btn = document.createElement('a');
-               btn.textContent = `Load ${title}`;
+               btn.textContent = `Load ${label}`;
                btn.id = selector_id;
                btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
                // btn.className = 'ytd-vertical-list-renderer';
@@ -1064,7 +1064,8 @@ const NOVA = {
          //    // 【MAD】,『MAD』,「MAD」
          //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', 'Remix OS, TEASER
          //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-         //       || ['【', '『', '「', 'REMIX', 'CD', 'PV', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
+         // "Sound Test" (https://www.youtube.com/watch?v=gLSTUhRY2-s)
+         //       || ['【', '『', '「', 'SOUND', 'REMIX', 'CD', 'PV', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
          //    ) {
          //       return true;
          //    }
@@ -1098,7 +1099,7 @@ const NOVA = {
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
             // word - https://www.youtube.com/watch?v=N67yRMOVk1s
-            || titleWordsList?.length && ['🎵', '♫', 'AUDIO', 'SONG', 'SOUND', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+            || titleWordsList?.length && ['🎵', '♫', 'AUDIO', 'SONG', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
             // words
@@ -1299,7 +1300,7 @@ const NOVA = {
       // https://github.com/mikebaldry/formatDate-js/blob/master/formatDate.js
       // https://github.com/sean1093/timeSolver/blob/master/src/1.2.0/timeSolver.js
 
-      if (!(date instanceof Date)) return console.error('dateformat - is not Date type:', this);
+      if (!(this instanceof Date)) return console.error('dateformat - is not Date type:', this);
 
       // console.debug('format', format);
       const

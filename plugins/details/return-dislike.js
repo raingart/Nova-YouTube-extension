@@ -17,7 +17,19 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'details',
    // opt_api_key_warn: true,
-   // desc: '',
+   desc: 'via by returnyoutubedislike.com',
+   // 'title:zh': '',
+   // 'title:ja': '',
+   // 'title:ko': '',
+   // 'title:id': '',
+   // 'title:es': '',
+   // 'title:pt': '',
+   // 'title:fr': '',
+   // 'title:it': '',
+   // 'title:tr': '',
+   // 'title:de': '',
+   // 'title:pl': '',
+   // 'title:ua': '',
    _runtime: user_settings => {
 
       // fix conflict with [details-buttons] plugin

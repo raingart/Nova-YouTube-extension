@@ -22,7 +22,7 @@ window.nova_plugins.push({
 
       NOVA.collapseElement({
          selector: '#secondary #related',
-         title: 'related',
+         label: 'related',
          remove: (user_settings.related_visibility_mode == 'disable') ? true : false,
       });
 

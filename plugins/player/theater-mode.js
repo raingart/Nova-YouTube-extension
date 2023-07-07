@@ -55,7 +55,9 @@ window.nova_plugins.push({
          .then(movie_player => {
             // movie_player.addEventListener('SIZE_CLICKED', () => console.debug('SIZE_CLICKED'));
             const
-               PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-theater-container', // fix for "player-pin-scroll" plugin
+               PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-wide-container', // fix for "player-pin-scroll" plugin
+               // PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-container',
+               // fix for "player-pin-scroll" plugin
                PINNED_SELECTOR = '.nova-player-pin', // fix for "player-pin-scroll" plugin
                PLAYER_SCROLL_LOCK_CLASS_NAME = 'nova-lock-scroll',
                PLAYER_SELECTOR = `${PLAYER_CONTAINER_SELECTOR} #movie_player:not(${PINNED_SELECTOR}):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for [player-pin-scroll] plugin
@@ -64,12 +66,25 @@ window.nova_plugins.push({
             addScrollDownBehavior();
 
             switch (user_settings.player_full_viewport_mode) {
+               case 'offset':
+                  // alt - https://greasyfork.org/en/scripts/436667-better-youtube-theatre-mode
+                  NOVA.css.push(
+                     PLAYER_CONTAINER_SELECTOR + ` {
+                        min-height: calc(100vh - ${user_settings['header-compact'] ? 36
+                        : NOVA.css.getValue('#masthead-container', 'height') || 56
+                     // : document.body.querySelector('#masthead-container')?.offsetHeight || 56
+                     }px) !important;
+                     }`);
+                  break;
+
                case 'force':
                   // alt1 - https://greasyfork.org/en/scripts/434075-youtube-fullscreen-mode
                   // alt2 - https://chrome.google.com/webstore/detail/gkkmiofalnjagdcjheckamobghglpdpm
                   // alt3 - https://greasyfork.org/en/scripts/454092-youtube-theater-fill-up-window
                   // alt4 - https://greasyfork.org/en/scripts/33243-maximizer-for-youtube
+                  // alt5 - https://greasyfork.org/en/scripts/442089-pkga-youtube-theater-mode
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
+                  break;
 
                case 'smart':
                   // exclude shorts page #1
@@ -102,7 +117,7 @@ window.nova_plugins.push({
                   // alt1 - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
                   // alt2 - https://chrome.google.com/webstore/detail/bfbmjmiodbnnpllbbbfblcplfjjepjdn
                   NOVA.css.push(
-                     PLAYER_CONTAINER_SELECTOR + `{
+                     PLAYER_CONTAINER_SELECTOR + ` {
                         z-index: ${zIindex};
                      }
 
@@ -137,9 +152,9 @@ window.nova_plugins.push({
                      }
                      #playlist:hover {
                         position: relative;
-                     }
-                     /* Hide scrollbars */
-                     body { overflow: hidden; }`);
+                     }`);
+
+                  addHideScrollbarCSS();
                   break;
             }
 
@@ -147,18 +162,30 @@ window.nova_plugins.push({
                const CLASS_OVER_PAUSED = 'nova-player-fullviewport';
                // Strategy 1
                NOVA.css.push(
-                  `${PLAYER_SELECTOR}.playing-mode
-                  ${exclude_pause ? '' : `, ${PLAYER_SELECTOR}.paused-mode`}
-                  , ${PLAYER_SELECTOR}.${CLASS_OVER_PAUSED} {
+                  `${PLAYER_SELECTOR}.playing-mode,
+                  ${exclude_pause ? '' : `${PLAYER_SELECTOR}.paused-mode,`}
+                  ${PLAYER_SELECTOR}.${CLASS_OVER_PAUSED} {
                      width: 100vw;
                      height: 100vh;
                      position: fixed;
                      bottom: 0 !important;
                      z-index: ${zIindex};
                      background-color: black;
+                  }`);
+
+               // show searchbar on hover. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+               NOVA.css.push(
+                  `#masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]) {
+                     position: fixed;
+                     z-index: ${zIindex + 1};
+                     opacity: 0;
                   }
-                  /* Hide scrollbars */
-                  body { overflow: hidden; }`);
+                  #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):hover,
+                  #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):focus {
+                     opacity: 1;
+                  }`);
+
+                  addHideScrollbarCSS();
 
                // Strategy 2
                // const CLASS_NAME = '';
@@ -226,6 +253,14 @@ window.nova_plugins.push({
                      }
                   });
                }
+            }
+
+            function addHideScrollbaCSSr() {
+               if (user_settings['scrollbar-hide']) return;
+               NOVA.css.push(
+                  `html body:has(${PLAYER_SELECTOR})::-webkit-scrollbar {
+                     display: none;
+                  }`);
             }
          });
 
@@ -308,6 +343,21 @@ window.nova_plugins.push({
                'label:ua': 'повноекранний',
             },
             {
+               label: 'offset', value: 'offset',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
                label: 'redirect to embedded', value: 'redirect_watch_to_embed',
                // 'label:zh': '',
                // 'label:ja': '',
@@ -327,7 +377,8 @@ window.nova_plugins.push({
       player_full_viewport_mode_exit: {
          _tagName: 'input',
          // label: 'Exit Fullscreen on Video End',
-         label: 'Full-viewport exit if video ends/pause',
+         // label: 'Full-viewport exit if video ends/pause',
+         label: 'Exit Fullscreen on video end/pause',
          'label:zh': '视频结束/暂停时退出',
          'label:ja': 'ビデオが終了/一時停止したら終了します',
          'label:ko': '동영상이 종료/일시 중지되면 종료',

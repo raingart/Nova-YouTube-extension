@@ -119,7 +119,8 @@ window.nova_plugins.push({
 
       // toggle pin state
       document.addEventListener('scroll', () => { // fix bug when initial (document.documentElement.scrollHeight != window.innerHeight) and it's running IntersectionObserver
-         // NOVA.waitSelector('#player-theater-container')
+         // NOVA.waitSelector('#player-container')
+         // NOVA.waitSelector('#player-wide-container')
          NOVA.waitSelector('#ytd-player')
             .then(container => {
                // movie_player / #ytd-player

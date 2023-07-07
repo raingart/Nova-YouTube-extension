@@ -32,6 +32,8 @@ window.nova_plugins.push({
    'desc:ua': 'Відкріпляє шапку при прокрутці сайту',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/469532-youtube-show-hide-top-header-search-bar
+
       const
          CLASS_NAME_TOGGLE = 'nova-header-unfixed',
          SELECTOR = 'html.' + CLASS_NAME_TOGGLE;

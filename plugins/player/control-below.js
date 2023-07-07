@@ -30,7 +30,9 @@ window.nova_plugins.push({
    // 'desc:ua': 'Перемістити елементи керування плеєром до низу',
    _runtime: user_settings => {
 
-      // alt - https://chrome.google.com/webstore/detail/chpodcedholiggcllnmmjlnghllddgmj
+      // alt1 - https://chrome.google.com/webstore/detail/chpodcedholiggcllnmmjlnghllddgmj
+      // alt2 - https://greasyfork.org/en/scripts/469704-youtube-player-controls-below-video
+      // alt2 - https://greasyfork.org/en/scripts/976-youtube-right-side-description
 
       // if (['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)) return; // conflict with plugin [theater-mode]
       // if (user_settings['player-float-progress-bar']) return; // conflict with plugin [player-float-progress-bar]
@@ -45,14 +47,15 @@ window.nova_plugins.push({
                const height = `calc(${heightPanel} + ${heightProgressBar})` || '51px';
                let SELECTOR_CONTAINER = 'ytd-watch-flexy:not([fullscreen])';
 
-               // fix for ['theater-mode'] plugin
+               // fix for [theater-mode] plugin
                // if (user_settings.player_full_viewport_mode) {
                //    const CLASS_OVER_PAUSED = 'nova-player-fullviewport';
                //    SELECTOR_CONTAINER += ` #movie_player:not(${CLASS_OVER_PAUSED})`;
                // }
 
                // fix conflict with plugin [theater-mode]
-               if (['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)) {
+               if (['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode)
+               ) {
                   SELECTOR_CONTAINER += `:not([theater])`;
                }
 
@@ -134,9 +137,9 @@ window.nova_plugins.push({
                && !NOVA.isFullscreen()
                && user_settings.player_hide_elements != 'time_display'
                /*&& (!user_settings['theater-mode']
-                  || (this.hasAttribute('fullscreen') && !['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode))
+                  || (this.hasAttribute('fullscreen') && !['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode))
                )*/
-               && (!user_settings['theater-mode'] || (user_settings['theater-mode'] && !['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)))
+               && (!user_settings['theater-mode'] || (user_settings['theater-mode'] && !['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode)))
                ) {
                // console.debug('moveMouse event');
                movie_player.dispatchEvent(moveMouse);

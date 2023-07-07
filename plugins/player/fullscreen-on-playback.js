@@ -39,7 +39,10 @@ window.nova_plugins.push({
             // on page change (new video)
             video.addEventListener('loaddata', setFullscreen.bind(video));
 
-            video.addEventListener('ended', exitFullscreen);
+            if (!location.search.includes('list=')) {
+               // alt - https://greasyfork.org/en/scripts/436168-youtube-exit-fullscreen-on-video-end
+               video.addEventListener('ended', exitFullscreen);
+            }
 
             // exit fullscreen
             if (user_settings.player_fullscreen_mode_onpause) {

@@ -51,6 +51,9 @@ window.nova_plugins.push({
          'miniplayer_button': '#movie_player .ytp-chrome-bottom button.ytp-miniplayer-button',
          'logo_button': '#movie_player .ytp-chrome-bottom .yt-uix-sessionlink',
          'fullscreen_button': '#movie_player .ytp-chrome-bottom button.ytp-fullscreen-button',
+         // for brave browser
+         // hide: "Seek backwards 10 seconds. (←)" and "Seek forward 10 seconds. (→)"
+         'brave_jump_button': '#movie_player .ytp-chrome-bottom button.ytp-jump-button',
       };
 
       const toArray = a => Array.isArray(a) ? a : [a];
@@ -218,6 +221,22 @@ window.nova_plugins.push({
                // 'label:de': '',
                // 'label:pl': '',
                // 'label:ua': '',
+            },
+            {
+               label: 'jump (for Brave)', value: 'brave_jump_button',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+               title: 'Seek backwards/forward 10 seconds'
             },
             {
                label: 'volume', value: 'volume_area',

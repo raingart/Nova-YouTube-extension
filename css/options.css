@@ -64,6 +64,7 @@ div.between input[type=text] {
    font-size: 1.2em;
    text-decoration: none;
    cursor: pointer;
+   user-select: none;
 }
 
 input[type=search]:placeholder-shown+#search_clear {

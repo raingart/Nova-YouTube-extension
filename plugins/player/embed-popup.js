@@ -24,9 +24,12 @@ window.nova_plugins.push({
       // alt - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector
 
       // enable only in iframe
-      if (window.top === window.self) return;
-
-      if (NOVA.queryURL.has('popup')) return;
+      if (window.top === window.self // not iframe
+         || location.hostname.includes('googleapis.com') // exclude Gdrive
+         || NOVA.queryURL.has('popup') // self
+      ) {
+         return;
+      }
 
       // fix conflict with [theater-mode] plugin (some options)
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') return;

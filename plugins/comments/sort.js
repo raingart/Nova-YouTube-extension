@@ -556,7 +556,7 @@ window.nova_plugins.push({
                font-size: 1.2em;
                line-height: 1.4;
                padding: 10px 5px;
-               max-width: 600px;
+               /*max-width: 600px;*/
             }
             #${MODAL_CONTENT_SELECTOR_ID} td a {
                text-decoration: none;

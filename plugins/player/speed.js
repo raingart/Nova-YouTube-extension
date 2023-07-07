@@ -596,7 +596,7 @@ window.nova_plugins.push({
          // 'title:ua': '',
          placeholder: '0.1-1',
          step: 0.05,
-         min: 0.1,
+         min: 0.05,
          max: 0.5,
          value: 0.25,
       },

@@ -176,7 +176,7 @@ App.init();
  *
  * #content
  *     ytd-watch-flexy
- *         #player-theater-container
+ *         #player-container
  *         #columns
  *             #primary
  *                #player

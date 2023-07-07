@@ -18,7 +18,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      const height = '36px';
+      const height = '36px'; // patch [theater-mode] plugin (player_full_viewport_mode == 'offset')
 
       NOVA.css.push(
          `#masthead #container.ytd-masthead {

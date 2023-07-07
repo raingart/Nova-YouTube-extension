@@ -8,12 +8,25 @@ if (typeof GM_info === 'undefined') {
    // See https://stackoverflow.com/a/2401861/331508 for optional browser sniffing code.
 }
 
+// isMOSupported test
+if (!('MutationObserver' in window)) {
+   errorAlert('MutationObserver not supported');
+}
+
 // chaining operator test
 try {
    // throw 'test';
    document?.body;
 } catch (error) {
    errorAlert('Your browser does not support chaining operator');
+}
+
+// css ":has()" test
+if (!CSS.supports('selector(:has(*))') && !localStorage.hasOwnProperty('nova_css_has_skipped')) {
+   if (confirm('Your browser does not support css ":has()" operator.\nApproximately 5% of opportunities will be unavailable')) {
+      localStorage.setItem('nova_css_has_skipped', true);
+   }
+   // errorAlert('Your browser does not support css ":has()" operator.\nApproximately 5% of opportunities will be unavailable', false);
 }
 
 switch (GM_info.scriptHandler) {
@@ -26,7 +39,7 @@ switch (GM_info.scriptHandler) {
 
    // partially
    case 'FireMonkey': // https://github.com/erosman/support/tree/FireMonkey (https://addons.mozilla.org/fr/firefox/addon/firemonkey/)
-      errorAlert(GM_info.scriptHandler + ' incomplete support', true);
+      errorAlert(GM_info.scriptHandler + ' incomplete support', false);
       break;
 
    // bad
@@ -42,14 +55,9 @@ switch (GM_info.scriptHandler) {
       break;
 }
 
-// isMOSupported test
-if (!('MutationObserver' in window)) {
-   errorAlert('MutationObserver not supported');
-}
-
-function errorAlert(text = '', continue_execute) {
+function errorAlert(text = '', stop_execute = true) {
    alert(GM_info.script.name + ' Error!\n' + text);
-   if (!continue_execute) {
+   if (stop_execute) {
       throw GM_info.script.name + ' crashed!\n' + text;
    }
 }

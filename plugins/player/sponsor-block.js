@@ -19,7 +19,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // there is a small conflict with the ['player-resume-playback'] plugin. It has higher priority
+      // there is a small conflict with the [player-resume-playback] plugin. It has higher priority
 
       // alt1 - https://github.com/afreakk/greasemonkeyscripts/blob/master/youtube_sponsorblock.js
       // alt2 - https://codeberg.org/mthsk/userscripts/src/branch/master/simple-sponsor-skipper

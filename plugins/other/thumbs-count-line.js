@@ -26,6 +26,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/465840-youtube-videos-per-row-fix
       // alt4 - https://greasyfork.org/en/scripts/452667-youtube-subscriptions-elderly-mode
       // alt5 - https://chrome.google.com/webstore/detail/dcnjhgnfnmijfkmcddcmffeamphmmeed
+      // alt6 - https://greasyfork.org/en/scripts/465840-youtube-row-fixer
 
       const
          origMathMin = Math.min,

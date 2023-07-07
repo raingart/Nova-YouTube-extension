@@ -20,7 +20,8 @@ window.nova_plugins.push({
    section: 'other',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
+      // alt1 - https://github.com/EvHaus/youtube-hide-watched
+      // alt2 - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
 
       const
          thumbsSelectors = [
