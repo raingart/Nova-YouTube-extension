@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'thumbnails-grid-count',
-   title: 'Thumbnails count in line',
+   title: 'Thumbnails count in row',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -34,7 +34,7 @@ window.nova_plugins.push({
 
       Math.min = function () {
          return origMathMin.apply(Math, arguments)
-            + (/calcElementsPerRow/img.test(Error().stack || '') ? addRowCount : 0);
+            + (/calcElementsPerRow/img.test(Error().stack || '') ? addRowCount - 1 : 0);
       };
 
       // ???

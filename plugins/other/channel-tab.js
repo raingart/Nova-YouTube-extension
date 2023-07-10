@@ -48,6 +48,8 @@ window.nova_plugins.push({
                let tabActive;
                const tabs = [...document.querySelectorAll(tabSelectors)];
                switch (user_settings.channel_default_tab) {
+                  // https://www.youtube.com/@channel/search?query=11
+                  // case 'search':; break;
                   case 'videos': tabActive = tabs[1]; break;
                   // case 'shorts': ; break;
                   // case 'live': ; break;

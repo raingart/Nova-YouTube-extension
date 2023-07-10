@@ -59,6 +59,8 @@ browser.runtime.onInstalled.addListener(details => {
                   'button-no-labels': 'details_button_no_labels',
                   'button_no_labels_opacity': 'details_button_no_labels_opacity',
                   'shorts_thumbnails_time': 'shorts-thumbnails-time',
+                  'comments-sidebar-position-exchange': 'move-in-sidebar',
+                  'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

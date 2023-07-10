@@ -49,7 +49,7 @@ const Plugins = {
       'other/thumbs-title-normalize.js',
       'other/thumbs-watched.js',
       'other/thumbs-shorts-time.js',
-      'other/thumbs-count-line.js',
+      'other/thumbs-row-count.js',
       // 'other/thumbs-quality.js',
       // 'other/thumbs-rating.js',
       'other/thumbs-preview-stop.js',
@@ -91,7 +91,7 @@ const Plugins = {
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',
-      'sidebar/comments-sidebar-exchange.js',
+      'sidebar/move-in-sidebar.js',
       'sidebar/channel-link.js',
       // 'sidebar/playlist-skip-liked.js',
 
@@ -168,7 +168,8 @@ const Plugins = {
          // Strategy 2. Known tabs list
          const pathnameArray = location.pathname.split('/').filter(Boolean);
          const [page, channelTab] = [pathnameArray[0], pathnameArray.pop()];
-         NOVA.channelTab = ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about'].includes(channelTab) ? channelTab : false;
+         // https://www.youtube.com/@channel/search?query=11
+         NOVA.channelTab = ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about', 'search'].includes(channelTab) ? channelTab : false;
 
          // Strategy 3. Excluding channelId (https://www.youtube.com/channel/UCE5yTn9ljzSnC_oMp9Jnckg). Error in emdeb - https://www.youtube.com/embed/H-3fre7943U?enablejsapi=1&wmode=opaque&autoplay=1
          // NOVA.channelTab = channelTab?.startsWith('UC') ? false : channelTab;

@@ -19,7 +19,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       if (user_settings.details_buttons_hide?.includes('subscribe')) {
-         stylesList.push('#below #subscribe-button');
+         // stylesList.push('#below #subscribe-button');
+         stylesList.push('#columns #subscribe-button'); // fix for [comments-sidebar-exchange] plugin
       }
 
       if (user_settings.details_buttons_hide?.includes('all')) {
@@ -78,7 +79,8 @@ window.nova_plugins.push({
 
          let stylesList = [];
          if (user_settings.details_buttons_hide.includes('join')) {
-            stylesList.push('#below #sponsor-button');
+            // stylesList.push('#below #sponsor-button');
+            stylesList.push('#sponsor-button'); // fix for [comments-sidebar-exchange] plugin
          }
          if (user_settings.details_buttons_hide.includes('like_dislike')) {
             stylesList.push('ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer');

@@ -32,19 +32,22 @@ You can now load the extension into your browser through the browser's extension
 Need one of the builds _Firefox Extended Support Release (ESR)_, _Firefox Developer Edition_ and _Nightly_
 Only this versions allow you to override the setting to enforce the extension signing requirement!
 1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script. And move the files in the directory inside the archive to the root of the archive. The file `manifest.json` etc. must be in the root of the archive (not inside folders)
-2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page. Agree with the warning
+2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page. Agree with warning
 3. Type in new input `xpinstall.signatures.required` and change the setting to `false`.
 4. Type `about:addons` in your address bar to bring up the "Add-ons Manager" page.
 5. Drag the script onto the "Add-ons Manager" page OR Click to __Gear icon__ and choose "Install Add-ons From File...".
 
-## Building
->Only for Unix shell**. All output will be in the `/tmp/` directory.
+## Development
+
+### Building Linux
+>Only for Unix shell** all output will be in the `/tmp/` directory.
 
 **Extensions**: `$ ./package-extensions.sh`
 
 **Userscript**: `$ make`
 
-## Development
+### Building WIndows
+**Userscript**: `makeUserscript.bat`
 
 ### Making Plugin
 Please read [plugin document](https://github.com/raingart/Nova-YouTube-extension/wiki/Plugin)

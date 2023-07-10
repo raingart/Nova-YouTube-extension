@@ -26,7 +26,8 @@ console.debug(`current ${configStoreName}:`, user_settings);
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'shorts_thumbnails_time': 'shorts-thumbnails-time',
+   'comments-sidebar-position-exchange': 'move-in-sidebar',
+   'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
