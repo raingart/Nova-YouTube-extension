@@ -1,5 +1,6 @@
 window.nova_plugins.push({
    id: 'search-filter',
+   // id: 'thumbs-channels-filter',
    title: 'Blocked channels',
    'title:zh': '屏蔽频道列表',
    'title:ja': 'ブロックされたチャネルのリスト',
@@ -34,10 +35,11 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/443529-improved-blacklist-function-%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%88%E6%A9%9F%E8%83%BD%E3%81%AE%E6%94%B9%E5%96%84
 
       // textarea to array
-      const keywords = user_settings.search_filter_channel_blocklist
-         ?.split(/[\n,;]/)
-         .map(e => e.toString().trim().toLowerCase())
-         .filter(e => e.length);
+      const keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist);
+      // const
+      //    keywords_exception = NOVA.strToArray(user_settings.streamed_disable_channel_exception),
+      //    keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist)
+      //       .filter(e => !keywords_exception || !keywords_exception.includes(e));
 
       const thumbsSelectors = [
          'ytd-rich-item-renderer', // home, channel, feed
@@ -60,17 +62,15 @@ window.nova_plugins.push({
             //    .map(i => i + ':not(:empty)'),
             attr_mark: 'nova-thumb-channel-filtered',
             callback: channel_name => {
-               keywords.forEach(keyword => {
-                  if (channel_name.textContent.trim().toLowerCase().includes(keyword)
-                     && (thumb = channel_name.closest(thumbsSelectors))
-                  ) {
-                     thumb.remove();
-                     // thumb.style.display = 'none';
+               if (keywords.includes(channel_name.textContent.trim().toLowerCase())
+                  && (thumb = channel_name.closest(thumbsSelectors))
+               ) {
+                  thumb.remove();
+                  // thumb.style.display = 'none';
 
-                     // thumb.style.border = '2px solid red'; // mark for test
-                     // console.log('filter removed', keyword, thumb);
-                  }
-               });
+                  // thumb.style.border = '2px solid red'; // mark for test
+                  // console.log('filter removed', keyword, thumb);
+               }
             }
          });
       }
@@ -108,8 +108,8 @@ window.nova_plugins.push({
                         else if (channel_name.textContent.trim().toLowerCase().includes(keyword)
                            && (thumb = channel_name.closest(thumbsSelectors))
                         ) {
-                           thumb.remove();
-                           // thumb.style.display = 'none';
+                           // thumb.remove();
+                           thumb.style.display = 'none'; // dependency for "streamed_disable_channel_exception" in [thumbs-hide] plugin
 
                            // thumb.style.border = '2px solid red'; // mark for test
                            // console.log('filter removed', keyword, thumb);
@@ -150,7 +150,7 @@ window.nova_plugins.push({
          'title:de': 'separator: "," oder ";" oder "new line"',
          'title:pl': 'separator: "," lub ";" lub "now linia"',
          'title:ua': 'розділювач: "," або ";" або "новий рядок"',
-         placeholder: 'channel1, channel2',
+         placeholder: 'channel1\nchannel2',
          required: true,
       },
    }

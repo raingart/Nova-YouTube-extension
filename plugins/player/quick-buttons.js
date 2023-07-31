@@ -796,7 +796,8 @@ window.nova_plugins.push({
 
                               if (movie_player.getPlaybackQuality() == quality) {
                                  qualityItem.className = 'active';
-                              } else {
+                              }
+                              else {
                                  // set max quality limit (viewport + 30%)
                                  // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
 

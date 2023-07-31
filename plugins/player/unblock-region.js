@@ -59,7 +59,7 @@ window.nova_plugins.push({
       //       break;
 
       //    default:
-      NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { stop_on_page_change: true })
+      NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_if_url_changes: true })
          // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
          // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
          .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());

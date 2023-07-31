@@ -64,7 +64,7 @@ window.nova_plugins.push({
                   // console.debug('has #shorts:', thumb);
                   // thumb.style.border = '2px solid orange'; // mark for test
 
-                  NOVA.waitSelector('ytd-thumbnail-overlay-time-status-renderer', { container: link, stop_on_page_change: true })
+                  NOVA.waitSelector('ytd-thumbnail-overlay-time-status-renderer', { container: link, destroy_if_url_changes: true })
                      .then(overlay => {
                         if ((thumb = link.closest(thumbsSelectors)?.data)
                            && (time = getThumbTime(thumb))

@@ -458,7 +458,8 @@ window.addEventListener('load', () => {
             searchFilterHTML({
                'keyword': this.value,
                'filter_selectors': `${Opt.UI.pluginsContainer} li.item`,
-               'highlight_selector': 'label'
+               'highlight_selector': 'label',
+               // 'highlight_class': 'nova-mark-text',
             });
          });
       document.getElementById('search_clear')
@@ -481,7 +482,7 @@ window.addEventListener('load', () => {
          });
    }
 
-   function searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector }) {
+   function searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector, highlight_class }) {
       // console.debug('searchFilterHTML:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
@@ -502,7 +503,7 @@ window.addEventListener('load', () => {
                      highlightTerm({
                         'target': el,
                         'keyword': keyword,
-                        // 'highlightClass':,
+                        'highlightClass': highlight_class,
                      });
                   }
                };

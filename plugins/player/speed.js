@@ -161,7 +161,7 @@ window.nova_plugins.push({
          NOVA.waitSelector('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
 
-         NOVA.waitSelector('#upload-info #channel-name a[href]', { stop_on_page_change: true })
+         NOVA.waitSelector('#upload-info #channel-name a[href]', { destroy_if_url_changes: true })
             .then(channelName => {
                // channelNameVEVO
                if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
@@ -274,6 +274,7 @@ window.nova_plugins.push({
                this.log('playbackRate save in session:', ...arguments);
 
             } catch (err) {
+               // maybe can fix it. But didn't check - https://greasyfork.org/en/scripts/442991-youtube-embed-use-storage-access-api
                console.warn(`${err.name}: save "rate" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
             }
          },

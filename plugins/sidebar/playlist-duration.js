@@ -89,7 +89,7 @@ window.nova_plugins.push({
             break;
 
          case 'watch':
-            NOVA.waitSelector('#secondary .index-message-wrapper', { stop_on_page_change: true })
+            NOVA.waitSelector('#secondary .index-message-wrapper', { destroy_if_url_changes: true })
                .then(el => {
                   const waitPlaylist = setInterval(() => {
                      const

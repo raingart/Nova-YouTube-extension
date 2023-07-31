@@ -83,14 +83,14 @@ window.nova_plugins.push({
                      });
                   });
 
-               if (user_settings.player_indicator_chapter_default_container_hide
-                  // skip if duplicate fn enable in [player-hide-elements] plugin
-                  && !(user_settings.player_hide_elements.length && user_settings.player_hide_elements.includes('chapter_container'))
-               ) {
-                  NOVA.css.push(
-                     `#movie_player .ytp-chrome-bottom .ytp-chapter-container { display: none !important; }`
-                  );
-               }
+               // if (user_settings.player_indicator_chapter_default_container_hide
+               //    // skip if duplicate fn enable in [player-hide-elements] plugin
+               //    && !(user_settings.player_hide_elements.length && user_settings.player_hide_elements.includes('chapter_container'))
+               // ) {
+               //    NOVA.css.push(
+               //       `#movie_player .ytp-chrome-bottom .ytp-chapter-container { display: none !important; }`
+               //    );
+               // }
 
             }
          });
@@ -102,21 +102,16 @@ window.nova_plugins.push({
                // for (const record of mutationRecordsArray) {
                //    console.debug('Old value:', record.oldValue);
                // }
-               let timeout_ms; // ms
                // console.log('bezel mutation detected', record.type, target.textContent);
                if (target.textContent) {
-                  // increase delay for plugin [time-jump]
-                  // target.textContent #1:"+30 sec • 10:00" - skip
-                  // target.textContent #2:"chapter name • 10:00" - ok
-                  if (!target.textContent.startsWith('+') && target.textContent.includes(' • ')) {
-                  // if (!target.textContent.startsWith('+') && target.textContent.includes(' ● ')) {
-                     timeout_ms = 1800; // ms
-                     // console.debug(`HUD delay increased: ${timeout_ms}ms`);
+                  // fix round volume level on range player change
+                  if (target.textContent?.endsWith('%') || target.textContent?.endsWith('x')) {
+                     return;
                   }
                   HUD.set({
                      'pt': target.textContent,
                      // 'suffix': '',
-                     'timeout_ms': timeout_ms,
+                     'timeout_ms': 1800, // ms
                   });
                }
             })
@@ -383,24 +378,24 @@ window.nova_plugins.push({
          'label:ua': 'Показати інформацію на початку розділу',
          type: 'checkbox',
       },
-      player_indicator_chapter_default_container_hide: {
-         _tagName: 'input',
-         label: 'Hide default block in player control panel',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
-         type: 'checkbox',
-         'data-dependent': { 'player_indicator_chapter': true },
-      },
+      // player_indicator_chapter_default_container_hide: {
+      //    _tagName: 'input',
+      //    label: 'Hide default block in player control panel',
+      //    // 'label:zh': '',
+      //    // 'label:ja': '',
+      //    // 'label:ko': '',
+      //    // 'label:id': '',
+      //    // 'label:es': '',
+      //    // 'label:pt': '',
+      //    // 'label:fr': '',
+      //    // 'label:it': '',
+      //    // 'label:tr': '',
+      //    // 'label:de': '',
+      //    // 'label:pl': '',
+      //    // 'label:ua': '',
+      //    type: 'checkbox',
+      //    'data-dependent': { 'player_indicator_chapter': true },
+      // },
       player_indicator_opacity: {
          _tagName: 'input',
          label: 'Opacity',

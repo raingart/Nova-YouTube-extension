@@ -1,3 +1,6 @@
+// for test
+// https://www.youtube.com/watch?v=dQw4w9WgXcQ - too many comments
+
 window.nova_plugins.push({
    id: 'comments-sort',
    title: 'Comments sort',
@@ -34,10 +37,12 @@ window.nova_plugins.push({
 
       // alt1 - https://github.com/sonigy/YCS
       // alt2 - https://github.com/pancevac/ytsc-extension
+      // alt3 - https://github.com/FreeTubeApp/yt-comment-scraper
 
       // #comments #contents #submessage[is-empty] - "Comments are turned off."
 
       const
+         MAX_COMMENTS = 500,
          // CACHE_PREFIX = 'nova-channel-videos-count:',
          MODAL_NAME_SELECTOR_ID = 'nova-modal-comments',
          MODAL_CONTENT_SELECTOR_ID = 'modal-content';
@@ -67,7 +72,7 @@ window.nova_plugins.push({
                btn.addEventListener('click', () => {
                   // once if not inited
                   if (!document.body.querySelector(`#${MODAL_CONTENT_SELECTOR_ID} table`)) {
-                     genTable();
+                     getComments();
                      // eventListenerPatchTimeLink();
                   }
                   btn.dispatchEvent(new CustomEvent(MODAL_NAME_SELECTOR_ID, { bubbles: true, detail: 'test' }));
@@ -123,7 +128,9 @@ window.nova_plugins.push({
             });
       }
 
-      function genTable() {
+      let commentList = []
+
+      function getComments(next_page_token) {
          // console.debug('genTable:', ...arguments);
          // const channelId = NOVA.getChannelId();
          // if (!channelId) return console.error('genTable channelId: empty', channelId);
@@ -137,14 +144,25 @@ window.nova_plugins.push({
          // https://developers.google.com/youtube/v3/docs/commentThreads/list?apix_params=%7B%22part%22%3A%5B%22snippet%22%5D%2C%22textFormat%22%3A%22plainText%22%2C%22videoId%22%3A%228Pnlm1Ky_sA%22%7D
 
          // https://www.googleapis.com/youtube/v3/commentThreads?key={your_api_key}&textFormat=plainText&part=snippet&videoId={video_id}&part=snippet&order=relevance&maxResults=5&pageToken={nextPageToken}
+
+         // chunkArray(ids, YOUTUBE_API_MAX_IDS_PER_CALL)
+         //    .forEach(id_part => {
+         // console.debug('id_part', id_part);
+
+         const params = {
+            'videoId': NOVA.queryURL.get('v') || movie_player.getVideoData().video_id,
+            'part': 'snippet',
+            'maxResults': 100, // max 100
+            'order': 'relevance', // 'time',
+         };
+
+         if (next_page_token) {
+            params['pageToken'] = next_page_token;
+         }
+
          NOVA.request.API({
             request: 'commentThreads',
-            params: {
-               'videoId': NOVA.queryURL.get('v') || movie_player.getVideoData().video_id,
-               'part': 'snippet',
-               'maxResults': 100, // max 100
-               'order': 'relevance', // 'time',
-            },
+            params: params,
             api_key: user_settings['user-api-key'],
          })
             .then(res => {
@@ -163,7 +181,6 @@ window.nova_plugins.push({
                   }
                }
 
-               let commentList = []
                res?.items?.forEach(item => {
                   if (comment = item.snippet?.topLevelComment?.snippet) {
 
@@ -202,24 +219,48 @@ window.nova_plugins.push({
                   }
                });
 
-               if (!commentList.length) {
-                  return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
-                     `<pre>Total number of comments: ${res.pageInfo.totalResults}</pre>`;
+               // max 500 comments
+               if (!user_settings['user-api-key'] && commentList.length > MAX_COMMENTS) {
+                  alert('Use your personal API key to overcome the 500 comments limit')
+                  genTable();
                }
+               // get next page
+               // else if ((res?.nextPageToken && (commentList.length % 1000) !== 0)
+               //    || ((commentList.length % 1000) === 0 && confirm(`Сontinue downloading?`)) // message every multiple of 1000 comments
+               // ) {
+               else if (res?.nextPageToken) {
+                  // display current download status
+                  document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Loaded: ${commentList.length}</pre>`;
 
-               const ul = document.createElement('tbody');
+                  getComments(res?.nextPageToken);
+               }
+               // pages are over
+               else {
+                  // console.debug('>', res);
+                  genTable();
+               }
+            });
+      }
 
-               commentList
-                  .sort((a, b) => b.likeCount - a.likeCount) // b - a for reverse sort
-                  .forEach(comment => {
-                     try {
-                        const li = document.createElement('tr');
-                        li.className = 'item';
+      function genTable() {
+         if (!commentList.length) {
+            return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
+               `<pre>Total number of comments: ${res.pageInfo.totalResults}</pre>`;
+         }
 
-                        li.innerHTML =
-                           `<td>${comment.likeCount}</td>
+         const ul = document.createElement('tbody');
+
+         commentList
+            .sort((a, b) => b.likeCount - a.likeCount) // b - a for reverse sort
+            .forEach(comment => {
+               try {
+                  const li = document.createElement('tr');
+                  li.className = 'item';
+
+                  li.innerHTML =
+                     `<td>${comment.likeCount}</td>
                            <td>${+comment.totalReplyCount ?
-                              `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open">${comment.totalReplyCount}</a>` : comment.totalReplyCount}
+                        `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open">${comment.totalReplyCount}</a>` : comment.totalReplyCount}
                            </td>
                            <td sorttable_customkey="${new Date(comment.updatedAt).getTime()}">${NOVA.timeFormatTo.ago(new Date(comment.updatedAt))}</td>
                            <td>
@@ -231,34 +272,33 @@ window.nova_plugins.push({
                               <span class="text-overflow-dynamic-ellipsis">${comment.textDisplay}</span>
                            </td>`;
 
-                        ul.append(li); // append
+                  ul.append(li); // append
 
-                     } catch (error) {
-                        console.error('Error comment generate:\n', error.stack + '\n', comment);
-                        // alert('Error comment generate\n' + comment);
-                     }
-                  });
-
-               // render table
-               const MODAL_CONTENT_FILTER_SELECTOR_ID = 'nova-search-comment';
-               document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
-                  `<table class="sortable" border="0" cellspacing="0" cellpadding="0">
-                     <thead id="${MODAL_CONTENT_FILTER_SELECTOR_ID}">
-                        <tr>
-                           <th class="sorttable_numeric">likes</th>
-                           <th class="sorttable_numeric">replys</th>
-                           <th class="sorttable_numeric">date</th>
-                           <th class="sorttable_nosort">avatars</th>
-                           <th class="sorttable_numeric">comments (${res.pageInfo.totalResults})</th>
-                        </tr>
-                     </thead>
-                     ${ul.innerHTML}
-                  </table>`;
-               // add sort event
-               sorttable.makeSortable(document.body.querySelector('.sortable'));
-
-               insertFilterInput(MODAL_CONTENT_FILTER_SELECTOR_ID);
+               } catch (error) {
+                  console.error('Error comment generate:\n', error.stack + '\n', comment);
+                  // alert('Error comment generate\n' + comment);
+               }
             });
+
+         // render table
+         const MODAL_CONTENT_FILTER_SELECTOR_ID = 'nova-search-comment';
+         document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
+            `<table class="sortable" border="0" cellspacing="0" cellpadding="0">
+               <thead id="${MODAL_CONTENT_FILTER_SELECTOR_ID}">
+                  <tr>
+                     <th class="sorttable_numeric">likes</th>
+                     <th class="sorttable_numeric">replys</th>
+                     <th class="sorttable_numeric">date</th>
+                     <th class="sorttable_nosort">avatar</th>
+                     <th class="sorttable_numeric">comments (${commentList.length/*res.pageInfo.totalResults*/})</th>
+                  </tr>
+               </thead>
+               ${ul.innerHTML}
+            </table>`;
+         // add sort event
+         sorttable.makeSortable(document.body.querySelector('.sortable'));
+
+         insertFilterInput(MODAL_CONTENT_FILTER_SELECTOR_ID);
       }
 
       // copy fn from [redirect-disable] plugin
@@ -311,6 +351,14 @@ window.nova_plugins.push({
             #${parent_selector_id} input[type=search]:focus,
             #${parent_selector_id} input[type=text]:focus {
                outline: 1px solid #00b7fc;
+            }
+            .nova-mark-text {
+               background-color: #ff0;
+               background-color: mark;
+
+               /* outline: 2px dashed rgba(255, 127, 127, 0.8);
+               background: transparent;
+               color: inherit;*/
             }`);
 
          const searchInput = document.createElement('input');
@@ -330,6 +378,7 @@ window.nova_plugins.push({
                      'keyword': this.value,
                      'filter_selectors': 'tr',
                      'highlight_selector': '.text-overflow-dynamic-ellipsis',
+                     'highlight_class': 'nova-mark-text',
                   });
                });
             searchInput
@@ -557,6 +606,7 @@ window.nova_plugins.push({
                line-height: 1.4;
                padding: 10px 5px;
                max-width: 1200px;
+               /*min-width: 450px;*/
             }
             #${MODAL_CONTENT_SELECTOR_ID} td a {
                text-decoration: none;

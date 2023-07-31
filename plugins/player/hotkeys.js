@@ -18,19 +18,13 @@ window.nova_plugins.push({
    // desc: 'Player hotkeys always active【SPACE/F】etc.',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/444329-youtube-fixed-actions
-      // alt2 - https://greasyfork.org/en/scripts/445540-youtubedisablefocusvolume
-      // alt3 - https://greasyfork.org/en/scripts/38643-youtube-key-shortcuts-fix
-      // alt4 - https://greasyfork.org/en/scripts/462196-auto-focus
+      // alt1 - https://greasyfork.org/en/scripts/445540-youtubedisablefocusvolume
+      // alt2 - https://greasyfork.org/en/scripts/38643-youtube-key-shortcuts-fix
+      // alt3 - https://greasyfork.org/en/scripts/462196-auto-focus
+      // alt4 - https://greasyfork.org/en/scripts/436459-remove-yt-volumebar-focus
 
       document.addEventListener('keydown', evt => {
-         // movie_player.contains(document.activeElement) // don't use! stay overline
-         if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
-
-         // NOVA.videoElement?.focus(); // video
-         movie_player.focus(); // player
-         // document.activeElement.style.border = '2px solid red'; // mark for test
-         // console.debug('active element', target.localName);
+         setFocus(evt.target);
 
          if (user_settings.hotkeys_disable_numpad && evt.code.startsWith('Numpad')) {
             // console.debug('evt.code', evt.code);
@@ -40,16 +34,20 @@ window.nova_plugins.push({
          }
       });
 
-      // fix after seeking with mouse (only for progress-bar)
-      // document.addEventListener('click', ({ target }) => {
-      //    // if (document.body.querySelector('.ytp-progress-bar')?.contains(document.activeElement)) {
-      //    if (document.activeElement.classList.contains('ytp-progress-bar')) {
-      //       alert(1)
-      //       // NOVA.videoElement?.focus(); // video
-      //       movie_player.focus(); // player
-      //       // document.activeElement.style.border = '2px solid red'; // mark for test
-      //    }
-      // });
+      document.addEventListener('click', evt => evt.isTrusted && setFocus(evt.target));
+
+
+      function setFocus(target) {
+         // movie_player.contains(document.activeElement) // don't use! stay overline
+         if (['input', 'textarea', 'select'].includes(target.localName) || target.isContentEditable) return;
+
+         // focus without scrolling
+         // NOVA.videoElement?.focus({ preventScroll: true });
+         movie_player.focus({ preventScroll: true });
+
+         // document.activeElement.style.border = '2px solid red'; // mark for test
+         // console.debug('active element', target.localName);
+      }
 
    },
    options: {

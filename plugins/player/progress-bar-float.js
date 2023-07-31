@@ -50,13 +50,14 @@ window.nova_plugins.push({
       NOVA.waitSelector('#movie_player.ytp-autohide video')
          .then(video => {
             const
-               container = insertFloatBar(Math.max(
-                  NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59
-               ) + 1),
+               container = insertFloatBar(
+                  Math.max(NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59)
+                  + 1),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
             renderChapters.init(video); // init
+            // resetBar();
 
             // resetBar on new video loaded
             // video.addEventListener('canplay', resetBar); // bug. Animation reset on seek
@@ -133,7 +134,7 @@ window.nova_plugins.push({
       function insertFloatBar(z_index = 60) {
          return document.getElementById(SELECTOR_ID) || (function () {
             movie_player.insertAdjacentHTML('beforeend',
-               `<div id="${SELECTOR_ID}" class="transition">
+               `<div id="${SELECTOR_ID}" class="">
                   <div class="container">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
                      <div id="${SELECTOR_ID}-progress" class="ytp-swatch-background-color"></div>
@@ -159,6 +160,7 @@ window.nova_plugins.push({
                   z-index: var(--zindex);
                   background-color: var(--bg-color);
                   width: 100%;
+                  height: var(--height);
                   visibility: hidden;
                }
 
@@ -172,13 +174,13 @@ window.nova_plugins.push({
                   margin: 0 15px;
                }*/
 
-               ${SELECTOR}.transition [id|=${SELECTOR_ID}] {
+               #movie_player.ytp-autohide ${SELECTOR}.transition [id|=${SELECTOR_ID}] {
                   transition: transform .2s linear;
                }
 
                ${SELECTOR}-progress, ${SELECTOR}-buffer {
                   width: 100%;
-                  height: var(--height);
+                  height: 100%;
                   transform-origin: 0 0;
                   transform: scaleX(0);
                }
@@ -261,11 +263,11 @@ window.nova_plugins.push({
 
             // search in description
             // NOVA.waitSelector(`ytd-watch-metadata #description #video-lockups a`)
-            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { stop_on_page_change: true })
+            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { destroy_if_url_changes: true })
                .then(() => this.renderChaptersMarks(duration));
 
             // search in comments
-            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { stop_on_page_change: true })
+            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { destroy_if_url_changes: true })
                .then(() => this.renderChaptersMarks(duration));
             // search in first/pinned comment
             // NOVA.waitSelector(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
@@ -371,6 +373,29 @@ window.nova_plugins.push({
          'label:de': 'Opazität',
          'label:pl': 'Przejrzystość',
          'label:ua': 'Прозорість',
+         type: 'number',
+         // title: '',
+         placeholder: '0-1',
+         step: .05,
+         min: 0,
+         max: 1,
+         value: .7,
+      },
+      player_float_progress_bar_opacity_background: {
+         _tagName: 'input',
+         label: 'Opacity background',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
          type: 'number',
          // title: '',
          placeholder: '0-1',

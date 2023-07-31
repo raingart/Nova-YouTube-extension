@@ -631,7 +631,8 @@ window.nova_plugins.push({
 
       //    if (document.getElementsByClassName("drDrag").length > 0) {
       //       document.getElementsByClassName("drDrag")[0].onmousedown = handler
-      //    } else {
+      //    }
+      //    else {
       //       elem.onmousedown = handler
       //    }
       // }

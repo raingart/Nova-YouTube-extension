@@ -35,7 +35,7 @@ window.nova_plugins.push({
 
       NOVA.runOnPageInitOrTransition(() => {
          if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('#title h1', { stop_on_page_change: true })
+            NOVA.waitSelector('#title h1', { destroy_if_url_changes: true })
                .then(el => setVideoDate(el));
          }
       });

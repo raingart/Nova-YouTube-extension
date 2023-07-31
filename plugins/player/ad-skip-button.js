@@ -63,7 +63,7 @@ window.nova_plugins.push({
          this.currentTime = this.duration; // set end ad-video
 
          // NOVA.waitSelector('.videoAdUiSkipButton,.ytp-ad-skip-button')
-         NOVA.waitSelector('div.ytp-ad-text.ytp-ad-skip-button-text:not([hidden]), button.ytp-ad-skip-button:not([hidden])', { stop_on_page_change: true })
+         NOVA.waitSelector('div.ytp-ad-text.ytp-ad-skip-button-text:not([hidden]), button.ytp-ad-skip-button:not([hidden])', { destroy_if_url_changes: true })
             .then(btn => btn.click()); // click skip-ad
       }
    },

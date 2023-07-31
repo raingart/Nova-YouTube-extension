@@ -103,7 +103,7 @@ window.nova_plugins.push({
       // a copy of the function is also in plugin [player-control-below]
       function fixControlFreeze(ms = 2000) {
          // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset interval
-         const moveMouse = new Event('mousemove');
+         // const moveMouse = new Event('mousemove');
          // this.mouseMoveIntervalId = window.setInterval(() => {
          return window.setInterval(() => {
             if (NOVA.currentPage === 'watch'
@@ -112,7 +112,8 @@ window.nova_plugins.push({
                && !NOVA.isFullscreen() // Doesn't work in full screen mode
             ) {
                // console.debug('moveMouse event');
-               movie_player.dispatchEvent(moveMouse);
+               // movie_player.dispatchEvent(moveMouse);
+               movie_player.wakeUpControls();
             }
          }, ms);
       }

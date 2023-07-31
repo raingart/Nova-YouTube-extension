@@ -39,7 +39,7 @@ window.nova_plugins.push({
 
       document.addEventListener('click', evt => {
          // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
-         if (evt.isTrusted && !evt.target.matches('a[href*="&t="]')) return;
+         if (!evt.isTrusted || !evt.target.matches('a[href*="&t="]')) return;
 
          // if (sec = NOVA.timeFormatTo.hmsToSec(evt.target.textContent)) {
          if (sec = parseInt(NOVA.queryURL.get('t', evt.target.href))) {

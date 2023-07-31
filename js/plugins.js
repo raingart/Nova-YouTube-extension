@@ -231,7 +231,7 @@ const Plugins = {
                console.groupEnd('plugins status'); // out-of-group display
                console.error(`[ERROR PLUGIN] ${plugin.id}\n${err.stack}\n\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=` + encodeURIComponent(app_ver + ' | ' + navigator.userAgent));
 
-               if (user_settings.report_issues && _pluginsCaptureException) {
+               if (user_settings.report_issues) {
                   _pluginsCaptureException({
                      'trace_name': plugin.id,
                      'err_stack': err.stack,

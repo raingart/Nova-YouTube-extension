@@ -30,14 +30,14 @@ window.nova_plugins.push({
       // window['nova-lock-live-chat'] = true; // set lock
 
       if (user_settings.livechat_visibility_mode == 'disable') {
-         NOVA.waitSelector('#chat', { stop_on_page_change: true })
+         NOVA.waitSelector('#chat', { destroy_if_url_changes: true })
             .then(chat => {
                chat.remove();
                // window['nova-lock-live-chat'] = false; // unlock
             });
       }
       else {
-         NOVA.waitSelector('#chat:not([collapsed]) #show-hide-button button', { stop_on_page_change: true })
+         NOVA.waitSelector('#chat:not([collapsed]) #show-hide-button button', { destroy_if_url_changes: true })
             .then(btn => {
                btn.click();
                // window['nova-lock-live-chat'] = false; // unlock
