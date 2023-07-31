@@ -61,7 +61,7 @@ window.nova_plugins.push({
       });
 
       function insertButton() {
-         NOVA.waitSelector('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed', { stop_on_page_change: true })
+         NOVA.waitSelector('ytd-watch-flexy.ytd-page-manager:not([hidden]) ytd-playlist-panel-renderer:not([collapsed]) #playlist-action-menu .top-level-buttons:not([hidden]), #secondary #playlist #playlist-action-menu #top-level-buttons-computed', { destroy_if_url_changes: true })
             .then(el => createButton(el));
 
          function createButton(container = required()) {
@@ -113,7 +113,7 @@ window.nova_plugins.push({
       async function reverseControl() {
          if (!window.nova_playlistReversed) return;
 
-         if ((ytdWatch = await NOVA.waitSelector('ytd-watch-flexy', { stop_on_page_change: true }))
+         if ((ytdWatch = await NOVA.waitSelector('ytd-watch-flexy', { destroy_if_url_changes: true }))
             && (data = await NOVA.waitUntil(() => ytdWatch?.data.contents?.twoColumnWatchNextResults))
             && (playlist = data.playlist.playlist)
             && (autoplay = data.autoplay.autoplay)

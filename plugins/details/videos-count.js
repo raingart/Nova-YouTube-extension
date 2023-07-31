@@ -60,11 +60,11 @@ window.nova_plugins.push({
       //          });
       //    });
 
-      NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
+      NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { destroy_if_url_changes: true })
          .then(el => setVideoCount(el));
       // NOVA.runOnPageInitOrTransition(() => {
       //    if (NOVA.currentPage == 'watch') {
-      //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { stop_on_page_change: true })
+      //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { destroy_if_url_changes: true })
       //          .then(el => setVideoCount(el));
       //    }
       // });

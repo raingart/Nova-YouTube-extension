@@ -34,6 +34,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/449799-clean-yt-interface
       // alt3 - https://greasyfork.org/en/scripts/441087-youtube-watch-page-no-icon-labels
       // alt4 - https://greasyfork.org/en/scripts/440416-youtube-hide-download-and-other-buttons-under-video
+      // alt5 - https://greasyfork.org/en/scripts/446771-youtube-helper
       let styles = '';
 
       if (user_settings.details_button_no_labels) {

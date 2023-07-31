@@ -23,6 +23,7 @@ window.nova_plugins.push({
    'title:pl': 'Domyślna karta na stronie kanału',
    'title:ua': 'Вкладка за умовчанням на сторінці каналу',
    // run_on_pages: 'channel, -mobile',
+   // run_on_pages: 'channel, watch',
    run_on_pages: 'channel',
    restart_on_location_change: true,
    section: 'channel',
@@ -35,6 +36,42 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
 
+      // if (NOVA.currentPage == 'watch') {
+      //    // mouse left click
+      //    // document.addEventListener('click', ({ target }) => patchLink(target), { capture: true });
+      //    // // mouse middle click
+      //    // document.addEventListener('auxclick', evt => evt.button === 1 && patchLink(evt.target), { capture: true });
+
+      //    // function patchLink(a = required()) {
+      //    //    const linkSelector = '#channel-name a';
+
+      //    //    if (!a.matches(linkSelector)) {
+      //    //       if (!(a = a.closest(linkSelector))) return;
+      //    //    }
+
+      //    //    a.href += '/' + user_settings.channel_default_tab;
+
+      //    //    if (a.data?.commandMetadata?.webCommandMetadata?.url) {
+      //    //       a.data.commandMetadata.webCommandMetadata.url += '/' + user_settings.channel_default_tab;
+      //    //    }
+      //    //    if (a.data.browseEndpoint.canonicalBaseUrl) {
+      //    //       a.data.browseEndpoint.canonicalBaseUrl += '/' + user_settings.channel_default_tab;
+      //    //    }
+      //    // }
+
+      //    NOVA.waitSelector('#owner #channel-name a', { destroy_if_url_changes: true })
+      //       .then(async a => {
+      //          a.href += '/' + user_settings.channel_default_tab;
+
+      //          await NOVA.waitUntil(() => a.data?.commandMetadata?.webCommandMetadata?.url, 1);
+      //          a.data.commandMetadata.webCommandMetadata.url += '/' + user_settings.channel_default_tab;
+      //          // a.data.commandMetadata.webCommandMetadata.url.replace('/@', '/c/')
+      //          a.data.browseEndpoint.canonicalBaseUrl += '/' + user_settings.channel_default_tab;
+      //       });
+      //    return;
+      // }
+      // return
+
       if (NOVA.channelTab) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
@@ -43,7 +80,7 @@ window.nova_plugins.push({
       else {
          const tabSelectors = '#tabsContent > [role="tab"]';
          // tab select
-         NOVA.waitSelector(tabSelectors, { stop_on_page_change: true })
+         NOVA.waitSelector(tabSelectors, { destroy_if_url_changes: true })
             .then(() => {
                let tabActive;
                const tabs = [...document.querySelectorAll(tabSelectors)];
@@ -64,7 +101,7 @@ window.nova_plugins.push({
             });
 
          //    // tab select
-         //    NOVA.waitSelector('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', { stop_on_page_change: true })
+         //    NOVA.waitSelector('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', { destroy_if_url_changes: true })
          //       .then(() => {
          //          let tab_nth;
          //          switch (user_settings.channel_default_tab) {

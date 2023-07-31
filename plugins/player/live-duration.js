@@ -40,7 +40,7 @@ window.nova_plugins.push({
                // // meta[itemprop="isLiveBroadcast"][content="True"]
                // if (document.body.querySelector('ytd-watch-flexy')?.playerData.videoDetails.isLiveContent) {
                // if (movie_player.getVideoData().isLive) {
-               //    NOVA.waitSelector('#movie_player .ytp-chrome-controls .ytp-live .ytp-time-current', { stop_on_page_change: true })
+               //    NOVA.waitSelector('#movie_player .ytp-chrome-controls .ytp-live .ytp-time-current', { destroy_if_url_changes: true })
                //       .then(el => {
                //          el.style = 'display: block !important; margin-right: 5px;';
                //       });

@@ -42,6 +42,7 @@ window.nova_plugins.push({
          'volume_area': '#movie_player .ytp-chrome-bottom .ytp-volume-area',
          'time_display': '#movie_player .ytp-chrome-bottom .ytp-time-display'
             + (user_settings['time-remaining'] ? ' span > span:not([id])' : ''),
+         'time_duration_display': '#movie_player .ytp-chrome-bottom .ytp-time-duration, #movie_player .ytp-chrome-bottom .ytp-time-separator',
          'chapter_container': '#movie_player .ytp-chrome-bottom .ytp-chapter-container', // duplicate "player_indicator_chapter_default_container_hide" [player-indicator] plugin
          // player control right
          'autonav_toggle_button': '#movie_player .ytp-chrome-bottom button.ytp-button[data-tooltip-target-id="ytp-autonav-toggle-button"]',
@@ -255,6 +256,21 @@ window.nova_plugins.push({
             },
             {
                label: 'time', value: 'time_display',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'time duration', value: 'time_duration_display',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

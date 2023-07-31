@@ -255,7 +255,7 @@ window.nova_plugins.push({
                }
             }
 
-            function addHideScrollbaCSSr() {
+            function addHideScrollbarCSS() {
                if (user_settings['scrollbar-hide']) return;
                NOVA.css.push(
                   `html body:has(${PLAYER_SELECTOR})::-webkit-scrollbar {

@@ -34,6 +34,11 @@ window.nova_plugins.push({
       // fix conflict with [theater-mode] plugin (some options)
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') return;
 
+      // get iframe size
+      // alert(window.innerWidth)
+      // alert(document.documentElement.clientWidth)
+      // add emdeb popup only for small frame size
+      if (window.innerWidth > 720) return;
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {

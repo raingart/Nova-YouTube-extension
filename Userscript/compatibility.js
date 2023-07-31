@@ -50,6 +50,11 @@ switch (GM_info.scriptHandler) {
       errorAlert(GM_info.scriptHandler + ' is not supported');
       break;
 
+   // unknown
+   case 'Stay': // https://github.com/shenruisi/Stay
+      errorAlert(GM_info.scriptHandler + ' is not tested!\nPlease inform the author about the working status');
+      break;
+
    // unknown monkey (not tested)
    default:
       if (typeof GM_getValue !== 'function') {

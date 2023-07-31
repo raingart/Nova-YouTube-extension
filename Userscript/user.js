@@ -24,18 +24,16 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 console.debug(`current ${configStoreName}:`, user_settings);
 
 // updateKeyStorage
-const keyRenameTemplate = {
-   // 'oldKey': 'newKey',
-   'comments-sidebar-position-exchange': 'move-in-sidebar',
-   'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
-}
-for (const oldKey in user_settings) {
-   if (newKey = keyRenameTemplate[oldKey]) {
-      console.log(oldKey, '=>', newKey);
-      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-   }
-   GM_setValue(configStoreName, user_settings);
-}
+// const keyRenameTemplate = {
+//    // 'oldKey': 'newKey',
+// }
+// for (const oldKey in user_settings) {
+//    if (newKey = keyRenameTemplate[oldKey]) {
+//       console.log(oldKey, '=>', newKey);
+//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+//    }
+//    GM_setValue(configStoreName, user_settings);
+// }
 
 registerMenuCommand();
 
@@ -371,38 +369,38 @@ function insertSettingButton() {
 }
 
 function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver }) {
-   //    // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
+   // GM_notification({ text: GM_info.script.name + ' an error occurred', timeout: 4000, onclick: openBugReport });
 
-   //    if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
-   //       openBugReport();
-   //    }
+   if (confirm(confirm_msg || `Error in ${GM_info.script.name}. Send the bug raport to developer?`)) {
+      openBugReport();
+   }
 
-   //    function openBugReport() {
-   //       // window.open(
-   //       GM_openInTab(
-   //          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
-   //          '?entry.35504208=' + encodeURIComponent(trace_name) +
-   //          '&entry.151125768=' + encodeURIComponent(err_stack) +
-   //          '&entry.744404568=' + encodeURIComponent(location.href) +
-   //          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
-   //          // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
-   //       );
-   //       // , '_blank');
-   //    }
+   function openBugReport() {
+      // window.open(
+      GM_openInTab(
+         'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
+         '?entry.35504208=' + encodeURIComponent(trace_name) +
+         '&entry.151125768=' + encodeURIComponent(err_stack) +
+         '&entry.744404568=' + encodeURIComponent(location.href) +
+         '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
+         // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
+      );
+      // , '_blank');
+   }
 }
 
-// window.addEventListener('unhandledrejection', err => {
-//    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
-//    if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
-//       console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
+window.addEventListener('unhandledrejection', err => {
+   // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
+   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
+      console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
-//       _pluginsCaptureException({
-//          'trace_name': 'unhandledrejection',
-//          'err_stack': err.reason.stack || err.stack,
-//          'app_ver': GM_info.script.version,
-//          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
-//       });
-//    }
-// });
+      _pluginsCaptureException({
+         'trace_name': 'unhandledrejection',
+         'err_stack': err.reason.stack || err.stack,
+         'app_ver': GM_info.script.version,
+         'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,
+      });
+   }
+});
 
 // })(); // for Greasemonkey

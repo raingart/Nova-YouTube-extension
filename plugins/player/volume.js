@@ -46,9 +46,8 @@ window.nova_plugins.push({
       // alt - https://greasyfork.org/en/scripts/418121-yt-fixed
 
       // volume curve
-      // alt1 - https://greasyfork.org/en/scripts/397686-youtube-music-fix-volume-ratio
-      // alt2 - https://greasyfork.org/en/scripts/404756-youtube-volume-curve-designer
-      // alt3 - https://greasyfork.org/en/scripts/426684-youtube-music-logarithmic-exponential-volume
+      // alt1 - https://greasyfork.org/en/scripts/404756-youtube-volume-curve-designer
+      // alt2 - https://greasyfork.org/en/scripts/426684-youtube-music-logarithmic-exponential-volume
 
       // max level
       // alt1 - https://chrome.google.com/webstore/detail/nnocenjojjcnlijjjikhehebkbgbmmep
@@ -61,13 +60,30 @@ window.nova_plugins.push({
             video.addEventListener('volumechange', function () {
                // bug? demonstration of different values
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
-               NOVA.bezelTrigger(movie_player.getVolume() + '%');
+               // NOVA.bezelTrigger(movie_player.getVolume() + '%');
+               NOVA.bezelTrigger(Math.round(this.volume * 100) + '%');
                playerVolume.buildVolumeSlider();
 
                if (user_settings.volume_mute_unsave) {
                   playerVolume.saveInSession(movie_player.getVolume());
                }
             });
+
+            //fix - Listener default indicator on change
+            if (user_settings.volume_normalization) {
+               NOVA.waitSelector('.ytp-volume-panel[aria-valuenow]')
+                  .then(target => {
+                     new MutationObserver(mutationRecordsArray => {
+                        // mutationRecordsArray[0].target
+                        // NOVA.videoElement.volume = movie_player.getVolume() / 100;
+                        playerVolume.volumeNormalization();
+                     })
+                        .observe(target, {
+                           attributes: true,
+                           attributeFilter: ['aria-valuenow']
+                        });
+                  });
+            }
 
             // keyboard
             if (user_settings.volume_hotkey == 'keyboard') {
@@ -153,6 +169,11 @@ window.nova_plugins.push({
                   console.error('setVolumeLevel error! Different: %s!=%s', newLevel, movie_player.getVolume());
                }
             }
+
+            if (user_settings.volume_normalization) {
+               this.volumeNormalization(newLevel);
+            }
+
             return newLevel === movie_player.getVolume() && newLevel;
          },
 
@@ -174,6 +195,17 @@ window.nova_plugins.push({
             } catch (err) {
                console.warn(`${err.name}: save "volume" in sessionStorage failed. It seems that "Block third-party cookies" is enabled`, err.message);
             }
+         },
+
+         volumeNormalization(level = movie_player.getVolume()) {
+            // const setVolume = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume')
+            //    .set.bind(NOVA.videoElement);
+
+            // // setVolume(movie_player.getVolume() / 100);
+            if (NOVA.videoElement?.volume) {
+               NOVA.videoElement.volume = level / 100;
+            }
+
          },
 
          unlimit(level = 300) {
@@ -434,6 +466,23 @@ window.nova_plugins.push({
          'title:de': 'Wirkt sich nur auf neue Registerkarten aus',
          'title:pl': 'Dotyczy tylko nowych kart',
          'title:ua': 'Діє лише на нові вкладки',
+      },
+      volume_normalization: {
+         _tagName: 'input',
+         label: 'Disable normalization',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
       },
    }
 });

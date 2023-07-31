@@ -91,6 +91,10 @@ window.nova_plugins.push({
          }
       });
 
+      if (user_settings.shorts_disable) {
+         NOVA.css.push(`#content > ytd-rich-shelf-renderer { display: none; }`);
+      }
+
       const thumbRemove = {
          // alt - https://greasyfork.org/en/scripts/461568-hide-youtube-shorts/
          shorts() {
@@ -220,10 +224,27 @@ window.nova_plugins.push({
             // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
-            document.body.querySelectorAll('#metadata-line > span:last-of-type')
+            // textarea to array
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_exception);
+
+            // document.body.querySelectorAll('#metadata-line > span:last-of-type')
+            document.body.querySelectorAll('#metadata')
                .forEach(el => {
-                  if (el.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
-                     && (thumb = el.closest(thumbsSelectors))) {
+                  if (el.querySelector('#metadata-line > span:last-of-type')?.textContent?.split(' ').length === 4 // "Streamed 5 days ago"
+                     && (thumb = el.closest(thumbsSelectors))
+                  ) {
+                     // filter channel
+                     if (keywords.length
+                        && keywords.includes(el.querySelector('#channel-name a')?.textContent.trim().toLowerCase())
+                     ) {
+                        // fix for [search-filter] plugin
+                        if (user_settings['search-filter']) {
+                           thumb.style.display = 'block'; // unhide after [search-filter] plugin
+                        }
+                        // thumb.style.border = '2px solid dodgerblue'; // mark for test
+                        return;
+                     }
+
                      thumb.remove();
                      // thumb.style.display = 'none';
 
@@ -424,6 +445,37 @@ window.nova_plugins.push({
          type: 'checkbox',
          //title: '',
          'data-dependent': { 'live_disable': true },
+      },
+      streamed_disable_channel_exception: {
+         _tagName: 'textarea',
+         label: 'Сhannel exception',
+         // 'label:zh': '频道列表',
+         // 'label:ja': 'チャンネルリスト',
+         // 'label:ko': '채널 목록',
+         // 'label:id': 'Daftar',
+         // 'label:es': 'Lista',
+         // 'label:pt': 'Lista',
+         // 'label:fr': 'Liste',
+         // 'label:it': 'Elenco',
+         // // 'label:tr': 'Listesi',
+         // 'label:de': 'Liste',
+         // 'label:pl': 'Lista',
+         // 'label:ua': 'Список',
+         title: 'separator: "," or ";" or "new line"',
+         'title:zh': '分隔器： "," 或 ";" 或 "新队"',
+         'title:ja': 'セパレータ： "," または ";" または "改行"',
+         'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         'title:id': 'pemisah: "," atau ";" atau "baris baru"',
+         'title:es': 'separador: "," o ";" o "new line"',
+         'title:pt': 'separador: "," ou ";" ou "new line"',
+         'title:fr': 'séparateur : "," ou ";" ou "nouvelle ligne"',
+         'title:it': 'separatore: "," o ";" o "nuova linea"',
+         // 'title:tr': 'ayırıcı: "," veya ";" veya "new line"',
+         'title:de': 'separator: "," oder ";" oder "new line"',
+         'title:pl': 'separator: "," lub ";" lub "now linia"',
+         'title:ua': 'розділювач: "," або ";" або "новий рядок"',
+         placeholder: 'channel1\nchannel2',
+         'data-dependent': { 'streamed_disable': true },
       },
       mix_disable: {
          _tagName: 'input',

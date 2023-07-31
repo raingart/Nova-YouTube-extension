@@ -117,7 +117,8 @@ window.nova_plugins.push({
                         display: none !important;
                      }`);
                }
-               fixControlFreeze.apply(document.body.querySelector('ytd-watch-flexy'));
+               // fixControlFreeze.apply(document.body.querySelector('ytd-watch-flexy')); // for - this.hasAttribute('fullscreen')
+               fixControlFreeze();
             }
          });
 
@@ -125,8 +126,13 @@ window.nova_plugins.push({
       // this.mouseMoveIntervalId = fixControlFreeze()
       // fixControlFreeze. copy of the function is also in plugin [player-control-autohide]
       function fixControlFreeze(ms = 2000) {
+         if (user_settings.player_hide_elements?.includes('time_display')
+            && (user_settings['theater-mode'] && ['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode))
+         ) {
+            return;
+         }
          // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset interval
-         const moveMouse = new Event('mousemove');
+         // const moveMouse = new Event('mousemove');
          // this.mouseMoveIntervalId = window.setInterval(() => {
          return window.setInterval(() => {
             if (['smart'].includes(user_settings.player_full_viewport_mode) && NOVA.css.getValue(movie_player, 'z-index') != '2020' && NOVA.css.getValue(movie_player, 'position') != 'fixed') return;
@@ -134,15 +140,11 @@ window.nova_plugins.push({
             if (NOVA.currentPage === 'watch'
                && document.visibilityState == 'visible'
                && movie_player.classList.contains('playing-mode')
-               && !NOVA.isFullscreen()
-               && user_settings.player_hide_elements != 'time_display'
-               /*&& (!user_settings['theater-mode']
-                  || (this.hasAttribute('fullscreen') && !['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode))
-               )*/
-               && (!user_settings['theater-mode'] || (user_settings['theater-mode'] && !['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode)))
-               ) {
-               // console.debug('moveMouse event');
-               movie_player.dispatchEvent(moveMouse);
+               && !NOVA.isFullscreen() // this.hasAttribute('fullscreen')
+            ) {
+               // console.debug('wakeUpControls');
+               // movie_player.dispatchEvent(moveMouse);
+               movie_player.wakeUpControls();
             }
          }, ms);
       }

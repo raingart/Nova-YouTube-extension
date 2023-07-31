@@ -25,7 +25,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/6034-youtube-hd-override
-      // alt2 - https://greasyfork.org/en/scripts/23661-youtube-hd/feedback
+      // alt2 - https://greasyfork.org/en/scripts/23661-youtube-hd
       // alt3 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
 
       const qualityFormatListWidth = {
@@ -78,7 +78,7 @@ window.nova_plugins.push({
             movie_player.addEventListener('onStateChange', setQuality); // update
          });
 
-      function setQuality(state) {
+      async function setQuality(state) {
          if (!selectedQuality) return console.error('selectedQuality unavailable', selectedQuality);
          // console.debug('playerState', NOVA.getPlayerState(state));
 
@@ -91,62 +91,46 @@ window.nova_plugins.push({
             selectedQuality = user_settings.video_quality_in_music_quality;
          }
 
-         // if ((1 == state || 3 == state) && !setQuality.quality_busy) {
-         if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state)) && !setQuality.quality_busy) {
-            setQuality.quality_busy = true;
+         // if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state))) {
+         if (1 == state || 3 == state) {
+            let availableQualityLevels;
+            await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels?.length, 50) // 500ms
+            // incorrect window size definition in embed
+            // set max quality limit (screen resolution (not viewport) + 30%)
+            const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
+            const maxQualityIdx = availableQualityLevels.findIndex(i => qualityFormatListWidth[i] <= (maxWidth * 1.3));
+            availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
-            const waitQuality = setInterval(() => {
-               // const availableQualityLevels = movie_player.getAvailableQualityLevels();
-               // set max quality limit (viewport + 30%)
-               let availableQualityLevels = movie_player.getAvailableQualityLevels();
+            const maxAvailableQualityIdx = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
+            const newQuality = availableQualityLevels[maxAvailableQualityIdx];
 
-               // incorrect window size definition in embed
-               const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
-               // set max quality limit (screen resolution + 30%)
-               const maxQualityIdx = availableQualityLevels
-                  .findIndex(i => qualityFormatListWidth[i] <= (maxWidth * 1.3));
-               availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
+            // if (!newQuality || movie_player.getPlaybackQuality() == selectedQuality) {
+            //    return console.debug('skip set quality');
+            // }
 
-               if (availableQualityLevels?.length) {
-                  clearInterval(waitQuality);
+            // if (!availableQualityLevels.includes(selectedQuality)) {
+            //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${newQuality}" of ${JSON.stringify(availableQualityLevels)}`);
+            // }
 
-                  const maxAvailableQuality = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
-                  const newQuality = availableQualityLevels[maxAvailableQuality];
+            if (movie_player.hasOwnProperty('setPlaybackQuality')) {
+               // console.debug('use setPlaybackQuality');
+               movie_player.setPlaybackQuality(newQuality);
+            }
 
-                  // if (!newQuality || movie_player.getPlaybackQuality() == selectedQuality) {
-                  //    return console.debug('skip set quality');
-                  // }
+            // set QualityRange
+            if (movie_player.hasOwnProperty('setPlaybackQualityRange')) {
+               // console.debug('use setPlaybackQualityRange');
+               movie_player.setPlaybackQualityRange(newQuality, newQuality);
+            }
 
-                  // if (!availableQualityLevels.includes(selectedQuality)) {
-                  //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${newQuality}" of ${JSON.stringify(availableQualityLevels)}`);
-                  // }
-
-                  if (movie_player.hasOwnProperty('setPlaybackQuality')) {
-                     // console.debug('use setPlaybackQuality');
-                     movie_player.setPlaybackQuality(newQuality);
-                  }
-
-                  // set QualityRange
-                  if (movie_player.hasOwnProperty('setPlaybackQualityRange')) {
-                     // console.debug('use setPlaybackQualityRange');
-                     movie_player.setPlaybackQualityRange(newQuality, newQuality);
-                  }
-
-                  // console.debug('availableQualityLevels:', availableQualityLevels);
-                  // console.debug("try set quality:", newQuality);
-                  // console.debug('current quality:', movie_player.getPlaybackQuality());
-               }
-            }, 50); // 50ms
-
-         }
-         // else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
-         else if (state <= 0) {
-            setQuality.quality_busy = false;
+            // console.debug('availableQualityLevels:', availableQualityLevels);
+            // console.debug("try set quality:", newQuality);
+            // console.debug('current quality:', movie_player.getPlaybackQuality());
          }
       }
 
       // error detector
-      NOVA.waitSelector('.ytp-error [class*="reason"]', { stop_on_page_change: true })
+      NOVA.waitSelector('.ytp-error [class*="reason"]', { destroy_if_url_changes: true })
          .then(error_reason_el => {
             if (alertText = error_reason_el.textContent) {
                // err ex:

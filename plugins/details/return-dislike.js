@@ -45,7 +45,7 @@ window.nova_plugins.push({
 
       NOVA.runOnPageInitOrTransition(() => {
          if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { stop_on_page_change: true })
+            NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { destroy_if_url_changes: true })
                .then(el => setDislikeCount(el));
          }
       });
@@ -53,7 +53,7 @@ window.nova_plugins.push({
       // NOVA.waitSelector('video')
       //    .then(video => {
       //       video.addEventListener('loadeddata', () => {
-      //          NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { stop_on_page_change: true })
+      //          NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { destroy_if_url_changes: true })
       //             .then(el => setDislikeCount(el));
       //       });
       //    });

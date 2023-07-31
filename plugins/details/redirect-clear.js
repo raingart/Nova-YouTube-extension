@@ -32,11 +32,12 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/445867-replace-youtube-redirect-links
       // alt2 - https://greasyfork.org/en/scripts/449286-clean-youtube-redirect-urls
+      // alt3 - https://greasyfork.org/en/scripts/470482-url-redirect-redirecter
 
       // mouse left click
-      document.addEventListener('click', ({ target }) => patchLink(target), { capture: true });
+      document.addEventListener('click', evt => evt.isTrusted && patchLink(evt.target), { capture: true });
       // mouse middle click
-      document.addEventListener('auxclick', evt => evt.button === 1 && patchLink(evt.target), { capture: true });
+      document.addEventListener('auxclick', evt => evt.isTrusted && evt.button === 1 && patchLink(evt.target), { capture: true });
 
       function patchLink(target = required()) {
          const linkSelector = 'a[href*="/redirect?"]';

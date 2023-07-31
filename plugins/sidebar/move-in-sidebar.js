@@ -32,37 +32,38 @@ window.nova_plugins.push({
          SELECTOR_SECONDARY = `${SELECTOR_CONTAINER} #secondary`;
 
       switch (user_settings.move_in_sidebar_target) {
+         case 'info':
+            moveChannelInfo();
+            break;
+
          // move description on the right
          case 'description':
             // alt - https://greasyfork.org/en/scripts/452405-youtube-scrollable-right-side-description
             if (user_settings['description-popup']) return;
             // ytd-watch-metadata #description.ytd-watch-metadata
-            NOVA.waitSelector(`${SELECTOR_BELOW} #description.ytd-watch-metadata`, { stop_on_page_change: true })
+            NOVA.waitSelector(`${SELECTOR_BELOW} #description.ytd-watch-metadata`, { destroy_if_url_changes: true })
                .then(description => {
                   // move to the right
-                  NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { stop_on_page_change: true })
-                     .then(secondary => {
+                  NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_if_url_changes: true })
+                     .then(async secondary => {
                         if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
                         // document.body.querySelector('#secondary')?.append(comments);
                         secondary.prepend(description);
                         // channel info
-                        // if (channelInfo = document.body.querySelector(`${SELECTOR_BELOW} ytd-watch-metadata #owner`)) {
-                        if (channelInfo = document.body.querySelector(`${SELECTOR_BELOW} ytd-watch-metadata ytd-video-owner-renderer`)) {
-                           secondary.prepend(channelInfo);
-                           // channelInfo.style.margin = 0; // remove padding
-                        }
+                        moveChannelInfo();
                         // views and date
                         if (!user_settings['description-popup'] && !user_settings['video-date-format']) {
                            document.body.querySelector(`${SELECTOR_BELOW} ytd-watch-metadata #title`)
                               ?.append(document.body.querySelector(`${SELECTOR_SECONDARY} #info-container`));
-                        } else {
+                        }
+                        else {
                            document.body.querySelector(`${SELECTOR_SECONDARY} #info-container`)?.remove();
                         }
 
                         NOVA.css.push(
                            SELECTOR_SECONDARY + ` #owner {
-                                 margin: 0;
+                              margin: 0;
                            }
                            /*make the description scrollable*/
                            ${SELECTOR_SECONDARY} #description.ytd-watch-metadata {
@@ -72,6 +73,10 @@ window.nova_plugins.push({
                            }
                            /* hide collapse label */
                            ${SELECTOR_SECONDARY} #description #collapse {
+                              display: none;
+                           }
+                           /* hide info tags */
+                           #info-container a {
                               display: none;
                            }`);
                         document.body.querySelector(`${SELECTOR_SECONDARY} #description #expand`)?.click();
@@ -88,7 +93,7 @@ window.nova_plugins.push({
                return;
             }
 
-            NOVA.waitSelector(`${SELECTOR_BELOW} #comments`, { stop_on_page_change: true })
+            NOVA.waitSelector(`${SELECTOR_BELOW} #comments`, { destroy_if_url_changes: true })
                .then(comments => {
                   if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
@@ -108,18 +113,33 @@ window.nova_plugins.push({
       }
 
       // move related on below the video
-      NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { stop_on_page_change: true })
+      NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { destroy_if_url_changes: true })
          .then(related => {
             if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
             document.body.querySelector('#below')?.appendChild(related);
          });
 
+      function moveChannelInfo() {
+         NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_if_url_changes: true })
+            .then(secondary => {
+               // with the subscribe button
+               NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata #owner`, { destroy_if_url_changes: true })
+               // without the subscribe button
+                  // NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata ytd-video-owner-renderer`, { destroy_if_url_changes: true })
+                  .then(channelInfo => {
+                     secondary.prepend(channelInfo);
+                     // channelInfo.style.margin = 0; // remove padding
+                  });
+            });
+
+      }
+
    },
    options: {
       move_in_sidebar_target: {
          _tagName: 'select',
-         label: 'Taget of movement',
+         label: 'Target of movement',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -134,7 +154,8 @@ window.nova_plugins.push({
          // 'label:ua': '',
          // title: '',
          options: [
-            { label: 'description', value: 'description', selected: true },
+            { label: 'info', value: 'info' },
+            { label: 'info + description', value: 'description', selected: true },
             { label: 'comments', value: 'comments' },
          ],
       },

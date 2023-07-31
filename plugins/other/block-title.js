@@ -19,10 +19,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // textarea to array
-      const keywords = user_settings.thumb_filter_title_blocklist
-         ?.split(/[\n,;]/)
-         .map(e => e.toString().trim().toLowerCase())
-         .filter(e => e.length);
+      const keywords = NOVA.strToArray(user_settings.thumb_filter_title_blocklist);
 
       const thumbsSelectors = [
          'ytd-rich-item-renderer', // home, channel, feed
@@ -51,8 +48,8 @@ window.nova_plugins.push({
                });
             }
          });
-
-      } else {
+      }
+      else {
          // Strategy 2 (optimize but doesn't work in mobile)
          // page update event
          document.addEventListener('yt-action', evt => {
@@ -117,7 +114,7 @@ window.nova_plugins.push({
          'title:de': 'separator: "," oder ";" oder "new line"',
          'title:pl': 'separator: "," lub ";" lub "now linia"',
          'title:ua': 'розділювач: "," або ";" або "новий рядок"',
-         placeholder: 'text1, text2',
+         placeholder: 'text1\ntext2',
          required: true,
       },
    }

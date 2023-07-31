@@ -21,6 +21,7 @@
    - aspectRatio.calculateWidth
    - bezelTrigger
    - getChapterList
+   - strToArray
    - searchFilterHTML
    - isMusic
    - timeFormatTo.hmsToSec
@@ -171,7 +172,7 @@ const NOVA = {
     * @return {Promise<Element>}
    */
    // untilDOM
-   // waitSelector(selector = required(), { container, stop_on_page_change }) {
+   // waitSelector(selector = required(), { container, destroy_if_url_changes }) {
    waitSelector(selector = required(), limit_data) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
       if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', limit_data.container);
@@ -249,7 +250,7 @@ const NOVA = {
                //  characterDataOldValue: true
             });
 
-         if (limit_data?.stop_on_page_change) {
+         if (limit_data?.destroy_if_url_changes) {
             isURLChange();
             window.addEventListener('transitionend', ({ target }) => {
                if (isURLChange()) {
@@ -747,7 +748,8 @@ const NOVA = {
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
-         BEZEL_SELECTOR_TOGGLE = '.ytp-text-root';
+         BEZEL_CLASS_VALUE = 'ytp-text-root',
+         BEZEL_SELECTOR_TOGGLE = '.' + BEZEL_CLASS_VALUE; // for css
 
       if (!this.bezel_css_inited) {
          this.bezel_css_inited = true;
@@ -762,12 +764,17 @@ const NOVA = {
       }
 
       bezelEl.textContent = text;
-      bezelContainer.classList.add(BEZEL_SELECTOR_TOGGLE);
+      bezelContainer.classList.add(BEZEL_CLASS_VALUE);
+
+      let ms = 1200;
+      if (text.endsWith('%') || text.endsWith('x')) {
+         ms = 600
+      }
 
       this.fateBezel = setTimeout(() => {
-         bezelContainer.classList.remove(BEZEL_SELECTOR_TOGGLE);
+         bezelContainer.classList.remove(BEZEL_CLASS_VALUE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
-      }, 600); // 600ms
+      }, ms);
    },
 
    /**
@@ -970,12 +977,23 @@ const NOVA = {
    // },
 
    /**
+    * @param  {str} str
+    * @return {@Nullable array}
+   */
+   strToArray(str) {
+      return str
+         ?.split(/[\n,;]/)
+         .map(e => e.toString().trim().toLowerCase())
+         .filter(e => e.length);
+   },
+
+   /**
     * @param  {string} keyword
     * @param  {string} filter_selectors
     * @param  {boolean*} highlight_selector
     * @return {void}
    */
-   searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector }) {
+   searchFilterHTML({ keyword = required(), filter_selectors = required(), highlight_selector, highlight_class }) {
       // console.debug('searchFilterHTML:', ...arguments);
       keyword = keyword.toString().toLowerCase();
 
@@ -997,7 +1015,7 @@ const NOVA = {
                      highlightTerm({
                         'target': el,
                         'keyword': keyword,
-                        // 'highlightClass':,
+                        'highlightClass': highlight_class,
                      });
                   }
                };
@@ -1102,7 +1120,7 @@ const NOVA = {
             || titleWordsList?.length && ['🎵', '♫', 'AUDIO', 'SONG', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
-            // words
+            // words ("feat." miss - https://www.youtube.com/watch?v=7ubvobYxgBk)
             || ['OFFICIAL VIDEO', 'OFFICIAL AUDIO', 'FEAT.', 'FT.', 'LIVE RADIO', 'DANCE VER', 'HIP HOP', 'ROCK N ROLL', 'HOUR VER', 'HOURS VER', 'INTRO THEME'] // 'FULL ALBUM'
                .some(i => titleStr.includes(i))
 
