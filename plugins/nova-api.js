@@ -782,22 +782,31 @@ const NOVA = {
     * @return {array}
    */
    getChapterList(video_duration = required()) {
-      // Strategy 1
-      if (NOVA.currentPage != 'embed'
-         && (chapsCollect = getFromDescriptionText() || getFromDescriptionChaptersBlock()) // Doesn't work in embed
-         && chapsCollect.length
-      ) {
-         return chapsCollect;
-      }
-      // Strategy 2
-      else {
-         chapsCollect = getFromAPI();
-      }
-      // console.debug('chapsCollect', chapsCollect);
-      return chapsCollect;
+      switch (NOVA.currentPage) {
+         case 'embed':
+            chapsCollect = getFromAPI();
+            // console.debug('chapsCollect (embed)', chapsCollect);
+            return chapsCollect;
+            break;
 
+         // Strategy 2
+         case 'watch':
+            if ((chapsCollect = getFromDescriptionText() || getFromDescriptionChaptersBlock())
+               && chapsCollect.length
+            ) {
+               // console.debug('chapsCollect (watch)', chapsCollect);
+               return chapsCollect;
+            }
+            break;
+      }
+
+      function descriptionExpand() {
+         document.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click();
+      }
 
       function getFromDescriptionText() {
+         descriptionExpand();
+
          const selectorTimestampLink = 'a[href*="&t="]';
          let
             timestampsCollect = [],
@@ -854,8 +863,8 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
-                                 .trim().replace(/^[:\-–—|]|(\[\])?|[:\-–—.;|]$/g, '') // clear of quotes and list characters
-                                 //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?|[:\-–—.;|]$/g, '') // clear numeric list prefix
+                                 .trim().replace(/^[:\-–—|]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
+                                 //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
                                  // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                                  .trim()
                            });
@@ -878,16 +887,20 @@ const NOVA = {
          }
       }
 
-      async function getFromDescriptionChaptersBlock() {
-         await NOVA.delay(500); // firty fix. Wait load all chapters
+      function getFromDescriptionChaptersBlock() {
+         descriptionExpand();
 
          const selectorTimestampLink = 'a[href*="&t="]';
          let timestampsCollect = [];
+         let prevSec = -1;
          document.body.querySelectorAll(`#structured-description ${selectorTimestampLink}`)
             // document.body.querySelectorAll(`#description.ytd-watch-metadata ${selectorTimestampLink}`)
             .forEach(chaperLink => {
                // console.debug('>', chaperLink);
-               if (sec = parseInt(NOVA.queryURL.get('t', chaperLink.href))) {
+               // filter duplicate
+               const sec = parseInt(NOVA.queryURL.get('t', chaperLink.href));
+               if (sec > prevSec) {
+                  prevSec = sec;
                   timestampsCollect.push({
                      'time': NOVA.timeFormatTo.HMS.digit(sec),
                      'sec': sec,
@@ -903,7 +916,7 @@ const NOVA = {
             return timestampsCollect;
          }
          else if (timestampsCollect.length > 1) {
-            // console.debug('timestampsCollect', timestampsCollect);
+            // console.debug('timestamepsCollect', timestampsCollect);
             return timestampsCollect;
          }
       }
@@ -1745,7 +1758,8 @@ const NOVA = {
        * @param  {boolean*} multiple
        * @return {object} {path: '.config.args.ucid', data: 'UCMDQxm7cUx3yXkfeHa5zJIQ'}
       */
-      key({ obj = required(),
+      key({
+         obj = required(),
          keys = required(),
          match_fn = data => data.constructor.name !== 'Object', // exclude objects type
          multiple = false,
@@ -1809,7 +1823,7 @@ const NOVA = {
                      case 'Function':
                         if (Object.keys(obj[prop]).length) {
                            for (const j in obj[prop]) {
-                              if (typeof obj[prop] !== 'undefined') {
+                              if (typeof obj[prop][j] !== 'undefined') {
                                  // recursive
                                  if (result = this.key({
                                     'obj': obj[prop][j],

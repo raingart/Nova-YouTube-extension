@@ -111,7 +111,7 @@ window.nova_plugins.push({
                   HUD.set({
                      'pt': target.textContent,
                      // 'suffix': '',
-                     'timeout_ms': 1800, // ms
+                     'timeout_ms': (user_settings.player_indicator_chapter_time || 1.8) * 1000, // ms
                   });
                }
             })
@@ -396,6 +396,42 @@ window.nova_plugins.push({
       //    type: 'checkbox',
       //    'data-dependent': { 'player_indicator_chapter': true },
       // },
+      player_indicator_chapter_time: {
+         _tagName: 'input',
+         label: 'Chapter timeout',
+         type: 'number',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         title: 'in sec',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         placeholder: '0-10',
+         step: .1,
+         min: .1,
+         max: 10,
+         value: 1.8,
+         'data-dependent': { 'player_indicator_chapter': true },
+      },
       player_indicator_opacity: {
          _tagName: 'input',
          label: 'Opacity',

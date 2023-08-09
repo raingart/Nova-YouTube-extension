@@ -23,7 +23,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/453851-auto-pause-youtube-channel-homepage-video
+      // alt1 - https://greasyfork.org/en/scripts/453851-auto-pause-youtube-channel-homepage-video
+      // alt2 - https://greasyfork.org/en/scripts/466007-s-disable-youtube-channel-user-home-page-video-autoplay-2-0-16-fork-may-2023-bugfix
+      // alt3 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
 
       NOVA.waitSelector('#c4-player.playing-mode', { destroy_if_url_changes: true })
          .then(player => player.stopVideo());

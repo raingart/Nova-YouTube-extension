@@ -228,31 +228,27 @@ window.nova_plugins.push({
 
             switch (NOVA.currentPage) {
                case 'watch':
+                  // // fix load description
+                  // NOVA.waitSelector('#meta [collapsed] #more, [description-collapsed] #description #expand')
+                  //    .then(btn => {
+                  //       btn.click();
+                  //       this.from_description(vid.duration);
+                  //    });
                   this.from_description(vid.duration);
                   break;
 
                // embed don't have description
                case 'embed':
                   // fix loaded - window.ytPubsubPubsubInstance and chaptersContainer to from_div
+                  let chaptersContainer;
                   await NOVA.waitUntil(() => (
                      chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
                      && chaptersContainer?.children.length > 1
                      , 1000);
 
-                  (
-                     this.renderChaptersMarks(vid.duration) // Strategy 1
-                     || this.from_div(chaptersContainer) // Strategy 2
-                  );
+                  this.renderChaptersMarkers(vid.duration) || this.from_div(chaptersContainer);
                   break;
             }
-
-            // trigger to show
-            NOVA.runOnPageInitOrTransition(() => {
-               if (NOVA.currentPage == 'watch') {
-                  NOVA.waitSelector('#meta [collapsed] #more, [description-collapsed] #description #expand')
-                     .then(btn => btn.click());
-               }
-            });
          },
 
          from_description(duration = required()) {
@@ -261,17 +257,17 @@ window.nova_plugins.push({
             // <a href="/playlist?list=XX"> - erroneous filtering "t=XX" without the character "&"
             const selectorTimestampLink = 'a[href*="&t="]';
 
-            // search in description
+            // search in description (#structured-description)
             // NOVA.waitSelector(`ytd-watch-metadata #description #video-lockups a`)
             NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { destroy_if_url_changes: true })
-               .then(() => this.renderChaptersMarks(duration));
+               .then(() => this.renderChaptersMarkers(duration));
 
             // search in comments
             NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { destroy_if_url_changes: true })
-               .then(() => this.renderChaptersMarks(duration));
+               .then(() => this.renderChaptersMarkers(duration));
             // search in first/pinned comment
             // NOVA.waitSelector(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
-            //    .then(() => this.renderChaptersMarks(duration));
+            //    .then(() => this.renderChaptersMarkers(duration));
          },
 
          from_div(chaptersContainer = required()) {
@@ -293,8 +289,8 @@ window.nova_plugins.push({
             }
          },
 
-         renderChaptersMarks(duration) {
-            // console.debug('renderChaptersMarks', ...arguments);
+         renderChaptersMarkers(duration) {
+            // console.debug('renderChaptersMarkers', ...arguments);
             if (isNaN(duration)) return console.error('duration isNaN:', duration);
 
             if (chaptersContainer = document.getElementById(`${SELECTOR_ID}-chapters`)) {
@@ -329,7 +325,7 @@ window.nova_plugins.push({
                   chaptersContainer.append(newChapter);
                });
 
-            // console.debug('renderChaptersMarks', chapterList);
+            // console.debug('renderChaptersMarkers', chapterList);
             return chapterList; // return dependency
          },
       };

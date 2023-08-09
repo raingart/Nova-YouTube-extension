@@ -412,45 +412,45 @@ window.nova_plugins.push({
          }
 
          // Strategy 1. local fn
-         if (path = findPathInObj({ 'obj': _yt_player, 'keys': 'getAvailablePlaybackRates' })) {
-            setAvailableRates(_yt_player, 0, path.split('.'));
-         }
-
-         function findPathInObj({ obj = required(), keys = required(), path }) {
-            const setPath = d => (path ? path + '.' : '') + d;
-
-            for (const prop in obj) {
-               if (obj.hasOwnProperty(prop) && obj[prop]) {
-                  if (keys === prop) {
-                     return this.path = setPath(prop)
-                  }
-                  // in deeper
-                  if (obj[prop].constructor.name == 'Function' && Object.keys(obj[prop]).length) {
-                     for (const j in obj[prop]) {
-                        if (typeof obj[prop] !== 'undefined') {
-                           // if (prop in obj) {
-                           // recursive
-                           findPathInObj({
-                              'obj': obj[prop][j],
-                              'keys': keys,
-                              'path': setPath(prop) + '.' + j,
-                           });
-                        }
-                        if (this.path) return this.path;
-                     }
-                  }
-               }
-            }
-         }
-
-         // Strategy 2. NOVA fn
-         // if (path = NOVA.seachInObjectBy.key({
-         //    'obj': _yt_player,
-         //    'keys': 'getAvailablePlaybackRates',
-         //    'match_fn': val => (typeof val === 'function') && val,
-         // })?.path) {
+         // if (path = findPathInObj({ 'obj': _yt_player, 'keys': 'getAvailablePlaybackRates' })) {
          //    setAvailableRates(_yt_player, 0, path.split('.'));
          // }
+
+         // function findPathInObj({ obj = required(), keys = required(), path }) {
+         //    const setPath = d => (path ? path + '.' : '') + d;
+
+         //    for (const prop in obj) {
+         //       if (obj.hasOwnProperty(prop) && obj[prop]) {
+         //          if (keys === prop) {
+         //             return this.path = setPath(prop)
+         //          }
+         //          // in deeper
+         //          if (obj[prop].constructor.name == 'Function' && Object.keys(obj[prop]).length) {
+         //             for (const j in obj[prop]) {
+         //                if (typeof obj[prop] !== 'undefined') {
+         //                   // if (prop in obj) {
+         //                   // recursive
+         //                   findPathInObj({
+         //                      'obj': obj[prop][j],
+         //                      'keys': keys,
+         //                      'path': setPath(prop) + '.' + j,
+         //                   });
+         //                }
+         //                if (this.path) return this.path;
+         //             }
+         //          }
+         //       }
+         //    }
+         // }
+
+         // Strategy 2. NOVA fn
+         if (path = NOVA.seachInObjectBy.key({
+            'obj': _yt_player,
+            'keys': 'getAvailablePlaybackRates',
+            // 'match_fn': val => (typeof val === 'function') && val,
+         })?.path) {
+            setAvailableRates(_yt_player, 0, path.split('.'));
+         }
 
          function setAvailableRates(path, idx, arr) {
             if (arr.length - 1 == idx) {

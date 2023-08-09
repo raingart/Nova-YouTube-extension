@@ -20,9 +20,11 @@ window.nova_plugins.push({
    section: 'player',
    _runtime: user_settings => {
 
+      const href = location.href.replace(/&amp;/g, '&'); // // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=1&amp;enablejsapi=1 - amp;
+
       // if (NOVA.queryURL.has('controls'))
-      if (['0', 'false'].includes(NOVA.queryURL.get('controls'))) {
-         NOVA.updateUrl(NOVA.queryURL.remove('controls')); // clear and update
+      if (['0', 'false'].includes(NOVA.queryURL.get('controls', href))) {
+         NOVA.updateUrl(NOVA.queryURL.remove('controls', href)); // clear and update
       }
 
    },

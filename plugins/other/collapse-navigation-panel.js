@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'collapse-navigation-panel',
-   title: 'Hide navigation panel',
+   title: 'Collapse navigation panel',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

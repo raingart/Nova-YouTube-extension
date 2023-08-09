@@ -19,6 +19,19 @@ window.nova_plugins.push({
    'title:ua': 'Переспрямувати вбудоване відео у спливаюче вікно',
    run_on_pages: 'embed, -mobile',
    section: 'player',
+   desc: 'if iframe width is less than 720p',
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:id': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:it': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
+   // 'desc:pl': '',
+   // 'desc:ua': '',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector

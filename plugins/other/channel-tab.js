@@ -35,6 +35,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
+      // alt3 - https://greasyfork.org/en/scripts/466003-e-youtube-channel-page-auto-click-videos-and-then-latest-may-2023
 
       // if (NOVA.currentPage == 'watch') {
       //    // mouse left click

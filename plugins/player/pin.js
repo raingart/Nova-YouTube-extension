@@ -38,6 +38,7 @@ window.nova_plugins.push({
       // alt1 - https://chrome.google.com/webstore/detail/aeilijiaejfdnbagnpannhdoaljpkbhe
       // alt2 - https://chrome.google.com/webstore/detail/mcodbccegmndmnbpbgkpdkoleoagjpgk
       // alt3 - https://greasyfork.org/en/scripts/444382-youtube-mini-player
+      // alt4 - https://greasyfork.org/en/scripts/472053-video-popout-and-no-scroll-on-click-timestamps
 
       if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
 
