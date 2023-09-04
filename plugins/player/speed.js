@@ -46,6 +46,7 @@ window.nova_plugins.push({
       // alt4 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
       // alt5 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
       // alt6 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
+      // alt7 - https://greasyfork.org/en/scripts/38575-youtube-advanced-speed-controller
 
       // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
@@ -65,11 +66,12 @@ window.nova_plugins.push({
             // Strategy 2
             video.addEventListener('ratechange', function () {
                // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
-               NOVA.bezelTrigger(this.playbackRate + 'x');
+               NOVA.triggerHUD(this.playbackRate + 'x');
 
                // slider update
                if (Object.keys(sliderContainer).length) {
                   sliderContainer.slider.value = this.playbackRate;
+                  sliderContainer.slider.title = `Speed (${this.playbackRate})`;
                   sliderContainer.sliderLabel.textContent = `Speed (${this.playbackRate})`;
                   sliderContainer.sliderCheckbox.checked = (this.playbackRate === 1) ? false : true;
                }
@@ -100,6 +102,7 @@ window.nova_plugins.push({
                   // alt - https://greasyfork.org/en/scripts/27091-youtube-speed-rememberer
                   if (user_settings['save-channel-state']) {
                      if (userRate = await NOVA.storage_obj_manager.getParam('speed')) {
+                        playerRate.set(userRate);
                         video.addEventListener('canplay', () => playerRate.set(userRate), { capture: true, once: true });
                      }
                   }
@@ -405,6 +408,29 @@ window.nova_plugins.push({
          //          </div>
          //       </div>`);
       }
+
+      // function insertSlider() {
+      //    // slider
+      //    const slider = document.createElement('input');
+      //    // slider.className = 'ytp-menuitem-slider';
+      //    slider.type = 'range';
+      //    slider.min = +user_settings.rate_step;
+      //    slider.max = Math.max(2, +user_settings.rate_default);
+      //    slider.step = +user_settings.rate_step;
+      //    slider.value = this.playbackRate;
+      //    slider.style.height = '100%';
+      //    // // sliderCheckbox.addEventListener('change', function () {
+      //    // //    this.value
+      //    // // });
+
+      //    const out = {};
+      //    out.slider = slider;
+
+      //    document.body.querySelector('#movie_player .ytp-right-controls')
+      //       ?.prepend(slider);
+
+      //    return out;
+      // }
 
       function expandAvailableRatesMenu() {
          if (typeof _yt_player !== 'object') {

@@ -17,6 +17,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed',
    section: 'player',
    // desc: '',
+   'data-conflict': 'embed-popup',
    _runtime: user_settings => {
 
       // embed if not iframe (missing tag forbidding full screen mode in iframe - [allowfullscreen="true"])

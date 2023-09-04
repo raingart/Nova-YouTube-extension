@@ -17,6 +17,7 @@ window.nova_plugins.push({
    'title:ua': 'Вимкнути режим сну відтворювача',
    run_on_pages: 'watch, -mobile',
    section: 'player',
+   // desc: 'popup appears when listening for a long time in the background ',
    // desc: 'prevent asking you to click "yes" to continue playing?',
    // desc: 'disable [Video paused] alert',
    // 'desc:zh': '防止[视频暂停]警报',

@@ -477,13 +477,14 @@ window.nova_plugins.push({
                /*--yt-spec-general-background-a: #181818;
                --yt-spec-general-background-b: #0f0f0f;
                --yt-spec-general-background-c: #030303;*/
-               background-color: var(--yt-spec-base-background);
+               background-color: var(--yt-spec-brand-background-primary);
+               background-color: var(--yt-spec-menu-background);
                background-color: var(--yt-spec-raised-background);
+               color: var(--yt-spec-text-primary);
             }
 
             .modal-content {
                font-size: 12px;
-               color: var(--yt-spec-text-primary);
             }`);
 
          // html

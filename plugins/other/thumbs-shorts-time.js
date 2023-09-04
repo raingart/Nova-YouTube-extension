@@ -21,9 +21,11 @@ window.nova_plugins.push({
    // run_on_pages: 'feed, channel, -mobile',
    // restart_on_location_change: true,
    section: 'other',
+   // desc: '',
+   'data-conflict': 'shorts_disable',
    _runtime: user_settings => {
 
-      if (user_settings['shorts_disable']) return; // conflict with plugin [thumbs-hide] option (shorts_disable). Attention! After shorts redirect
+      if (user_settings['shorts_disable']) return; // conflict with [thumbs-hide] plugin (shorts_disable) option. Attention! After shorts redirect
 
       // Strategy 1
       document.addEventListener('yt-action', evt => {

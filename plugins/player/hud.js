@@ -71,7 +71,7 @@ window.nova_plugins.push({
                            if (chapterData = chapterList[nextChapterIndex - 1]) {
                               const separator = ' • ';
                               const msg = chapterData.title + separator + chapterData.time;
-                              NOVA.bezelTrigger(msg);
+                              NOVA.triggerHUD(msg);
                            }
                         }
                      });

@@ -1,7 +1,7 @@
 window.nova_plugins.push({
    id: 'disable-video-cards',
    // title: 'Hide garbage: annotations, endcards etc',
-   title: 'Hide html garbage',
+   title: 'Hide HTML garbage',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

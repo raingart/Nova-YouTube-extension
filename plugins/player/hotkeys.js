@@ -53,7 +53,8 @@ window.nova_plugins.push({
    options: {
       hotkeys_disable_numpad: {
          _tagName: 'input',
-         label: 'Disable numpad hotkeys',
+         // label: 'Disable numpad hotkeys',
+         label: 'Disable numpad',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

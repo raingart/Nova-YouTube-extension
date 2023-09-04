@@ -5,6 +5,8 @@
 // https://www.youtube.com/watch?v=bJ9r8LMU9bQ - https://watannetwork.com/tools/blocked/#url=bJ9r8LMU9bQ
 // https://www.youtube.com/watch?v=6pX93dXfH9s - https://watannetwork.com/tools/blocked/#url=6pX93dXfH9s
 // https://www.youtube.com/watch?v=c8mJrbYdMWw - https://watannetwork.com/tools/blocked/#url=c8mJrbYdMWw
+// https://www.youtube.com/watch?v=Ea6JCPUfito - https://watannetwork.com/tools/blocked/#url=Ea6JCPUfito
+// https://www.youtube.com/watch?v=0HlYIx1LDmU - https://watannetwork.com/tools/blocked/#url=0HlYIx1LDmU
 
 window.nova_plugins.push({
    id: 'video-unblock-region',

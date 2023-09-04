@@ -17,6 +17,7 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'details',
    // desc: '',
+   'data-conflict': 'description-popup, comments-sidebar-position-exchange',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/452405-youtube-scrollable-right-side-description

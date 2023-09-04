@@ -1,3 +1,7 @@
+// for  test
+// https://www.youtube.com/watch?v=3eJZcpoSpKY
+// https://www.youtube.com/watch?v=pf9WOuzeWhw
+
 window.nova_plugins.push({
    id: 'sponsor-block',
    title: 'SponsorBlock',
@@ -29,37 +33,51 @@ window.nova_plugins.push({
          .then(video => {
             let segmentsList = [];
             let muteState;
+            let videoId; // share for console
 
             // reset chapterList
             // video.addEventListener('loadeddata', async () => segmentsList = await getSkipSegments(videoId) || []);
             video.addEventListener('loadeddata', init.bind(video));
 
             async function init() {
-               const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
-
+               // const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+               videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
                segmentsList = await getSkipSegments(videoId) || [];
+               // console.debug('segmentsList', segmentsList);
 
                if (user_settings['player-float-progress-bar'] && segmentsList.length) {
                   const SELECTOR = 'nova-player-float-progress-bar-chapters';
-                  let el;
+                  let chaptersEl;
+                  // wait chapters
                   await NOVA.waitUntil(() =>
-                     (el = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && el.length
+                     (chaptersEls = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && chaptersEls.length
                      , 1000);
-                  el.forEach(chapterEl => {
-                     const sec = NOVA.timeFormatTo.hmsToSec(chapterEl.getAttribute('time'));
+                  // alert(1)
+                  chaptersEls.forEach((chapterEl, idx) => {
+                     if (idx === chaptersEls.length - 1) return; // if last chapter
+
+                     const
+                        chapterStart = ~~NOVA.timeFormatTo.hmsToSec(chapterEl.getAttribute('time')),
+                        chapterNext = ~~NOVA.timeFormatTo.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
+
                      for (const [i, value] of segmentsList.entries()) {
                         const [start, end, category] = value;
-                        if (sec >= (~~start - 5) && sec <= (Math.ceil(end) + 5)) { // +5sec observational error
+
+                        // console.debug('chapter', start, end);
+                        // console.debug('chapterStart', chapterStart);
+                        // console.debug('chapterNext', chapterNext);
+
+                        if ((~~start <= chapterNext) && (~~end >= chapterStart)) {
                            chapterEl.style.title = category;
                            let color;
                            switch (category) {
-                              case 'sponsor': color = 'rgb(255,231,0,.3)'; break;
-                              case 'interaction': color = 'rgb(255,127,80,.3)'; break;
-                              case 'selfpromo': color = 'rgb(255,99,71,.3)'; break;
-                              case 'intro': color = 'rgb(255,165,0,.3)'; break;
-                              case 'outro': color = 'rgb(255,165,0,.3)'; break;
+                              case 'sponsor': color = '255, 231, 0'; break;
+                              case 'interaction': color = '255, 127, 80'; break;
+                              case 'selfpromo': color = '255, 99, 71'; break;
+                              case 'intro': color = '255, 165, 0'; break;
+                              case 'outro': color = '255, 165, 0'; break;
                            }
-                           chapterEl.style.background = color;
+                           chapterEl.style.background = `rgb(${color},.4`;
                         }
                      }
                   });
@@ -118,8 +136,8 @@ window.nova_plugins.push({
 
                function novaNotification(prefix = '') {
                   const msg = `${prefix} [${category}] • ${NOVA.timeFormatTo.HMS.digit(start)} - ${NOVA.timeFormatTo.HMS.digit(end)}`;
-                  console.info(msg);
-                  NOVA.bezelTrigger(msg); // trigger default indicator
+                  console.info(videoId, msg); // user log
+                  NOVA.triggerHUD(msg); // trigger default indicator
                }
 
             });

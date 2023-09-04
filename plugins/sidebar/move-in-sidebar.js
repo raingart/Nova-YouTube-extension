@@ -82,6 +82,8 @@ window.nova_plugins.push({
                         document.body.querySelector(`${SELECTOR_SECONDARY} #description #expand`)?.click();
                      });
                });
+
+            moveSidebar();
             break;
 
          // move conmments on the right
@@ -109,23 +111,27 @@ window.nova_plugins.push({
                   //       overflow-y: auto;
                   //    }`);
                });
+
+            moveSidebar();
             break;
       }
 
-      // move related on below the video
-      NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { destroy_if_url_changes: true })
-         .then(related => {
-            if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
+      function moveSidebar() {
+         // move related on below the video
+         NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { destroy_if_url_changes: true })
+            .then(related => {
+               if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
-            document.body.querySelector('#below')?.appendChild(related);
-         });
+               document.body.querySelector('#below')?.appendChild(related);
+            });
+      }
 
       function moveChannelInfo() {
          NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_if_url_changes: true })
             .then(secondary => {
                // with the subscribe button
                NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata #owner`, { destroy_if_url_changes: true })
-               // without the subscribe button
+                  // without the subscribe button
                   // NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata ytd-video-owner-renderer`, { destroy_if_url_changes: true })
                   .then(channelInfo => {
                      secondary.prepend(channelInfo);

@@ -84,7 +84,7 @@ window.nova_plugins.push({
          NOVA.waitSelector(tabSelectors, { destroy_if_url_changes: true })
             .then(() => {
                let tabActive;
-               const tabs = [...document.querySelectorAll(tabSelectors)];
+               const tabs = [...document.body.querySelectorAll(tabSelectors)];
                switch (user_settings.channel_default_tab) {
                   // https://www.youtube.com/@channel/search?query=11
                   // case 'search':; break;

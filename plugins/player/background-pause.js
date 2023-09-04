@@ -40,7 +40,10 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/463632-youtube-pause-background-videos
 
       // redirect for localStorage common storage space
-      if (location.hostname.includes('youtube-nocookie.com')) location.hostname = 'youtube.com';
+      if (location.hostname.includes('youtube-nocookie.com')) {
+         location.hostname = 'youtube.com';
+         return;
+      }
 
       // fix - Failed to read the 'localStorage' property from 'Window': Access is denied for this document. typeof
       if (typeof window === 'undefined') return;
@@ -71,25 +74,56 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('video')
          .then(video => {
-            // Strategy 2. Mark a playing
-            video.addEventListener('play', checkInstance); // gaps in initialization
-            video.addEventListener('playing', checkInstance); // more reliable way
-            // remove mark if video stop play
-            ['pause', /*'suspend',*/ 'ended'].forEach(evt => video.addEventListener(evt, removeStorage)); // BUG - "suspend" in google drive player
-            // remove mark if tab closed
-            window.addEventListener('beforeunload', removeStorage);
+            if (user_settings.pause_background_tab_autoplay_onfocus
+               && user_settings.pause_background_tab_autopause_unfocus
+            ) {
+               // fix https://github.com/raingart/Nova-YouTube-extension/issues/101
+               // empty
+            } else {
+               // Strategy 2. Mark a playing
+               video.addEventListener('play', checkInstance); // gaps in initialization
+               video.addEventListener('playing', checkInstance); // more reliable way
+               // remove mark if video stop play
+               ['pause', /*'suspend',*/ 'ended'].forEach(evt => video.addEventListener(evt, removeStorage)); // BUG - "suspend" in google drive player
+               // remove mark if tab closed
+               window.addEventListener('beforeunload', removeStorage);
 
-            // if tab unfocus apply pause
-            window.addEventListener('storage', store => {
-               if ((!document.hasFocus() || NOVA.currentPage == 'embed') // tab unfocus
-                  && store.key === storeName && store.storageArea === localStorage // checking store target
-                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
-                  && 'PLAYING' == NOVA.getPlayerState()
-               ) {
-                  // console.debug('video pause', localStorage[storeName]);
-                  video.pause();
+               // if tab unfocus apply pause
+               window.addEventListener('storage', store => {
+                  if ((!document.hasFocus() || NOVA.currentPage == 'embed') // tab unfocus
+                     && store.key === storeName && store.storageArea === localStorage // checking store target
+                     && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
+                     && 'PLAYING' == NOVA.getPlayerState()
+                  ) {
+                     // console.debug('video pause', localStorage[storeName]);
+                     video.pause();
+                  }
+               });
+
+               function checkInstance() {
+                  if (user_settings.pause_background_tab_autoplay_onfocus !== true
+                     && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID
+                  ) {
+                     // console.debug('event interception instanceID:', instanceID, movie_player.getVideoData().video_id || NOVA.queryURL.get('v'));
+                     video.pause();
+                  }
+                  else {
+                     localStorage.setItem(storeName, instanceID);
+                  }
                }
-            });
+            }
+
+            // document.addEventListener('visibilitychange', () => {
+            //    switch (document.visibilityState) {
+            //       case 'visible':
+            //          video.play();
+            //          break;
+
+            //       case 'hidden':
+            //          video.pause();
+            //          break;
+            //    }
+            // });
 
             // auto play on tab focus
             if (user_settings.pause_background_tab_autoplay_onfocus) {
@@ -120,23 +154,13 @@ window.nova_plugins.push({
             // pause on tab unfocuse
             if (user_settings.pause_background_tab_autopause_unfocus) {
                window.addEventListener('blur', () => {
-                  // await NOVA.delay(100); // dirty fix. document.visibilityState update AFTER blur
-                  if (document.visibilityState == 'hidden' && 'PLAYING' == NOVA.getPlayerState()) {
+                  // ddocument.visibilityState update afterwindow.blur event (https://github.com/raingart/Nova-YouTube-extension/issues/100)
+                  // if (document.visibilityState == 'hidden' && 'PLAYING' == NOVA.getPlayerState()) {
+                  if ('PLAYING' == NOVA.getPlayerState()) {
+                     // console.debug('pause video on lost focus');
                      video.pause();
                   }
                });
-            }
-
-            function checkInstance() {
-               if (user_settings.pause_background_tab_autoplay_onfocus !== true
-                  && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID
-               ) {
-                  // console.debug('event interception instanceID:', instanceID, movie_player.getVideoData().video_id || NOVA.queryURL.get('v'));
-                  video.pause();
-               }
-               else {
-                  localStorage.setItem(storeName, instanceID);
-               }
             }
 
          });

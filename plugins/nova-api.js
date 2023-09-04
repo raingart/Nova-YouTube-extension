@@ -19,7 +19,7 @@
    - aspectRatio.getAspectRatio
    - aspectRatio.calculateHeight
    - aspectRatio.calculateWidth
-   - bezelTrigger
+   - triggerHUD
    - getChapterList
    - strToArray
    - searchFilterHTML
@@ -381,16 +381,16 @@ const NOVA = {
    /**
     * @param  {obj/string} css
     * @param  {string*} selector
-    * @param  {boolean*} important
+    * @param  {boolean*} set_important
     * @return {void}
    */
    css: {
-      push(css = required(), selector, important) {
+      push(css = required(), selector, set_important) {
          // console.debug('css\n', ...arguments);
          if (typeof css === 'object') {
             if (!selector) return console.error('injectStyle > empty json-selector:', ...arguments);
 
-            // if (important) {
+            // if (set_important) {
             injectCss(selector + json2css(css));
             // } else {
             //    Object.assign(document.body.querySelector(selector).style, css);
@@ -400,7 +400,7 @@ const NOVA = {
                let css = '';
                Object.entries(obj)
                   .forEach(([key, value]) => {
-                     css += key + ':' + value + (important ? ' !important' : '') + ';';
+                     css += key + ':' + value + (set_important ? ' !important' : '') + ';';
                   });
                return `{ ${css} }`;
             }
@@ -739,32 +739,32 @@ const NOVA = {
     * @param  {string} text
     * @return {void}
    */
-   bezelTrigger(text) {
-      // console.debug('bezelTrigger', ...arguments);
+   triggerHUD(text) {
+      // console.debug('triggerHUD', ...arguments);
       if (!text) return;
       if (typeof this.fateBezel === 'number') clearTimeout(this.fateBezel); // reset hide
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
-      if (!bezelEl) return console.warn(`bezelTrigger ${text}=>${bezelEl}`);
+      if (!bezelEl) return console.warn(`triggerHUD ${text}=>${bezelEl}`);
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
-         BEZEL_CLASS_VALUE = 'ytp-text-root',
-         BEZEL_SELECTOR_TOGGLE = '.' + BEZEL_CLASS_VALUE; // for css
+         CLASS_VALUE = 'ytp-text-root',
+         SELECTOR = '.' + CLASS_VALUE; // for css
 
       if (!this.bezel_css_inited) {
          this.bezel_css_inited = true;
          this.css.push(
-            `${BEZEL_SELECTOR_TOGGLE} { display: block !important; }
-            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel-text-wrapper {
+            `${SELECTOR} { display: block !important; }
+            ${SELECTOR} .ytp-bezel-text-wrapper {
                pointer-events: none;
                z-index: 40 !important;
             }
-            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel-text { display: inline-block !important; }
-            ${BEZEL_SELECTOR_TOGGLE} .ytp-bezel { display: none !important; }`);
+            ${SELECTOR} .ytp-bezel-text { display: inline-block !important; }
+            ${SELECTOR} .ytp-bezel { display: none !important; }`);
       }
 
       bezelEl.textContent = text;
-      bezelContainer.classList.add(BEZEL_CLASS_VALUE);
+      bezelContainer.classList.add(CLASS_VALUE);
 
       let ms = 1200;
       if (text.endsWith('%') || text.endsWith('x')) {
@@ -772,7 +772,7 @@ const NOVA = {
       }
 
       this.fateBezel = setTimeout(() => {
-         bezelContainer.classList.remove(BEZEL_CLASS_VALUE);
+         bezelContainer.classList.remove(CLASS_VALUE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
       }, ms);
    },
@@ -1176,14 +1176,25 @@ const NOVA = {
             parts = str?.split(':'),
             t = 0;
          switch (parts?.length) {
-            case 2: t = (parts[0] * 60); break;
-            case 3: t = (parts[0] * 60 * 60) + (parts[1] * 60); break;
-            case 4: t = (parts[0] * 24 * 60 * 60) + (parts[1] * 60 * 60) + (parts[2] * 60); break;
+            case 2: t = (parts[0] * 60); break; // m:s
+            case 3: t = (parts[0] * 3600) + (parts[1] * 60); break; // h:m
+            case 4: t = (parts[0] * 86400) + (parts[1] * 3600) + (parts[2] * 60); break;
          }
          return t + +parts.pop();
       },
 
       HMS: {
+         parseTime(time_sec) {
+            const ts = Math.abs(+time_sec);
+            return {
+               d: ~~(ts / 86400),
+               h: ~~((ts % 86400) / 3600),
+               m: ~~((ts % 3600) / 60),
+               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
+               s: ~~(ts % 60),
+            };
+         },
+
          /**
           * @param  {int} time_sec
           * @return {string}
@@ -1201,13 +1212,7 @@ const NOVA = {
          //    return (days ? `${days}d ` : '') + t;
          // },
          digit(time_sec = required()) { // format out "h:mm:ss"
-            const
-               ts = Math.abs(+time_sec),
-               d = ~~(ts / 86400),
-               h = ~~((ts % 86400) / 3600),
-               m = ~~((ts % 3600) / 60),
-               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
-               s = ~~(ts % 60);
+            const { d, h, m, s } = this.parseTime(time_sec);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + ':' : '')
@@ -1227,13 +1232,7 @@ const NOVA = {
           * @return {string}
          */
          abbr(time_sec = required()) { // format out "999h00m00s"
-            const
-               ts = Math.abs(+time_sec),
-               d = ~~(ts / 86400),
-               h = ~~((ts % 86400) / 3600),
-               m = ~~((ts % 3600) / 60),
-               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
-               s = ~~(ts % 60);
+            const { d, h, m, s } = this.parseTime(time_sec);
 
             return (d ? `${d}d ` : '')
                + (h ? (d ? h.toString().padStart(2, '0') : h) + 'h' : '')

@@ -32,6 +32,7 @@ window.nova_plugins.push({
    // 'desc:de': '',
    // 'desc:pl': '',
    // 'desc:ua': '',
+   'data-conflict': 'player-fullscreen-mode',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector
@@ -46,6 +47,8 @@ window.nova_plugins.push({
 
       // fix conflict with [theater-mode] plugin (some options)
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') return;
+      // fix conflict with [player-fullscreen-mode]
+      if (user_settings['player-fullscreen-mode']) return;
 
       // get iframe size
       // alert(window.innerWidth)

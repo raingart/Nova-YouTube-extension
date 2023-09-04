@@ -60,10 +60,11 @@ const PopulateForm = {
    },
 
    attrDependencies() {
-      document.body.querySelectorAll('[data-dependent]')
+      const attributeName = 'data-dependent';
+      document.body.querySelectorAll(`[${attributeName}]`)
          .forEach(targetEl => {
-            // let dependentsList = targetEl.getAttribute('data-dependent').split(',').forEach(i => i.trim());
-            const rules = JSON.parse(targetEl.getAttribute('data-dependent').toString());
+            // let dependentsList = targetEl.getAttribute(attributeName).split(',').map(i => i.trim());
+            const rules = JSON.parse(targetEl.getAttribute(attributeName).toString());
             const handler = () => showOrHide(targetEl, rules);
             // document.getElementById(Object.keys(rules))?.addEventListener('change', handler);
             document.getElementsByName(Object.keys(rules))

@@ -848,6 +848,58 @@ window.nova_plugins.push({
                }, 1000); // 1sec
             }
 
+            if (user_settings.player_buttons_custom_items?.includes('range-speed')) {
+               // alt1 - https://greasyfork.org/en/scripts/38575-youtube-advanced-speed-controller
+               const
+                  speedSlider = document.createElement('input'),
+                  SELECTOR_RANGE_CLASS_NAME = 'nova-range-speed-input',
+                  SELECTOR_RANGE = '.' + SELECTOR_RANGE_CLASS_NAME;
+
+               NOVA.css.push(
+                  `${SELECTOR_RANGE}[type="range"] {
+                     height: 100%;
+                  }`);
+
+               // speedSlider.className = SELECTOR_RANGE_CLASS_NAME;
+               speedSlider.className = `${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_RANGE_CLASS_NAME}`;
+               speedSlider.title = 'Playback Rate';
+               speedSlider.type = 'range';
+               // speedSlider.type = 'number';
+               speedSlider.min = speedSlider.step = +user_settings.rate_step || .1;
+               // speedSlider.max = +user_settings.rate_default || 2;
+               speedSlider.max = user_settings.range_speed_unlimit ? +user_settings.rate_default : 2;
+               speedSlider.value = NOVA.videoElement.playbackRate;
+               updateTitleForSpeedSlider(NOVA.videoElement.playbackRate);
+
+               NOVA.videoElement.addEventListener('ratechange', function () {
+                  // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
+                  speedSlider.value = this.playbackRate;
+                  updateTitleForSpeedSlider(this.playbackRate);
+               });
+               // speedSlider.addEventListener('change', () => NOVA.videoElement.playbackRate = speedSlider.value);
+               // speedSlider.addEventListener('input', ({ target }) => playerRate(target.value));
+               speedSlider.addEventListener('change', ({ target }) => playerRate(target.value));
+               speedSlider.addEventListener('wheel', evt => {
+                  evt.preventDefault();
+                  const rate = NOVA.videoElement.playbackRate + (speedSlider.step * Math.sign(evt.wheelDelta));
+                  playerRate(rate);
+                  speedSlider.value = rate;
+               });
+               container.prepend(speedSlider);
+
+               function playerRate(rate) {
+                  // console.debug('rate', rate);
+                  if (!user_settings.range_speed_unlimit && rate > 2) return;
+                  NOVA.videoElement.playbackRate = (+rate).toFixed(2);
+                  updateTitleForSpeedSlider(rate);
+               }
+
+               function updateTitleForSpeedSlider(rate) {
+                  speedSlider.title = `Speed (${rate})`;
+                  speedSlider.setAttribute('tooltip', `Speed (${rate})`);
+               }
+            }
+
             if (user_settings.player_buttons_custom_items?.includes('toggle-speed')) {
                // alt1 - https://greasyfork.org/en/scripts/466690-youtube-quick-speed-interface
                // alt2 - https://greasyfork.org/en/scripts/30506-video-speed-buttons
@@ -1029,6 +1081,21 @@ window.nova_plugins.push({
                'label:de': 'qualität',
                'label:pl': 'jakość',
                'label:ua': 'якість',
+            },
+            {
+               label: 'range speed', value: 'range-speed',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
             },
             {
                label: 'toggle speed', value: 'toggle-speed',
@@ -1299,7 +1366,7 @@ window.nova_plugins.push({
       },
       player_buttons_custom_screenshot: {
          _tagName: 'select',
-         label: 'Default screenshot format',
+         label: 'Screenshot format',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -1345,6 +1412,24 @@ window.nova_plugins.push({
             },
          ],
          'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
+      },
+      range_speed_unlimit: {
+         _tagName: 'input',
+         label: 'Range speed unlimit',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         'data-dependent': { 'player_buttons_custom_items': ['range-speed'] },
       },
    }
 });

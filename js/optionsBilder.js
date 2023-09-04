@@ -104,6 +104,9 @@ const Opt = {
                      <div class="opt">
                         <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
                      </div>`;
+                  if (plugin.hasOwnProperty('data-conflict')) {
+                     li.querySelector('input').setAttribute('data-conflict', plugin['data-conflict']);
+                  }
 
                   if (plugin.options) {
                      li.append(
@@ -448,6 +451,7 @@ window.addEventListener('load', () => {
       if (settings && settings['user-api-key']) {
          document.body.querySelectorAll('.info b').forEach(el => el.remove());
       }
+      pluginConflictDisable();
    }, storageMethod);
 
    // search bar
@@ -479,6 +483,36 @@ window.addEventListener('load', () => {
       document.body.querySelector('a[href$="issues/new"]')
          .addEventListener('click', ({ target }) => {
             target.href += '?body=' + encodeURIComponent(browser.runtime.getManifest().version + ' | ' + navigator.userAgent);
+         });
+   }
+
+   // 'description-expand', 'description-popup', 'comments-sidebar-position-exchange',
+   // 'video-date-format', 'description-popup'
+   // 'watched_disable' 'thumbnails-watched'
+   // 'thumbs-shorts-duration', 'shorts_disable'
+   // 'video-autopause', 'shorts_disable'
+   // 'player-control-autohide', 'player-control-below'
+   // 'theater-mode', 'player-fullscreen-mode' 'embed-popup'
+
+   function pluginConflictDisable() {
+      const attributeName = 'data-conflict';
+      document.body.querySelectorAll(`[${attributeName}]`)
+         .forEach(targetEl => {
+            // console.debug('targetEl', targetEl);
+            const rules = targetEl.getAttribute(attributeName).split(',').map(i => i.trim());
+            // const rules = JSON.parse(targetEl.getAttribute(attributeName).toString());
+            targetEl.addEventListener('change', () => {
+               for (const parrentName of rules) {
+                  // console.debug('parrentName', parrentName);
+                  document.getElementsByName(parrentName)
+                     .forEach(subtargetEl => {
+                        subtargetEl.disabled = targetEl.checked;
+                        if (subtargetEl.disabled) subtargetEl.checked = false;
+                        subtargetEl.title = subtargetEl.disabled ? `conflict wich ${parrentName}` : '';
+                        // console.debug('', targetEl, targetEl.checked, subtargetEl.checked);
+                     });
+               }
+            });
          });
    }
 

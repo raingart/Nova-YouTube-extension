@@ -22,6 +22,7 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'details',
    opt_api_key_warn: true,
+   'data-conflict': 'description-popup',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/424068-youtube-exact-upload

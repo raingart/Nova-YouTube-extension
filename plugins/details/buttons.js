@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=J07l-Qe9xgs - thanks button
+
 window.nova_plugins.push({
    id: 'details-buttons',
    title: 'Buttons',
@@ -100,13 +103,13 @@ window.nova_plugins.push({
          }
          // by svg To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
          if (user_settings.details_buttons_hide.includes('share')) {
-            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M15,5.63L20.66,12L15"])`));
+            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M15 5.63 20.66"])`));
          }
          if (user_settings.details_buttons_hide.includes('thanks')) {
-            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M16.5,3C19.02,3,21,5.19,21"])`));
+            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M11 17h2v-1h1c.55"])`));
          }
          if (user_settings.details_buttons_hide.includes('clip')) {
-            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M8,7c0,0.55-0.45"])`));
+            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M8 7c0 .55-.45"])`));
          }
          if (user_settings.details_buttons_hide.includes('save')) {
             stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d$="M2,16h8v-1H2V16z"])`));

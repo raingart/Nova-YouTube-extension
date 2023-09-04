@@ -1,5 +1,8 @@
 // for test
 // https://www.youtube.com/watch?v=OV27taeR4LA - (4:3)
+// https://www.youtube.com/watch?v=KOCZaxzZE34 - (4:3)
+// https://www.youtube.com/watch?v=z-2w7eAL-98 - (4:3)
+// https://www.youtube.com/watch?v=TaQwW5eQZeY - (4:3)
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
 
 window.nova_plugins.push({

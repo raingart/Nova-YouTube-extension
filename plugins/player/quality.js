@@ -2,6 +2,7 @@
 // for testing
 // https://www.youtube.com/watch?v=LhKT9NTH9HA - don't have 480p
 // https://www.youtube.com/watch?v=FZovbrEP53o - don't have 480p
+// https://www.youtube.com/watch?v=Qc6FJWapiJk - don't have 240p
 // https://www.youtube.com/watch?v=E480DjY6ve8 - only 360p
 
 window.nova_plugins.push({
@@ -101,8 +102,22 @@ window.nova_plugins.push({
             const maxQualityIdx = availableQualityLevels.findIndex(i => qualityFormatListWidth[i] <= (maxWidth * 1.3));
             availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
-            const maxAvailableQualityIdx = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
-            const newQuality = availableQualityLevels[maxAvailableQualityIdx];
+            // const maxAvailableQualityIdx = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
+            const availableQualityIdx = function () {
+               let i = availableQualityLevels.indexOf(selectedQuality);
+               if (i === -1) {
+                  const
+                     availableQuality = Object.keys(qualityFormatListWidth)
+                        .filter(v => availableQualityLevels.includes(v) || (v == selectedQuality)), // filter same item + selectedQuality
+                     // nearestQualityIdx = availableQuality.findIndex(q => q === selectedQuality); // hight quality item
+                     nearestQualityIdx = availableQuality.findIndex(q => q === selectedQuality) - 1; // lower quality item
+
+                  i = availableQualityLevels[nearestQualityIdx] ? nearestQualityIdx : 0;
+               }
+               return i;
+
+            }();
+            const newQuality = availableQualityLevels[availableQualityIdx];
 
             // if (!newQuality || movie_player.getPlaybackQuality() == selectedQuality) {
             //    return console.debug('skip set quality');

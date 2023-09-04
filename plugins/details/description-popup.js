@@ -25,7 +25,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer-v-43
+      // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer
       // alt2 - https://greasyfork.org/en/scripts/446269-youtube-sticky-show-less-button
       // alt3 - https://chrome.google.com/webstore/detail/nojdofjkkahhdklccleaaeinfklmlaga
       // alt4 - https://greasyfork.org/en/scripts/428651-tabview-youtube
@@ -72,7 +72,10 @@ window.nova_plugins.push({
                   overflow-y: auto;
                   max-height: 88vh;
                   max-width: 55%;
-                  background-color: #222;
+                  background-color: var(--yt-spec-brand-background-primary);
+                  background-color: var(--yt-spec-menu-background);
+                  background-color: var(--yt-spec-raised-background);
+                  color: var(--yt-spec-text-primary);;
                   border: 1px solid #333;
                   border-radius: 0 !important;
                }

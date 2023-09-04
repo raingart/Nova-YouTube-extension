@@ -125,7 +125,7 @@ window.nova_plugins.push({
             // if (NOVA.currentPage == 'channel' && NOVA.channelTab != 'video') return;
 
             // Strategy 1. API
-            // // document.querySelector('ytd-grid-video-renderer').data - feed page
+            // // document.body.querySelector('ytd-grid-video-renderer').data - feed page
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
             //       if ((to = thumb.data?.thumbnailOverlays).length) {
@@ -281,7 +281,7 @@ window.nova_plugins.push({
          // alt2 - https://greasyfork.org/en/scripts/424945-youtube-watched-subscription-hider
          watched() {
             if (!user_settings.watched_disable) return;
-            // conflict with plugin [thumbnails-watched]
+            // conflict with [thumbnails-watched] plugin
             if (!user_settings['thumbnails-watched']) return;
 
             const PERCENT_COMPLETE = user_settings.watched_disable_percent_complete || 90;

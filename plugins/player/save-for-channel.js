@@ -1,7 +1,7 @@
 window.nova_plugins.push({
    id: 'save-channel-state',
    // title: 'Save for specific channel',
-   title: 'Add button Save for specific channel',
+   title: 'Add button "Save state for specific channel"',
    'title:zh': '특정 채널에 저장',
    'title:ja': '特定のチャンネル用に保存',
    'title:ko': '특정 채널에 저장',

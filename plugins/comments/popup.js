@@ -18,7 +18,7 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer-v-43
+      // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer
       // alt2 - https://greasyfork.org/en/scripts/458531-move-youtube-comments-to-sidebar
 
       if (user_settings['comments_visibility_mode'] == 'disable') return; // conflict with plugin [comments-visibility]
@@ -74,7 +74,10 @@ window.nova_plugins.push({
                ${COMMENTS_SELECTOR} {
                   ${(user_settings.comments_popup_width === 100) ? 'margin: 0 1%;' : ''}
                   padding: 0 15px;
-                  background-color: #222;
+                  background-color: var(--yt-spec-brand-background-primary);
+                  background-color: var(--yt-spec-menu-background);
+                  background-color: var(--yt-spec-raised-background);
+                  color: var(--yt-spec-text-primary);;
                   border: 1px solid #333;
                   max-width: ${user_settings.comments_popup_width || 40}%;
                }
@@ -131,6 +134,10 @@ window.nova_plugins.push({
                }
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-track:hover {
                   background: #666;
+               }
+               /* fixs */
+               ytd-comments-header-renderer {
+                  margin: 10px 0 !important;
                }`);
 
             // hide add comment textarea
@@ -146,16 +153,8 @@ window.nova_plugins.push({
                      display: none;
                   }
                   /* fixs */
-                  ytd-comments-header-renderer {
-                     height: 0;
-                     margin-top: 10px;
-                  }`);
-            }
-            else {
-               NOVA.css.push(
-                  `/* fixs */
-                  ytd-comments-header-renderer {
-                     margin: 10px 0;
+                  ytd-comments-header-renderer #title {
+                     margin: 0 !important;
                   }`);
             }
          });

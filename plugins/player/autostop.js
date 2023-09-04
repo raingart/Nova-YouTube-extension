@@ -38,7 +38,7 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
       // alt2 - https://chrome.google.com/webstore/detail/afgfpcfjdgakemlmlgadojdfnejkpegd
 
-      // if (user_settings['video-autopause']) return; // conflict with plugin [video-autopause]. This plugin has a higher priority. that's why it's disabled/commented
+      // if (user_settings['video-autopause']) return; // conflict with [video-autopause] plugin. This plugin has a higher priority. that's why it's disabled/commented
 
       if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
       // fix bug in google drive

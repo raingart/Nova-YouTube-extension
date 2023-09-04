@@ -104,6 +104,14 @@ window.nova_plugins.push({
                      margin-top: ${height} !important;
                   }
 
+                  /* fix for rounded player (without login) */
+                  #ytd-player {
+                     overflow: visible !important;
+                  }
+                  /*#movie_player {
+                     background-color: #0f0f0f;
+                  }*/
+
                   /* fix the video moved outside the player when playback unstarted/ended */
                   /*${SELECTOR_CONTAINER} .unstarted-mode video,
                   ${SELECTOR_CONTAINER} .ended-mode video {

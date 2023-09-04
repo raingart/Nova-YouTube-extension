@@ -221,7 +221,7 @@ function registerMenuCommand() {
          rdr.addEventListener('load', function () {
             try {
                GM_setValue(configStoreName, JSON.parse(rdr.result));
-               alert('Settings imported');
+               alert('Settings imported successfully!');
                location.reload();
             }
             catch (err) {

@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/@Azurestar/videos
+
 window.nova_plugins.push({
    id: 'rss-link',
    title: 'Add RSS feed link',

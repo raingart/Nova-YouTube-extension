@@ -30,9 +30,10 @@ window.nova_plugins.push({
    'desc:de': 'Bewegen Sie den Mauszeiger darüber, um es anzuzeigen',
    'desc:pl': 'Najedź, aby wyświetlić',
    'desc:ua': 'Наведіть мишкою щоб показати',
+   'data-conflict': 'player-control-below',
    _runtime: user_settings => {
 
-      if (user_settings['player-control-below']) return; // conflict with plugin [player-control-below]
+      if (user_settings['player-control-below']) return; // conflict with [player-control-below]plugin
 
       // alt1 - https://greasyfork.org/en/scripts/435487-youtube-always-hoverable-progressbar
       // alt2 - https://greasyfork.org/en/scripts/446045-youtube-hide-controls-until-hover
@@ -45,13 +46,17 @@ window.nova_plugins.push({
             selectorGradientHide = '#movie_player:not(:hover) .ytp-gradient-bottom';
 
             // fixControlFreeze on hover
-            elementOnHoverChangeState({
-               'element': movie_player,
-               'callback': function (hovered) {
-                  if (hovered) this.mouseMoveIntervalId = fixControlFreeze();
-                  else clearInterval(this.mouseMoveIntervalId);
-               },
-            });
+            NOVA.waitSelector('#movie_player')
+               .then(movie_player => {
+                  triggerOnHoverElement({
+                     'element': movie_player,
+                     'callback': function (hovered) {
+                        if (hovered) this.mouseMoveIntervalId = fixControlFreeze();
+                        else clearInterval(this.mouseMoveIntervalId);
+                     },
+                  });
+               });
+
             break;
 
          // case 'control':
@@ -82,14 +87,14 @@ window.nova_plugins.push({
          }`);
 
 
-      function elementOnHoverChangeState({ element = required(), callback = required() }) {
-         // console.debug('elementOnHoverChangeState', ...arguments);
-         if (!(element instanceof HTMLElement)) return console.error('elementOnHoverChangeState:', typeof element);
-         if (typeof callback !== 'function') return console.error('elementOnHoverChangeState:', typeof callback);
+      function triggerOnHoverElement({ element = required(), callback = required() }) {
+         // console.debug('triggerOnHoverElement', ...arguments);
+         if (!(element instanceof HTMLElement)) return console.error('triggerOnHoverElement:', typeof element);
+         if (typeof callback !== 'function') return console.error('triggerOnHoverElement:', typeof callback);
 
          const isHover = e => e.parentElement.querySelector(':hover') === e;
          document.addEventListener('mousemove', function checkHover() {
-            const hovered = isHover(movie_player);
+            const hovered = isHover(element);
             if (hovered !== checkHover.hovered) {
                // console.log(hovered ? 'hovered' : 'not hovered');
                checkHover.hovered = hovered;
@@ -98,9 +103,9 @@ window.nova_plugins.push({
          });
       }
 
-      // moveMousePeriodic
-      // this.mouseMoveIntervalId = fixControlFreeze()
-      // a copy of the function is also in plugin [player-control-below]
+      // // moveMousePeriodic
+      // // this.mouseMoveIntervalId = fixControlFreeze()
+      // // a copy of the function is also in plugin [player-control-below]
       function fixControlFreeze(ms = 2000) {
          // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset interval
          // const moveMouse = new Event('mousemove');

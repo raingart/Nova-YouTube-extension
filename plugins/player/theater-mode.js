@@ -16,6 +16,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
+   // 'data-conflict': 'player-fullscreen-mode, embed-popup',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/10523-youtube-always-theater-mode
@@ -43,8 +44,8 @@ window.nova_plugins.push({
 
       if (user_settings.player_full_viewport_mode == '') return; // for optimization
 
-      // fix conflict with [player-fullscreen-mode] and [embed-popup] plugins
-      if ((user_settings['player-fullscreen-mode'] || user_settings['embed-popup'])
+      // fix conflict with [player-fullscreen-mode] plugin
+      if (user_settings['player-fullscreen-mode']
          && !user_settings.player_fullscreen_mode_embed
          && user_settings.player_full_viewport_mode != 'cinema_mode'
       ) {
@@ -55,7 +56,8 @@ window.nova_plugins.push({
          .then(movie_player => {
             // movie_player.addEventListener('SIZE_CLICKED', () => console.debug('SIZE_CLICKED'));
             const
-               PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-wide-container', // fix for "player-pin-scroll" plugin
+               PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #ytd-player', // fix for "player-pin-scroll" plugin
+               // PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-wide-container', // fix for "player-pin-scroll" plugin
                // PLAYER_CONTAINER_SELECTOR = 'ytd-watch-flexy[theater]:not([fullscreen]) #player-container',
                // fix for "player-pin-scroll" plugin
                PINNED_SELECTOR = '.nova-player-pin', // fix for "player-pin-scroll" plugin
