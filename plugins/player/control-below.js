@@ -32,7 +32,8 @@ window.nova_plugins.push({
 
       // alt1 - https://chrome.google.com/webstore/detail/chpodcedholiggcllnmmjlnghllddgmj
       // alt2 - https://greasyfork.org/en/scripts/469704-youtube-player-controls-below-video
-      // alt2 - https://greasyfork.org/en/scripts/976-youtube-right-side-description
+      // alt3 - https://greasyfork.org/en/scripts/976-youtube-right-side-description
+      // alt4 - https://greasyfork.org/en/scripts/474286-always-show-the-control-bar-below-the-video
 
       // if (['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)) return; // conflict with plugin [theater-mode]
       // if (user_settings['player-float-progress-bar']) return; // conflict with plugin [player-float-progress-bar]

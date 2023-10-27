@@ -55,7 +55,7 @@ window.nova_plugins.push({
       // alt2 - https://chrome.google.com/webstore/detail/oggiagogblgafoilijjdhcmflgekfmja
       // alt3 - https://greasyfork.org/en/scripts/427173-maximum-audio-output-for-youtube
 
-      NOVA.waitSelector('video')
+      NOVA.waitSelector('#movie_player video')
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {
@@ -190,6 +190,7 @@ window.nova_plugins.push({
             };
 
             try {
+               // https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API/Using
                localStorage['yt-player-volume'] = JSON.stringify(
                   Object.assign({ expiration: Date.now() + 2592e6 }, storageData)
                );

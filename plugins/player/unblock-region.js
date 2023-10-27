@@ -55,7 +55,7 @@ window.nova_plugins.push({
       //             document.location.hostname = 'raingart.github.io';
       //             location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
       //             if (confirm('Nova [video-unblock-region]\nFound an embedded video that is not available in your region, open a mirror with it in a new tab?')) {
-      //                redirect(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch?v=` + movie_player.getVideoData().video_id);
+      //                redirect(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch?v=` + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;));
       //             }
       //          });
       //       break;
@@ -75,7 +75,7 @@ window.nova_plugins.push({
 
       function redirect(new_tab_url) {
          if (new_tab_url) {
-            window.open(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}${location.port ? ':' + location.port : ''}/watch?v=` + movie_player.getVideoData().video_id);
+            window.open(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}${location.port ? ':' + location.port : ''}/watch?v=` + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id));
          }
          else {
             location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
@@ -138,6 +138,8 @@ window.nova_plugins.push({
             { label: 'clipzag.com', value: 'clipzag.com' },
             { label: 'piped.video', value: 'piped.video' },
             { label: 'yewtu.be', value: 'yewtu.be' },
+            { label: 'nsfwyoutube.com', value: 'nsfwyoutube.com' },
+            { label: 'yout-ube.com', value: 'yout-ube.com' },
             // { label: 'piped.kavin.rocks', value: 'piped.kavin.rocks' },
             // is shut down
             // { label: 'tubeunblock.com', value: 'tubeunblock.com' },

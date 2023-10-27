@@ -301,6 +301,11 @@ window.nova_plugins.push({
                      // ex: https://www.youtube.com/watch?v=FZovbrEP53o
 
                      canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
+                     // canvas.toBlob(blob => {
+                     //    container.href = URL.createObjectURL(blob);
+                     //    // copy to clipboard
+                     //    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                     // });
                      // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
                   } catch (error) {
                      // alert("The video is protected. Can't take screenshot due to security policy");
@@ -393,7 +398,7 @@ window.nova_plugins.push({
 
                   // Strategy 2 (fetch)
                   const
-                     videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v'),
+                     videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id,
                      thumbsSizesTemplate = [
                         // Warn! "maxresdefault" is not available everywhere. etc:
                         // https://i.ytimg.com/vi_webp/<VIDEO_ID>/maxresdefault.webp
@@ -850,6 +855,7 @@ window.nova_plugins.push({
 
             if (user_settings.player_buttons_custom_items?.includes('range-speed')) {
                // alt1 - https://greasyfork.org/en/scripts/38575-youtube-advanced-speed-controller
+               // alt2 - https://greasyfork.org/en/scripts/475864-youtube-playback-speed-buttons
                const
                   speedSlider = document.createElement('input'),
                   SELECTOR_RANGE_CLASS_NAME = 'nova-range-speed-input',
@@ -968,6 +974,7 @@ window.nova_plugins.push({
 
                   // saveInSession(level = required()) {
                   //    try {
+                  //       // https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API/Using
                   //       sessionStorage['yt-player-playback-rate'] = JSON.stringify({
                   //          creation: Date.now(), data: level.toString(),
                   //       })

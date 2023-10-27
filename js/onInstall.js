@@ -61,6 +61,7 @@ browser.runtime.onInstalled.addListener(details => {
                   'shorts_thumbnails_time': 'shorts-thumbnails-time',
                   'comments-sidebar-position-exchange': 'move-in-sidebar',
                   'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
+                  'shorts_disable_min_duration': 'thumbs_min_duration',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

@@ -24,22 +24,28 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 console.debug(`current ${configStoreName}:`, user_settings);
 
 // updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+const keyRenameTemplate = {
+   // 'oldKey': 'newKey',
+   'shorts_disable_min_duration': 'thumbs_min_duration',
+}
+for (const oldKey in user_settings) {
+   if (newKey = keyRenameTemplate[oldKey]) {
+      console.log(oldKey, '=>', newKey);
+      delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+   }
+   GM_setValue(configStoreName, user_settings);
+}
 
 registerMenuCommand();
 
 // is configPage
 if (location.hostname === new URL(configPage).hostname) setupConfigPage();
 else {
+   // Disabled the script if iframe in not "embed"
+   if ((window.self !== window.top) && !location.pathname.startsWith('/embed')) {
+      return console.warn('iframe skiped:', location.pathname);
+   }
+
    if (!user_settings?.disable_setting_button) insertSettingButton();
 
    // is user_settings empty

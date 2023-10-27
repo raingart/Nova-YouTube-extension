@@ -45,6 +45,7 @@ window.nova_plugins.push({
          ]
             .includes(evt.detail?.actionName)
          ) {
+            // console.log(evt.detail?.actionName); // flltered
             switch (NOVA.currentPage) {
                case 'home':
                   thumbRemove.live();
@@ -92,7 +93,11 @@ window.nova_plugins.push({
       });
 
       if (user_settings.shorts_disable) {
-         NOVA.css.push(`#content > ytd-rich-shelf-renderer { display: none; }`);
+         NOVA.css.push(
+            // #content > ytd-rich-shelf-renderer,
+            `#contents > ytd-reel-shelf-renderer {
+               display: none;
+            }`);
       }
 
       const thumbRemove = {
@@ -103,23 +108,23 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'shorts') return;
 
             document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
-               .forEach(el => el.closest(thumbsSelectors)?.remove());
+               // .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
-            // .forEach(el => {
-            //    if (thumb = el.closest(thumbsSelectors)) {
-            //       // thumb.remove();
-            //       // thumb.style.display = 'none';
+            .forEach(el => {
+               if (thumb = el.closest(thumbsSelectors)) {
+                  // thumb.remove();
+                  // thumb.style.display = 'none';
 
-            //       // console.debug('#short:', thumb);
-            //       thumb.style.border = '2px solid orange'; // mark for test
-            //    }
-            // });
+                  // console.debug('#short:', thumb);
+                  thumb.style.border = '2px solid orange'; // mark for test
+               }
+            });
          },
 
          durationLimits() {
             // alt - https://greasyfork.org/en/scripts/466576-hide-longs-on-youtube
-            if (!+user_settings.shorts_disable_min_duration) return;
-            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.shorts_disable_min_duration)) return; // for input[type=text] (digit time)
+            if (!+user_settings.thumbs_min_duration) return;
+            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.thumbs_min_duration)) return; // for input[type=text] (digit time)
 
             // exclude "" tab in channel
             // if (NOVA.currentPage == 'channel' && NOVA.channelTab != 'video') return;
@@ -129,7 +134,7 @@ window.nova_plugins.push({
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
             //       if ((to = thumb.data?.thumbnailOverlays).length) {
-            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.shorts_disable_min_duration || 60)
+            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_min_duration || 60)
             //          ) {
             //             // thumb.remove();
             //             // // for test
@@ -150,7 +155,7 @@ window.nova_plugins.push({
                         // console.debug('>', NOVA.timeFormatTo.hmsToSec(el.textContent.trim()));
                         if ((thumb = el.closest(thumbsSelectors))
                            && (time = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
-                           && time < (+user_settings.shorts_disable_min_duration || 60)
+                           && time < (+user_settings.thumbs_min_duration || 60)
                         ) {
                            thumb.remove();
                            // thumb.style.display = 'none';
@@ -204,19 +209,32 @@ window.nova_plugins.push({
             // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
+            // textarea to array
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_exception);
+
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
-               .forEach(el => el.closest(thumbsSelectors)?.remove());
-            // for test
-            // .forEach(el => {
-            //    if (thumb = el.closest(thumbsSelectors)) {
-            //       // thumb.remove();
-            //       // thumb.style.display = 'none';
+               // .forEach(el => el.closest(thumbsSelectors)?.remove());
+               // for test
+               .forEach(el => {
+                  if (thumb = el.closest(thumbsSelectors)) {
+                     // filter channel
+                     if (keywords?.includes(thumb.querySelector('#channel-name a')?.textContent.trim().toLowerCase())) {
+                        // fix for [search-filter] plugin
+                        if (user_settings['search-filter']) {
+                           thumb.style.display = 'block'; // unhide after [search-filter] plugin
+                        }
+                        // thumb.style.border = '2px solid dodgerblue'; // mark for test
+                        return;
+                     }
 
-            //       console.debug('live now:', thumb);
-            //       thumb.style.border = '2px solid orange'; // mark for test
-            //    }
-            // });
+                     thumb.remove();
+                     // thumb.style.display = 'none';
+
+                     // console.debug('live now:', thumb);
+                     // thumb.style.border = '2px solid orange'; // mark for test
+                  }
+               });
          },
 
          streamed() {
@@ -234,9 +252,7 @@ window.nova_plugins.push({
                      && (thumb = el.closest(thumbsSelectors))
                   ) {
                      // filter channel
-                     if (keywords.length
-                        && keywords.includes(el.querySelector('#channel-name a')?.textContent.trim().toLowerCase())
-                     ) {
+                     if (keywords?.includes(thumb.querySelector('#channel-name a')?.textContent.trim().toLowerCase())) {
                         // fix for [search-filter] plugin
                         if (user_settings['search-filter']) {
                            thumb.style.display = 'block'; // unhide after [search-filter] plugin
@@ -345,7 +361,7 @@ window.nova_plugins.push({
          // title: '',
          // 'data-dependent': { 'thumbs-shorts-duration': '!true' },
       },
-      shorts_disable_min_duration: {
+      thumbs_min_duration: {
          _tagName: 'input',
          label: 'Min duration in sec (for regular video)',
          'label:zh': '最短持续时间（以秒为单位）',
@@ -427,25 +443,7 @@ window.nova_plugins.push({
          'title:pl': 'Teraz wietrzenie',
          'title:ua': 'Зараз в ефірі',
       },
-      streamed_disable: {
-         _tagName: 'input',
-         label: 'Hide finished streams',
-         'label:zh': '隐藏完成的流',
-         'label:ja': '終了したストリームを非表示にする',
-         'label:ko': '완료된 스트림 숨기기',
-         'label:id': 'Sembunyikan aliran yang sudah selesai',
-         'label:es': 'Ocultar flujos terminados',
-         'label:pt': 'Ocultar streams concluídos',
-         'label:fr': 'Masquer les flux terminés',
-         'label:it': 'Nascondi i flussi finiti',
-         // 'label:tr': 'Bitmiş akışları gizle',
-         'label:de': 'Fertige Streams ausblenden',
-         'label:pl': 'Ukryj po streamie',
-         'label:ua': 'cховати завершені транcляції',
-         type: 'checkbox',
-         //title: '',
-         'data-dependent': { 'live_disable': true },
-      },
+      // streamed_disable_channel_exception: {
       streamed_disable_channel_exception: {
          _tagName: 'textarea',
          label: 'Сhannel exception',
@@ -475,7 +473,26 @@ window.nova_plugins.push({
          'title:pl': 'separator: "," lub ";" lub "now linia"',
          'title:ua': 'розділювач: "," або ";" або "новий рядок"',
          placeholder: 'channel1\nchannel2',
-         'data-dependent': { 'streamed_disable': true },
+         'data-dependent': { 'live_disable': true },
+      },
+      streamed_disable: {
+         _tagName: 'input',
+         label: 'Hide finished streams',
+         'label:zh': '隐藏完成的流',
+         'label:ja': '終了したストリームを非表示にする',
+         'label:ko': '완료된 스트림 숨기기',
+         'label:id': 'Sembunyikan aliran yang sudah selesai',
+         'label:es': 'Ocultar flujos terminados',
+         'label:pt': 'Ocultar streams concluídos',
+         'label:fr': 'Masquer les flux terminés',
+         'label:it': 'Nascondi i flussi finiti',
+         // 'label:tr': 'Bitmiş akışları gizle',
+         'label:de': 'Fertige Streams ausblenden',
+         'label:pl': 'Ukryj po streamie',
+         'label:ua': 'cховати завершені транcляції',
+         type: 'checkbox',
+         //title: '',
+         'data-dependent': { 'live_disable': true },
       },
       mix_disable: {
          _tagName: 'input',

@@ -43,16 +43,19 @@ window.nova_plugins.push({
       if (NOVA.currentPage == 'embed' && ['0', 'false'].includes(NOVA.queryURL.get('controls'))) return;
 
       const
+         SELECTOR_CONTAINER = '#movie_player.ytp-autohide',
          SELECTOR_ID = 'nova-player-float-progress-bar', // Do not forget patch plugin [player-control-autohide]
          SELECTOR = '#' + SELECTOR_ID,
          CHAPTERS_MARK_WIDTH_PX = '2px';
 
-      NOVA.waitSelector('#movie_player.ytp-autohide video')
+      NOVA.waitSelector(`${SELECTOR_CONTAINER} video`)
          .then(video => {
             const
-               container = insertFloatBar(
-                  Math.max(NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59)
-                  + 1),
+               container = insertFloatBar({
+                  'init_container': movie_player,
+                  'z_index': Math.max(NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59)
+                     + 1
+               }),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
 
@@ -131,9 +134,13 @@ window.nova_plugins.push({
 
          });
 
-      function insertFloatBar(z_index = 60) {
+      function insertFloatBar({ init_container = movie_player, z_index = 60 }) {
+         if (!(init_container instanceof HTMLElement)) {
+            return console.error('vid not HTMLElement:', init_container);
+         }
+
          return document.getElementById(SELECTOR_ID) || (function () {
-            movie_player.insertAdjacentHTML('beforeend',
+            init_container.insertAdjacentHTML('beforeend',
                `<div id="${SELECTOR_ID}" class="">
                   <div class="container">
                      <div id="${SELECTOR_ID}-buffer" class="ytp-load-progress"></div>
@@ -165,7 +172,7 @@ window.nova_plugins.push({
                }
 
                /*.ytp-chrome-bottom[hidden],*/
-               #movie_player.ytp-autohide ${SELECTOR} {
+               ${SELECTOR_CONTAINER} ${SELECTOR} {
                   visibility: visible;
                }
 
@@ -174,7 +181,7 @@ window.nova_plugins.push({
                   margin: 0 15px;
                }*/
 
-               #movie_player.ytp-autohide ${SELECTOR}.transition [id|=${SELECTOR_ID}] {
+               ${SELECTOR_CONTAINER} ${SELECTOR}.transition [id|=${SELECTOR_ID}] {
                   transition: transform .2s linear;
                }
 
@@ -301,7 +308,7 @@ window.nova_plugins.push({
             // let segmentsList = [];
             // if (user_settings['sponsor-block']) {
             //    const CACHE_PREFIX = 'nova-videos-sponsor-block:';
-            //    const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+            //    const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
             //    if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
             //       segmentsList = JSON.parse(storage);
             //    }

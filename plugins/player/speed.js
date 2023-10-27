@@ -47,6 +47,7 @@ window.nova_plugins.push({
       // alt5 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
       // alt6 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
       // alt7 - https://greasyfork.org/en/scripts/38575-youtube-advanced-speed-controller
+      // alt8 - https://greasyfork.org/en/scripts/470633-ytspeed
 
       // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
@@ -271,6 +272,7 @@ window.nova_plugins.push({
 
          saveInSession(level = required()) {
             try {
+               // https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API/Using
                sessionStorage['yt-player-playback-rate'] = JSON.stringify({
                   creation: Date.now(), data: level.toString(),
                })
@@ -285,6 +287,7 @@ window.nova_plugins.push({
          clearInSession() {
             const keyName = 'yt-player-playback-rate';
             try {
+               // https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API/Using
                sessionStorage.hasOwnProperty(keyName) && sessionStorage.removeItem(keyName);
                this.log('playbackRate save in session:', ...arguments);
 
@@ -470,11 +473,12 @@ window.nova_plugins.push({
          // }
 
          // Strategy 2. NOVA fn
-         if (path = NOVA.seachInObjectBy.key({
-            'obj': _yt_player,
-            'keys': 'getAvailablePlaybackRates',
-            // 'match_fn': val => (typeof val === 'function') && val,
-         })?.path) {
+         if (Object.keys(_yt_player).length
+            && (path = NOVA.seachInObjectBy.key({
+               'obj': _yt_player,
+               'keys': 'getAvailablePlaybackRates',
+               // 'match_fn': val => (typeof val === 'function') && val,
+            })?.path)) {
             setAvailableRates(_yt_player, 0, path.split('.'));
          }
 

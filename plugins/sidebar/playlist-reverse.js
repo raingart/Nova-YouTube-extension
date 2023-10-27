@@ -1,5 +1,5 @@
 // for test:
-// https://www.youtube.com/watch?v=9JzmYISeRMA&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4
+// https://www.youtube.com/watch?v=lt2otCCtDZA&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4&index=2
 
 window.nova_plugins.push({
    id: 'playlist-reverse',
@@ -52,11 +52,20 @@ window.nova_plugins.push({
          ${SELECTOR}:active svg,
          ${SELECTOR}.${CLASS_NAME_ACTIVE} svg { fill: #2196f3; }`);
 
-      NOVA.runOnPageInitOrTransition(() => {
+      if (user_settings.playlist_reverse_auto_enabled && !window.nova_playlistReversed) {
+         window.nova_playlistReversed = true;
+      }
+
+      NOVA.runOnPageInitOrTransition(async () => {
          if (location.search.includes('list=') && NOVA.currentPage == 'watch') {
             // if (!NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/) return;
-            insertButton();
             reverseControl(); // set event
+
+            // Strategy 1
+            await NOVA.delay(1000);
+            insertButton();
+            // Strategy 2
+            // document.addEventListener('yt-page-data-updated', insertButton, { capture: true, once: true });
          }
       });
 
@@ -114,7 +123,7 @@ window.nova_plugins.push({
          if (!window.nova_playlistReversed) return;
 
          if ((ytdWatch = await NOVA.waitSelector('ytd-watch-flexy', { destroy_if_url_changes: true }))
-            && (data = await NOVA.waitUntil(() => ytdWatch?.data.contents?.twoColumnWatchNextResults))
+            && (data = await NOVA.waitUntil(() => ytdWatch?.data?.contents?.twoColumnWatchNextResults))
             && (playlist = data.playlist.playlist)
             && (autoplay = data.autoplay.autoplay)
          ) {
@@ -204,5 +213,25 @@ window.nova_plugins.push({
          container.scrollTop = targetEl.offsetTop - container.offsetTop;
       }
 
+   },
+   options: {
+      playlist_reverse_auto_enabled: {
+         _tagName: 'input',
+         label: 'Default enabled state',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+      },
    },
 });

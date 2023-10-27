@@ -221,7 +221,8 @@ window.nova_plugins.push({
 
                // max 500 comments
                if (!user_settings['user-api-key'] && commentList.length > MAX_COMMENTS) {
-                  alert('Use your personal API key to overcome the 500 comments limit')
+                  // NOVA.uiAlert('Use your personal API key to overcome the 500 comments limit');
+                  alert('Use your personal API key to overcome the 500 comments limit');
                   genTable();
                }
                // get next page
@@ -230,7 +231,7 @@ window.nova_plugins.push({
                // ) {
                else if (res?.nextPageToken) {
                   // display current download status
-                  document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Loaded: ${commentList.length}</pre>`;
+                  document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Loading: ${commentList.length}</pre>`;
 
                   getComments(res?.nextPageToken);
                }
@@ -244,8 +245,7 @@ window.nova_plugins.push({
 
       function genTable() {
          if (!commentList.length) {
-            return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML =
-               `<pre>Total number of comments: ${res.pageInfo.totalResults}</pre>`;
+            return document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Comments empty</pre>`;
          }
 
          const ul = document.createElement('tbody');

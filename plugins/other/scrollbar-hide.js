@@ -61,7 +61,7 @@ window.nova_plugins.push({
       //    }
       // });
 
-      if (user_settings.scrollbar_hide_livechat && NOVA.currentPage == 'live_chat') {
+      if (user_settings.scrollbar_hide_livechat && NOVA.currentPage.includes('live_chat')) {
          return NOVA.css.push(
             `*,
             #item-scroller {

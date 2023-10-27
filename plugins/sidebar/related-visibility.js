@@ -18,7 +18,9 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://chrome.google.com/webstore/detail/fcchghcgfeadhdmkmpkedplecikkajnp
+      // alt1 - https://chrome.google.com/webstore/detail/fcchghcgfeadhdmkmpkedplecikkajnp
+      // alt2 - https://chrome.google.com/webstore/detail/mlaigmdigmkhpbnljmhajhleifegcchb
+      // alt3 - https://greasyfork.org/en/scripts/472081-youtube-hide-tool
 
       NOVA.collapseElement({
          selector: '#secondary #related',

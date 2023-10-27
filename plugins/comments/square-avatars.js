@@ -32,7 +32,8 @@ window.nova_plugins.push({
    'desc:ua': 'Зробіть зображення користувачів квадратними',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/453802-youtube-non-rounded-design
+      // alt1 - https://greasyfork.org/en/scripts/453802-youtube-non-rounded-design
+      // alt2 - https://greasyfork.org/en/scripts/475711-youtube-player-unrounder
 
       // alt experiment flags:
       // window.yt?.config_?.EXPERIMENT_FLAGS?.web_rounded_containers = false;
@@ -54,6 +55,9 @@ window.nova_plugins.push({
          ]
             .join(',\n') + ` {
                border-radius: 0 !important;
+            }
+            html {
+               --yt-button-border-radius: 0;
             }`);
 
       NOVA.waitUntil(() => {

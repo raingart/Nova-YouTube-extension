@@ -46,7 +46,7 @@ window.nova_plugins.push({
             // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '.cbox'} {
             //    display: none;
             // }
-            `ytd-watch-metadata #actions button .cbox {
+            `ytd-watch-metadata #actions button[class*=text] {
                display: none;
             }
             ytd-watch-metadata #actions button .yt-spec-button-shape-next__icon {
@@ -90,7 +90,7 @@ window.nova_plugins.push({
             stylesList.push('ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer');
          }
          if (user_settings.details_buttons_hide.includes('dislike')) {
-            stylesList.push('ytd-watch-metadata #menu #segmented-dislike-button');
+            stylesList.push('ytd-watch-metadata #menu #segmented-dislike-button, .yt-spec-button-shape-next--segmented-start::after');
             NOVA.css.push(
                `ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer button {
                   border-radius: 100%;

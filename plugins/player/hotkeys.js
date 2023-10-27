@@ -22,6 +22,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/38643-youtube-key-shortcuts-fix
       // alt3 - https://greasyfork.org/en/scripts/462196-auto-focus
       // alt4 - https://greasyfork.org/en/scripts/436459-remove-yt-volumebar-focus
+      // alt5 - https://github.com/timmontague/youtube-disable-number-seek
 
       document.addEventListener('keydown', evt => {
          setFocus(evt.target);

@@ -11,9 +11,15 @@ const App = {
    storage: {
       set(settings) {
          this.settingsStore = settings;
-         // Disabled script if youtube is embedded
-         if (settings?.exclude_iframe && (window.self !== window.top)) { // window.frameElement
-            return console.warn('processed in the iframe disable');
+         if (window.self !== window.top) {
+            // Disabled the script if youtube is embedded
+            if (settings?.exclude_iframe) { // window.frameElement
+               return console.warn('processed in the iframe disable');
+            }
+            // Disabled the script if iframe in not "embed"
+            else if (!location.pathname.startsWith('/embed')) {
+               return console.warn('iframe skiped:', location.pathname);
+            }
          }
          if (settings?.report_issues) this.reflectException();
          this.run();

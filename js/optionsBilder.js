@@ -1,12 +1,15 @@
 console.debug('init optionsView.js');
 
+// alt1 - https://github.com/colejd/guify
+// alt2 - https://github.com/timtnleeProject/skeletons
+
 window.nova_plugins = [];
 Plugins.load();
 
 const Opt = {
    // DEBUG: true,
 
-   // https://gist.github.com/glumb/623cf25d1a9ef5d8b6c090f2030195a6
+   // https://gist.github.com/wpsmith/7604842
    lang_code: window.navigator.language.substring(0, 2),
    // lang_code = 'zh',
    // lang_code = 'ja',

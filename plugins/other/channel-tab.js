@@ -79,7 +79,7 @@ window.nova_plugins.push({
          location.pathname += '/' + user_settings.channel_default_tab;
       }
       else {
-         const tabSelectors = '#tabsContent > [role="tab"]';
+         const tabSelectors = '#tabsContent [role="tab"]';
          // tab select
          NOVA.waitSelector(tabSelectors, { destroy_if_url_changes: true })
             .then(() => {

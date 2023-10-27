@@ -37,6 +37,7 @@ window.nova_plugins.push({
       // alt6 - https://greasyfork.org/en/scripts/11712-youtube-playlist-time
       // alt7 - https://chrome.google.com/webstore/detail/pijbakhgmhhadeakaocjfockpndcpobk
       // alt8 - https://greasyfork.org/en/scripts/465609-youtube-playlist-calculator
+      // alt9 - https://greasyfork.org/en/scripts/475879-youtube-playlist-length
 
       const
          SELECTOR_ID = 'nova-playlist-duration',

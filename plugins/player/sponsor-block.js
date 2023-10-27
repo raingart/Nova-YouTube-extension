@@ -1,6 +1,7 @@
 // for  test
 // https://www.youtube.com/watch?v=3eJZcpoSpKY
 // https://www.youtube.com/watch?v=pf9WOuzeWhw
+// https://www.youtube.com/watch?v=KboTw3NBuuk - ad in multi chaprtes
 
 window.nova_plugins.push({
    id: 'sponsor-block',
@@ -40,19 +41,20 @@ window.nova_plugins.push({
             video.addEventListener('loadeddata', init.bind(video));
 
             async function init() {
-               // const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
-               videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+               // const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
+               videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
                segmentsList = await getSkipSegments(videoId) || [];
                // console.debug('segmentsList', segmentsList);
 
                if (user_settings['player-float-progress-bar'] && segmentsList.length) {
                   const SELECTOR = 'nova-player-float-progress-bar-chapters';
-                  let chaptersEl;
+                  // const deflectionSec = 5;
+                  let chaptersEls;
                   // wait chapters
                   await NOVA.waitUntil(() =>
                      (chaptersEls = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && chaptersEls.length
                      , 1000);
-                  // alert(1)
+
                   chaptersEls.forEach((chapterEl, idx) => {
                      if (idx === chaptersEls.length - 1) return; // if last chapter
 
@@ -67,6 +69,7 @@ window.nova_plugins.push({
                         // console.debug('chapterStart', chapterStart);
                         // console.debug('chapterNext', chapterNext);
 
+                        // if ((~~start <= chapterNext) && (~~end >= (chapterStart + deflectionSec))) {
                         if ((~~start <= chapterNext) && (~~end >= chapterStart)) {
                            chapterEl.style.title = category;
                            let color;
@@ -147,7 +150,10 @@ window.nova_plugins.push({
       async function getSkipSegments(videoId = required()) {
          const CACHE_PREFIX = 'nova-videos-sponsor-block:';
 
-         if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
+         if (
+            navigator.cookieEnabled // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
+            && (storage = sessionStorage.getItem(CACHE_PREFIX + videoId))
+         ) {
             // console.debug('get from cache:', storage);
             return JSON.parse(storage);
          }
@@ -226,7 +232,9 @@ window.nova_plugins.push({
                // console.debug('result sponsor', result
                //    // , (user_settings.sponsor_block_url || 'https://sponsor.ajay.app') + `/api/skipSegments?${query}`
                // );
-               sessionStorage.setItem(CACHE_PREFIX + videoId, JSON.stringify(result));
+               if (navigator.cookieEnabled) {
+                  sessionStorage.setItem(CACHE_PREFIX + videoId, JSON.stringify(result));
+               }
                return result;
             }
          }

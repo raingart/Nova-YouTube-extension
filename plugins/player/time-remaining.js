@@ -37,6 +37,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/368389-youtube-time-remaining
       // alt3 - https://greasyfork.org/en/scripts/19120-youtube-remaining-time
       // alt4 - https://greasyfork.org/en/scripts/38090-add-youtube-video-progress
+      // alt5 - https://greasyfork.org/en/scripts/477119-youtube-remaining-time
 
       const SELECTOR_ID = 'nova-player-time-remaining';
 

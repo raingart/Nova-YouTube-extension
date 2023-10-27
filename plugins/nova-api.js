@@ -4,6 +4,7 @@
    - waitSelector (async)
    - waitUntil (async)
    - delay (async)
+   // - uiAlert
    - watchElements
    - runOnPageInitOrTransition
    - css.push
@@ -296,6 +297,15 @@ const NOVA = {
    delay(ms = 100) {
       return new Promise(resolve => setTimeout(resolve, ms));
    },
+
+   // uiAlert(message, callback) {
+   //    if (callback) {
+   //       if (window.confirm(message)) {
+   //          callback();
+   //       }
+   //    }
+   //    else alert(message);
+   // },
 
    watchElements_list: {}, // can to stop watch setInterval
    // complete doesn't work
@@ -816,7 +826,7 @@ const NOVA = {
          [
             // description
             (
-               document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.shortDescription
+               document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.shortDescription
                || document.body.querySelector('ytd-watch-metadata #description.ytd-watch-metadata')?.textContent
             ),
 
@@ -1084,7 +1094,7 @@ const NOVA = {
          // await NOVA.waitUntil(() => typeof movie_player === 'object');
          const
             // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
-            // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.author,
+            // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.author,
             // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
             channelName = movie_player.getVideoData().author,
             titleStr = movie_player.getVideoData().title.toUpperCase(),
@@ -1094,9 +1104,8 @@ const NOVA = {
          // if (user_settings.rate_default_apply_music == 'expanded') {
          //    // 【MAD】,『MAD』,「MAD」
          //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', 'Remix OS, TEASER
-         //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song"
-         // "Sound Test" (https://www.youtube.com/watch?v=gLSTUhRY2-s)
-         //       || ['【', '『', '「', 'SOUND', 'REMIX', 'CD', 'PV', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
+         //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song", "Sound Test" (https://www.youtube.com/watch?v=gLSTUhRY2-s)
+         //       || ['【', '『', '「', 'SOUND', 'REMIX', 'CD', 'PV', 'AUDIO', 'EXTENDED', 'FULL', 'TOP', 'TRACK', 'TRAP', 'THEME', 'PIANO', 'POP', '8-BIT', 'BEAT'].some(i => titleWordsList?.map(w => w.toUpperCase()).includes(i))
          //    ) {
          //       return true;
          //    }
@@ -1130,7 +1139,7 @@ const NOVA = {
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
 
             // word - https://www.youtube.com/watch?v=N67yRMOVk1s
-            || titleWordsList?.length && ['🎵', '♫', 'AUDIO', 'SONG', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
+            || titleWordsList?.length && ['🎵', '♫', 'SONG', 'SONGS', 'SOUNDTRACK', 'LYRIC', 'LYRICS', 'AMBIENT', 'MIX', 'VEVO', 'CLIP', 'KARAOKE', 'OPENING', 'COVER', 'COVERED', 'VOCAL', 'INSTRUMENTAL', 'ORCHESTRAL', 'DJ', 'DNB', 'BASS', 'BEAT', 'HITS', 'ALBUM', 'PLAYLIST', 'DUBSTEP', 'CHILL', 'RELAX', 'CLASSIC', 'CINEMATIC']
                .some(i => titleWordsList.includes(i))
 
             // words ("feat." miss - https://www.youtube.com/watch?v=7ubvobYxgBk)
@@ -1573,7 +1582,7 @@ const NOVA = {
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],
          document.body.querySelector('a.ytp-ce-channel-title[href]')?.href.split('/')[4],
          // watch page
-         document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails.channelId, // exclude embed page
+         document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.channelId, // exclude embed page
          // document.body.querySelector('#owner #channel-name a[href]')?.href.split('/')[4], // outdated
          // ALL BELOW - not updated after page transition!
          // || window.ytplayer?.config?.args.ucid

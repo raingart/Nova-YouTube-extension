@@ -43,7 +43,7 @@ window.nova_plugins.push({
 
       function setVideoDate(container = required()) {
          // console.debug('setVideoDate:', ...arguments);
-         const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+         const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
 
          // // has in cache
          if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {

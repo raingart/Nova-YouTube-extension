@@ -90,7 +90,7 @@ window.nova_plugins.push({
                'ytd-video-renderer + ytd-shelf-renderer', // "People also watched" block - https://greasyfork.org/en/scripts/454513-youtube-search-results-cleaner
                // 'ytd-video-renderer + ytd-horizontal-card-list-renderer', // "People also search for" block
 
-               'ytd-video-renderer + ytd-reel-shelf-renderer', // Shorts - https://www.youtube.com/results?search_query=+WE+DON%27T+HAVE+TO+TAKE+OUR+CLOTHES+OFF
+               // 'ytd-video-renderer + ytd-reel-shelf-renderer', // Shorts - https://www.youtube.com/results?search_query=+WE+DON%27T+HAVE+TO+TAKE+OUR+CLOTHES+OFF
 
 
                // watch page
@@ -103,6 +103,9 @@ window.nova_plugins.push({
                'ytd-popup-container tp-yt-paper-dialog ytd-single-option-survey-renderer', // "How is YouTube today?" - Absolutely outstanding, Extremely good, Very good, Good, Not good
 
                '#donation-shelf ytd-donation-unavailable-renderer', // message "Sorry, you can't donate in this country or region yet." - https://www.youtube.com/watch?v=L_tg2u26tCU, https://www.youtube.com/watch?v=NGQ2Zhrkk4o
+
+
+               '[class^="ytp-cultural-moment"]', // '.ytp-cultural-moment-player-content' link for "https://www.youtube.com/youtubemusic" - https://www.youtube.com/watch?v=9aofoBrFNdg
 
 
                // results, sidebar page

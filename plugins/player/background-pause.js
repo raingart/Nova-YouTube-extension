@@ -104,7 +104,7 @@ window.nova_plugins.push({
                   if (user_settings.pause_background_tab_autoplay_onfocus !== true
                      && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID
                   ) {
-                     // console.debug('event interception instanceID:', instanceID, movie_player.getVideoData().video_id || NOVA.queryURL.get('v'));
+                     // console.debug('event interception instanceID:', instanceID, NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
                      video.pause();
                   }
                   else {

@@ -32,6 +32,8 @@ window.nova_plugins.push({
    // 'title:ua': '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/436115-return-youtube-dislike
+
       // fix conflict with [details-buttons] plugin
       if (user_settings.details_button_no_labels
          || user_settings.details_buttons_hide?.includes('like_dislike')
@@ -60,7 +62,7 @@ window.nova_plugins.push({
 
       async function setDislikeCount(container = required()) {
          // console.debug('setDislikeCount:', ...arguments);
-         const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+         const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
          if (!videoId) return console.error('return-dislike videoId: empty', videoId);
 
          container.style.width = 'auto'; // fix width
@@ -74,7 +76,7 @@ window.nova_plugins.push({
          }
 
          async function getDislikeCount() {
-            const videoId = movie_player.getVideoData().video_id || NOVA.queryURL.get('v');
+            const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
             // https://www.returnyoutubedislike.com/docs/fetching
             const fetchAPI = () => fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`,
                {
