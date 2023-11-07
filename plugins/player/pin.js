@@ -301,6 +301,9 @@ window.nova_plugins.push({
                height: var(--height) !important;
 
                background-color: var(--yt-spec-base-background);
+
+               border-radius: 1em;
+               margin: 1em 2em;
             }
             ${PINNED_SELECTOR} video {
                object-fit: contain !important;
