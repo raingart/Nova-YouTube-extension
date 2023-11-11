@@ -43,6 +43,7 @@
    - getChannelId (async)
    - storage_obj_manager.getParam
    //- seachInObjectBy.key
+   //- fakeUA
 
    // data (not fn)
    - videoElement
@@ -78,6 +79,31 @@ const NOVA = {
    //       // }
    //    });
    // },
+
+//    waitForElementNotHidden(selector, timeout) {
+//       return new Promise((resolve, reject) => {
+//         const startTime = Date.now();
+
+//         function checkElement() {
+//           let element = document.querySelector(selector);
+
+//           if (element) {
+//               if (element.style.display != 'none') {
+//                   resolve(element);
+//               }
+//               else {
+//                   setTimeout(checkElement, 100); // Check again in 100ms
+//               }
+//           } else if (Date.now() - startTime >= timeout) {
+//             reject(new Error(`Element '${selector}' not found within ${timeout}ms`));
+//           } else {
+//             setTimeout(checkElement, 100); // Check again in 100ms
+//           }
+//         }
+
+//         checkElement();
+//       });
+//   },
 
    // waitSelector(selector = required(), container) {
    //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
@@ -125,10 +151,10 @@ const NOVA = {
    /**
     * @param {string} selector - beware of $ quirks with `#dotted.id` that won't work with $$
     * @param {Object} [opt]
-    * @param {function(HTMLElement[]):boolean} [opt.recur] - called on each match until stopOnDomReady,
+    * @param {function(Node[]):boolean} [opt.recur] - called on each match until stopOnDomReady,
       you can also return `false` to disconnect the observer
     * @param {boolean} [opt.stopOnDomReady] - stop observing on DOM ready
-    * @returns {Promise<HTMLElement>} - resolves on first match
+    * @returns {Promise<Node>} - resolves on first match
    */
    // https://github.com/openstyles/stylus/blob/master/js/dom.js#L388-L422
    // waitSelector(selector, { recur, stopOnDomReady = true } = {}) {
@@ -169,7 +195,7 @@ const NOVA = {
 
    /**
     * @param  {string} selector
-    * @param  {HTMLElement*} container
+    * @param  {Node*} container
     * @return {Promise<Element>}
    */
    // untilDOM
@@ -281,10 +307,10 @@ const NOVA = {
             resolve(result);
          }
          else {
-            const interval = setInterval(() => {
+            const waitCondition = setInterval(() => {
                if (result = condition()) {
                   // console.debug('waitUntil[2]', result, condition, timeout);
-                  clearInterval(interval);
+                  clearInterval(waitCondition);
                   resolve(result);
                }
                // console.debug('waitUntil[3]', result, condition, timeout);
@@ -460,7 +486,7 @@ const NOVA = {
       },
 
       /**
-       * @param  {string/HTMLElement} selector
+       * @param  {string/Node} selector
        * @param  {string} prop_name
        * @param  {boolean} int
        * @return {string}
@@ -593,18 +619,18 @@ const NOVA = {
    },
 
    /**
-    * @param  {HTMLElement} el
+    * @param  {Node} el
     * @return  {boolean}
    */
    isInViewport(el = required()) {
       if (!(el instanceof HTMLElement)) return console.error('el is not HTMLElement type:', el);
 
-      if (bounding = el.getBoundingClientRect()) {
+      if (distance = el.getBoundingClientRect()) {
          return (
-            bounding.top >= 0 &&
-            bounding.left >= 0 &&
-            bounding.bottom <= window.innerHeight &&
-            bounding.right <= window.innerWidth
+            distance.top >= 0 &&
+            distance.left >= 0 &&
+            distance.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            distance.right <= (window.innerWidth || document.documentElement.clientWidth)
          );
       }
    },
@@ -873,7 +899,7 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
-                                 .trim().replace(/^[:\-–—|]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
+                                 .trim().replace(/^[:\-–—|●]|(\[\])?[:\-–—.;|●]$/g, '').trim() // clear of quotes and list characters
                                  //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
                                  // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                                  .trim()
@@ -937,9 +963,11 @@ const NOVA = {
             return console.warn('ytPubsubPubsubInstance is null:', ytPubsubPubsubInstance);
          }
 
-         if (ytPubsubPubsubInstance = ytPubsubPubsubInstance.i // embed
+         if ((ytPubsubPubsubInstance = ytPubsubPubsubInstance.i // embed
             || ytPubsubPubsubInstance.j // watch
             || ytPubsubPubsubInstance.subscriptions_ // navigation
+         )
+            && Array.isArray(ytPubsubPubsubInstance)
          ) {
             const data = Object.values(
                ytPubsubPubsubInstance.find(a => a?.player)?.player.app
@@ -1133,7 +1161,7 @@ const NOVA = {
             // https://yt.lemnoslife.com/channels?part=approval&id=CHANNEL_ID (items[0].approval == 'Official Artist Channel') (https://github.com/Benjamin-Loison/YouTube-operational-API)
 
             // channelNameVEVO
-            || (channelName && /(VEVO|Topic|Records|RECORDS|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio, https://www.youtube.com/@VisibleNoiseRecords, https://www.youtube.com/@TerribleRecords
+            || (channelName && /(VEVO|Topic|Records|RECORDS|Recordings|AMV)$/.test(channelName)) // https://www.youtube.com/channel/UCHV1I4axw-6pCeQTUu7YFhA, https://www.youtube.com/@FIRESLARadio, https://www.youtube.com/@VisibleNoiseRecords, https://www.youtube.com/@TerribleRecords, https://www.youtube.com/@blackholerecordings
 
             // specific word in channel
             || (channelName && /(MUSIC|ROCK|SOUNDS|SONGS)/.test(channelName.toUpperCase())) // https://www.youtube.com/channel/UCj-Wwx1PbCUX3BUwZ2QQ57A https://www.youtube.com/@RelaxingSoundsOfNature
@@ -1861,6 +1889,15 @@ const NOVA = {
          if (multiple) return results;
       },
    },
+
+   // fakeUA(ua) {
+   //    Object.defineProperty(navigator, 'userAgent', {
+   //       value: ua,
+   //       writable: false,
+   //       configurable: false,
+   //       enumerable: true
+   //    });
+   // },
 
    log() {
       if (this.DEBUG && arguments.length) {

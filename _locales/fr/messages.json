@@ -24,13 +24,13 @@
       "message": "Effacer la recherche"
    },
    "opt_btn_save_settings": {
-      "message": "Enregistrer"
+      "message": "Save"
    },
    "opt_btn_save_settings_process": {
-      "message": "Enregistrement en cours..."
+      "message": "Saving..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Enregistré !"
+      "message": "Saved!"
    },
    "opt_appearance_header": {
       "message": "Header"

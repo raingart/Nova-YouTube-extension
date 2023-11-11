@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'thumbs-hide',
-   title: 'Thumbnails filtering',
+   title: 'Thumbnails filter',
    'title:zh': '缩略图过滤',
    'title:ja': 'サムネイルのフィルタリング',
    'title:ko': '썸네일 필터링',
@@ -93,11 +93,17 @@ window.nova_plugins.push({
       });
 
       if (user_settings.shorts_disable) {
-         NOVA.css.push(
-            // #content > ytd-rich-shelf-renderer,
-            `#contents > ytd-reel-shelf-renderer {
-               display: none;
-            }`);
+         const stylesList = [
+            // '#content > ytd-rich-shelf-renderer', // results old
+            '#contents > ytd-reel-shelf-renderer', // results
+            'ytd-rich-section-renderer', // feed
+         ]
+            .join(',\n');
+
+         NOVA.css.push(stylesList + `{ display: none !important; }`);
+         // NOVA.css.push({
+         //    'display': 'none !important',
+         // }, stylesList.join(',\n'));
       }
 
       const thumbRemove = {
@@ -108,17 +114,17 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'shorts') return;
 
             document.body.querySelectorAll('a#thumbnail[href*="shorts/"]')
-               // .forEach(el => el.closest(thumbsSelectors)?.remove());
+               .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
-            .forEach(el => {
-               if (thumb = el.closest(thumbsSelectors)) {
-                  // thumb.remove();
-                  // thumb.style.display = 'none';
+            // .forEach(el => {
+            //    if (thumb = el.closest(thumbsSelectors)) {
+            //       // thumb.remove();
+            //       // thumb.style.display = 'none';
 
-                  // console.debug('#short:', thumb);
-                  thumb.style.border = '2px solid orange'; // mark for test
-               }
-            });
+            //       // console.debug('#short:', thumb);
+            //       thumb.style.border = '2px solid orange'; // mark for test
+            //    }
+            // });
          },
 
          durationLimits() {
@@ -133,7 +139,7 @@ window.nova_plugins.push({
             // // document.body.querySelector('ytd-grid-video-renderer').data - feed page
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
-            //       if ((to = thumb.data?.thumbnailOverlays).length) {
+            //       if ((to = thumb.data?.thumbnailOverlays)?.length) {
             //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_min_duration || 60)
             //          ) {
             //             // thumb.remove();
@@ -146,6 +152,7 @@ window.nova_plugins.push({
             //    });
 
             // Strategy 2. HTML
+            // const OVERLAYS_TIME_SELECTOR = '#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not(:empty)';
             const OVERLAYS_TIME_SELECTOR = '#thumbnail #overlays #text:not(:empty)';
             // wait load overlays-time
             NOVA.waitSelector(OVERLAYS_TIME_SELECTOR)
@@ -154,14 +161,14 @@ window.nova_plugins.push({
                      .forEach(el => {
                         // console.debug('>', NOVA.timeFormatTo.hmsToSec(el.textContent.trim()));
                         if ((thumb = el.closest(thumbsSelectors))
-                           && (time = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
-                           && time < (+user_settings.thumbs_min_duration || 60)
+                           && (timeSec = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
+                           && (timeSec * (user_settings.rate_default || 1)) < (+user_settings.thumbs_min_duration || 60)
                         ) {
-                           thumb.remove();
+                           // thumb.remove();
                            // thumb.style.display = 'none';
 
                            // console.debug('short time:', time, el.textContent);
-                           // thumb.style.border = '2px solid blue'; // mark for test
+                           thumb.style.border = '2px solid blue'; // mark for test
                         }
                      });
                });
@@ -188,7 +195,8 @@ window.nova_plugins.push({
             // });
 
             // streaming
-            // #overlays > :not(ytd-thumbnail-overlay-time-status-renderer)
+            // #thumbnail #overlays > :not(ytd-thumbnail-overlay-time-status-renderer)
+            // #thumbnail #overlays > :not(#text)
             // #video-badges > .badge-style-type-live-now-alternate
             document.body.querySelectorAll('#video-badges > [class*="live-now"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
@@ -210,7 +218,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_exception);
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_sexception);
 
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
@@ -243,7 +251,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_exception);
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_sexception);
 
             // document.body.querySelectorAll('#metadata-line > span:last-of-type')
             document.body.querySelectorAll('#metadata')
@@ -305,7 +313,7 @@ window.nova_plugins.push({
             // Strategy 1. API
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
-            //       if ((to = thumb.data?.thumbnailOverlays).length) {
+            //       if ((to = thumb.data?.thumbnailOverlays)?.length) {
             //          if (to[0].thumbnailOverlayResumePlaybackRenderer?.percentDurationWatched >= PERCENT_COMPLETE) {
             //             thumb.remove();
             //             // // for test
@@ -443,10 +451,9 @@ window.nova_plugins.push({
          'title:pl': 'Teraz wietrzenie',
          'title:ua': 'Зараз в ефірі',
       },
-      // streamed_disable_channel_exception: {
-      streamed_disable_channel_exception: {
+      streamed_disable_channels_exception: {
          _tagName: 'textarea',
-         label: 'Сhannel exception',
+         label: 'Сhannels exception',
          // 'label:zh': '频道列表',
          // 'label:ja': 'チャンネルリスト',
          // 'label:ko': '채널 목록',

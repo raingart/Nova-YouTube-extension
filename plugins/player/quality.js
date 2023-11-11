@@ -92,6 +92,14 @@ window.nova_plugins.push({
             selectedQuality = user_settings.video_quality_in_music_quality;
          }
 
+         // get data [quick-quality] from [player-quick-buttons] plugin
+         if (user_settings['player-quick-buttons']
+            && user_settings.player_buttons_custom_items?.includes('quick-quality')
+            && window['nova-quality']
+         ) {
+            selectedQuality = window['nova-quality'];
+         }
+
          // if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state))) {
          if (1 == state || 3 == state) {
             let availableQualityLevels;

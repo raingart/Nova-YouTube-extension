@@ -6,6 +6,7 @@
 // https://www.youtube.com/c/YouTube
 // https://www.youtube.com/channel/UCK9X9JACEsonjbqaewUtICA - old
 // https://www.youtube.com/channel/UCG6TrwqzkWwvWiY2eUny8TA - does not have a "video" tab
+// https://www.youtube.com/channel/UCPJ_rWazdbheOzQuqNQpKwg - does not have a "video" tab
 
 window.nova_plugins.push({
    id: 'channel-default-tab',

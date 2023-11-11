@@ -1,6 +1,5 @@
 // for test:
 // https://www.youtube.com/playlist?list=WL
-// https://www.youtube.com/watch?v=Ohz9eumWEhY&list=PLVaR5VNkhu5533wzRj0W0gfXExZ0srdjY - short and has [Private video]
 // https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist container
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
 // https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
@@ -59,9 +58,7 @@ window.nova_plugins.push({
                      insertToHTML({ 'container': el, 'text': duration });
                   }
                   else {
-                     getPlaylistDurationFromThumbnails({
-                        'items_selector': '#primary .ytd-thumbnail-overlay-time-status-renderer:not(:empty)',
-                     })
+                     getPlaylistDurationFromThumbnails('#primary #thumbnail #overlays #text:not(:empty)')
                         .then(duration => insertToHTML({ 'container': el, 'text': duration }));
                   }
 
@@ -111,10 +108,7 @@ window.nova_plugins.push({
                         // Strategy 2 HTML. this method ignores progress
                         // this method ignores progress
                         else if (!user_settings.playlist_duration_progress_type) {
-                           getPlaylistDurationFromThumbnails({
-                              'container': document.body.querySelector('#secondary #playlist'),
-                              'items_selector': '#playlist-items #unplayableText[hidden]',
-                           })
+                           getPlaylistDurationFromThumbnails('#playlist #playlist-items #unplayableText[hidden]')
                               .then(duration => insertToHTML({ 'container': el, 'text': duration }));
                         }
                      }
@@ -164,7 +158,7 @@ window.nova_plugins.push({
             break;
       }
 
-      function getPlaylistDurationFromThumbnails({ items_selector = required(), container }) {
+      function getPlaylistDurationFromThumbnails(items_selector = required()) {
          // console.log('thumbnails_method', ...arguments);
          if (container && !(container instanceof HTMLElement)) {
             return console.error('container not HTMLElement:', container);
@@ -174,11 +168,10 @@ window.nova_plugins.push({
             let forcePlaylistRun = false;
             const waitThumbnails = setInterval(() => {
                const
+                  timeStampList = document.body.querySelectorAll(items_selector),
                   playlistLength = movie_player.getPlaylist()?.length
                      || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length
-                     || document.body.querySelectorAll(items_selector)?.length,
-                  timeStampList = (container || document.body)
-                     .querySelectorAll('.ytd-thumbnail-overlay-time-status-renderer:not(:empty)'),
+                     || timeStampList.length,
                   duration = getTotalTime(timeStampList);
 
                console.assert(timeStampList.length === playlistLength, 'playlist loading:', timeStampList.length + '/' + playlistLength);

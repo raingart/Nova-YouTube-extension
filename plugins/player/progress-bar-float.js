@@ -24,6 +24,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
+   // 'data-conflict': 'description-expand',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked

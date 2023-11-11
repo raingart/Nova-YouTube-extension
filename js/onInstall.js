@@ -62,6 +62,7 @@ browser.runtime.onInstalled.addListener(details => {
                   'comments-sidebar-position-exchange': 'move-in-sidebar',
                   'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
                   'shorts_disable_min_duration': 'thumbs_min_duration',
+                  'streamed_disable_channel_exception': 'streamed_disable_channels_exception',
                }
                for (const oldKey in settings) {
                   if (newKey = keyRenameTemplate[oldKey]) {

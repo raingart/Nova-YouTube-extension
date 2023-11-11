@@ -32,9 +32,10 @@ window.nova_plugins.push({
          // .then(el => el.theaterModeChanged_(true));
          .then(el => {
             if (location.search.includes('list=')) {
-               if (user_settings.theater_mode_ignore_playlist == 'all'
-                  || (user_settings.theater_mode_ignore_playlist == 'music' && NOVA.isMusic())
-               ) {
+               // if (user_settings.theater_mode_ignore_playlist == 'all'
+               //    || (user_settings.theater_mode_ignore_playlist == 'music' && NOVA.isMusic())
+               // ) {
+               if (user_settings.theater_mode_ignore_playlist) {
                   el.theaterModeChanged_(false);
                   return;
                }
@@ -454,53 +455,54 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          // 'label:ua': '',
-         options: [
-            {
-               label: 'false', /*value: '',*/ selected: true,
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               // 'label:ua': '',
-            },
-            {
-               label: 'all', value: 'all',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               // 'label:ua': '',
-            },
-            {
-               label: 'only music', value: 'music',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               // 'label:ua': '',
-            },
-         ],
+         type: 'checkbox',
+         // options: [
+         //    {
+         //       label: 'false', /*value: '',*/ selected: true,
+         //       // 'label:zh': '',
+         //       // 'label:ja': '',
+         //       // 'label:ko': '',
+         //       // 'label:id': '',
+         //       // 'label:es': '',
+         //       // 'label:pt': '',
+         //       // 'label:fr': '',
+         //       // 'label:it': '',
+         //       // 'label:tr': '',
+         //       // 'label:de': '',
+         //       // 'label:pl': '',
+         //       // 'label:ua': '',
+         //    },
+         //    {
+         //       label: 'all', value: 'all',
+         //       // 'label:zh': '',
+         //       // 'label:ja': '',
+         //       // 'label:ko': '',
+         //       // 'label:id': '',
+         //       // 'label:es': '',
+         //       // 'label:pt': '',
+         //       // 'label:fr': '',
+         //       // 'label:it': '',
+         //       // 'label:tr': '',
+         //       // 'label:de': '',
+         //       // 'label:pl': '',
+         //       // 'label:ua': '',
+         //    },
+         //    {
+         //       label: 'only music', value: 'music',
+         //       // 'label:zh': '',
+         //       // 'label:ja': '',
+         //       // 'label:ko': '',
+         //       // 'label:id': '',
+         //       // 'label:es': '',
+         //       // 'label:pt': '',
+         //       // 'label:fr': '',
+         //       // 'label:it': '',
+         //       // 'label:tr': '',
+         //       // 'label:de': '',
+         //       // 'label:pl': '',
+         //       // 'label:ua': '',
+         //    },
+         // ],
       },
    }
 });

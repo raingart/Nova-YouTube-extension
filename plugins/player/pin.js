@@ -301,6 +301,8 @@ window.nova_plugins.push({
                height: var(--height) !important;
 
                background-color: var(--yt-spec-base-background);
+               ${user_settings['square-avatars'] ? '' : 'border-radius: 1em;'}
+               margin: 1em 2em;
             }
             ${PINNED_SELECTOR} video {
                object-fit: contain !important;

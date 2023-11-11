@@ -1,5 +1,8 @@
 // for test
 // https://www.youtube.com/watch?v=dQw4w9WgXcQ - too many comments
+// https://www.youtube.com/watch?v=kXYiU_JCYtU - too many comments
+// https://www.youtube.com/watch?v=hWozHt9wbO4 - many comments
+
 
 window.nova_plugins.push({
    id: 'comments-sort',
@@ -45,7 +48,8 @@ window.nova_plugins.push({
          MAX_COMMENTS = 500,
          // CACHE_PREFIX = 'nova-channel-videos-count:',
          MODAL_NAME_SELECTOR_ID = 'nova-modal-comments',
-         MODAL_CONTENT_SELECTOR_ID = 'modal-content';
+         MODAL_CONTENT_SELECTOR_ID = 'modal-content',
+         NOVA_REPLYS_SELECTOR_ID = 'nova-replys';
       // getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
       insertButton();
@@ -151,7 +155,7 @@ window.nova_plugins.push({
 
          const params = {
             'videoId': NOVA.queryURL.get('v') || movie_player.getVideoData().video_id,
-            'part': 'snippet',
+            'part': 'snippet,replies',
             'maxResults': 100, // max 100
             'order': 'relevance', // 'time',
          };
@@ -211,6 +215,7 @@ window.nova_plugins.push({
                            { 'totalReplyCount': item.snippet.totalReplyCount },
                            { 'id': item.id },
                            comment,
+                           item.replies,
                         )
                      );
                   }
@@ -254,25 +259,72 @@ window.nova_plugins.push({
             .sort((a, b) => b.likeCount - a.likeCount) // b - a for reverse sort
             .forEach(comment => {
                try {
-                  const li = document.createElement('tr');
-                  li.className = 'item';
+                  const
+                     replyInputName = `${NOVA_REPLYS_SELECTOR_ID}-${comment.id}`,
+                     li = document.createElement('tr');
 
+                  li.className = 'item';
                   li.innerHTML =
                      `<td>${comment.likeCount}</td>
-                           <td>${+comment.totalReplyCount ?
-                        `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open">${comment.totalReplyCount}</a>` : comment.totalReplyCount}
-                           </td>
-                           <td sorttable_customkey="${new Date(comment.updatedAt).getTime()}">${NOVA.timeFormatTo.ago(new Date(comment.updatedAt))}</td>
-                           <td>
-                              <a href="${comment.authorChannelUrl}" target="_blank" title="${comment.authorDisplayName}">
-                                 <img src="${comment.authorProfileImageUrl}" alt="${comment.authorDisplayName}" />
-                              </a>
-                           </td>
-                           <td sorttable_customkey="${comment.textDisplay.length}">
-                              <span class="text-overflow-dynamic-ellipsis">${comment.textDisplay}</span>
-                           </td>`;
+                     <td sorttable_customkey="${comment.totalReplyCount}">
+                     ${+comment.totalReplyCount
+                        ? `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open">${comment.totalReplyCount}</a> <label for="${replyInputName}"></label>`
+                        : comment.totalReplyCount}</td>
+                     <td sorttable_customkey="${new Date(comment.updatedAt).getTime()}">${NOVA.timeFormatTo.ago(new Date(comment.updatedAt))}</td>
+                     <td>
+                        <a href="${comment.authorChannelUrl}" target="_blank" title="${comment.authorDisplayName}">
+                           <img src="${comment.authorProfileImageUrl}" alt="${comment.authorDisplayName}" />
+                        </a>
+                     </td>
+                     <td sorttable_customkey="${comment.textDisplay.length}">
+                        <span class="text-overflow-dynamic-ellipsis">${comment.textDisplay}</span>
+                        ${appendReplies()}
+                     </td>`;
 
                   ul.append(li); // append
+
+                  // checkbox reply
+                  if (+comment.totalReplyCount) {
+                     const checkbox = document.createElement('input');
+                     checkbox.type = 'checkbox';
+                     checkbox.id = checkbox.name = replyInputName;
+                     checkbox.addEventListener('change', ({ target }) => {
+                        // console.debug('change', target, 'name:', target.name);
+                        document.body.querySelector(`table[${NOVA_REPLYS_SELECTOR_ID}="${target.name}"]`)
+                           .classList.toggle('nova-hide');
+                     });
+                     li.querySelector('td label[for]').append(checkbox);
+                  }
+
+                  function appendReplies() {
+                     if (!+comment.totalReplyCount) return '';
+
+                     const table = document.createElement('table');
+                     table.className = 'nova-hide';
+                     table.setAttribute(NOVA_REPLYS_SELECTOR_ID, replyInputName); // mark
+                     // replies
+                     comment.comments
+                        ?.reverse() // order by
+                        .forEach(reply => {
+                           const li = document.createElement('tr');
+                           // li.className = 'item';
+                           li.innerHTML =
+                              `<td>
+                                 <a href="${reply.snippet.authorChannelUrl}" target="_blank" title="${reply.snippet.authorDisplayName}">
+                                    <img src="${reply.snippet.authorProfileImageUrl}" alt="${reply.snippet.authorDisplayName}" />
+                                 </a>
+                              </td>
+                              <td>
+                                 <span class="text-overflow-dynamic-ellipsis">
+                                    <div class="nova-reply-time-text">${reply.snippet.likeCount
+                                 ? `${reply.snippet.likeCount} likes` : ''}</div>
+                                    <div>${reply.snippet.textDisplay}</div>
+                                 </span>
+                              </td>`;
+                           table.append(li); // append
+                        });
+                     return table.outerHTML;
+                  }
 
                } catch (error) {
                   console.error('Error comment generate:\n', error.stack + '\n', comment);
@@ -293,12 +345,32 @@ window.nova_plugins.push({
                      <th class="sorttable_numeric">comments (${commentList.length/*res.pageInfo.totalResults*/})</th>
                   </tr>
                </thead>
-               ${ul.innerHTML}
+               <!-- $ {ul.innerHTML} -->
             </table>`;
+
+         document.getElementById(MODAL_CONTENT_FILTER_SELECTOR_ID).after(ul); /*$ {ul.innerHTML}*/
+
          // add sort event
          sorttable.makeSortable(document.body.querySelector('.sortable'));
 
          insertFilterInput(MODAL_CONTENT_FILTER_SELECTOR_ID);
+
+         // replies
+         NOVA.css.push(
+            `.nova-hide {
+               display: none;
+            }
+            table[${NOVA_REPLYS_SELECTOR_ID}] {
+               border: 1px solid #444;
+               width: auto !important;
+            }
+            table[${NOVA_REPLYS_SELECTOR_ID}] td {
+               padding: auto 10px;
+            }
+            .nova-reply-time-text {
+               font-size: .5em;
+               font-style: italic;
+            }`);
       }
 
       // copy fn from [redirect-disable] plugin
@@ -570,7 +642,7 @@ window.nova_plugins.push({
             }
 
             table tbody tr:nth-child(odd) {}
-            table tbody tr:nth-child(even) {}/*`);
+            table tbody tr:nth-child(even) {} */`);
 
          // custom style
          NOVA.css.push(

@@ -57,9 +57,9 @@ window.nova_plugins.push({
 
             // force way
             // const btn = document.body.querySelector('#movie_player .ytp-miniplayer-ui button.ytp-miniplayer-close-button');
-            // const interval = setInterval(() => {
+            // const waitMiniplayer = setInterval(() => {
             //    if (document.body.querySelector('ytd-miniplayer video')) btn.click();
-            //    else clearInterval(interval);
+            //    else clearInterval(waitMiniplayer);
             // }, 500); // 500ms
          }
       });

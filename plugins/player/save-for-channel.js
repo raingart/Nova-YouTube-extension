@@ -184,6 +184,7 @@ window.nova_plugins.push({
             ul.append(li);
          });
 
+         // alt - https://greasyfork.org/en/scripts/392459-youtube-automatic-bs-skip
          // input-number (skip_into_step)
          if (user_settings['time-jump']) {
             const

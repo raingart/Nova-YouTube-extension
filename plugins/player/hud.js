@@ -66,7 +66,7 @@ window.nova_plugins.push({
                            && this.currentTime > lastChapTime
                         ) {
                            const nextChapterIndex = getNextChapterIndex();
-                           lastChapTime = chapterList[nextChapterIndex].sec;
+                           lastChapTime = chapterList[nextChapterIndex]?.sec;
 
                            if (chapterData = chapterList[nextChapterIndex - 1]) {
                               const separator = ' • ';

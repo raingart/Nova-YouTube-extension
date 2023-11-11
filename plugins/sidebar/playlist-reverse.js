@@ -93,6 +93,12 @@ window.nova_plugins.push({
                      </g>
                   </svg>
                </yt-icon-button>`;
+               // `<yt-icon-button>
+               //    <svg class="pl-reverse" viewBox="0 0 16 20">
+               //          <polygon points="7,8 3,8 3,14 0,14 5,20 10,14 7,14"></polygon>
+               //          <polygon points="11,0 6,6 9,6 9,12 13,12 13,6 16,6"></polygon>
+               //    </svg>
+               // </yt-icon-button>`;
             reverseBtn.addEventListener('click', () => {
                reverseBtn.classList.toggle(CLASS_NAME_ACTIVE);
                window.nova_playlistReversed = !window.nova_playlistReversed;
@@ -124,8 +130,8 @@ window.nova_plugins.push({
 
          if ((ytdWatch = await NOVA.waitSelector('ytd-watch-flexy', { destroy_if_url_changes: true }))
             && (data = await NOVA.waitUntil(() => ytdWatch?.data?.contents?.twoColumnWatchNextResults))
-            && (playlist = data.playlist.playlist)
-            && (autoplay = data.autoplay.autoplay)
+            && (playlist = data.playlist?.playlist)
+            && (autoplay = data.autoplay?.autoplay)
          ) {
 
             playlist.contents.reverse();

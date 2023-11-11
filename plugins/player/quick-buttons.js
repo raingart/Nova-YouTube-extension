@@ -431,8 +431,10 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('rotate')) {
+               // for test:
+               // https://www.youtube.com/watch?v=RPMgLld0P58
                // alt1 - https://github.com/zhzLuke96/ytp-rotate
-               // alt2 - https://greasyfork.org/en/scripts/375568-%E6%B2%B9%E7%AE%A1%E8%A7%86%E9%A2%91%E6%97%8B%E8%BD%AC
+               // alt2 - https://greasyfork.org/en/scripts/375568
                const
                   hotkey = user_settings.player_buttons_custom_hotkey_rotate || 'r',
                   rotateBtn = document.createElement('button');
@@ -728,6 +730,12 @@ window.nova_plugins.push({
                      /* --yt-spec-brand-button-background: #c00; */
                   }
 
+                  /* fix for fullscreen mode */
+                  .ytp-big-mode .ytp-menuitem-toggle-checkbox {
+                     width: 3.5em;
+                     height: 1.6em;
+                  }
+
                   ${SELECTOR_QUALITY}:not(:hover) ${SELECTOR_QUALITY_LIST} {
                      display: none;
                   }
@@ -780,6 +788,10 @@ window.nova_plugins.push({
                fillQualityMenu(); // init
 
                NOVA.videoElement?.addEventListener('canplay', fillQualityMenu); // update
+               // clear quality state after page changed
+               // if (user_settings['video-quality']) {
+               //    document.addEventListener('yt-navigate-start', () => delete window['nova-quality']);
+               // }
 
                function fillQualityMenu() {
                   if (qualityList = document.getElementById(SELECTOR_QUALITY_LIST_ID)) {
@@ -814,6 +826,11 @@ window.nova_plugins.push({
                                        // console.debug('setPlaybackQuality', quality);
                                        movie_player.setPlaybackQualityRange(quality, quality);
                                        // movie_player.setPlaybackQuality(quality); // Doesn't work
+
+                                       // send data to [video-quality] plugin
+                                       if (user_settings['video-quality']) {
+                                          window['nova-quality'] = quality;
+                                       }
 
                                        if (quality == 'auto') return; // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
 

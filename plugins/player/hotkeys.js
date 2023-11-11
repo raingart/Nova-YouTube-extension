@@ -25,7 +25,7 @@ window.nova_plugins.push({
       // alt5 - https://github.com/timmontague/youtube-disable-number-seek
 
       document.addEventListener('keydown', evt => {
-         setFocus(evt.target);
+         setPlayerFocus(evt.target);
 
          if (user_settings.hotkeys_disable_numpad && evt.code.startsWith('Numpad')) {
             // console.debug('evt.code', evt.code);
@@ -35,10 +35,10 @@ window.nova_plugins.push({
          }
       });
 
-      document.addEventListener('click', evt => evt.isTrusted && setFocus(evt.target));
+      document.addEventListener('click', evt => evt.isTrusted && setPlayerFocus(evt.target));
 
 
-      function setFocus(target) {
+      function setPlayerFocus(target) {
          // movie_player.contains(document.activeElement) // don't use! stay overline
          if (['input', 'textarea', 'select'].includes(target.localName) || target.isContentEditable) return;
 

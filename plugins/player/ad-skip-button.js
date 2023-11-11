@@ -39,6 +39,7 @@ window.nova_plugins.push({
 
       // alt1 - https://github.com/MarcGuiselin/youtube-refined/blob/main/code/scripts/content/youtube.js#L1526-L1653
       // alt2 - https://chrome.google.com/webstore/detail/youtube-ad-auto-skipper/lokpenepehfdekijkebhpnpcjjpngpnd
+      // alt3 - https://greasyfork.org/en/scripts/459541
 
       // NOVA.css.push( // hides the appearance when playing on the next video
       //    `#movie_player.ad-showing video {

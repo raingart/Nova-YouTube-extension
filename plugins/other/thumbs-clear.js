@@ -107,7 +107,7 @@ window.nova_plugins.push({
                && thumb.querySelector(
                   `#badges [class*="live-now"],
                   #overlays [aria-label="PREMIERE"],
-                  ytd-thumbnail-overlay-time-status-renderer [overlay-style="UPCOMING"]`)
+                  #overlays [overlay-style="UPCOMING"]`)
             ) {
                // console.debug('skiped thumbnails-preview-cleared', parent);
                return;

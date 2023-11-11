@@ -37,7 +37,7 @@ window.nova_plugins.push({
       // textarea to array
       const keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist);
       // const
-      //    keywords_exception = NOVA.strToArray(user_settings.streamed_disable_channel_exception),
+      //    keywords_exception = NOVA.strToArray(user_settings.streamed_disable_channels_exception),
       //    keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist)
       //       .filter(e => !keywords_exception || !keywords_exception.includes(e));
 
@@ -109,7 +109,7 @@ window.nova_plugins.push({
                            && (thumb = channel_name.closest(thumbsSelectors))
                         ) {
                            // thumb.remove();
-                           thumb.style.display = 'none'; // dependency for "streamed_disable_channel_exception" in [thumbs-hide] plugin
+                           thumb.style.display = 'none'; // dependency for "streamed_disable_channels_exception" in [thumbs-hide] plugin
 
                            // thumb.style.border = '2px solid red'; // mark for test
                            // console.log('filter removed', keyword, thumb);

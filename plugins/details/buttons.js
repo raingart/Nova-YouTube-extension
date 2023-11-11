@@ -46,7 +46,7 @@ window.nova_plugins.push({
             // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '.cbox'} {
             //    display: none;
             // }
-            `ytd-watch-metadata #actions button[class*=text] {
+            `ytd-watch-metadata #actions button [class*=text] {
                display: none;
             }
             ytd-watch-metadata #actions button .yt-spec-button-shape-next__icon {
@@ -123,7 +123,7 @@ window.nova_plugins.push({
          // final
          if (stylesList.length) {
             NOVA.css.push(
-               stylesList.join(',\n').trim() + ` {
+               stylesList.join(',\n') + ` {
                   display: none !important;
                }`);
             // NOVA.css.push({

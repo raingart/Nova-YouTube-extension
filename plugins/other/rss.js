@@ -49,7 +49,6 @@ window.nova_plugins.push({
 
                   // fix https://github.com/raingart/Nova-YouTube-extension/issues/60
                   if (!parseInt(NOVA.css.getValue('#header div.banner-visible-area', 'height'))) {
-                     // if (!NOVA.isInViewport(container)) { // incorrect definition
                      container = document.body.querySelector('#channel-header #inner-header-container #buttons');
                   }
 

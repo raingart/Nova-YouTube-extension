@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name            Nova YouTube
 // @namespace       https://github.com/raingart/Nova-YouTube-extension/
-// @version         0.43.6
+// @version         0.43.7
 // @description     Powerful control on YouTube
+// @description:zh-CN 最好的玉棒 youtube
 
 // @author          raingart <raingart+scriptaddons@protonmail.com>
 // @license         Apache-2.0

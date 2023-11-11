@@ -80,7 +80,7 @@ const App = {
 
       const forceLander = setTimeout(() => {
          console.warn('force lander:', window.nova_plugins.length + '/' + plugins_count);
-         clearInterval(landerInterval);
+         clearInterval(waitPlugins);
 
          if (!document.body) return;
 
@@ -117,7 +117,7 @@ const App = {
          }
       }, 1000 * 3); // 3sec
 
-      const landerInterval = setInterval(() => {
+      const waitPlugins = setInterval(() => {
          const domLoaded = document?.readyState != 'loading';
          if (!domLoaded) return console.debug('waiting, page loading..');
 
@@ -131,7 +131,7 @@ const App = {
 
       function processLander() {
          console.assert(window.nova_plugins.length === plugins_count, 'loaded:', window.nova_plugins.length + '/' + plugins_count);
-         clearInterval(landerInterval);
+         clearInterval(waitPlugins);
          plugins_executor({
             'user_settings': user_settings,
             'app_ver': app_ver, // need for reflectException

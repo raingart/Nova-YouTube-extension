@@ -24,13 +24,13 @@
       "message": "Saubere Suche"
    },
    "opt_btn_save_settings": {
-      "message": "Einstellungen speichern"
+      "message": "Save"
    },
    "opt_btn_save_settings_process": {
-      "message": "Speichern …"
+      "message": "Saving..."
    },
    "opt_btn_save_settings_processed": {
-      "message": "Einstellungen gespeichert!"
+      "message": "Saved!"
    },
    "opt_appearance_header": {
       "message": "Header"

@@ -22,7 +22,8 @@ window.nova_plugins.push({
    'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    'title:pl': 'Kontrola prędkości odtwarzania',
    'title:ua': 'Контроль швидкості відтворення',
-   run_on_pages: 'watch, embed',
+   // run_on_pages: 'watch, embed',
+   run_on_pages: 'home, results, feed, channel, watch, embed, -mobile',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
    desc: 'With mouse wheel',
@@ -57,6 +58,10 @@ window.nova_plugins.push({
       //          console.debug('onPlaybackRateChange', rate);
       //       });
       //    });
+
+      if (+user_settings.rate_default !== 1) {
+         reCalcTimeToOverlay();
+      }
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
@@ -491,6 +496,50 @@ window.nova_plugins.push({
             }
          }
 
+      }
+
+
+      function reCalcTimeToOverlay() {
+         const
+            ATTR_MARK = 'nova-thumb-overlay-time-recalc';
+
+         // page update event
+         document.addEventListener('yt-action', evt => {
+            // console.log(evt.detail?.actionName);
+            if ([
+               'yt-append-continuation-items-action', // home, results, feed, channel, watch
+               'ytd-update-grid-state-action', // feed, channel
+               'yt-service-request', // results, watch
+               'ytd-rich-item-index-update-action', // home, channel
+            ]
+               .includes(evt.detail?.actionName)
+            ) {
+               // console.log(evt.detail?.actionName); // flltered
+               switch (NOVA.currentPage) {
+                  case 'home':
+                  case 'results':
+                  case 'feed':
+                  case 'channel':
+                  case 'watch':
+                     // document.body.querySelectorAll(`#thumbnail #overlays #text:not([${ATTR_MARK}])`)
+                     document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
+                        .forEach(overlay => {
+                           // if (timeLabelEl = overlay.querySelector('#text')) {
+                           if (timeLabelEl = overlay.$['text']) {
+                              overlay.setAttribute(ATTR_MARK, true); // mark
+                              // overlay.style.border = '2px solid orange'; // mark for test
+                              const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl.textContent);
+                              timeLabelEl.textContent = //'⚡' + // broken thumbs_min_duration in [thumbs-hide] plugin
+                                 NOVA.timeFormatTo.HMS.digit(timeSec / user_settings.rate_default);
+                           }
+                        });
+                     break;
+
+                  // default:
+                  //    break;
+               }
+            }
+         });
       }
 
    },
