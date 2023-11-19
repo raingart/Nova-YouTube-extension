@@ -23,6 +23,8 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/462196-auto-focus
       // alt4 - https://greasyfork.org/en/scripts/436459-remove-yt-volumebar-focus
       // alt5 - https://github.com/timmontague/youtube-disable-number-seek
+      // alt6 - https://greasyfork.org/en/scripts/479994-disable-youtube-player-focus
+      // alt7 - https://greasyfork.org/en/scripts/478857-youtube-spacebar-to-play-pause-videos
 
       document.addEventListener('keydown', evt => {
          setPlayerFocus(evt.target);

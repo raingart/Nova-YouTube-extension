@@ -38,77 +38,81 @@ window.nova_plugins.push({
       if (user_settings['comments-sidebar-position-exchange']) return; // conflict with [comments-sidebar-position-exchange] plugin
 
       // NOVA.waitSelector(`[description-collapsed] #description ${user_settings.description_expand_mode == 'onhover' ? '' : '#expand'}`)
-      NOVA.waitSelector(`[description-collapsed] #description`)
-         .then(btn => {
-            NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && btn.click());
-            // switch (user_settings.description_expand_mode) {
-            //    case 'onhover':
-            //       btn.addEventListener('mouseenter', btn.click);
-            //       break;
+      // .then(btn => {
+      const SELECTOR_BTN = '[description-collapsed] #description #expand';
+      switch (user_settings.description_expand_mode) {
+         case 'onhover':
+            NOVA.waitSelector(SELECTOR_BTN)
+               .then(btn => btn.addEventListener('mouseenter', btn.click));
+            break;
 
-            //    case 'always':
-            //       NOVA.runOnPageInitOrTransition(() => {
-            //          if ((NOVA.currentPage == 'watch')) {
-            //             const wailtBtn = setInterval(() => {
-            //                btn.click()
-            //                if (!btn) clearInterval(wailtBtn);
-            //             }, 200);
-            //          }
-            //       });
-            //       break;
-            // }
-         });
+         case 'always':
+            document.addEventListener('yt-page-data-updated', () => {
+               document.body.querySelector(SELECTOR_BTN)?.click();
+            });
+            // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && btn.click());
+            // NOVA.runOnPageInitOrTransition(() => {
+            //    if ((NOVA.currentPage == 'watch')) {
+            //       const wailtBtn = setInterval(() => {
+            //          btn.click()
+            //          if (!btn) clearInterval(wailtBtn);
+            //       }, 200);
+            //    }
+            // });
+            break;
+      }
+      // });
 
    },
-   // options: {
-   //    description_expand_mode: {
-   //       _tagName: 'select',
-   //       label: 'Mode',
-   //       'label:zh': '模式',
-   //       'label:ja': 'モード',
-   //       'label:ko': '방법',
-   //       // 'label:id': 'Mode',
-   //       'label:es': 'Modo',
-   //       'label:pt': 'Modo',
-   //       // 'label:fr': 'Mode',
-   //       'label:it': 'Modalità',
-   //       // 'label:tr': 'Mod',
-   //       'label:de': 'Modus',
-   //       'label:pl': 'Tryb',
-   //       // title: '',
-   //       'label:ua': 'Режим',
-   //       options: [
-   //          {
-   //             label: 'always', value: 'always', selected: true,
-   //             'label:zh': '每次',
-   //             'label:ja': 'いつも',
-   //             'label:ko': '언제나',
-   //             'label:id': 'selalu',
-   //             'label:es': 'siempre',
-   //             'label:pt': 'sempre',
-   //             'label:fr': 'toujours',
-   //             'label:it': 'sempre',
-   //             // 'label:tr': 'her zaman',
-   //             'label:de': 'stets',
-   //             'label:pl': 'zawsze',
-   //             'label:ua': 'завжди',
-   //          },
-   //          {
-   //             label: 'on hover', value: 'onhover',
-   //             'label:zh': '悬停时',
-   //             'label:ja': 'ホバー時に',
-   //             'label:ko': '호버에',
-   //             'label:id': 'saat melayang',
-   //             'label:es': 'en vuelo estacionario',
-   //             'label:pt': 'pairando',
-   //             'label:fr': 'en vol stationnaire',
-   //             'label:it': 'quando in bilico',
-   //             // 'label:tr': 'üzerinde gezinme',
-   //             'label:de': 'auf schweben',
-   //             'label:pl': 'po najechaniu',
-   //             'label:ua': 'при наведенні',
-   //          },
-   //       ],
-   //    },
-   // }
+   options: {
+      description_expand_mode: {
+         _tagName: 'select',
+         label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
+         'label:ko': '방법',
+         // 'label:id': 'Mode',
+         'label:es': 'Modo',
+         'label:pt': 'Modo',
+         // 'label:fr': 'Mode',
+         'label:it': 'Modalità',
+         // 'label:tr': 'Mod',
+         'label:de': 'Modus',
+         'label:pl': 'Tryb',
+         // title: '',
+         'label:ua': 'Режим',
+         options: [
+            {
+               label: 'always', value: 'always', selected: true,
+               'label:zh': '每次',
+               'label:ja': 'いつも',
+               'label:ko': '언제나',
+               'label:id': 'selalu',
+               'label:es': 'siempre',
+               'label:pt': 'sempre',
+               'label:fr': 'toujours',
+               'label:it': 'sempre',
+               // 'label:tr': 'her zaman',
+               'label:de': 'stets',
+               'label:pl': 'zawsze',
+               'label:ua': 'завжди',
+            },
+            {
+               label: 'on hover', value: 'onhover',
+               'label:zh': '悬停时',
+               'label:ja': 'ホバー時に',
+               'label:ko': '호버에',
+               'label:id': 'saat melayang',
+               'label:es': 'en vuelo estacionario',
+               'label:pt': 'pairando',
+               'label:fr': 'en vol stationnaire',
+               'label:it': 'quando in bilico',
+               // 'label:tr': 'üzerinde gezinme',
+               'label:de': 'auf schweben',
+               'label:pl': 'po najechaniu',
+               'label:ua': 'при наведенні',
+            },
+         ],
+      },
+   }
 });

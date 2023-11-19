@@ -226,7 +226,8 @@ window.nova_plugins.push({
             }
             // console.debug('unlimit', this.node.gain.value);
          },
-         // alt - https://greasyfork.org/en/scripts/420723-youtube-better-player
+         // alt1 - https://greasyfork.org/en/scripts/420723-youtube-better-player
+         // alt2 - https://greasyfork.org/en/scripts/479475-youtube-display-current-volume
          buildVolumeSlider(timeout_ms = 800) {
             if (volumeArea = movie_player?.querySelector('.ytp-volume-area')) {
                // reset hide
@@ -477,6 +478,19 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
+         title: 'Boost volume',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
       },
    }
 });

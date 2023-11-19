@@ -21,12 +21,13 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
-console.debug(`current ${configStoreName}:`, user_settings);
+// console.debug(`current ${configStoreName}:`, user_settings);
 
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
    'streamed_disable_channel_exception': 'streamed_disable_channels_exception',
+   'video_quality_for_music': 'video_quality_in_music_quality',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {

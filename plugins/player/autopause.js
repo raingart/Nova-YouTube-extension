@@ -36,7 +36,7 @@ window.nova_plugins.push({
       // better use this flag when launching the chrome/imum:
       //  --autoplay-policy=user-gesture-required
 
-      if (user_settings['video-stop-preload'] && !user_settings.stop_preload_embed) return; // disable if a similar plugin of higher priority is active
+      if (user_settings['video-stop-preload'] && !user_settings.stop_preload_embed) return; // fix conflict with [video-stop-preload] plugin
 
       if (user_settings.video_autopause_embed && NOVA.currentPage != 'embed') return;
 
@@ -78,7 +78,11 @@ window.nova_plugins.push({
 
          this.pause();
 
-         const forceHoldPause = setInterval(() => this.paused || this.pause(), 200); // 200ms
+         // const forceHoldPause = setInterval(() => this.paused || this.pause(), 200); // 200ms
+         const forceHoldPause = setInterval(() => {
+            this.paused || movie_player.pauseVideo();
+            this.paused || this.pause(); // alt just in case
+         }, 200); // 200ms
          // setTimeout(() => clearInterval(forceHoldPause), 1000); // 1s
 
          document.addEventListener('keyup', ({ code }) => (code == 'Space') && stopForceHoldPause());
@@ -86,7 +90,10 @@ window.nova_plugins.push({
          document.addEventListener('click', evt => {
             if (//movie_player.contains(document.activeElement) ||
                evt.isTrusted
-               && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(s => evt.srcElement.matches(s))
+               && ['button[class*="play-button"]',
+                  '.ytp-cued-thumbnail-overlay-image',
+                  '.ytp-player-content'
+               ].some(s => evt.srcElement.matches(s))
             ) {
                stopForceHoldPause();
             }

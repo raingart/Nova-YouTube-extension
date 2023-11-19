@@ -218,7 +218,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_sexception);
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channels_exception);
 
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
@@ -251,7 +251,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channel_sexception);
+            const keywords = NOVA.strToArray(user_settings.streamed_disable_channels_exception);
 
             // document.body.querySelectorAll('#metadata-line > span:last-of-type')
             document.body.querySelectorAll('#metadata')

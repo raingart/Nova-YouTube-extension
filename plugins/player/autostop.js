@@ -114,7 +114,10 @@ window.nova_plugins.push({
             document.addEventListener('click', evt => {
                if (//movie_player.contains(document.activeElement) ||
                   evt.isTrusted
-                  && ['button[class*="play-button"]', '.ytp-cued-thumbnail-overlay-image'].some(s => evt.srcElement.matches(s))
+                  && ['button[class*="play-button"]',
+                     '.ytp-cued-thumbnail-overlay-image',
+                     '.ytp-player-content'
+                  ].some(s => evt.srcElement.matches(s))
                ) {
                   disableHoldStop();
                }

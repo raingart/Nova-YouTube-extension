@@ -15,6 +15,7 @@
    //- extractFirstInt
    - prettyRoundInt
    - isInViewport
+   // - checkVisibility
    - collapseElement
    - aspectRatio.sizeToFit
    - aspectRatio.getAspectRatio
@@ -80,30 +81,30 @@ const NOVA = {
    //    });
    // },
 
-//    waitForElementNotHidden(selector, timeout) {
-//       return new Promise((resolve, reject) => {
-//         const startTime = Date.now();
+   //    waitForElementNotHidden(selector, timeout) {
+   //       return new Promise((resolve, reject) => {
+   //         const startTime = Date.now();
 
-//         function checkElement() {
-//           let element = document.querySelector(selector);
+   //         function checkElement() {
+   //           let element = document.querySelector(selector);
 
-//           if (element) {
-//               if (element.style.display != 'none') {
-//                   resolve(element);
-//               }
-//               else {
-//                   setTimeout(checkElement, 100); // Check again in 100ms
-//               }
-//           } else if (Date.now() - startTime >= timeout) {
-//             reject(new Error(`Element '${selector}' not found within ${timeout}ms`));
-//           } else {
-//             setTimeout(checkElement, 100); // Check again in 100ms
-//           }
-//         }
+   //           if (element) {
+   //               if (element.style.display != 'none') {
+   //                   resolve(element);
+   //               }
+   //               else {
+   //                   setTimeout(checkElement, 100); // Check again in 100ms
+   //               }
+   //           } else if (Date.now() - startTime >= timeout) {
+   //             reject(new Error(`Element '${selector}' not found within ${timeout}ms`));
+   //           } else {
+   //             setTimeout(checkElement, 100); // Check again in 100ms
+   //           }
+   //         }
 
-//         checkElement();
-//       });
-//   },
+   //         checkElement();
+   //       });
+   //   },
 
    // waitSelector(selector = required(), container) {
    //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
@@ -236,7 +237,7 @@ const NOVA = {
             return resolve(element);
          }
 
-         const observer1 = new MutationObserver((mutationRecordsArray, observer) => {
+         const mutationObserver = new MutationObserver((mutationRecordsArray, observer) => {
             for (const record of mutationRecordsArray) {
                for (const node of record.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType) || !(node instanceof HTMLElement)) continue; // speedup hack
@@ -267,7 +268,7 @@ const NOVA = {
             }
          })
 
-         observer1
+         mutationObserver
             .observe(limit_data?.container || document.body || document.documentElement || document, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
@@ -281,7 +282,7 @@ const NOVA = {
             isURLChange();
             window.addEventListener('transitionend', ({ target }) => {
                if (isURLChange()) {
-                  observer1.disconnect();
+                  mutationObserver.disconnect();
                }
             });
             function isURLChange() {
@@ -635,6 +636,21 @@ const NOVA = {
       }
    },
 
+   /**
+    * @param  {Node} el
+    * @return  {boolean}
+   */
+   // checkVisibility(el = required()) {
+   //    if (!el.offsetHeight && !el.offsetWidth) return false;
+
+   //    if (styles = getComputedStyle(el)) {
+   //       return (
+   //          styles.visibility != 'hidden' &&
+   //          styles.display != 'none'
+   //       );
+   //    }
+   // }
+
    /* NOVA.collapseElement({
          selector: '#secondary #related',
          label: 'related',// auto uppercase
@@ -899,7 +915,7 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
-                                 .trim().replace(/^[:\-–—|●]|(\[\])?[:\-–—.;|●]$/g, '').trim() // clear of quotes and list characters
+                                 .trim().replace(/^[:\-–—|●►]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
                                  //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
                                  // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                                  .trim()

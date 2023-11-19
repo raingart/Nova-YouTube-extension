@@ -36,6 +36,7 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/451446-youtube-embed-remove-branding
       // alt2 - https://greasyfork.org/en/scripts/462455-remove-youtube-propaganda
       // alt3 - https://greasyfork.org/en/scripts/407207-ad-free-youtube-grid
+      // alt4 - https://greasyfork.org/en/scripts/480134-starburst-ads
 
       // hide donate"
       // '#donation-shelf',

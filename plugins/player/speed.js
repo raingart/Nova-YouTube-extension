@@ -525,7 +525,9 @@ window.nova_plugins.push({
                      document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
                         .forEach(overlay => {
                            // if (timeLabelEl = overlay.querySelector('#text')) {
-                           if (timeLabelEl = overlay.$['text']) {
+                           if (overlay.hasOwnProperty('text')
+                              && (timeLabelEl = overlay.$['text'])
+                           ) {
                               overlay.setAttribute(ATTR_MARK, true); // mark
                               // overlay.style.border = '2px solid orange'; // mark for test
                               const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl.textContent);

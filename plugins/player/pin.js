@@ -20,7 +20,7 @@ window.nova_plugins.push({
    'title:ua': 'Закріпити відтворювач коли гортаєш сторінку',
    run_on_pages: 'watch, -mobile',
    section: 'player',
-   desc: 'Mini player',
+   desc: 'Show mini player when scrolling down',
    // desc: 'Player stays always visible while scrolling',
    // 'desc:zh': '滚动时播放器始终可见',
    // 'desc:ja': 'スクロール中、プレーヤーは常に表示されたままになります',

@@ -40,6 +40,8 @@ window.nova_plugins.push({
       // alt1 - https://github.com/MarcGuiselin/youtube-refined/blob/main/code/scripts/content/youtube.js#L1526-L1653
       // alt2 - https://chrome.google.com/webstore/detail/youtube-ad-auto-skipper/lokpenepehfdekijkebhpnpcjjpngpnd
       // alt3 - https://greasyfork.org/en/scripts/459541
+      // alt4 - https://greasyfork.org/en/scripts/386925-youtube-ad-cleaner-include-non-skippable-ads-works
+      // alt5 - https://greasyfork.org/en/scripts/478684-addodge
 
       // NOVA.css.push( // hides the appearance when playing on the next video
       //    `#movie_player.ad-showing video {
@@ -55,6 +57,12 @@ window.nova_plugins.push({
             video.addEventListener('loadeddata', adSkip.bind(video));
             video.addEventListener('canplay', adSkip.bind(video));
             // video.addEventListener('durationupdate', adSkip.bind(video)); // stream
+
+            // requestAnimationFrame(tick);
+            // function tick() {
+            //    requestAnimationFrame(tick);
+            //    adSkip.apply(video);
+            // }
          });
 
       // onSkipAdButtonClick

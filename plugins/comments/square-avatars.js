@@ -45,7 +45,7 @@ window.nova_plugins.push({
             '.ytp-title-channel-logo',
             '#player .ytp-title-channel',
             'ytm-profile-icon',
-
+            '#ytd-player.ytd-watch-flexy',
             // after 10.27.22
             'a.ytd-thumbnail',
             // 'ytd-watch-metadata #description.ytd-watch-metadata',

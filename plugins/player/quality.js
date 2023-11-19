@@ -58,7 +58,7 @@ window.nova_plugins.push({
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
                      selectedQuality = quality;
-                     user_settings.video_quality_in_music_playlist = false; // overwrite for music
+                     user_settings.video_quality_for_fullscreen = false; // overwrite for music
                   }
                });
             }
@@ -77,6 +77,16 @@ window.nova_plugins.push({
             setQuality(); // init
 
             movie_player.addEventListener('onStateChange', setQuality); // update
+
+            if (user_settings.video_quality_for_fullscreen) {
+               let selectedQualityBackup = selectedQuality;
+               document.addEventListener('fullscreenchange', () => {
+                  selectedQuality = NOVA.isFullscreen()
+                     ? user_settings.video_quality_for_fullscreen
+                     : selectedQualityBackup;
+                  movie_player.setPlaybackQualityRange(selectedQuality, selectedQuality);
+               });
+            }
          });
 
       async function setQuality(state) {
@@ -84,12 +94,12 @@ window.nova_plugins.push({
          // console.debug('playerState', NOVA.getPlayerState(state));
 
          // checkMusicType
-         if (user_settings.video_quality_in_music_playlist
+         if (user_settings.video_quality_for_fullscreen
             && location.search.includes('list=')
             // && (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/)
             && NOVA.isMusic()
          ) {
-            selectedQuality = user_settings.video_quality_in_music_quality;
+            selectedQuality = user_settings.video_quality_for_music;
          }
 
          // get data [quick-quality] from [player-quick-buttons] plugin
@@ -229,9 +239,9 @@ window.nova_plugins.push({
          'title:pl': 'Zmiany w następnych filmach',
          'title:ua': 'Впливає на наступні відео',
       },
-      video_quality_in_music_playlist: {
-         _tagName: 'input',
-         label: 'Diff quality for music in playlists',
+      video_quality_for_music: {
+         _tagName: 'select',
+         label: 'For music (in playlists)',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -244,7 +254,6 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          'label:ua': 'Змінити якість музики у списках відтворення',
-         type: 'checkbox',
          title: 'to save traffic / increase speed',
          'title:zh': '节省流量/提高速度',
          'title:ja': 'トラフィックを節約/速度を上げる',
@@ -258,22 +267,6 @@ window.nova_plugins.push({
          'title:de': 'um Verkehr zu sparen / Geschwindigkeit zu erhöhen',
          'title:pl': 'aby zaoszczędzić ruch / zwiększyć prędkość',
          'title:ua': 'для економії трафіку / збільшення швидкості',
-      },
-      video_quality_in_music_quality: {
-         _tagName: 'select',
-         label: 'Quality for music',
-         'label:zh': '音乐品质',
-         'label:ja': '音楽の品質',
-         'label:ko': '음악 품질',
-         'label:id': 'Kualitas untuk musik',
-         'label:es': 'calidad para la musica',
-         'label:pt': 'Qualidade para música',
-         'label:fr': 'Qualité pour la musique',
-         'label:it': 'Qualità per la musica',
-         // 'label:tr': '',
-         'label:de': 'Qualität für Musik',
-         'label:pl': 'Jakość dla muzyki',
-         'label:ua': 'Якість для музики',
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
@@ -287,9 +280,52 @@ window.nova_plugins.push({
             { label: 'SD/360p', value: 'medium' },
             { label: 'SD/240p', value: 'small' },
             { label: 'SD/144p', value: 'tiny' },
-            // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
+            { label: 'default', /*value: false*/ },
          ],
-         'data-dependent': { 'video_quality_in_music_playlist': true },
+      },
+      video_quality_for_fullscreen: {
+         _tagName: 'select',
+         label: 'For fullscreen',
+         'label:zh': '音乐品质',
+         'label:ja': '音楽の品質',
+         'label:ko': '음악 품질',
+         'label:id': 'Kualitas untuk musik',
+         'label:es': 'calidad para la musica',
+         'label:pt': 'Qualidade para música',
+         'label:fr': 'Qualité pour la musique',
+         'label:it': 'Qualità per la musica',
+         // 'label:tr': '',
+         'label:de': 'Qualität für Musik',
+         'label:pl': 'Jakość dla muzyki',
+         'label:ua': 'Якість для музики',
+         // title: 'specified quality in fullscreen mode',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         // multiple: null,
+         options: [
+            // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
+            { label: '8K/4320p', value: 'highres' },
+            // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            { label: '4K/2160p', value: 'hd2160' },
+            { label: 'QHD/1440p', value: 'hd1440' },
+            { label: 'FHD/1080p', value: 'hd1080' },
+            { label: 'HD/720p', value: 'hd720' },
+            { label: 'SD/480p', value: 'large' },
+            { label: 'SD/360p', value: 'medium' },
+            { label: 'SD/240p', value: 'small' },
+            { label: 'SD/144p', value: 'tiny' },
+            { label: 'default', /*value: false,*/ selected: true },
+         ],
       },
    }
 });
