@@ -45,14 +45,15 @@ window.nova_plugins.push({
       document.addEventListener('yt-action', evt => {
          // if (!location.search.includes('list=')) return;
 
-         if (NOVA.currentPage != 'watch' && evt.detail?.actionName.includes('miniplayer')) {
+         // if (NOVA.currentPage != 'watch' && evt.detail?.actionName.includes('miniplayer')) {
+         if (evt.detail?.actionName.includes('miniplayer')) {
             // console.log(evt.detail?.actionName);
             // 'yt-cache-miniplayer-page-action'
             // 'yt-miniplayer-endpoint-changed'
             // 'yt-miniplayer-play-state-changed'
             // 'yt-miniplayer-active'
 
-            document.body.querySelector('ytd-miniplayer[active] #movie_player .ytp-miniplayer-scrim button.ytp-miniplayer-close-button')
+            document.body.querySelector('ytd-miniplayer[active] #movie_player button.ytp-miniplayer-close-button')
                ?.click();
 
             // force way

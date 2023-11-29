@@ -70,8 +70,8 @@ window.nova_plugins.push({
                }
             });
 
-            //fix - Listener default indicator on change
-            if (user_settings.volume_normalization) {
+            // fix - Listener default indicator on change
+            if (user_settings.volume_loudness_normalization) {
                // get original fn
                // const { get, set } = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume');
                const { set } = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume');
@@ -462,9 +462,9 @@ window.nova_plugins.push({
          'title:pl': 'Dotyczy tylko nowych kart',
          'title:ua': 'Діє лише на нові вкладки',
       },
-      volume_normalization: {
+      volume_loudness_normalization: {
          _tagName: 'input',
-         label: 'Disable normalization',
+         label: 'Disable loudness normalization',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -478,7 +478,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
-         title: 'Boost volume',
+         title: 'Boost volume level',
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',

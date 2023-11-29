@@ -300,12 +300,13 @@ window.nova_plugins.push({
                      // fix Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
                      // ex: https://www.youtube.com/watch?v=FZovbrEP53o
 
-                     canvas.toBlob(blob => container.href = URL.createObjectURL(blob));
-                     // canvas.toBlob(blob => {
-                     //    container.href = URL.createObjectURL(blob);
-                     //    // copy to clipboard
-                     //    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                     // });
+                     canvas.toBlob(blob => {
+                        container.href = URL.createObjectURL(blob);
+                        // copy to clipboard
+                        if (user_settings.player_buttons_custom_screenshot_to_clipboard) {
+                           navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        }
+                     }, `image/${user_settings.player_buttons_custom_screenshot || 'png'}`);
                      // container.href = canvas.toDataURL(); // err in Brave browser (https://github.com/raingart/Nova-YouTube-extension/issues/8)
                   } catch (error) {
                      // alert("The video is protected. Can't take screenshot due to security policy");
@@ -828,9 +829,9 @@ window.nova_plugins.push({
                                        // movie_player.setPlaybackQuality(quality); // Doesn't work
 
                                        // send data to [video-quality] plugin
-                                       if (user_settings['video-quality']) {
-                                          window['nova-quality'] = quality;
-                                       }
+                                       // if (user_settings['video-quality']) {
+                                       //    window['nova-quality'] = quality;
+                                       // }
 
                                        if (quality == 'auto') return; // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
 
@@ -1435,6 +1436,24 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
          ],
+         'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
+      },
+      player_buttons_custom_screenshot_to_clipboard: {
+         _tagName: 'input',
+         label: 'Screenshot copy to clipboard',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
          'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
       },
       range_speed_unlimit: {

@@ -1,7 +1,7 @@
 window.nova_plugins.push({
    id: 'save-channel-state',
    // title: 'Save for specific channel',
-   title: 'Add button "Save state for specific channel"',
+   title: 'Add button "Save params for the channel"',
    'title:zh': '특정 채널에 저장',
    'title:ja': '特定のチャンネル用に保存',
    'title:ko': '특정 채널에 저장',
@@ -142,6 +142,9 @@ window.nova_plugins.push({
          // }
          if (user_settings['player-resume-playback']) {
             listItem.push({ name: 'ignore-playback', label: 'unsave playback time', getSaveDataFn: () => true });
+         }
+         if (user_settings['player-loop']) {
+            listItem.push({ name: 'loop', getSaveDataFn: () => true });
          }
 
          // input-checkbox

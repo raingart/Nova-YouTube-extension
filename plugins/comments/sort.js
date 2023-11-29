@@ -192,7 +192,7 @@ window.nova_plugins.push({
                      // {
                      //    "snippet": {
                      //       "videoId": "xxx..",
-                     //       "textDisplay": "text",
+                     //       "textOriginal": "text",
                      //       "textOriginal": "text",
                      //       "authorDisplayName": "user A",
                      //       "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/..",
@@ -259,17 +259,18 @@ window.nova_plugins.push({
             .sort((a, b) => b.likeCount - a.likeCount) // b - a for reverse sort
             .forEach(comment => {
                try {
+                  const countWords = (str = '') => str.trim().split(/\s+/).length,
+                     clearOfEmoji = str => str
+                        .replace(/[\u2011-\u26FF]/g, ' ') // Symbols
+                        .replace(/[^<>=\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ') // Emoji
+                        .replace(/([=:;/.()]{2,}|\))$/g, ' ') // Smile at the end of the line
+                        .replace(/\s{2,}/g, ' ')
+                        .replace(/(<br>){3,}/g, '<br><br>')
+                        .trim();
+
                   // filter comments
                   if (user_settings.comments_sort_clear_emoji) {
-                     const countWords = str => str.trim().split(/\s+/).length,
-                        clearOfEmoji = str => str
-                           .replace(/[\u2011-\u26FF]/g, ' ') // Symbols
-                           .replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ') // Emoji
-                           .replace(/([:;/.()]{2,}|\))$/g, ' ') // Smile at the end of the line
-                           .replace(/\s{2,}/g, ' ')
-                           .trim();
-
-                     comment.textDisplay = clearOfEmoji(comment.textDisplay);
+                     comment.textDisplay = clearOfEmoji(comment.textDisplay); // comment.textOriginal
 
                      if (comment.textDisplay.length < 3) return;
 
@@ -298,7 +299,7 @@ window.nova_plugins.push({
                            <img src="${comment.authorProfileImageUrl}" alt="${comment.authorDisplayName}" />
                         </a>
                      </td>
-                     <td sorttable_customkey="${comment.textDisplay.length}">
+                     <td sorttable_customkey="${comment.textOriginal.length}">
                         <span class="text-overflow-dynamic-ellipsis">${comment.textDisplay}</span>
                         ${appendReplies()}
                      </td>`;
@@ -326,8 +327,22 @@ window.nova_plugins.push({
                      table.setAttribute(NOVA_REPLYS_SELECTOR_ID, replyInputName); // mark
                      // replies
                      comment.comments
-                        ?.reverse() // order by
-                        .forEach(reply => {
+                        // ?.reverse() // order by
+                        ?.forEach(reply => {
+                           // filter comments
+                           if (user_settings.comments_sort_clear_emoji) {
+                              reply.snippet.textDisplay = clearOfEmoji(reply.snippet.textDisplay);
+
+                              // if (reply.snippet.textDisplay.length < 3) return;
+
+                              if (+user_settings.comments_sort_min_words
+                                 && countWords(reply.snippet.textDisplay) <= +user_settings.comments_sort_min_words
+                              ) {
+                                 // console.debug('filter reply (by min words):', reply.snippet.textDisplay.textDisplay);
+                                 return;
+                              }
+                           }
+
                            const li = document.createElement('tr');
                            // li.className = 'item';
                            li.innerHTML =
@@ -732,7 +747,7 @@ window.nova_plugins.push({
       },
       comments_sort_min_words: {
          _tagName: 'input',
-         label: 'Min words',
+         label: 'Min words count',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -746,7 +761,19 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'number',
-         // title: '',
+         title: '0 - disable',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
          placeholder: '1-10',
          min: 1,
          max: 10,

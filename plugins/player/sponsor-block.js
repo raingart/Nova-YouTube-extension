@@ -46,9 +46,10 @@ window.nova_plugins.push({
                segmentsList = await getSkipSegments(videoId) || [];
                // console.debug('segmentsList', segmentsList);
 
+               // render marks for [player-float-progress-bar] plugin
                if (user_settings['player-float-progress-bar'] && segmentsList.length) {
                   const SELECTOR = 'nova-player-float-progress-bar-chapters';
-                  // const deflectionSec = 5;
+                  const deflectionSec = 5;
                   let chaptersEls;
                   // wait chapters
                   await NOVA.waitUntil(() =>
@@ -60,17 +61,19 @@ window.nova_plugins.push({
 
                      const
                         chapterStart = ~~NOVA.timeFormatTo.hmsToSec(chapterEl.getAttribute('time')),
-                        chapterNext = ~~NOVA.timeFormatTo.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
+                        chapterNextStart = ~~NOVA.timeFormatTo.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
 
                      for (const [i, value] of segmentsList.entries()) {
-                        const [start, end, category] = value;
+                        const [segmentStart, segmentEnd, category] = value;
 
-                        // console.debug('chapter', start, end);
+                        // console.debug('chapter', segmentStart, segmentEnd);
                         // console.debug('chapterStart', chapterStart);
-                        // console.debug('chapterNext', chapterNext);
+                        // console.debug('chapterNextStart', chapterNextStart);
 
-                        // if ((~~start <= chapterNext) && (~~end >= (chapterStart + deflectionSec))) {
-                        if ((~~start <= chapterNext) && (~~end >= chapterStart)) {
+                        // if ((~~segmentStart <= chapterNextStart) && (~~segmentEnd >= chapterStart)) {
+                        if (((~~segmentStart + deflectionSec) <= chapterNextStart)
+                           && ((~~segmentEnd - deflectionSec) >= chapterStart)
+                        ) {
                            chapterEl.style.title = category;
                            let color;
                            switch (category) {
@@ -86,22 +89,22 @@ window.nova_plugins.push({
                   });
                }
             }
-
+            // apply a skip method
             video.addEventListener('timeupdate', function () {
                // if (!isNaN(video.duration))
 
-               let start, end, category;
+               let segmentStart, segmentEnd, category;
 
                // for (const [i, value] of segmentsList.entries()) {
                //    console.debug('>>', value, i);
-               //    const [start, end] = value;
+               //    const [segmentStart, segmentEnd] = value;
                for (let i = 0; i < segmentsList.length; i++) {
                   // console.debug('>>', segmentsList, i);
-                  [start, end, category] = segmentsList[i];
-                  start = ~~start;
-                  end = Math.ceil(end);
+                  [segmentStart, segmentEnd, category] = segmentsList[i];
+                  segmentStart = ~~segmentStart;
+                  segmentEnd = Math.ceil(segmentEnd);
 
-                  const inSegment = (this.currentTime > start && this.currentTime < end);
+                  const inSegment = (this.currentTime > segmentStart && this.currentTime < segmentEnd);
 
                   switch (user_settings.sponsor_block_action) {
                      // case 'full': break;
@@ -128,7 +131,7 @@ window.nova_plugins.push({
                      // default:
                      case 'skip':
                         if (inSegment) {
-                           this.currentTime = end;
+                           this.currentTime = segmentEnd;
                            segmentsList.splice(i, 1); // for optimization use segment once
 
                            return novaNotification('skipped');
@@ -138,7 +141,7 @@ window.nova_plugins.push({
                }
 
                function novaNotification(prefix = '') {
-                  const msg = `${prefix} [${category}] • ${NOVA.timeFormatTo.HMS.digit(start)} - ${NOVA.timeFormatTo.HMS.digit(end)}`;
+                  const msg = `${prefix} [${category}] • ${NOVA.timeFormatTo.HMS.digit(segmentStart)} - ${NOVA.timeFormatTo.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
                   NOVA.triggerHUD(msg); // trigger default indicator
                }

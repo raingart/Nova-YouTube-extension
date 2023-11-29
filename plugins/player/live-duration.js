@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'player-live-duration',
-   title: 'Show duration on live',
+   title: 'Show duration on live video',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

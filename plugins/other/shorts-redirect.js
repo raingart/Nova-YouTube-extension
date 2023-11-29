@@ -19,7 +19,8 @@ window.nova_plugins.push({
    // run_on_pages: 'results, feed, channel, shorts',
    run_on_pages: 'shorts',
    restart_on_location_change: true, // replace "redirectPageToNormal"
-   section: 'other',
+   // section: 'other',
+   section: 'player',
    desc: 'Redirect Shorts video to normal player',
    'desc:zh': '将 Shorts 视频重定向到普通播放器',
    'desc:ja': 'ショートパンツのビデオを通常のプレーヤーにリダイレクトする',

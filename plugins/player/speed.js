@@ -521,17 +521,17 @@ window.nova_plugins.push({
                   case 'feed':
                   case 'channel':
                   case 'watch':
-                     // document.body.querySelectorAll(`#thumbnail #overlays #text:not([${ATTR_MARK}])`)
-                     document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
+                     // document.body.querySelectorAll(`#thumbnail #overlays #time-status #text:not([${ATTR_MARK}])`)
+                     document.body.querySelectorAll(`#thumbnail #overlays #text:not([${ATTR_MARK}])`)
+                        // document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
                         .forEach(overlay => {
-                           // if (timeLabelEl = overlay.querySelector('#text')) {
-                           if (overlay.hasOwnProperty('text')
-                              && (timeLabelEl = overlay.$['text'])
+                           if ((timeLabelEl = overlay.textContent.trim())
+                              //&& !timeLabelEl.startsWith('⚡')
                            ) {
                               overlay.setAttribute(ATTR_MARK, true); // mark
                               // overlay.style.border = '2px solid orange'; // mark for test
-                              const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl.textContent);
-                              timeLabelEl.textContent = //'⚡' + // broken thumbs_min_duration in [thumbs-hide] plugin
+                              const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl);
+                              overlay.textContent = //'⚡' + // broken thumbs_min_duration in [thumbs-hide] plugin
                                  NOVA.timeFormatTo.HMS.digit(timeSec / user_settings.rate_default);
                            }
                         });

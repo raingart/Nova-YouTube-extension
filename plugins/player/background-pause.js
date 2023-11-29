@@ -275,7 +275,7 @@ window.nova_plugins.push({
       // },
       pause_background_tab_autoplay_onfocus: {
          _tagName: 'select',
-         label: 'Autoplay on tab focus',
+         label: 'Autoplay on tab focus mode',
          'label:zh': '在标签焦点上自动播放',
          'label:ja': 'タブフォーカスでの自動再生',
          'label:ko': '탭 포커스에서 자동 재생',

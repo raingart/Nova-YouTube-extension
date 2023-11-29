@@ -208,7 +208,7 @@ window.nova_plugins.push({
    options: {
       thumbnails_clear_preview_timestamp: {
          _tagName: 'select',
-         label: 'Thumbnail timestamps',
+         label: 'Thumbnail timestamps moment',
          'label:zh': '缩略图时间戳',
          'label:ja': 'サムネイルのタイムスタンプ',
          'label:ko': '썸네일 타임스탬프',

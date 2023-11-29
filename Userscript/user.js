@@ -26,8 +26,8 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 // updateKeyStorage
 const keyRenameTemplate = {
    // 'oldKey': 'newKey',
-   'streamed_disable_channel_exception': 'streamed_disable_channels_exception',
-   'video_quality_for_music': 'video_quality_in_music_quality',
+   'video_quality_in_music_quality': 'video_quality_for_music',
+   'volume_normalization': 'volume_loudness_normalization',
 }
 for (const oldKey in user_settings) {
    if (newKey = keyRenameTemplate[oldKey]) {
@@ -58,7 +58,20 @@ else {
       user_settings['report_issues'] = 'on';
       GM_setValue(configStoreName, user_settings);
    }
-   else landerPlugins();
+   else {
+      landerPlugins();
+
+      // export conf
+      const exportedSettings = Object.assign({}, user_settings);
+      delete exportedSettings['user-api-key'];
+      delete exportedSettings['sponsor_block'];
+      delete exportedSettings['sponsor_block_category'];
+      delete exportedSettings['sponsor_block_url'];
+      delete exportedSettings['thumb_filter_title_blocklist'];
+      delete exportedSettings['search_filter_channel_blocklist'];
+      delete exportedSettings['streamed_disable_channels_exception'];
+      unsafeWindow.window.nova_settings = exportedSettings;
+   }
 }
 
 function setupConfigPage() {
@@ -209,38 +222,40 @@ function landerPlugins() {
 function registerMenuCommand() {
    // GM_registerMenuCommand('Settings', () => window.open(configPage));
    GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
-   // GM_registerMenuCommand('Import settings', () => {
-   //    if (json = JSON.parse(prompt('Enter json file context'))) {
-   //       GM_setValue(configStoreName, json);
-   //       alert('Settings imported');
-   //       location.reload();
-   //    }
-   //    else alert('Import failed');
-   // });
    GM_registerMenuCommand('Import settings', () => {
-      const f = document.createElement('input');
-      f.type = 'file';
-      f.accept = 'application/JSON';
-      f.style.display = 'none';
-      f.addEventListener('change', function () {
-         if (f.files.length !== 1) return alert('file empty');
-         const rdr = new FileReader();
-         rdr.addEventListener('load', function () {
-            try {
-               GM_setValue(configStoreName, JSON.parse(rdr.result));
-               alert('Settings imported successfully!');
-               location.reload();
-            }
-            catch (err) {
-               alert(`Error parsing settings\n${err.name}: ${err.message}`);
-            }
+      if (navigator.userAgent.match(/firefox|fxios/i)) {
+         if (json = JSON.parse(prompt('Enter json file context'))) {
+            GM_setValue(configStoreName, json);
+            alert('Settings imported');
+            location.reload();
+         }
+         // else alert('Import failed');
+      }
+      else {
+         const f = document.createElement('input');
+         f.type = 'file';
+         f.accept = 'application/JSON';
+         f.style.display = 'none';
+         f.addEventListener('change', function () {
+            if (f.files.length !== 1) return alert('file empty');
+            const rdr = new FileReader();
+            rdr.addEventListener('load', function () {
+               try {
+                  GM_setValue(configStoreName, JSON.parse(rdr.result));
+                  alert('Settings imported successfully!');
+                  location.reload();
+               }
+               catch (err) {
+                  alert(`Error parsing settings\n${err.name}: ${err.message}`);
+               }
+            });
+            rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
+            rdr.readAsText(f.files[0]);
          });
-         rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
-         rdr.readAsText(f.files[0]);
-      });
-      document.body.append(f);
-      f.click();
-      f.remove();
+         document.body.append(f);
+         f.click();
+         f.remove();
+      }
    });
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');

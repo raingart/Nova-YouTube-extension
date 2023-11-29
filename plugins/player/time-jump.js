@@ -366,9 +366,10 @@ window.nova_plugins.push({
          'label:ua': 'Гаряча клавіша (двічі натиснути)',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'alt', value: 18 },
             { label: 'shift', value: 16 },
             { label: 'ctrl', value: 17, selected: true },
+            { label: 'alt', value: 18 },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ '[', ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
          ],
       },
       time_jump_title_offset: {
@@ -437,7 +438,19 @@ window.nova_plugins.push({
          'label:pl': 'Ustaw czas rozpoczęcia',
          'label:ua': 'Встановіть час початку',
          type: 'number',
-         title: 'sec',
+         title: 'in sec / 0 - disable',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
          placeholder: '1-30',
          step: 1,
          min: 0,

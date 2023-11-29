@@ -194,6 +194,26 @@ const NOVA = {
    //       });
    // },
 
+   // waitSelector(selector, intervalMs = 500, maxTries = 6) {
+   //    return new Promise((resolve, reject) => {
+   //       let tried = 1
+   //       const id = setInterval(() => {
+   //          if (tried > maxTries) {
+   //             clearInterval(id)
+   //             reject(new Error(`The maximum amount of tries (${maxTries}) was exceeded.`))
+   //             return
+   //          }
+   //          const elements = document.querySelectorAll(selector)
+   //          if (elements.length > 0) {
+   //             clearInterval(id)
+   //             resolve(elements)
+   //             return
+   //          }
+   //          tried++
+   //       }, intervalMs)
+   //    })
+   // }
+
    /**
     * @param  {string} selector
     * @param  {Node*} container
@@ -1594,7 +1614,7 @@ const NOVA = {
     * @return {boolean}
    */
    isFullscreen: () => (
-      /*document.fullscreen || */ // site page can be in full screen mode
+      /*document.fullscreen || */ // site page can be in fullscreen mode
       movie_player.classList.contains('ytp-fullscreen')
       || (movie_player.hasOwnProperty('isFullscreen') && movie_player.isFullscreen()) // Doesn't work in embed
       // || document.body.querySelector('ytd-watch-flexy[fullscreen]')

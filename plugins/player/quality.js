@@ -3,6 +3,7 @@
 // https://www.youtube.com/watch?v=LhKT9NTH9HA - don't have 480p
 // https://www.youtube.com/watch?v=FZovbrEP53o - don't have 480p
 // https://www.youtube.com/watch?v=Qc6FJWapiJk - don't have 240p
+// https://www.youtube.com/watch?v=f354o8g-4mk - don't have 240p
 // https://www.youtube.com/watch?v=E480DjY6ve8 - only 360p
 
 window.nova_plugins.push({
@@ -58,7 +59,9 @@ window.nova_plugins.push({
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
                      selectedQuality = quality;
-                     user_settings.video_quality_for_fullscreen = false; // overwrite for music
+                     // clear all other state
+                     user_settings.video_quality_for_music = false;
+                     user_settings.video_quality_for_fullscreen = false;
                   }
                });
             }
@@ -94,7 +97,7 @@ window.nova_plugins.push({
          // console.debug('playerState', NOVA.getPlayerState(state));
 
          // checkMusicType
-         if (user_settings.video_quality_for_fullscreen
+         if (user_settings.video_quality_for_music
             && location.search.includes('list=')
             // && (NOVA.queryURL.has('list')/* || movie_player?.getPlaylistId()*/)
             && NOVA.isMusic()
@@ -102,18 +105,22 @@ window.nova_plugins.push({
             selectedQuality = user_settings.video_quality_for_music;
          }
 
+         // Atention "quality_lock" fix conflict [quick-quality] from [player-quick-buttons] plugin
          // get data [quick-quality] from [player-quick-buttons] plugin
-         if (user_settings['player-quick-buttons']
-            && user_settings.player_buttons_custom_items?.includes('quick-quality')
-            && window['nova-quality']
-         ) {
-            selectedQuality = window['nova-quality'];
-         }
+         // if (user_settings['player-quick-buttons']
+         //    && user_settings.player_buttons_custom_items?.includes('quick-quality')
+         //    && window['nova-quality']
+         // ) {
+         //    selectedQuality = window['nova-quality'];
+         // }
 
-         // if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state))) {
-         if (1 == state || 3 == state) {
+         // if (['PLAYING', 'BUFFERING'].includes(NOVA.getPlayerState(state)) && !setQuality.quality_lock) {
+         if ((1 == state || 3 == state) && !this.quality_lock) {
+            this.quality_lock = true;
+
             let availableQualityLevels;
-            await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels?.length, 50) // 500ms
+            await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels.length, 50) // 50ms
+
             // incorrect window size definition in embed
             // set max quality limit (screen resolution (not viewport) + 30%)
             const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
@@ -123,7 +130,7 @@ window.nova_plugins.push({
             // const maxAvailableQualityIdx = Math.max(availableQualityLevels.indexOf(selectedQuality), 0);
             const availableQualityIdx = function () {
                let i = availableQualityLevels.indexOf(selectedQuality);
-               if (i === -1) {
+               if (i === -1) { // get closest
                   const
                      availableQuality = Object.keys(qualityFormatListWidth)
                         .filter(v => availableQualityLevels.includes(v) || (v == selectedQuality)), // filter same item + selectedQuality
@@ -159,6 +166,10 @@ window.nova_plugins.push({
             // console.debug('availableQualityLevels:', availableQualityLevels);
             // console.debug("try set quality:", newQuality);
             // console.debug('current quality:', movie_player.getPlaybackQuality());
+         }
+         // else if (['UNSTARTED', 'ENDED'].includes(NOVA.getPlayerState(state))) {
+         else if (state <= 0) {
+            this.quality_lock = false;
          }
       }
 
@@ -270,34 +281,34 @@ window.nova_plugins.push({
          // multiple: null,
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
-            { label: '8K/4320p', value: 'highres' },
-            // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
-            { label: '4K/2160p', value: 'hd2160' },
+            // { label: '8K/4320p', value: 'highres' }, // useless for the current mode
+            // // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            // { label: '4K/2160p', value: 'hd2160' }, // useless for the current mode
             { label: 'QHD/1440p', value: 'hd1440' },
             { label: 'FHD/1080p', value: 'hd1080' },
             { label: 'HD/720p', value: 'hd720' },
-            { label: 'SD/480p', value: 'large', selected: true },
+            { label: 'SD/480p', value: 'large' },
             { label: 'SD/360p', value: 'medium' },
             { label: 'SD/240p', value: 'small' },
             { label: 'SD/144p', value: 'tiny' },
-            { label: 'default', /*value: false*/ },
+            { label: 'default', /*value: false,*/ selected: true },
          ],
       },
       video_quality_for_fullscreen: {
          _tagName: 'select',
          label: 'For fullscreen',
-         'label:zh': '音乐品质',
-         'label:ja': '音楽の品質',
-         'label:ko': '음악 품질',
-         'label:id': 'Kualitas untuk musik',
-         'label:es': 'calidad para la musica',
-         'label:pt': 'Qualidade para música',
-         'label:fr': 'Qualité pour la musique',
-         'label:it': 'Qualità per la musica',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
          // 'label:tr': '',
-         'label:de': 'Qualität für Musik',
-         'label:pl': 'Jakość dla muzyki',
-         'label:ua': 'Якість для музики',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
          // title: 'specified quality in fullscreen mode',
          // 'title:zh': '',
          // 'title:ja': '',
@@ -322,8 +333,8 @@ window.nova_plugins.push({
             { label: 'HD/720p', value: 'hd720' },
             { label: 'SD/480p', value: 'large' },
             { label: 'SD/360p', value: 'medium' },
-            { label: 'SD/240p', value: 'small' },
-            { label: 'SD/144p', value: 'tiny' },
+            // { label: 'SD/240p', value: 'small' }, // useless for the current mode
+            // { label: 'SD/144p', value: 'tiny' }, // useless for the current mode
             { label: 'default', /*value: false,*/ selected: true },
          ],
       },

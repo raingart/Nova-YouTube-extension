@@ -17,6 +17,7 @@ window.nova_plugins.push({
    run_on_pages: '*, -embed, -mobile, -live_chat',
    section: 'header',
    // desc: '',
+   // 'data-conflict': 'subscriptions-home',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/445197-youtube-premium-logo

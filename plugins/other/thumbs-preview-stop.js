@@ -3,7 +3,8 @@
 
 window.nova_plugins.push({
    id: 'thumbs-preview-stop',
-   title: 'Autostop thumbnail preview playback',
+   // title: 'Autostop thumbnail preview playback',
+   title: 'Autostop thumbnail playback on hover',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

@@ -15,7 +15,19 @@ window.nova_plugins.push({
    'title:ua': 'Замінити стандартний інтерфейс',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   // desc: '',
+   desc: "'bezel' that's what YouTube called",
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:id': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:it': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
+   // 'desc:pl': '',
+   // 'desc:ua': '',
    _runtime: user_settings => {
 
       // alt:

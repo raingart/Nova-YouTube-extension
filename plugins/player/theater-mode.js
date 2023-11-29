@@ -86,6 +86,7 @@ window.nova_plugins.push({
                   // alt3 - https://greasyfork.org/en/scripts/454092-youtube-theater-fill-up-window
                   // alt4 - https://greasyfork.org/en/scripts/33243-maximizer-for-youtube
                   // alt5 - https://greasyfork.org/en/scripts/442089-pkga-youtube-theater-mode
+                  // alt6 - https://greasyfork.org/en/scripts/480701-youtube-fullpage-theater
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
                   break;
 

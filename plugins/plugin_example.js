@@ -23,6 +23,8 @@ window.nova_plugins.push({
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
    desc: 'Title description', // optional. Plugin description in settings. Don't use double quotes inside the text!
 
+   'data-conflict': 'plugin-id, plugin-id2, ...', // mark plugins with which the current plugin conflicts
+
    // localization
    // 'title:zh': '',
    // 'title:ja': '',

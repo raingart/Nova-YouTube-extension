@@ -5,7 +5,7 @@
 
 window.nova_plugins.push({
    id: 'video-date-format',
-   title: 'Show date format',
+   title: 'Displaying date format',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

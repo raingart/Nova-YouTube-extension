@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'move-in-sidebar',
-   title: 'Move in sidebar',
+   title: 'Move to sidebar',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

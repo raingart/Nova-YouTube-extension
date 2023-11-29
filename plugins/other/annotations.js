@@ -1,7 +1,8 @@
 window.nova_plugins.push({
    id: 'disable-video-cards',
    // title: 'Hide garbage: annotations, endcards etc',
-   title: 'Hide HTML garbage',
+   // title: 'Hide HTML garbage',
+   title: 'Clear pages of junk',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -96,6 +97,8 @@ window.nova_plugins.push({
 
                // watch page
                '#clarify-box', // message "COVID", "Wikipedia" link
+
+               'ytd-watch-metadata ytd-info-panel-content-renderer', // message "USAGM is funded in whole or in part by the American government. Wikipedia", "Wikipedia" link
 
                '.ytd-watch-flexy.attached-message', // message "BBC World Service is a British public broadcast service. Wikipedia"
 

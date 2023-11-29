@@ -125,7 +125,7 @@ window.nova_plugins.push({
       },
       scroll_to_top_autoplay: {
          _tagName: 'input',
-         label: 'Unpause video',
+         label: 'Unpause a video',
          'label:zh': '视频取消暂停',
          'label:ja': 'ビデオの一時停止解除',
          'label:ko': '비디오 일시 중지 해제',

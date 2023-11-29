@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'embed-show-control-force',
-   title: 'Force enable control panel in embed',
+   title: 'Force enable control panel (for embed)',
    'title:zh': '埋め込みでコントロール パネルを強制的に有効にする',
    'title:ja': '强制启用嵌入的控制面板',
    'title:ko': '임베디드에서 강제 활성화 제어판',

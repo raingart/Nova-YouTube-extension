@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'scrollbar-hide',
-   title: 'Hide scrollbar in watch page',
+   title: 'Hide scrollbar (for watch page)',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -15,7 +15,7 @@ window.nova_plugins.push({
    'title:ua': 'Приховати смугу прокрутки на сторінці перегляду',
    run_on_pages: '*, -embed, -mobile',
    // run_on_pages: '*, live_chat, -embed, -mobile',
-   section: 'other',
+   section: 'player',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/452948-youtube-disable-scrollbar

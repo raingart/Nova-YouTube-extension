@@ -114,7 +114,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage === 'watch'
                && document.visibilityState == 'visible'
                && movie_player.classList.contains('playing-mode')
-               && !NOVA.isFullscreen() // Doesn't work in full screen mode
+               && !NOVA.isFullscreen() // Doesn't work in fullscreen mode
             ) {
                // console.debug('moveMouse event');
                // movie_player.dispatchEvent(moveMouse);

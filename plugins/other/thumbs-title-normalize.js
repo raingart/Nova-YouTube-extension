@@ -39,7 +39,7 @@ window.nova_plugins.push({
          ATTR_MARK = 'nova-thumb-title-normalized',
          // /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g // full
          clearOfSymbols = str => str.replace(/[\u2011-\u26FF]/g, ' ').replace(/\s{2,}/g, ' '), // simple
-         clearOfEmoji = str => str.replace(/[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
+         clearOfEmoji = str => str.replace(/[^<>=\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
       if (user_settings.thumbnails_title_normalize_show_full) {
          NOVA.css.push(

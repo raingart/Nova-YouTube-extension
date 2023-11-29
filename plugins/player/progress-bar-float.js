@@ -64,7 +64,8 @@ window.nova_plugins.push({
             // resetBar();
 
             // resetBar on new video loaded
-            // video.addEventListener('canplay', resetBar); // bug. Animation reset on seek
+            // video.addEventListener('play', resetBar); // fix: live_stream visibility
+            video.addEventListener('canplay', resetBar); // fix: live_stream visibility
             video.addEventListener('loadeddata', resetBar);
             // document.addEventListener('yt-navigate-finish', resetBar);
 
@@ -377,29 +378,6 @@ window.nova_plugins.push({
          'label:de': 'Opazität',
          'label:pl': 'Przejrzystość',
          'label:ua': 'Прозорість',
-         type: 'number',
-         // title: '',
-         placeholder: '0-1',
-         step: .05,
-         min: 0,
-         max: 1,
-         value: .7,
-      },
-      player_float_progress_bar_opacity_background: {
-         _tagName: 'input',
-         label: 'Opacity background',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
          type: 'number',
          // title: '',
          placeholder: '0-1',

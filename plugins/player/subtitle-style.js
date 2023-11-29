@@ -27,9 +27,6 @@ window.nova_plugins.push({
       // alt2 - https://chrome.google.com/webstore/detail/oanhbddbfkjaphdibnebkklpplclomal
       // alt3 - https://greasyfork.org/en/scripts/433440-youtube-subtitles-under-video-frame
 
-      // movie_player.getSubtitlesUserSettings();
-      // movie_player.updateSubtitlesUserSettings({ background: 'transparent',}); // Uncaught Error: 'transparent' is not a valid hex color
-
       // alt caption style
       // const storeName = 'yt-player-caption-display-settings';
       // if (data = localStorage.getItem(storeName)) {
@@ -89,6 +86,37 @@ window.nova_plugins.push({
                el.style.cursor = 'text';
             }
          });
+      }
+
+      // api method
+      if (user_settings.subtitle_font_size) {
+         // Strategy 1
+         NOVA.css.push(
+            // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
+            `.ytp-caption-segment {
+               font-size: ${+user_settings.subtitle_font_size}em !important;
+            }`);
+         // Strategy 2. API
+         // NOVA.waitUntil(() => movie_player.hasOwnProperty('getSubtitlesUserSettings'), 1000) // 1sec
+         //    .then(() => {
+         //       // // settings = {
+         //       // //    "background": "#080808",
+         //       // //    "backgroundOpacity": 0.75,
+         //       // //    "charEdgeStyle": 0,
+         //       // //    "color": "#fff",
+         //       // //    "fontFamily": 4,
+         //       // //    "fontSizeIncrement": 0,
+         //       // //    "fontStyle": 0,
+         //       // //    "textOpacity": 1,
+         //       // //    "windowColor": "#080808",
+         //       // //    "windowOpacity": 0
+         //       // // }
+         //       // if (user_settings.subtitle_font_size) {
+         //       //    movie_player.updateSubtitlesUserSettings({ fontSizeIncrement: +user_settings.subtitle_font_size });
+         //       //    // settings.fontSizeIncrement = +user_settings.subtitle_font_size;
+         //       // }
+         //       // movie_player.updateSubtitlesUserSettings(settings);
+         //    });
       }
 
       if (Object.keys(css).length) {
@@ -178,6 +206,41 @@ window.nova_plugins.push({
          'label:pl': 'Ustaw napisy do wyboru',
          'label:ua': 'Зробити субтитри доступними для виділення',
          type: 'checkbox',
+      },
+      subtitle_font_size: {
+         _tagName: 'input',
+         label: 'Font size',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'number',
+         title: '0 - disable',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         placeholder: '0-5',
+         step: 1,
+         min: 0,
+         max: 5,
+         value: 0,
       },
    }
 });

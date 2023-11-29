@@ -23,11 +23,12 @@ const Plugins = {
       'player/pin.js',
       'player/time-jump.js',
       'player/no-sleep.js',
-      // 'player/loop.js',
+      'player/loop.js',
       'player/resume-playback.js',
       // 'player/-thumb-pause.js',
       'player/quick-buttons.js',
       'player/hide-elements.js',
+      'player/scrollbar-hide.js',
       'player/subtitle-style.js',
       // 'player/subtitle-lang.js',
       'player/unblock-region.js',
@@ -58,7 +59,6 @@ const Plugins = {
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
       // 'other/lang.js',
-      'other/scrollbar-hide.js',
       'other/scroll-to-top.js',
       'other/shorts-redirect.js',
       'other/rss.js',
@@ -99,6 +99,7 @@ const Plugins = {
       'header/compact.js',
       'header/unfixed.js',
       'header/logo.js',
+      'header/subscriptions-home.js',
    ],
 
    // for test
@@ -174,7 +175,7 @@ const Plugins = {
          // Strategy 3. Excluding channelId (https://www.youtube.com/channel/UCE5yTn9ljzSnC_oMp9Jnckg). Error in emdeb - https://www.youtube.com/embed/H-3fre7943U?enablejsapi=1&wmode=opaque&autoplay=1
          // NOVA.channelTab = channelTab?.startsWith('UC') ? false : channelTab;
 
-         return (!page.includes('live_chat')) // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat, https://www.youtube.com/live_chat_replay)
+         return (!page?.includes('live_chat')) // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat, https://www.youtube.com/live_chat_replay)
             && (['channel', 'c', 'user'].includes(page)
                || page?.startsWith('@') // https://www.youtube.com/@ALBO
                || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
