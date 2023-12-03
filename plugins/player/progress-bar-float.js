@@ -233,7 +233,7 @@ window.nova_plugins.push({
                return console.error('vid not HTMLElement:', chaptersContainer);
             }
 
-            await NOVA.waitUntil(() => !isNaN(vid.duration), 1000);
+            await NOVA.waitUntil(() => !isNaN(vid.duration), 1000); // 1sec
 
             switch (NOVA.currentPage) {
                case 'watch':
@@ -253,7 +253,7 @@ window.nova_plugins.push({
                   await NOVA.waitUntil(() => (
                      chaptersContainer = document.body.querySelector('.ytp-chapters-container'))
                      && chaptersContainer?.children.length > 1
-                     , 1000);
+                     , 1000); // 1sec
 
                   this.renderChaptersMarkers(vid.duration) || this.from_div(chaptersContainer);
                   break;

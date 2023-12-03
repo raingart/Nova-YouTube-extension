@@ -37,9 +37,14 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/445640-yt-video-tab-by-default
       // alt2 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
       // alt3 - https://greasyfork.org/en/scripts/466003-e-youtube-channel-page-auto-click-videos-and-then-latest-may-2023
+      // alt4 - https://greasyfork.org/en/scripts/407945-youtube-2020-improvements
 
       // if (NOVA.currentPage == 'watch') {
       //    // mouse left click
+      // document.addEventListener('click', evt => {
+      //    patchLink(evt.target);
+      //    evt.stopPropagation();
+      // }, { capture: true });
       //    // document.addEventListener('click', ({ target }) => patchLink(target), { capture: true });
       //    // // mouse middle click
       //    // document.addEventListener('auxclick', evt => evt.button === 1 && patchLink(evt.target), { capture: true });
@@ -65,7 +70,7 @@ window.nova_plugins.push({
       //       .then(async a => {
       //          a.href += '/' + user_settings.channel_default_tab;
 
-      //          await NOVA.waitUntil(() => a.data?.commandMetadata?.webCommandMetadata?.url, 1);
+      //          await NOVA.waitUntil(() => a.data?.commandMetadata?.webCommandMetadata?.url, 100);
       //          a.data.commandMetadata.webCommandMetadata.url += '/' + user_settings.channel_default_tab;
       //          // a.data.commandMetadata.webCommandMetadata.url.replace('/@', '/c/')
       //          a.data.browseEndpoint.canonicalBaseUrl += '/' + user_settings.channel_default_tab;
@@ -274,22 +279,22 @@ window.nova_plugins.push({
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
-         title: 'Redirect is safer but slower',
-         'title:zh': '重定向是安全的，但速度很慢',
-         'title:ja': 'リダイレクトは安全ですが遅くなります',
-         'title:ko': '리디렉션이 더 안전하지만 느립니다',
-         'title:id': 'Redirect lebih aman tetapi lebih lambat',
-         'title:es': 'La redirección es más segura pero más lenta',
-         'title:pt': 'O redirecionamento é mais seguro, mas mais lento',
-         'title:fr': 'La redirection est plus sûre mais plus lente',
-         'title:it': 'Il reindirizzamento è più sicuro ma più lento',
-         // 'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
-         'title:de': 'Redirect ist sicherer, aber langsamer',
-         'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
-         'title:ua': 'Перенаправлення безпечніше, але повільніше',
+         // title: 'Redirect is safer but slower',
+         // 'title:zh': '重定向是安全的，但速度很慢',
+         // 'title:ja': 'リダイレクトは安全ですが遅くなります',
+         // 'title:ko': '리디렉션이 더 안전하지만 느립니다',
+         // 'title:id': 'Redirect lebih aman tetapi lebih lambat',
+         // 'title:es': 'La redirección es más segura pero más lenta',
+         // 'title:pt': 'O redirecionamento é mais seguro, mas mais lento',
+         // 'title:fr': 'La redirection est plus sûre mais plus lente',
+         // 'title:it': 'Il reindirizzamento è più sicuro ma più lento',
+         // // 'title:tr': 'Yönlendirme daha güvenlidir ancak daha yavaştır',
+         // 'title:de': 'Redirect ist sicherer, aber langsamer',
+         // 'title:pl': 'Przekierowanie jest bezpieczniejsze, ale wolniejsze',
+         // 'title:ua': 'Перенаправлення безпечніше, але повільніше',
          options: [
             {
-               label: 'redirect', value: 'redirect',
+               label: 'redirect', value: 'redirect', selected: true,
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -304,7 +309,7 @@ window.nova_plugins.push({
                'label:ua': 'перенаправити',
             },
             {
-               label: 'click', /*value: '',*/ selected: true,
+               label: 'click', /*value: '',*/
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

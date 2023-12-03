@@ -136,7 +136,7 @@ window.nova_plugins.push({
                NOVA.waitUntil(() => {
                   movie_player.toggleSubtitlesOn();
                   return document.body.querySelector('.ytp-caption-window-top[id^="caption-window"]');
-               }, 500);
+               }, 500); // 500ms
             },
          });
          // }

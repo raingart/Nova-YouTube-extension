@@ -36,7 +36,7 @@ window.nova_plugins.push({
       }
 
       // document.addEventListener('wheel', evt => {
-      //    if (NOVA.isFullscreen()) {
+      //    if (document.fullscreenElement) {
       //       // console.debug('fullscreenElement:', document.fullscreenElement);
       //       evt.preventDefault();
       //       // movie_player.scrollIntoView({behavior: 'instant', block: 'end', inline: 'nearest'});

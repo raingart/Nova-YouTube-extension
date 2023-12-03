@@ -65,7 +65,7 @@ window.nova_plugins.push({
             yt.config_.EXPERIMENT_FLAGS.web_rounded_thumbnails = false;
             return true;
          }
-      });
+      }, 100); // 100ms
 
    },
 });

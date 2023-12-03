@@ -79,7 +79,7 @@ window.nova_plugins.push({
             // reset disableStop (before on page change)
             document.addEventListener('yt-navigate-start', () => disableStop = false);
 
-            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/); // fix specific error for firefox
+            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/, 100); // fix specific error for firefox
 
             movie_player.stopVideo(); // init before update onStateChange
 
@@ -103,7 +103,7 @@ window.nova_plugins.push({
                // 2: paused
                // 3: buffering
                // 5: cued
-               // if (['BUFFERING', 'PAUSED', 'PLAYING'].includes(NOVA.getPlayerState(state))) {
+               // if (!disableStop && ['BUFFERING', 'PAUSED', 'PLAYING'].includes(NOVA.getPlayerState(state))) {
                if (!disableStop && state > 0 && state < 5) {
                   movie_player.stopVideo();
                }

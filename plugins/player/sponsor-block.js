@@ -54,7 +54,7 @@ window.nova_plugins.push({
                   // wait chapters
                   await NOVA.waitUntil(() =>
                      (chaptersEls = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && chaptersEls.length
-                     , 1000);
+                     , 1000); // 1sec
 
                   chaptersEls.forEach((chapterEl, idx) => {
                      if (idx === chaptersEls.length - 1) return; // if last chapter

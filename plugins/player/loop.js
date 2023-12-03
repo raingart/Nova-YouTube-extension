@@ -64,9 +64,6 @@ window.nova_plugins.push({
                if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
 
                NOVA.videoElement.loop = !NOVA.videoElement.loop;
-               // fix ad
-               if (movie_player.classList.contains('ad-showing')) NOVA.videoElement.removeAttribute('loop');
-
                btn.style.opacity = NOVA.videoElement.hasAttribute('loop') ? 1 : .5;
             });
 

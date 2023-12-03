@@ -149,7 +149,7 @@ window.nova_plugins.push({
             if (NOVA.currentPage === 'watch'
                && document.visibilityState == 'visible'
                && movie_player.classList.contains('playing-mode')
-               && !NOVA.isFullscreen() // this.hasAttribute('fullscreen')
+               && !document.fullscreenElement // this.hasAttribute('fullscreen')
             ) {
                // console.debug('wakeUpControls');
                // movie_player.dispatchEvent(moveMouse);

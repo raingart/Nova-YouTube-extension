@@ -192,7 +192,7 @@ window.nova_plugins.push({
                      // {
                      //    "snippet": {
                      //       "videoId": "xxx..",
-                     //       "textOriginal": "text",
+                     //       "textDisplay": "text", // html inicode
                      //       "textOriginal": "text",
                      //       "authorDisplayName": "user A",
                      //       "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/..",
@@ -711,6 +711,7 @@ window.nova_plugins.push({
                display: block;
                max-height: 25vh;
                overflow-y: auto;
+               scrollbar-width: thin;
                text-align: left;
                font-size: 1.2em;
                line-height: 1.4;

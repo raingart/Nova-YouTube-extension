@@ -127,7 +127,7 @@ window.nova_plugins.push({
                   //    if (playlistList?.length === playlistLength) {
                   //       return playlistList;
                   //    }
-                  // }, 2000);
+                  // }, 2000); // 2sec
 
                   function getPlaylistDuration(total_list) {
                      const currentIndex = movie_player.getPlaylistIndex();// || playlistList?.findIndex(c => c.playlistPanelVideoRenderer.selected);

@@ -135,7 +135,8 @@ window.nova_plugins.push({
                      drag.reset(); // save old pos. Clear curr pos
                   }
                   // enter viewport.
-                  else if (!movie_player.isFullscreen() // fix bug on scroll in fullscreen player mode
+                  // else if (!movie_player.isFullscreen() // fix bug on scroll in fullscreen player mode
+                  else if (!document.fullscreenElement // fix bug on scroll in fullscreen player mode
                      && document.documentElement.scrollTop // fix bug on exit fullscreen mode (https://github.com/raingart/Nova-YouTube-extension/issues/69)
                   ) {
                      movie_player.classList.add(CLASS_VALUE);
@@ -173,7 +174,9 @@ window.nova_plugins.push({
             insertUnpinButton(player);
 
             // if player fullscreen disable float mode
-            document.addEventListener('fullscreenchange', () => NOVA.isFullscreen() && movie_player.classList.remove(CLASS_VALUE));
+            document.addEventListener('fullscreenchange', () =>
+               document.fullscreenElement && movie_player.classList.remove(CLASS_VALUE)
+            );
             // ytd-watch-flexy:not([fullscreen])
 
             // resize on video change
@@ -206,7 +209,7 @@ window.nova_plugins.push({
 
                // restore scroll pos
                document.addEventListener('fullscreenchange', () => {
-                  if (!NOVA.isFullscreen()
+                  if (!document.fullscreenElement
                      && scrollPos // >0
                      && drag.storePos // not cleared yet
                   ) {

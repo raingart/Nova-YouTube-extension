@@ -26,22 +26,34 @@ window.nova_plugins.push({
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));
       }
 
-      // if (ytd_watch.theater) {}
-      // // NOVA.waitSelector('ytd-watch-flexy:not([theater])') // wrong way. Reassigns manual exit from the mode
+      if (user_settings.theater_mode_ignore_playlist && location.search.includes('list=')) return;
+
+      // Strategy 1
+      // NOVA.waitSelector('ytd-watch-flexy:not([theater])') // wrong way. Reassigns manual exit from the mode
       NOVA.waitSelector('ytd-watch-flexy')
          // .then(el => el.theaterModeChanged_(true));
          .then(el => {
-            if (location.search.includes('list=')) {
-               // if (user_settings.theater_mode_ignore_playlist == 'all'
-               //    || (user_settings.theater_mode_ignore_playlist == 'music' && NOVA.isMusic())
-               // ) {
-               if (user_settings.theater_mode_ignore_playlist) {
-                  el.theaterModeChanged_(false);
-                  return;
-               }
-            }
-            el.theaterModeChanged_(true);
+            if (el.hasAttribute('theater') || el.theater) return;
+
+            // if (location.search.includes('list=')) {
+            //    // if (user_settings.theater_mode_ignore_playlist == 'all'
+            //    //    || (user_settings.theater_mode_ignore_playlist == 'music' && NOVA.isMusic())
+            //    // ) {
+            // }
+            el.updateTheaterModeState_(true);
          });
+
+      // Strategy 2. Doesn't work
+      // NOVA.waitSelector('video')
+      //    .then(video => {
+      //       video.addEventListener('play', setTheater, { capture: true, once: true });
+
+      //       function setTheater() {
+      //          // document.cookie = 'wide=1;';
+      //          document.querySelector('ytd-watch-flexy:not([theater]) #movie_player .ytp-chrome-bottom button.ytp-size-button')
+      //             ?.click();
+      //       }
+      //    });
 
       if (user_settings.player_full_viewport_mode == '') return; // for optimization
 
@@ -106,8 +118,8 @@ window.nova_plugins.push({
                            const miniSize = NOVA.aspectRatio.sizeToFit({
                               'srcWidth': this.videoWidth,
                               'srcHeight': this.videoHeight,
-                              // 'maxWidth': window.innerWidth,
-                              // 'maxHeight': window.innerHeight,
+                              'maxWidth': window.innerWidth,
+                              'maxHeight': window.innerHeight,
                            });
                            // out of viewport
                            if (miniSize.width < window.innerWidth) {
@@ -189,7 +201,7 @@ window.nova_plugins.push({
                      opacity: 1;
                   }`);
 
-                  addHideScrollbarCSS();
+               addHideScrollbarCSS();
 
                // Strategy 2
                // const CLASS_NAME = '';
@@ -286,21 +298,21 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
          options: [
-            {
-               label: 'default', /*value: '',*/ selected: true,
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               'label:ua': 'за замовчуванням',
-            },
+            // {
+            //    label: 'default', /*value: '',*/ selected: true,
+            //    // 'label:zh': '',
+            //    // 'label:ja': '',
+            //    // 'label:ko': '',
+            //    // 'label:id': '',
+            //    // 'label:es': '',
+            //    // 'label:pt': '',
+            //    // 'label:fr': '',
+            //    // 'label:it': '',
+            //    // 'label:tr': '',
+            //    // 'label:de': '',
+            //    // 'label:pl': '',
+            //    'label:ua': 'за замовчуванням',
+            // },
             {
                label: 'cinema', value: 'cinema_mode',
                // 'label:zh': '',
@@ -442,7 +454,7 @@ window.nova_plugins.push({
          'data-dependent': { 'player_full_viewport_mode': 'cinema_mode' },
       },
       theater_mode_ignore_playlist: {
-         _tagName: 'select',
+         _tagName: 'input',
          label: 'Ignore playlist',
          // 'label:zh': '',
          // 'label:ja': '',
@@ -457,53 +469,72 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
-         // options: [
-         //    {
-         //       label: 'false', /*value: '',*/ selected: true,
-         //       // 'label:zh': '',
-         //       // 'label:ja': '',
-         //       // 'label:ko': '',
-         //       // 'label:id': '',
-         //       // 'label:es': '',
-         //       // 'label:pt': '',
-         //       // 'label:fr': '',
-         //       // 'label:it': '',
-         //       // 'label:tr': '',
-         //       // 'label:de': '',
-         //       // 'label:pl': '',
-         //       // 'label:ua': '',
-         //    },
-         //    {
-         //       label: 'all', value: 'all',
-         //       // 'label:zh': '',
-         //       // 'label:ja': '',
-         //       // 'label:ko': '',
-         //       // 'label:id': '',
-         //       // 'label:es': '',
-         //       // 'label:pt': '',
-         //       // 'label:fr': '',
-         //       // 'label:it': '',
-         //       // 'label:tr': '',
-         //       // 'label:de': '',
-         //       // 'label:pl': '',
-         //       // 'label:ua': '',
-         //    },
-         //    {
-         //       label: 'only music', value: 'music',
-         //       // 'label:zh': '',
-         //       // 'label:ja': '',
-         //       // 'label:ko': '',
-         //       // 'label:id': '',
-         //       // 'label:es': '',
-         //       // 'label:pt': '',
-         //       // 'label:fr': '',
-         //       // 'label:it': '',
-         //       // 'label:tr': '',
-         //       // 'label:de': '',
-         //       // 'label:pl': '',
-         //       // 'label:ua': '',
-         //    },
-         // ],
+         // title: '',
+         'data-dependent': { 'player_full_viewport_mode': 'smart' },
       },
+      // theater_mode_ignore_playlist: {
+      //    _tagName: 'select',
+      //    label: 'Ignore playlist',
+      //    // 'label:zh': '',
+      //    // 'label:ja': '',
+      //    // 'label:ko': '',
+      //    // 'label:id': '',
+      //    // 'label:es': '',
+      //    // 'label:pt': '',
+      //    // 'label:fr': '',
+      //    // 'label:it': '',
+      //    // 'label:tr': '',
+      //    // 'label:de': '',
+      //    // 'label:pl': '',
+      //    // 'label:ua': '',
+      //    type: 'checkbox',
+      //    options: [
+      //       {
+      //          label: 'false', /*value: '',*/ selected: true,
+      //          // 'label:zh': '',
+      //          // 'label:ja': '',
+      //          // 'label:ko': '',
+      //          // 'label:id': '',
+      //          // 'label:es': '',
+      //          // 'label:pt': '',
+      //          // 'label:fr': '',
+      //          // 'label:it': '',
+      //          // 'label:tr': '',
+      //          // 'label:de': '',
+      //          // 'label:pl': '',
+      //          // 'label:ua': '',
+      //       },
+      //       {
+      //          label: 'all', value: 'all',
+      //          // 'label:zh': '',
+      //          // 'label:ja': '',
+      //          // 'label:ko': '',
+      //          // 'label:id': '',
+      //          // 'label:es': '',
+      //          // 'label:pt': '',
+      //          // 'label:fr': '',
+      //          // 'label:it': '',
+      //          // 'label:tr': '',
+      //          // 'label:de': '',
+      //          // 'label:pl': '',
+      //          // 'label:ua': '',
+      //       },
+      //       {
+      //          label: 'only music', value: 'music',
+      //          // 'label:zh': '',
+      //          // 'label:ja': '',
+      //          // 'label:ko': '',
+      //          // 'label:id': '',
+      //          // 'label:es': '',
+      //          // 'label:pt': '',
+      //          // 'label:fr': '',
+      //          // 'label:it': '',
+      //          // 'label:tr': '',
+      //          // 'label:de': '',
+      //          // 'label:pl': '',
+      //          // 'label:ua': '',
+      //       },
+      //    ],
+      // },
    }
 });

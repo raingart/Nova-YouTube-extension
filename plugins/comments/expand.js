@@ -22,6 +22,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/446954-youtube-expand-description-and-long-comments-show-all-the-replies
       // alt3 - https://greasyfork.org/en/scripts/39719-youtube-expand-all-video-comments
       // alt4 - https://greasyfork.org/en/scripts/470340-auto-click-youtube-comment-read-more-buttons
+      // alt5 - https://greasyfork.org/en/scripts/407945-youtube-2020-improvements
 
       // Doesn't work. I don't know how to implement it better. By updating "removeEventListener/addEventListener" or reloading the entire comment block
       // dirty fix bug with not updating comments addEventListener: reset comments block

@@ -29,7 +29,8 @@ window.nova_plugins.push({
             if (link = new URL(user_settings.page_logo_url_mode)?.href) {
                a.href = link;
 
-               await NOVA.waitUntil(() => a.data?.commandMetadata?.webCommandMetadata?.url, 1500);
+               await NOVA.waitUntil(() => a.data?.commandMetadata?.webCommandMetadata?.url, 1500); // 1.5sec
+
                a.data.commandMetadata.webCommandMetadata.url = link;
             }
          });

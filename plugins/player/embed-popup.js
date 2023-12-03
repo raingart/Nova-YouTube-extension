@@ -4,7 +4,7 @@
 window.nova_plugins.push({
    // id: 'embed-redirect-watch',
    id: 'embed-popup',
-   title: 'Redirect embedded to popup',
+   title: 'Open embedded to popup',
    'title:zh': '将嵌入式视频重定向到弹出窗口',
    'title:ja': '埋め込まれたビデオをポップアップにリダイレクトします',
    'title:ko': '포함된 비디오를 팝업으로 리디렉션',
@@ -62,19 +62,18 @@ window.nova_plugins.push({
          });
 
       function createPopup() {
-         // stop playing in parent tab
-         // location.assign(NOVA.queryURL.set({ 'autoplay': false }));
-         movie_player.stopVideo();
-
          // this == NOVA.videoElement
          const { width, height } = NOVA.aspectRatio.sizeToFit({
             // 'srcWidth': NOVA.videoElement.videoWidth,
             // 'srcHeight': NOVA.videoElement.videoHeight,
             'srcWidth': this.videoWidth,
             'srcHeight': this.videoHeight,
-            'maxWidth': screen.width / (+user_settings.player_buttons_custom_popup_width || 4),
-            // 'maxHeight': window.innerHeight,
+            // 'maxWidth': screen.width / (+user_settings.player_buttons_custom_popup_width || 4),
          });
+
+         // stop playing in parent tab
+         // location.assign(NOVA.queryURL.set({ 'autoplay': false }));
+         movie_player.stopVideo();
 
          const url = new URL(
             document.querySelector('link[itemprop="embedUrl"][href]')?.href

@@ -89,12 +89,12 @@ window.nova_plugins.push({
       }
 
       // api method
-      if (user_settings.subtitle_font_size) {
+      if (+user_settings.subtitle_font_size) {
          // Strategy 1
          NOVA.css.push(
             // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
             `.ytp-caption-segment {
-               font-size: ${+user_settings.subtitle_font_size}em !important;
+               font-size: ${+user_settings.subtitle_font_size || 1}em !important;
             }`);
          // Strategy 2. API
          // NOVA.waitUntil(() => movie_player.hasOwnProperty('getSubtitlesUserSettings'), 1000) // 1sec

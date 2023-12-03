@@ -39,7 +39,6 @@
    - queryURL.remove
    - request.API (async)
    - getPlayerState
-   - isFullscreen
    //- videoId
    - getChannelId (async)
    - storage_obj_manager.getParam
@@ -210,7 +209,7 @@ const NOVA = {
    //             return
    //          }
    //          tried++
-   //       }, intervalMs)
+   //       }, ~~intervalMs || 500) // default 500ms
    //    })
    // }
 
@@ -319,7 +318,7 @@ const NOVA = {
    */
    /** wait for every DOM change until a condition becomes true */
    // await NOVA.waitUntil(?, 500) // 500ms
-   waitUntil(condition = required(), timeout = 100) {
+   waitUntil(condition = required(), timeout = required()) {
       if (typeof condition !== 'function') return console.error('waitUntil > condition is not fn:', typeof condition);
 
       return new Promise((resolve) => {
@@ -335,7 +334,7 @@ const NOVA = {
                   resolve(result);
                }
                // console.debug('waitUntil[3]', result, condition, timeout);
-            }, timeout);
+            }, ~~timeout || 500); // default 500ms
          }
       });
    },
@@ -385,7 +384,7 @@ const NOVA = {
             process(); // launch without waiting
             // if (attr_mark) {
             this.watchElements_list[attr_mark] = setInterval(() =>
-               document.visibilityState == 'visible' && process(), 1000 * 1.5); // 1.5 sec
+               document.visibilityState == 'visible' && process(), 1500); // 1.5 sec
             // }
 
             function process() {
@@ -721,14 +720,15 @@ const NOVA = {
    aspectRatio: {
       /**
        * @param  {object} 4 int
-       * @return {object} 2 int
+       * @return {Object} { width, height }
       */
       sizeToFit({
          srcWidth = 0, srcHeight = 0,
-         maxWidth = window.innerWidth, maxHeight = window.innerHeight
+         // maxWidth = window.innerWidth, maxHeight = window.innerHeight // iframe size
+         maxWidth = screen.width, maxHeight = screen.height // screen size
       }) {
          // console.debug('aspectRatioFit:', ...arguments);
-         const aspectRatio = Math.min(+maxWidth / +srcWidth, +maxHeight / +srcHeight);
+         const aspectRatio = Math.min(maxWidth / +srcWidth, maxHeight / +srcHeight, 1); // "1" if src < max
          return {
             width: +srcWidth * aspectRatio,
             height: +srcHeight * aspectRatio,
@@ -1609,17 +1609,6 @@ const NOVA = {
       // document.dispatchEvent(new CustomEvent('nova-video-loaded'));
    })(),
 
-   /**
-    * @param  {}
-    * @return {boolean}
-   */
-   isFullscreen: () => (
-      /*document.fullscreen || */ // site page can be in fullscreen mode
-      movie_player.classList.contains('ytp-fullscreen')
-      || (movie_player.hasOwnProperty('isFullscreen') && movie_player.isFullscreen()) // Doesn't work in embed
-      // || document.body.querySelector('ytd-watch-flexy[fullscreen]')
-   ),
-
    // videoId(url = document.URL) {
    //    return new URL(url).searchParams.get('v') || movie_player.getVideoData().video_id;
    // },
@@ -1764,7 +1753,7 @@ const NOVA = {
          //   playlist higher priority than the channel
          this.channelId = location.search.includes('list=')
             ? (NOVA.queryURL.get('list') || movie_player?.getPlaylistId())
-            : await NOVA.waitUntil(NOVA.getChannelId, 1000);
+            : await NOVA.waitUntil(NOVA.getChannelId, 1000); // 1sec
       },
 
       read(return_all) {

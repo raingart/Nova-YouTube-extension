@@ -84,7 +84,7 @@ window.nova_plugins.push({
             if (user_settings.video_quality_for_fullscreen) {
                let selectedQualityBackup = selectedQuality;
                document.addEventListener('fullscreenchange', () => {
-                  selectedQuality = NOVA.isFullscreen()
+                  selectedQuality = document.fullscreenElement
                      ? user_settings.video_quality_for_fullscreen
                      : selectedQualityBackup;
                   movie_player.setPlaybackQualityRange(selectedQuality, selectedQuality);

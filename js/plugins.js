@@ -2,13 +2,13 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
-      'player/ad-skip-button.js',
+      // 'player/ad-skip-button.js',
       'player/speed.js',
       'player/volume.js',
       'player/hud.js',
       'player/quality.js',
       'player/autostop.js',
-      'player/autopause.js',
+      // 'player/autopause.js',
       'player/theater-mode.js',
       'player/background-pause.js',
       // 'player/fullscreen-on-playback.js',

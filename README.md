@@ -64,3 +64,9 @@ Please read [plugin document](https://github.com/raingart/Nova-YouTube-extension
 * [/plugins/nova-api.js](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/nova-api.js) - common library for all plugins.
 * [/plugins/](https://github.com/raingart/Nova-YouTube-extension/tree/master/plugins) - directory of all plugins and files available for connection to the YouTube page.
   * [plugin example](https://github.com/raingart/Nova-YouTube-extension/blob/master/plugins/plugin_example.js) - file use to understand basic functions
+
+### compatibility with other scripts
+For compatibility with other scripts, you can access the list of settings (read only) Available only in userscript ver.
+```
+window.nova_setting`
+```

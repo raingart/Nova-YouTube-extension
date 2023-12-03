@@ -129,7 +129,7 @@ window.nova_plugins.push({
          if (!window.nova_playlistReversed) return;
 
          if ((ytdWatch = await NOVA.waitSelector('ytd-watch-flexy', { destroy_if_url_changes: true }))
-            && (data = await NOVA.waitUntil(() => ytdWatch?.data?.contents?.twoColumnWatchNextResults))
+            && (data = await NOVA.waitUntil(() => ytdWatch?.data?.contents?.twoColumnWatchNextResults), 100) // 100ms
             && (playlist = data.playlist?.playlist)
             && (autoplay = data.autoplay?.autoplay)
          ) {
