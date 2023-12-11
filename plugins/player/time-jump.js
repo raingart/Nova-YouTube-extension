@@ -30,7 +30,7 @@
 
 window.nova_plugins.push({
    id: 'time-jump',
-   title: 'Time jump',
+   title: 'Jump time/chapter',
    'title:zh': '时间跳跃',
    'title:ja': 'タイムジャンプ',
    'title:ko': '시간 점프',
@@ -292,7 +292,7 @@ window.nova_plugins.push({
                });
             });
       }
-      else if (+user_settings.skip_into_step) {
+      else if (+user_settings.skip_into_sec) {
          NOVA.waitSelector('#movie_player video')
             .then(video => {
                NOVA.runOnPageInitOrTransition(() => {
@@ -303,8 +303,8 @@ window.nova_plugins.push({
             });
       }
 
-      function timeLeapInto(time_seek = user_settings.skip_into_step || 10) {
-         if (!time_seek && !user_settings.skip_into_step_in_music && NOVA.isMusic()) return;
+      function timeLeapInto(time_seek = user_settings.skip_into_sec || 10) {
+         if (!time_seek && !user_settings.skip_into_sec_in_music && NOVA.isMusic()) return;
          // start - fix conflict with plugin [player-resume-playback]
          const
             CACHE_PREFIX = 'resume-playback-time',
@@ -318,7 +318,7 @@ window.nova_plugins.push({
 
          // isNaN(this.duration) - waiting for the duration can be too expensive and long
          if ((isNaN(this.duration) || this.duration > 30)
-            && this.currentTime < (+user_settings.skip_into_step || +time_seek)
+            && this.currentTime < (+user_settings.skip_into_sec || +time_seek)
          ) {
             // console.debug('ad intro seek', time_seek);
             this.currentTime = +time_seek;
@@ -420,7 +420,7 @@ window.nova_plugins.push({
       //    'label:ua': 'Показати розділ списку розділів',
       //    type: 'checkbox',
       // },
-      skip_into_step: {
+      skip_into_sec: {
          _tagName: 'input',
          label: 'Start playback at',
          // label: 'Set play start time',
@@ -457,7 +457,7 @@ window.nova_plugins.push({
          max: 30,
          value: 0,
       },
-      skip_into_step_in_music: {
+      skip_into_sec_in_music: {
          _tagName: 'input',
          label: 'Apply for music genre',
          // 'label:zh': '',
@@ -473,7 +473,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
-         'data-dependent': { 'skip_into_step': "!0" },
+         'data-dependent': { 'skip_into_sec': "!0" },
       },
    }
 });

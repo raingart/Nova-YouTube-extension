@@ -52,7 +52,7 @@ window.nova_plugins.push({
       //    }
       // }
 
-      // if (user_settings['shorts_disable']) return; // conflict with plugin [thumbs-hide] option (shorts_disable). Attention! After shorts redirect
+      // if (user_settings['thumbs_hide_shorts']) return; // conflict with plugin [thumbs-hide] option (thumbs_hide_shorts). Attention! After shorts redirect
 
       // Strategy 1
 

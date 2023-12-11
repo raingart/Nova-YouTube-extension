@@ -30,7 +30,7 @@ window.nova_plugins.push({
          COMMENTS_SELECTOR = 'html:not(:fullscreen) #page-manager #comments:not([hidden]):not(:empty)',
          counterAttrName = 'data-counter';
 
-      // append count
+      // append (recalc) count
       NOVA.runOnPageInitOrTransition(() => {
          if (NOVA.currentPage == 'watch') {
             NOVA.waitSelector('ytd-comments-header-renderer #title #count', { destroy_if_url_changes: true })
@@ -123,9 +123,12 @@ window.nova_plugins.push({
 
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-thumb {
                   background: #e1e1e1;
+                  /*background-color: var(--yt-spec-text-secondary);*/
                   border: 0;
                   border-radius: 0;
                }
+
+               ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-thumb {}
 
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-track {
                   background: #666;

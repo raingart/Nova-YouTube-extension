@@ -40,6 +40,7 @@ window.nova_plugins.push({
       // NOVA.waitSelector(`[description-collapsed] #description ${user_settings.description_expand_mode == 'onhover' ? '' : '#expand'}`)
       // .then(btn => {
       const SELECTOR_BTN = '[description-collapsed] #description #expand';
+
       switch (user_settings.description_expand_mode) {
          case 'onhover':
             NOVA.waitSelector(SELECTOR_BTN)
@@ -47,9 +48,14 @@ window.nova_plugins.push({
             break;
 
          case 'always':
-            document.addEventListener('yt-page-data-updated', () => {
-               document.body.querySelector(SELECTOR_BTN)?.click();
-            });
+            // expandSection(); // init (legacy)
+            document.addEventListener('yt-page-data-updated', expandSection); // update
+
+            function expandSection() {
+               if (NOVA.currentPage == 'watch') {
+                  document.body.querySelector(SELECTOR_BTN)?.click();
+               }
+            }
             // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && btn.click());
             // NOVA.runOnPageInitOrTransition(() => {
             //    if ((NOVA.currentPage == 'watch')) {

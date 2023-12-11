@@ -36,6 +36,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/453567-youtube-auto-player
       // alt4 - https://greasyfork.org/en/scripts/39153-youtube-auto-resume
       // alt5 - https://greasyfork.org/en/scripts/478990-youtube-resume
+      // alt6 - https://greasyfork.org/en/scripts/481388-youtube-video-resumer
 
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;

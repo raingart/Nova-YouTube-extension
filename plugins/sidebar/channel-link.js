@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'sidebar-channel-links-patch',
+   id: 'sidebar-thumbs-channel-link-patch',
    title: 'Fix channel links in sidebar',
    'title:zh': '修复侧边栏中的频道链接',
    'title:ja': 'サイドバーのチャネルリンクを修正',
@@ -27,7 +27,7 @@ window.nova_plugins.push({
          if (!target.matches('.ytd-channel-name')) return;
 
          if ((link = target.closest('a'))
-            && target.__data?.text?.runs.length
+            && target.__data?.text?.runs?.length
             && target.__data?.text?.runs[0].navigationEndpoint?.commandMetadata?.webCommandMetadata?.webPageType == 'WEB_PAGE_TYPE_CHANNEL'
          ) {
             // Doesn't work

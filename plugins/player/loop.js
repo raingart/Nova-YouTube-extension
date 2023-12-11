@@ -34,7 +34,8 @@ window.nova_plugins.push({
    // 'desc:ua': 'Зациклювання відео',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/444241-loopbuttonyt (https://github.com/Makhloufbel/YoutubeLooper/blob/main/loopButton.user.js)
+      // alt1 - https://greasyfork.org/en/scripts/444241-loopbuttonyt (https://github.com/Makhloufbel/YoutubeLooper/blob/main/loopButton.user.js)
+      // alt2 - https://greasyfork.org/en/scripts/421393-youtube-extended-controls
 
       // createPlayerButton
       NOVA.waitSelector('#movie_player .ytp-left-controls .ytp-play-button')
@@ -60,12 +61,7 @@ window.nova_plugins.push({
             //       <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/>
             //    </g>
             // </svg>`;
-            btn.addEventListener('click', () => {
-               if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
-
-               NOVA.videoElement.loop = !NOVA.videoElement.loop;
-               btn.style.opacity = NOVA.videoElement.hasAttribute('loop') ? 1 : .5;
-            });
+            btn.addEventListener('click', toggleLoop);
 
             container.after(btn);
 
@@ -81,6 +77,25 @@ window.nova_plugins.push({
                      if (target.loop) btn.style.opacity = 1;
                   });
                });
+
+            // hotkey
+            if (user_settings.player_loop_hotkey) {
+               document.addEventListener('keyup', evt => {
+                  if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.key === user_settings.player_loop_hotkey) {
+                     toggleLoop();
+                     // btn.click();
+                  }
+               });
+            }
+
+            function toggleLoop() {
+               if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
+
+               NOVA.videoElement.loop = !NOVA.videoElement.loop;
+               btn.style.opacity = (NOVA.videoElement.loop || NOVA.videoElement.hasAttribute('loop')) ? 1 : .5;
+               NOVA.triggerHUD('Loop is ' + Boolean(NOVA.videoElement.loop));
+            }
 
             // NOVA.runOnPageInitOrTransition(async () => {
             //    if (NOVA.currentPage != 'watch') return;
@@ -125,6 +140,29 @@ window.nova_plugins.push({
 
    },
    options: {
+      player_loop_hotkey: {
+         _tagName: 'select',
+         label: 'Hotkey',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         options: [
+            // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+            { label: 'none', /*value: false,*/ selected: true },
+            // { label: 'shift', value: 16 },
+            // { label: 'ctrl', value: 17, selected: true },
+            // { label: 'alt', value: 18 },
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ '[', ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+         ],
+      },
       // player_loop_save_state: {
       //    _tagName: 'input',
       //    //label: 'Remember state',

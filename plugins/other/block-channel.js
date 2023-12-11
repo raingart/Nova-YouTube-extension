@@ -35,10 +35,10 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/443529-improved-blacklist-function-%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%88%E6%A9%9F%E8%83%BD%E3%81%AE%E6%94%B9%E5%96%84
 
       // textarea to array
-      const keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist);
+      const keywords = NOVA.strToArray(user_settings.search_filter_channels_blocklist);
       // const
-      //    keywords_exception = NOVA.strToArray(user_settings.streamed_disable_channels_exception),
-      //    keywords = NOVA.strToArray(user_settings.search_filter_channel_blocklist)
+      //    keywords_exception = NOVA.strToArray(user_settings.thumbs_hide_live_channels_exception),
+      //    keywords = NOVA.strToArray(user_settings.search_filter_channels_blocklist)
       //       .filter(e => !keywords_exception || !keywords_exception.includes(e));
 
       const thumbsSelectors = [
@@ -109,7 +109,7 @@ window.nova_plugins.push({
                            && (thumb = channel_name.closest(thumbsSelectors))
                         ) {
                            // thumb.remove();
-                           thumb.style.display = 'none'; // dependency for "streamed_disable_channels_exception" in [thumbs-hide] plugin
+                           thumb.style.display = 'none'; // dependency for "thumbs_hide_live_channels_exception" in [thumbs-hide] plugin
 
                            // thumb.style.border = '2px solid red'; // mark for test
                            // console.log('filter removed', keyword, thumb);
@@ -122,7 +122,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      search_filter_channel_blocklist: {
+      search_filter_channels_blocklist: {
          _tagName: 'textarea',
          label: 'List',
          'label:zh': '频道列表',

@@ -23,6 +23,8 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
+   'data-conflict': 'description-timestamps-scroll',
+   // 'data-conflict': 'move-to-sidebar[description]',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer
@@ -122,8 +124,6 @@ window.nova_plugins.push({
                }`);
          });
 
-      NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && restoreDateLine());
-
       // expand
       NOVA.waitSelector(DESCRIPTION_SELECTOR)
          .then(descriptionEl => {
@@ -133,6 +133,12 @@ window.nova_plugins.push({
             });
             // }, { capture: true, once: true });
          });
+
+      // start restoreDateLine section
+      // conflict with [video-date-format] plugin
+      if (!user_settings['video-date-format']) {
+         NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && restoreDateLine());
+      }
 
       // alt1 - https://chrome.google.com/webstore/detail/amdebbajoolgbbgdhdnkhmgkkdlbkdgi
       // alt2 - https://greasyfork.org/en/scripts/457850-youtube-video-info

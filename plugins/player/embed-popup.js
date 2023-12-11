@@ -58,7 +58,9 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
+            // video.addEventListener('loadedmetadata', createPopup.bind(video));
             video.addEventListener('loadeddata', createPopup.bind(video));
+            // video.addEventListener('canplay', createPopup.bind(video));
          });
 
       function createPopup() {
@@ -95,7 +97,7 @@ window.nova_plugins.push({
             // left = window.innerWidth;
             // top = window.innerHeight;
             const newWindow = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
-            newWindow.document.title = title;
+            // newWindow.document.title = title; // ncaught TypeError: Cannot read properties of null (reading 'document')
          }
       }
 

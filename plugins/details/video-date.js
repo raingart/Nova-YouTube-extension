@@ -22,13 +22,9 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'details',
    opt_api_key_warn: true,
-   'data-conflict': 'description-popup',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
-
-      // fix conflict with [description-popup] plugin
-      if (user_settings['description-popup']) return
 
       const
          CACHE_PREFIX = 'nova-video-date:',
@@ -49,7 +45,7 @@ window.nova_plugins.push({
 
          // // has in cache
          if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
-            insertToHTML({ 'text': storage, 'container': container });
+            return insertToHTML({ 'text': storage, 'container': container });
          }
          // // from local
          // else if (videoDate = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate ||
@@ -67,11 +63,15 @@ window.nova_plugins.push({
          //    // save cache in tabs
          //    sessionStorage.setItem(CACHE_PREFIX + videoId, videoDate);
          // }
-         // // from API
+         // from API
          // else {
          NOVA.request.API({
             request: 'videos',
-            params: { 'id': videoId, 'part': 'snippet,liveStreamingDetails' },
+            params: {
+               'id': videoId,
+               'part': 'snippet,liveStreamingDetails'
+                  + (user_settings.video_view_count ? ',statistics' : '')
+            },
             api_key: user_settings['user-api-key'],
          })
             .then(res => {
@@ -85,11 +85,24 @@ window.nova_plugins.push({
                   //    "concurrentViewers": "25194",
                   //    "activeLiveChatId": ""
                   //  }
+                  // "statistics": {
+                  //    "viewCount": "313303291",
+                  //    "likeCount": "2376859",
+                  //    "favoriteCount": "0",
+                  //    "commentCount": "0"
+                  //  }
 
-                  let innerHTML = '';
+                  let innerHTML = user_settings.video_view_count
+                     // ? new Intl.NumberFormat().format(item.statistics.viewCount) + ' • '
+                     ? NOVA.prettyRoundInt(item.statistics.viewCount) + ' • '
+                     : '';
 
                   if (item.snippet.publishedAt) {
-                     innerHTML = NOVA.dateformat.apply(new Date(item.snippet.publishedAt), [user_settings.video_date_format]);
+                     const publishedDate = new Date(item.snippet.publishedAt);
+
+                     innerHTML += (user_settings.video_date_format == 'ago')
+                        ? `${NOVA.timeFormatTo.ago(publishedDate)} ago`
+                        : NOVA.dateformat.apply(publishedDate, [user_settings.video_date_format]);
                   }
 
                   if (item.liveStreamingDetails) {
@@ -104,7 +117,7 @@ window.nova_plugins.push({
                            timeStart = new Date(item.liveStreamingDetails.actualStartTime),
                            timeEnd = new Date(item.liveStreamingDetails.actualEndTime);
 
-                        innerHTML = ENDED_STREAM_START
+                        innerHTML += ENDED_STREAM_START
                            + NOVA.dateformat.apply(timeStart, [user_settings.video_date_format]);
 
                         innerHTML += DATETIME_UNTIL_PATTERN
@@ -115,7 +128,7 @@ window.nova_plugins.push({
                            ]);
                      }
                      else if (item.liveStreamingDetails.scheduledStartTime) {
-                        innerHTML = ACTIVE_LIVE_START
+                        innerHTML += ACTIVE_LIVE_START
                            + NOVA.dateformat.apply(new Date(item.liveStreamingDetails.scheduledStartTime), [user_settings.video_date_format]);
                      }
                   }
@@ -161,6 +174,24 @@ window.nova_plugins.push({
 
    },
    options: {
+      video_view_count: {
+         _tagName: 'input',
+         label: 'Show view count',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         type: 'checkbox',
+      },
       video_date_format: {
          _tagName: 'select',
          label: 'Date pattern',
@@ -177,6 +208,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          options: [
+            { label: 'ago', value: 'ago' },
             { label: 'D MMM Y', value: 'D MMM YYYY' },
             { label: 'D MMM Y HH:mm:ss', value: 'D MMM YYYY at HH:mm:ss', selected: true },
             { label: 'DDD DD/MM/YYYY', value: 'DDD DD/MM/YYYY HH:mm:ss' },

@@ -489,14 +489,6 @@ window.addEventListener('load', () => {
          });
    }
 
-   // 'description-expand', 'description-popup', 'comments-sidebar-position-exchange',
-   // 'video-date-format', 'description-popup'
-   // 'watched_disable' 'thumbnails-watched'
-   // 'thumbs-shorts-duration', 'shorts_disable'
-   // 'video-autopause', 'shorts_disable'
-   // 'player-control-autohide', 'player-control-below'
-   // 'theater-mode', 'player-fullscreen-mode' 'embed-popup'
-
    function pluginConflictDisable() {
       const attributeName = 'data-conflict';
       document.body.querySelectorAll(`[${attributeName}]`)

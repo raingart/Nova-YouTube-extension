@@ -82,6 +82,17 @@ window.nova_plugins.push({
       if (NOVA.channelTab) return;
 
       if (user_settings.channel_default_tab_mode == 'redirect') {
+
+         switch (user_settings.channel_default_tab_thumbs_sort) {
+            case 'popular':
+               location.assign(`${location.protocol}//${location.hostname}/${location.pathname}/${user_settings.channel_default_tab}?SRT=P`);
+               return;
+               break;
+
+            // case 'newest':
+            // default:
+            //    user_settings.channel_default_tab_thumbs_sort += '?SRT=R'; break;
+         }
          location.pathname += '/' + user_settings.channel_default_tab;
       }
       else {
@@ -325,6 +336,56 @@ window.nova_plugins.push({
             },
          ],
          'data-dependent': { 'channel_default_tab': ['videos', 'playlists', 'community', 'about'] },
+      },
+      channel_default_tab_thumbs_sort: {
+         _tagName: 'select',
+         label: 'Sort',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            {
+               label: 'newest', /*value: 'newest',*/ selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'popular', value: 'popular',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+         ],
+         'data-dependent': { 'channel_default_tab_mode': ['redirect'] },
       },
    }
 });

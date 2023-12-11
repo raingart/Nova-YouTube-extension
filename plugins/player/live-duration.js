@@ -22,7 +22,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/453367-youtube-live-clock
-      // alt2 - https://chrome.google.com/webstore/detail/cnllmiliafeacdmlngaofjpjaljoolpc
+      // alt2 - https://greasyfork.org/en/scripts/470937-youtube-live-datetime-tooltip
+      // alt3 - https://chrome.google.com/webstore/detail/cnllmiliafeacdmlngaofjpjaljoolpc
 
       // new Date(document.querySelector('meta[itemprop="startDate"][content]')?.content);
       // new Date(document.querySelector('meta[itemprop="endDate"][content]')?.content);

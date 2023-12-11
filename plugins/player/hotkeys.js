@@ -35,6 +35,7 @@ window.nova_plugins.push({
             evt.stopPropagation();
             evt.stopImmediatePropagation();
          }
+         // }, { capture: true });
       });
 
       document.addEventListener('click', evt => evt.isTrusted && setPlayerFocus(evt.target));

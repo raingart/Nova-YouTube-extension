@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=ICpzoZozwCU - [player-unavailable] offensive video
+
 window.nova_plugins.push({
    id: 'theater-mode',
    title: 'Theater mode',
@@ -30,7 +33,7 @@ window.nova_plugins.push({
 
       // Strategy 1
       // NOVA.waitSelector('ytd-watch-flexy:not([theater])') // wrong way. Reassigns manual exit from the mode
-      NOVA.waitSelector('ytd-watch-flexy')
+      NOVA.waitSelector('ytd-watch-flexy:not([player-unavailable])')
          // .then(el => el.theaterModeChanged_(true));
          .then(el => {
             if (el.hasAttribute('theater') || el.theater) return;
@@ -41,6 +44,12 @@ window.nova_plugins.push({
             //    // ) {
             // }
             el.updateTheaterModeState_(true);
+
+            // fix broken offensive video
+            if (!user_settings['video-unblock-warn-content']) {
+               NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer button', { destroy_if_url_changes: true })
+                  .then(btn => btn.click()); // click "I understand and wish to proceed"
+            }
          });
 
       // Strategy 2. Doesn't work
@@ -50,7 +59,7 @@ window.nova_plugins.push({
 
       //       function setTheater() {
       //          // document.cookie = 'wide=1;';
-      //          document.querySelector('ytd-watch-flexy:not([theater]) #movie_player .ytp-chrome-bottom button.ytp-size-button')
+      //          document.body.querySelector('ytd-watch-flexy:not([theater]) #movie_player .ytp-chrome-bottom button.ytp-size-button')
       //             ?.click();
       //       }
       //    });
@@ -298,21 +307,21 @@ window.nova_plugins.push({
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
          options: [
-            // {
-            //    label: 'default', /*value: '',*/ selected: true,
-            //    // 'label:zh': '',
-            //    // 'label:ja': '',
-            //    // 'label:ko': '',
-            //    // 'label:id': '',
-            //    // 'label:es': '',
-            //    // 'label:pt': '',
-            //    // 'label:fr': '',
-            //    // 'label:it': '',
-            //    // 'label:tr': '',
-            //    // 'label:de': '',
-            //    // 'label:pl': '',
-            //    'label:ua': 'за замовчуванням',
-            // },
+            {
+               label: 'default', /*value: '',*/ selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               'label:ua': 'за замовчуванням',
+            },
             {
                label: 'cinema', value: 'cinema_mode',
                // 'label:zh': '',
@@ -470,7 +479,6 @@ window.nova_plugins.push({
          // 'label:ua': '',
          type: 'checkbox',
          // title: '',
-         'data-dependent': { 'player_full_viewport_mode': 'smart' },
       },
       // theater_mode_ignore_playlist: {
       //    _tagName: 'select',

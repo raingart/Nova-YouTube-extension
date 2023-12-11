@@ -6,9 +6,10 @@
 // https://www.youtube.com/watch?v=kCHiSHxTXgg - svg icon "🎵"
 // https://www.youtube.com/results?search_query=Highly+Suspect+-+Upperdrugs+-+2019 // test transition. Open firt thumb "Highly Suspect 🎵"
 // https://www.youtube.com/embed/fEcGObUqzk4 - embed (music not recognized)
+// https://www.youtube.com/watch?v=O6ydiX4TOFw - min 25sec
 
 window.nova_plugins.push({
-   id: 'rate-wheel',
+   id: 'video-rate',
    title: 'Playback speed control',
    'title:zh': '播放速度控制',
    'title:ja': '再生速度制御',
@@ -41,14 +42,13 @@ window.nova_plugins.push({
    'desc:ua': 'За допомогою колеса мишки',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/421610-youtube-speed-up
+      // alt1 - https://greasyfork.org/en/scripts/481189-youtube-playback-speed-up
       // alt2 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
       // alt3 - https://greasyfork.org/en/scripts/427369-speed-up-for-youtube
-      // alt4 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
-      // alt5 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
-      // alt6 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
-      // alt7 - https://greasyfork.org/en/scripts/38575-youtube-advanced-speed-controller
-      // alt8 - https://greasyfork.org/en/scripts/470633-ytspeed
+      // alt4 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
+      // alt5 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
+      // alt6 - https://greasyfork.org/en/scripts/470633-ytspeed
+      // alt7 (mobile) - https://greasyfork.org/en/scripts/477218-m-youtube-com-more-playback-speeds
 
       // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
@@ -99,7 +99,9 @@ window.nova_plugins.push({
                   target.checked || playerRate.set(1)
                });
             }
-            // // expand memu
+            // expand memu
+            // alt1 - https://greasyfork.org/en/scripts/421610-youtube-speed-up
+            // alt2 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
             // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
 
             NOVA.runOnPageInitOrTransition(async () => {
@@ -137,14 +139,16 @@ window.nova_plugins.push({
                case user_settings.rate_hotkey_custom_down: delta = -1; break;
             }
             if (delta) {
-               // evt.preventDefault();
+               evt.preventDefault();
                // evt.stopPropagation();
                // evt.stopImmediatePropagation();
 
-               const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(delta));
-               // console.debug('current rate:', rate);
+               if (step = +user_settings.rate_step * Math.sign(delta)) {
+                  const rate = playerRate.adjust(step);
+                  // console.debug('current rate:', rate);
+               }
             }
-         });
+         }, { capture: true });
       }
       // mousewheel in player area
       else if (user_settings.rate_hotkey) {
@@ -153,19 +157,21 @@ window.nova_plugins.push({
                container.addEventListener('wheel', evt => {
                   evt.preventDefault();
 
-                  if (evt[user_settings.rate_hotkey]
-                     || (user_settings.rate_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)) {
-                     // console.debug('hotkey caught');
-                     const rate = playerRate.adjust(+user_settings.rate_step * Math.sign(evt.wheelDelta));
-                     // console.debug('current rate:', rate);
+                  if (evt[user_settings.rate_hotkey] || (user_settings.rate_hotkey == 'none'
+                     && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)
+                  ) {
+                     if (step = +user_settings.rate_step * Math.sign(evt.wheelDelta)) {
+                        const rate = playerRate.adjust(step);
+                        // console.debug('current rate:', rate);
+                     }
                   }
-               });
+               }, { capture: true });
             });
       }
 
       // once execute
       // during initialization, the icon can be loaded after the video
-      if (+user_settings.rate_default !== 1 && user_settings.rate_default_apply_music) {
+      if (+user_settings.rate_default !== 1 && user_settings.rate_apply_music) {
          // 'Official Artist' badge
          NOVA.waitSelector('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
@@ -312,12 +318,12 @@ window.nova_plugins.push({
 
       function setDefaultRate() {
          // init rate_default
-         // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_default_apply_music, isMusic());
+         // console.debug('setDefaultRate', +user_settings.rate_default, user_settings.rate_apply_music, isMusic());
          if (+user_settings.rate_default !== 1) {
             const is_music = NOVA.isMusic();
             // console.debug('isMusic', is_music);
             if (this.playbackRate !== +user_settings.rate_default
-               && (!user_settings.rate_default_apply_music || !is_music)
+               && (!user_settings.rate_apply_music || !is_music)
                && (!isNaN(this.duration) && this.duration > 25) // min 25sec
             ) {
                // console.debug('update rate_default');
@@ -531,7 +537,7 @@ window.nova_plugins.push({
                               overlay.setAttribute(ATTR_MARK, true); // mark
                               // overlay.style.border = '2px solid orange'; // mark for test
                               const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl);
-                              overlay.textContent = //'⚡' + // broken thumbs_min_duration in [thumbs-hide] plugin
+                              overlay.textContent = //'⚡' + // broken `thumbs_hide_min_duration` in [thumbs-hide] plugin
                                  NOVA.timeFormatTo.HMS.digit(timeSec / user_settings.rate_default);
                            }
                         });
@@ -570,7 +576,7 @@ window.nova_plugins.push({
          // max: 3,
          value: 1,
       },
-      rate_default_apply_music: {
+      rate_apply_music: {
          _tagName: 'select',
          label: 'For music genre',
          // 'label:zh': '音乐流派视频',
@@ -724,7 +730,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: ']', value: ']', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '+', '-', ',', '.', '/', '<', ';', '\\', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
          ],
          'data-dependent': { 'rate_hotkey': ['keyboard'] },
       },
@@ -746,7 +752,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: '[', value: '[', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '+', '-', ',', '.', '/', '<', ';', '\\'
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ']', '+', '-', ',', '.', '/', '<', ';', '\\', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
          ],
          'data-dependent': { 'rate_hotkey': ['keyboard'] },
       },

@@ -23,17 +23,37 @@ if (user_settings?.exclude_iframe && (window.frameElement || window.self !== win
 
 // console.debug(`current ${configStoreName}:`, user_settings);
 
-// updateKeyStorage
-// const keyRenameTemplate = {
-//    // 'oldKey': 'newKey',
-// }
-// for (const oldKey in user_settings) {
-//    if (newKey = keyRenameTemplate[oldKey]) {
-//       console.log(oldKey, '=>', newKey);
-//       delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
-//    }
-//    GM_setValue(configStoreName, user_settings);
-// }
+renameStorageKeys({
+   // 'oldKey': 'newKey',
+   'video_quality_in_music_quality': 'video_quality_for_music',
+   'volume_normalization': 'volume_loudness_normalization',
+   'details_button_no_labels_opacity': 'details_buttons_opacity',
+   'details_button_no_labels': 'details_buttons_label_hide',
+   'volume-wheel': 'video-volume',
+   'rate-wheel': 'video-rate',
+   'video-stop-preload': 'video-autostop',
+   'stop_preload_ignore_playlist': 'video_autostop_ignore_playlist',
+   'stop_preload_ignore_live': 'video_autostop_ignore_live',
+   'stop_preload_embed': 'video_autostop_embed',
+   'disable-video-cards': 'pages-clear',
+   'volume_level_default': 'volume_default',
+   'thumb_filter_title_blocklist': 'thumbs_filter_title_blocklist',
+   'shorts_disable': 'thumbs_hide_shorts',
+   'premieres_disable': 'thumbs_hide_premieres',
+   'thumbs_min_duration': 'thumbs_hide_min_duration',
+   'live_disable': 'thumbs_hide_live',
+   'streamed_disable_channels_exception': 'thumbs_hide_live_channels_exception',
+   'search_filter_channel_blocklist': 'search_filter_channels_blocklist',
+   'streamed_disable': 'thumbs_hide_streamed',
+   'mix_disable': 'thumbs_hide_mix',
+   'watched_disable': 'thumbs_hide_watched',
+   'watched_disable_percent_complete': 'thumbs_hide_watched_percent_complete',
+   'sidebar-channel-links-patch': 'sidebar-thumbs-channel-link-patch',
+   'move-in-sidebar': 'move-to-sidebar',
+   'move_in_sidebar_target': 'move_to_sidebar_target',
+   'skip_into_step': 'skip_into_sec',
+   'miniplayer-disable': 'default-miniplayer-disable',
+});
 
 registerMenuCommand();
 
@@ -65,9 +85,9 @@ else {
       delete exportedSettings['sponsor_block'];
       delete exportedSettings['sponsor_block_category'];
       delete exportedSettings['sponsor_block_url'];
-      delete exportedSettings['thumb_filter_title_blocklist'];
-      delete exportedSettings['search_filter_channel_blocklist'];
-      delete exportedSettings['streamed_disable_channels_exception'];
+      delete exportedSettings['thumbs_filter_title_blocklist'];
+      delete exportedSettings['search_filter_channels_blocklist'];
+      delete exportedSettings['thumbs_hide_live_channels_exception'];
       unsafeWindow.window.nova_settings = exportedSettings;
    }
 }
@@ -101,7 +121,7 @@ function setupConfigPage() {
 
       console.debug(`update ${configStoreName}:`, obj);
       GM_setValue(configStoreName, obj);
-   });
+   }, { capture: true });
 
    window.addEventListener('DOMContentLoaded', () => {
       localizePage(user_settings?.lang_code);
@@ -223,9 +243,7 @@ function registerMenuCommand() {
    GM_registerMenuCommand('Import settings', () => {
       if (navigator.userAgent.match(/firefox|fxios/i)) {
          if (json = JSON.parse(prompt('Enter json file context'))) {
-            GM_setValue(configStoreName, json);
-            alert('Settings imported');
-            location.reload();
+            saveImportSettings(json);
          }
          // else alert('Import failed');
       }
@@ -239,9 +257,7 @@ function registerMenuCommand() {
             const rdr = new FileReader();
             rdr.addEventListener('load', function () {
                try {
-                  GM_setValue(configStoreName, JSON.parse(rdr.result));
-                  alert('Settings imported successfully!');
-                  location.reload();
+                  saveImportSettings(JSON.parse(rdr.result));
                }
                catch (err) {
                   alert(`Error parsing settings\n${err.name}: ${err.message}`);
@@ -253,6 +269,66 @@ function registerMenuCommand() {
          document.body.append(f);
          f.click();
          f.remove();
+      }
+
+      function saveImportSettings(json) {
+         GM_setValue(configStoreName, json);
+         renameStorageKeys({
+            // 'oldKey': 'newKey',
+            'disable_in_frame': 'exclude_iframe',
+            'custom-api-key': 'user-api-key',
+            'shorts-disable': 'thumbs_hide_shorts',
+            'shorts_disable': 'thumbs_hide_shorts',
+            'premiere-disable': 'thumbs_hide_premieres',
+            'premieres-disable': 'thumbs_hide_premieres',
+            'premieres_disable': 'thumbs_hide_premieres',
+            'thumbs_min_duration': 'thumbs_hide_min_duration',
+            'shorts_disable_min_duration': 'thumbs_hide_min_duration',
+            'streams-disable': 'thumbs_hide_live',
+            'streams_disable': 'thumbs_hide_live',
+            'live_disable': 'thumbs_hide_live',
+            'thumbnails-mix-hide': 'thumbs_hide_mix',
+            'thumb_mix_disable': 'thumbs_hide_mix',
+            'mix_disable': 'thumbs_hide_mix',
+            'player_fullscreen_mode_exit': 'player_fullscreen_mode_onpause',
+            'subtitle-transparent': 'subtitle_transparent',
+            'video-description-expand': 'description-expand',
+            'video_quality_in_music': 'video_quality_in_music_playlist',
+            'player_float_progress_bar_color': 'player_progress_bar_color',
+            'header-short': 'header-compact',
+            'player-buttons-custom': 'player-quick-buttons',
+            'button-no-labels': 'details_button_no_labels',
+            'button_no_labels_opacity': 'details_button_no_labels_opacity',
+            'shorts_thumbnails_time': 'shorts-thumbnails-time',
+            'comments-sidebar-position-exchange': 'move-in-sidebar',
+            'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
+            'streamed_disable_channel_exception': 'thumbs_hide_live_channels_exception',
+            'streamed_disable_channels_exception': 'thumbs_hide_live_channels_exception',
+            'video_quality_in_music_quality': 'video_quality_for_music',
+            'volume_normalization': 'volume_loudness_normalization',
+            'details_button_no_labels_opacity': 'details_buttons_opacity',
+            'details_button_no_labels': 'details_buttons_label_hide',
+            'volume-wheel': 'video-volume',
+            'rate-wheel': 'video-rate',
+            'video-stop-preload': 'video-autostop',
+            'stop_preload_ignore_playlist': 'video_autostop_ignore_playlist',
+            'stop_preload_ignore_live': 'video_autostop_ignore_live',
+            'stop_preload_embed': 'video_autostop_embed',
+            'disable-video-cards': 'pages-clear',
+            'volume_level_default': 'volume_default',
+            'thumb_filter_title_blocklist': 'thumbs_filter_title_blocklist',
+            'search_filter_channel_blocklist': 'search_filter_channels_blocklist',
+            'streamed_disable': 'thumbs_hide_streamed',
+            'watched_disable': 'thumbs_hide_watched',
+            'watched_disable_percent_complete': 'thumbs_hide_watched_percent_complete',
+            'sidebar-channel-links-patch': 'sidebar-thumbs-channel-link-patch',
+            'move-in-sidebar': 'move-to-sidebar',
+            'move_in_sidebar_target': 'move_to_sidebar_target',
+            'skip_into_step': 'skip_into_sec',
+            'miniplayer-disable': 'default-miniplayer-disable',
+         });
+         alert('Settings imported successfully!');
+         location.reload();
       }
    });
    GM_registerMenuCommand('Export settings', () => {
@@ -266,6 +342,18 @@ function registerMenuCommand() {
    });
 }
 
+function renameStorageKeys(key_template_obj = required()) {
+   let needSave;
+   for (const oldKey in user_settings) {
+      if (newKey = key_template_obj[oldKey]) {
+         console.log(oldKey, '=>', newKey);
+         needSave = true;
+         delete Object.assign(user_settings, { [newKey]: user_settings[oldKey] })[oldKey];
+      }
+      if (needSave) GM_setValue(configStoreName, user_settings);
+   }
+}
+
 function insertSettingButton() {
    NOVA.waitSelector('#masthead #end')
       .then(menu => {
@@ -277,6 +365,7 @@ function insertSettingButton() {
          a.id = SETTING_BTN_ID;
          a.href = configPage + '?tabs=tab-plugins';
          a.target = '_blank';
+         // a.textContent = '▷';
          a.innerHTML =
             `<yt-icon-button class="style-scope ytd-button-renderer style-default size-default">
                <svg viewBox="-4 0 20 16">
@@ -299,9 +388,7 @@ function insertSettingButton() {
          //    'text-decoration': 'none',
          //    'padding': '0 10px',
          // });
-         a.addEventListener('click', () => {
-            setTimeout(() => document.body.click(), 200); // fix hide <tp-yt-iron-dropdown>
-         });
+         a.addEventListener('click', null, { capture: true }); // fix hide <tp-yt-iron-dropdown>
 
          // append tooltip
          // a.setAttribute('tooltip', titleMsg); // css (ahs bug on hover search buttom)
@@ -415,7 +502,7 @@ window.addEventListener('unhandledrejection', err => {
       console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
       _pluginsCaptureException({
-         'trace_name': 'unhandledrejection',
+         'trace_name': 'unhandledRejection',
          'err_stack': err.reason.stack || err.stack,
          'app_ver': GM_info.script.version,
          'confirm_msg': `Failure when async-call of one "${GM_info.script.name}" plugin.\nDetails in the console\n\nOpen tab to report the bug?`,

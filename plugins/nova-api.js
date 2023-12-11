@@ -12,8 +12,6 @@
    //- cookie.get
    //- cookie.getParamLikeObj
    //- cookie.updateParam
-   //- extractFirstInt
-   - prettyRoundInt
    - isInViewport
    // - checkVisibility
    - collapseElement
@@ -32,6 +30,8 @@
    //- timeFormatTo.HMS.abbrFull
    - timeFormatTo.ago
    - dateformat
+   //- extractFirstInt
+   - prettyRoundInt
    - updateUrl
    - queryURL.has
    - queryURL.get
@@ -85,7 +85,7 @@ const NOVA = {
    //         const startTime = Date.now();
 
    //         function checkElement() {
-   //           let element = document.querySelector(selector);
+   //           let element = document.body.querySelector(selector);
 
    //           if (element) {
    //               if (element.style.display != 'none') {
@@ -129,7 +129,7 @@ const NOVA = {
    //    export const findElement = (selector: string): Promise<Element> => {
    //       return new Promise((resolve) => {
    //           const interval = setInterval(() => {
-   //               const elem = document.querySelector(selector);
+   //               const elem = document.body.querySelector(selector);
    //               if (elem !== null) {
    //                   clearInterval(interval);
    //                   resolve(elem);
@@ -202,7 +202,7 @@ const NOVA = {
    //             reject(new Error(`The maximum amount of tries (${maxTries}) was exceeded.`))
    //             return
    //          }
-   //          const elements = document.querySelectorAll(selector)
+   //          const elements = document.body.querySelectorAll(selector)
    //          if (elements.length > 0) {
    //             clearInterval(id)
    //             resolve(elements)
@@ -607,37 +607,6 @@ const NOVA = {
    //    },
    // },
 
-   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, '')),
-
-   /**
-    * @param  {integer/string} num
-    * @return {string}
-   */
-   // prettyRoundInt(num) { // conver number "2111" > "2K" (without decimals)
-   //    num = +num;
-   //    if (num === 0) return '';
-   //    else if (num < 1000) return num;
-   //    else if (num < 990000) return Math.max(1, Math.round(num / 1000)) + 'K'; // K on youtube are never decimals
-   //    else if (num < 990000000) return Math.max(1, Math.round(num / 100000) / 10) + 'M';
-   //    else return Math.max(1, Math.round(num / 100000000) / 10) + 'B';
-   // },
-   // 81.46% slower
-   prettyRoundInt(num) { // conver number "2111" > "2.1K"
-      num = +num;
-      if (num === 0) return '';
-      if (num < 1000) return num; // speed up
-      const sizes = ['', 'K', 'M', 'B'];
-      const i = ~~(Math.log(Math.abs(num)) / Math.log(1000));
-      if (!sizes[i]) return num; // out range
-
-      return round(num / 1000 ** i, 1) + sizes[i];
-
-      function round(n, precision = 2) {
-         const prec = 10 ** precision;
-         return ~~(n * prec) / prec;
-      }
-   },
-
    /**
     * @param  {Node} el
     * @return  {boolean}
@@ -935,7 +904,7 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
-                                 .trim().replace(/^[:\-–—|●►]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
+                                 .trim().replace(/^[:\-–—|●►▷]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
                                  //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
                                  // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                                  .trim()
@@ -1160,12 +1129,12 @@ const NOVA = {
             // channelName = document.body.querySelector('#upload-info #channel-name a:not(:empty)')?.textContent,
             // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.author,
             // channelName = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.ownerChannelName,
-            channelName = movie_player.getVideoData().author,
-            titleStr = movie_player.getVideoData().title.toUpperCase(),
+            channelName = movie_player.getVideoData().author, // document.body.querySelector('.ytp-title-channel a:not(:empty)').textContent
+            titleStr = movie_player.getVideoData().title.toUpperCase(), // #movie_player .ytp-title a:not(:empty)
             titleWordsList = titleStr?.toUpperCase().match(/\w+/g), // UpperCase
             playerData = document.body.querySelector('ytd-watch-flexy')?.playerData;
 
-         // if (user_settings.rate_default_apply_music == 'expanded') {
+         // if (user_settings.rate_apply_music == 'expanded') {
          //    // 【MAD】,『MAD』,「MAD」
          //    // warn false finding ex: "AUDIO visualizer" 'underCOVER','VOCALoid','write THEME','UI THEME','photo ALBUM', 'lolyPOP', 'ascENDING', speeED, 'LapOP' 'Ambient AMBILIGHT lighting', 'CD Projekt RED', 'Remix OS, TEASER
          //    if (titleStr.split(' - ').length === 2  // search for a hyphen. Ex.:"Artist - Song", "Sound Test" (https://www.youtube.com/watch?v=gLSTUhRY2-s)
@@ -1450,6 +1419,37 @@ const NOVA = {
             }
             return out;
          });
+   },
+
+   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, '')),
+
+   /**
+    * @param  {integer/string} num
+    * @return {string}
+   */
+   // prettyRoundInt(num) { // conver number "2111" > "2K" (without decimals)
+   //    num = +num;
+   //    if (num === 0) return '';
+   //    else if (num < 1000) return num;
+   //    else if (num < 990000) return Math.max(1, Math.round(num / 1000)) + 'K'; // K on youtube are never decimals
+   //    else if (num < 990000000) return Math.max(1, Math.round(num / 100000) / 10) + 'M';
+   //    else return Math.max(1, Math.round(num / 100000000) / 10) + 'B';
+   // },
+   // 81.46% slower
+   prettyRoundInt(num) { // conver number "2111" > "2.1K"
+      num = +num;
+      if (num === 0) return '';
+      if (num < 1000) return num; // speed up
+      const sizes = ['', 'K', 'M', 'B'];
+      const i = ~~(Math.log(Math.abs(num)) / Math.log(1000));
+      return sizes[i]
+         ? round(num / 1000 ** i, 1) + sizes[i]
+         : num; // out range
+
+      function round(n, precision = 2) {
+         const prec = 10 ** precision;
+         return ~~(n * prec) / prec;
+      }
    },
 
    /**

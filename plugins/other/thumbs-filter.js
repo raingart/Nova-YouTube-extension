@@ -92,7 +92,7 @@ window.nova_plugins.push({
          }
       });
 
-      if (user_settings.shorts_disable) {
+      if (user_settings.thumbs_hide_shorts) {
          const stylesList = [
             // '#content > ytd-rich-shelf-renderer', // results old
             '#contents > ytd-reel-shelf-renderer', // results
@@ -109,7 +109,7 @@ window.nova_plugins.push({
       const thumbRemove = {
          // alt - https://greasyfork.org/en/scripts/461568-hide-youtube-shorts/
          shorts() {
-            if (!user_settings.shorts_disable) return;
+            if (!user_settings.thumbs_hide_shorts) return;
             // exclude "short" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'shorts') return;
 
@@ -129,8 +129,8 @@ window.nova_plugins.push({
 
          durationLimits() {
             // alt - https://greasyfork.org/en/scripts/466576-hide-longs-on-youtube
-            if (!+user_settings.thumbs_min_duration) return;
-            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.thumbs_min_duration)) return; // for input[type=text] (digit time)
+            if (!+user_settings.thumbs_hide_min_duration) return;
+            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.thumbs_hide_min_duration)) return; // for input[type=text] (digit time)
 
             // exclude "" tab in channel
             // if (NOVA.currentPage == 'channel' && NOVA.channelTab != 'video') return;
@@ -140,7 +140,7 @@ window.nova_plugins.push({
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
             //       if ((to = thumb.data?.thumbnailOverlays)?.length) {
-            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_min_duration || 60)
+            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_hide_min_duration || 60)
             //          ) {
             //             // thumb.remove();
             //             // // for test
@@ -162,7 +162,7 @@ window.nova_plugins.push({
                         // console.debug('>', NOVA.timeFormatTo.hmsToSec(el.textContent.trim()));
                         if ((thumb = el.closest(thumbsSelectors))
                            && (timeSec = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
-                           && (timeSec * (user_settings.rate_default || 1)) < (+user_settings.thumbs_min_duration || 60)
+                           && (timeSec * (user_settings.rate_default || 1)) < (+user_settings.thumbs_hide_min_duration || 60)
                         ) {
                            // thumb.remove();
                            // thumb.style.display = 'none';
@@ -176,7 +176,7 @@ window.nova_plugins.push({
 
          // alt - https://greasyfork.org/en/scripts/443344-youtube-toggle-videos-buttons
          premieres() {
-            if (!user_settings.premieres_disable) return;
+            if (!user_settings.thumbs_hide_premieres) return;
             // announced
             document.body.querySelectorAll(
                `#thumbnail #overlays [aria-label="Premiere"],
@@ -197,8 +197,10 @@ window.nova_plugins.push({
             // streaming
             // #thumbnail #overlays > :not(ytd-thumbnail-overlay-time-status-renderer)
             // #thumbnail #overlays > :not(#text)
-            // #video-badges > .badge-style-type-live-now-alternate
-            document.body.querySelectorAll('#video-badges > [class*="live-now"]')
+            // #video-badges > .badge-style-type-live-now-alternate // old
+            // .badge-style-type-live-now-alternate .ytd-badge-supported-renderer svg
+            // document.body.querySelectorAll('#video-badges > [class*="live-now"]') // old
+            document.body.querySelectorAll('[class*="badge"] [class*="live-now"]')
                .forEach(el => el.closest(thumbsSelectors)?.remove());
             // for test
             // .forEach(el => {
@@ -213,12 +215,12 @@ window.nova_plugins.push({
          },
 
          live() {
-            if (!user_settings.live_disable) return;
+            if (!user_settings.thumbs_hide_live) return;
             // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channels_exception);
+            const keywords = NOVA.strToArray(user_settings.thumbs_hide_live_channels_exception);
 
             // #thumbnail #overlays [overlay-style="LIVE"],
             document.body.querySelectorAll('#thumbnail img[src*="_live.jpg"]')
@@ -246,12 +248,12 @@ window.nova_plugins.push({
          },
 
          streamed() {
-            if (!user_settings.streamed_disable) return;
+            if (!user_settings.thumbs_hide_streamed) return;
             // exclude "LIVE" tab in channel
             if (NOVA.currentPage == 'channel' && NOVA.channelTab == 'streams') return;
 
             // textarea to array
-            const keywords = NOVA.strToArray(user_settings.streamed_disable_channels_exception);
+            const keywords = NOVA.strToArray(user_settings.thumbs_hide_live_channels_exception);
 
             // document.body.querySelectorAll('#metadata-line > span:last-of-type')
             document.body.querySelectorAll('#metadata')
@@ -279,7 +281,7 @@ window.nova_plugins.push({
          },
 
          mix() {
-            if (!user_settings.mix_disable) return;
+            if (!user_settings.thumbs_hide_mix) return;
 
             document.body.querySelectorAll(
                // .ytp-videowall-still[data-is-mix=true],
@@ -304,11 +306,11 @@ window.nova_plugins.push({
          // alt1 - https://greasyfork.org/en/scripts/451525-youtube-hide-watched
          // alt2 - https://greasyfork.org/en/scripts/424945-youtube-watched-subscription-hider
          watched() {
-            if (!user_settings.watched_disable) return;
+            if (!user_settings.thumbs_hide_watched) return;
             // conflict with [thumbnails-watched] plugin
             if (!user_settings['thumbnails-watched']) return;
 
-            const PERCENT_COMPLETE = user_settings.watched_disable_percent_complete || 90;
+            const PERCENT_COMPLETE = user_settings.thumbs_hide_watched_percent_complete || 90;
 
             // Strategy 1. API
             // document.body.querySelectorAll(thumbsSelectors)
@@ -341,7 +343,7 @@ window.nova_plugins.push({
          },
       };
 
-      if (user_settings.mix_disable) {
+      if (user_settings.thumbs_hide_mix) {
          NOVA.css.push(
             `ytd-radio-renderer {
                display: none !important;
@@ -350,7 +352,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      shorts_disable: {
+      thumbs_hide_shorts: {
          _tagName: 'input',
          label: 'Hide Shorts',
          'label:zh': '隐藏短裤',
@@ -369,7 +371,7 @@ window.nova_plugins.push({
          // title: '',
          // 'data-dependent': { 'thumbs-shorts-duration': '!true' },
       },
-      thumbs_min_duration: {
+      thumbs_hide_min_duration: {
          _tagName: 'input',
          label: 'Min duration in sec (for regular video)',
          'label:zh': '最短持续时间（以秒为单位）',
@@ -415,7 +417,7 @@ window.nova_plugins.push({
          // pattern: '(0[0-1])(:[0-5][0-9]){2}',
          // size: 15,
       },
-      premieres_disable: {
+      thumbs_hide_premieres: {
          _tagName: 'input',
          label: 'Hide Premieres/Upcoming',
          'label:zh': '隐藏首映/即将上映',
@@ -433,7 +435,7 @@ window.nova_plugins.push({
          type: 'checkbox',
          title: 'Premiere Announcements',
       },
-      live_disable: {
+      thumbs_hide_live: {
          _tagName: 'input',
          label: 'Hide Live streams',
          'label:zh': '隐藏直播',
@@ -463,7 +465,7 @@ window.nova_plugins.push({
          'title:pl': 'Teraz wietrzenie',
          'title:ua': 'Зараз в ефірі',
       },
-      streamed_disable_channels_exception: {
+      thumbs_hide_live_channels_exception: {
          _tagName: 'textarea',
          label: 'Сhannels exception',
          // 'label:zh': '频道列表',
@@ -492,9 +494,9 @@ window.nova_plugins.push({
          'title:pl': 'separator: "," lub ";" lub "now linia"',
          'title:ua': 'розділювач: "," або ";" або "новий рядок"',
          placeholder: 'channel1\nchannel2',
-         'data-dependent': { 'live_disable': true },
+         'data-dependent': { 'thumbs_hide_live': true },
       },
-      streamed_disable: {
+      thumbs_hide_streamed: {
          _tagName: 'input',
          label: 'Hide finished streams',
          'label:zh': '隐藏完成的流',
@@ -511,9 +513,9 @@ window.nova_plugins.push({
          'label:ua': 'cховати завершені транcляції',
          type: 'checkbox',
          //title: '',
-         'data-dependent': { 'live_disable': true },
+         'data-dependent': { 'thumbs_hide_live': true },
       },
-      mix_disable: {
+      thumbs_hide_mix: {
          _tagName: 'input',
          label: "Hide 'Mix' thumbnails",
          'label:zh': '隐藏[混合]缩略图',
@@ -542,7 +544,7 @@ window.nova_plugins.push({
          'title:pl': '[Mix] proponuje ponowne obejrzenie już obejrzanych filmów',
          'title:ua': '[Mix] пропонує передивитиcя вже побачене',
       },
-      watched_disable: {
+      thumbs_hide_watched: {
          _tagName: 'input',
          label: 'Hide watched',
          'label:zh': '隐藏观看',
@@ -573,7 +575,7 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
       },
-      watched_disable_percent_complete: {
+      thumbs_hide_watched_percent_complete: {
          _tagName: 'input',
          label: 'Threshold percent',
          type: 'number',
@@ -583,7 +585,7 @@ window.nova_plugins.push({
          min: 5,
          max: 100,
          value: 90,
-         'data-dependent': { 'watched_disable': true },
+         'data-dependent': { 'thumbs_hide_watched': true },
       },
    }
 });

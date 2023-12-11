@@ -114,17 +114,7 @@ window.nova_plugins.push({
 
          // append buttons based on activated plugins
          let listItem = [];
-         // the same name as in the corresponding option inside the plugin
-         if (user_settings['video-quality']) {
-            listItem.push({ name: 'quality', getSaveDataFn: movie_player.getPlaybackQuality });
-         }
-         if (user_settings['rate-wheel']) {
-            listItem.push({ name: 'speed', getSaveDataFn: movie_player.getPlaybackRate });
-         }
-         if (user_settings['volume-wheel']) {
-            listItem.push({ name: 'volume', getSaveDataFn: () => ~~(movie_player.getVolume()) });
-         }
-         // if (user_settings['vsubtitles']) {
+         // if (user_settings['subtitles']) {
          listItem.push({
             name: 'subtitles',
             getSaveDataFn: () => {
@@ -140,11 +130,24 @@ window.nova_plugins.push({
             },
          });
          // }
+         // the same name as in the corresponding option inside the plugin
+         if (user_settings['video-quality']) {
+            listItem.push({ name: 'quality', getSaveDataFn: movie_player.getPlaybackQuality });
+         }
+         if (user_settings['video-rate']) {
+            listItem.push({ name: 'speed', getSaveDataFn: movie_player.getPlaybackRate });
+         }
+         if (user_settings['video-volume']) {
+            listItem.push({ name: 'volume', getSaveDataFn: () => ~~(movie_player.getVolume()) });
+         }
          if (user_settings['player-resume-playback']) {
             listItem.push({ name: 'ignore-playback', label: 'unsave playback time', getSaveDataFn: () => true });
          }
          if (user_settings['player-loop']) {
             listItem.push({ name: 'loop', getSaveDataFn: () => true });
+         }
+         if (user_settings['transcript']) {
+            listItem.push({ name: 'transcript', getSaveDataFn: () => true });
          }
 
          // input-checkbox
@@ -188,7 +191,7 @@ window.nova_plugins.push({
          });
 
          // alt - https://greasyfork.org/en/scripts/392459-youtube-automatic-bs-skip
-         // input-number (skip_into_step)
+         // input-number (skip_into_sec)
          if (user_settings['time-jump']) {
             const
                SLIDER_LABEL = 'skip into',
@@ -267,7 +270,7 @@ window.nova_plugins.push({
                left: -2.2em;
                list-style: none;
                padding-bottom: 1.5em !important;
-               z-index: ${+NOVA.css.getValue('.ytp-progress-bar', 'z-index') + 1};
+               z-index: calc(${+NOVA.css.getValue('.ytp-progress-bar', 'z-index')} + 1);
             }
 
             /* for embed */

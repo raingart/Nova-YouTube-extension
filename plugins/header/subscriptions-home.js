@@ -23,5 +23,6 @@ window.nova_plugins.push({
       // alt - https://greasyfork.org/en/scripts/475942-youtube-recommendations-be-gone-cleaner-youtube
 
       location.pathname = '/feed/subscriptions';
+
    },
 });

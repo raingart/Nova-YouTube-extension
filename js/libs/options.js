@@ -94,7 +94,7 @@ const PopulateForm = {
                   // return [(subtargetEl.type == 'checkbox') ? subtargetEl.checked : subtargetEl.value];
                })();
 
-               // if (parrentName == 'stop_preload_embed')
+               // if (parrentName == '')
                //    console.debug(parrentName, ruleValues, currentValuesList);
 
                if (ruleValues.length // filter value present
@@ -194,7 +194,7 @@ const PopulateForm = {
          this.btnSubmitAnimation._process();
          this.saveOptions(evt.target);
          this.btnSubmitAnimation._defaut();
-      });
+      }, { capture: true });
       // form unsave
       document.addEventListener('change', ({ target }) => {
          // console.debug('change', target, 'name:', target.name);

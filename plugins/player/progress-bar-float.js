@@ -35,13 +35,16 @@ window.nova_plugins.push({
       // alt6 - https://greasyfork.org/en/scripts/426283-youtube-permanent-progressbar
       // alt7 - https://greasyfork.org/en/scripts/466345-stick-youtube-progress-bar
 
-      // live iframe
-      if (NOVA.currentPage == 'embed' && window.self.location.href.includes('live_stream')
-         // && (window.self.location.href.includes('live_stream') || movie_player.getVideoData().isLive)
-      ) return;
-
-      // skip embed when disable chrome - bottom(example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
-      if (NOVA.currentPage == 'embed' && ['0', 'false'].includes(NOVA.queryURL.get('controls'))) return;
+      if (NOVA.currentPage == 'embed') {
+         if (
+            // live iframe
+            window.self.location.href.includes('live_stream') //|| movie_player.getVideoData().isLive)
+            // skip embed when disable chrome - bottom(example: https://www.youtube.com/embed/yWUMMg3dmFY?controls=0)
+            || ['0', 'false'].includes(NOVA.queryURL.get('controls'))
+         ) {
+            return;
+         }
+      }
 
       const
          SELECTOR_CONTAINER = '#movie_player.ytp-autohide',
@@ -55,7 +58,6 @@ window.nova_plugins.push({
                container = insertFloatBar({
                   'init_container': movie_player,
                   'z_index': Math.max(NOVA.css.getValue('.ytp-chrome-bottom', 'z-index'), 59)
-                     + 1
                }),
                bufferEl = document.getElementById(`${SELECTOR_ID}-buffer`),
                progressEl = document.getElementById(`${SELECTOR_ID}-progress`);
@@ -65,7 +67,6 @@ window.nova_plugins.push({
 
             // resetBar on new video loaded
             // video.addEventListener('play', resetBar); // fix: live_stream visibility
-            video.addEventListener('canplay', resetBar); // fix: live_stream visibility
             video.addEventListener('loadeddata', resetBar);
             // document.addEventListener('yt-navigate-finish', resetBar);
 

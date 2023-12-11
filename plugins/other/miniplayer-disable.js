@@ -3,7 +3,7 @@
 // https://www.youtube.com/channel/UCwXNBp8jcBZcm4YRMwngJBQ/playlists
 
 window.nova_plugins.push({
-   id: 'miniplayer-disable',
+   id: 'default-miniplayer-disable',
    title: 'Disable miniplayer',
    // 'title:zh': '',
    // 'title:ja': '',

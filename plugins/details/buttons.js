@@ -19,16 +19,19 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
+   // 'data-conflict': 'return-dislike',
    _runtime: user_settings => {
 
       if (user_settings.details_buttons_hide?.includes('subscribe')) {
-         // stylesList.push('#below #subscribe-button');
-         stylesList.push('#columns #subscribe-button'); // fix for [comments-sidebar-exchange] plugin
+         stylesList.push('#owner #subscribe-button'); // consider the [comments-sidebar-exchange] plugin
       }
 
+      const SELECTOR_BTN_CONTAINER = 'ytd-watch-metadata #actions';
+
+      // for optimozation
       if (user_settings.details_buttons_hide?.includes('all')) {
          return NOVA.css.push(
-            `ytd-watch-metadata #actions button {
+            `${SELECTOR_BTN_CONTAINER} button {
                display: none !important;
             }`);
       }
@@ -40,35 +43,37 @@ window.nova_plugins.push({
       // alt5 - https://greasyfork.org/en/scripts/446771-youtube-helper
       let styles = '';
 
-      if (user_settings.details_button_no_labels) {
+      if (user_settings.details_buttons_label_hide) {
          styles +=
-            // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '[class*="--button-text-content"]'} {
-            // `ytd-watch-metadata #actions button ${user_settings.details_buttons_hide ? '' : '.cbox'} {
+            // `${SELECTOR_BTN_CONTAINER} button ${user_settings.details_buttons_hide ? '' : '[class*="--button-text-content"]'} {
+            // `${SELECTOR_BTN_CONTAINER} button ${user_settings.details_buttons_hide ? '' : '.cbox'} {
             //    display: none;
             // }
-            `ytd-watch-metadata #actions button [class*=text] {
+            `${SELECTOR_BTN_CONTAINER} button [class*=text] {
                display: none;
             }
-            ytd-watch-metadata #actions button .yt-spec-button-shape-next__icon {
+            ${SELECTOR_BTN_CONTAINER} button .yt-spec-button-shape-next__icon {
                margin: 0 !important;
             }
             /* exept like-dislike */
-            ytd-watch-metadata #actions ytd-segmented-like-dislike-button-renderer ~ * button,
-            ytd-watch-metadata #actions #top-level-buttons-computed ~ * button.yt-spec-button-shape-next--size-m {
+            /* ${SELECTOR_BTN_CONTAINER} ytd-segmented-like-dislike-button-renderer ~ * button,*/
+            ${SELECTOR_BTN_CONTAINER} segmented-like-dislike-button-view-model button,
+            ${SELECTOR_BTN_CONTAINER} segmented-like-dislike-button-view-model ~ * button,
+            ${SELECTOR_BTN_CONTAINER} button.yt-spec-button-shape-next--size-m {
                padding: 0 7px;
             }`;
       }
 
-      if (+user_settings.details_button_no_labels_opacity) {
+      if (+user_settings.details_buttons_opacity) {
          styles +=
-            `#subscribe-button:not(:hover),
-            ytd-watch-metadata #actions #menu:not(:hover) {
+            `#owner #subscribe-button:not(:hover),
+            ${SELECTOR_BTN_CONTAINER} #menu:not(:hover) {
                transition: opacity .2s ease-in-out;
-               opacity: ${user_settings.details_button_no_labels_opacity || .1};
+               opacity: ${user_settings.details_buttons_opacity || .1};
             }`;
       }
-
-      if (styles) {
+      // final
+      if (styles.length) {
          NOVA.css.push(styles);
       }
 
@@ -76,8 +81,8 @@ window.nova_plugins.push({
       if (user_settings.details_buttons_hide?.length) {
 
          const buttonSelectors = [
-            'ytd-watch-metadata #menu ytd-button-renderer',
-            'ytd-watch-metadata #menu button',
+            `${SELECTOR_BTN_CONTAINER} ytd-button-renderer`,
+            `${SELECTOR_BTN_CONTAINER} button`,
             'ytd-popup-container ytd-menu-service-item-renderer',
          ];
 
@@ -87,19 +92,21 @@ window.nova_plugins.push({
             stylesList.push('#sponsor-button'); // fix for [comments-sidebar-exchange] plugin
          }
          if (user_settings.details_buttons_hide.includes('like_dislike')) {
-            stylesList.push('ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer');
+            // stylesList.push(`${SELECTOR_BTN_CONTAINER} ytd-segmented-like-dislike-button-renderer`); // old
+            stylesList.push(`${SELECTOR_BTN_CONTAINER} segmented-like-dislike-button-view-model`);
          }
-         if (user_settings.details_buttons_hide.includes('dislike')) {
-            stylesList.push('ytd-watch-metadata #menu #segmented-dislike-button, .yt-spec-button-shape-next--segmented-start::after');
+         else if (user_settings.details_buttons_hide.includes('dislike')) {
+            // stylesList.push(`${SELECTOR_BTN_CONTAINER} #segmented-dislike-button, .yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--segmented-start::after`);
+            stylesList.push(`${SELECTOR_BTN_CONTAINER} dislike-button-view-model, ${SELECTOR_BTN_CONTAINER} .yt-spec-button-shape-next--segmented-start::after`);
+            // fix add round(radius)
             NOVA.css.push(
-               `ytd-watch-metadata #menu ytd-segmented-like-dislike-button-renderer button {
-                  border-radius: 100%;
-                  width: 40px;
-                  border: 0;
+               // `${SELECTOR_BTN_CONTAINER} ytd-segmented-like-dislike-button-renderer button,
+               `${SELECTOR_BTN_CONTAINER} segmented-like-dislike-button-view-model button {
+                  border-radius: 20px;
                }`);
          }
          if (user_settings.details_buttons_hide.includes('download')) {
-            stylesList.push('ytd-watch-metadata #menu ytd-download-button-renderer');
+            stylesList.push(`${SELECTOR_BTN_CONTAINER} ytd-download-button-renderer`);
          }
          // by svg To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
          if (user_settings.details_buttons_hide.includes('share')) {
@@ -122,10 +129,7 @@ window.nova_plugins.push({
          }
          // final
          if (stylesList.length) {
-            NOVA.css.push(
-               stylesList.join(',\n') + ` {
-                  display: none !important;
-               }`);
+            NOVA.css.push(stylesList.join(',\n') + ` { display: none !important; }`);
             // NOVA.css.push({
             //    'display': 'none !important',
             // }, stylesList.join(',\n'));
@@ -135,7 +139,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      details_button_no_labels: {
+      details_buttons_label_hide: {
          _tagName: 'input',
          label: 'Buttons without labels',
          // label: 'Compact button labels',
@@ -166,7 +170,7 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
       },
-      details_button_no_labels_opacity: {
+      details_buttons_opacity: {
          _tagName: 'input',
          label: 'Opacity',
          'label:zh': '不透明度',
@@ -297,7 +301,7 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'like/dislike', value: 'like_dislike',
+               label: 'like+dislike', value: 'like_dislike',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

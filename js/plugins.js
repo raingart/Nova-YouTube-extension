@@ -42,7 +42,7 @@ const Plugins = {
       'player/sponsor-block.js',
       // 'player/block-embed.js',
 
-      'other/annotations.js',
+      'other/pages-clear.js',
       'other/block-title.js',
       'other/block-channel.js',
       'other/thumbs-filter.js',
@@ -73,6 +73,7 @@ const Plugins = {
       'details/video-date.js',
       'details/buttons.js',
       'details/return-dislike.js',
+      'details/transcript.js',
       'details/metadata-hide.js',
       'details/timestamps-scroll.js',
       'details/redirect-clear.js',
@@ -91,7 +92,7 @@ const Plugins = {
       'sidebar/playlist-duration.js',
       'sidebar/playlist-reverse.js',
       'sidebar/livechat.js',
-      'sidebar/move-in-sidebar.js',
+      'sidebar/move-to-sidebar.js',
       'sidebar/channel-link.js',
       // 'sidebar/playlist-skip-liked.js',
 

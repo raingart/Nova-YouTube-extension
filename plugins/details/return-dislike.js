@@ -30,9 +30,11 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    // 'title:ua': '',
+   // 'data-conflict': 'details-buttons',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/436115-return-youtube-dislike
+      // alt1 - https://greasyfork.org/en/scripts/436115-return-youtube-dislike
+      // alt2 - https://greasyfork.org/en/scripts/480949-show-youtube-like-dislike-ratios-in-video-descriptions
 
       // fix conflict with [details-buttons] plugin
       if (user_settings.details_button_no_labels
@@ -47,7 +49,7 @@ window.nova_plugins.push({
 
       NOVA.runOnPageInitOrTransition(() => {
          if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { destroy_if_url_changes: true })
+            NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
                .then(el => setDislikeCount(el));
          }
       });
@@ -55,7 +57,7 @@ window.nova_plugins.push({
       // NOVA.waitSelector('video')
       //    .then(video => {
       //       video.addEventListener('loadeddata', () => {
-      //          NOVA.waitSelector('ytd-watch-metadata #menu #segmented-dislike-button button', { destroy_if_url_changes: true })
+      //          NOVA.waitSelector('ytd-watch-metadata #actions segmented-like-dislike-button-view-model button', { destroy_if_url_changes: true })
       //             .then(el => setDislikeCount(el));
       //       });
       //    });
@@ -69,10 +71,10 @@ window.nova_plugins.push({
 
          // has in cache
          if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
-            insertToHTML({ 'text': storage, 'container': container });
+            insertToHTML({ 'data': JSON.parse(storage), 'container': container });
          }
-         else if (dislikeCount = await getDislikeCount()) {
-            insertToHTML({ 'text': dislikeCount, 'container': container });
+         else if (data = await getDislikeCount()) {
+            insertToHTML({ 'data': data, 'container': container });
          }
 
          async function getDislikeCount() {
@@ -95,7 +97,7 @@ window.nova_plugins.push({
                //    "viewCount": 679,
                //    "deleted": false
                // }
-               .then(json => json.dislikes)
+               .then(json => json.dislikes && ({ 'likes': json.likes, 'dislikes': json.dislikes }))
                .catch(error => {
                   // mute console warn
                   // console.warn(`returnyoutubedislikeapi: failed fetching skipSegments for ${ videoId }, reason: ${ error } `)
@@ -108,9 +110,12 @@ window.nova_plugins.push({
             }
          }
 
-         function insertToHTML({ text = '', container = required() }) {
+         function insertToHTML({ data = required(), container = required() }) {
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
+
+            const percent = ~~(100 * data.likes / (data.likes + data.dislikes));
+            const text = `${data.dislikes} (${percent}%)`;
 
             (document.getElementById(SELECTOR_ID) || (function () {
                container.insertAdjacentHTML('beforeend',

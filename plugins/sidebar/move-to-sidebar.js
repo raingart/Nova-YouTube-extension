@@ -2,7 +2,7 @@
 // https://www.youtube.com/@TheGoodLiferadio/streams
 
 window.nova_plugins.push({
-   id: 'move-in-sidebar',
+   id: 'move-to-sidebar',
    title: 'Move to sidebar',
    // 'title:zh': '',
    // 'title:ja': '',
@@ -21,6 +21,7 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
+   'data-conflict': 'description-popup',
    _runtime: user_settings => {
 
       // exclude playlists
@@ -31,7 +32,7 @@ window.nova_plugins.push({
          SELECTOR_BELOW = `${SELECTOR_CONTAINER} #below`,
          SELECTOR_SECONDARY = `${SELECTOR_CONTAINER} #secondary`;
 
-      switch (user_settings.move_in_sidebar_target) {
+      switch (user_settings.move_to_sidebar_target) {
          case 'info':
             moveChannelInfo();
             break;
@@ -76,7 +77,7 @@ window.nova_plugins.push({
                               display: none;
                            }
                            /* hide info tags */
-                           #info-container a {
+                           #ytd-watch-info-text, #info-container a {
                               display: none;
                            }`);
                         document.body.querySelector(`${SELECTOR_SECONDARY} #description #expand`)?.click();
@@ -143,7 +144,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      move_in_sidebar_target: {
+      move_to_sidebar_target: {
          _tagName: 'select',
          label: 'Target of movement',
          // 'label:zh': '',

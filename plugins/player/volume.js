@@ -2,7 +2,7 @@
 // the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
 
 window.nova_plugins.push({
-   id: 'volume-wheel',
+   id: 'video-volume',
    title: 'Volume',
    'title:zh': '体积',
    'title:ja': '音量',
@@ -59,7 +59,7 @@ window.nova_plugins.push({
          .then(video => {
             // trigger default indicator
             video.addEventListener('volumechange', function () {
-               // bug? demonstration of different values
+               // demonstration of different values
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
                // NOVA.triggerHUD(movie_player.getVolume() + '%');
                NOVA.triggerHUD(Math.round(this.volume * 100) + '%');
@@ -108,14 +108,16 @@ window.nova_plugins.push({
                      case user_settings.volume_hotkey_custom_down: delta = -1; break;
                   }
                   if (delta) {
-                     // evt.preventDefault();
+                     evt.preventDefault();
                      // evt.stopPropagation();
                      // evt.stopImmediatePropagation();
 
-                     const rate = playerVolume.adjust(+user_settings.volume_step * Math.sign(delta));
-                     // console.debug('current rate:', rate);
+                     if (step = +user_settings.volume_step * Math.sign(delta)) {
+                        const volume = playerVolume.adjust(step);
+                        // console.debug('current volume:', volume);
+                     }
                   }
-               });
+               }, { capture: true });
             }
             // mousewheel in player area
             else if (user_settings.volume_hotkey) {
@@ -124,20 +126,22 @@ window.nova_plugins.push({
                   .addEventListener('wheel', evt => {
                      evt.preventDefault();
 
-                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none' && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)) {
-                        // console.debug('hotkey caught');
+                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none'
+                        && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)
+                     ) {
                         if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
-                           playerVolume.adjust(step);
+                           const volume = playerVolume.adjust(step);
+                           // console.debug('current volume:', volume);
                         }
                      }
-                  });
+                  }, { capture: true });
             }
-            // init volume_level_default
-            if (+user_settings.volume_level_default) {
-               playerVolume.set(+user_settings.volume_level_default);
-               // (user_settings.volume_unlimit || +user_settings.volume_level_default > 100)
-               //    ? playerVolume.unlimit(+user_settings.volume_level_default)
-               //    : playerVolume.set(+user_settings.volume_level_default);
+            // init volume_default
+            if (+user_settings.volume_default) {
+               playerVolume.set(+user_settings.volume_default);
+               // (user_settings.volume_unlimit || +user_settings.volume_default > 100)
+               //    ? playerVolume.unlimit(+user_settings.volume_default)
+               //    : playerVolume.set(+user_settings.volume_default);
             }
 
             // custom volume from [save-channel-state] plugin
@@ -159,6 +163,7 @@ window.nova_plugins.push({
             const level = movie_player?.getVolume() + +delta;
             return user_settings.volume_unlimit ? this.unlimit(level) : this.set(level);
          },
+
          set(level = 50) {
             if (typeof movie_player === 'undefined' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
 
@@ -283,7 +288,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      volume_level_default: {
+      volume_default: {
          _tagName: 'input',
          // label: 'Level at startup',
          label: 'Default level',
@@ -373,7 +378,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: ']', value: ']', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '+', '-', ',', '.', '/', '<', ';', '\\', /*'ArrowUp',*/ 'ArrowDown', 'ArrowLeft', 'ArrowRight'
          ],
          'data-dependent': { 'volume_hotkey': ['keyboard'] },
       },
@@ -395,39 +400,9 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: '[', value: '[', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ']', '+', '-', ',', '.', '/', '<', ';', '\\'
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ']', '+', '-', ',', '.', '/', '<', ';', '\\', 'ArrowUp', /*'ArrowDown',*/ 'ArrowLeft', 'ArrowRight'
          ],
          'data-dependent': { 'volume_hotkey': ['keyboard'] },
-      },
-      volume_unlimit: {
-         _tagName: 'input',
-         label: 'Allow above 100%',
-         'label:zh': '允许超过 100%',
-         'label:ja': '100％以上を許可する',
-         'label:ko': '100% 이상 허용',
-         'label:id': 'Izinkan di atas 100%',
-         'label:es': 'Permitir por encima del 100%',
-         'label:pt': 'Permitir acima de 100%',
-         'label:fr': 'Autoriser au-dessus de 100 %',
-         'label:it': 'Consenti oltre il 100%',
-         // 'label:tr': "%100'ün üzerinde izin ver",
-         'label:de': 'Über 100 % zulassen',
-         'label:pl': 'Zezwól powyżej 100%',
-         'label:ua': 'Дозволити більше 100%',
-         type: 'checkbox',
-         // title: 'allow set volume above 100%',
-         // 'title:zh': '允许设定音量高于 100%',
-         // 'title:ja': '100％を超える設定ボリュームを許可する',
-         // 'title:ko': '100% 이상의 설정 볼륨 허용',
-         // 'title:id': 'izinkan volume yang disetel di atas 100%',
-         // 'title:es': 'permitir el volumen establecido por encima del 100%',
-         // 'title:pt': 'permitir volume definido acima de 100%',
-         // 'title:fr': 'autoriser le réglage du volume au-dessus de 100 %',
-         // 'title:it': 'consentire volume impostato superiore al 100%',
-         // 'title:tr': "%100'ün üzerinde ses ayarına izin ver",
-         // 'title:de': 'eingestellte Lautstärke über 100% zulassen',
-         // 'title:pl': 'zezwala ustawić powyżej 100%',
-         // 'title:ua': 'Дозволити встановити звук більше 100%',
       },
       volume_mute_unsave: {
          _tagName: 'input',
@@ -491,6 +466,37 @@ window.nova_plugins.push({
          // 'title:de': '',
          // 'title:pl': '',
          // 'title:ua': '',
+      },
+      volume_unlimit: {
+         _tagName: 'input',
+         label: 'Allow above 100%',
+         'label:zh': '允许超过 100%',
+         'label:ja': '100％以上を許可する',
+         'label:ko': '100% 이상 허용',
+         'label:id': 'Izinkan di atas 100%',
+         'label:es': 'Permitir por encima del 100%',
+         'label:pt': 'Permitir acima de 100%',
+         'label:fr': 'Autoriser au-dessus de 100 %',
+         'label:it': 'Consenti oltre il 100%',
+         // 'label:tr': "%100'ün üzerinde izin ver",
+         'label:de': 'Über 100 % zulassen',
+         'label:pl': 'Zezwól powyżej 100%',
+         'label:ua': 'Дозволити більше 100%',
+         type: 'checkbox',
+         title: 'With sound distortion',
+         // title: 'allow set volume above 100%',
+         // 'title:zh': '允许设定音量高于 100%',
+         // 'title:ja': '100％を超える設定ボリュームを許可する',
+         // 'title:ko': '100% 이상의 설정 볼륨 허용',
+         // 'title:id': 'izinkan volume yang disetel di atas 100%',
+         // 'title:es': 'permitir el volumen establecido por encima del 100%',
+         // 'title:pt': 'permitir volume definido acima de 100%',
+         // 'title:fr': 'autoriser le réglage du volume au-dessus de 100 %',
+         // 'title:it': 'consentire volume impostato superiore al 100%',
+         // 'title:tr': "%100'ün üzerinde ses ayarına izin ver",
+         // 'title:de': 'eingestellte Lautstärke über 100% zulassen',
+         // 'title:pl': 'zezwala ustawić powyżej 100%',
+         // 'title:ua': 'Дозволити встановити звук більше 100%',
       },
    }
 });

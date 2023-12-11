@@ -112,7 +112,7 @@ const App = {
                `<h4 style="margin:0;">Failure on initialization ${app_name}</h4>`
                + ((typeof NOVA === 'object')
                   ? `<div>plugins loaded: ${window.nova_plugins.length + '/' + plugins_count}</div>`
-                  : `<div>Critical Error: NOVA SDK is "${typeof NOVA}"</div>`);// lauch obstacted
+                  : `<div>Critical Error: NOVA core is "${typeof NOVA}"</div>`);// lauch obstacted
             document.body.append(notice);
          }
       }, 1000 * 3); // 3sec
@@ -166,7 +166,7 @@ const App = {
             console.error(\`[PLUGIN ERROR]\n\`, err.reason, \`\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=${encodeURIComponent([browser.runtime.getManifest().version, navigator.userAgent].join(' | '))}\`);
 
             _pluginsCaptureException({
-               'trace_name': 'unhandledrejection',
+               'trace_name': 'unhandledRejection',
                'err_stack': err.reason.stack,
                'app_ver': '${browser.runtime.getManifest().version}',
                'confirm_msg': \`${alertMsg}\`,

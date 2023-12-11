@@ -19,7 +19,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // textarea to array
-      const keywords = NOVA.strToArray(user_settings.thumb_filter_title_blocklist);
+      const keywords = NOVA.strToArray(user_settings.thumbs_filter_title_blocklist);
 
       const thumbsSelectors = [
          'ytd-rich-item-renderer', // home, channel, feed
@@ -86,7 +86,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      thumb_filter_title_blocklist: {
+      thumbs_filter_title_blocklist: {
          _tagName: 'textarea',
          label: 'Words list',
          'label:zh': '单词列表',

@@ -3,6 +3,7 @@
 
 window.nova_plugins.push({
    id: 'video-stop-preload',
+   id: 'video-autostop',
    title: 'Stop video preload',
    'title:zh': '停止视频预加载',
    'title:ja': 'ビデオのプリロードを停止します',
@@ -40,7 +41,7 @@ window.nova_plugins.push({
 
       // if (user_settings['video-autopause']) return; // conflict with [video-autopause] plugin. This plugin has a higher priority. that's why it's disabled/commented
 
-      if (user_settings.stop_preload_embed && NOVA.currentPage != 'embed') return;
+      if (user_settings.video_autostop_embed && NOVA.currentPage != 'embed') return;
       // fix bug in google drive
       if (location.hostname == 'youtube.googleapis.com') return;
       // conflict with plugin [user_settings.player_buttons_custom_items?.indexOf('popup')], [embed-redirect-popup]
@@ -87,15 +88,15 @@ window.nova_plugins.push({
 
             function onPlayerStateChange(state) {
                // console.debug('onStateChange', NOVA.getPlayerState(state), document.visibilityState);
-               if (user_settings.stop_preload_ignore_playlist && location.search.includes('list=')) return;
-               // if (user_settings.stop_preload_ignore_playlist && (NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/)) return;
+               if (user_settings.video_autostop_ignore_playlist && location.search.includes('list=')) return;
+               // if (user_settings.video_autostop_ignore_playlist && (NOVA.queryURL.has('list')/* || !movie_player?.getPlaylistId()*/)) return;
                // // stop inactive tab
-               // if (user_settings.stop_preload_ignore_active_tab && document.visibilityState == 'visible') {
+               // if (user_settings.video_autostop_ignore_active_tab && document.visibilityState == 'visible') {
                //    // console.debug('cancel stop in active tab');
                //    return;
                // }
 
-               if (user_settings.stop_preload_ignore_live && movie_player.getVideoData().isLive) return;
+               if (user_settings.video_autostop_ignore_live && movie_player.getVideoData().isLive) return;
 
                // -1: unstarted
                // 0: ended
@@ -112,16 +113,22 @@ window.nova_plugins.push({
             document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
             // document.addEventListener('click', ({ isTrusted }) => isTrusted && disableHoldStop());
             document.addEventListener('click', evt => {
-               if (//movie_player.contains(document.activeElement) ||
-                  evt.isTrusted
-                  && ['button[class*="play-button"]',
-                     '.ytp-cued-thumbnail-overlay-image',
-                     '.ytp-player-content'
-                  ].some(s => evt.srcElement.matches(s))
+               if (evt.isTrusted
+                  // Strategy 1. Universal, click is inside the player
+                  && evt.target.closest('#movie_player') // movie_player.contains(document.activeElement)
+                  // Strategy 2. Click from some elements
+                  // && ['button[class*="play-button"]',
+                  //    '.ytp-cued-thumbnail-overlay-image',
+                  //    '.ytp-player-content'
+                  // ].some(s => evt.srcElement.matches(s))
                ) {
+                  // fix. stop pause
+                  evt.preventDefault();
+                  // evt.stopPropagation();
+                  evt.stopImmediatePropagation();
                   disableHoldStop();
                }
-            });
+            }, { capture: true });
 
             function disableHoldStop() {
                if (!disableStop) {
@@ -133,7 +140,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      stop_preload_ignore_playlist: {
+      video_autostop_ignore_playlist: {
          _tagName: 'input',
          label: 'Ignore playlist',
          'label:zh': '忽略播放列表',
@@ -149,9 +156,9 @@ window.nova_plugins.push({
          'label:pl': 'Zignoruj listę odtwarzania',
          'label:ua': 'Ігнорувати список відтворення',
          type: 'checkbox',
-         'data-dependent': { 'stop_preload_embed': false },
+         'data-dependent': { 'video_autostop_embed': false },
       },
-      stop_preload_ignore_live: {
+      video_autostop_ignore_live: {
          _tagName: 'input',
          label: 'Ignore live',
          // 'label:zh': '',
@@ -167,9 +174,9 @@ window.nova_plugins.push({
          // 'label:pl': '',
          'label:ua': 'Ігнорувати живі трансляції',
          type: 'checkbox',
-         'data-dependent': { 'stop_preload_embed': false },
+         'data-dependent': { 'video_autostop_embed': false },
       },
-      // stop_preload_embed: {
+      // video_autostop_embed: {
       //    _tagName: 'input',
       //    label: 'Only for embedded videos',
       //    'label:zh': '仅适用于嵌入式视频',
@@ -186,7 +193,7 @@ window.nova_plugins.push({
       //    'label:ua': 'Тільки для вбудованих відео',
       //    type: 'checkbox',
       // },
-      stop_preload_embed: {
+      video_autostop_embed: {
          _tagName: 'select',
          label: 'Apply to video type',
          // 'label:zh': '',
@@ -234,7 +241,7 @@ window.nova_plugins.push({
             },
          ],
       },
-      // stop_preload_ignore_active_tab: {
+      // video_autostop_ignore_active_tab: {
       //    _tagName: 'input',
       //    label: 'Only in inactive tab', // inactive - background
       //    // 'label:zh': '',

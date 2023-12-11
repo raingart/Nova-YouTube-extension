@@ -99,7 +99,7 @@ window.nova_plugins.push({
                   }
 
                   /* fix control collider (buttons, progress-bar), description, sidebar */
-                  /*${SELECTOR_CONTAINER} #below #menu tp-yt-paper-tooltip, */
+                  /*${SELECTOR_CONTAINER} #below #actions tp-yt-paper-tooltip, */
                   ${SELECTOR_CONTAINER}[theater] > #columns,
                   ${SELECTOR_CONTAINER}:not([theater]) #below {
                      margin-top: ${height} !important;

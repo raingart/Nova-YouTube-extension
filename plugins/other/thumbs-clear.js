@@ -37,7 +37,8 @@ window.nova_plugins.push({
    'desc:ua': 'Замінює попередньо визначені мініатюри клікбейти',
    _runtime: user_settings => {
 
-      // alt - https://chrome.google.com/webstore/detail/omoinegiohhgbikclijaniebjpkeopip
+      // alt1 - https://chrome.google.com/webstore/detail/omoinegiohhgbikclijaniebjpkeopip
+      // alt2 - https://greasyfork.org/en/scripts/481732-youtube-blur-no-more/code
 
       const
          ATTR_MARK = 'nova-thumb-preview-cleared',
@@ -156,7 +157,7 @@ window.nova_plugins.push({
       // }
 
       // patch end card
-      // if (user_settings.thumbnails_clear_videowall && !user_settings['disable-video-cards']) {
+      // if (user_settings.thumbnails_clear_videowall && !user_settings['pages-clear']) {
       //    // force show title
       //    NOVA.css.push(
       //       `.ytp-videowall-still .ytp-videowall-still-info-content {

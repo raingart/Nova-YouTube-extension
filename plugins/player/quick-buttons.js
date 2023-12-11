@@ -76,7 +76,7 @@ window.nova_plugins.push({
                   transform: translateX(-30%);
                   line-height: normal;
                   background-color: rgba(28,28,28,.9);
-                  border-radius: 2px;
+                  border-radius: .3em;
                   padding: 5px 9px;
                   color: #fff;
                   font-weight: bold;
@@ -326,7 +326,7 @@ window.nova_plugins.push({
                         evt.preventDefault();
                         downloadCanvasAsImage(evt.target);
                         container.remove();
-                     });
+                     }, { capture: true });
                      container.append(canvas);
                      const close = document.createElement('a');
                      close.className = 'close-btn'
@@ -584,7 +584,7 @@ window.nova_plugins.push({
                         // </div>
 
                         // return alt
-                        //    ? `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
+                        //    ? `<svg viewBox="0 0 36 36" height="100%" width="100%">
                         //          <use class="ytp-svg-shadow" xlink:href="#ytp-id-25"></use>
                         //          <path class="ytp-svg-fill"
                         //             d="M18,8 C12.47,8 8,12.47 8,18 C8,23.52 12.47,28 18,28 C23.52,28 28,23.52 28,18 C28,12.47 23.52,8 18,8 L18,8 Z M16,19.02 L16,12.00 L18,12.00 L18,17.86 L23.10,20.81 L22.10,22.54 L16,19.02 Z"
@@ -819,7 +819,12 @@ window.nova_plugins.push({
                                  // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
 
                                  // incorrect window size definition in embed
-                                 const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
+                                 const maxWidth = (NOVA.currentPage == 'watch'
+                                    // enable and active [embed-popup] plugin
+                                    || (user_settings['embed-popup'] && NOVA.queryURL.has('popup'))
+                                 )
+                                    ? window.screen.width
+                                    : window.innerWidth;
                                  // set max quality limit (screen resolution + 30%)
                                  if (+(qualityData.label.replace(/[^0-9]/g, '') || 0) <= (maxWidth * 1.3)) {
                                     qualityItem.addEventListener('click', () => {
@@ -835,7 +840,7 @@ window.nova_plugins.push({
                                        if (quality == 'auto') return; // fix empty qualityList. onPlaybackQualityChange and addEventListener do not trigger
 
                                        qualityList.innerHTML = ''; // dirty hack (clear list)
-                                    });
+                                    }, { capture: true });
                                  }
                                  else {
                                     qualityItem.className = 'disable';
@@ -907,7 +912,7 @@ window.nova_plugins.push({
                   const rate = NOVA.videoElement.playbackRate + (speedSlider.step * Math.sign(evt.wheelDelta));
                   playerRate(rate);
                   speedSlider.value = rate;
-               });
+               }, { capture: true });
                container.prepend(speedSlider);
 
                function playerRate(rate) {
@@ -926,6 +931,7 @@ window.nova_plugins.push({
             if (user_settings.player_buttons_custom_items?.includes('toggle-speed')) {
                // alt1 - https://greasyfork.org/en/scripts/466690-youtube-quick-speed-interface
                // alt2 - https://greasyfork.org/en/scripts/30506-video-speed-buttons
+               // alt3 - https://greasyfork.org/en/scripts/421393-youtube-extended-controls
                const
                   speedBtn = document.createElement('a'),
                   hotkey = user_settings.player_buttons_custom_hotkey_toggle_speed || 'a',
@@ -953,6 +959,11 @@ window.nova_plugins.push({
                   }
                });
                speedBtn.addEventListener('click', switchRate);
+               NOVA.videoElement.addEventListener('ratechange', function () {
+                  speedBtn.setAttribute('tooltip', genTooltip());
+                  // same fn in "video-rate" plugin
+                  if (!user_settings['video-rate']) NOVA.triggerHUD(this.playbackRate + 'x');
+               });
 
                function switchRate() {
                   // restore orig

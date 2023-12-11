@@ -60,6 +60,7 @@ window.nova_plugins.push({
                --yt-button-border-radius: 0;
             }`);
 
+      // apply flag
       NOVA.waitUntil(() => {
          if (window.yt && (obj = yt?.config_?.EXPERIMENT_FLAGS) && Object.keys(obj).length) {
             yt.config_.EXPERIMENT_FLAGS.web_rounded_thumbnails = false;

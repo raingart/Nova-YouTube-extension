@@ -7,6 +7,7 @@
 // https://www.youtube.com/watch?v=c8mJrbYdMWw - https://watannetwork.com/tools/blocked/#url=c8mJrbYdMWw
 // https://www.youtube.com/watch?v=Ea6JCPUfito - https://watannetwork.com/tools/blocked/#url=Ea6JCPUfito
 // https://www.youtube.com/watch?v=0HlYIx1LDmU - https://watannetwork.com/tools/blocked/#url=0HlYIx1LDmU
+// https://www.youtube.com/watch?v=HCq5y6CcaxE - https://watannetwork.com/tools/blocked/#url=HCq5y6CcaxE
 
 window.nova_plugins.push({
    id: 'video-unblock-region',

@@ -1,5 +1,5 @@
 window.nova_plugins.push({
-   id: 'disable-video-cards',
+   id: 'pages-clear',
    // title: 'Hide garbage: annotations, endcards etc',
    // title: 'Hide HTML garbage',
    title: 'Clear pages of junk',
@@ -108,6 +108,10 @@ window.nova_plugins.push({
 
                '#donation-shelf ytd-donation-unavailable-renderer', // message "Sorry, you can't donate in this country or region yet." - https://www.youtube.com/watch?v=L_tg2u26tCU, https://www.youtube.com/watch?v=NGQ2Zhrkk4o
 
+               `#subscribe-button .smartimation__border,
+               #subscribe-button .smartimation__background,
+               ytd-watch-metadata #actions .smartimation__border,
+               ytd-watch-metadata #actions .smartimation__background`, // interaction CTAs - https://github.com/raingart/Nova-YouTube-extension/issues/125#issuecomment-1844091611
 
                '[class^="ytp-cultural-moment"]', // '.ytp-cultural-moment-player-content' link for "https://www.youtube.com/youtubemusic" - https://www.youtube.com/watch?v=9aofoBrFNdg
 

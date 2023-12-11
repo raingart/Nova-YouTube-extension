@@ -78,7 +78,7 @@ window.nova_plugins.push({
                .map(i => i + ':not(:empty)'),
             // attr_mark: ATTR_MARK,
             callback: el => {
-               el.addEventListener('mousedown', evt => evt.stopPropagation(), true);
+               el.addEventListener('mousedown', evt => evt.stopPropagation(), { capture: true });
                el.setAttribute('draggable', 'false');
                el.setAttribute('selectable', 'true');
                el.style.userSelect = 'text';
