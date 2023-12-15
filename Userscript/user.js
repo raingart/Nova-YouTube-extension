@@ -16,44 +16,16 @@ const
    user_settings = GM_getValue(configStoreName, null);
 // user_settings = await GM_getValue(configStoreName) || {}; // for Greasemonkey
 
+// console.debug(`current ${configStoreName}:`, user_settings);
+
+// renameStorageKeys({
+//    // 'oldKey': 'newKey',
+// });
+
 // Disabled script if youtube is embedded
 if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
-
-// console.debug(`current ${configStoreName}:`, user_settings);
-
-renameStorageKeys({
-   // 'oldKey': 'newKey',
-   'video_quality_in_music_quality': 'video_quality_for_music',
-   'volume_normalization': 'volume_loudness_normalization',
-   'details_button_no_labels_opacity': 'details_buttons_opacity',
-   'details_button_no_labels': 'details_buttons_label_hide',
-   'volume-wheel': 'video-volume',
-   'rate-wheel': 'video-rate',
-   'video-stop-preload': 'video-autostop',
-   'stop_preload_ignore_playlist': 'video_autostop_ignore_playlist',
-   'stop_preload_ignore_live': 'video_autostop_ignore_live',
-   'stop_preload_embed': 'video_autostop_embed',
-   'disable-video-cards': 'pages-clear',
-   'volume_level_default': 'volume_default',
-   'thumb_filter_title_blocklist': 'thumbs_filter_title_blocklist',
-   'shorts_disable': 'thumbs_hide_shorts',
-   'premieres_disable': 'thumbs_hide_premieres',
-   'thumbs_min_duration': 'thumbs_hide_min_duration',
-   'live_disable': 'thumbs_hide_live',
-   'streamed_disable_channels_exception': 'thumbs_hide_live_channels_exception',
-   'search_filter_channel_blocklist': 'search_filter_channels_blocklist',
-   'streamed_disable': 'thumbs_hide_streamed',
-   'mix_disable': 'thumbs_hide_mix',
-   'watched_disable': 'thumbs_hide_watched',
-   'watched_disable_percent_complete': 'thumbs_hide_watched_percent_complete',
-   'sidebar-channel-links-patch': 'sidebar-thumbs-channel-link-patch',
-   'move-in-sidebar': 'move-to-sidebar',
-   'move_in_sidebar_target': 'move_to_sidebar_target',
-   'skip_into_step': 'skip_into_sec',
-   'miniplayer-disable': 'default-miniplayer-disable',
-});
 
 registerMenuCommand();
 

@@ -2,7 +2,7 @@
 // https://www.youtube.com/embed/668nUCeBHyY?autoplay=1 - skip stoped embed
 
 window.nova_plugins.push({
-   id: 'video-stop-preload',
+   // id: 'video-stop-preload',
    id: 'video-autostop',
    title: 'Stop video preload',
    'title:zh': '停止视频预加载',
@@ -110,8 +110,11 @@ window.nova_plugins.push({
                }
             }
 
-            document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
-            // document.addEventListener('click', ({ isTrusted }) => isTrusted && disableHoldStop());
+            // document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
+            document.addEventListener('keyup', evt => {
+               if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+               if (evt.code == 'Space') disableHoldStop();
+            });
             document.addEventListener('click', evt => {
                if (evt.isTrusted
                   // Strategy 1. Universal, click is inside the player
@@ -121,11 +124,13 @@ window.nova_plugins.push({
                   //    '.ytp-cued-thumbnail-overlay-image',
                   //    '.ytp-player-content'
                   // ].some(s => evt.srcElement.matches(s))
+                  && !disableStop
                ) {
                   // fix. stop pause
                   evt.preventDefault();
                   // evt.stopPropagation();
                   evt.stopImmediatePropagation();
+
                   disableHoldStop();
                }
             }, { capture: true });

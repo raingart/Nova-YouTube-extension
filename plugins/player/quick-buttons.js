@@ -350,7 +350,7 @@ window.nova_plugins.push({
                            movie_player.getVideoData().title
                               .replace(/[\\/:*?"<>|]+/g, '')
                               .replace(/\s+/g, ' ').trim(),
-                           `[${NOVA.timeFormatTo.HMS.abbr(NOVA.videoElement.currentTime)}]`,
+                           `[${NOVA.formatTimeOut.HMS.abbr(NOVA.videoElement.currentTime)}]`,
                         ]
                            .join(' ');
 

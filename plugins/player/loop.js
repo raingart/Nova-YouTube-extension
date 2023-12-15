@@ -128,6 +128,8 @@ window.nova_plugins.push({
 
          });
 
+      // loopChangeMutationObserver.observe(videoElement, { attributeFilter: ["loop"], attributes: true });
+
       // NOVA.waitSelector('video')
       //    .then(video => {
       //       // video.loop = true;

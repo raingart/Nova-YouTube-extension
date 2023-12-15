@@ -94,7 +94,7 @@ window.nova_plugins.push({
                         playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
                         playlistList = document.body.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
                            .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
-                           .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
+                           .map(e => NOVA.formatTimeOut.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 
                      console.assert(playlistList?.length === playlistLength, 'playlist loading:', playlistList?.length + '/' + playlistLength);
 
@@ -120,7 +120,7 @@ window.nova_plugins.push({
                   //       playlistLength = movie_player.getPlaylist()?.length, // || document.body.querySelector('ytd-player')?.player_?.getPlaylist()?.length,
                   //       playlistList = document.body.querySelector('yt-playlist-manager')?.currentPlaylistData_?.contents
                   //          .filter(e => e.playlistPanelVideoRenderer?.lengthText?.simpleText)
-                  //          .map(e => NOVA.timeFormatTo.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
+                  //          .map(e => NOVA.formatTimeOut.hmsToSec(e.playlistPanelVideoRenderer.lengthText.simpleText));
 
                   //    console.assert(playlistList?.length === playlistLength, 'playlist loading:', playlistList?.length + '/' + playlistLength);
 
@@ -193,7 +193,7 @@ window.nova_plugins.push({
          function getTotalTime(nodes) {
             // console.debug('getTotalTime', ...arguments);
             const arr = [...nodes]
-               .map(e => NOVA.timeFormatTo.hmsToSec(e.textContent))
+               .map(e => NOVA.formatTimeOut.hmsToSec(e.textContent))
                .filter(Number); // filter PREMIERE
 
             return arr.length && arr.reduce((acc, time) => acc + +time, 0);
@@ -201,9 +201,9 @@ window.nova_plugins.push({
          // function getTotalTime(nodes) {
          //    // console.debug('getTotalTime', ...arguments);
          //    return [...nodes]
-         //       // .map(e => NOVA.timeFormatTo.hmsToSec(e.textContent))
+         //       // .map(e => NOVA.formatTimeOut.hmsToSec(e.textContent))
          //       // .filter(t => !isNaN(+t)) // filter PREMIERE
-         //       .flatMap(e => NOVA.timeFormatTo.hmsToSec(e.textContent) || [])
+         //       .flatMap(e => NOVA.formatTimeOut.hmsToSec(e.textContent) || [])
          //       .reduce((acc, time) => acc + time, 0);
          // }
       }
@@ -212,7 +212,7 @@ window.nova_plugins.push({
          // console.log('outFormat', ...arguments);
          let outArr = [
             // time
-            NOVA.timeFormatTo.HMS.digit(
+            NOVA.formatTimeOut.HMS.digit(
                (NOVA.currentPage == 'watch' && NOVA.videoElement?.playbackRate)
                   ? (duration / NOVA.videoElement.playbackRate) : duration
             )

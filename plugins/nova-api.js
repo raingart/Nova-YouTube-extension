@@ -24,11 +24,11 @@
    - strToArray
    - searchFilterHTML
    - isMusic
-   - timeFormatTo.hmsToSec
-   - timeFormatTo.HMS.digit
-   - timeFormatTo.HMS.abbr
-   //- timeFormatTo.HMS.abbrFull
-   - timeFormatTo.ago
+   - formatTimeOut.hmsToSec
+   - formatTimeOut.HMS.digit
+   - formatTimeOut.HMS.abbr
+   //- formatTimeOut.HMS.abbrFull
+   - formatTimeOut.ago
    - dateformat
    //- extractFirstInt
    - prettyRoundInt
@@ -317,7 +317,7 @@ const NOVA = {
     * @return {Promise<fn>}
    */
    /** wait for every DOM change until a condition becomes true */
-   // await NOVA.waitUntil(?, 500) // 500ms
+   // await NOVA.waitUntil(fn_condition, 500) // 500ms
    waitUntil(condition = required(), timeout = required()) {
       if (typeof condition !== 'function') return console.error('waitUntil > condition is not fn:', typeof condition);
 
@@ -887,7 +887,7 @@ const NOVA = {
                         // console.debug('line', line);
                         timestamp = timestamp[0]; // ex:"0:00"
                         const
-                           sec = NOVA.timeFormatTo.hmsToSec(timestamp),
+                           sec = NOVA.formatTimeOut.hmsToSec(timestamp),
                            timestampPos = line.indexOf(timestamp);
 
                         if (
@@ -943,7 +943,7 @@ const NOVA = {
                if (sec > prevSec) {
                   prevSec = sec;
                   timestampsCollect.push({
-                     'time': NOVA.timeFormatTo.HMS.digit(sec),
+                     'time': NOVA.formatTimeOut.HMS.digit(sec),
                      'sec': sec,
                      'title': chaperLink.textContent.trim().split('\n')[0].trim(),
                      // in #structured-description
@@ -986,7 +986,7 @@ const NOVA = {
                      const sec = +c.chapterRenderer.timeRangeStartMillis / 1000;
                      return {
                         'sec': sec,
-                        'time': NOVA.timeFormatTo.HMS.digit(sec),
+                        'time': NOVA.formatTimeOut.HMS.digit(sec),
                         'title':
                            c.chapterRenderer.title.simpleText // watch
                            || c.chapterRenderer.title.runs[0].text, // embed
@@ -1199,7 +1199,7 @@ const NOVA = {
    // },
 
    // dateFormatter
-   timeFormatTo: {
+   formatTimeOut: {
       /**
        * 00:00:00形式の時間を秒に変換する
        *

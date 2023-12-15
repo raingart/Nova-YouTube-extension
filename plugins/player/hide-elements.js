@@ -33,30 +33,32 @@ window.nova_plugins.push({
          // 'voice_search_button': '#masthead #voice-search-button',
          // player ends
          // alt - https://greasyfork.org/en/scripts/466195-remove-youtube-video-end-screen-thumbnails
-         'videowall_endscreen': '#movie_player .videowall-endscreen',
-         'card_endscreen': '#movie_player [class^="ytp-ce-"]',
+         'videowall_endscreen': '.videowall-endscreen',
+         'card_endscreen': '[class^="ytp-ce-"]',
          // player control left
-         'prev_button': '#movie_player .ytp-chrome-bottom .ytp-prev-button',
-         'play_button': '#movie_player .ytp-chrome-bottom .ytp-play-button',
-         'next_button': '#movie_player .ytp-chrome-bottom .ytp-next-button',
-         'volume_area': '#movie_player .ytp-chrome-bottom .ytp-volume-area',
-         'time_display': '#movie_player .ytp-chrome-bottom .ytp-time-display'
+         'prev_button': '.ytp-chrome-bottom .ytp-prev-button',
+         'play_button': '.ytp-chrome-bottom .ytp-play-button',
+         'next_button': '.ytp-chrome-bottom .ytp-next-button',
+         'volume_area': '.ytp-chrome-bottom .ytp-volume-area',
+         'time_display': '.ytp-chrome-bottom .ytp-time-display'
             + (user_settings['time-remaining'] ? ' span > span:not([id])' : ''),
-         'time_duration_display': '#movie_player .ytp-chrome-bottom .ytp-time-duration, #movie_player .ytp-chrome-bottom .ytp-time-separator',
-         'chapter_container': '#movie_player .ytp-chrome-bottom .ytp-chapter-container', // duplicate "player_indicator_chapter_default_container_hide" [player-indicator] plugin
+         'time_duration_display': '.ytp-chrome-bottom .ytp-time-duration, .ytp-chrome-bottom .ytp-time-separator',
+         'chapter_container': '.ytp-chrome-bottom .ytp-chapter-container', // duplicate "player_indicator_chapter_default_container_hide" [player-indicator] plugin
          // player control right
-         'autonav_toggle_button': '#movie_player .ytp-chrome-bottom button.ytp-button[data-tooltip-target-id="ytp-autonav-toggle-button"]',
-         'subtitles_button': '#movie_player .ytp-chrome-bottom button.ytp-subtitles-button',
-         'settings_button': '#movie_player .ytp-chrome-bottom button.ytp-settings-button',
-         'size_button': '#movie_player .ytp-chrome-bottom button.ytp-size-button',
-         'miniplayer_button': '#movie_player .ytp-chrome-bottom button.ytp-miniplayer-button',
-         'logo_button': '#movie_player .ytp-chrome-bottom .yt-uix-sessionlink',
-         'fullscreen_button': '#movie_player .ytp-chrome-bottom button.ytp-fullscreen-button',
+         'autonav_toggle_button': '.ytp-chrome-bottom button.ytp-button[data-tooltip-target-id="ytp-autonav-toggle-button"]',
+         'subtitles_button': '.ytp-chrome-bottom button.ytp-subtitles-button',
+         'settings_button': '.ytp-chrome-bottom button.ytp-settings-button',
+         'size_button': '.ytp-chrome-bottom button.ytp-size-button',
+         'miniplayer_button': '.ytp-chrome-bottom button.ytp-miniplayer-button',
+         'logo_button': '.ytp-chrome-bottom .yt-uix-sessionlink',
+         'fullscreen_button': '.ytp-chrome-bottom button.ytp-fullscreen-button',
          // for brave browser
          // hide: "Seek backwards 10 seconds. (←)" and "Seek forward 10 seconds. (→)"
-         'brave_jump_button': '#movie_player .ytp-chrome-bottom button.ytp-jump-button',
+         'brave_jump_button': '.ytp-chrome-bottom button.ytp-jump-button',
       };
 
+      // const SELECTOR_CONTAINER = '#movie_player1 .ytp-chrome-bottom';
+      const SELECTOR_CONTAINER = '#movie_player';
       const toArray = a => Array.isArray(a) ? a : [a];
       // function checkIsList(el, idx, array) {
       //    if (data = SELECTORS[el]) {
@@ -68,7 +70,7 @@ window.nova_plugins.push({
       let list = [];
 
       toArray(user_settings.player_hide_elements)
-         .forEach(el => (data = SELECTORS[el]) && list.push(data));
+         .forEach(el => (data = SELECTORS[el]) && list.push(`${SELECTOR_CONTAINER} ${data}`));
 
       // final
       // if (toArray(user_settings.player_hide_elements).every(checkIsList) && list.length) {

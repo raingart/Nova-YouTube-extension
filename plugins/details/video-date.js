@@ -5,7 +5,8 @@
 
 window.nova_plugins.push({
    id: 'video-date-format',
-   title: 'Displaying date format',
+   // title: 'Displaying date format',
+   title: 'Date format display',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -101,7 +102,7 @@ window.nova_plugins.push({
                      const publishedDate = new Date(item.snippet.publishedAt);
 
                      innerHTML += (user_settings.video_date_format == 'ago')
-                        ? `${NOVA.timeFormatTo.ago(publishedDate)} ago`
+                        ? `${NOVA.formatTimeOut.ago(publishedDate)} ago`
                         : NOVA.dateformat.apply(publishedDate, [user_settings.video_date_format]);
                   }
 
@@ -176,7 +177,8 @@ window.nova_plugins.push({
    options: {
       video_view_count: {
          _tagName: 'input',
-         label: 'Show view count',
+         // label: 'Show view count',
+         label: 'Show number of views',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

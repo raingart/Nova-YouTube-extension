@@ -60,8 +60,8 @@ window.nova_plugins.push({
                      if (idx === chaptersEls.length - 1) return; // if last chapter
 
                      const
-                        chapterStart = ~~NOVA.timeFormatTo.hmsToSec(chapterEl.getAttribute('time')),
-                        chapterNextStart = ~~NOVA.timeFormatTo.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
+                        chapterStart = ~~NOVA.formatTimeOut.hmsToSec(chapterEl.getAttribute('time')),
+                        chapterNextStart = ~~NOVA.formatTimeOut.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
 
                      for (const [i, value] of segmentsList.entries()) {
                         const [segmentStart, segmentEnd, category] = value;
@@ -141,7 +141,7 @@ window.nova_plugins.push({
                }
 
                function novaNotification(prefix = '') {
-                  const msg = `${prefix} [${category}] • ${NOVA.timeFormatTo.HMS.digit(segmentStart)} - ${NOVA.timeFormatTo.HMS.digit(segmentEnd)}`;
+                  const msg = `${prefix} [${category}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
                   NOVA.triggerHUD(msg); // trigger default indicator
                }

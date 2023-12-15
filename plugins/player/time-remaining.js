@@ -73,7 +73,7 @@ window.nova_plugins.push({
                            : Math.round(pt); // whats left
                      return floatRound((this.currentTime / this.duration) * 100) + '%';
                   },
-                  getLeftTime = () => '-' + NOVA.timeFormatTo.HMS.digit((this.duration - this.currentTime) / this.playbackRate);
+                  getLeftTime = () => '-' + NOVA.formatTimeOut.HMS.digit((this.duration - this.currentTime) / this.playbackRate);
 
                let text;
 

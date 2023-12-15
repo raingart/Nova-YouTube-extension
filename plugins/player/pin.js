@@ -306,6 +306,16 @@ window.nova_plugins.push({
                background-color: var(--yt-spec-base-background);
                ${user_settings['square-avatars'] ? '' : 'border-radius: 1em;'}
                margin: 1em 2em;
+               --zIndex: ${1 + Math.max(
+               NOVA.css.getValue('#chat', 'z-index'),
+               NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
+               NOVA.css.getValue('#chat', 'z-index'),
+               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
+               601)};
+            }
+            /* fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube */
+            html[style*="ytrb-bar"] ${PINNED_SELECTOR} {
+               --zIndex: 1000;
             }
             ${PINNED_SELECTOR} video {
                object-fit: contain !important;
@@ -346,16 +356,7 @@ window.nova_plugins.push({
 
       function insertUnpinButton(player = movie_player) {
          NOVA.css.push(
-            PINNED_SELECTOR + ` {
-               --zIndex: ${1 + Math.max(
-               NOVA.css.getValue('#chat', 'z-index'),
-               NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
-               NOVA.css.getValue('#chat', 'z-index'),
-               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
-               601)};
-            }
-
-            ${UNPIN_BTN_SELECTOR} { display: none; }
+            UNPIN_BTN_SELECTOR + ` { display: none; }
 
             ${PINNED_SELECTOR} ${UNPIN_BTN_SELECTOR} {
                display: initial !important;

@@ -130,7 +130,7 @@ window.nova_plugins.push({
          durationLimits() {
             // alt - https://greasyfork.org/en/scripts/466576-hide-longs-on-youtube
             if (!+user_settings.thumbs_hide_min_duration) return;
-            // if (!NOVA.timeFormatTo.hmsToSec(user_settings.thumbs_hide_min_duration)) return; // for input[type=text] (digit time)
+            // if (!NOVA.formatTimeOut.hmsToSec(user_settings.thumbs_hide_min_duration)) return; // for input[type=text] (digit time)
 
             // exclude "" tab in channel
             // if (NOVA.currentPage == 'channel' && NOVA.channelTab != 'video') return;
@@ -140,7 +140,7 @@ window.nova_plugins.push({
             // document.body.querySelectorAll(thumbsSelectors)
             //    .forEach(thumb => {
             //       if ((to = thumb.data?.thumbnailOverlays)?.length) {
-            //          if (NOVA.timeFormatTo.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_hide_min_duration || 60)
+            //          if (NOVA.formatTimeOut.hmsToSec(to[0].thumbnailOverlayTimeStatusRenderer.text.simpleText) < (+user_settings.thumbs_hide_min_duration || 60)
             //          ) {
             //             // thumb.remove();
             //             // // for test
@@ -159,9 +159,9 @@ window.nova_plugins.push({
                .then(() => {
                   document.body.querySelectorAll(OVERLAYS_TIME_SELECTOR)
                      .forEach(el => {
-                        // console.debug('>', NOVA.timeFormatTo.hmsToSec(el.textContent.trim()));
+                        // console.debug('>', NOVA.formatTimeOut.hmsToSec(el.textContent.trim()));
                         if ((thumb = el.closest(thumbsSelectors))
-                           && (timeSec = NOVA.timeFormatTo.hmsToSec(el.textContent.trim()))
+                           && (timeSec = NOVA.formatTimeOut.hmsToSec(el.textContent.trim()))
                            && (timeSec * (user_settings.rate_default || 1)) < (+user_settings.thumbs_hide_min_duration || 60)
                         ) {
                            // thumb.remove();

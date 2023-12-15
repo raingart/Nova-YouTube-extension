@@ -36,6 +36,8 @@ window.nova_plugins.push({
       NOVA.waitSelector('ytd-watch-flexy:not([player-unavailable])')
          // .then(el => el.theaterModeChanged_(true));
          .then(el => {
+            // await NOVA.waitUntil(() => el.hasOwnProperty('updateTheaterModeState_'), 500) // 500ms
+
             if (el.hasAttribute('theater') || el.theater) return;
 
             // if (location.search.includes('list=')) {
@@ -44,6 +46,16 @@ window.nova_plugins.push({
             //    // ) {
             // }
             el.updateTheaterModeState_(true);
+
+            // fix broken exit from TheaterMode
+            // document.addEventListener('click', exitTheaterMode, { passive: false });
+            // function exitTheaterMode(evt) {
+            //    if (evt.isTrusted && evt.target.matches('button.ytp-size-button')) {
+            //       alert(1)
+            //       document.removeEventListener('click', exitTheaterMode);
+            //       el.updateTheaterModeState_(false);
+            //    }
+            // }
 
             // fix broken offensive video
             if (!user_settings['video-unblock-warn-content']) {

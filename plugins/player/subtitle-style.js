@@ -73,7 +73,7 @@ window.nova_plugins.push({
          NOVA.watchElements({
             selectors: [
                SELECTOR,
-               '#caption-window-1', // div.caption-window
+               '[id^="caption-window-"]',
             ]
                .map(i => i + ':not(:empty)'),
             // attr_mark: ATTR_MARK,

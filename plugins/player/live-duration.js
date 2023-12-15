@@ -69,7 +69,7 @@ window.nova_plugins.push({
 
       //                insertToHTML({
       //                   // movie_player.getCurrentTime() == '#ytd-player .ytp-chrome-bottom  .ytp-time-current'
-      //                   'text': NOVA.timeFormatTo.HMS.abbr(movie_player.getCurrentTime()),
+      //                   'text': NOVA.formatTimeOut.HMS.abbr(movie_player.getCurrentTime()),
       //                   'container': container,
       //                });
       //             });

@@ -181,7 +181,7 @@ window.nova_plugins.push({
                            && text != oldDateText // new date
                         ) {
                            oldDateText = text;
-                           // NOVA.timeFormatTo.ago();
+                           // NOVA.formatTimeOut.ago();
                            insertToHTML({ 'text': oldDateText, 'container': container });
                            return true;
                         }

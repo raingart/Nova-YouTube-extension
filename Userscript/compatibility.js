@@ -37,6 +37,7 @@ switch (GM_info.scriptHandler) {
    case 'Tampermonkey': // https://www.tampermonkey.net/
    case 'Violentmonkey': // https://github.com/violentmonkey/violentmonkey
    case 'ScriptCat': // https://github.com/scriptscat/scriptcat
+   case 'OrangeMonkey': // https://chromewebstore.google.com/detail/orangemonkey/ekmeppjgajofkpiofbebgcbohbmfldaf
       // console.debug('compatibility ok');
       break;
 

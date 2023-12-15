@@ -114,7 +114,7 @@ window.nova_plugins.push({
                else {
                   seekTime(+user_settings.time_jump_step + currentTime);
                   // Attention! Apply after seeking
-                  msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.timeFormatTo.HMS.digit(currentTime);
+                  msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.formatTimeOut.HMS.digit(currentTime);
                }
 
                NOVA.triggerHUD(msg); // trigger default indicator
@@ -152,7 +152,7 @@ window.nova_plugins.push({
       //             document.body.querySelector('.ytp-chapter-title-content')
       //                ?.addEventListener('DOMNodeInserted', ({ target }) => {
       //                   NOVA.triggerHUD(
-      //                      target.textContent + ' • ' + NOVA.timeFormatTo.HMS.digit(video.currentTime)
+      //                      target.textContent + ' • ' + NOVA.formatTimeOut.HMS.digit(video.currentTime)
       //                   );// trigger default indicator
       //                }, { capture: true, once: true });
       //          }
@@ -228,12 +228,12 @@ window.nova_plugins.push({
                      ) return;
 
                      const
-                        cursorTime = NOVA.timeFormatTo.hmsToSec(tooltipEl.textContent),
+                        cursorTime = NOVA.formatTimeOut.hmsToSec(tooltipEl.textContent),
                         offsetTime = cursorTime - NOVA.videoElement?.currentTime,
                         sign = (offsetTime >= 1) ? '+' : (Math.sign(offsetTime) === -1) ? '-' : '';
                      // updateOffsetTime
                      // console.debug('offsetTime', offsetTime, cursorTime, sign);
-                     tooltipEl.setAttribute('data-before', ` ${sign + NOVA.timeFormatTo.HMS.digit(offsetTime)}`);
+                     tooltipEl.setAttribute('data-before', ` ${sign + NOVA.formatTimeOut.HMS.digit(offsetTime)}`);
                   });
                   // hide titleOffset
                   progressContainer.addEventListener('mouseleave', () => tooltipEl.removeAttribute('data-before'));

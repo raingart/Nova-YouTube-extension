@@ -293,7 +293,7 @@ window.nova_plugins.push({
                      ${comment.comments?.length
                         ? `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open comment link">${comment.comments.length}</a> <label for="${replyInputName}"></label>`
                         : ''}</td>
-                     <td sorttable_customkey="${new Date(comment.updatedAt).getTime()}">${NOVA.timeFormatTo.ago(new Date(comment.updatedAt))}</td>
+                     <td sorttable_customkey="${new Date(comment.updatedAt).getTime()}">${NOVA.formatTimeOut.ago(new Date(comment.updatedAt))}</td>
                      <td>
                         <a href="${comment.authorChannelUrl}" target="_blank" title="${comment.authorDisplayName}">
                            <img src="${comment.authorProfileImageUrl}" alt="${comment.authorDisplayName}" />
@@ -426,7 +426,7 @@ window.nova_plugins.push({
 
       //       if (t = NOVA.queryURL.get('t', target.href)) {
       //          // '10m42s' > '10:42' > '642'
-      //          t = NOVA.timeFormatTo.hmsToSec(t.replace(/m/, ':').replace(/s$/, ''));
+      //          t = NOVA.formatTimeOut.hmsToSec(t.replace(/m/, ':').replace(/s$/, ''));
 
       //          target.href = NOVA.queryURL.set({ 't': ~~t + 's' }, target.href);
       //          NOVA.updateUrl(NOVA.queryURL.set({ 't': ~~t + 's' }, target.href));

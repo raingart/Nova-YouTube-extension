@@ -536,9 +536,9 @@ window.nova_plugins.push({
                            ) {
                               overlay.setAttribute(ATTR_MARK, true); // mark
                               // overlay.style.border = '2px solid orange'; // mark for test
-                              const timeSec = NOVA.timeFormatTo.hmsToSec(timeLabelEl);
+                              const timeSec = NOVA.formatTimeOut.hmsToSec(timeLabelEl);
                               overlay.textContent = //'⚡' + // broken `thumbs_hide_min_duration` in [thumbs-hide] plugin
-                                 NOVA.timeFormatTo.HMS.digit(timeSec / user_settings.rate_default);
+                                 NOVA.formatTimeOut.HMS.digit(timeSec / user_settings.rate_default);
                            }
                         });
                      break;
