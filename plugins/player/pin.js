@@ -2,6 +2,7 @@
 // https://www.youtube.com/watch?v=d94PwdKQ3Ag
 // https://www.youtube.com/watch?v=twFNTZ6Y_OI - wide
 // https://www.youtube.com/watch?v=nX2anEXG0eE - square
+// https://www.youtube.com/watch?v=SDjbK8JWA_Y - square
 
 window.nova_plugins.push({
    id: 'player-pin-scroll',
@@ -296,7 +297,11 @@ window.nova_plugins.push({
 
          // variable declaration for fix
          NOVA.css.push(
-            PINNED_SELECTOR + `{
+            /* default. fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube */
+            `html[style*="ytrb-bar"] ${PINNED_SELECTOR} {
+               --zIndex: 1000;
+            }
+            ${PINNED_SELECTOR} {
                --height: ${initcss.height} !important;
                --width: ${initcss.width} !important;
 
@@ -310,12 +315,9 @@ window.nova_plugins.push({
                NOVA.css.getValue('#chat', 'z-index'),
                NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
                NOVA.css.getValue('#chat', 'z-index'),
+               NOVA.css.getValue('ytrb-bar', 'z-index'), // update. fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube
                // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
                601)};
-            }
-            /* fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube */
-            html[style*="ytrb-bar"] ${PINNED_SELECTOR} {
-               --zIndex: 1000;
             }
             ${PINNED_SELECTOR} video {
                object-fit: contain !important;

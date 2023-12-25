@@ -182,6 +182,7 @@ window.nova_plugins.push({
       //    // 'label:pl': '',
       //    // 'label:ua': '',
       //    type: 'checkbox',
+      //    // title: '',
       // },
    }
 });

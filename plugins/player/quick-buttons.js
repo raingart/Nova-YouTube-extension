@@ -196,6 +196,7 @@ window.nova_plugins.push({
             if (user_settings.player_buttons_custom_items?.includes('screenshot')) {
                // alt1 - https://greasyfork.org/en/scripts/455155-youtube-screenshot
                // alt2 - https://greasyfork.org/en/scripts/466259-youtube-video-screenshot
+               // alt3 - https://greasyfork.org/en/scripts/482387-screenshot
                const
                   // bar
                   SELECTOR_SCREENSHOT_ID = 'nova-screenshot-result',
@@ -366,6 +367,7 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('thumbnail')) {
+               // for test https://www.youtube.com/watch?v=SDjbK8JWA_Y - square
                // info https://gist.github.com/iredun/a9681c46d3d74e03fb35d9ebf198b83d
                // alt1 - https://greasyfork.org/en/scripts/19151-get-youtube-thumbnail
                // alt2 - https://greasyfork.org/en/scripts/367855-youtube-com-thumbnail
@@ -614,8 +616,8 @@ window.nova_plugins.push({
                   }`);
 
                cardBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               // cardBtn.title = 'Сard display switch';
-               // cardBtn.setAttribute('tooltip', 'Сard display switch');
+               // cardBtn.title = 'Card display switch';
+               // cardBtn.setAttribute('tooltip', 'Card display switch');
                cardBtn.innerHTML = createSVG();
                // cardBtn.innerHTML =
                // `<svg viewBox="-300 0 1600 1000" height="100%" width="100%">
@@ -1464,6 +1466,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
       },
       range_speed_unlimit: {
@@ -1482,6 +1485,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'player_buttons_custom_items': ['range-speed'] },
       },
    }

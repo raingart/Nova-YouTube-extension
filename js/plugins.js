@@ -72,6 +72,7 @@ const Plugins = {
       'details/description-popup.js',
       'details/video-date.js',
       'details/buttons.js',
+      'details/auto-likes.js',
       'details/return-dislike.js',
       'details/transcript.js',
       'details/metadata-hide.js',

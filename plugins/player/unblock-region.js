@@ -40,6 +40,7 @@ window.nova_plugins.push({
    'desc:de': 'Versuchen Sie, "ist in Ihrem Land nicht verfügbar" zu beheben',
    'desc:pl': 'Próba naprawienia nie jest dostępna w Twoim kraju',
    'desc:ua': 'Спроба розблокувати доступ до відео',
+   // 'data-conflict': 'video-unavailable',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/9062-youtube-unblocker
@@ -48,54 +49,157 @@ window.nova_plugins.push({
       // alt4 - https://freetubeapp.io/
       // alt5 - https://greasyfork.org/en/scripts/466944-youtube-country-restriction-forwarder
 
-      // switch (NOVA.currentPage) {
-      //    case 'embed':
-      //       // NOVA.waitSelector('#movie_player .ytp-error .ytp-error-content-wrap-reason')
-      //       NOVA.waitSelector('#movie_player .ytp-error')
-      //          .then(() => {
-      //             document.location.hostname = 'raingart.github.io';
-      //             location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
-      //             if (confirm('Nova [video-unblock-region]\nFound an embedded video that is not available in your region, open a mirror with it in a new tab?')) {
-      //                redirect(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch?v=` + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;));
-      //             }
-      //          });
-      //       break;
+      if (user_settings.video_unblock_region_mode == 'redirect') {
 
-      //    default:
-      NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_if_url_changes: true })
-         // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-         // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
-         .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());
-      //       break;
-      // }
-      // Doesn't work
-      // NOVA.waitSelector('video')
-      //    .then(video => {
-      //       video.addEventListener('emptied', redirect);
-      //    });
+         // switch (NOVA.currentPage) {
+         //    case 'embed':
+         //       // NOVA.waitSelector('#movie_player .ytp-error .ytp-error-content-wrap-reason')
+         //       NOVA.waitSelector('#movie_player .ytp-error')
+         //          .then(() => {
+         //             document.location.hostname = 'raingart.github.io';
+         //             location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
+         //             if (confirm('Nova [video-unblock-region]\nFound an embedded video that is not available in your region, open a mirror with it in a new tab?')) {
+         //                redirect(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch?v=` + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;));
+         //             }
+         //          });
+         //       break;
 
-      function redirect(new_tab_url) {
-         if (new_tab_url) {
-            window.open(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}${location.port ? ':' + location.port : ''}/watch?v=` + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id));
-         }
-         else {
-            location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
-            // or
-            // location.assign(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch` + location.search); // currect tab
-         }
+         //    default:
+         NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_if_url_changes: true })
+            // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+            // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
+            .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());
+         //       break;
+         // }
+         // Doesn't work
+         // NOVA.waitSelector('video')
+         //    .then(video => {
+         //       video.addEventListener('emptied', redirect);
+         //    });
 
-         // open map
-         if (user_settings.video_unblock_region_open_map) {
-            window.open(`https://watannetwork.com/tools/blocked/#url=${NOVA.queryURL.get('v')}:~:text=Allowed%20countries`); // new tab and focus
+         function redirect(open_new_tab) {
+            const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
+
+            if (open_new_tab) {
+               window.open(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}${location.port ? ':' + location.port : ''}/watch?v=${videoId}`);
+            }
+            else {
+               location.hostname = user_settings.video_unblock_region_domain || 'hooktube.com';
+               // or
+               // location.assign(`${location.protocol}//${user_settings.video_unblock_region_domain || 'hooktube.com'}/watch` + location.search); // currect tab
+            }
+
+            // open map
+            if (user_settings.video_unblock_region_open_map) {
+               window.open(`https://watannetwork.com/tools/blocked/#url=${videoId}:~:text=Allowed%20countries`); // new tab and focus
+            }
          }
+      }
+      else {
+         const SELECTOR = 'ytd-watch-flexy[player-unavailable] #player-error-message-container #info';
+
+         NOVA.waitSelector(SELECTOR, { destroy_if_url_changes: true })
+            .then(el => {
+               if (el.querySelector('button')) return;
+
+               NOVA.css.push(
+                  `${SELECTOR} ul {
+                     border-radius: 12px;
+                     background: var(--yt-spec-badge-chip-background);
+                     font-size: 1.4rem;
+                     line-height: 2rem;
+                     padding: 10px;
+                  }
+                  ${SELECTOR} a:not(:hover) {
+                     color: var(--yt-spec-text-primary);
+                     text-decoration: none;
+                  }`);
+
+               const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
+               const ul = document.createElement('ul');
+               // ul.className = '';
+               [
+                  { label: 'hooktube.com', value: 'hooktube.com' },
+                  { label: 'clipzag.com', value: 'clipzag.com' },
+                  { label: 'piped.video', value: 'piped.video' },
+                  { label: 'yewtu.be', value: 'yewtu.be' },
+                  { label: 'nsfwyoutube.com', value: 'nsfwyoutube.com' },
+                  { label: 'yout-ube.com', value: 'yout-ube.com' },
+                  { label: 'riservato-xyz.frama.io', value: 'riservato-xyz.frama.io' },
+               ]
+                  .forEach(domain => {
+                     const li = document.createElement('li');
+
+                     const a = document.createElement('a');
+                     a.href = `${location.protocol}//${domain.value}${location.port ? ':' + location.port : ''}/watch?v=${videoId}`;
+                     a.target = '_blank';
+                     a.textContent = '→ Open with ' + domain.label;
+                     a.title = 'Open with ' + domain.label;
+
+                     li.append(a); // append
+                     ul.append(li); // append
+                  });
+
+               el.append(ul); // append
+
+               const newWindow = window.open(`https://watannetwork.com/tools/blocked/#url=${videoId}:~:text=Allowed%20countries`, '_blank', `popup=1`);
+            });
       }
 
    },
    options: {
+      video_unblock_region_mode: {
+         _tagName: 'select',
+         label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
+         'label:ko': '방법',
+         // 'label:id': 'Mode',
+         'label:es': 'Modo',
+         'label:pt': 'Modo',
+         // 'label:fr': 'Mode',
+         'label:it': 'Modalità',
+         // 'label:tr': 'Mod',
+         'label:de': 'Modus',
+         'label:pl': 'Tryb',
+         'label:ua': 'Режим',
+         options: [
+            {
+               label: 'show links', /*value: '',*/
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'redirect', value: 'redirect', //selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               'label:pl': 'przekierowanie',
+               'label:ua': 'перенаправити',
+            },
+         ],
+      },
       // Strategy 1
       video_unblock_region_domain: {
          _tagName: 'input',
-         label: 'URL',
+         label: 'Redirect to URL',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -131,6 +235,7 @@ window.nova_plugins.push({
          maxlength: 20,
          required: true,
          // value: 'hooktube.com',
+         'data-dependent': { 'video_unblock_region_mode': ['redirect'] },
       },
       video_unblock_region_domain_help_list: {
          _tagName: 'datalist',
@@ -141,6 +246,7 @@ window.nova_plugins.push({
             { label: 'yewtu.be', value: 'yewtu.be' },
             { label: 'nsfwyoutube.com', value: 'nsfwyoutube.com' },
             { label: 'yout-ube.com', value: 'yout-ube.com' },
+            { label: 'riservato-xyz.frama.io', value: 'riservato-xyz.frama.io' },
             // { label: 'piped.kavin.rocks', value: 'piped.kavin.rocks' },
             // is shut down
             // { label: 'tubeunblock.com', value: 'tubeunblock.com' },
@@ -164,11 +270,16 @@ window.nova_plugins.push({
       //    // 'label:pl': '',
       //    // 'label:ua': '',
       //    options: [
-      //       { label: 'hooktube.com', value: 'hooktube.com', selected: true },
+      //       { label: 'hooktube.com', value: 'hooktube.com' },
       //       { label: 'clipzag.com', value: 'clipzag.com' },
-      //       { label: 'custom', value: false },
+      //       { label: 'piped.video', value: 'piped.video' },
+      //       { label: 'yewtu.be', value: 'yewtu.be' },
+      //       { label: 'nsfwyoutube.com', value: 'nsfwyoutube.com' },
+      //       { label: 'yout-ube.com', value: 'yout-ube.com' },
+      //       { label: 'riservato-xyz.frama.io', value: 'riservato-xyz.frama.io' },
+      //       // { label: 'piped.kavin.rocks', value: 'piped.kavin.rocks' },
       //       // is shut down
-      //       // { label: 'hooktube.com', value: 'hooktube.com' },
+      //       // { label: 'tubeunblock.com', value: 'tubeunblock.com' },
       //       // { label: 'cinemaphile.com', value: 'cinemaphile.com' },
       //    ],
       // },
@@ -213,6 +324,8 @@ window.nova_plugins.push({
          'label:pl': 'Otwórz mapę z dostępnością w regionach',
          'label:ua': 'Відкрити карту з доступністю в регіонах',
          type: 'checkbox',
+         // title: '',
+         'data-dependent': { 'video_unblock_region_mode': ['redirect'] },
       },
    }
 });

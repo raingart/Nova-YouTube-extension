@@ -18,7 +18,8 @@ window.nova_plugins.push({
    section: 'player',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/452948-youtube-disable-scrollbar
+      // alt1 - https://greasyfork.org/en/scripts/452948-youtube-disable-scrollbar
+      // alt2 - https://greasyfork.org/en/scripts/423150-youtube-scrollbar-remove
 
       const HIDE_SCROLL_ATTR = 'nova-scrollbar-hide';
 
@@ -92,6 +93,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          'label:ua': 'У живому чаті',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'livechat_visibility_mode': ['!disable'] }, // conflict with plugin [livechat-visibility]
       },
    }

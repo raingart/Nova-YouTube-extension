@@ -142,6 +142,7 @@ window.nova_plugins.push({
          'label:pl': 'Przezroczyste',
          'label:ua': 'Прозорі',
          type: 'checkbox',
+         // title: '',
       },
       subtitle_bold: {
          _tagName: 'input',
@@ -159,6 +160,7 @@ window.nova_plugins.push({
          'label:pl': 'Tekst pogrubiony',
          'label:ua': 'Жирний текст',
          type: 'checkbox',
+         // title: '',
       },
       subtitle_fixed: {
          _tagName: 'input',
@@ -206,6 +208,7 @@ window.nova_plugins.push({
          'label:pl': 'Ustaw napisy do wyboru',
          'label:ua': 'Зробити субтитри доступними для виділення',
          type: 'checkbox',
+         // title: '',
       },
       subtitle_font_size: {
          _tagName: 'input',

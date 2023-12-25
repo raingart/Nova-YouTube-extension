@@ -31,11 +31,11 @@ window.nova_plugins.push({
 
       // Strategy 1
       const
-         origMathMin = Math.min,
+         MathMin_orig = Math.min,
          addRowCount = +user_settings.thumbnails_grid_count || 1;
 
       Math.min = function () {
-         return origMathMin.apply(Math, arguments)
+         return MathMin_orig.apply(Math, arguments)
             + (/calcElementsPerRow/img.test(Error().stack || '') ? addRowCount - 1 : 0);
       };
 

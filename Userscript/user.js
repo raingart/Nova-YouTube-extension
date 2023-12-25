@@ -49,7 +49,7 @@ else {
       GM_setValue(configStoreName, user_settings);
    }
    else {
-      landerPlugins();
+      appLander();
 
       // export conf
       const exportedSettings = Object.assign({}, user_settings);
@@ -116,82 +116,37 @@ function setupConfigPage() {
    });
 }
 
-function landerPlugins() {
-   processLander();
-
-   // let playlist_page_transition_count = 0;
-
-   function processLander() {
-      const plugins_lander = setInterval(() => {
-         // wait page loaded
-         const domLoaded = document?.readyState != 'loading';
-         if (!domLoaded) return console.debug('waiting, page loading..');
-
-         clearInterval(plugins_lander);
-         // force page reload. Dirty hack to page reset hack to clean up junk (for playlist)
-         // playlistPageReload();
-
-         console.groupCollapsed('plugins status');
-
-         // PluginsFn.run({
-         Plugins.run({
-            'user_settings': user_settings,
-            'app_ver': GM_info.script.version,
-         });
-
-      }, 500); // 500ms
+function appLander() {
+   // on page init
+   if (document.readyState == 'loading') {
+      document.addEventListener('DOMContentLoaded', appRun);
+   }
+   else {
+      appRun();
    }
 
    let prevURL = location.href;
    const isURLChanged = () => prevURL == location.href ? false : prevURL = location.href;
 
-   // skip first page transition
+   // on page updated url
    // Strategy 1
    if (isMobile = (location.host == 'm.youtube.com')) {
-      window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && isURLChange() && processLander());
+      window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && isURLChange() && appRun());
    }
    // Strategy 2
    else {
-      document.addEventListener('yt-navigate-start', () => isURLChanged() && processLander());
+      document.addEventListener('yt-navigate-start', () => isURLChanged() && appRun());
    }
 
-   // function playlistPageReload(sec = 5) {
-   //    if (location.search.includes('list=')) {
-   //       playlist_page_transition_count++;
-   //       // console.debug('playlist_page_transition_count:', playlist_page_transition_count);
+   function appRun() {
+      console.groupCollapsed('plugins status');
 
-   //       if (playlist_page_transition_count === 30) {
-   //          const notice = document.createElement('div');
-   //          Object.assign(notice.style, {
-   //             position: 'fixed',
-   //             top: 0,
-   //             right: '50%',
-   //             transform: 'translateX(50%)',
-   //             margin: '50px',
-   //             'z-index': 9999,
-   //             'border-radius': '2px',
-   //             'background-color': 'tomato',
-   //             'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
-   //             'font-size': '12px',
-   //             color: '#fff',
-   //             padding: '10px',
-   //             cursor: 'pointer',
-   //          });
-   //          notice.addEventListener('click', () => {
-   //             playlist_page_transition_count = 0;
-   //             notice.remove();
-   //             clearTimeout(playlist_reload);
-   //          });
-   //          notice.innerHTML =
-   //             `<h4 style="margin:0;">Attention! ${GM_info.script.name}</h4>
-   //             <div>The page will be automatically reloaded within ${sec} sec</div>
-   //             <div><i>Click for cancel</i></div>`;
-   //          document.body.append(notice);
-
-   //          const playlist_reload = setTimeout(() => location.reload(), 1000 * +sec); // 5sec
-   //       }
-   //    }
-   // }
+      // PluginsFn.run({
+      Plugins.run({
+         'user_settings': user_settings,
+         'app_ver': GM_info.script.version,
+      });
+   }
 }
 
 // There are problems in this way / try remove initialization plugins delay (only userscript)
@@ -306,7 +261,7 @@ function registerMenuCommand() {
    GM_registerMenuCommand('Export settings', () => {
       let d = document.createElement('a');
       d.style.display = 'none';
-      d.download = 'nova-settings.json';
+      d.download = 'nova_backup.json';
       d.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings));
       document.body.append(d);
       d.click();

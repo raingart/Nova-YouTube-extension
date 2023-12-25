@@ -68,5 +68,5 @@ Please read [plugin document](https://github.com/raingart/Nova-YouTube-extension
 ### compatibility with other scripts
 For compatibility with other scripts, you can access the list of settings (read only) Available only in userscript ver.
 ```
-window.nova_setting`
+window.nova_setting
 ```

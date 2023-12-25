@@ -176,6 +176,7 @@ window.nova_plugins.push({
          'label:pl': 'Usuń emoji',
          'label:ua': 'Очистити емодзі',
          type: 'checkbox',
+         // title: '',
       },
       thumbnails_title_clear_symbols: {
          _tagName: 'input',
@@ -193,6 +194,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
+         // title: '',
       },
    }
 });

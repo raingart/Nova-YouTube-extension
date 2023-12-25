@@ -191,8 +191,8 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          // 'label:ua': '',
-         // title: '',
          type: 'checkbox',
+         // title: '',
       },
       video_date_format: {
          _tagName: 'select',

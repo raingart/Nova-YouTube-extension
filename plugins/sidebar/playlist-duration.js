@@ -343,6 +343,7 @@ window.nova_plugins.push({
          'label:pl': 'Pokaż procenty',
          'label:ua': 'Показати %',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'playlist_duration_progress_type': ['done', 'left'] },
       },
    }

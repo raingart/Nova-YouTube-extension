@@ -19,7 +19,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
-   // 'data-conflict': 'player-fullscreen-mode, embed-popup',
+   // 'data-conflict': 'player-fullscreen-mode, embed-popup, player-control-below',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/10523-youtube-always-theater-mode
@@ -97,7 +97,7 @@ window.nova_plugins.push({
                PINNED_SELECTOR = '.nova-player-pin', // fix for "player-pin-scroll" plugin
                PLAYER_SCROLL_LOCK_CLASS_NAME = 'nova-lock-scroll',
                PLAYER_SELECTOR = `${PLAYER_CONTAINER_SELECTOR} #movie_player:not(${PINNED_SELECTOR}):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for [player-pin-scroll] plugin
-               zIindex = Math.max(getComputedStyle(movie_player)['z-index'], 2020);
+               zIindex = Math.max(getComputedStyle(movie_player)['z-index'], 2020); // remember update pkugin [player-control-below]
 
             addScrollDownBehavior();
 
@@ -106,10 +106,15 @@ window.nova_plugins.push({
                   // alt - https://greasyfork.org/en/scripts/436667-better-youtube-theatre-mode
                   NOVA.css.push(
                      PLAYER_CONTAINER_SELECTOR + ` {
-                        min-height: calc(100vh - ${user_settings['header-compact'] ? 36
-                        : NOVA.css.getValue('#masthead-container', 'height') || 56
+                        min-height: calc(100vh - ${user_settings['header-compact']
+                        ? '36px'
+                        : NOVA.css.getValue('#masthead-container', 'height') || '56px'
                      // : document.body.querySelector('#masthead-container')?.offsetHeight || 56
-                     }px) !important;
+                     }) !important;
+                     }
+                     ytd-watch-flexy[theater]:not([fullscreen]) #columns {
+                        position: absolute;
+                        top: 100vh;
                      }`);
                   break;
 
@@ -154,7 +159,7 @@ window.nova_plugins.push({
                   // alt1 - https://greasyfork.org/en/scripts/419359-youtube-simple-cinema-mode
                   // alt2 - https://chrome.google.com/webstore/detail/bfbmjmiodbnnpllbbbfblcplfjjepjdn
                   NOVA.css.push(
-                     PLAYER_CONTAINER_SELECTOR + ` {
+                     PLAYER_SELECTOR + ` {
                         z-index: ${zIindex};
                      }
 
@@ -223,6 +228,14 @@ window.nova_plugins.push({
                   }`);
 
                addHideScrollbarCSS();
+
+               // fix overwrite video height after pause
+               NOVA.waitSelector('video')
+                  .then(video => {
+                     video.addEventListener('play', () => {
+                        window.dispatchEvent(new Event('resize')); // fix: restore player size
+                     });
+                  });
 
                // Strategy 2
                // const CLASS_NAME = '';
@@ -350,21 +363,6 @@ window.nova_plugins.push({
                'label:ua': 'кінотеатр',
             },
             {
-               label: 'full-viewport (auto)', value: 'smart',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               'label:ua': 'повноекранний (авто)',
-            },
-            {
                label: 'full-viewport', value: 'force',
                // 'label:zh': '',
                // 'label:ja': '',
@@ -380,7 +378,22 @@ window.nova_plugins.push({
                'label:ua': 'повноекранний',
             },
             {
-               label: 'offset', value: 'offset',
+               label: 'full-viewport (auto)', value: 'smart',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               'label:ua': 'повноекранний (авто)',
+            },
+            {
+               label: 'full-viewport (offset)', value: 'offset',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -429,6 +442,7 @@ window.nova_plugins.push({
          'label:pl': 'Wyjdź, gdy film się kończy/pauzuje',
          'label:ua': 'Вихід із повного вікна перегляду, якщо відео закінчується/призупиняється',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'player_full_viewport_mode': ['force', 'smart'] },
       },
       player_full_viewport_mode_exclude_shorts: {

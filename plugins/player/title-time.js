@@ -42,7 +42,10 @@ window.nova_plugins.push({
          // backup: document.title,
 
          strSplit: ' | ',
+         // strSplit: ' ● ',
          // strSplit: ' • ',
+         // strSplit: ' ► ',
+         // strSplit: ' ▷ ',
 
          saveCheck() { // speed hack
             return (result = (this.backup || document.title).includes(this.strSplit)) // check strSplit has in title

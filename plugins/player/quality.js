@@ -26,9 +26,45 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
+      // premium clicker
+      // NOVA.waitSelector('#movie_player')
+      //    .then(player => {
+      //       player.addEventListener('onStateChange', setQuality1, { capture: true, once: true });
+      //    });
+
+      // async function setQuality1() {
+      //    const SELECTOR_CONTAINER = '#movie_player';
+      //    // menu
+      //    const menu = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-chrome-bottom button.ytp-settings-button[aria-expanded="false"]`);
+      //    menu.click(); // open
+
+      //    //console.log(document.body.querySelectorAll(`#movie_player .ytp-chrome-bottom .ytp-settings-menu [role=menuitem]:last-child`))
+      //    // quality menu
+      //    const qualityOption = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role=menuitem]:last-child`);
+      //    qualityOption.click(); // open
+
+      //    // const qualityToSet = '144p';
+      //    // const showQualities = [...document.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
+      //    //    .find(menuitem => menuitem.textContent.includes(qualityToSet));
+      //    const showQualities = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
+      //    console.debug('choosing it quality', showQualities.textContent, showQualities.innerText);
+      //    alert(`choosing it quality:\n${showQualities.textContent}\n${showQualities.innerText}`);
+      //    showQualities.click(); // choosing it quality
+
+      //    player.removeEventListener('onStateChange', setQuality1);
+
+      //    // unfocused
+      //    document.querySelector('body').click();
+      //    document.querySelector('video').focus();
+      // }
+
+      // return;
+
       // alt1 - https://greasyfork.org/en/scripts/6034-youtube-hd-override
       // alt2 - https://greasyfork.org/en/scripts/23661-youtube-hd
       // alt3 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
+      // alt5 - https://github.com/avi12/youtube-auto-hd
+      // alt6 - https://github.com/james-fray/YouTube-HD
 
       const qualityFormatListWidth = {
          highres: 4320,

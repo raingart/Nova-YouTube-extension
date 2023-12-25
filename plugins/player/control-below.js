@@ -55,8 +55,7 @@ window.nova_plugins.push({
                // }
 
                // fix conflict with plugin [theater-mode]
-               if (['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode)
-               ) {
+               if (['force', 'offset'].includes(user_settings.player_full_viewport_mode)) {
                   SELECTOR_CONTAINER += `:not([theater])`;
                }
 
@@ -136,7 +135,7 @@ window.nova_plugins.push({
       // fixControlFreeze. copy of the function is also in plugin [player-control-autohide]
       function fixControlFreeze(ms = 2000) {
          if (user_settings.player_hide_elements?.includes('time_display')
-            && (user_settings['theater-mode'] && ['cinema_mode', 'force', 'offset'].includes(user_settings.player_full_viewport_mode))
+            || (user_settings['theater-mode'] && ['force', 'offset'].includes(user_settings.player_full_viewport_mode))
          ) {
             return;
          }
@@ -144,9 +143,16 @@ window.nova_plugins.push({
          // const moveMouse = new Event('mousemove');
          // this.mouseMoveIntervalId = window.setInterval(() => {
          return window.setInterval(() => {
-            if (['smart'].includes(user_settings.player_full_viewport_mode) && NOVA.css.getValue(movie_player, 'z-index') != '2020' && NOVA.css.getValue(movie_player, 'position') != 'fixed') return;
+            if (user_settings['theater-mode']
+               // && ['smart'].includes(user_settings.player_full_viewport_mode)
+               && user_settings.player_full_viewport_mode == 'smart'
+               && NOVA.css.getValue(movie_player, 'z-index') != '2020'
+               && NOVA.css.getValue(movie_player, 'position') != 'fixed'
+            ) {
+               return;
+            }
 
-            if (NOVA.currentPage === 'watch'
+            if (NOVA.currentPage == 'watch'
                && document.visibilityState == 'visible'
                && movie_player.classList.contains('playing-mode')
                && !document.fullscreenElement // this.hasAttribute('fullscreen')

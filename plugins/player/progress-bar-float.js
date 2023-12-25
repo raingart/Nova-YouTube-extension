@@ -2,7 +2,7 @@
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
 // https://radio.nv.ua/online-radio-nv - live embed
 
-// Сhapters not indicated in the description block
+// Chapters not indicated in the description block
 // https://www.youtube.com/watch?v=PtSNcZLyNaU
 
 window.nova_plugins.push({
@@ -359,6 +359,18 @@ window.nova_plugins.push({
          'label:ua': 'Висота',
          type: 'number',
          title: 'in pixels',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
          placeholder: 'px',
          min: 1,
          max: 9,
@@ -381,6 +393,18 @@ window.nova_plugins.push({
          'label:ua': 'Прозорість',
          type: 'number',
          // title: '',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
          placeholder: '0-1',
          step: .05,
          min: 0,

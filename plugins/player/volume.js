@@ -121,20 +121,22 @@ window.nova_plugins.push({
             }
             // mousewheel in player area
             else if (user_settings.volume_hotkey) {
-               // mousewheel in player area
-               document.body.querySelector('.html5-video-container')
-                  .addEventListener('wheel', evt => {
-                     evt.preventDefault();
+               // NOVA.waitSelector('#movie_player') // broken, don't use
+               NOVA.waitSelector('.html5-video-container')
+                  .then(container => {
+                     container.addEventListener('wheel', evt => {
+                        evt.preventDefault();
 
-                     if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none'
-                        && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)
-                     ) {
-                        if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
-                           const volume = playerVolume.adjust(step);
-                           // console.debug('current volume:', volume);
+                        if (evt[user_settings.volume_hotkey] || (user_settings.volume_hotkey == 'none'
+                           && !evt.ctrlKey && !evt.altKey && !evt.shiftKey && !evt.metaKey)
+                        ) {
+                           if (step = +user_settings.volume_step * Math.sign(evt.wheelDelta)) {
+                              const volume = playerVolume.adjust(step);
+                              // console.debug('current volume:', volume);
+                           }
                         }
-                     }
-                  }, { capture: true });
+                     }, { capture: true });
+                  });
             }
             // init volume_default
             if (+user_settings.volume_default) {
@@ -439,7 +441,8 @@ window.nova_plugins.push({
       },
       volume_loudness_normalization: {
          _tagName: 'input',
-         label: 'Disable loudness normalization',
+         // label: 'Disable YouTube's audio loudness normalization',
+         label: 'Disable audio loudness normalization',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

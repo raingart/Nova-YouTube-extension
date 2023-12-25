@@ -371,6 +371,7 @@ window.nova_plugins.push({
          'label:de': 'Farbe',
          'label:pl': 'Kolor',
          'label:ua': 'Колір',
+         // title: '',
          'data-dependent': { 'player_indicator_type': '!text-top' },
       },
       player_indicator_chapter: {
@@ -389,6 +390,7 @@ window.nova_plugins.push({
          'label:pl': 'Pokaż informacje na początku rozdziału',
          'label:ua': 'Показати інформацію на початку розділу',
          type: 'checkbox',
+         // title: '',
       },
       // player_indicator_chapter_default_container_hide: {
       //    _tagName: 'input',

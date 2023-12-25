@@ -256,7 +256,7 @@ const NOVA = {
             return resolve(element);
          }
 
-         const mutationObserver = new MutationObserver((mutationRecordsArray, observer) => {
+         const observerFactory = new MutationObserver((mutationRecordsArray, observer) => {
             for (const record of mutationRecordsArray) {
                for (const node of record.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType) || !(node instanceof HTMLElement)) continue; // speedup hack
@@ -287,7 +287,7 @@ const NOVA = {
             }
          })
 
-         mutationObserver
+         observerFactory
             .observe(limit_data?.container || document.body || document.documentElement || document, {
                childList: true, // observe direct children
                subtree: true, // and lower descendants too
@@ -301,7 +301,7 @@ const NOVA = {
             isURLChange();
             window.addEventListener('transitionend', ({ target }) => {
                if (isURLChange()) {
-                  mutationObserver.disconnect();
+                  observerFactory.disconnect();
                }
             });
             function isURLChange() {

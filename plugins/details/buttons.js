@@ -119,10 +119,10 @@ window.nova_plugins.push({
             stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M8 7c0 .55-.45"])`));
          }
          if (user_settings.details_buttons_hide.includes('save')) {
-            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d$="M2,16h8v-1H2V16z"])`));
+            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M22 13h-4v4h"])`));
          }
          if (user_settings.details_buttons_hide.includes('report')) {
-            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d$="L14,3z"])`));
+            stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="m13.18 4 .24 "])`));
          }
          if (user_settings.details_buttons_hide.includes('transcript')) {
             stylesList.push(buttonSelectors.map(e => `\n${e}:has(path[d^="M5,11h2v2H5V11z"])`));

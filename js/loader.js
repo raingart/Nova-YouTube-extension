@@ -85,7 +85,7 @@ const App = {
          if (!document.body) return;
 
          if (typeof NOVA === 'object' && window.nova_plugins.length) {
-            processLander();
+            appRun();
          }
          // if delay load domLoaded
          if (window.nova_plugins.length !== plugins_count) {
@@ -123,13 +123,13 @@ const App = {
 
          if (typeof NOVA === 'object' && window.nova_plugins.length === plugins_count) {
             clearInterval(forceLander);
-            processLander();
+            appRun();
          }
          else console.debug('loading plugins:', window.nova_plugins.length + '/' + plugins_count);
 
       }, 100); // 100ms
 
-      function processLander() {
+      function appRun() {
          console.assert(window.nova_plugins.length === plugins_count, 'loaded:', window.nova_plugins.length + '/' + plugins_count);
          clearInterval(waitPlugins);
          plugins_executor({
@@ -209,6 +209,7 @@ App.init();
 // https://www.youtube.com/watch?v=ir6nk2zrMG0 - wide
 // https://www.youtube.com/watch?v=twFNTZ6Y_OI - wide
 // https://www.youtube.com/watch?v=nX2anEXG0eE - square
+// https://www.youtube.com/watch?v=SDjbK8JWA_Y - square
 
 // live
 // https://www.youtube.com/watch?v=tNkZsRW7h2c - live

@@ -104,7 +104,7 @@ window.nova_plugins.push({
          'label:pl': 'Ustaw kolor tytułu',
          'label:ua': 'Встановити колір заголовку',
          type: 'checkbox',
-         // title: 'Link',
+         // title: '',
       },
       thumbnails_watched_title_color: {
          _tagName: 'input',
@@ -122,6 +122,7 @@ window.nova_plugins.push({
          'label:pl': 'Wybierz kolor tytułu',
          'label:ua': 'Обрати колір заголовку',
          type: 'color',
+         // title: '',
          value: '#ff4500',
          'data-dependent': { 'thumbnails_watched_title': true },
       },

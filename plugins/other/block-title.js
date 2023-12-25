@@ -57,8 +57,15 @@ window.nova_plugins.push({
             if ([
                'yt-append-continuation-items-action', // home, results, feed, channel, watch
                'ytd-update-grid-state-action', // feed, channel
-               'yt-service-request', // results, watch
-               'ytd-rich-item-index-update-action', // home, channel
+               'yt-rich-grid-layout-refreshed', // feed
+               // 'ytd-rich-item-index-update-action', // home, channel
+               'yt-store-grafted-ve-action', // results, watch
+               // 'ytd-update-elements-per-row-action', // feed
+
+               // universal
+               // 'ytd-update-active-endpoint-action',
+               // 'yt-window-scrolled',
+               // 'yt-service-request', // results, watch
             ]
                .includes(evt.detail?.actionName)
             ) {

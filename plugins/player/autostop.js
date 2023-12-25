@@ -34,6 +34,7 @@ window.nova_plugins.push({
    // 'desc:de': '',
    // 'desc:pl': '',
    // 'desc:ua': '',
+   // 'data-conflict': 'video-autopause',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
@@ -161,6 +162,7 @@ window.nova_plugins.push({
          'label:pl': 'Zignoruj listę odtwarzania',
          'label:ua': 'Ігнорувати список відтворення',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'video_autostop_embed': false },
       },
       video_autostop_ignore_live: {
@@ -179,6 +181,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          'label:ua': 'Ігнорувати живі трансляції',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'video_autostop_embed': false },
       },
       // video_autostop_embed: {

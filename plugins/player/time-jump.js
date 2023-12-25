@@ -1,4 +1,5 @@
 // for test:
+// ttps://www.youtube.com/watch?v=SDjbK8JWA_Y - short duration (perfect for test)
 // CHAPTER without description
 // https://www.youtube.com/watch?v=lQPp7xNOoe4
 // https://www.youtube.com/watch?v=PtSNcZLyNaU
@@ -473,6 +474,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
+         // title: '',
          'data-dependent': { 'skip_into_sec': "!0" },
       },
    }

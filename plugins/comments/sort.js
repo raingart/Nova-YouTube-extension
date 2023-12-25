@@ -52,7 +52,11 @@ window.nova_plugins.push({
          NOVA_REPLYS_SELECTOR_ID = 'nova-replys';
       // getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
-      insertButton();
+      // try fix disappear button
+      NOVA.waitSelector('#movie_player')
+         .then(insertButton);
+
+      // insertButton();
 
       function insertButton() {
          // NOVA.waitSelector('#comments ytd-comments-header-renderer #title')
@@ -232,7 +236,7 @@ window.nova_plugins.push({
                }
                // get next page
                // else if ((res?.nextPageToken && (commentList.length % 1000) !== 0)
-               //    || ((commentList.length % 1000) === 0 && confirm(`Сontinue downloading?`)) // message every multiple of 1000 comments
+               //    || ((commentList.length % 1000) === 0 && confirm(`Continue downloading?`)) // message every multiple of 1000 comments
                // ) {
                else if (res?.nextPageToken) {
                   // display current download status

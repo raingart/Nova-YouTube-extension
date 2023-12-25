@@ -58,12 +58,14 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
-            // video.addEventListener('loadedmetadata', createPopup.bind(video));
-            video.addEventListener('loadeddata', createPopup.bind(video));
-            // video.addEventListener('canplay', createPopup.bind(video));
+            // video.addEventListener('loadedmetadata', createPopup.bind(video), { capture: true, once: true });
+            video.addEventListener('loadeddata', createPopup.bind(video), { capture: true, once: true });
+            // video.addEventListener('canplay', createPopup.bind(video), { capture: true, once: true });
          });
 
       function createPopup() {
+         if (this.videoWidth < window.innerWidth) return;
+
          // this == NOVA.videoElement
          const { width, height } = NOVA.aspectRatio.sizeToFit({
             // 'srcWidth': NOVA.videoElement.videoWidth,

@@ -152,6 +152,7 @@ window.nova_plugins.push({
       }
       // mousewheel in player area
       else if (user_settings.rate_hotkey) {
+         // NOVA.waitSelector('#movie_player') // broken, don't use
          NOVA.waitSelector('.html5-video-container')
             .then(container => {
                container.addEventListener('wheel', evt => {

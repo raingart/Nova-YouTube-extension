@@ -47,20 +47,34 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'nova-dislikes-count:',
          SELECTOR_ID = 'nova-dislikes-count';
 
-      NOVA.runOnPageInitOrTransition(() => {
-         if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
-               .then(el => setDislikeCount(el));
-         }
+      NOVA.runOnPageInitOrTransition(async () => {
+         if (NOVA.currentPage != 'watch') return;
+
+         document.addEventListener('yt-action', dislikeIsUpdated);
+         // await NOVA.delay(500)
+         // NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+         //    .then(el => setDislikeCount(el));
       });
 
-      // NOVA.waitSelector('video')
-      //    .then(video => {
-      //       video.addEventListener('loadeddata', () => {
-      //          NOVA.waitSelector('ytd-watch-metadata #actions segmented-like-dislike-button-view-model button', { destroy_if_url_changes: true })
-      //             .then(el => setDislikeCount(el));
-      //       });
-      //    });
+      // document.addEventListener('yt-navigate-finish', () => {
+      //    NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+      //       .then(el => setDislikeCount(el));
+      // });
+
+      function dislikeIsUpdated(evt) {
+         if (NOVA.currentPage != 'watch') return;
+         // console.log(evt.detail?.actionName);
+
+         switch (evt.detail?.actionName) {
+            // case 'yt-reload-continuation-items-command':
+            case 'yt-reload-continuation-items-command':
+               document.removeEventListener('yt-action', dislikeIsUpdated); // stop listener
+
+               NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+                  .then(el => setDislikeCount(el));
+               break;
+         }
+      }
 
       async function setDislikeCount(container = required()) {
          // console.debug('setDislikeCount:', ...arguments);
@@ -114,7 +128,8 @@ window.nova_plugins.push({
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-            const percent = ~~(100 * data.likes / (data.likes + data.dislikes));
+            // const percent = ~~(100 * data.likes / (data.likes + data.dislikes)); // liked
+            const percent = ~~(100 * data.dislikes / (data.likes + data.dislikes)); // disliked
             const text = `${data.dislikes} (${percent}%)`;
 
             (document.getElementById(SELECTOR_ID) || (function () {
