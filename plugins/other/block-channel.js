@@ -36,10 +36,10 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/405325-youtube-search-filter
 
       // textarea to array
-      const keywords = NOVA.strToArray(user_settings.search_filter_channels_blocklist);
+      const BLOCK_KEYWORDS = NOVA.strToArray(user_settings.search_filter_channels_blocklist);
       // const
       //    keywords_exception = NOVA.strToArray(user_settings.thumbs_hide_live_channels_exception),
-      //    keywords = NOVA.strToArray(user_settings.search_filter_channels_blocklist)
+      //    BLOCK_KEYWORDS = NOVA.strToArray(user_settings.search_filter_channels_blocklist)
       //       .filter(e => !keywords_exception || !keywords_exception.includes(e));
 
       const thumbsSelectors = [
@@ -63,14 +63,14 @@ window.nova_plugins.push({
             //    .map(i => i + ':not(:empty)'),
             attr_mark: 'nova-thumb-channel-filtered',
             callback: channel_name => {
-               if (keywords.includes(channel_name.textContent.trim().toLowerCase())
+               if (BLOCK_KEYWORDS.includes(channel_name.textContent.trim().toLowerCase())
                   && (thumb = channel_name.closest(thumbsSelectors))
                ) {
                   thumb.remove();
                   // thumb.style.display = 'none';
 
                   // thumb.style.border = '2px solid red'; // mark for test
-                  // console.log('filter removed', keyword, thumb);
+                  // console.log('filter removed', thumb);
                }
             }
          });
@@ -102,7 +102,7 @@ window.nova_plugins.push({
                   // '.subhead > [class*="media-item-byline"]' // mobile /subscriptions page
                )
                   .forEach(channel_name => {
-                     keywords.forEach(keyword => {
+                     BLOCK_KEYWORDS.forEach(keyword => {
                         // @url_name
                         if (keyword.startsWith('@')
                            && channel_name.href.includes(keyword)

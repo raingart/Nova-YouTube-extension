@@ -23,8 +23,8 @@ window.nova_plugins.push({
    'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    'title:pl': 'Kontrola prędkości odtwarzania',
    'title:ua': 'Контроль швидкості відтворення',
-   // run_on_pages: 'watch, embed',
-   run_on_pages: 'home, results, feed, channel, watch, embed, -mobile',
+   // run_on_pages: 'watch, embed, -mobile',
+   run_on_pages: 'home, results, feed, channel, watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
    desc: 'With mouse wheel',
@@ -177,7 +177,7 @@ window.nova_plugins.push({
          NOVA.waitSelector('#upload-info #channel-name .badge-style-type-verified-artist')
             .then(icon => playerRate.set(1));
 
-         NOVA.waitSelector('#upload-info #channel-name a[href]', { destroy_if_url_changes: true })
+         NOVA.waitSelector('#upload-info #channel-name a[href]', { destroy_after_page_leaving: true })
             .then(channelName => {
                // channelNameVEVO
                if (/(VEVO|Topic|Records|AMV)$/.test(channelName.textContent)
@@ -654,9 +654,33 @@ window.nova_plugins.push({
          ],
          'data-dependent': { 'rate_default': '!1' },
       },
+      rate_hotkey: {
+         _tagName: 'select',
+         label: 'Hotkey',
+         'label:zh': '热键',
+         'label:ja': 'ホットキー',
+         'label:ko': '단축키',
+         'label:id': 'Tombol pintas',
+         'label:es': 'Tecla de acceso rápido',
+         'label:pt': 'Tecla de atalho',
+         'label:fr': 'Raccourci',
+         'label:it': 'Tasto di scelta rapida',
+         // 'label:tr': 'Kısayol tuşu',
+         'label:de': 'Schnelltaste',
+         'label:pl': 'Klawisz skrótu',
+         'label:ua': 'Гаряча клавіша',
+         options: [
+            { label: 'alt+wheel', value: 'altKey', selected: true },
+            { label: 'shift+wheel', value: 'shiftKey' },
+            { label: 'ctrl+wheel', value: 'ctrlKey' },
+            { label: 'wheel', value: 'none' },
+            { label: 'keyboard', value: 'keyboard' },
+            { label: 'disable', value: false },
+         ],
+      },
       rate_step: {
          _tagName: 'input',
-         label: 'Step',
+         label: 'Hotkey step',
          'label:zh': '步',
          'label:ja': 'ステップ',
          'label:ko': '단계',
@@ -688,30 +712,7 @@ window.nova_plugins.push({
          min: 0.05,
          max: 0.5,
          value: 0.25,
-      },
-      rate_hotkey: {
-         _tagName: 'select',
-         label: 'Hotkey',
-         'label:zh': '热键',
-         'label:ja': 'ホットキー',
-         'label:ko': '단축키',
-         'label:id': 'Tombol pintas',
-         'label:es': 'Tecla de acceso rápido',
-         'label:pt': 'Tecla de atalho',
-         'label:fr': 'Raccourci',
-         'label:it': 'Tasto di scelta rapida',
-         // 'label:tr': 'Kısayol tuşu',
-         'label:de': 'Schnelltaste',
-         'label:pl': 'Klawisz skrótu',
-         'label:ua': 'Гаряча клавіша',
-         options: [
-            { label: 'alt+wheel', value: 'altKey', selected: true },
-            { label: 'shift+wheel', value: 'shiftKey' },
-            { label: 'ctrl+wheel', value: 'ctrlKey' },
-            { label: 'wheel', value: 'none' },
-            { label: 'keyboard', value: 'keyboard' },
-            { label: 'disable', value: false },
-         ],
+         // 'data-dependent': { 'rate_hotkey': ['!false'] }, // conflict to slider dependency
       },
       rate_hotkey_custom_up: {
          _tagName: 'select',

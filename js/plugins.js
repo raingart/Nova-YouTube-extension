@@ -70,7 +70,7 @@ const Plugins = {
       'details/videos-count.js',
       'details/description-expand.js',
       'details/description-popup.js',
-      'details/video-date.js',
+      'details/show-date.js',
       'details/buttons.js',
       'details/auto-likes.js',
       'details/return-dislike.js',

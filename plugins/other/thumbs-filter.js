@@ -54,7 +54,7 @@ window.nova_plugins.push({
          ]
             .includes(evt.detail?.actionName)
          ) {
-            console.log(evt.detail?.actionName); // flltered
+            // console.log(evt.detail?.actionName); // flltered
             switch (NOVA.currentPage) {
                case 'home':
                   thumbRemove.live();
@@ -103,8 +103,8 @@ window.nova_plugins.push({
 
       // inset filter-switch button
       // alt - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
-      // NOVA.waitSelector('#voice-search-button', { stop_on_page_change: true })
-      NOVA.waitSelector('#filter-button, ytd-shelf-renderer #title-container a[href="/feed/channels"]', { stop_on_page_change: true })
+      // NOVA.waitSelector('#voice-search-button', { destroy_after_page_leaving: true })
+      NOVA.waitSelector('#filter-button, ytd-shelf-renderer #title-container a[href="/feed/channels"]', { destroy_after_page_leaving: true })
          .then(container => {
             const filterBtn = document.createElement('button');
             filterBtn.className = 'style-scope yt-formatted-string bold yt-spec-button-shape-next--tonal yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m yt-spec-button-shape-next--text';
@@ -140,9 +140,11 @@ window.nova_plugins.push({
 
       if (user_settings.thumbs_hide_shorts) {
          const stylesList = [
+            // https://www.reddit.com/r/uBlockOrigin/wiki/solutions/youtube/#wiki_shorts
             // '#content > ytd-rich-shelf-renderer', // results old
-            '#contents > ytd-reel-shelf-renderer', // results
+            'ytd-reel-shelf-renderer',
             'ytd-rich-grid-row + ytd-rich-section-renderer', // feed
+            '[is-shorts]',
          ]
             .join(',\n');
 
@@ -214,7 +216,7 @@ window.nova_plugins.push({
                            // thumb.remove();
                            // thumb.style.display = 'none';
 
-                           console.debug('short time:', timeSec, el.textContent);
+                           // console.debug('short time:', timeSec, el.textContent);
                            // thumb.style.border = '2px solid blue'; // mark for test
                         }
                      });
@@ -324,7 +326,7 @@ window.nova_plugins.push({
                      // thumb.remove();
                      // thumb.style.display = 'none';
 
-                     console.debug('streamed:', thumb);
+                     // console.debug('streamed:', thumb);
                      // thumb.style.border = '2px solid green'; // mark for test
                   }
                });

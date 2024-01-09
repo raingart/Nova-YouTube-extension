@@ -26,45 +26,16 @@ window.nova_plugins.push({
    // desc: '',
    _runtime: user_settings => {
 
-      // premium clicker
-      // NOVA.waitSelector('#movie_player')
-      //    .then(player => {
-      //       player.addEventListener('onStateChange', setQuality1, { capture: true, once: true });
-      //    });
-
-      // async function setQuality1() {
-      //    const SELECTOR_CONTAINER = '#movie_player';
-      //    // menu
-      //    const menu = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-chrome-bottom button.ytp-settings-button[aria-expanded="false"]`);
-      //    menu.click(); // open
-
-      //    //console.log(document.body.querySelectorAll(`#movie_player .ytp-chrome-bottom .ytp-settings-menu [role=menuitem]:last-child`))
-      //    // quality menu
-      //    const qualityOption = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role=menuitem]:last-child`);
-      //    qualityOption.click(); // open
-
-      //    // const qualityToSet = '144p';
-      //    // const showQualities = [...document.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
-      //    //    .find(menuitem => menuitem.textContent.includes(qualityToSet));
-      //    const showQualities = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
-      //    console.debug('choosing it quality', showQualities.textContent, showQualities.innerText);
-      //    alert(`choosing it quality:\n${showQualities.textContent}\n${showQualities.innerText}`);
-      //    showQualities.click(); // choosing it quality
-
-      //    player.removeEventListener('onStateChange', setQuality1);
-
-      //    // unfocused
-      //    document.querySelector('body').click();
-      //    document.querySelector('video').focus();
-      // }
-
-      // return;
-
       // alt1 - https://greasyfork.org/en/scripts/6034-youtube-hd-override
       // alt2 - https://greasyfork.org/en/scripts/23661-youtube-hd
       // alt3 - https://greasyfork.org/en/scripts/379822-youtube-video-quality
       // alt5 - https://github.com/avi12/youtube-auto-hd
       // alt6 - https://github.com/james-fray/YouTube-HD
+
+      // movie_player.getAvailableQualityData()
+      // movie_player.getAvailableQualityDataAndMessaging()
+      // movie_player.getAvailableQualityLabels()
+      // movie_player.getAvailableQualityLevels()
 
       const qualityFormatListWidth = {
          highres: 4320,
@@ -90,7 +61,7 @@ window.nova_plugins.push({
             ) {
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
-                  if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
+                  if (document.activeElement.getAttribute('role') == 'menuItemradio' // focuse on setting menu
                      && quality !== selectedQuality // the new quality
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
@@ -157,6 +128,17 @@ window.nova_plugins.push({
             let availableQualityLevels;
             await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels.length, 50) // 50ms
 
+            // premium support
+            if (user_settings.video_quality_premium
+               && (qualityToSet = [...movie_player.getAvailableQualityData()]
+                  .find(q => q.quality == selectedQuality
+                     && q.isPlayable
+                     && q.qualityLabel?.toLocaleLowerCase().includes('premium'))?.qualityLabel
+               )
+            ) {
+               return setPremium(qualityToSet);
+            }
+
             // incorrect window size definition in embed
             // set max quality limit (screen resolution (not viewport) + 30%)
             const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
@@ -209,8 +191,51 @@ window.nova_plugins.push({
          }
       }
 
+      // alt - https://openuserjs.org/scripts/adisib/Youtube_HD
+      async function setPremium(qualityLabel = required()) {
+         // premium clicker
+         // NOVA.waitSelector('#movie_player')
+         //    .then(player => {
+         //       player.addEventListener('onStateChange', setQuality1, { capture: true, once: true });
+         //    });
+
+         // async function setQuality1() {
+         const SELECTOR_CONTAINER = '#movie_player';
+         // menu
+         const settingsButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-chrome-bottom button.ytp-settings-button[aria-expanded="false"]`);
+         settingsButton.click(); // open
+
+         //console.log(document.body.querySelectorAll(`#movie_player .ytp-chrome-bottom .ytp-settings-menu [role="menuitem"]:last-child`))
+         // quality menu
+         const qualityMenuButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"]:last-child`);
+         qualityMenuButton.click(); // open
+         // Strategy 1
+         // const qualityItem = [...document.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
+         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]:has(.ytp-premium-label)')]
+         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]')]
+         const qualityItem = [...document.querySelectorAll('.ytp-quality-menu .ytp-menuitem')]
+            .find(menuItem => menuItem.textContent.includes(qualityLabel));
+         // Strategy 2
+         // const qualityItem = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
+
+         await NOVA.delay(1500);
+         // console.debug('choosing it quality', qualityItem.textContent, qualityItem.innerText);
+         qualityItem.click(); // choosing it quality
+         // alert(`choosing it quality:\n${qualityItem.textContent}\n${qualityItem.innerText}`);
+
+         // player.removeEventListener('onStateChange', setQuality1);
+
+         // unfocused
+         document.querySelector('body').click();
+         document.querySelector('video').focus();
+         // }
+
+         setQuality.quality_lock = true;
+         // return true;
+      }
+
       // error detector
-      NOVA.waitSelector('.ytp-error [class*="reason"]', { destroy_if_url_changes: true })
+      NOVA.waitSelector('.ytp-error [class*="reason"]', { destroy_after_page_leaving: true })
          .then(error_reason_el => {
             if (alertText = error_reason_el.textContent) {
                // err ex:
@@ -254,6 +279,24 @@ window.nova_plugins.push({
             { label: 'SD/144p', value: 'tiny' },
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
+      },
+      video_quality_premium: {
+         _tagName: 'input',
+         label: 'use Premium if available',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
       },
       video_quality_manual_save_in_tab: {
          _tagName: 'input',

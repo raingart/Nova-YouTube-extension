@@ -177,7 +177,7 @@ window.nova_plugins.push({
                movie_player.setVolume(newLevel); // 0 - 100
 
                if (newLevel === movie_player.getVolume()) {
-                  this.saveInSession(newLevel);
+                  // this.saveInSession(newLevel);
                   // this.buildVolumeSlider();
                }
                else {
@@ -315,29 +315,6 @@ window.nova_plugins.push({
          // max: 600,
          value: 100,
       },
-      volume_step: {
-         _tagName: 'input',
-         label: 'Step',
-         'label:zh': '步',
-         'label:ja': 'ステップ',
-         'label:ko': '단계',
-         'label:id': 'Melangkah',
-         'label:es': 'Paso',
-         'label:pt': 'Degrau',
-         'label:fr': 'Étape',
-         'label:it': 'Fare un passo',
-         // 'label:tr': 'Adım',
-         'label:de': 'Schritt',
-         'label:pl': 'Krok',
-         'label:ua': 'Крок',
-         type: 'number',
-         title: 'in %',
-         placeholder: '%',
-         step: 5,
-         min: 5,
-         max: 30,
-         value: 10,
-      },
       volume_hotkey: {
          _tagName: 'select',
          label: 'Hotkey',
@@ -361,6 +338,30 @@ window.nova_plugins.push({
             { label: 'keyboard', value: 'keyboard' },
             { label: 'disable', value: false },
          ],
+      },
+      volume_step: {
+         _tagName: 'input',
+         label: 'Hotkey step',
+         'label:zh': '步',
+         'label:ja': 'ステップ',
+         'label:ko': '단계',
+         'label:id': 'Melangkah',
+         'label:es': 'Paso',
+         'label:pt': 'Degrau',
+         'label:fr': 'Étape',
+         'label:it': 'Fare un passo',
+         // 'label:tr': 'Adım',
+         'label:de': 'Schritt',
+         'label:pl': 'Krok',
+         'label:ua': 'Крок',
+         type: 'number',
+         title: 'in %',
+         placeholder: '%',
+         step: 5,
+         min: 5,
+         max: 30,
+         value: 10,
+         'data-dependent': { 'volume_hotkey': ['!false'] },
       },
       volume_hotkey_custom_up: {
          _tagName: 'select',

@@ -41,7 +41,7 @@ window.nova_plugins.push({
                // // meta[itemprop="isLiveBroadcast"][content="True"]
                // if (document.body.querySelector('ytd-watch-flexy')?.playerData.videoDetails.isLiveContent) {
                // if (movie_player.getVideoData().isLive) {
-               //    NOVA.waitSelector('#movie_player .ytp-chrome-controls .ytp-live .ytp-time-current', { destroy_if_url_changes: true })
+               //    NOVA.waitSelector('#movie_player .ytp-chrome-controls .ytp-live .ytp-time-current', { destroy_after_page_leaving: true })
                //       .then(el => {
                //          el.style = 'display: block !important; margin-right: 5px;';
                //       });

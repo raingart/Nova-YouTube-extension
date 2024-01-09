@@ -52,12 +52,12 @@ window.nova_plugins.push({
 
          document.addEventListener('yt-action', dislikeIsUpdated);
          // await NOVA.delay(500)
-         // NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+         // NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
          //    .then(el => setDislikeCount(el));
       });
 
       // document.addEventListener('yt-navigate-finish', () => {
-      //    NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+      //    NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
       //       .then(el => setDislikeCount(el));
       // });
 
@@ -70,7 +70,7 @@ window.nova_plugins.push({
             case 'yt-reload-continuation-items-command':
                document.removeEventListener('yt-action', dislikeIsUpdated); // stop listener
 
-               NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_if_url_changes: true })
+               NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
                   .then(el => setDislikeCount(el));
                break;
          }

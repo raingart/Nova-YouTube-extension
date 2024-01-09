@@ -48,6 +48,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/24163-youtube-unblocker
       // alt4 - https://freetubeapp.io/
       // alt5 - https://greasyfork.org/en/scripts/466944-youtube-country-restriction-forwarder
+      // alt5 - https://greasyfork.org/en/scripts/476133-youtube-lite-melhor-experi%C3%AAncia
 
       if (user_settings.video_unblock_region_mode == 'redirect') {
 
@@ -65,7 +66,7 @@ window.nova_plugins.push({
          //       break;
 
          //    default:
-         NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_if_url_changes: true })
+         NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_after_page_leaving: true })
             // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
             // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
             .then(el => el.querySelector('yt-player-error-message-renderer #button.yt-player-error-message-renderer button') || redirect());
@@ -98,7 +99,7 @@ window.nova_plugins.push({
       else {
          const SELECTOR = 'ytd-watch-flexy[player-unavailable] #player-error-message-container #info';
 
-         NOVA.waitSelector(SELECTOR, { destroy_if_url_changes: true })
+         NOVA.waitSelector(SELECTOR, { destroy_after_page_leaving: true })
             .then(el => {
                if (el.querySelector('button')) return;
 

@@ -24,7 +24,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/447775-youtube-premium-logo
       // alt3 - https://greasyfork.org/en/scripts/405614-youtube-polymer-engine-fixes
 
-      NOVA.waitSelector('#masthead a#logo', { destroy_if_url_changes: true })
+      NOVA.waitSelector('#masthead a#logo', { destroy_after_page_leaving: true })
          .then(async a => {
             if (link = new URL(user_settings.page_logo_url_mode)?.href) {
                a.href = link;

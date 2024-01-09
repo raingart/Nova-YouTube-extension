@@ -134,7 +134,6 @@ window.nova_plugins.push({
          options: [
             // {
             //    label: 'current', value: 'current',
-            //    'label:ua': 'поточний',
             //    'label:zh': '现在',
             //    'label:ja': '現在',
             //    'label:ko': '현재의',
@@ -143,8 +142,10 @@ window.nova_plugins.push({
             //    'label:pt': 'atual',
             //    'label:fr': 'courant',
             //    // 'label:it': '',
-            //    'label:tr': 'akım',
+            //    // ''label:tr': 'akım',
             //    'label:de': 'strom',
+            //    'label:pl': 'pozostało',
+            //    'label:ua': 'поточний',
             // },
             {
                label: 'left', value: 'left', selected: true,

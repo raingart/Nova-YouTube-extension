@@ -13,7 +13,7 @@ window.nova_plugins.push({
    'title:de': 'Deaktivieren Sie das Scrollen im Vollbildmodus',
    'title:pl': 'Wyłącz przewijanie w trybie pełnoekranowym',
    'title:ua': 'Вимкнути прокрутку у повноекранному режимі',
-   run_on_pages: 'watch',
+   run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
    _runtime: user_settings => {

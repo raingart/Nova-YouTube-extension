@@ -28,7 +28,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/discussions/requests/56798-request-make-videoes-the-default-tab-on-youtube-channels
       // alt4 - https://greasyfork.org/en/scripts/480747-youtube-channel-trailer-pauser
 
-      NOVA.waitSelector('#c4-player.playing-mode', { destroy_if_url_changes: true })
+      NOVA.waitSelector('#c4-player.playing-mode', { destroy_after_page_leaving: true })
          .then(player => player.stopVideo());
 
    },

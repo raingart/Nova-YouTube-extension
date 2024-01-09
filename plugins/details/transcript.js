@@ -36,6 +36,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/480993-show-transcript-by-default
 
       // alt (download) - https://greasyfork.org/en/scripts/402811-concatenate-transcript
+      // alt (copy with timestamps) - https://greasyfork.org/en/scripts/483035-youtube-transcript-copier
 
       const
          BTN_SELECTOR_ID = 'nova-transcript-button',
@@ -47,7 +48,7 @@ window.nova_plugins.push({
 
          // custom speed from [save-channel-state] plugin
          if (await NOVA.storage_obj_manager.getParam('transcript')) {
-            NOVA.waitSelector(BTN_SELECTOR, { destroy_if_url_changes: true })
+            NOVA.waitSelector(BTN_SELECTOR, { destroy_after_page_leaving: true })
                .then(btn => {
                   btn.style.display = 'flex';
                   switch (user_settings.transcript_visibility_mode) {
@@ -64,12 +65,12 @@ window.nova_plugins.push({
 
          switch (user_settings.transcript_visibility_mode) {
             case 'expand':
-               NOVA.waitSelector('[target-id="engagement-panel-searchable-transcript"][visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"]', { destroy_if_url_changes: true })
+               NOVA.waitSelector('[target-id="engagement-panel-searchable-transcript"][visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"]', { destroy_after_page_leaving: true })
                   .then(transcriptEl => {
                      transcriptEl.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
                   });
 
-               // NOVA.waitSelector('#description ytd-video-description-transcript-section-renderer button', { destroy_if_url_changes: true })
+               // NOVA.waitSelector('#description ytd-video-description-transcript-section-renderer button', { destroy_after_page_leaving: true })
                //    .then(btn => btn.click());
                break;
 
@@ -78,7 +79,7 @@ window.nova_plugins.push({
             // case 'external-popup':
             default:
                // switch btn visibility
-               NOVA.waitSelector(BTN_SELECTOR, { destroy_if_url_changes: true })
+               NOVA.waitSelector(BTN_SELECTOR, { destroy_after_page_leaving: true })
                   .then(btn => {
                      btn.style.display = document.body.querySelector('#description ytd-video-description-transcript-section-renderer button, [target-id="engagement-panel-searchable-transcript"]') ? 'flex' : 'none';
                   });
@@ -112,12 +113,12 @@ window.nova_plugins.push({
 
          // // case 'expand':
          // default:
-         //    NOVA.waitSelector('[target-id="engagement-panel-searchable-transcript"][visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"]', { destroy_if_url_changes: true })
+         //    NOVA.waitSelector('[target-id="engagement-panel-searchable-transcript"][visibility="ENGAGEMENT_PANEL_VISIBILITY_HIDDEN"]', { destroy_after_page_leaving: true })
          //       .then(transcriptEl => {
          //          transcriptEl.setAttribute('visibility', 'ENGAGEMENT_PANEL_VISIBILITY_EXPANDED');
          //       });
 
-         //    // NOVA.waitSelector('#description ytd-video-description-transcript-section-renderer button', { destroy_if_url_changes: true })
+         //    // NOVA.waitSelector('#description ytd-video-description-transcript-section-renderer button', { destroy_after_page_leaving: true })
          //    //    .then(btn => btn.click());
          //    break;
       }

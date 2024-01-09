@@ -76,7 +76,7 @@ window.nova_plugins.push({
       NOVA.runOnPageInitOrTransition(async () => {
          if (NOVA.currentPage != 'watch') return;
 
-         NOVA.waitSelector(`${SELECTOR_LIKE_BTN}[aria-pressed="true"]`, { destroy_if_url_changes: true })
+         NOVA.waitSelector(`${SELECTOR_LIKE_BTN}[aria-pressed="true"]`, { destroy_after_page_leaving: true })
             .then(() => {
                if (Timer.disable) return;
                // Timer.disable();
@@ -86,8 +86,8 @@ window.nova_plugins.push({
 
          if (user_settings.auto_likes_for_subscribed) {
             // isSubscribed
-            // NOVA.waitSelector('#subscribe-button [subscribe-button-invisible]', { destroy_if_url_changes: true })
-            NOVA.waitSelector('#subscribe-button [subscribed]', { destroy_if_url_changes: true })
+            // NOVA.waitSelector('#subscribe-button [subscribe-button-invisible]', { destroy_after_page_leaving: true })
+            NOVA.waitSelector('#subscribe-button [subscribed]', { destroy_after_page_leaving: true })
                .then(() => {
                   // Timer.reset();
                   Timer.disable = false;
@@ -107,7 +107,7 @@ window.nova_plugins.push({
       //       case 'yt-reload-continuation-items-command':
       //          document.removeEventListener('yt-action', likeIsUpdated); // stop listener
 
-      //          NOVA.waitSelector(`${SELECTOR_LIKE_BTN}[aria-pressed="true"]`, { destroy_if_url_changes: true })
+      //          NOVA.waitSelector(`${SELECTOR_LIKE_BTN}[aria-pressed="true"]`, { destroy_after_page_leaving: true })
       //             .then(() => {
       //                alert(1)
       //                // Timer.disable();

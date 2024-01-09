@@ -66,7 +66,7 @@ window.nova_plugins.push({
       //    //    }
       //    // }
 
-      //    NOVA.waitSelector('#owner #channel-name a', { destroy_if_url_changes: true })
+      //    NOVA.waitSelector('#owner #channel-name a', { destroy_after_page_leaving: true })
       //       .then(async a => {
       //          a.href += '/' + user_settings.channel_default_tab;
 
@@ -98,7 +98,7 @@ window.nova_plugins.push({
       else {
          const tabSelectors = '#tabsContent [role="tab"]';
          // tab select
-         NOVA.waitSelector(tabSelectors, { destroy_if_url_changes: true })
+         NOVA.waitSelector(tabSelectors, { destroy_after_page_leaving: true })
             .then(() => {
                let tabActive;
                const tabs = [...document.body.querySelectorAll(tabSelectors)];
@@ -119,7 +119,7 @@ window.nova_plugins.push({
             });
 
          //    // tab select
-         //    NOVA.waitSelector('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', { destroy_if_url_changes: true })
+         //    NOVA.waitSelector('#tabsContent>[role="tab"]:nth-child(2)[aria-selected="true"]', { destroy_after_page_leaving: true })
          //       .then(() => {
          //          let tab_nth;
          //          switch (user_settings.channel_default_tab) {

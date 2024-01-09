@@ -31,7 +31,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       NOVA.css.push(
-         `ytd-watch-metadata > ytd-metadata-row-container-renderer {
+         `ytd-watch-metadata > ytd-metadata-row-container-renderer,
+         ytd-merch-shelf-renderer {
             display: none;
          }`);
 

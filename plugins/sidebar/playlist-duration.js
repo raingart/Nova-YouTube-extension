@@ -2,7 +2,7 @@
 // https://www.youtube.com/playlist?list=WL
 // https://www.youtube.com/watch?v=Y07--9_sLpA&list=OLAK5uy_nMilHFKO3dZsuNgVWmEKDZirwXRXMl9yM - hidden playlist container
 // https://www.youtube.com/playlist?list=PLJP5_qSxMbkLzx-XiaW0U8FcpYGgwlh5s -simple
-// https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00
+// https://www.youtube.com/watch?v=L1bBMndgmM0&list=PLNGZuc13nIrqOrynIHoy3VdQ5FDXypMSO&index=5 - has 36:00 (zero)
 // https://www.youtube.com/watch?v=v0PqdzLdFSk&list=OLAK5uy_m-Dv_8xLBZNZeysu7yXsw7psMf48nJ7tw - 1 unavailable video is hidden
 // https://www.youtube.com/watch?v=RhxF9Qg5mOU&list=RDEMd-ObnI9A_YffTMufAPhAHQ&index=9 - infinite playlist
 // https://www.youtube.com/watch?v=30PcoavqFq0&list=PLS3XGZxi7cBXnYfJpUas1ud6XATvWATHb&index=305 - big playlist
@@ -87,7 +87,7 @@ window.nova_plugins.push({
             break;
 
          case 'watch':
-            NOVA.waitSelector('#secondary .index-message-wrapper', { destroy_if_url_changes: true })
+            NOVA.waitSelector('#secondary .index-message-wrapper', { destroy_after_page_leaving: true })
                .then(el => {
                   const waitPlaylist = setInterval(() => {
                      const
@@ -104,6 +104,15 @@ window.nova_plugins.push({
                         // Strategy 1 API
                         if (duration = getPlaylistDuration(playlistList)) {
                            insertToHTML({ 'container': el, 'text': duration });
+
+                           // update on rate change
+                           NOVA.waitSelector('#movie_player video', { destroy_after_page_leaving: true })
+                              .then(video => {
+                                 video.addEventListener('ratechange', function () {
+                                    // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
+                                    insertToHTML({ 'container': el, 'text': getPlaylistDuration(playlistList) });
+                                 });
+                              });
                         }
                         // Strategy 2 HTML. this method ignores progress
                         // this method ignores progress

@@ -73,6 +73,7 @@ window.nova_plugins.push({
                      if (movie_player.classList.contains('ad-showing')) return;
                      // upd loop state
                      if (btn.style.opacity == 1 && !target.loop) target.loop = true;
+                     // if (btn.style.opacity == 1 && !movie_player.getLoopVideo()) movie_player.setLoopVideo();
                      // upd btn active
                      if (target.loop) btn.style.opacity = 1;
                   });
@@ -93,8 +94,9 @@ window.nova_plugins.push({
                if (!NOVA.videoElement) return console.error('btn > videoElement empty:', NOVA.videoElement);
 
                NOVA.videoElement.loop = !NOVA.videoElement.loop;
-               btn.style.opacity = (NOVA.videoElement.loop || NOVA.videoElement.hasAttribute('loop')) ? 1 : .5;
+               btn.style.opacity = NOVA.videoElement.loop ? 1 : .5;
                NOVA.triggerHUD('Loop is ' + Boolean(NOVA.videoElement.loop));
+               // NOVA.triggerHUD('Loop is ' + movie_player.getLoopVideo());
             }
 
             // NOVA.runOnPageInitOrTransition(async () => {

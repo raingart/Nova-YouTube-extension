@@ -51,6 +51,16 @@ window.nova_plugins.push({
 
       // let initPageIsBackgroundTab = !document.hasFocus();
 
+      // function getVisibilityState() {
+      //     // don`t react "Video unavailable"
+      //    return {
+      //       0: 'show',
+      //       1: 'moniplayer',
+      //       // 2: '',
+      //       3: 'hide',
+      //    }[movie_player.getVisibilityState()];
+      // }
+
       const
          storeName = 'nova-playing-instanceIDTab',
          instanceID = String(Math.random()), // Generate a random script instance ID
@@ -94,6 +104,7 @@ window.nova_plugins.push({
                      && store.key === storeName && store.storageArea === localStorage // checking store target
                      && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID // active tab not current
                      && 'PLAYING' == NOVA.getPlayerState()
+                     && !document.pictureInPictureElement
                   ) {
                      // console.debug('video pause', localStorage[storeName]);
                      video.pause();
@@ -103,6 +114,7 @@ window.nova_plugins.push({
                function checkInstance() {
                   if (user_settings.pause_background_tab_autoplay_onfocus !== true
                      && localStorage.hasOwnProperty(storeName) && localStorage.getItem(storeName) !== instanceID
+                     && !document.pictureInPictureElement
                   ) {
                      // console.debug('event interception instanceID:', instanceID, NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
                      video.pause();
@@ -156,7 +168,9 @@ window.nova_plugins.push({
                window.addEventListener('blur', () => {
                   // ddocument.visibilityState update afterwindow.blur event (https://github.com/raingart/Nova-YouTube-extension/issues/100)
                   // if (document.visibilityState == 'hidden' && 'PLAYING' == NOVA.getPlayerState()) {
-                  if ('PLAYING' == NOVA.getPlayerState()) {
+                  if ('PLAYING' == NOVA.getPlayerState()
+                     && !document.pictureInPictureElement
+                  ) {
                      // console.debug('pause video on lost focus');
                      video.pause();
                   }

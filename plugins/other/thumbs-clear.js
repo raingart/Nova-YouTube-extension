@@ -19,7 +19,7 @@ window.nova_plugins.push({
    'title:pl': 'Wyczyść miniatury',
    'title:ua': 'Очистити мініатюри',
    run_on_pages: 'home, feed, channel, watch',
-   // run_on_pages: 'home, results, feed, channel, watch',
+   // run_on_pages: 'home, results, feed, channel, watch, -mobile',
    // run_on_pages: '*, -embed, -live_chat',
    section: 'other',
    desc: 'Replaces the predefined clickbait thumbnails',

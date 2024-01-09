@@ -15,9 +15,10 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    'title:ua': 'Приховайте сміття: анотації, кінцеві заставки тощо',
-   run_on_pages: 'results, watch, embed, -mobile',
+   run_on_pages: 'results, feed, watch, embed, -mobile',
    section: 'other',
    // desc: "Turn off 'card' in https://www.youtube.com/account_playback",
+   // desc: 'Remove the annoying stuff at the end of the videos',
    desc: 'Remove the annoying stuff',
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -30,7 +31,6 @@ window.nova_plugins.push({
    // 'desc:tr': '',
    // 'desc:de': '',
    // 'desc:pl': '',
-   // desc: 'Remove the annoying stuff at the end of the videos',
    'desc:ua': 'Приховайте набридливий контент',
    _runtime: user_settings => {
 
@@ -114,6 +114,8 @@ window.nova_plugins.push({
                ytd-watch-metadata #actions .smartimation__background`, // interaction CTAs - https://github.com/raingart/Nova-YouTube-extension/issues/125#issuecomment-1844091611
 
                '[class^="ytp-cultural-moment"]', // '.ytp-cultural-moment-player-content' link for "https://www.youtube.com/youtubemusic" - https://www.youtube.com/watch?v=9aofoBrFNdg
+
+               'tp-yt-paper-dialog.ytd-popup-container.style-scope > .ytd-popup-container.style-scope', // message "YouTube Premium - Get YouTube without the ads"
 
 
                // results, sidebar page

@@ -42,8 +42,8 @@ window.nova_plugins.push({
 
       // alt - https://greasyfork.org/en/scripts/445870-remove-overlay-messages-on-youtube
 
-      // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer button', { destroy_if_url_changes: true })
-      NOVA.waitSelector('ytd-watch-flexy[player-unavailable] #player-error-message-container #info button', { destroy_if_url_changes: true })
+      // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer button', { destroy_after_page_leaving: true })
+      NOVA.waitSelector('ytd-watch-flexy[player-unavailable] #player-error-message-container #info button', { destroy_after_page_leaving: true })
          .then(btn => btn.click()); // click "I understand and wish to proceed"
 
    },

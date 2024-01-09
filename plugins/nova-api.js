@@ -219,7 +219,7 @@ const NOVA = {
     * @return {Promise<Element>}
    */
    // untilDOM
-   // waitSelector(selector = required(), { container, destroy_if_url_changes }) {
+   // waitSelector(selector = required(), { container, destroy_after_page_leaving }) {
    waitSelector(selector = required(), limit_data) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
       if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', limit_data.container);
@@ -297,13 +297,16 @@ const NOVA = {
                //  characterDataOldValue: true
             });
 
-         if (limit_data?.destroy_if_url_changes) {
+         if (limit_data?.destroy_after_page_leaving) {
+            // on page init
             isURLChange();
+            // on page update
             window.addEventListener('transitionend', ({ target }) => {
                if (isURLChange()) {
                   observerFactory.disconnect();
                }
             });
+
             function isURLChange() {
                return (this.prevURL === location.href) ? false : this.prevURL = location.href;
             }
@@ -782,8 +785,9 @@ const NOVA = {
    */
    triggerHUD(text) {
       // console.debug('triggerHUD', ...arguments);
-      if (!text) return;
+      if (!text || !['watch', 'embed'].includes(this.currentPage)) return;
       if (typeof this.fateBezel === 'number') clearTimeout(this.fateBezel); // reset hide
+
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
       if (!bezelEl) return console.warn(`triggerHUD ${text}=>${bezelEl}`);
 
@@ -823,6 +827,8 @@ const NOVA = {
     * @return {array}
    */
    getChapterList(video_duration = required()) {
+      if (!['watch', 'embed'].includes(this.currentPage)) return;
+
       switch (NOVA.currentPage) {
          case 'embed':
             chapsCollect = getFromAPI();
@@ -1099,6 +1105,8 @@ const NOVA = {
    */
    // isMusicChannel() {
    isMusic() {
+      if (!['watch', 'embed'].includes(this.currentPage)) return;
+
       return checkMusicType();
       // const
       //    CACHE_PREFIX = 'nova-music-type',

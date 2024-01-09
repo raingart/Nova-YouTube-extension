@@ -49,7 +49,9 @@ window.nova_plugins.push({
          // CACHE_PREFIX = 'nova-channel-videos-count:',
          MODAL_NAME_SELECTOR_ID = 'nova-modal-comments',
          MODAL_CONTENT_SELECTOR_ID = 'modal-content',
-         NOVA_REPLYS_SELECTOR_ID = 'nova-replys';
+         NOVA_REPLYS_SELECTOR_ID = 'nova-replys',
+         // textarea to array
+         BLOCK_KEYWORDS = NOVA.strToArray(user_settings.comments_sort_words_blocklist);
       // getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
 
       // try fix disappear button
@@ -276,6 +278,7 @@ window.nova_plugins.push({
                   if (user_settings.comments_sort_clear_emoji) {
                      comment.textDisplay = clearOfEmoji(comment.textDisplay); // comment.textOriginal
 
+                     // min letters
                      if (comment.textDisplay.length < 3) return;
 
                      if (+user_settings.comments_sort_min_words
@@ -284,6 +287,13 @@ window.nova_plugins.push({
                         // console.debug('filter comment (by min words):', comment.textDisplay);
                         return;
                      }
+                  }
+                  // alt - https://greasyfork.org/en/scripts/481131-youtube-comment-sponsor-blocker
+                  if (BLOCK_KEYWORDS.length
+                     && BLOCK_KEYWORDS.some(keyword => comment.textDisplay.toLowerCase().includes(keyword))
+                  ) {
+                     console.log('comment filter removed:\n', comment.textDisplay);
+                     return;
                   }
 
                   const
@@ -784,6 +794,37 @@ window.nova_plugins.push({
          max: 10,
          value: 2,
          'data-dependent': { 'comments_sort_clear_emoji': true },
+      },
+      comments_sort_words_blocklist: {
+         _tagName: 'textarea',
+         label: 'Words block list',
+         // 'label:zh': '单词列表',
+         // 'label:ja': '単語リスト',
+         // 'label:ko': '단어 목록',
+         // 'label:id': 'Daftar kata',
+         // 'label:es': 'lista de palabras',
+         // 'label:pt': 'Lista de palavras',
+         // 'label:fr': 'Liste de mots',
+         // 'label:it': 'Elenco di parole',
+         // // 'label:tr': 'Kelime listesi',
+         // 'label:de': 'Wortliste',
+         // 'label:pl': 'Lista słów',
+         // 'label:ua': 'Список слів',
+         title: 'separator: "," or ";" or "new line"',
+         'title:zh': '分隔器： "," 或 ";" 或 "新队"',
+         'title:ja': 'セパレータ： "," または ";" または "改行"',
+         'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         'title:id': 'pemisah: "," atau ";" atau "baris baru"',
+         'title:es': 'separador: "," o ";" o "new line"',
+         'title:pt': 'separador: "," ou ";" ou "new line"',
+         'title:fr': 'séparateur : "," ou ";" ou "nouvelle ligne"',
+         'title:it': 'separatore: "," o ";" o "nuova linea"',
+         // 'title:tr': 'ayırıcı: "," veya ";" veya "new line"',
+         'title:de': 'separator: "," oder ";" oder "new line"',
+         'title:pl': 'separator: "," lub ";" lub "now linia"',
+         'title:ua': 'розділювач: "," або ";" або "новий рядок"',
+         placeholder: 'text1\ntext2',
+         // required: true,
       },
    },
 });

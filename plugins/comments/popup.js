@@ -33,7 +33,7 @@ window.nova_plugins.push({
       // append (recalc) count
       NOVA.runOnPageInitOrTransition(() => {
          if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('ytd-comments-header-renderer #title #count', { destroy_if_url_changes: true })
+            NOVA.waitSelector('ytd-comments-header-renderer #title #count', { destroy_after_page_leaving: true })
                .then(count => {
                   document.body.querySelector(COMMENTS_SELECTOR)
                      ?.setAttribute(counterAttrName,

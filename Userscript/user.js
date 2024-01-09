@@ -168,35 +168,35 @@ function registerMenuCommand() {
    // GM_registerMenuCommand('Settings', () => window.open(configPage));
    GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
    GM_registerMenuCommand('Import settings', () => {
-      if (navigator.userAgent.match(/firefox|fxios/i)) {
-         if (json = JSON.parse(prompt('Enter json file context'))) {
-            saveImportSettings(json);
-         }
-         // else alert('Import failed');
+      // if (navigator.userAgent.match(/firefox|fxios/i)) {
+      if (json = JSON.parse(prompt('Enter json file context'))) {
+         saveImportSettings(json);
       }
-      else {
-         const f = document.createElement('input');
-         f.type = 'file';
-         f.accept = 'application/JSON';
-         f.style.display = 'none';
-         f.addEventListener('change', function () {
-            if (f.files.length !== 1) return alert('file empty');
-            const rdr = new FileReader();
-            rdr.addEventListener('load', function () {
-               try {
-                  saveImportSettings(JSON.parse(rdr.result));
-               }
-               catch (err) {
-                  alert(`Error parsing settings\n${err.name}: ${err.message}`);
-               }
-            });
-            rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
-            rdr.readAsText(f.files[0]);
-         });
-         document.body.append(f);
-         f.click();
-         f.remove();
-      }
+      //    // else alert('Import failed');
+      // }
+      // else {
+      //    const f = document.createElement('input');
+      //    f.type = 'file';
+      //    f.accept = 'application/JSON';
+      //    f.style.display = 'none';
+      //    f.addEventListener('change', function () {
+      //       if (f.files.length !== 1) return alert('file empty');
+      //       const rdr = new FileReader();
+      //       rdr.addEventListener('load', function () {
+      //          try {
+      //             saveImportSettings(JSON.parse(rdr.result));
+      //          }
+      //          catch (err) {
+      //             alert(`Error parsing settings\n${err.name}: ${err.message}`);
+      //          }
+      //       });
+      //       rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
+      //       rdr.readAsText(f.files[0]);
+      //    });
+      //    document.body.append(f);
+      //    f.click();
+      //    f.remove();
+      // }
 
       function saveImportSettings(json) {
          GM_setValue(configStoreName, json);

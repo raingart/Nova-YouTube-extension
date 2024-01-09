@@ -19,7 +19,7 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       // textarea to array
-      const keywords = NOVA.strToArray(user_settings.thumbs_filter_title_blocklist);
+      const BLOCK_KEYWORDS = NOVA.strToArray(user_settings.thumbs_filter_title_blocklist);
 
       const thumbsSelectors = [
          'ytd-rich-item-renderer', // home, channel, feed
@@ -37,7 +37,7 @@ window.nova_plugins.push({
             selectors: ['#video-title:not(:empty)'],
             attr_mark: 'nova-thumb-title-filtered',
             callback: video_title => {
-               keywords.forEach(keyword => {
+               BLOCK_KEYWORDS.forEach(keyword => {
                   if (video_title.textContent.trim().toLowerCase().includes(keyword)
                      && (thumb = channel_name.closest(thumbsSelectors))
                   ) {
@@ -76,7 +76,7 @@ window.nova_plugins.push({
          function hideThumb() {
             document.body.querySelectorAll('#video-title')
                .forEach(el => {
-                  keywords.forEach(keyword => {
+                  BLOCK_KEYWORDS.forEach(keyword => {
                      if (el.innerText.toLowerCase().includes(keyword)
                         && (thumb = el.closest(thumbsSelectors))
                      ) {

@@ -61,7 +61,7 @@ window.nova_plugins.push({
             break;
 
          case 'playlist':
-            NOVA.waitSelector('ytd-playlist-header-renderer .metadata-buttons-wrapper', { destroy_if_url_changes: true })
+            NOVA.waitSelector('ytd-playlist-header-renderer .metadata-buttons-wrapper', { destroy_after_page_leaving: true })
                .then(container => {
                   insertToHTML({ 'url': playlistURL, 'container': container, 'is_playlist': true });
                });

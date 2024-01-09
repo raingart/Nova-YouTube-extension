@@ -6,3 +6,5 @@ labels: enhancement
 assignees: ''
 
 ---
+
+<!-- Note! А link to a script with an example of the requested function may help. -->

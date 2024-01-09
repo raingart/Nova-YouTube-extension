@@ -24,6 +24,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/10523-youtube-always-theater-mode
       // alt2 - https://chrome.google.com/webstore/detail/dgognhgbpdoeidccnbfhohblklhbbomh
+      // alt3 - https://greasyfork.org/en/scripts/480701-youtube-fullpage-theater/code
 
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') {
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));
@@ -59,7 +60,7 @@ window.nova_plugins.push({
 
             // fix broken offensive video
             if (!user_settings['video-unblock-warn-content']) {
-               NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer button', { destroy_if_url_changes: true })
+               NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer button', { destroy_after_page_leaving: true })
                   .then(btn => btn.click()); // click "I understand and wish to proceed"
             }
          });
@@ -229,14 +230,6 @@ window.nova_plugins.push({
 
                addHideScrollbarCSS();
 
-               // fix overwrite video height after pause
-               NOVA.waitSelector('video')
-                  .then(video => {
-                     video.addEventListener('play', () => {
-                        window.dispatchEvent(new Event('resize')); // fix: restore player size
-                     });
-                  });
-
                // Strategy 2
                // const CLASS_NAME = '';
                // video.addEventListener('play', () => {
@@ -273,6 +266,14 @@ window.nova_plugins.push({
                               movie_player.classList.add(CLASS_OVER_PAUSED);
                               // }
                            });
+                        });
+                     });
+
+                  // fix overwrite video height after pause
+                  NOVA.waitSelector('video')
+                     .then(video => {
+                        video.addEventListener('play', () => {
+                           window.dispatchEvent(new Event('resize')); // fix: restore player size
                         });
                      });
                }

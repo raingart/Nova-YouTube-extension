@@ -42,10 +42,10 @@ window.nova_plugins.push({
             // alt - https://greasyfork.org/en/scripts/452405-youtube-scrollable-right-side-description
             if (user_settings['description-popup']) return;
             // ytd-watch-metadata #description.ytd-watch-metadata
-            NOVA.waitSelector(`${SELECTOR_BELOW} #description.ytd-watch-metadata`, { destroy_if_url_changes: true })
+            NOVA.waitSelector(`${SELECTOR_BELOW} #description.ytd-watch-metadata`, { destroy_after_page_leaving: true })
                .then(description => {
                   // move to the right
-                  NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_if_url_changes: true })
+                  NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_after_page_leaving: true })
                      .then(async secondary => {
                         if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
@@ -96,7 +96,7 @@ window.nova_plugins.push({
                return;
             }
 
-            NOVA.waitSelector(`${SELECTOR_BELOW} #comments`, { destroy_if_url_changes: true })
+            NOVA.waitSelector(`${SELECTOR_BELOW} #comments`, { destroy_after_page_leaving: true })
                .then(comments => {
                   if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
@@ -119,7 +119,7 @@ window.nova_plugins.push({
 
       function moveSidebar() {
          // move related on below the video
-         NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { destroy_if_url_changes: true })
+         NOVA.waitSelector(`${SELECTOR_SECONDARY} #related`, { destroy_after_page_leaving: true })
             .then(related => {
                if (document.body.querySelector('#chat:not([collapsed])')) return; // exclude opened chat
 
@@ -128,12 +128,12 @@ window.nova_plugins.push({
       }
 
       function moveChannelInfo() {
-         NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_if_url_changes: true })
+         NOVA.waitSelector(`${SELECTOR_SECONDARY}-inner`, { destroy_after_page_leaving: true })
             .then(secondary => {
                // with the subscribe button
-               NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata #owner`, { destroy_if_url_changes: true })
+               NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata #owner`, { destroy_after_page_leaving: true })
                   // without the subscribe button
-                  // NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata ytd-video-owner-renderer`, { destroy_if_url_changes: true })
+                  // NOVA.waitSelector(`${SELECTOR_BELOW} ytd-watch-metadata ytd-video-owner-renderer`, { destroy_after_page_leaving: true })
                   .then(channelInfo => {
                      secondary.prepend(channelInfo);
                      // channelInfo.style.margin = 0; // remove padding

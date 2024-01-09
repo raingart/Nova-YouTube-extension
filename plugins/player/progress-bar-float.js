@@ -68,7 +68,7 @@ window.nova_plugins.push({
             // resetBar on new video loaded
             // video.addEventListener('play', resetBar); // fix: live_stream visibility
             video.addEventListener('loadeddata', resetBar);
-            // document.addEventListener('yt-navigate-finish', resetBar);
+            document.addEventListener('yt-navigate-finish', resetBar);
 
             // render progress
             // NOVA.waitSelector(`${SELECTOR}-progress`)
@@ -269,11 +269,11 @@ window.nova_plugins.push({
 
             // search in description (#structured-description)
             // NOVA.waitSelector(`ytd-watch-metadata #description #video-lockups a`)
-            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { destroy_if_url_changes: true })
+            NOVA.waitSelector(`ytd-watch-metadata #description.ytd-watch-metadata ${selectorTimestampLink}`, { destroy_after_page_leaving: true })
                .then(() => this.renderChaptersMarkers(duration));
 
             // search in comments
-            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { destroy_if_url_changes: true })
+            NOVA.waitSelector(`#comments #comment #comment-content ${selectorTimestampLink}`, { destroy_after_page_leaving: true })
                .then(() => this.renderChaptersMarkers(duration));
             // search in first/pinned comment
             // NOVA.waitSelector(`#comments ytd-comment-thread-renderer:first-child #content ${selectorTimestampLink}`)
@@ -393,18 +393,6 @@ window.nova_plugins.push({
          'label:ua': 'Прозорість',
          type: 'number',
          // title: '',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
-         // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
          placeholder: '0-1',
          step: .05,
          min: 0,
