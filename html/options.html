@@ -3,7 +3,7 @@
 
 <head>
    <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
    <title>Options page</title>
 
    <link rel="stylesheet" href="/css/libs/normalize.min.css">
@@ -62,17 +62,29 @@
                      <div class="player" id="player">
                         <span>__MSG_opt_appearance_player__</span>
                      </div>
+                     <div class="control-panel" id="control-panel">
+                        <span>__MSG_opt_appearance_control_panel__</span>
+                     </div>
+                     <div class="playlist" id="playlist">
+                        <span>__MSG_opt_appearance_playlist__</span>
+                     </div>
                      <div class="sidebar" id="sidebar">
                         <span>__MSG_opt_appearance_sidebar__</span>
                      </div>
                      <div class="details" id="details">
                         <span>__MSG_opt_appearance_details__</span>
                      </div>
+                     <div class="details-buttons" id="details-buttons">
+                        <span>__MSG_opt_appearance_details_buttons__</span>
+                     </div>
                      <div class="comments" id="comments">
                         <span>__MSG_opt_appearance_comments__</span>
                      </div>
                      <div class="other" id="other">
                         <span>__MSG_opt_appearance_other__</span>
+                     </div>
+                     <div class="thumbs" id="thumbs">
+                        <span>__MSG_opt_appearance_thumbs__</span>
                      </div>
                   </div>
                </div>
@@ -91,10 +103,14 @@
 
                   <div id="plugins">
                      <ul id="player" class="active"></ul>
+                     <ul id="control-panel" class="active"></ul>
+                     <ul id="thumbs" class="thumbs"></ul>
                      <ul id="other" class="active"></ul>
-                     <ul id="sidebar" class="active"></ul>
                      <ul id="details" class="active"></ul>
+                     <ul id="details-buttons" class="active"></ul>
                      <ul id="comments" class="active"></ul>
+                     <ul id="playlist" class="active"></ul>
+                     <ul id="sidebar" class="active"></ul>
                      <ul id="header" class="active"></ul>
                   </div>
 
@@ -139,7 +155,7 @@
                      <button type="button" id="settings_reset">__MSG_opt_btn_reset_settings__</button>
                   </fieldset>
 
-                  <div class="between">
+                  <div class="between item">
                      <label for="exclude_iframe"
                         tooltip="__MSG_opt_exclude_iframe_tooltip__">__MSG_opt_exclude_iframe__</label>
                      <input type="checkbox" name="exclude_iframe" id="exclude_iframe" />
@@ -159,14 +175,14 @@
                         <option value="en">English</option>
                         <option value="zh">繁體中文</option>
                         <option value="ja">日本語</option>
-                        <option value="ko">자막</option>
-                        <option value="id">Indonesia</option>
+                        <!-- <option value="ko">자막</option> -->
+                        <!-- <option value="id">Indonesia</option> -->
                         <option value="fr">Français</option>
                         <option value="de">Deutsch</option>
-                        <option value="it">Italiano</option>
-                        <option value="es">Español</option>
+                        <!-- <option value="it">Italiano</option> -->
+                        <!-- <option value="es">Español</option> -->
                         <option value="pt">Português</option>
-                        <option value="tr">Türkçe</option>
+                        <!-- <option value="tr">Türkçe</option> -->
                         <option value="pl">Polski</option>
                         <option value="ua">Українська</option>
                      </select>

@@ -3,12 +3,12 @@ window.nova_plugins.push({
    title: 'Header unpinned',
    'title:zh': '标题未固定',
    'title:ja': 'ヘッダーは固定されていません',
-   'title:ko': '헤더가 고정되지 않음',
-   'title:id': 'Tajuk tidak diperbaiki',
-   'title:es': 'Encabezado sin arreglar',
+   // 'title:ko': '헤더가 고정되지 않음',
+   // 'title:id': 'Tajuk tidak diperbaiki',
+   // 'title:es': 'Encabezado sin arreglar',
    'title:pt': 'Cabeçalho não corrigido',
    'title:fr': 'En-tête non corrigé',
-   'title:it': 'Intestazione non fissata',
+   // 'title:it': 'Intestazione non fissata',
    // 'title:tr': 'Başlık sabitlenmemiş',
    'title:de': 'Kopfleiste nicht fixiert',
    'title:pl': 'Przewijany nagłówek',
@@ -20,12 +20,12 @@ window.nova_plugins.push({
    desc: 'Prevent header from sticking',
    'desc:zh': '防止头部粘连',
    'desc:ja': 'ヘッダーがくっつくのを防ぎます',
-   'desc:ko': '헤더가 달라붙는 것을 방지',
-   'desc:id': 'Mencegah header menempel',
-   'desc:es': 'Evita que el cabezal se pegue',
+   // 'desc:ko': '헤더가 달라붙는 것을 방지',
+   // 'desc:id': 'Mencegah header menempel',
+   // 'desc:es': 'Evita que el cabezal se pegue',
    'desc:pt': 'Impede que o cabeçalho grude',
    'desc:fr': "Empêcher l'en-tête de coller",
-   'desc:it': "Impedisci che l'intestazione si attacchi",
+   // 'desc:it': "Impedisci che l'intestazione si attacchi",
    // 'desc:tr': 'Başlığın yapışmasını önleyin',
    'desc:de': 'Verhindert das Ankleben des Headers',
    'desc:pl': 'Nagłówek będzie przewijany wraz ze stroną',
@@ -57,11 +57,11 @@ window.nova_plugins.push({
       document.documentElement.classList.add(CLASS_NAME_TOGGLE);
 
       if (user_settings.header_unfixed_hotkey) {
-         const hotkey = user_settings.header_unfixed_hotkey || 'v';
+         const hotkey = user_settings.header_unfixed_hotkey || 'KeyV';
          // hotkey
          document.addEventListener('keyup', evt => {
             if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
-            if (evt.key === hotkey) {
+            if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey) {
                document.documentElement.classList.toggle(CLASS_NAME_TOGGLE);
             }
          });
@@ -98,6 +98,7 @@ window.nova_plugins.push({
             const scrollDownButton = document.createElement('button');
             scrollDownButton.textContent = '▼';
             scrollDownButton.title = 'Scroll down';
+            // scrollDownButton.style.cssText = '';
             Object.assign(scrollDownButton.style, {
                cursor: 'pointer',
                background: 'transparent',
@@ -119,12 +120,12 @@ window.nova_plugins.push({
          label: 'Scroll after header',
          'label:zh': '在标题后滚动',
          'label:ja': 'ヘッダーの後にスクロール',
-         'label:ko': '헤더 뒤 스크롤',
-         'label:id': 'Gulir setelah tajuk',
-         'label:es': 'Desplazarse después del encabezado',
+         // 'label:ko': '헤더 뒤 스크롤',
+         // 'label:id': 'Gulir setelah tajuk',
+         // 'label:es': 'Desplazarse después del encabezado',
          'label:pt': 'Role após o cabeçalho',
          'label:fr': "Faire défiler après l'en-tête",
-         'label:it': "Scorri dopo l'intestazione",
+         // 'label:it': "Scorri dopo l'intestazione",
          // 'label:tr': 'Başlıktan sonra kaydır',
          'label:de': 'Nach der Kopfzeile scrollen',
          'label:pl': 'Przewiń nagłówek',
@@ -133,12 +134,12 @@ window.nova_plugins.push({
          title: 'Makes sense on a small screen',
          'title:zh': '在小屏幕上有意义',
          'title:ja': '小さな画面で意味があります',
-         'title:ko': '작은 화면에서 이해하기',
-         'title:id': 'Masuk akal di layar kecil',
-         'title:es': 'Tiene sentido en una pantalla pequeña',
+         // 'title:ko': '작은 화면에서 이해하기',
+         // 'title:id': 'Masuk akal di layar kecil',
+         // 'title:es': 'Tiene sentido en una pantalla pequeña',
          'title:pt': 'Faz sentido em uma tela pequena',
          'title:fr': 'A du sens sur un petit écran',
-         'title:it': 'Ha senso su un piccolo schermo',
+         // 'title:it': 'Ha senso su un piccolo schermo',
          // 'title:tr': 'Küçük ekranda mantıklı',
          'title:de': 'Macht auf einem kleinen Bildschirm Sinn',
          'title:pl': 'Przydatne na małym ekranie',
@@ -161,8 +162,47 @@ window.nova_plugins.push({
          'label:ua': 'Перемикання гарячою клавішею',
          // title: '',
          options: [
-            { label: 'V', value: 'v', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z', /*'ArrowLeft', 'ArrowRight',*/ ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\'
+            // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            { label: 'none', value: false },
+            // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+            { label: 'shiftL', value: 'ShiftLeft' },
+            { label: 'shiftR', value: 'ShiftRight' },
+            { label: 'ctrlL', value: 'ControlLeft' },
+            { label: 'ctrlR', value: 'ControlRight' },
+            { label: 'altL', value: 'AltLeft' },
+            { label: 'altR', value: 'AltRight' },
+            // { label: 'ArrowUp', value: 'ArrowUp' },
+            // { label: 'ArrowDown', value: 'ArrowDown' },
+            // { label: 'ArrowLeft', value: 'ArrowLeft' },
+            // { label: 'ArrowRight', value: 'ArrowRight' },
+            { label: 'A', value: 'KeyA' },
+            { label: 'B', value: 'KeyB' },
+            { label: 'C', value: 'KeyC' },
+            { label: 'D', value: 'KeyD' },
+            { label: 'E', value: 'KeyE' },
+            { label: 'F', value: 'KeyF' },
+            { label: 'G', value: 'KeyG' },
+            { label: 'H', value: 'KeyH' },
+            { label: 'I', value: 'KeyI' },
+            { label: 'J', value: 'KeyJ' },
+            { label: 'K', value: 'KeyK' },
+            { label: 'L', value: 'KeyL' },
+            { label: 'M', value: 'KeyM' },
+            { label: 'N', value: 'KeyN' },
+            { label: 'O', value: 'KeyO' },
+            { label: 'P', value: 'KeyP' },
+            { label: 'Q', value: 'KeyQ' },
+            { label: 'R', value: 'KeyR' },
+            { label: 'S', value: 'KeyS' },
+            { label: 'T', value: 'KeyT' },
+            { label: 'U', value: 'KeyU' },
+            { label: 'V', value: 'KeyV', selected: true },
+            { label: 'W', value: 'KeyW' },
+            { label: 'X', value: 'KeyX' },
+            { label: 'Y', value: 'KeyY' },
+            { label: 'Z', value: 'KeyZ' },
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\',
          ],
       },
       // header_unfixed_default_state: {

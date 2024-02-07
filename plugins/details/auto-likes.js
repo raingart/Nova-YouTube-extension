@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'auto-likes',
-   title: 'Auto-likes',
+   title: 'Auto-like',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'watch, -mobile',
    // restart_on_location_change: true,
-   section: 'details',
+   section: 'details-buttons',
    // desc: '',
    // 'data-conflict': 'details-buttons',
    _runtime: user_settings => {
@@ -54,8 +54,8 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', function () {
                if (Timer.disable || isNaN(this.duration)) return;
                // exceeds the progress threshold
-               // if (this.currentTime / this.duration > (user_settings.auto_likes_percent || .8)) {
-               if ((+Timer.progressTime / this.duration) > (+user_settings.auto_likes_percent || .8)) {
+               // if (this.currentTime / this.duration > ((~~user_settings.auto_likes_percent / 100) || .8)) {
+               if ((+Timer.progressTime / this.duration) > ((~~+user_settings.auto_likes_percent / 100) || .8)) {
                   // Timer.disable();
                   Timer.disable = true;
                   setLike();
@@ -64,7 +64,7 @@ window.nova_plugins.push({
                // console.debug('Auto-like timeupdate');
             });
             // disable for live
-            video.addEventListener('canplay', function () {
+            video.addEventListener('canplay', () => {
                if (movie_player.getVideoData().isLive) {
                   // Timer.disable();
                   Timer.disable = true;
@@ -73,7 +73,7 @@ window.nova_plugins.push({
          });
 
       // if is liked button pressed. for optimization
-      NOVA.runOnPageInitOrTransition(async () => {
+      NOVA.runOnPageLoad(async () => {
          if (NOVA.currentPage != 'watch') return;
 
          NOVA.waitSelector(`${SELECTOR_LIKE_BTN}[aria-pressed="true"]`, { destroy_after_page_leaving: true })
@@ -159,27 +159,27 @@ window.nova_plugins.push({
    options: {
       auto_likes_percent: {
          _tagName: 'input',
-         label: 'Watch threshold %',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
+         label: 'Watch threshold in %',
+         'label:zh': '观察阈值（%）',
+         'label:ja': '監視しきい値 (%)',
+         // 'label:ko': '감시 임계값(%)',
+         // 'label:id': 'Ambang batas tontonan dalam %',
+         // 'label:es': 'Umbral de vigilancia en %',
+         'label:pt': 'Limite de observação em %',
+         'label:fr': 'Seuil de surveillance en %',
          // 'label:it': '',
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
+         'label:de': 'Beobachtungsschwelle in %',
+         'label:pl': 'Próg oglądania w%',
+         'label:ua': 'Поріг перегляду в %',
          type: 'number',
-         title: '0.1 - 0.9',
-         title: 'The percentage watched to like the video at',
-         // 'title:zh': '',
-         // 'title:ja': '',
+         title: '10-90%',
+         title: 'Percentage of views at which a video is liked',
+         'title:zh': '视频在时间进度后被点赞',
+         'title:ja': '時間の経過後にビデオが「いいね！」される',
          // 'title:ko': '',
          // 'title:id': '',
-         // 'title:es': '',
+         // 'title:es': 'El porcentaje visto para darle me gusta al video en',
          // 'title:pt': '',
          // 'title:fr': '',
          // 'title:it': '',
@@ -188,10 +188,10 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
          placeholder: '%',
-         step: .05,
-         min: .1,
-         max: .9,
-         value: .8,
+         step: 5,
+         min: 10,
+         max: 90,
+         value: 80,
       },
       auto_likes_for_subscribed: {
          _tagName: 'input',

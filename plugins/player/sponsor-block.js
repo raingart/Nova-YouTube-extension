@@ -1,6 +1,8 @@
 // for  test
+// https://www.youtube.com/watch?v=q45jxjne3BU - many ad
 // https://www.youtube.com/watch?v=3eJZcpoSpKY
 // https://www.youtube.com/watch?v=pf9WOuzeWhw
+// https://www.youtube.com/watch?v=KboTw3NBuuk - ad in multi chaprtes
 // https://www.youtube.com/watch?v=KboTw3NBuuk - ad in multi chaprtes
 
 window.nova_plugins.push({
@@ -32,6 +34,18 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
+            const categoryNameLabel = {
+               sponsor: 'Sponsor',
+               selfpromo: 'Self Promotion',
+               interaction: 'Reminder Subscribe',
+               intro: 'Intro',
+               outro: 'Credits (Outro)',
+               // poi_highlight   'Highlight',
+               preview: 'Preview/Recap',
+               music_offtopic: 'Non-Music Section',
+               exclusive_access: 'Full Video Label Only',
+            };
+
             let segmentsList = [];
             let muteState;
             let videoId; // share for console
@@ -41,7 +55,6 @@ window.nova_plugins.push({
             video.addEventListener('loadeddata', init.bind(video));
 
             async function init() {
-               // const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
                videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
                segmentsList = await getSkipSegments(videoId) || [];
                // console.debug('segmentsList', segmentsList);
@@ -55,6 +68,7 @@ window.nova_plugins.push({
                   await NOVA.waitUntil(() =>
                      (chaptersEls = document.body.querySelectorAll(`#${SELECTOR} > span[time]`)) && chaptersEls.length
                      , 1000); // 1sec
+                  // await NOVA.waitSelector(`#${SELECTOR} > span[time]`, { destroy_after_page_leaving: true }); // err
 
                   chaptersEls.forEach((chapterEl, idx) => {
                      if (idx === chaptersEls.length - 1) return; // if last chapter
@@ -74,7 +88,7 @@ window.nova_plugins.push({
                         if (((~~segmentStart + deflectionSec) <= chapterNextStart)
                            && ((~~segmentEnd - deflectionSec) >= chapterStart)
                         ) {
-                           chapterEl.style.title = category;
+                           chapterEl.title = [chapterEl.title, categoryNameLabel[category]].join(', ');
                            let color;
                            switch (category) {
                               case 'sponsor': color = '255, 231, 0'; break;
@@ -141,7 +155,7 @@ window.nova_plugins.push({
                }
 
                function novaNotification(prefix = '') {
-                  const msg = `${prefix} [${category}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
+                  const msg = `${prefix} [${categoryNameLabel[category]}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
                   NOVA.triggerHUD(msg); // trigger default indicator
                }
@@ -263,12 +277,12 @@ window.nova_plugins.push({
          title: '[Ctrl+Click] to select several',
          'title:zh': '[Ctrl+Click] 选择多个',
          'title:ja': '「Ctrl+Click」して、いくつかを選択します',
-         'title:ko': '[Ctrl+Click] 여러 선택',
-         'title:id': '[Ctrl+Klik] untuk memilih beberapa',
-         'title:es': '[Ctrl+Click] para seleccionar varias',
+         // 'title:ko': '[Ctrl+Click] 여러 선택',
+         // 'title:id': '[Ctrl+Klik] untuk memilih beberapa',
+         // 'title:es': '[Ctrl+Click] para seleccionar varias',
          'title:pt': '[Ctrl+Click] para selecionar vários',
          'title:fr': '[Ctrl+Click] pour sélectionner plusieurs',
-         'title:it': '[Ctrl+Clic] per selezionarne diversi',
+         // 'title:it': '[Ctrl+Clic] per selezionarne diversi',
          // 'title:tr': 'Birkaç tane seçmek için [Ctrl+Tıkla]',
          'title:de': '[Ctrl+Click] um mehrere auszuwählen',
          'title:pl': 'Ctrl+kliknięcie, aby zaznaczyć kilka',
@@ -434,12 +448,12 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
-         'label:ko': '방법',
+         // 'label:ko': '방법',
          // 'label:id': 'Mode',
-         'label:es': 'Modo',
+         // 'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:it': 'Modalità',
+         // 'label:it': 'Modalità',
          // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',

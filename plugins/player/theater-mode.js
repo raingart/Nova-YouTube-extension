@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'theater-mode',
-   title: 'Theater mode',
+   title: 'Auto Wide (Theater mode)',
    // 'title:zh': '播放器全模式',
    // 'title:ja': 'プレーヤーフル-モード付き',
    // 'title:ko': '플레이어 풀-위드 모드',
@@ -33,30 +33,48 @@ window.nova_plugins.push({
       if (user_settings.theater_mode_ignore_playlist && location.search.includes('list=')) return;
 
       // Strategy 1
-      // NOVA.waitSelector('ytd-watch-flexy:not([theater])') // wrong way. Reassigns manual exit from the mode
       NOVA.waitSelector('ytd-watch-flexy:not([player-unavailable])')
-         // .then(el => el.theaterModeChanged_(true));
          .then(el => {
-            // await NOVA.waitUntil(() => el.hasOwnProperty('updateTheaterModeState_'), 500) // 500ms
+            if (isTheaterMode()) return;
 
-            if (el.hasAttribute('theater') || el.theater) return;
+            NOVA.waitUntil(() => isTheaterMode() ? true : toggleTheater(), 500); // 500ms
 
-            // if (location.search.includes('list=')) {
-            //    // if (user_settings.theater_mode_ignore_playlist == 'all'
-            //    //    || (user_settings.theater_mode_ignore_playlist == 'music' && NOVA.isMusic())
-            //    // ) {
-            // }
-            el.updateTheaterModeState_(true);
+            function isTheaterMode() {
+               return (el.hasAttribute('theater')
+                  || (typeof el.isTheater_ === 'function' && el.isTheater_())
+                  // || cookies.get('wide') === '1'
+               );
+            }
 
-            // fix broken exit from TheaterMode
-            // document.addEventListener('click', exitTheaterMode, { passive: false });
-            // function exitTheaterMode(evt) {
-            //    if (evt.isTrusted && evt.target.matches('button.ytp-size-button')) {
-            //       alert(1)
-            //       document.removeEventListener('click', exitTheaterMode);
-            //       el.updateTheaterModeState_(false);
-            //    }
-            // }
+            function toggleTheater() {
+               // Strategy 1 (API)
+               // document.body.querySelector('ytd-watch-flexy').setPlayerTheaterMode_(); // Doesn't work
+               // el.updateTheaterModeState_(true);
+
+               // Strategy 2 (Hotkey)
+               (typeof movie_player === 'object' ? movie_player : document) // window.dispatchEvent - Doesn't work!
+                  .dispatchEvent(
+                     // Keyboard code - https://docs.microsoft.com/en-us/dotnet/api/android.views.keycode?view=xamarin-android-sdk-12
+                     new KeyboardEvent(
+                        'keydown',
+                        {
+                           keyCode: 84,
+                           key: 't',
+                           code: 'KeyT',
+                           which: 84,
+                           // target: document.body,
+                           bubbles: true,
+                           cancelable: false,
+                        }
+                     )
+                  );
+
+               // Strategy 3 (Emulate button press)
+               // document.body.querySelector('.ytp-chrome-bottom .ytp-size-button').click();
+
+               // Strategy 4 (Cookie) (Doesn't work without refreshing the page)
+               // document.cookie = 'wide=1;domain=.youtube.com';
+            }
 
             // fix broken offensive video
             if (!user_settings['video-unblock-warn-content']) {
@@ -64,6 +82,18 @@ window.nova_plugins.push({
                   .then(btn => btn.click()); // click "I understand and wish to proceed"
             }
          });
+
+      // function alwaysTheaterMode() {
+      //    let clickBtnRepeatly = setInterval(() => {
+      //       if (isTheaterMode()) {
+      //          clearInterval(clickBtnRepeatly);
+      //       } else {
+      //          document.body.querySelectorAll('.ytp-chrome-bottom .ytp-size-button')?.forEach(e => e.click());
+      //          clearInterval(clickBtnRepeatly);
+      //       }
+      //    }, 500);
+      //    setTimeout(() => clearInterval(clickBtnRepeatly), 10000);
+      // };
 
       // Strategy 2. Doesn't work
       // NOVA.waitSelector('video')
@@ -104,12 +134,13 @@ window.nova_plugins.push({
 
             switch (user_settings.player_full_viewport_mode) {
                case 'offset':
-                  // alt - https://greasyfork.org/en/scripts/436667-better-youtube-theatre-mode
+                  // alt1 - https://greasyfork.org/en/scripts/436667-better-youtube-theatre-mode
+                  // alt2 - https://greasyfork.org/en/scripts/16323-youtube-player-controls
                   NOVA.css.push(
                      PLAYER_CONTAINER_SELECTOR + ` {
                         min-height: calc(100vh - ${user_settings['header-compact']
                         ? '36px'
-                        : NOVA.css.getValue('#masthead-container', 'height') || '56px'
+                        : NOVA.css.get('#masthead-container', 'height') || '56px'
                      // : document.body.querySelector('#masthead-container')?.offsetHeight || 56
                      }) !important;
                      }
@@ -217,16 +248,18 @@ window.nova_plugins.push({
                   }`);
 
                // show searchbar on hover. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-               NOVA.css.push(
-                  `#masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]) {
-                     position: fixed;
-                     z-index: ${zIindex + 1};
-                     opacity: 0;
-                  }
-                  #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):hover,
-                  #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):focus {
-                     opacity: 1;
-                  }`);
+               if (CSS.supports('selector(:has(*))')) {
+                  NOVA.css.push(
+                     `#masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]) {
+                        position: fixed;
+                        z-index: ${zIindex + 1};
+                        opacity: 0;
+                     }
+                     #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):hover,
+                     #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):focus {
+                        opacity: 1;
+                     }`);
+               }
 
                addHideScrollbarCSS();
 
@@ -308,10 +341,8 @@ window.nova_plugins.push({
 
             function addHideScrollbarCSS() {
                if (user_settings['scrollbar-hide']) return;
-               NOVA.css.push(
-                  `html body:has(${PLAYER_SELECTOR})::-webkit-scrollbar {
-                     display: none;
-                  }`);
+
+               NOVA.css.push({ 'display': none }, `html body:has(${PLAYER_SELECTOR})::-webkit-scrollbar`);
             }
          });
 
@@ -322,12 +353,12 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
-         'label:ko': '방법',
+         // 'label:ko': '방법',
          // 'label:id': 'Mode',
-         'label:es': 'Modo',
+         // 'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:it': 'Modalità',
+         // 'label:it': 'Modalità',
          // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
@@ -432,12 +463,12 @@ window.nova_plugins.push({
          label: 'Exit Fullscreen on video end/pause',
          'label:zh': '视频结束/暂停时退出',
          'label:ja': 'ビデオが終了/一時停止したら終了します',
-         'label:ko': '동영상이 종료/일시 중지되면 종료',
-         'label:id': 'Keluar dari viewport penuh jika video berakhir/jeda',
-         'label:es': 'Salir si el video termina/pausa',
+         // 'label:ko': '동영상이 종료/일시 중지되면 종료',
+         // 'label:id': 'Keluar dari viewport penuh jika video berakhir/jeda',
+         // 'label:es': 'Salir si el video termina/pausa',
          'label:pt': 'Sair se o vídeo terminar/pausar',
          'label:fr': 'Quitter si la vidéo se termine/pause',
-         'label:it': 'Uscita dalla visualizzazione completa se il video termina/mette in pausa',
+         // 'label:it': 'Uscita dalla visualizzazione completa se il video termina/mette in pausa',
          // 'label:tr': 'Video biterse/duraklatılırsa çıkın',
          'label:de': 'Beenden, wenn das Video endet/pausiert',
          'label:pl': 'Wyjdź, gdy film się kończy/pauzuje',
@@ -451,12 +482,12 @@ window.nova_plugins.push({
          label: 'Full-viewport exclude shorts',
          'label:zh': '全视口不包括短裤',
          'label:ja': 'フルビューポートはショートパンツを除外します',
-         'label:ko': '전체 뷰포트 제외 반바지',
-         'label:id': 'Area pandang penuh tidak termasuk celana pendek',
-         'label:es': 'Vista completa excluir pantalones cortos',
+         // 'label:ko': '전체 뷰포트 제외 반바지',
+         // 'label:id': 'Area pandang penuh tidak termasuk celana pendek',
+         // 'label:es': 'Vista completa excluir pantalones cortos',
          'label:pt': 'Shorts de exclusão da janela de visualização completa',
          'label:fr': 'La fenêtre complète exclut les shorts',
-         'label:it': 'La visualizzazione completa esclude i cortometraggi',
+         // 'label:it': 'La visualizzazione completa esclude i cortometraggi',
          // 'label:tr': 'Tam görünüm alanı şortları hariç tutar',
          'label:de': 'Vollbildansicht schließt Shorts aus',
          'label:pl': 'Pełny ekran wyklucza krótkie filmy',
@@ -470,12 +501,12 @@ window.nova_plugins.push({
          label: 'Opacity',
          'label:zh': '不透明度',
          'label:ja': '不透明度',
-         'label:ko': '불투명',
-         'label:id': 'Kegelapan',
-         'label:es': 'Opacidad',
+         // 'label:ko': '불투명',
+         // 'label:id': 'Kegelapan',
+         // 'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
          'label:fr': 'Opacité',
-         'label:it': 'Opacità',
+         // 'label:it': 'Opacità',
          // 'label:tr': 'Opaklık',
          'label:de': 'Opazität',
          'label:pl': 'Przezroczystość',
@@ -492,18 +523,18 @@ window.nova_plugins.push({
       theater_mode_ignore_playlist: {
          _tagName: 'input',
          label: 'Ignore playlist',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
+         'label:zh': '忽略播放列表',
+         'label:ja': 'プレイリストを無視する',
+         // 'label:ko': '재생목록 무시',
+         // 'label:id': 'Abaikan daftar putar',
+         // 'label:es': 'Ignorar lista de reproducción',
+         'label:pt': 'Ignorar lista de reprodução',
+         'label:fr': 'Ignorer la liste de lecture',
+         // 'label:it': 'Ignora playlist',
+         // 'label:tr': 'Oynatma listesini yoksay',
+         'label:de': 'Wiedergabeliste ignorieren',
+         'label:pl': 'Zignoruj listę odtwarzania',
+         'label:ua': 'Ігнорувати список відтворення',
          type: 'checkbox',
          // title: '',
       },

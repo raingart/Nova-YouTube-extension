@@ -13,12 +13,12 @@ window.nova_plugins.push({
    title: 'Playback speed control',
    'title:zh': '播放速度控制',
    'title:ja': '再生速度制御',
-   'title:ko': '재생 속도 제어',
-   'title:id': 'Kontrol kecepatan pemutaran',
-   'title:es': 'Controle de velocidade de reprodução',
+   // 'title:ko': '재생 속도 제어',
+   // 'title:id': 'Kontrol kecepatan pemutaran',
+   // 'title:es': 'Controle de velocidade de reprodução',
    'title:pt': 'Controle de velocidade de reprodução',
    'title:fr': 'Contrôle de la vitesse de lecture',
-   'title:it': 'Controllo della velocità di riproduzione',
+   // 'title:it': 'Controllo della velocità di riproduzione',
    // 'title:tr': 'Oynatma hızı kontrolü',
    'title:de': 'Steuerung der Wiedergabegeschwindigkeit',
    'title:pl': 'Kontrola prędkości odtwarzania',
@@ -30,25 +30,28 @@ window.nova_plugins.push({
    desc: 'With mouse wheel',
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
-   'desc:ko': '마우스 휠로',
-   'desc:id': 'Dengan roda mouse',
-   'desc:es': 'Con rueda de ratón',
+   // 'desc:ko': '마우스 휠로',
+   // 'desc:id': 'Dengan roda mouse',
+   // 'desc:es': 'Con rueda de ratón',
    'desc:pt': 'Com roda do mouse',
    'desc:fr': 'Avec molette de la souris',
-   'desc:it': 'Con rotellina del mouse',
+   // 'desc:it': 'Con rotellina del mouse',
    // 'desc:tr': 'Fare tekerleği ile',
    'desc:de': 'Mit mausrad',
    'desc:pl': 'Za pomocą kółka myszy',
    'desc:ua': 'За допомогою колеса мишки',
    _runtime: user_settings => {
 
-      // alt1 - https://greasyfork.org/en/scripts/481189-youtube-playback-speed-up
-      // alt2 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
-      // alt3 - https://greasyfork.org/en/scripts/427369-speed-up-for-youtube
-      // alt4 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
-      // alt5 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
-      // alt6 - https://greasyfork.org/en/scripts/470633-ytspeed
-      // alt7 (mobile) - https://greasyfork.org/en/scripts/477218-m-youtube-com-more-playback-speeds
+      // speed buttons (-/+)
+      // alt1 - https://greasyfork.org/en/scripts/475864-youtube-playback-speed-buttons
+      // alt2 - https://chrome.google.com/webstore/detail/hdannnflhlmdablckfkjpleikpphncik
+      // alt3 - https://chrome.google.com/webstore/detail/gaiceihehajjahakcglkhmdbbdclbnlf
+
+      // array
+      // alt1 - https://greasyfork.org/en/scripts/30506-video-speed-buttons
+      // alt2 - https://greasyfork.org/en/scripts/477218-m-youtube-com-more-playback-speeds
+      // alt3 - https://greasyfork.org/en/scripts/421670-youtube-more-speeds
+      // alt4 (mobile) - https://greasyfork.org/en/scripts/477218-m-youtube-com-more-playback-speeds
 
       // NOVA.waitSelector('#movie_player')
       //    .then(movie_player => {
@@ -59,8 +62,8 @@ window.nova_plugins.push({
       //       });
       //    });
 
-      if (+user_settings.rate_default !== 1) {
-         reCalcTimeToOverlay();
+      if (user_settings.rate_overlay_time && +user_settings.rate_default !== 1) {
+         reCalcOverlayTime();
       }
 
       NOVA.waitSelector('#movie_player video')
@@ -102,9 +105,9 @@ window.nova_plugins.push({
             // expand memu
             // alt1 - https://greasyfork.org/en/scripts/421610-youtube-speed-up
             // alt2 - https://greasyfork.org/en/scripts/387654-edx-more-video-speeds
-            // NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
+            // NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
 
-            NOVA.runOnPageInitOrTransition(async () => {
+            NOVA.runOnPageLoad(async () => {
                if (NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed') {
                   // custom speed from [save-channel-state] plugin
                   // alt - https://greasyfork.org/en/scripts/27091-youtube-speed-rememberer
@@ -122,19 +125,21 @@ window.nova_plugins.push({
          });
 
       // keyboard
-      // alt1 - https://greasyfork.org/en/scripts/466105-youtube%E9%95%BF%E6%8C%89%E5%80%8D%E9%80%9F%E8%84%9A%E6%9C%AC
+      // alt1 - https://greasyfork.org/en/scripts/466105
       // alt2 - https://greasyfork.org/en/scripts/421464-html5-video-speed-controller-vlc-like
       // alt3 - https://greasyfork.org/en/scripts/405559-youtube-playback-rate-shortcut
+      // alt4 - https://greasyfork.org/en/scripts/481189-youtube-playback-speed-up
       if (user_settings.rate_hotkey == 'keyboard') {
-         // document.addEventListener('keypress', evt => {
          document.addEventListener('keydown', evt => {
+            if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
+
             // movie_player.contains(document.activeElement) // don't use! stay overline
             if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
             if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
             // console.debug('evt.code', evt.code);
 
             let delta;
-            switch (evt.key) {
+            switch (user_settings.rate_hotkey_custom_up.length === 1 ? evt.key : evt.code) {
                case user_settings.rate_hotkey_custom_up: delta = 1; break;
                case user_settings.rate_hotkey_custom_down: delta = -1; break;
             }
@@ -199,9 +204,12 @@ window.nova_plugins.push({
          // DEBUG: true,
 
          // default method requires a multiplicity of 0.25
-         testDefault: rate => (+rate % .25) === 0
-            && +rate <= 2
-            && +user_settings.rate_default <= 2
+         testDefault: rate => ((+rate % .25) === 0)
+            && (+rate <= 2)
+            // && ((+user_settings.rate_step % .25) === 0)
+            && (+user_settings.rate_default <= 2)
+            && (NOVA.videoElement.playbackRate <= 2)
+            && ((NOVA.videoElement.playbackRate % .25) === 0)
             && (typeof movie_player !== 'undefined' && movie_player.hasOwnProperty('getPlaybackRate')),
          // && (typeof movie_player !== 'undefined' && ('getPlaybackRate' in movie_player)),
 
@@ -224,7 +232,11 @@ window.nova_plugins.push({
 
          adjust(rate_step = required()) {
             this.log('adjust', ...arguments);
-            return this.testDefault(rate_step) ? this.default(+rate_step) : this.html5(+rate_step);
+            // return this.testDefault(rate_step)
+            //    ? this.default(+rate_step) || this.html5(+rate_step)
+            //    : this.html5(+rate_step);
+
+            return (this.testDefault(rate_step) && this.default(+rate_step)) || this.html5(+rate_step);
          },
          // Strategy 1
          default(playback_rate = required()) {
@@ -241,6 +253,9 @@ window.nova_plugins.push({
                return (.1 <= setRateStep && setRateStep <= 2) && +setRateStep.toFixed(2);
             };
             const newRate = inRange(+playback_rate);
+            // out of limits. Transfer control for html5
+            if (!newRate) return false;
+
             // set new rate
             if (newRate && newRate != playbackRate) {
                movie_player.setPlaybackRate(newRate);
@@ -263,7 +278,7 @@ window.nova_plugins.push({
             const playbackRate = NOVA.videoElement.playbackRate;
             const inRange = step => {
                const setRateStep = playbackRate + step;
-               return (.1 <= setRateStep && setRateStep <= 3) && +setRateStep.toFixed(2);
+               return (.1 <= setRateStep && setRateStep <= (+user_settings.rate_max || 2)) && +setRateStep.toFixed(2);
             };
             const newRate = inRange(+playback_rate);
             // set new rate
@@ -287,7 +302,7 @@ window.nova_plugins.push({
                // https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API/Using
                sessionStorage['yt-player-playback-rate'] = JSON.stringify({
                   creation: Date.now(), data: level.toString(),
-               })
+               });
                this.log('playbackRate save in session:', ...arguments);
 
             } catch (err) {
@@ -338,7 +353,10 @@ window.nova_plugins.push({
          }
       }
 
-      // alt - https://greasyfork.org/en/scripts/433222-improved-speed-slider-for-youtube-fix
+      // alt1 - https://greasyfork.org/en/scripts/433222-improved-speed-slider-for-youtube-fix
+      // alt2 - https://greasyfork.org/en/scripts/393900-improved-speed-slider-for-youtube
+      // alt3 - https://greasyfork.org/en/scripts/470633-ytspeed
+      // alt4 - https://greasyfork.org/en/scripts/483341-speed
       function insertSlider() {
          const
             SELECTOR_ID = 'nova-rate-slider-menu',
@@ -370,7 +388,7 @@ window.nova_plugins.push({
          slider.className = 'ytp-menuitem-slider';
          slider.type = 'range';
          slider.min = +user_settings.rate_step;
-         slider.max = Math.max(2, +user_settings.rate_default);
+         slider.max = Math.max((+user_settings.rate_max || 2), +user_settings.rate_default);
          slider.step = +user_settings.rate_step;
          slider.value = this.playbackRate;
          // slider.addEventListener('change', () => playerRate.set(slider.value));
@@ -430,7 +448,7 @@ window.nova_plugins.push({
       //    // slider.className = 'ytp-menuitem-slider';
       //    slider.type = 'range';
       //    slider.min = +user_settings.rate_step;
-      //    slider.max = Math.max(2, +user_settings.rate_default);
+      //    slider.max = Math.max((+user_settings.rate_max || 2), +user_settings.rate_default);
       //    slider.step = +user_settings.rate_step;
       //    slider.value = this.playbackRate;
       //    slider.style.height = '100%';
@@ -506,47 +524,49 @@ window.nova_plugins.push({
       }
 
 
-      function reCalcTimeToOverlay() {
+      function reCalcOverlayTime() {
          const
             ATTR_MARK = 'nova-thumb-overlay-time-recalc';
 
          // page update event
          document.addEventListener('yt-action', evt => {
             // console.log(evt.detail?.actionName);
-            if ([
-               'yt-append-continuation-items-action', // home, results, feed, channel, watch
-               'ytd-update-grid-state-action', // feed, channel
-               'yt-service-request', // results, watch
-               'ytd-rich-item-index-update-action', // home, channel
-            ]
-               .includes(evt.detail?.actionName)
-            ) {
-               // console.log(evt.detail?.actionName); // flltered
-               switch (NOVA.currentPage) {
-                  case 'home':
-                  case 'results':
-                  case 'feed':
-                  case 'channel':
-                  case 'watch':
-                     // document.body.querySelectorAll(`#thumbnail #overlays #time-status #text:not([${ATTR_MARK}])`)
-                     document.body.querySelectorAll(`#thumbnail #overlays #text:not([${ATTR_MARK}])`)
-                        // document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
-                        .forEach(overlay => {
-                           if ((timeLabelEl = overlay.textContent.trim())
-                              //&& !timeLabelEl.startsWith('⚡')
-                           ) {
-                              overlay.setAttribute(ATTR_MARK, true); // mark
-                              // overlay.style.border = '2px solid orange'; // mark for test
-                              const timeSec = NOVA.formatTimeOut.hmsToSec(timeLabelEl);
-                              overlay.textContent = //'⚡' + // broken `thumbs_hide_min_duration` in [thumbs-hide] plugin
-                                 NOVA.formatTimeOut.HMS.digit(timeSec / user_settings.rate_default);
-                           }
-                        });
-                     break;
+            switch (evt.detail?.actionName) {
+               case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
+               case 'ytd-update-grid-state-action': // feed, channel
+               case 'yt-service-request': // results, watch
+               case 'ytd-rich-item-index-update-action': // home, channel
 
-                  // default:
-                  //    break;
-               }
+                  // console.log(evt.detail?.actionName); // flltered
+                  switch (NOVA.currentPage) {
+                     case 'home':
+                     case 'results':
+                     case 'feed':
+                     case 'channel':
+                     case 'watch':
+                        // document.body.querySelectorAll(`#thumbnail #overlays #time-status #text:not([${ATTR_MARK}])`)
+                        // document.body.querySelectorAll(`#thumbnail #overlays ytd-thumbnail-overlay-time-status-renderer:not([${ATTR_MARK}])`)
+                        document.body.querySelectorAll(`#thumbnail #overlays #text:not([${ATTR_MARK}])`)
+                           .forEach(overlay => {
+                              if ((timeLabelEl = overlay.textContent.trim())
+                                 // && !timeLabelEl.startsWith('⚡')
+                              ) {
+                                 overlay.setAttribute(ATTR_MARK, true); // mark
+                                 // overlay.style.border = '2px solid orange'; // mark for test
+                                 const timeSec = NOVA.formatTimeOut.hmsToSec(timeLabelEl);
+                                 overlay.textContent = // '⚡' + // broken `thumbs_hide_min_duration` in [thumbs-hide] plugin
+                                    NOVA.formatTimeOut.HMS.digit(timeSec / user_settings.rate_default);
+                              }
+                           });
+                        break;
+
+                     // default:
+                     //    break;
+                  }
+                  break;
+
+               // default:
+               //    break;
             }
          });
       }
@@ -559,22 +579,21 @@ window.nova_plugins.push({
          label: 'Speed at startup',
          'label:zh': '启动速度',
          'label:ja': '起動時の速度',
-         'label:ko': '시작 시 속도',
-         'label:id': 'Kecepatan saat startup',
-         'label:es': 'Velocidad al inicio',
+         // 'label:ko': '시작 시 속도',
+         // 'label:id': 'Kecepatan saat startup',
+         // 'label:es': 'Velocidad al inicio',
          'label:pt': 'Velocidade na inicialização',
          'label:fr': 'Rapidité au démarrage',
-         'label:it': "Velocità all'avvio",
+         // 'label:it': "Velocità all'avvio",
          // 'label:tr': 'Başlangıçta hız',
          'label:de': 'Geschwindigkeit beim Start',
          'label:pl': 'Prędkość przy uruchamianiu',
          'label:ua': 'Звичайна швидкість',
          type: 'number',
          title: '1 - default',
-         // placeholder: '1-3',
          step: 0.05,
          min: 1,
-         // max: 3,
+         max: 5, // rate_max
          value: 1,
       },
       rate_apply_music: {
@@ -595,12 +614,12 @@ window.nova_plugins.push({
          title: 'Extended detection - may trigger falsely',
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
-         'title:ko': '확장 감지 - 잘못 트리거될 수 있음',
-         'title:id': 'Deteksi diperpanjang - dapat memicu salah',
+         // 'title:ko': '확장 감지 - 잘못 트리거될 수 있음',
+         // 'title:id': 'Deteksi diperpanjang - dapat memicu salah',
          // 'title:es': 'Detección extendida - puede activarse falsamente',
          'title:pt': 'Detecção estendida - pode disparar falsamente',
          'title:fr': 'Détection étendue - peut se déclencher par erreur',
-         'title:it': 'Rilevamento esteso - potrebbe attivarsi in modo errato',
+         // 'title:it': 'Rilevamento esteso - potrebbe attivarsi in modo errato',
          // 'title:tr': 'Genişletilmiş algılama - yanlış tetiklenebilir',
          'title:de': 'Erweiterte Erkennung - kann fälschlicherweise auslösen',
          'title:pl': 'Rozszerzona detekcja - może działać błędnie',
@@ -610,12 +629,12 @@ window.nova_plugins.push({
                label: 'skip', value: true, selected: true,
                'label:zh': '跳过',
                'label:ja': 'スキップ',
-               'label:ko': '건너 뛰기',
-               'label:id': 'merindukan',
-               'label:es': 'saltar',
+               // 'label:ko': '건너 뛰기',
+               // 'label:id': 'merindukan',
+               // 'label:es': 'saltar',
                'label:pt': 'pular',
                'label:fr': 'sauter',
-               'label:it': 'Perdere',
+               // 'label:it': 'Perdere',
                // 'label:tr': 'atlamak',
                'label:de': 'überspringen',
                'label:pl': 'tęsknić',
@@ -640,12 +659,12 @@ window.nova_plugins.push({
                label: 'force apply', value: false,
                'label:zh': '施力',
                'label:ja': '力を加える',
-               'label:ko': '강제 적용',
-               'label:id': 'berlaku paksa',
-               'label:es': 'aplicar fuerza',
+               // 'label:ko': '강제 적용',
+               // 'label:id': 'berlaku paksa',
+               // 'label:es': 'aplicar fuerza',
                'label:pt': 'aplicar força',
                'label:fr': 'appliquer la force',
-               'label:it': 'applicare la forza',
+               // 'label:it': 'applicare la forza',
                // 'label:tr': 'zorlamak',
                'label:de': 'kraft anwenden',
                'label:pl': 'zastosować siłę',
@@ -654,41 +673,222 @@ window.nova_plugins.push({
          ],
          'data-dependent': { 'rate_default': '!1' },
       },
+      rate_overlay_time: {
+         _tagName: 'input',
+         label: 'Recalculate overlay time',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         title: 'by startup value',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         'data-dependent': { 'rate_default': '!1' },
+      },
       rate_hotkey: {
          _tagName: 'select',
          label: 'Hotkey',
          'label:zh': '热键',
          'label:ja': 'ホットキー',
-         'label:ko': '단축키',
-         'label:id': 'Tombol pintas',
-         'label:es': 'Tecla de acceso rápido',
+         // 'label:ko': '단축키',
+         // 'label:id': 'Tombol pintas',
+         // 'label:es': 'Tecla de acceso rápido',
          'label:pt': 'Tecla de atalho',
          'label:fr': 'Raccourci',
-         'label:it': 'Tasto di scelta rapida',
+         // 'label:it': 'Tasto di scelta rapida',
          // 'label:tr': 'Kısayol tuşu',
          'label:de': 'Schnelltaste',
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',
          options: [
+            // { label: 'none', /*value: false*/ },
+            { label: 'none', value: false }, // need for for 'data-dependent' in rate_max
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
             { label: 'wheel', value: 'none' },
             { label: 'keyboard', value: 'keyboard' },
-            { label: 'disable', value: false },
          ],
+      },
+      // rate_mode: { // does not support multiple of `0.25` in "rate_default"
+      //    _tagName: 'select',
+      //    label: 'Mode',
+      //    'label:zh': '模式',
+      //    'label:ja': 'モード',
+      //    // 'label:ko': '방법',
+      //    // 'label:id': 'Mode',
+      //    // 'label:es': 'Modo',
+      //    'label:pt': 'Modo',
+      //    // 'label:fr': 'Mode',
+      //    // 'label:it': 'Modalità',
+      //    // 'label:tr': 'Mod',
+      //    'label:de': 'Modus',
+      //    'label:pl': 'Tryb',
+      //    'label:ua': 'Режим',
+      //    options: [
+      //       {
+      //          label: 'collapse', value: 'hide', selected: true,
+      //       },
+      //       {
+      //          label: 'remove', value: 'disable',
+      //       },
+      //    ],
+      //    'data-dependent': { 'rate_hotkey': ['!false'] },
+      // },
+      rate_hotkey_custom_up: {
+         _tagName: 'select',
+         label: 'Hotkey up',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: ']', value: ']', selected: true },
+            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', value: false },
+            // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+            { label: 'shiftL', value: 'ShiftLeft' },
+            { label: 'shiftR', value: 'ShiftRight' },
+            { label: 'ctrlL', value: 'ControlLeft' },
+            { label: 'ctrlR', value: 'ControlRight' },
+            { label: 'altL', value: 'AltLeft' },
+            { label: 'altR', value: 'AltRight' },
+            { label: 'ArrowUp', value: 'ArrowUp' },
+            { label: 'ArrowDown', value: 'ArrowDown' },
+            // { label: 'ArrowLeft', value: 'ArrowLeft' },
+            // { label: 'ArrowRight', value: 'ArrowRight' },
+            { label: 'A', value: 'KeyA' },
+            { label: 'B', value: 'KeyB' },
+            { label: 'C', value: 'KeyC' },
+            { label: 'D', value: 'KeyD' },
+            { label: 'E', value: 'KeyE' },
+            { label: 'F', value: 'KeyF' },
+            { label: 'G', value: 'KeyG' },
+            { label: 'H', value: 'KeyH' },
+            { label: 'I', value: 'KeyI' },
+            { label: 'J', value: 'KeyJ' },
+            { label: 'K', value: 'KeyK' },
+            { label: 'L', value: 'KeyL' },
+            { label: 'M', value: 'KeyM' },
+            { label: 'N', value: 'KeyN' },
+            { label: 'O', value: 'KeyO' },
+            { label: 'P', value: 'KeyP' },
+            { label: 'Q', value: 'KeyQ' },
+            { label: 'R', value: 'KeyR' },
+            { label: 'S', value: 'KeyS' },
+            { label: 'T', value: 'KeyT' },
+            { label: 'U', value: 'KeyU' },
+            { label: 'V', value: 'KeyV' },
+            { label: 'W', value: 'KeyW' },
+            { label: 'X', value: 'KeyX' },
+            { label: 'Y', value: 'KeyY' },
+            { label: 'Z', value: 'KeyZ' },
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            /*']',*/ '[', '+', '-', ',', '.', '/', '<', ';', '\\',
+         ],
+         'data-dependent': { 'rate_hotkey': ['keyboard'] },
+      },
+      rate_hotkey_custom_down: {
+         _tagName: 'select',
+         label: 'Hotkey down',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: '[', value: '[', selected: true },
+            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', value: false },
+            // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+            { label: 'shiftL', value: 'ShiftLeft' },
+            { label: 'shiftR', value: 'ShiftRight' },
+            { label: 'ctrlL', value: 'ControlLeft' },
+            { label: 'ctrlR', value: 'ControlRight' },
+            { label: 'altL', value: 'AltLeft' },
+            { label: 'altR', value: 'AltRight' },
+            { label: 'ArrowUp', value: 'ArrowUp' },
+            { label: 'ArrowDown', value: 'ArrowDown' },
+            // { label: 'ArrowLeft', value: 'ArrowLeft' },
+            // { label: 'ArrowRight', value: 'ArrowRight' },
+            { label: 'A', value: 'KeyA' },
+            { label: 'B', value: 'KeyB' },
+            { label: 'C', value: 'KeyC' },
+            { label: 'D', value: 'KeyD' },
+            { label: 'E', value: 'KeyE' },
+            { label: 'F', value: 'KeyF' },
+            { label: 'G', value: 'KeyG' },
+            { label: 'H', value: 'KeyH' },
+            { label: 'I', value: 'KeyI' },
+            { label: 'J', value: 'KeyJ' },
+            { label: 'K', value: 'KeyK' },
+            { label: 'L', value: 'KeyL' },
+            { label: 'M', value: 'KeyM' },
+            { label: 'N', value: 'KeyN' },
+            { label: 'O', value: 'KeyO' },
+            { label: 'P', value: 'KeyP' },
+            { label: 'Q', value: 'KeyQ' },
+            { label: 'R', value: 'KeyR' },
+            { label: 'S', value: 'KeyS' },
+            { label: 'T', value: 'KeyT' },
+            { label: 'U', value: 'KeyU' },
+            { label: 'V', value: 'KeyV' },
+            { label: 'W', value: 'KeyW' },
+            { label: 'X', value: 'KeyX' },
+            { label: 'Y', value: 'KeyY' },
+            { label: 'Z', value: 'KeyZ' },
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            ']', /*'[',*/ '+', '-', ',', '.', '/', '<', ';', '\\',
+         ],
+         'data-dependent': { 'rate_hotkey': ['keyboard'] },
       },
       rate_step: {
          _tagName: 'input',
          label: 'Hotkey step',
          'label:zh': '步',
          'label:ja': 'ステップ',
-         'label:ko': '단계',
-         'label:id': 'Melangkah',
-         'label:es': 'Paso',
+         // 'label:ko': '단계',
+         // 'label:id': 'Melangkah',
+         // 'label:es': 'Paso',
          'label:pt': 'Degrau',
          'label:fr': 'Étape',
-         'label:it': 'Fare un passo',
+         // 'label:it': 'Fare un passo',
          // 'label:tr': 'Adım',
          'label:de': 'Schritt',
          'label:pl': 'Krok',
@@ -712,11 +912,10 @@ window.nova_plugins.push({
          min: 0.05,
          max: 0.5,
          value: 0.25,
-         // 'data-dependent': { 'rate_hotkey': ['!false'] }, // conflict to slider dependency
       },
-      rate_hotkey_custom_up: {
-         _tagName: 'select',
-         label: 'Hotkey up',
+      rate_max: {
+         _tagName: 'input',
+         label: 'Hotkey Max',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -729,34 +928,26 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          // 'label:ua': '',
-         // title: '',
-         options: [
-            { label: ']', value: ']', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '+', '-', ',', '.', '/', '<', ';', '\\', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
-         ],
-         'data-dependent': { 'rate_hotkey': ['keyboard'] },
-      },
-      rate_hotkey_custom_down: {
-         _tagName: 'select',
-         label: 'Hotkey down',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
-         // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
-         // 'label:it': '',
-         // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
-         // title: '',
-         options: [
-            { label: '[', value: '[', selected: true },
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ']', '+', '-', ',', '.', '/', '<', ';', '\\', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'
-         ],
-         'data-dependent': { 'rate_hotkey': ['keyboard'] },
+         type: 'number',
+         title: '2 - default',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         placeholder: '2-5',
+         step: .05,
+         min: 2,
+         max: 5, // rate_default
+         value: 2,
+         'data-dependent': { 'rate_hotkey': ['!false', '!'] },
       },
    }
 });

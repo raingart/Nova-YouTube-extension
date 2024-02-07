@@ -9,12 +9,12 @@ window.nova_plugins.push({
    title: 'Pin player while scrolling',
    'title:zh': '滚动时固定播放器',
    'title:ja': 'スクロール中にプレイヤーを固定する',
-   'title:ko': '스크롤하는 동안 플레이어 고정',
-   'title:id': 'Sematkan pemutar saat menggulir',
-   'title:es': 'Fijar jugador mientras se desplaza',
+   // 'title:ko': '스크롤하는 동안 플레이어 고정',
+   // 'title:id': 'Sematkan pemutar saat menggulir',
+   // 'title:es': 'Fijar jugador mientras se desplaza',
    'title:pt': 'Fixar jogador enquanto rola',
    'title:fr': 'Épingler le lecteur pendant le défilement',
-   'title:it': 'Blocca il lettore durante lo scorrimento',
+   // 'title:it': 'Blocca il lettore durante lo scorrimento',
    // 'title:tr': 'Kaydırırken oynatıcıyı sabitle',
    'title:de': 'Pin-Player beim Scrollen',
    'title:pl': 'Przypnij odtwarzacz podczas przewijania',
@@ -40,6 +40,7 @@ window.nova_plugins.push({
       // alt2 - https://chrome.google.com/webstore/detail/mcodbccegmndmnbpbgkpdkoleoagjpgk
       // alt3 - https://greasyfork.org/en/scripts/444382-youtube-mini-player
       // alt4 - https://greasyfork.org/en/scripts/472053-video-popout-and-no-scroll-on-click-timestamps
+      // alt5 - https://greasyfork.org/en/scripts/484817-youtube-video-auto-pop-out
 
       if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
 
@@ -133,7 +134,7 @@ window.nova_plugins.push({
                   // leave viewport
                   if (entry.isIntersecting) {
                      movie_player.classList.remove(CLASS_VALUE);
-                     drag.reset(); // save old pos. Clear curr pos
+                     makeDraggable.reset(); // save old pos. Clear curr pos
                   }
                   // enter viewport.
                   // else if (!movie_player.isFullscreen() // fix bug on scroll in fullscreen player mode
@@ -141,10 +142,10 @@ window.nova_plugins.push({
                      && document.documentElement.scrollTop // fix bug on exit fullscreen mode (https://github.com/raingart/Nova-YouTube-extension/issues/69)
                   ) {
                      movie_player.classList.add(CLASS_VALUE);
-                     drag?.storePos?.X && drag.setTranslate(drag.storePos); // restore pos
+                     if (makeDraggable.storePos?.X) makeDraggable.moveByCoordinates(makeDraggable.storePos); // restore pos
                   }
 
-                  window.dispatchEvent(new Event('resize')); // fix: restore player size if un/pin
+                  window.dispatchEvent(new Event('resize')); // fix: restore player size on pin/unpin
                }, {
                   // https://github.com/raingart/Nova-YouTube-extension/issues/28
                   // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
@@ -157,7 +158,7 @@ window.nova_plugins.push({
       NOVA.waitSelector(PINNED_SELECTOR)
          .then(async player => {
             // add drag
-            drag.init(player);
+            makeDraggable.init(player);
             // dragElement(player); // incorrect work
 
             // wait video size
@@ -167,7 +168,7 @@ window.nova_plugins.push({
                   && NOVA.videoElement?.videoHeight && !isNaN(NOVA.videoElement.videoHeight)
                )
                // && document.getElementById('masthead-container')?.offsetHeight
-               , 500) // 500ms
+               , 500); // 500ms
 
             initMiniStyles();
 
@@ -198,8 +199,8 @@ window.nova_plugins.push({
                               }),
                            );
                            player.style.setProperty('--width', `${width}px !important;`);
-                           // movie_player.style = `--width: ${width}px !important;`
-                           // movie_player.style = `--width: ${width}px !important; --height: ${movie_player.clientHeight}px !important`
+                           // movie_player.style.cssText = `--width: ${width}px !important;`
+                           // movie_player.style.cssText = `--width: ${width}px !important; --height: ${movie_player.clientHeight}px !important`
                         });
                   });
                });
@@ -207,12 +208,14 @@ window.nova_plugins.push({
             // save scroll code part
             if (user_settings.player_float_scroll_after_fullscreen_restore_srcoll_pos) {
                let scrollPos = 0;
+               // clear scroll pos
+               document.addEventListener('yt-navigate-start', () => scrollPos = 0);
 
                // restore scroll pos
                document.addEventListener('fullscreenchange', () => {
                   if (!document.fullscreenElement
                      && scrollPos // >0
-                     && drag.storePos // not cleared yet
+                     && makeDraggable.storePos // not cleared yet
                   ) {
                      window.scrollTo({
                         top: scrollPos,
@@ -220,18 +223,29 @@ window.nova_plugins.push({
                         // behavior: user_settings.scroll_to_top_smooth ? 'smooth' : 'instant',
                      });
                   }
-               });
+               }, { capture: false });
                // save scroll pos
-               document.addEventListener('yt-action', function (evt) {
-                  // if (evt.detail?.actionName == 'yt-fullscreen-change-action') { // to late
-                  // if (evt.detail?.actionName == 'yt-window-scrolled') {
-                  if (evt.detail?.actionName == 'yt-close-all-popups-action') { // last
+               // Strategy 1
+               document.addEventListener('fullscreenchange', () => {
+                  if (document.fullscreenElement) {
                      scrollPos = document.documentElement.scrollTop;
-                     // console.debug('1', scrollPos, document.documentElement.scrollTop);
+                     // console.debug('scrollPos:', scrollPos, document.documentElement.scrollTop);
                   }
-               });
-               // clear scroll pos
-               document.addEventListener('yt-navigate-start', () => scrollPos = 0);
+               }, { capture: true });
+               // Strategy 2
+               // document.addEventListener('yt-action', evt => {
+               //    // console.log(evt.detail?.actionName);
+               //    switch (evt.detail?.actionName) {
+               //       // case 'yt-fullscreen-change-action': // to late
+               //       // case 'yt-window-scrolled':
+               //       case 'yt-close-all-popups-action':
+               //          // console.log(evt.detail?.actionName); // flltered
+
+               //          scrollPos = document.documentElement.scrollTop;
+               //          // console.debug('1', scrollPos, document.documentElement.scrollTop);
+               //          break;
+               //    }
+               // });
             }
          });
 
@@ -309,14 +323,14 @@ window.nova_plugins.push({
                height: var(--height) !important;
 
                background-color: var(--yt-spec-base-background);
-               ${user_settings['square-avatars'] ? '' : 'border-radius: 1em;'}
+               ${user_settings['square-avatars'] ? '' : 'border-radius: 12px;'}
                margin: 1em 2em;
                --zIndex: ${1 + Math.max(
-               NOVA.css.getValue('#chat', 'z-index'),
-               NOVA.css.getValue('.ytp-chrome-top .ytp-cards-button', 'z-index'),
-               NOVA.css.getValue('#chat', 'z-index'),
-               NOVA.css.getValue('ytrb-bar', 'z-index'), // update. fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube
-               // NOVA.css.getValue('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
+               NOVA.css.get('#chat', 'z-index'),
+               NOVA.css.get('.ytp-chrome-top .ytp-cards-button', 'z-index'),
+               NOVA.css.get('#chat', 'z-index'),
+               NOVA.css.get('ytrb-bar', 'z-index'), // update. fix conflict with https://github.com/elliotwaite/thumbnail-rating-bar-for-youtube
+               // NOVA.css.get('#description.ytd-watch-metadata', 'z-index'), // consider plugin [description-popup]
                601)};
             }
             ${PINNED_SELECTOR} video {
@@ -361,7 +375,7 @@ window.nova_plugins.push({
             UNPIN_BTN_SELECTOR + ` { display: none; }
 
             ${PINNED_SELECTOR} ${UNPIN_BTN_SELECTOR} {
-               display: initial !important;
+               display: inherit !important;
                position: absolute;
                cursor: pointer;
                top: 10px;
@@ -372,11 +386,12 @@ window.nova_plugins.push({
                border: none;
                outline: none;
                opacity: .1;
-               /* border-radius: 100%; */
+               ${user_settings['square-avatars'] ? '' : 'border-radius: 100%;'}
                z-index: var(--zIndex);
                font-size: 24px;
                font-weight: bold;
                background-color: rgba(0, 0, 0, 0.8);
+               transition: opacity 100ms linear;
                /* text-transform: uppercase; */
             }
 
@@ -390,7 +405,7 @@ window.nova_plugins.push({
          btnUnpin.textContent = '×'; // ✖
          btnUnpin.addEventListener('click', () => {
             player.classList.remove(CLASS_VALUE);
-            drag.reset('clear storePos');
+            makeDraggable.reset('clear storePos');
             window.dispatchEvent(new Event('resize')); // fix: restore player size if unpinned
          });
          player.append(btnUnpin);
@@ -399,15 +414,15 @@ window.nova_plugins.push({
          document.addEventListener('yt-navigate-start', () => {
             if (player.classList.contains(CLASS_VALUE)) {
                player.classList.remove(CLASS_VALUE);
-               drag.reset(); // save storePos state
-               // drag.reset('clear storePos'); // storePos
+               makeDraggable.reset(); // save storePos state
+               // makeDraggable.reset('clear storePos'); // storePos
             }
          });
 
          // window.addEventListener('resize', updatePos);
       }
 
-      const drag = {
+      const makeDraggable = {
          // DEBUG: true,
 
          // xOffset: 0,
@@ -417,7 +432,7 @@ window.nova_plugins.push({
          // dragTarget: HTMLElement,
          // active: false,
          // storePos: { X, Y },
-         attrNametoLock: 'force-fix-preventDefault', // preventDefault patch
+         attrNameMoving: 'nova-el-moving',
 
          reset(clear_storePos) {
             // switchElement.style.transform = ''; // clear drag state
@@ -443,24 +458,27 @@ window.nova_plugins.push({
             document.addEventListener('mousedown', evt => {
                if (!el_target.classList.contains(CLASS_VALUE)) return;
                this.dragStart.apply(this, [evt]);
+               // cancel default events
+               evt.preventDefault();
+               evt.stopImmediatePropagation();
             });
             document.addEventListener('mouseup', evt => {
-               if (this.active) this.dragTarget.removeAttribute(this.attrNametoLock); // fix broken preventDefault
+               if (this.moving) this.dragTarget.removeAttribute(this.attrNameMoving); // mark on moving
                this.dragEnd.apply(this, [evt]);
             });
             document.addEventListener('mousemove', evt => {
-               if (this.active && !this.dragTarget.hasAttribute(this.attrNametoLock)) {
-                  this.dragTarget.setAttribute(this.attrNametoLock, true); // fix broken preventDefault
+               if (this.moving && !this.dragTarget.hasAttribute(this.attrNameMoving)) {
+                  this.dragTarget.setAttribute(this.attrNameMoving, true); //  mark on moving
                }
                this.draging.apply(this, [evt]);
             });
 
-            // fix broken preventDefault / preventDefault patch
+            // Mark on moving. alt preventDefault
             NOVA.css.push(
-               `[${this.attrNametoLock}]:active {
+               `[${this.attrNameMoving}]:active {
                   pointer-events: none;
                }`);
-            // `[${this.attrNametoLock}]:active {
+            // `[${this.attrNameMoving}]:active {
             //    pointer-events: none;
             //    cursor: grab; /* <-- Doesn't work */
             //    outline: 2px dashed #3ea6ff !important;
@@ -483,25 +501,23 @@ window.nova_plugins.push({
                   this.initialY = evt.clientY - (this.yOffset || 0);
                   break;
             }
-            this.active = true;
+            this.moving = true;
             // document.body.style.cursor = 'grab';
             document.body.style.cursor = 'move';
          },
 
          dragEnd(evt) {
-            if (!this.active) return;
+            if (!this.moving) return;
             this.log('dragEnd');
 
             this.initialX = this.currentX;
             this.initialY = this.currentY;
-            this.active = false;
+            this.moving = false;
             document.body.style.cursor = 'default';
          },
 
          draging(evt) {
-            if (!this.active) return;
-            evt.preventDefault(); // Doesn't work. Replace to preventDefault patch
-            evt.stopImmediatePropagation(); // Doesn't work. Replace to preventDefault patch
+            if (!this.moving) return;
 
             this.log('draging');
 
@@ -553,11 +569,11 @@ window.nova_plugins.push({
             this.xOffset = this.currentX;
             this.yOffset = this.currentY;
 
-            this.setTranslate({ 'X': this.currentX, 'Y': this.currentY });
+            this.moveByCoordinates({ 'X': this.currentX, 'Y': this.currentY });
          },
 
-         setTranslate({ X = required(), Y = required() }) {
-            this.log('setTranslate', ...arguments);
+         moveByCoordinates({ X = required(), Y = required() }) {
+            this.log('moveByCoordinates', ...arguments);
             this.dragTarget.style.transform = `translate3d(${X}px, ${Y}px, 0)`;
          },
 
@@ -674,12 +690,12 @@ window.nova_plugins.push({
          label: 'Player size',
          'label:zh': '播放器尺寸',
          'label:ja': 'プレーヤーのサイズ',
-         'label:ko': '플레이어 크기',
-         'label:id': 'Ukuran pemain',
-         'label:es': 'Tamaño del jugador',
+         // 'label:ko': '플레이어 크기',
+         // 'label:id': 'Ukuran pemain',
+         // 'label:es': 'Tamaño del jugador',
          'label:pt': 'Tamanho do jogador',
          'label:fr': 'Taille du joueur',
-         'label:it': 'Dimensioni del giocatore',
+         // 'label:it': 'Dimensioni del giocatore',
          // 'label:tr': 'Oyuncu boyutu',
          'label:de': 'Spielergröße',
          'label:pl': 'Rozmiar odtwarzacza',
@@ -688,12 +704,12 @@ window.nova_plugins.push({
          title: 'Less value - larger size',
          'title:zh': '较小的值 - 较大的尺寸',
          'title:ja': '小さい値-大きいサイズ',
-         'title:ko': '더 작은 값 - 더 큰 크기',
-         'title:id': 'Nilai lebih kecil - ukuran lebih besar',
-         'title:es': 'Valor más pequeño - tamaño más grande',
+         // 'title:ko': '더 작은 값 - 더 큰 크기',
+         // 'title:id': 'Nilai lebih kecil - ukuran lebih besar',
+         // 'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
          'title:fr': 'Plus petite valeur - plus grande taille',
-         'title:it': 'Meno valore - dimensioni maggiori',
+         // 'title:it': 'Meno valore - dimensioni maggiori',
          // 'title:tr': 'Daha az değer - daha büyük boyut',
          'title:de': 'Kleiner Wert - größere Größe',
          'title:pl': 'Mniejsza wartość - większy rozmiar',
@@ -711,12 +727,12 @@ window.nova_plugins.push({
          label: 'Player position',
          'label:zh': '球员位置',
          'label:ja': 'プレイヤーの位置',
-         'label:ko': '선수 위치',
-         'label:id': 'Posisi pemain',
-         'label:es': 'Posición de jugador',
+         // 'label:ko': '선수 위치',
+         // 'label:id': 'Posisi pemain',
+         // 'label:es': 'Posición de jugador',
          'label:pt': 'Posição do jogador',
          'label:fr': 'La position du joueur',
-         'label:it': 'Posizione del giocatore',
+         // 'label:it': 'Posizione del giocatore',
          // 'label:tr': 'Oyuncu pozisyonu',
          'label:de': 'Spielerposition',
          'label:pl': 'Pozycja odtwarzacza',
@@ -802,6 +818,18 @@ window.nova_plugins.push({
       //    'label:ua': 'Діапазон видимості чутливості відтворювача',
       //    type: 'number',
       //    title: 'in %',
+      //    // 'title:zh': '',
+      //    // 'title:ja': '',
+      //    // 'title:ko': '',
+      //    // 'title:id': '',
+      //    // 'title:es': '',
+      //    // 'title:pt': '',
+      //    // 'title:fr': '',
+      //    // 'title:it': '',
+      //    // 'title:tr': '',
+      //    // 'title:de': '',
+      //    // 'title:pl': '',
+      //    // 'title:ua': '',
       //    placeholder: '%',
       //    step: 10,
       //    min: 10,

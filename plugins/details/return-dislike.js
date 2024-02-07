@@ -1,3 +1,6 @@
+// for test:
+https://www.youtube.com/watch?v=eB6txyhHFG4 - many dislike count
+
 window.nova_plugins.push({
    id: 'return-dislike',
    title: 'Show dislike count',
@@ -15,7 +18,7 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'watch, -mobile',
    // restart_on_location_change: true,
-   section: 'details',
+   section: 'details-buttons',
    // opt_api_key_warn: true,
    desc: 'via by returnyoutubedislike.com',
    // 'title:zh': '',
@@ -35,6 +38,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/436115-return-youtube-dislike
       // alt2 - https://greasyfork.org/en/scripts/480949-show-youtube-like-dislike-ratios-in-video-descriptions
+      // alt3 - https://greasyfork.org/en/scripts/473533-return-youtube-dislike-on-mobile
 
       // fix conflict with [details-buttons] plugin
       if (user_settings.details_button_no_labels
@@ -47,7 +51,7 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'nova-dislikes-count:',
          SELECTOR_ID = 'nova-dislikes-count';
 
-      NOVA.runOnPageInitOrTransition(async () => {
+      NOVA.runOnPageLoad(async () => {
          if (NOVA.currentPage != 'watch') return;
 
          document.addEventListener('yt-action', dislikeIsUpdated);
@@ -128,9 +132,9 @@ window.nova_plugins.push({
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-            // const percent = ~~(100 * data.likes / (data.likes + data.dislikes)); // liked
-            const percent = ~~(100 * data.dislikes / (data.likes + data.dislikes)); // disliked
-            const text = `${data.dislikes} (${percent}%)`;
+            // const percent = ~~(data.likes * 100 / (data.likes + data.dislikes)); // liked
+            const percent = ~~(data.dislikes * 100 / (data.likes + data.dislikes)); // disliked
+            const text = `${NOVA.prettyRoundInt(data.dislikes)} (${percent}%)`;
 
             (document.getElementById(SELECTOR_ID) || (function () {
                container.insertAdjacentHTML('beforeend',

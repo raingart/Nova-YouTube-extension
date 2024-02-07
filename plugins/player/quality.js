@@ -6,17 +6,22 @@
 // https://www.youtube.com/watch?v=f354o8g-4mk - don't have 240p
 // https://www.youtube.com/watch?v=E480DjY6ve8 - only 360p
 
+// https://www.youtube.com/watch?v=2_4aVFv95z8 - hd2160
+// https://www.youtube.com/watch?v=IUWJ8_lkFAA - hd2880
+// https://www.youtube.com/watch?v=Hf5enZVznC4 - highres
+// https://www.youtube.com/watch?v=5USuekk16e0 - highres
+
 window.nova_plugins.push({
    id: 'video-quality',
    title: 'Video quality',
    'title:zh': '视频质量',
    'title:ja': 'ビデオ品質',
-   'title:ko': '비디오 품질',
-   'title:id': 'Kualitas video',
-   'title:es': 'Calidad de video',
+   // 'title:ko': '비디오 품질',
+   // 'title:id': 'Kualitas video',
+   // 'title:es': 'Calidad de video',
    'title:pt': 'Qualidade de vídeo',
    'title:fr': 'Qualité vidéo',
-   'title:it': 'Qualità video',
+   // 'title:it': 'Qualità video',
    // 'title:tr': 'Video kalitesi',
    'title:de': 'Videoqualität',
    'title:pl': 'Jakość wideo',
@@ -61,7 +66,7 @@ window.nova_plugins.push({
             ) {
                movie_player.addEventListener('onPlaybackQualityChange', quality => {
                   // console.debug('document.activeElement,',document.activeElement);
-                  if (document.activeElement.getAttribute('role') == 'menuItemradio' // focuse on setting menu
+                  if (document.activeElement.getAttribute('role') == 'menuitemradio' // focuse on setting menu
                      && quality !== selectedQuality // the new quality
                   ) {
                      console.info(`keep quality "${quality}" in the session`);
@@ -75,7 +80,7 @@ window.nova_plugins.push({
 
             // custom volume from [save-channel-state] plugin
             if (user_settings['save-channel-state']) {
-               NOVA.runOnPageInitOrTransition(async () => {
+               NOVA.runOnPageLoad(async () => {
                   if ((NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed')
                      && (userQuality = await NOVA.storage_obj_manager.getParam('quality'))
                   ) {
@@ -126,7 +131,7 @@ window.nova_plugins.push({
             this.quality_lock = true;
 
             let availableQualityLevels;
-            await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels.length, 50) // 50ms
+            await NOVA.waitUntil(() => (availableQualityLevels = movie_player.getAvailableQualityLevels()) && availableQualityLevels.length, 50); // 50ms
 
             // premium support
             if (user_settings.video_quality_premium
@@ -141,7 +146,7 @@ window.nova_plugins.push({
 
             // incorrect window size definition in embed
             // set max quality limit (screen resolution (not viewport) + 30%)
-            const maxWidth = (NOVA.currentPage == 'watch') ? window.screen.width : window.innerWidth;
+            const maxWidth = (NOVA.currentPage == 'watch') ? screen.width : window.innerWidth;
             const maxQualityIdx = availableQualityLevels.findIndex(i => qualityFormatListWidth[i] <= (maxWidth * 1.3));
             availableQualityLevels = availableQualityLevels.slice(maxQualityIdx);
 
@@ -205,15 +210,13 @@ window.nova_plugins.push({
          const settingsButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-chrome-bottom button.ytp-settings-button[aria-expanded="false"]`);
          settingsButton.click(); // open
 
-         //console.log(document.body.querySelectorAll(`#movie_player .ytp-chrome-bottom .ytp-settings-menu [role="menuitem"]:last-child`))
          // quality menu
          const qualityMenuButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"]:last-child`);
          qualityMenuButton.click(); // open
          // Strategy 1
          // const qualityItem = [...document.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
-         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]:has(.ytp-premium-label)')]
-         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]')]
-         const qualityItem = [...document.querySelectorAll('.ytp-quality-menu .ytp-menuitem')]
+         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu .ytp-menuitem[role="menuitemradio"]:has(.ytp-premium-label)')]
+         const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]')]
             .find(menuItem => menuItem.textContent.includes(qualityLabel));
          // Strategy 2
          // const qualityItem = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
@@ -253,12 +256,12 @@ window.nova_plugins.push({
          label: 'Default quality',
          'label:zh': '默认视频质量',
          'label:ja': 'デフォルトのビデオ品質',
-         'label:ko': '기본 비디오 품질',
-         'label:id': 'Kualitas bawaan',
-         'label:es': 'Calidad predeterminada',
+         // 'label:ko': '기본 비디오 품질',
+         // 'label:id': 'Kualitas bawaan',
+         // 'label:es': 'Calidad predeterminada',
          'label:pt': 'Qualidade padrão',
          'label:fr': 'Qualité par défaut',
-         'label:it': 'Qualità predefinita',
+         // 'label:it': 'Qualità predefinita',
          // 'label:tr': 'Varsayılan kalite',
          'label:de': 'Standardvideoqualität',
          'label:pl': 'Domyślna jakość',
@@ -268,7 +271,7 @@ window.nova_plugins.push({
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
             { label: '8K/4320p', value: 'highres' },
-            // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            { label: '5K/2880p', value: 'hd2880' },
             { label: '4K/2160p', value: 'hd2160' },
             { label: 'QHD/1440p', value: 'hd1440' },
             { label: 'FHD/1080p', value: 'hd1080', selected: true },
@@ -304,12 +307,12 @@ window.nova_plugins.push({
          label: 'Save manually selected for the same tab',
          'label:zh': '手动选择的质量保存在当前选项卡中',
          'label:ja': '手動で選択した品質が現在のタブに保存されます',
-         'label:ko': '동일한 탭에 대해 수동으로 선택한 저장',
-         'label:id': 'Simpan dipilih secara manual untuk tab yang sama',
-         'label:es': 'Guardar seleccionado manualmente para la misma pestaña',
+         // 'label:ko': '동일한 탭에 대해 수동으로 선택한 저장',
+         // 'label:id': 'Simpan dipilih secara manual untuk tab yang sama',
+         // 'label:es': 'Guardar seleccionado manualmente para la misma pestaña',
          'label:pt': 'Salvar selecionado manualmente para a mesma guia',
          'label:fr': 'Enregistrer sélectionné manuellement pour le même onglet',
-         'label:it': 'Salva selezionato manualmente per la stessa scheda',
+         // 'label:it': 'Salva selezionato manualmente per la stessa scheda',
          // 'label:tr': 'Aynı sekme için manuel olarak seçili kaydet',
          'label:de': 'Manuell für dieselbe Registerkarte ausgewählt speichern',
          'label:pl': 'Właściwości dla obecnej karty',
@@ -318,12 +321,12 @@ window.nova_plugins.push({
          title: 'Affects to next videos',
          'title:zh': '对下一个视频的影响',
          'title:ja': '次の動画への影響',
-         'title:ko': '다음 동영상에 영향',
-         'title:id': 'Mempengaruhi video berikutnya',
-         'title:es': 'Afecta a los siguientes videos',
+         // 'title:ko': '다음 동영상에 영향',
+         // 'title:id': 'Mempengaruhi video berikutnya',
+         // 'title:es': 'Afecta a los siguientes videos',
          'title:pt': 'Afeta para os próximos vídeos',
          'title:fr': 'Affecte aux prochaines vidéos',
-         'title:it': 'Influisce sui prossimi video',
+         // 'title:it': 'Influisce sui prossimi video',
          // 'title:tr': 'Sonraki videoları etkiler',
          'title:de': 'Beeinflusst die nächsten Videos',
          'title:pl': 'Zmiany w następnych filmach',
@@ -347,12 +350,12 @@ window.nova_plugins.push({
          title: 'to save traffic / increase speed',
          'title:zh': '节省流量/提高速度',
          'title:ja': 'トラフィックを節約/速度を上げる',
-         'title:ko': '트래픽 절약 / 속도 향상',
-         'title:id': 'untuk menghemat lalu lintas / meningkatkan kecepatan',
-         'title:es': 'para ahorrar tráfico / aumentar la velocidad',
+         // 'title:ko': '트래픽 절약 / 속도 향상',
+         // 'title:id': 'untuk menghemat lalu lintas / meningkatkan kecepatan',
+         // 'title:es': 'para ahorrar tráfico / aumentar la velocidad',
          'title:pt': 'para economizar tráfego / aumentar a velocidade',
          'title:fr': 'économiser du trafic / augmenter la vitesse',
-         'title:it': 'per risparmiare traffico / aumentare la velocità',
+         // 'title:it': 'per risparmiare traffico / aumentare la velocità',
          // 'title:tr': '',
          'title:de': 'um Verkehr zu sparen / Geschwindigkeit zu erhöhen',
          'title:pl': 'aby zaoszczędzić ruch / zwiększyć prędkość',
@@ -361,7 +364,7 @@ window.nova_plugins.push({
          options: [
             // Available ['highres','hd2880','hd2160','hd1440','hd1080','hd720','large','medium','small','tiny']
             // { label: '8K/4320p', value: 'highres' }, // useless for the current mode
-            // // { label: '5K/2880p', value: 'hd2880' }, // missing like https://www.youtube.com/watch?v=Hbj3z8Db4Rk
+            // { label: '5K/2880p', value: 'hd2880' }, // useless for the current mode
             // { label: '4K/2160p', value: 'hd2160' }, // useless for the current mode
             { label: 'QHD/1440p', value: 'hd1440' },
             { label: 'FHD/1080p', value: 'hd1080' },

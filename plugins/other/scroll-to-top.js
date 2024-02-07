@@ -3,12 +3,12 @@ window.nova_plugins.push({
    title: 'Add "Scroll to top" button',
    'title:zh': '滚动到顶部按钮',
    'title:ja': 'トップボタンまでスクロール',
-   'title:ko': '맨 위로 스크롤 버튼',
-   'title:id': 'Gulir ke tombol atas',
-   'title:es': 'Desplazarse al botón superior',
+   // 'title:ko': '맨 위로 스크롤 버튼',
+   // 'title:id': 'Gulir ke tombol atas',
+   // 'title:es': 'Desplazarse al botón superior',
    'title:pt': 'Role para o botão superior',
    'title:fr': 'Faites défiler vers le haut',
-   'title:it': 'Scorri fino al pulsante in alto',
+   // 'title:it': 'Scorri fino al pulsante in alto',
    // 'title:tr': 'Üst düğmeye kaydır',
    'title:de': 'Nach oben scrollen',
    'title:pl': 'Przycisk przewijania do góry',
@@ -18,12 +18,12 @@ window.nova_plugins.push({
    desc: 'Displayed on long pages',
    'desc:zh': '出现在长页面上',
    'desc:ja': '長いページに表示されます',
-   'desc:ko': '긴 페이지에 표시됨',
-   'desc:id': 'Ditampilkan di halaman panjang',
-   'desc:es': 'Mostrado en páginas largas',
+   // 'desc:ko': '긴 페이지에 표시됨',
+   // 'desc:id': 'Ditampilkan di halaman panjang',
+   // 'desc:es': 'Mostrado en páginas largas',
    'desc:pt': 'Exibido em páginas longas',
    'desc:fr': 'Affiché sur de longues pages',
-   'desc:it': 'Visualizzato su pagine lunghe',
+   // 'desc:it': 'Visualizzato su pagine lunghe',
    // 'desc:tr': 'Uzun sayfalarda görüntüleniyor',
    'desc:de': 'Wird auf langen Seiten angezeigt',
    'desc:pl': 'Wyświetlaj na długich stronach',
@@ -37,6 +37,7 @@ window.nova_plugins.push({
 
          const btn = document.createElement('button');
          btn.id = SELECTOR_ID;
+         // btn.style.cssText = '';
          Object.assign(btn.style, {
             position: 'fixed',
             cursor: 'pointer',
@@ -73,6 +74,7 @@ window.nova_plugins.push({
 
          // create arrow
          const arrow = document.createElement('span');
+         // arrow.style.cssText = '';
          Object.assign(arrow.style, {
             border: 'solid white',
             'border-width': '0 3px 3px 0',
@@ -111,12 +113,12 @@ window.nova_plugins.push({
          label: 'Smooth',
          'label:zh': '光滑的',
          'label:ja': 'スムーズ',
-         'label:ko': '매끄러운',
-         'label:id': 'Mulus',
-         'label:es': 'Suave',
+         // 'label:ko': '매끄러운',
+         // 'label:id': 'Mulus',
+         // 'label:es': 'Suave',
          'label:pt': 'Suave',
          'label:fr': 'Lisse',
-         'label:it': 'Scorrimento fluido',
+         // 'label:it': 'Scorrimento fluido',
          // 'label:tr': 'Düz',
          'label:de': 'Glatt',
          'label:pl': 'Płynnie',
@@ -128,12 +130,12 @@ window.nova_plugins.push({
          label: 'Unpause a video',
          'label:zh': '视频取消暂停',
          'label:ja': 'ビデオの一時停止解除',
-         'label:ko': '비디오 일시 중지 해제',
-         'label:id': 'Video batalkan Jeda',
-         'label:es': 'Reanudar video',
+         // 'label:ko': '비디오 일시 중지 해제',
+         // 'label:id': 'Video batalkan Jeda',
+         // 'label:es': 'Reanudar video',
          'label:pt': 'Retomar vídeo',
          'label:fr': 'Annuler la pause de la vidéo',
-         'label:it': 'Annulla pausa video',
+         // 'label:it': 'Annulla pausa video',
          // 'label:tr': 'Videoyu Duraklat',
          'label:de': 'Video wieder anhalten',
          'label:pl': 'Wyłącz wstrzymanie odtwarzania filmu',

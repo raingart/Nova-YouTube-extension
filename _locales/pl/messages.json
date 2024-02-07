@@ -38,17 +38,29 @@
    "opt_appearance_player": {
       "message": "Odtwarzacz"
    },
+   "opt_appearance_control_panel": {
+      "message": "Control Panel"
+   },
+   "opt_appearance_playlist": {
+      "message": "Playlist"
+   },
    "opt_appearance_sidebar": {
       "message": "Pasek boczny"
    },
    "opt_appearance_details": {
       "message": "Szczegóły"
    },
+   "opt_appearance_details_buttons": {
+      "message": "Buttons"
+   },
    "opt_appearance_comments": {
       "message": "Komentarze"
    },
    "opt_appearance_other": {
       "message": "Różne"
+   },
+   "opt_appearance_thumbs": {
+      "message": "Thumbs"
    },
    "opt_legend_settings_transfer": {
       "message": "Przeniesienie ustawień:"

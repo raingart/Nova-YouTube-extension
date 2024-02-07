@@ -1,18 +1,19 @@
 // for test
 // https://www.youtube.com/embed/u3JP5UzZbiI?enablejsapi=1&playerapiid=pljs_yt_YouTube10069&html5=1&start=0&disablekb=1&autohide=1&playsinline=1&iv_load_policy=3&controls=0&showinfo=0&modestbranding=1&rel=0&autoplay=0&loop=0&origin=https%3A%2F%2Fsmall-games.info&widgetid=1
+// https://lsgamedev.itch.io/ouija-rumours
 
 window.nova_plugins.push({
    // id: 'embed-redirect-watch',
    id: 'embed-popup',
-   title: 'Open embedded to popup',
+   title: 'Open small embedded in popup',
    'title:zh': '将嵌入式视频重定向到弹出窗口',
    'title:ja': '埋め込まれたビデオをポップアップにリダイレクトします',
-   'title:ko': '포함된 비디오를 팝업으로 리디렉션',
-   'title:id': '포함된 비디오를 팝업으로 리디렉션',
-   'title:es': 'Redirigir video incrustado a ventana emergente',
+   // 'title:ko': '포함된 비디오를 팝업으로 리디렉션',
+   // 'title:id': '포함된 비디오를 팝업으로 리디렉션',
+   // 'title:es': 'Redirigir video incrustado a ventana emergente',
    'title:pt': 'Redirecionar vídeo incorporado para pop-up',
    'title:fr': 'Rediriger la vidéo intégrée vers une fenêtre contextuelle',
-   'title:it': 'Reindirizza il video incorporato al popup',
+   // 'title:it': 'Reindirizza il video incorporato al popup',
    // 'title:tr': '',
    'title:de': 'Leiten Sie eingebettete Videos zum Popup um',
    'title:pl': 'Przekieruj osadzone wideo do wyskakującego okienka',
@@ -54,7 +55,7 @@ window.nova_plugins.push({
       // alert(window.innerWidth)
       // alert(document.documentElement.clientWidth)
       // add emdeb popup only for small frame size
-      if (window.innerWidth > 720) return;
+      if (window.innerWidth > 720 && window.innerHeight > 480) return;
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
@@ -64,7 +65,7 @@ window.nova_plugins.push({
          });
 
       function createPopup() {
-         if (this.videoWidth < window.innerWidth) return;
+         if (this.videoHeight < window.innerWidth && this.videoHeight < window.innerHeight) return;
 
          // this == NOVA.videoElement
          const { width, height } = NOVA.aspectRatio.sizeToFit({

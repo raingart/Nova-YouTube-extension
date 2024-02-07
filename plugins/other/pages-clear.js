@@ -3,34 +3,34 @@ window.nova_plugins.push({
    // title: 'Hide garbage: annotations, endcards etc',
    // title: 'Hide HTML garbage',
    title: 'Clear pages of junk',
-   // 'title:zh': '',
-   // 'title:ja': '',
+   'title:zh': '清除垃圾页面',
+   'title:ja': 'ジャンクページをクリアする',
    // 'title:ko': '',
    // 'title:id': '',
    // 'title:es': '',
-   // 'title:pt': '',
-   // 'title:fr': '',
+   'title:pt': 'Limpar páginas de lixo',
+   'title:fr': 'Effacer les pages indésirables',
    // 'title:it': '',
    // 'title:tr': '',
-   // 'title:de': '',
-   // 'title:pl': '',
+   'title:de': 'Befreien Sie die Seiten von Müll',
+   'title:pl': 'Wyczyść strony ze śmieci',
    'title:ua': 'Приховайте сміття: анотації, кінцеві заставки тощо',
    run_on_pages: 'results, feed, watch, embed, -mobile',
    section: 'other',
    // desc: "Turn off 'card' in https://www.youtube.com/account_playback",
    // desc: 'Remove the annoying stuff at the end of the videos',
    desc: 'Remove the annoying stuff',
-   // 'desc:zh': '',
-   // 'desc:ja': '',
+   'desc:zh': '删除烦人的东西',
+   'desc:ja': '煩わしいものを取り除く',
    // 'desc:ko': '',
    // 'desc:id': '',
    // 'desc:es': '',
-   // 'desc:pt': '',
-   // 'desc:fr': '',
+   'desc:pt': 'Remova as coisas irritantes',
+   'desc:fr': 'Supprimez les trucs ennuyeux',
    // 'desc:it': '',
    // 'desc:tr': '',
-   // 'desc:de': '',
-   // 'desc:pl': '',
+   'desc:de': 'Entfernen Sie das lästige Zeug',
+   'desc:pl': 'Usuń irytujące rzeczy',
    'desc:ua': 'Приховайте набридливий контент',
    _runtime: user_settings => {
 
@@ -71,7 +71,7 @@ window.nova_plugins.push({
          case 'embed':
             // https://stackoverflow.com/questions/52887444/hide-more-videos-within-youtube-iframe-when-stop-video
             selectorsList.push([
-               '.ytp-pause-overlay', // wide-bottom block with more video list on pause
+               (user_settings['player-quick-buttons'] && user_settings.player_buttons_custom_items?.includes('card-switch')) || '.ytp-pause-overlay', // wide-bottom block with more video list on pause embed
 
                '.ytp-info-panel-preview', // message "COVID-19 • Get the latest information from the WHO about coronavirus." - https://www.youtube.com/embed/47IwHxHVTxc?autoplay=1&wmode=opaque&fs=1&rel=0&autohide=1
             ]);
@@ -115,7 +115,7 @@ window.nova_plugins.push({
 
                '[class^="ytp-cultural-moment"]', // '.ytp-cultural-moment-player-content' link for "https://www.youtube.com/youtubemusic" - https://www.youtube.com/watch?v=9aofoBrFNdg
 
-               'tp-yt-paper-dialog.ytd-popup-container.style-scope > .ytd-popup-container.style-scope', // message "YouTube Premium - Get YouTube without the ads"
+               // 'tp-yt-paper-dialog.ytd-popup-container.style-scope > .ytd-popup-container.style-scope', // message "YouTube Premium - Get YouTube without the ads". Error block unsabsrcibe popup
 
 
                // results, sidebar page
@@ -126,10 +126,9 @@ window.nova_plugins.push({
                'ytd-feed-nudge-renderer', // message "Recommendations not quite right? When you turn on watch history, you’ll get more personalized recommendations."
             ]);
 
-
             // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-            NOVA.css.push(
-               [
+            if (CSS.supports('selector(:has(*))')) {
+               selectorsList.push([
                   // '*:has(ytd-ad-slot-renderer)', // too general
 
                   // home page
@@ -139,9 +138,11 @@ window.nova_plugins.push({
                   // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // Doesn't work. Ad buy
 
                   // watch page
-                  'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // hide off chat "Live chat replay was turned off for this video."
-               ]
-                  .join(',\n') + `{ display: none !important;}`);
+                  'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // hide chat "Live chat replay was turned off for this video."
+
+                  'ytd-popup-container:has(yt-tooltip-renderer[position-type="OPEN_POPUP_POSITION_BOTTOM"])', // hide tooltip below "join" buttob. $details-text = "Join this channel and unlock members-only perks" (https://www.youtube.com/watch?v=tBRT_RbnGOk)
+               ]);
+            }
       }
 
       if (selectorsList.length) {

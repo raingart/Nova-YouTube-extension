@@ -102,7 +102,7 @@ const Opt = {
                      `<div class="info" ${plugin.desc ? ` tooltip="${plugin.desc.replace(/"/g, "'")}" flow="up"` : ''}>
                         <label for="${plugin.id}">${plugin.title}</label>
                         <a href="https://github.com/raingart/Nova-YouTube-extension/wiki/plugins#${plugin.id}" target="_blank" title="${i18n('opt_title_help_link')}">?</a>
-                        ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: initial;">⚠️</span></b>` : ''}
+                        ${plugin.opt_api_key_warn ? `<b tooltip="${i18n('opt_api_key_warn')}" flow="left"><span style="font-size: inherit;">⚠️</span></b>` : ''}
                      </div>
                      <div class="opt">
                         <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
@@ -225,7 +225,8 @@ const Opt = {
 
                               case 'string':
                                  tagOption.value = option;
-                                 tagOption.textContent = option.toLocaleUpperCase();
+                                 // if (option.length === 1) option = option.toLocaleUpperCase(); // upperCase letter hotkeys
+                                 tagOption.textContent = option;
                                  break;
 
                               case 'number':
@@ -242,9 +243,7 @@ const Opt = {
 
                      case 'label':
                         const label = document.createElement(attr);
-                        // label.textContent = value;
-                        label.innerHTML = '<font>↪</font>' + value;
-                        // label.innerHTML = '<font>►</font>' + value;
+                        label.textContent = value;
                         label.htmlFor = (property.type?.toLowerCase() == 'radio') ? name : property.name;
                         exportContainer.append(label);
                         // exportContainer.insertAdjacentHTML('beforeend", '<label>' + value + '</label>');
@@ -437,8 +436,8 @@ const Opt = {
          console.trace();
          console.groupEnd();
       }
-   }
-}
+   },
+};
 
 
 window.addEventListener('load', () => {

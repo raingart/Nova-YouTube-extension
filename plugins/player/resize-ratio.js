@@ -1,10 +1,10 @@
 // for test
-// https://www.youtube.com/watch?v=SDjbK8JWA_Y - square
+// https://www.youtube.com/watch?v=SDjbK8JWA_Y - (1:1)
 // https://www.youtube.com/watch?v=OV27taeR4LA - (4:3)
-// https://www.youtube.com/watch?v=KOCZaxzZE34 - (4:3)
-// https://www.youtube.com/watch?v=z-2w7eAL-98 - (4:3)
-// https://www.youtube.com/watch?v=TaQwW5eQZeY - (4:3)
-// https://www.youtube.com/watch?v=U9mUwZ47z3E - ultra-wide
+// https://www.youtube.com/watch?v=KOCZaxzZE34 - (91:90)
+// https://www.youtube.com/watch?v=z-2w7eAL-98 - (121:120)
+// https://www.youtube.com/watch?v=TaQwW5eQZeY - (121:120)
+// https://www.youtube.com/watch?v=U9mUwZ47z3E - (ultra-wide)
 
 window.nova_plugins.push({
    id: 'player-resize-ratio',
@@ -51,27 +51,31 @@ window.nova_plugins.push({
       NOVA.waitSelector('ytd-watch-flexy:not([theater])')
          .then(ytd_watch => {
 
-            NOVA.waitSelector('#movie_player video')
+            NOVA.waitSelector('#movie_player video', { container: ytd_watch })
                .then(video => {
                   console.assert(ytd_watch.calculateCurrentPlayerSize_, '"ytd_watch" does not have fn "calculateCurrentPlayerSize_"');
 
                   const
                      heightRatio = .5625, // 0.5625 as a fraction is 9/16 (https://hellothinkster.com/math-questions/fractions/what-is-0.5625-as-a-fraction)
-                     check4to3 = () => '4:3' == NOVA.aspectRatio.getAspectRatio({
-                        // 'width': movie_player.clientWidth,
-                        // 'height': movie_player.clientHeight,
-                        // 'width': NOVA.videoElement?.videoWidth,
-                        // 'height': NOVA.videoElement?.videoHeight,
-                        'width': video.videoWidth,
-                        'height': video.videoHeight,
-                     });
+                     squareAspectRatio = () => {
+                        const aspectRatio = NOVA.aspectRatio.getAspectRatio({
+                           // 'width': movie_player.clientWidth,
+                           // 'height': movie_player.clientHeight,
+                           // 'width': NOVA.videoElement?.videoWidth,
+                           // 'height': NOVA.videoElement?.videoHeight,
+                           'width': video.videoWidth,
+                           'height': video.videoHeight,
+                        });
+                        return ('4:3' == aspectRatio || '1:1' == aspectRatio);
+                     };
 
-                  // Strategy 1 API
+                  // Strategy 1 (API)
                   if (ytd_watch.calculateCurrentPlayerSize_ && ytd_watch.updateStyles) {
                      const backupFn = ytd_watch.calculateCurrentPlayerSize_;
                      // const backupFn = ytd_watch.calculateNormalPlayerSize_;
+
                      // init
-                     patchYtCalculateFn();
+                     NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && patchYtCalculateFn());
                      // update video
                      video.addEventListener('loadeddata', patchYtCalculateFn);
 
@@ -99,7 +103,8 @@ window.nova_plugins.push({
                      }
 
                      function patchYtCalculateFn() {
-                        ytd_watch.calculateCurrentPlayerSize_ = check4to3() ? sizeBypass : backupFn;
+                        ytd_watch.calculateCurrentPlayerSize_ = squareAspectRatio() ? sizeBypass : backupFn;
+                        ytd_watch.calculateCurrentPlayerSize_();
                      }
                   }
                   // Strategy 2. Now broken ".ytp-chrome-bottom" (https://www.youtube.com/watch?v=U9mUwZ47z3E)
@@ -120,7 +125,7 @@ window.nova_plugins.push({
                   window.addEventListener('resize', updateRatio); // fix: restore player size
 
                   function updateRatio() {
-                     if (check4to3()) {
+                     if (squareAspectRatio()) {
                         ytd_watch.style.setProperty('--ytd-watch-flexy-width-ratio', 1);
                         ytd_watch.style.setProperty('--ytd-watch-flexy-height-ratio', heightRatio);
                      }
@@ -140,10 +145,10 @@ window.nova_plugins.push({
       //       const aspectRatio = NOVA.aspectRatio.getAspectRatio(video.videoWidth, video.videoHeight);
       //       console.debug('>', aspectRatio, video.videoWidth, height);
       //       // update only height ratio
-      //       // Strategy 1
+      //       // Strategy 1 (HTML)
       //       // ytd_watch.style.setProperty('--ytd-watch-flexy-height-ratio', aspectRatioHeightList[aspectRatio]);
 
-      //       // Strategy 2 API
+      //       // Strategy 2 (API)
       //       ytd_watch.updateStyles({
       //          '--ytd-watch-flexy-width-ratio': 1,
       //          '--ytd-watch-flexy-height-ratio': .5625,

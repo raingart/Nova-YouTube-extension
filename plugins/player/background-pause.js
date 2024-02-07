@@ -8,12 +8,12 @@ window.nova_plugins.push({
    // title: 'Only one player instance playing',
    'title:zh': '自动暂停除活动选项卡以外的所有选项卡',
    'title:ja': 'アクティブなタブを除くすべてのタブを自動一時停止',
-   'title:ko': '활성 탭을 제외한 모든 탭 자동 일시 중지',
-   'title:id': 'Jeda otomatis semua tab latar belakang kecuali yang aktif',
-   'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
+   // 'title:ko': '활성 탭을 제외한 모든 탭 자동 일시 중지',
+   // 'title:id': 'Jeda otomatis semua tab latar belakang kecuali yang aktif',
+   // 'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
    'title:pt': 'Pausar automaticamente todas as guias, exceto a ativa',
    'title:fr': "Interrompt la lecture des vidéos dans d'autres onglets",
-   'title:it': 'Metti automaticamente in pausa tutte le schede in background tranne quella attiva',
+   // 'title:it': 'Metti automaticamente in pausa tutte le schede in background tranne quella attiva',
    // 'title:tr': 'Etkin olan dışındaki tüm sekmeleri otomatik duraklat',
    'title:de': 'Alle Tabs außer dem aktiven automatisch pausieren',
    'title:pl': 'Zatrzymanie kart w tle oprócz aktywnej',
@@ -38,6 +38,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/444330-youtube-autoplay-mutex
       // alt2 - https://greasyfork.org/en/scripts/463632-youtube-pause-background-videos
+      // alt3 - https://greasyfork.org/en/scripts/30344-pause-mute-html5-audio-video-on-leaving-tab
 
       // redirect for localStorage common storage space
       if (location.hostname.includes('youtube-nocookie.com')) {
@@ -52,7 +53,7 @@ window.nova_plugins.push({
       // let initPageIsBackgroundTab = !document.hasFocus();
 
       // function getVisibilityState() {
-      //     // don`t react "Video unavailable"
+      //     // don't react "Video unavailable"
       //    return {
       //       0: 'show',
       //       1: 'moniplayer',
@@ -157,6 +158,7 @@ window.nova_plugins.push({
                      // && video.paused  // don't see ENDED
                      && ['UNSTARTED', 'PAUSED'].includes(NOVA.getPlayerState())
                   ) {
+                     // console.debug('focus', 'hidden:', document.hidden, 'visibilityState:', document.visibilityState, 'hasFocus:', document.hasFocus());
                      // console.debug('play video in focus');
                      video.play();
                   }
@@ -171,6 +173,7 @@ window.nova_plugins.push({
                   if ('PLAYING' == NOVA.getPlayerState()
                      && !document.pictureInPictureElement
                   ) {
+                     // console.debug('blur', 'hidden:', document.hidden, 'visibilityState:', document.visibilityState, 'hasFocus:', document.hasFocus());
                      // console.debug('pause video on lost focus');
                      video.pause();
                   }
@@ -292,12 +295,12 @@ window.nova_plugins.push({
          label: 'Autoplay on tab focus mode',
          'label:zh': '在标签焦点上自动播放',
          'label:ja': 'タブフォーカスでの自動再生',
-         'label:ko': '탭 포커스에서 자동 재생',
-         'label:id': 'Putar otomatis pada fokus tab',
-         'label:es': 'Reproducción automática en el enfoque de la pestaña',
+         // 'label:ko': '탭 포커스에서 자동 재생',
+         // 'label:id': 'Putar otomatis pada fokus tab',
+         // 'label:es': 'Reproducción automática en el enfoque de la pestaña',
          'label:pt': 'Reprodução automática no foco da guia',
          'label:fr': "Lecture automatique sur le focus de l'onglet",
-         'label:it': 'Riproduzione automatica su tab focus',
+         // 'label:it': 'Riproduzione automatica su tab focus',
          // 'label:tr': 'Sekme odağında otomatik oynatma',
          'label:de': 'Autoplay bei Tab-Fokus',
          'label:pl': 'Autoodtwarzanie po wybraniu karty',
@@ -355,12 +358,12 @@ window.nova_plugins.push({
          label: 'Autopause if tab loses focus',
          'label:zh': '如果选项卡失去焦点，则自动暂停视频',
          'label:ja': 'タブがフォーカスを失った場合にビデオを自動一時停止',
-         'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',
-         'label:id': 'Jeda otomatis video jika tab kehilangan fokus',
-         'label:es': 'Pausa automática del video si la pestaña pierde el foco',
+         // 'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',
+         // 'label:id': 'Jeda otomatis video jika tab kehilangan fokus',
+         // 'label:es': 'Pausa automática del video si la pestaña pierde el foco',
          'label:pt': 'Pausar automaticamente o vídeo se a guia perder o foco',
          'label:fr': "Pause automatique de la vidéo si l'onglet perd le focus",
-         'label:it': 'Metti automaticamente in pausa il video se la scheda perde la messa a fuoco',
+         // 'label:it': 'Metti automaticamente in pausa il video se la scheda perde la messa a fuoco',
          // 'label:tr': 'Sekme odağı kaybederse videoyu otomatik duraklat',
          'label:de': 'Video automatisch pausieren, wenn der Tab den Fokus verliert',
          'label:pl': 'Automatycznie wstrzymaj wideo, jeśli karta straci ostrość',

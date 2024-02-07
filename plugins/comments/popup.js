@@ -3,12 +3,12 @@ window.nova_plugins.push({
    title: 'Comments section in popup',
    'title:zh': '弹出窗口中的评论部分',
    'title:ja': 'ポップアップのコメントセクション',
-   'title:ko': '팝업의 댓글 섹션',
-   'title:id': 'Bagian komentar di popup',
-   'title:es': 'Sección de comentarios en ventana emergente',
+   // 'title:ko': '팝업의 댓글 섹션',
+   // 'title:id': 'Bagian komentar di popup',
+   // 'title:es': 'Sección de comentarios en ventana emergente',
    'title:pt': 'Seção de comentários no pop-up',
    'title:fr': 'Section des commentaires dans la fenêtre contextuelle',
-   'title:it': 'Sezione commenti nel popup',
+   // 'title:it': 'Sezione commenti nel popup',
    // 'title:tr': 'Açılır pencerede yorumlar bölümü',
    'title:de': 'Kommentarbereich im Popup',
    'title:pl': 'Sekcja komentarzy w osobnym oknie',
@@ -31,12 +31,13 @@ window.nova_plugins.push({
          counterAttrName = 'data-counter';
 
       // append (recalc) count
-      NOVA.runOnPageInitOrTransition(() => {
+      NOVA.runOnPageLoad(() => {
          if (NOVA.currentPage == 'watch') {
             NOVA.waitSelector('ytd-comments-header-renderer #title #count', { destroy_after_page_leaving: true })
                .then(count => {
                   document.body.querySelector(COMMENTS_SELECTOR)
                      ?.setAttribute(counterAttrName,
+                        // parseFloat(count.textContent.replace(/[^0-9.]/g, ''));
                         NOVA.prettyRoundInt(parseInt(count.textContent.replace(/,/g, '')))
                      );
                });
@@ -80,6 +81,7 @@ window.nova_plugins.push({
                   color: var(--yt-spec-text-primary);;
                   border: 1px solid #333;
                   max-width: ${user_settings.comments_popup_width || 40}%;
+                  ${user_settings['square-avatars'] ? '' : 'border-radius: 12px'};
                }
 
                ${COMMENTS_SELECTOR}:not(:hover) {
@@ -94,7 +96,7 @@ window.nova_plugins.push({
                /* add scroll option in comments */
                ${COMMENTS_SELECTOR} > #sections > #contents {
                   overflow-y: auto;
-                  max-height: 88vh;
+                  max-height: 82.5vh;
                   padding-top: 1em;
                }
 
@@ -167,17 +169,17 @@ window.nova_plugins.push({
       comments_popup_width: {
          _tagName: 'input',
          label: 'Width',
-         // 'label:zh': '',
-         // 'label:ja': '',
+         'label:zh': '宽度',
+         'label:ja': '幅',
          // 'label:ko': '',
          // 'label:id': '',
          // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
+         'label:pt': 'Largura',
+         'label:fr': 'Largeur',
          // 'label:it': '',
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
+         'label:de': 'Breite',
+         'label:pl': 'Szerokość',
          'label:ua': 'Ширина',
          type: 'number',
          // title: 'in %',
@@ -203,17 +205,17 @@ window.nova_plugins.push({
       comments_popup_hide_textarea: {
          _tagName: 'input',
          label: 'Hide textarea',
-         // 'label:zh': '',
-         // 'label:ja': '',
+         'label:zh': '隐藏文本区域',
+         'label:ja': 'テキストエリアを隠す',
          // 'label:ko': '',
          // 'label:id': '',
          // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
+         'label:pt': 'Ocultar área de texto',
+         'label:fr': 'Masquer la zone de texte',
          // 'label:it': '',
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
+         'label:de': 'Textbereich ausblenden',
+         'label:pl': 'Ukryj obszar tekstowy',
          'label:ua': 'Приховати поле вводу',
          type: 'checkbox',
          // title: '',

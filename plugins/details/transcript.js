@@ -15,7 +15,7 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'watch, -mobile',
    // restart_on_location_change: true,
-   section: 'details',
+   section: 'details-buttons',
    // desc: ',
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -34,8 +34,10 @@ window.nova_plugins.push({
       // alt1 - https://greasyfork.org/en/scripts/468715-youtube-script-downloader-button
       // alt2 - https://greasyfork.org/en/scripts/471805-show-youtube-transcript-by-default
       // alt3 - https://greasyfork.org/en/scripts/480993-show-transcript-by-default
+      // alt4 - https://www.reddit.com/r/userscripts/comments/18pymrv/request_show_youtube_transcript_using_a_more/
 
-      // alt (download) - https://greasyfork.org/en/scripts/402811-concatenate-transcript
+      // alt1 (download) - https://greasyfork.org/en/scripts/402811-concatenate-transcript
+      // alt2 (download) - https://greasyfork.org/en/scripts/5368-youtube-subtitle-downloader-v36
       // alt (copy with timestamps) - https://greasyfork.org/en/scripts/483035-youtube-transcript-copier
 
       const
@@ -43,7 +45,7 @@ window.nova_plugins.push({
          BTN_SELECTOR = '#' + BTN_SELECTOR_ID;
 
       // update state on url change
-      NOVA.runOnPageInitOrTransition(async () => {
+      NOVA.runOnPageLoad(async () => {
          if (NOVA.currentPage != 'watch') return;
 
          // custom speed from [save-channel-state] plugin
@@ -56,11 +58,11 @@ window.nova_plugins.push({
 
                      case 'external':
                      case 'external-popup':
-                        transcriptOpenLink()
+                        transcriptOpenLink();
                         break;
                   }
                });
-            return; // runOnPageInitOrTransition
+            return; // runOnPageLoad
          }
 
          switch (user_settings.transcript_visibility_mode) {
@@ -147,6 +149,7 @@ window.nova_plugins.push({
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
          return (document.getElementById(BTN_SELECTOR_ID) || (function () {
+            // document.getElementById(BTN_SELECTOR_ID).style.cssText = '';
             NOVA.css.push(
                `${BTN_SELECTOR} {
                   border: 0;
@@ -189,12 +192,12 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
-         'label:ko': '방법',
+         // 'label:ko': '방법',
          // 'label:id': 'Mode',
-         'label:es': 'Modo',
+         // 'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:it': 'Mode',
+         // 'label:it': 'Mode',
          // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',

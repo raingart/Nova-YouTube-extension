@@ -38,6 +38,12 @@
    "opt_appearance_player": {
       "message": "Player"
    },
+   "opt_appearance_control_panel": {
+      "message": "Control Panel"
+   },
+   "opt_appearance_playlist": {
+      "message": "Playlist"
+   },
    "opt_appearance_sidebar": {
       "message": "Sidebar"
    },

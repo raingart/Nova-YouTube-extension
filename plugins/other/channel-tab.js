@@ -7,18 +7,19 @@
 // https://www.youtube.com/channel/UCK9X9JACEsonjbqaewUtICA - old
 // https://www.youtube.com/channel/UCG6TrwqzkWwvWiY2eUny8TA - does not have a "video" tab
 // https://www.youtube.com/channel/UCPJ_rWazdbheOzQuqNQpKwg - does not have a "video" tab
+// https://www.youtube.com/channel/UCqEfdEvLG5oQWNYlDQrGlKw - "releases" tab
 
 window.nova_plugins.push({
    id: 'channel-default-tab',
    title: 'Default tab on channel page',
    'title:zh': '频道页默认选项卡',
    'title:ja': 'チャンネルページのデフォルトタブ',
-   'title:ko': '채널 페이지의 기본 탭',
-   'title:id': 'Tab default di halaman saluran',
-   'title:es': 'La pestaña predeterminada en la página del canal',
+   // 'title:ko': '채널 페이지의 기본 탭',
+   // 'title:id': 'Tab default di halaman saluran',
+   // 'title:es': 'La pestaña predeterminada en la página del canal',
    'title:pt': 'A guia padrão na página do canal',
    'title:fr': 'Onglet par défaut sur la page de la chaîne',
-   'title:it': 'Scheda predefinita nella pagina del canale',
+   // 'title:it': 'Scheda predefinita nella pagina del canale',
    // 'title:tr': 'Kanal sayfasındaki varsayılan sekme',
    'title:de': 'Die Standardregisterkarte auf der Kanalseite',
    'title:pl': 'Domyślna karta na stronie kanału',
@@ -108,14 +109,28 @@ window.nova_plugins.push({
                   case 'videos': tabActive = tabs[1]; break;
                   // case 'shorts': ; break;
                   // case 'live': ; break;
-                  case 'playlists': tabActive = tabs[tabs.length - 4]; break;
-                  case 'community': tabActive = tabs[tabs.length - 3]; break;
-                  case 'about': tabActive = tabs.pop(); break;
+                  // case 'podcasts': ; break;
+                  // case 'playlists': tabActive = tabs[tabs.length - 4]; break;
+                  // case 'community': tabActive = tabs[tabs.length - 3]; break;
+                  // case 'about': tabActive = tabs.pop(); break;
                   default:
                      location.pathname += '/' + user_settings.channel_default_tab;
                }
                // select tab
                tabActive?.click();
+
+               // (dirty fix) refresh paddingTop
+               // Strategy 1
+               document.addEventListener('yt-navigate-finish', () => window.dispatchEvent(new Event('resize'))
+                  , { capture: true, once: true });
+               // Strategy 2
+               // const elToFix = document.body.querySelector('#wrapper > #contentContainer');
+               // // if ((phead = parseInt(NOVA.css.get('#wrapper > #header > #contentContainer, #wrapper > #header', 'height')))
+               // if ((correctHeight = +document.body.querySelector('#wrapper > #header > #contentContainer, #wrapper > #header')?.clientHeight)
+               //    && parseInt(elToFix?.style.paddingTop) > (correctHeight * 1.1) // +10%
+               // ) {
+               //    elToFix.style.paddingTop = correctHeight + 'px';
+               // }
             });
 
          //    // tab select
@@ -157,12 +172,12 @@ window.nova_plugins.push({
          label: 'Default tab',
          'label:zh': '默认标签页',
          'label:ja': 'デフォルトのタブ',
-         'label:ko': '기본 탭',
-         'label:id': 'tab bawaan',
-         'label:es': 'Ficha predeterminada',
+         // 'label:ko': '기본 탭',
+         // 'label:id': 'tab bawaan',
+         // 'label:es': 'Ficha predeterminada',
          'label:pt': 'Aba padrão',
          'label:fr': 'Onglet par défaut',
-         'label:it': 'Scheda predefinita',
+         // 'label:it': 'Scheda predefinita',
          // 'label:tr': 'Varsayılan sekme',
          'label:de': 'Standard-Tab',
          'label:pl': 'Domyślna karta',
@@ -200,6 +215,36 @@ window.nova_plugins.push({
             },
             {
                label: 'live', value: 'streams',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'podcasts', value: 'podcasts',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'releases', value: 'releases',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -258,21 +303,21 @@ window.nova_plugins.push({
             //    // 'label:pl': '',
             //    // 'label:ua': '',
             // },
-            {
-               label: 'about', value: 'about',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               'label:pl': 'o kanale',
-               'label:ua': 'про канал',
-            },
+            // {
+            //    label: 'about', value: 'about',
+            //    // 'label:zh': '',
+            //    // 'label:ja': '',
+            //    // 'label:ko': '',
+            //    // 'label:id': '',
+            //    // 'label:es': '',
+            //    // 'label:pt': '',
+            //    // 'label:fr': '',
+            //    // 'label:it': '',
+            //    // 'label:tr': '',
+            //    // 'label:de': '',
+            //    'label:pl': 'o kanale',
+            //    'label:ua': 'про канал',
+            // },
          ],
       },
       channel_default_tab_mode: {
@@ -280,12 +325,12 @@ window.nova_plugins.push({
          label: 'Mode',
          'label:zh': '模式',
          'label:ja': 'モード',
-         'label:ko': '방법',
+         // 'label:ko': '방법',
          // 'label:id': 'Mode',
-         'label:es': 'Modo',
+         // 'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         'label:it': 'Modalità',
+         // 'label:it': 'Modalità',
          // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
@@ -320,7 +365,7 @@ window.nova_plugins.push({
                'label:ua': 'клік',
             },
             {
-               label: 'redirect', value: 'redirect', //selected: true,
+               label: 'redirect', value: 'redirect', // selected: true,
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -335,7 +380,8 @@ window.nova_plugins.push({
                'label:ua': 'перенаправити',
             },
          ],
-         'data-dependent': { 'channel_default_tab': ['videos', 'playlists', 'community', 'about'] },
+         // 'data-dependent': { 'channel_default_tab': ['videos', 'podcasts', 'playlists', 'community', 'about'] },
+         'data-dependent': { 'channel_default_tab': ['videos'] },
       },
       channel_default_tab_thumbs_sort: {
          _tagName: 'select',

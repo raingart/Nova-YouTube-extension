@@ -20,10 +20,14 @@ outFile="/tmp/nova-tube.user.js"
 # remove "'title:" line (grep)
 # find logo.js -type f | xargs grep -v 'desc:' > 1.txt
 # AFTER build:
-# in vscode
+# use one of
+#  - https://minifyjs.codeutility.io/
+#  - https://tools.simpletools.nl/minify-javascript-online.html
+#  - https://minify-js.com/
+# OR in vscode
 # 1. clear comments. regex - "//\s.*|/\*[\s\S\n]*?\*/"
 # 2. For clear spaces use "Format Document".
-# 3. replace "\n^\n+" to"\n"
+# 3. replace "(\n\s{3,}|\n^\n+)" to "\n"
 
 # PluginFn=`cat ./js/plugins.js | sed -e "/   list\:/,/   run: (/c\   run: ({ user_settings, app_ver }) => {" `
 # PluginFn=$(cat ./js/plugins.js)

@@ -131,6 +131,14 @@ input[type=search]:focus, input[type=text]:focus {
    content: "player";
 }
 
+#plugins #control-panel:not(:empty):before {
+   content: "control panel";
+}
+
+#plugins #playlist:not(:empty):before {
+   content: "playlist";
+}
+
 #plugins #sidebar:not(:empty):before {
    content: "sidebar";
 }
@@ -139,12 +147,20 @@ input[type=search]:focus, input[type=text]:focus {
    content: "details";
 }
 
+#plugins #details-buttons:not(:empty):before {
+   content: "details buttons";
+}
+
 #plugins #comments:not(:empty):before {
    content: "comments";
 }
 
 #plugins #other:not(:empty):before {
    content: "other";
+}
+
+#plugins #thumbs:not(:empty):before {
+   content: "thumbs";
 }
 
 [data-dependent] {
@@ -230,15 +246,16 @@ input[type=search]:focus, input[type=text]:focus {
    text-indent: 5px;
 }
 
+li>label:before {
+   content: "↪";
+   margin: 0 .5em;
+   color: #343a45;
+}
+
 li>label {
    grid-column: label;
    align-self: center;
    color: var(--label2);
-}
-
-li>label>font {
-   padding-right: .2em;
-   color: #343a45;
 }
 
 li>label+* {

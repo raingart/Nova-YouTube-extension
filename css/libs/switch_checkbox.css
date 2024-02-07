@@ -1,123 +1,101 @@
-/* template */
-/* #1 */
-input[type=checkbox] {
+.item input[type=checkbox] {
    --height: 1.2em;
-   width: 2.5em;
-}
+   --disabled-opacity: .7;
 
-/* #2 */
-/* input[type=checkbox] {
-   --height: 1em;
-   width: 2.2em;
-} */
+   background-color: transparent;
+   --off-hover-bg: var(--input-border);
+   --checked-bg: var(--checkbox-bg);
+   --checked-bg-active: var(--off-hover-bg);
+   --checked-color: #fff;
 
-/* #2.1 */
-/* input[type=checkbox] {
-   --height: 1em;
-   width: 2.2em;
-}
-input[type=checkbox]:after {
-   transform: scale(1.2);
-} */
+   --text-on: 'ON';
+   --text-on-press: '>';
+   /* --text-on: attr(text-on); */
+   --text-off: '-';
+   /* --text-off: 'OFF'; */
+   --text-off-press: 'OFF?';
+   /* --text-on: attr(text-off); */
 
-/* #3.1 */
-/* input[type=checkbox] {
-   --height: 1em;
-   width: 2.2em;
-}
-input[type=checkbox]:after {
-   transform: scale(1.5);
-} */
-
-/* #4 */
-/* input[type=checkbox] {
-   --height: 1.4em;
-   width: 3.1em;
-} */
-
-/* #4.1 */
-/* input[type=checkbox] {
-   --height: 1.4em;
-   width: 3.1em;
-}
-input[type=checkbox]:after {
-   transform: scale(.8);
-} */
-
-/* ================== */
-
-input[type=checkbox] {
-   --opacity: .7;
-   --color: #fff;
-   height: var(--height);
-   line-height: 1.6em;
-   border-radius: 3em;
-   /* background-color: #ddd; */
-   background-color: #aaa;
-   /* background-color: #8f8f8f; */
    appearance: none;
    -webkit-appearance: none;
    position: relative;
    cursor: pointer;
    outline: 0;
    border: none;
+   overflow: hidden;
+
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   -webkit-backface-visibility: hidden;
+   backface-visibility: hidden;
+   /* box-shadow: none !important; */
+
+   transform: skew(-10deg);
+   font-size: .9em;
+   width: 3em;
+   height: 1.5em;
 }
 
-input[type=checkbox]:checked {
-   background-color: var(--checkbox-bg);
-   /* background-color: #188cc3; */
-   /* background-color: #27a6e5; */
-   /* background-color: #00b7fc; */
-   /* background-color: #4cd964; */
-   /* background-color: #4CAF50; */
-   /* background-color: #717171; */
+.item input[type=checkbox]:hover:before {
+   background-color: var(--off-hover-bg);
+   /* background-color: greenyellow; */
 }
 
-input[type=checkbox]:after {
+.item input[type=checkbox]:after,
+.item input[type=checkbox]:before {
    position: absolute;
-   top: 0;
+   transition: left 200ms ease-in-out;
+   width: 100%;
+   line-height: 1.8em;
+   text-align: center;
+   /* box-shadow: 0 0 .25em rgba(0, 0, 0, .3); */
+}
+
+.item input[type=checkbox]:after {
+   left: 100%;
+   content: var(--text-on);
+}
+
+.item input[type=checkbox]:before {
    left: 0;
-   content: "";
-   width: var(--height);
-   height: var(--height);
-   border-radius: 50%;
-   background-color: var(--color);
-   box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
-   /* box-shadow: 0 .1em .25em #999999; */
+   content: var(--text-off);
 }
 
-input[type=checkbox]:checked:after {
-   left: calc(100% - var(--height));
+.item input[type=checkbox]:active {
+   /* line on press */
+   background-color: var(--checked-bg);
 }
 
-input[type=checkbox][disabled] {
+.item input[type=checkbox]:active:before {
+   left: -10%;
+   content: var(--text-on-press);
+}
+
+.item input[type=checkbox]:checked {
+   color: var(--checked-color);
+   background-color: var(--checked-bg);
+}
+
+.item input[type=checkbox]:checked:before {
+   left: -100%;
+}
+
+.item input[type=checkbox]:checked:after {
+   left: 0;
+}
+
+.item input[type=checkbox]:checked:active:after {
+   left: 10%;
+   background-color: var(--checked-bg-active);
+   content: var(--text-off-press);
+}
+
+.item input[type=checkbox] [disabled] {
    cursor: not-allowed;
 }
 
-input[type=checkbox][disabled]:after {
-   opacity: var(--opacity);
+.item input[type=checkbox] [disabled] {
+   opacity: var(--disabled-opacity);
 }
-
-input[type=checkbox]:checked[disabled] {
-   background-color: #b0d7f5;
-}
-
-input[type=checkbox]:focus, input[type=checkbox]:focus:after {
-   transition: all 200ms ease-in-out;
-}
-/* add status text */
-/* input[type=checkbox]:before {
-   float: right;
-   content: "OFF";
-   color: #767778;
-   font-size: .7em;
-   margin-right: 5%;
-   opacity: var(--opacity);
-}
-
-input[type=checkbox]:checked:before {
-   float: left;
-   content: "ON";
-   color: var(--color);
-   margin-left: 10%;
-} */

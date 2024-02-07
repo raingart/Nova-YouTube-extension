@@ -6,12 +6,12 @@ window.nova_plugins.push({
    title: 'Add RSS feed link',
    'title:zh': '添加 RSS 提要链接',
    'title:ja': 'RSSフィードリンクを追加',
-   'title:ko': 'RSS 피드 링크 추가',
-   'title:id': 'Tambahkan tautan Umpan RSS',
-   'title:es': 'Agregar enlace de fuente RSS',
+   // 'title:ko': 'RSS 피드 링크 추가',
+   // 'title:id': 'Tambahkan tautan Umpan RSS',
+   // 'title:es': 'Agregar enlace de fuente RSS',
    'title:pt': 'Adicionar link de feed RSS',
    'title:fr': 'Ajouter un lien de flux RSS',
-   'title:it': 'Aggiungi collegamento al feed RSS',
+   // 'title:it': 'Aggiungi collegamento al feed RSS',
    // 'title:tr': 'RSS Beslemesi bağlantısı ekle',
    'title:de': 'RSS-Feed-Link hinzufügen',
    'title:pl': 'Dodaj kanał RSS',
@@ -30,7 +30,6 @@ window.nova_plugins.push({
 
       const
          SELECTOR_ID = 'nova-rss-link',
-         // SELECTOR_ID = 'nova-rss-link-' + NOVA.currentPage, // Strategy 11
          rssLinkPrefix = '/feeds/videos.xml',
          playlistURL = rssLinkPrefix + '?playlist_id=' + NOVA.queryURL.get('list'),
          genChannelURL = channelId => rssLinkPrefix + '?channel_id=' + channelId;
@@ -48,7 +47,7 @@ window.nova_plugins.push({
                   // }
 
                   // fix https://github.com/raingart/Nova-YouTube-extension/issues/60
-                  if (!parseInt(NOVA.css.getValue('#header div.banner-visible-area', 'height'))) {
+                  if (!parseInt(NOVA.css.get('#header div.banner-visible-area', 'height'))) {
                      container = document.body.querySelector('#channel-header #inner-header-container #buttons');
                   }
 
@@ -72,8 +71,8 @@ window.nova_plugins.push({
          // console.debug('insertToHTML', ...arguments);
          if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-         // (document.getElementById(SELECTOR_ID) || (function () { // Strategy 11
-         (container.querySelector(`#${SELECTOR_ID}`) || (function () {
+         // (document.getElementById(SELECTOR_ID) || (function () { // for 1 pages
+         (container.querySelector(`#${SELECTOR_ID}`) || (function () { // for 2 parallel pages - playlist, watch
             const link = document.createElement('a');
             link.id = SELECTOR_ID;
             link.target = '_blank';
@@ -86,12 +85,14 @@ window.nova_plugins.push({
                      <path fill="#F60" d="M-17.392 7.875c0 3.025-2.46 5.485-5.486 5.485s-5.486-2.46-5.486-5.485c0-3.026 2.46-5.486 5.486-5.486s5.486 2.461 5.486 5.486zm31.351 5.486C14.042.744 8.208-11.757-1.567-19.736c-7.447-6.217-17.089-9.741-26.797-9.708v9.792C-16.877-19.785-5.556-13.535.344-3.66a32.782 32.782 0 0 1 4.788 17.004h8.827v.017zm-14.96 0C-.952 5.249-4.808-2.73-11.108-7.817c-4.821-3.956-11.021-6.184-17.255-6.15v8.245c6.782-.083 13.432 3.807 16.673 9.774a19.296 19.296 0 0 1 2.411 9.326h8.278v-.017z"/>
                   </g>
                </svg>`;
+            // link.style.cssText = '';
             Object.assign(link.style, {
                height: '20px',
                display: 'inline-block',
                padding: '5px',
             });
             if (is_playlist) {
+               // link.style.cssText += '';
                Object.assign(link.style, {
                   'margin-right': '8px',
                   'border-radius': '20px',

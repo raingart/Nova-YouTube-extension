@@ -8,12 +8,12 @@ window.nova_plugins.push({
    title: 'Subtitles (captions) style',
    'title:zh': '字幕样式',
    'title:ja': '字幕スタイル',
-   'title:ko': '자막 스타일',
-   'title:id': 'Gaya subtitel',
-   'title:es': 'Estilo de subtítulos',
+   // 'title:ko': '자막 스타일',
+   // 'title:id': 'Gaya subtitel',
+   // 'title:es': 'Estilo de subtítulos',
    'title:pt': 'estilo de legenda',
    'title:fr': 'Style de sous-titre',
-   'title:it': 'Stile dei sottotitoli',
+   // 'title:it': 'Stile dei sottotitoli',
    // 'title:tr': 'Altyazı stili',
    'title:de': 'Untertitelstil',
    'title:pl': 'Styl napisów',
@@ -25,7 +25,16 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/458161-youtube-subtitle-caption-stylish
       // alt2 - https://chrome.google.com/webstore/detail/oanhbddbfkjaphdibnebkklpplclomal
-      // alt3 - https://greasyfork.org/en/scripts/433440-youtube-subtitles-under-video-frame
+
+      // under video
+      // alt1 - https://greasyfork.org/en/scripts/433440-youtube-subtitles-under-video-frame
+      // alt2 - https://greasyfork.org/en/scripts/390669-move-youtube-subtitle-to-the-bottom-of-the-viewport
+
+      // alt (download) - https://greasyfork.org/en/scripts/5368-youtube-subtitle-downloader-v36
+
+      // dual subtitle
+      // https://chromewebstore.google.com/detail/youtube-dual-subtitles/hkbdddpiemdeibjoknnofflfgbgnebcm
+      // https://greasyfork.org/en/scripts/464879-youtube-dual-subtitle
 
       // alt caption style
       // const storeName = 'yt-player-caption-display-settings';
@@ -42,10 +51,12 @@ window.nova_plugins.push({
       // ));
 
       const SELECTOR = '.ytp-caption-segment';
-      let css = {}
+
+      let cssObj = {};
 
       if (user_settings.subtitle_transparent) {
-         css = {
+         // alt - https://greasyfork.org/en/scripts/408929-youtube-bolder-subtitles
+         cssObj = {
             'background': 'Transparent',
             'text-shadow':
                `rgb(0, 0, 0) 0 0 .1em,
@@ -53,11 +64,17 @@ window.nova_plugins.push({
                rgb(0, 0, 0) 0 0 .4em`,
          };
       }
+      if (user_settings.subtitle_bold) cssObj['font-weight'] = 'bold';
 
-      if (user_settings.subtitle_bold) css['font-weight'] = 'bold';
+      if (Object.keys(cssObj).length) {
+         NOVA.css.push(cssObj, SELECTOR, 'important');
+      }
+
 
       if (user_settings.subtitle_fixed) {
-         // alt - https://greasyfork.org/en/scripts/442033-fix-youtube-caption-position
+         // alt1 - https://greasyfork.org/en/scripts/442033-fix-youtube-caption-position
+         // alt2 - https://greasyfork.org/en/scripts/402598-fixed-youtube-captions
+
          NOVA.css.push(
             // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
             `.caption-window {
@@ -69,7 +86,9 @@ window.nova_plugins.push({
       if (user_settings.subtitle_selectable) {
          // alt1 - https://greasyfork.org/en/scripts/451626-make-youtube-caption-selectable
          // alt2 - https://greasyfork.org/en/scripts/456140-youtube-caption-selector
-         // alt3 - https://greasyfork.org/en/scripts/435955-youtube%E5%AD%97%E5%B9%95%E5%8D%95%E8%AF%8D%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E9%80%89%E4%B8%AD-%E6%96%B9%E4%BE%BFmac%E7%94%B5%E8%84%91%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BF%BB%E8%AF%91%E5%8D%95%E8%AF%8D
+         // alt3 - https://greasyfork.org/en/scripts/435955
+         // alt4 - https://greasyfork.org/en/scripts/472979-hover-on-youtube-subtitles-for-translating-words/code
+
          NOVA.watchElements({
             selectors: [
                SELECTOR,
@@ -88,39 +107,42 @@ window.nova_plugins.push({
          });
       }
 
+      if (user_settings.subtitle_color != '#ffffff') {
+         // color: rgba(255, 255, 255, .8) !important;
+         // color: ${user_settings.subtitle_color}cc !important;
+         NOVA.css.push(
+            `.ytp-caption-segment {
+               color: ${user_settings.subtitle_color} !important;
+            }`);
+      }
+
       // api method
       if (+user_settings.subtitle_font_size) {
          // Strategy 1
          NOVA.css.push(
             // `.ytp-larger-tap-buttons .caption-window.ytp-caption-window-bottom {
             `.ytp-caption-segment {
-               font-size: ${+user_settings.subtitle_font_size || 1}em !important;
+               font-size: calc(32px * ${+user_settings.subtitle_font_size || 1}) !important;
             }`);
          // Strategy 2. API
          // NOVA.waitUntil(() => movie_player.hasOwnProperty('getSubtitlesUserSettings'), 1000) // 1sec
          //    .then(() => {
-         //       // // settings = {
-         //       // //    "background": "#080808",
-         //       // //    "backgroundOpacity": 0.75,
-         //       // //    "charEdgeStyle": 0,
-         //       // //    "color": "#fff",
-         //       // //    "fontFamily": 4,
-         //       // //    "fontSizeIncrement": 0,
-         //       // //    "fontStyle": 0,
-         //       // //    "textOpacity": 1,
-         //       // //    "windowColor": "#080808",
-         //       // //    "windowOpacity": 0
-         //       // // }
-         //       // if (user_settings.subtitle_font_size) {
-         //       //    movie_player.updateSubtitlesUserSettings({ fontSizeIncrement: +user_settings.subtitle_font_size });
-         //       //    // settings.fontSizeIncrement = +user_settings.subtitle_font_size;
+         //       // settings = {
+         //       //    "background": "#080808",
+         //       //    "backgroundOpacity": 0.75,
+         //       //    "charEdgeStyle": 0,
+         //       //    "color": "#fff",
+         //       //    "fontFamily": 4,
+         //       //    "fontSizeIncrement": 0,
+         //       //    "fontStyle": 0,
+         //       //    "textOpacity": 1,
+         //       //    "windowColor": "#080808",
+         //       //    "windowOpacity": 0
          //       // }
-         //       // movie_player.updateSubtitlesUserSettings(settings);
+         //       // settings.fontSizeIncrement = +user_settings.subtitle_font_size;
+         //       movie_player.updateSubtitlesUserSettings({ fontSizeIncrement: +user_settings.subtitle_font_size });
+         //       movie_player.updateSubtitlesUserSettings(settings);
          //    });
-      }
-
-      if (Object.keys(css).length) {
-         NOVA.css.push(css, SELECTOR, 'important');
       }
 
    },
@@ -130,12 +152,12 @@ window.nova_plugins.push({
          label: 'Transparent',
          'label:zh': '透明的',
          'label:ja': '透明',
-         'label:ko': '투명한',
-         'label:id': 'Transparan',
-         'label:es': 'Transparentes',
+         // 'label:ko': '투명한',
+         // 'label:id': 'Transparan',
+         // 'label:es': 'Transparentes',
          'label:pt': 'Transparentes',
          'label:fr': 'Transparents',
-         'label:it': 'Trasparenti',
+         // 'label:it': 'Trasparenti',
          // 'label:tr': 'Şeffaf',
          'label:de': 'Transparente',
          // 'label:pl': 'Przezroczysty',
@@ -149,12 +171,12 @@ window.nova_plugins.push({
          label: 'Bold text',
          'label:zh': '粗体',
          'label:ja': '太字',
-         'label:ko': '굵은 텍스트',
-         'label:id': 'Teks tebal',
-         'label:es': 'Texto en negrita',
+         // 'label:ko': '굵은 텍스트',
+         // 'label:id': 'Teks tebal',
+         // 'label:es': 'Texto en negrita',
          'label:pt': 'Texto em negrito',
          'label:fr': 'Texte en gras',
-         'label:it': 'Testo grassetto',
+         // 'label:it': 'Testo grassetto',
          // 'label:tr': 'Kalın yazı',
          'label:de': 'Fetter Text',
          'label:pl': 'Tekst pogrubiony',
@@ -167,12 +189,12 @@ window.nova_plugins.push({
          label: 'Fixed from below',
          'label:zh': '从下方固定',
          'label:ja': '下から固定',
-         'label:ko': '아래에서 고정',
-         'label:id': 'Diperbaiki dari bawah',
-         'label:es': 'Fijado desde abajo',
+         // 'label:ko': '아래에서 고정',
+         // 'label:id': 'Diperbaiki dari bawah',
+         // 'label:es': 'Fijado desde abajo',
          'label:pt': 'Fixo por baixo',
          'label:fr': 'Fixé par le bas',
-         'label:it': 'Risolto dal basso',
+         // 'label:it': 'Risolto dal basso',
          // 'label:tr': 'Risolto dal basso',
          'label:de': 'Von unten befestigt',
          'label:pl': 'Przyklejone na dole',
@@ -181,12 +203,12 @@ window.nova_plugins.push({
          title: 'Preventing captions jumping up/down when pause/resume',
          'title:zh': '暂停/恢复时防止字幕跳上/跳下',
          'title:ja': '一時停止/再開時にキャプションが上下にジャンプしないようにする',
-         'title:ko': '일시 중지/다시 시작 시 캡션이 위/아래로 점프하는 것을 방지',
-         'title:id': 'Mencegah teks melompat ke atas/bawah saat menjeda/melanjutkan',
-         'title:es': 'Evitar que los subtítulos salten hacia arriba/abajo al pausar/reanudar',
+         // 'title:ko': '일시 중지/다시 시작 시 캡션이 위/아래로 점프하는 것을 방지',
+         // 'title:id': 'Mencegah teks melompat ke atas/bawah saat menjeda/melanjutkan',
+         // 'title:es': 'Evitar que los subtítulos salten hacia arriba/abajo al pausar/reanudar',
          'title:pt': 'Evitando que as legendas subam/descem ao pausar/reiniciar',
          'title:fr': "Empêcher les sous-titres de sauter vers le haut/bas lors d'une pause/reprise",
-         'title:it': 'Prevenire i sottotitoli che saltano su/giù durante la pausa/ripresa',
+         // 'title:it': 'Prevenire i sottotitoli che saltano su/giù durante la pausa/ripresa',
          // 'title:tr': '',
          'title:de': 'Verhindern, dass Untertitel beim Anhalten/Fortsetzen nach oben/unten springen',
          'title:pl': 'Zapobieganie przeskakiwaniu napisów w górę/w dół podczas pauzy/wznowienia',
@@ -197,12 +219,12 @@ window.nova_plugins.push({
          label: 'Make selectable',
          'label:zh': '使字幕可选',
          'label:ja': '字幕を選択可能にする',
-         'label:ko': '자막 선택 가능',
-         'label:id': 'Jadikan subtitle dapat dipilih',
-         'label:es': 'Hacer subtítulos seleccionables',
+         // 'label:ko': '자막 선택 가능',
+         // 'label:id': 'Jadikan subtitle dapat dipilih',
+         // 'label:es': 'Hacer subtítulos seleccionables',
          'label:pt': 'Tornar as legendas selecionáveis',
          'label:fr': 'Rendre les sous-titres sélectionnables',
-         'label:it': 'Rendi i sottotitoli selezionabili',
+         // 'label:it': 'Rendi i sottotitoli selezionabili',
          // 'label:tr': 'Altyazıları seçilebilir yap',
          'label:de': 'Untertitel auswählbar machen',
          'label:pl': 'Ustaw napisy do wyboru',
@@ -213,18 +235,18 @@ window.nova_plugins.push({
       subtitle_font_size: {
          _tagName: 'input',
          label: 'Font size',
-         // 'label:zh': '',
-         // 'label:ja': '',
-         // 'label:ko': '',
+         'label:zh': '字体大小',
+         'label:ja': 'フォントサイズ',
+         // 'label:ko': '글꼴 크기',
          // 'label:id': '',
-         // 'label:es': '',
-         // 'label:pt': '',
-         // 'label:fr': '',
+         // 'label:es': 'Tamaño de fuente',
+         'label:pt': 'Tamanho da fonte',
+         'label:fr': 'Taille de police',
          // 'label:it': '',
          // 'label:tr': '',
-         // 'label:de': '',
-         // 'label:pl': '',
-         // 'label:ua': '',
+         'label:de': 'Schriftgröße',
+         'label:pl': 'Rozmiar czcionki',
+         'label:ua': 'Розмір шрифту',
          type: 'number',
          title: '0 - disable',
          // 'title:zh': '',
@@ -244,6 +266,37 @@ window.nova_plugins.push({
          min: 0,
          max: 5,
          value: 0,
+      },
+      subtitle_color: {
+         _tagName: 'input',
+         type: 'color',
+         value: '#ffffff',
+         label: 'Color',
+         'label:zh': '颜色',
+         'label:ja': '色',
+         // 'label:ko': '색깔',
+         // 'label:id': 'Warna',
+         // 'label:es': 'Color',
+         'label:pt': 'Cor',
+         'label:fr': 'Couleur',
+         // 'label:it': 'Colore',
+         // 'label:tr': 'Renk',
+         'label:de': 'Farbe',
+         'label:pl': 'Kolor',
+         'label:ua': 'Колір',
+         title: 'default - #FFF',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
       },
    }
 });

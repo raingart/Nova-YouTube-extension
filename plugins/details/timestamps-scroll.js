@@ -4,15 +4,16 @@
 
 window.nova_plugins.push({
    id: 'description-timestamps-scroll',
-   title: 'No scroll to top when clicking timestamps',
+   // title: 'No scroll to top when clicking timestamps',
+   title: 'No scroll to top on timestamps',
    'title:zh': '没有在时间戳上滚动到播放器',
    'title:ja': 'タイムスタンプでプレーヤーにスクロールしない',
-   'title:ko': '타임스탬프에서 플레이어로 스크롤하지 않음',
-   'title:id': 'Tidak ada gulir ke pemain pada stempel waktu',
-   'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
+   // 'title:ko': '타임스탬프에서 플레이어로 스크롤하지 않음',
+   // 'title:id': 'Tidak ada gulir ke pemain pada stempel waktu',
+   // 'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
    'title:pt': 'Sem rolar para o jogador em timestamps',
    'title:fr': 'Pas de défilement vers le joueur sur les horodatages',
-   'title:it': 'Nessun passaggio al giocatore sui timestamp',
+   // 'title:it': 'Nessun passaggio al giocatore sui timestamp',
    // 'title:tr': 'Zaman damgalarında oynatıcıya kaydırma yok',
    'title:de': 'Kein Scrollen zum Player bei Zeitstempeln',
    'title:pl': 'Brak przejścia do odtwarzacza na znacznikach czasu',
@@ -46,6 +47,7 @@ window.nova_plugins.push({
 
          // if (sec = NOVA.formatTimeOut.hmsToSec(evt.target.textContent)) {
          if (sec = parseInt(NOVA.queryURL.get('t', evt.target.href))) {
+            // preventScroll
             evt.preventDefault();
             evt.stopPropagation();
             evt.stopImmediatePropagation();

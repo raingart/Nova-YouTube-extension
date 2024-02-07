@@ -9,12 +9,12 @@ window.nova_plugins.push({
    title: 'Show channel videos count',
    'title:zh': '显示频道上的视频数量',
    'title:ja': 'チャンネルの動画数を表示する',
-   'title:ko': '채널 동영상 수 표시',
-   'title:id': 'Tampilkan jumlah video saluran',
-   'title:es': 'Mostrar recuento de videos del canal',
+   // 'title:ko': '채널 동영상 수 표시',
+   // 'title:id': 'Tampilkan jumlah video saluran',
+   // 'title:es': 'Mostrar recuento de videos del canal',
    'title:pt': 'Mostrar contagem de vídeos do canal',
    'title:fr': 'Afficher le nombre de vidéos de la chaîne',
-   'title:it': 'Mostra il conteggio dei video del canale',
+   // 'title:it': 'Mostra il conteggio dei video del canale',
    // 'title:tr': 'Kanal video sayısını göster',
    'title:de': 'Anzahl der Kanalvideos anzeigen',
    'title:pl': 'Pokaż liczbę filmów na kanale',
@@ -27,12 +27,12 @@ window.nova_plugins.push({
    desc: 'Display uploaded videos on channel',
    'desc:zh': '在频道上显示上传的视频',
    'desc:ja': 'アップロードした動画をチャンネルに表示',
-   'desc:ko': '채널에 업로드된 동영상 표시',
-   'desc:id': 'Tampilkan video yang diunggah di saluran',
-   'desc:es': 'Mostrar videos subidos en el canal',
+   // 'desc:ko': '채널에 업로드된 동영상 표시',
+   // 'desc:id': 'Tampilkan video yang diunggah di saluran',
+   // 'desc:es': 'Mostrar videos subidos en el canal',
    'desc:pt': 'Exibir vídeos enviados no canal',
    'desc:fr': 'Afficher les vidéos mises en ligne sur la chaîne',
-   'desc:it': 'Visualizza i video caricati sul canale',
+   // 'desc:it': 'Visualizza i video caricati sul canale',
    // 'desc:tr': 'Yüklenen videoları kanalda göster',
    'desc:de': 'Hochgeladene Videos auf dem Kanal anzeigen',
    'desc:pl': 'Wyświetla przesłane filmy na kanale',
@@ -62,7 +62,7 @@ window.nova_plugins.push({
 
       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { destroy_after_page_leaving: true })
          .then(el => setVideoCount(el));
-      // NOVA.runOnPageInitOrTransition(() => {
+      // NOVA.runOnPageLoad(() => {
       //    if (NOVA.currentPage == 'watch') {
       //       NOVA.waitSelector('#upload-info #owner-sub-count, ytm-slim-owner-renderer .subhead', { destroy_after_page_leaving: true })
       //          .then(el => setVideoCount(el));

@@ -8,7 +8,7 @@
    opacity: .2;
    border-right: 30px solid transparent;
    border-bottom: 30px solid #3D3D3D;
-   border-bottom-color: #777;
+   /* border-bottom-color: #777; */
    color: #fff;
    padding: 0 1.2em;
    margin: 0 -15px 0 0;

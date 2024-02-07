@@ -2,83 +2,89 @@ const Plugins = {
    list: [
       // 'plugins/_blank_plugin.js', // for example
 
-      // 'player/ad-skip-button.js',
       'player/speed.js',
       'player/volume.js',
-      'player/hud.js',
+      'player/osd.js',
       'player/quality.js',
       'player/autostop.js',
-      // 'player/autopause.js',
       'player/theater-mode.js',
       'player/background-pause.js',
-      // 'player/fullscreen-on-playback.js',
       'player/resize-ratio.js',
-      'player/progress-bar-color.js',
-      'player/progress-bar-float.js',
-      'player/control-below.js',
-      'player/control-autohide.js',
       'player/embed-popup.js',
-      'player/embed-control.js',
-      'player/hotkeys.js',
       'player/pin.js',
-      'player/time-jump.js',
       'player/no-sleep.js',
-      'player/loop.js',
       'player/resume-playback.js',
-      // 'player/-thumb-pause.js',
-      'player/quick-buttons.js',
-      'player/hide-elements.js',
-      'player/scrollbar-hide.js',
+      'player/auto-buffer.js',
       'player/subtitle-style.js',
-      // 'player/subtitle-lang.js',
       'player/unblock-region.js',
       'player/unblock-warn-content.js',
-      // 'player/next-autoplay.js',
       'player/fullscreen-scroll.js',
-      'player/time-remaining.js',
-      'player/live-duration.js',
-      'player/title-time.js',
-      'player/save-for-channel.js',
       'player/sponsor-block.js',
+      'player/zoom.js',
+      // 'player/ad-skip-button.js',
+      // 'player/autopause.js',
+      // 'player/fullscreen-on-playback.js',
+      // 'player/-thumb-pause.js',
+      // 'player/scrollbar-hide.js',
+      // 'player/subtitle-lang.js',
+      // 'player/next-autoplay.js',
       // 'player/block-embed.js',
 
-      'other/pages-clear.js',
-      'other/block-title.js',
-      'other/block-channel.js',
-      'other/thumbs-filter.js',
-      'other/thumbs-clear.js',
-      'other/thumbs-title-normalize.js',
-      'other/thumbs-watched.js',
-      // 'other/thumbs-shorts-time.js',
-      'other/thumbs-row-count.js',
-      // 'other/thumbs-quality.js',
-      // 'other/thumbs-rating.js',
-      'other/thumbs-preview-stop.js',
+      'control-panel/control-below.js',
+      'control-panel/control-autohide.js',
+      'control-panel/progress-bar-color.js',
+      'control-panel/progress-bar-float.js',
+      'control-panel/embed-control.js',
+      'control-panel/hotkeys.js',
+      'control-panel/time-jump.js',
+      'control-panel/loop.js',
+      'control-panel/hide-elements.js',
+      'control-panel/quick-buttons.js',
+      'control-panel/save-for-channel.js',
+      'control-panel/time-remaining.js',
+      'control-panel/live-duration.js',
+
+      'thumbs/block-title.js',
+      'thumbs/block-channel.js',
+      'thumbs/filter.js',
+      'thumbs/preview-clear.js',
+      'thumbs/title-normalize.js',
+      'thumbs/watched.js',
+      'thumbs/watch-later.js',
+      'thumbs/row-count.js',
+      // 'thumbs/shorts-time.js',
+      // 'thumbs/quality.js',
+      // 'thumbs/rating.js',
+      // 'thumbs/preview-stop.js',
+      // 'thumbs/sort.js',
+      // 'thumbs/sort.js',
+
+      'other/title-time.js',
+      'other/collapse-navigation-panel.js',
       'other/channel-trailer-stop.js',
       'other/channel-tab.js',
+      'other/miniplayer-disable.js',
+      'other/pages-clear.js',
+      'other/rss.js',
+      'other/scroll-to-top.js',
+      'other/shorts-redirect.js',
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
       // 'other/lang.js',
-      'other/scroll-to-top.js',
-      'other/shorts-redirect.js',
-      'other/rss.js',
-      // 'other/thumbs-sort.js',
-      // 'other/thumbs-sort.js',
-      'other/miniplayer-disable.js',
-      'other/collapse-navigation-panel.js',
 
-      'details/videos-count.js',
-      'details/description-expand.js',
-      'details/description-popup.js',
       'details/show-date.js',
-      'details/buttons.js',
+      'details/videos-count.js',
+      'details/buttons-hide.js',
       'details/auto-likes.js',
       'details/return-dislike.js',
+      'details/description-expand.js',
+      'details/description-popup.js',
       'details/transcript.js',
       'details/metadata-hide.js',
       'details/timestamps-scroll.js',
       'details/redirect-clear.js',
       'details/save-to-playlist.js',
+      // 'details/download-video.js',
 
       'comments/visibility.js',
       'comments/square-avatars.js',
@@ -87,15 +93,17 @@ const Plugins = {
       'comments/sort.js',
 
       'sidebar/related-visibility.js',
-      'sidebar/playlist-collapse.js',
-      'sidebar/playlist-extended.js',
-      'sidebar/playlist-autoplay.js',
-      'sidebar/playlist-duration.js',
-      'sidebar/playlist-reverse.js',
-      'sidebar/livechat.js',
+      'sidebar/livechat-visibility.js',
       'sidebar/move-to-sidebar.js',
       'sidebar/channel-link.js',
-      // 'sidebar/playlist-skip-liked.js',
+      // 'sidebar/livechat-filter.js',
+
+      'playlist/collapse.js',
+      'playlist/extended.js',
+      'playlist/autoplay.js',
+      'playlist/duration.js',
+      'playlist/reverse.js',
+      // 'playlist/skip-liked.js',
 
       'header/search.js',
       'header/compact.js',
@@ -165,28 +173,36 @@ const Plugins = {
       // https://www.youtube.com/@divr (https://www.youtube.com/channel/UC7tD6Ifrwbiy-BoaAHEinmQ)
 
       NOVA.currentPage = (function () {
-         // const [page, channelTab] = location.pathname.split('/').filter(Boolean);
-         // Strategy 1
-         // return identifyCurrentPage(page, channelTab);
-         // Strategy 2. Known tabs list
-         const pathnameArray = location.pathname.split('/').filter(Boolean);
-         const [page, channelTab] = [pathnameArray[0], pathnameArray.pop()];
-         // https://www.youtube.com/@channel/search?query=11
-         NOVA.channelTab = ['featured', 'videos', 'shorts', 'streams', 'playlists', 'community', 'channels', 'about', 'search'].includes(channelTab) ? channelTab : false;
+         // Strategy 1. Optimize
+         const
+            pathnameArray = location.pathname.split('/').filter(Boolean),
+            { page, channelTab } = identifyCurrentPage(pathnameArray[0], pathnameArray.pop());
 
-         // Strategy 3. Excluding channelId (https://www.youtube.com/channel/UCE5yTn9ljzSnC_oMp9Jnckg). Error in emdeb - https://www.youtube.com/embed/H-3fre7943U?enablejsapi=1&wmode=opaque&autoplay=1
-         // NOVA.channelTab = channelTab?.startsWith('UC') ? false : channelTab;
+         NOVA.channelTab = channelTab;
 
-         return (!page?.includes('live_chat')) // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat, https://www.youtube.com/live_chat_replay)
-            && (['channel', 'c', 'user'].includes(page)
-               || page?.startsWith('@') // https://www.youtube.com/@ALBO
-               || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
-               // fix non-standard link:
-               // https://www.youtube.com/pencilmation
-               // https://www.youtube.com/rhino
-               || NOVA.channelTab
-               // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
-            ) ? 'channel' : (page == 'clip') ? 'watch' : page || 'home';
+         return page;
+         // Strategy 2. Clearly
+         // const
+         //    pathnameArray = location.pathname.split('/').filter(Boolean),
+         //    [page, channelTab] = [pathnameArray[0], pathnameArray.pop()];
+         // // https://www.youtube.com/@channel/search?query=11
+         // // NOVA.channelTab = ['featured', 'videos', 'shorts', 'streams', 'podcasts', 'playlists', 'community', 'channels', 'about', 'search'].includes(channelTab) ? channelTab : false;
+
+         // // Excluding channelId (https://www.youtube.com/channel/UCE5yTn9ljzSnC_oMp9Jnckg). Error in emdeb - https://www.youtube.com/embed/H-3fre7943U?enablejsapi=1&wmode=opaque&autoplay=1
+         // // NOVA.channelTab = channelTab?.startsWith('UC') ? false : channelTab;
+
+         // // fix for "/[A-Z\d_]/.test(page)" (https://www.youtube.com/live_chat, https://www.youtube.com/live_chat_replay)
+         // if (page?.includes('live_chat')) return 'live_chat';
+
+         // // fix non-standard link:
+         // // https://www.youtube.com/pencilmation
+         // // https://www.youtube.com/rhino
+         // return (NOVA.channelTab
+         //       || ['channel', 'c', 'user'].includes(page)
+         //       || page?.startsWith('@') // https://www.youtube.com/@ALBO
+         //       || /[A-Z\d_]/.test(page) // containsUppercase(without unicode) https://www.youtube.com/ProTradingSkills and number - https://www.youtube.com/deadp47, underline - https://www.youtube.com/live_games_it
+         //       // https://www.youtube.com/clip/Ugkx2Z62NxoBfx_ZR2nIDpk3F2f90TV4_uht
+         //    ) ? 'channel' : (page == 'clip') ? 'watch' : page || 'home';
       })();
       // console.debug('NOVA.currentPage:', NOVA.currentPage);
 
@@ -257,40 +273,64 @@ const Plugins = {
       console.table(logTableArray);
       console.groupEnd('plugins status');
 
-      // function identifyCurrentPage(page, channelTab) {
-      //    switch (page) {
-      //       case 'channel':
-      //       case 'c':
-      //       case 'user':
-      //          return 'channel';
-      //          break;
+      function identifyCurrentPage(page = 'home', channel_tab) {
+         switch (page) {
+            case '': page = 'home'; break;
+            case 'live_chat': page = 'live_chat'; break;
 
-      //       case 'watch':
-      //       case 'clip':
-      //          return 'watch'; break;
-      //       case 'live_chat': return 'live_chat'; break;
-      //    }
+            // channel
+            case 'channel':
+            case 'c':
+            case 'user':
+               page = 'channel';
+               break;
 
-      //    if (page?.startsWith('@') // https://www.youtube.com/@ALBO
-      //       || /[A-Z\d_]/.test(page) // containsUppercase(without unicode))
-      //    ) {
-      //       return 'channel'
-      //    }
+            // watch
+            case 'watch':
+            case 'clip':
+               page = 'watch';
+               break;
 
-      //    switch (channelTab) {
-      //       case 'featured':
-      //       case 'videos':
-      //       case 'shorts':
-      //       case 'streams':
-      //       case 'playlists':
-      //       case 'community':
-      //       case 'channels':
-      //       case 'about':
-      //          return 'channel';
-      //          break;
-      //    }
-      //    return page;
-      // }
+            default:
+               // fix for "/[A-Z\d_]/.test(page)"
+               // https://www.youtube.com/live_chat
+               // https://www.youtube.com/live_chat_replay
+               if (page?.includes('live_chat')) page = 'live_chat';
+               // channel
+               else if (page?.startsWith('@') // https://www.youtube.com/@ALBO
+                  || /[A-Z\d_]/.test(page) // containsUppercase(without unicode))
+               ) {
+                  page = 'channel';
+               }
+               break;
+         }
+
+         switch (channel_tab) {
+            case 'featured':
+            case 'videos':
+            case 'shorts':
+            case 'streams':
+            case 'podcasts':
+            case 'releases':
+            case 'playlists':
+            case 'community':
+            case 'channels':
+            case 'about':
+            case 'search': // https://www.youtube.com/@channel/search?query=11
+               page = 'channel';
+               channel_tab = channel_tab;
+               break;
+            default:
+               if (channel_tab?.startsWith('UC')) page = 'channel';
+               channel_tab = false;
+               break;
+         }
+
+         return {
+            'page': page,
+            'channelTab': channel_tab,
+         };
+      }
 
       function pluginChecker(plugin) {
          const result = plugin?.id && plugin.run_on_pages && 'function' === typeof plugin._runtime;

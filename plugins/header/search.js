@@ -3,12 +3,12 @@ window.nova_plugins.push({
    title: 'Search filter',
    'title:zh': '搜索过滤器',
    'title:ja': '検索フィルター',
-   'title:ko': '검색 필터',
-   'title:id': 'Filter pencarian',
-   'title:es': 'Filtros de búsqueda',
+   // 'title:ko': '검색 필터',
+   // 'title:id': 'Filter pencarian',
+   // 'title:es': 'Filtros de búsqueda',
    'title:pt': 'Filtros de pesquisa',
    'title:fr': 'Filtres de recherche',
-   'title:it': 'Filtri di ricerca',
+   // 'title:it': 'Filtri di ricerca',
    // 'title:tr': 'Arama filtreleri',
    'title:de': 'Suchfilter',
    'title:pl': 'Filtry wyszukiwania',
@@ -21,7 +21,7 @@ window.nova_plugins.push({
 
       // alt - https://greasyfork.org/en/discussions/requests/146033-youtube-searches-auto-filtered-by-upload-date
 
-      // Strategy 1. Patch url
+      // Strategy 1. Patch URL
       if (!NOVA.queryURL.has('sp')
          && (sp = user_settings.search_query_date || user_settings.search_query_sort)
       ) {
@@ -52,12 +52,12 @@ window.nova_plugins.push({
          label: 'Sort by',
          'label:zh': '排序方式',
          'label:ja': '並び替え',
-         'label:ko': '정렬 기준',
-         'label:id': 'Sortir dengan',
-         'label:es': 'Ordenar por',
+         // 'label:ko': '정렬 기준',
+         // 'label:id': 'Sortir dengan',
+         // 'label:es': 'Ordenar por',
          'label:pt': 'Ordenar por',
          'label:fr': 'Trier par',
-         'label:it': 'Ordina per',
+         // 'label:it': 'Ordina per',
          // 'label:tr': 'Göre sırala',
          'label:de': 'Sortieren nach',
          'label:pl': 'Sortuj według',
@@ -131,12 +131,12 @@ window.nova_plugins.push({
          label: 'Upload date',
          'label:zh': '上传日期',
          'label:ja': 'アップロード日',
-         'label:ko': '업로드 날짜',
-         'label:id': 'Tanggal unggah',
-         'label:es': 'Fecha de carga',
+         // 'label:ko': '업로드 날짜',
+         // 'label:id': 'Tanggal unggah',
+         // 'label:es': 'Fecha de carga',
          'label:pt': 'data de upload',
          'label:fr': 'Date de dépôt',
-         'label:it': 'data di caricamento',
+         // 'label:it': 'data di caricamento',
          // 'label:tr': 'yükleme tarihi',
          'label:de': 'Datum des Hochladens',
          'label:pl': 'Data przesłania',

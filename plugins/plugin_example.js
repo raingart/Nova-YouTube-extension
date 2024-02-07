@@ -167,5 +167,15 @@ window.nova_plugins.push({
          title: 'Help info',
          'data-dependent': { 'jump_step': true },
       },
+      url: {
+         _tagName: 'input',
+         label: 'URL',
+         type: 'url',
+         pattern: "https://.*",
+         // title: '',
+         placeholder: 'https://youtube.com/...',
+         value: 'https://sponsor.ajay.app',
+         required: true, // use from like input[type="text"], select[multiple="null"], select, textarea
+      },
    }
 });

@@ -10,12 +10,12 @@ window.nova_plugins.push({
    title: 'Description section in popup',
    'title:zh': '弹出窗口中的描述部分',
    'title:ja': 'ポップアップの説明セクション',
-   'title:ko': '팝업의 설명 섹션',
-   'title:id': 'Bagian deskripsi dalam popup',
-   'title:es': 'Sección de descripción en ventana emergente',
+   // 'title:ko': '팝업의 설명 섹션',
+   // 'title:id': 'Bagian deskripsi dalam popup',
+   // 'title:es': 'Sección de descripción en ventana emergente',
    'title:pt': 'Seção de descrição no pop-up',
    'title:fr': 'Section de description dans la fenêtre contextuelle',
-   'title:it': 'Sezione Descrizione nel popup',
+   // 'title:it': 'Sezione Descrizione nel popup',
    // 'title:tr': 'Açılır pencerede açıklama bölümü',
    'title:de': 'Beschreibungsabschnitt im Popup',
    'title:pl': 'Opis w osobnym oknie',
@@ -79,7 +79,7 @@ window.nova_plugins.push({
                   background-color: var(--yt-spec-raised-background);
                   color: var(--yt-spec-text-primary);;
                   border: 1px solid #333;
-                  border-radius: 0 !important;
+                  ${user_settings['square-avatars'] ? 'border-radius: 0' : ''};
                }
 
                ${DESCRIPTION_SELECTOR}:not(:hover) {
@@ -137,7 +137,7 @@ window.nova_plugins.push({
       // start restoreDateLine section
       // conflict with [video-date-format] plugin
       if (!user_settings['video-date-format']) {
-         NOVA.runOnPageInitOrTransition(() => (NOVA.currentPage == 'watch') && restoreDateLine());
+         NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && restoreDateLine());
       }
 
       // alt1 - https://chrome.google.com/webstore/detail/amdebbajoolgbbgdhdnkhmgkkdlbkdgi

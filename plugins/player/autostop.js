@@ -7,12 +7,12 @@ window.nova_plugins.push({
    title: 'Stop video preload',
    'title:zh': '停止视频预加载',
    'title:ja': 'ビデオのプリロードを停止します',
-   'title:ko': '비디오 미리 로드 중지',
-   'title:id': 'Hentikan pramuat video',
-   'title:es': 'Detener la precarga de video',
+   // 'title:ko': '비디오 미리 로드 중지',
+   // 'title:id': 'Hentikan pramuat video',
+   // 'title:es': 'Detener la precarga de video',
    'title:pt': 'Parar o pré-carregamento de vídeo',
    'title:fr': 'Arrêter le préchargement de la vidéo',
-   'title:it': 'Interrompi il precaricamento del video',
+   // 'title:it': 'Interrompi il precaricamento del video',
    // 'title:tr': 'Video önyüklemesini durdur',
    'title:de': 'Beenden Sie das Vorladen des Videos',
    'title:pl': 'Zatrzymaj ładowanie wideo',
@@ -44,13 +44,13 @@ window.nova_plugins.push({
 
       if (user_settings.video_autostop_embed && NOVA.currentPage != 'embed') return;
       // fix bug in google drive
-      if (location.hostname == 'youtube.googleapis.com') return;
+      if (location.hostname.includes('youtube.googleapis.com')) return;
       // conflict with plugin [user_settings.player_buttons_custom_items?.indexOf('popup')], [embed-redirect-popup]
       if (NOVA.queryURL.has('popup')) return;
 
       // skip stoped embed - https://www.youtube.com/embed/668nUCeBHyY?autoplay=1
       if (NOVA.currentPage == 'embed'
-         && window.self !== window.top// window.frameElement // is iframe?
+         && window.self !== window.top // is iframe
          && ['0', 'false'].includes(NOVA.queryURL.get('autoplay'))
       ) {
          return;
@@ -113,12 +113,14 @@ window.nova_plugins.push({
 
             // document.addEventListener('keyup', ({ code }) => (code == 'Space') && disableHoldStop());
             document.addEventListener('keyup', evt => {
+               if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
+
                if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
                if (evt.code == 'Space') disableHoldStop();
             });
             document.addEventListener('click', evt => {
                if (evt.isTrusted
-                  // Strategy 1. Universal, click is inside the player
+                  // Strategy 1 (Universal), click is inside the player
                   && evt.target.closest('#movie_player') // movie_player.contains(document.activeElement)
                   // Strategy 2. Click from some elements
                   // && ['button[class*="play-button"]',
@@ -151,12 +153,12 @@ window.nova_plugins.push({
          label: 'Ignore playlist',
          'label:zh': '忽略播放列表',
          'label:ja': 'プレイリストを無視する',
-         'label:ko': '재생목록 무시',
-         'label:id': 'Abaikan daftar putar',
-         'label:es': 'Ignorar lista de reproducción',
+         // 'label:ko': '재생목록 무시',
+         // 'label:id': 'Abaikan daftar putar',
+         // 'label:es': 'Ignorar lista de reproducción',
          'label:pt': 'Ignorar lista de reprodução',
          'label:fr': 'Ignorer la liste de lecture',
-         'label:it': 'Ignora playlist',
+         // 'label:it': 'Ignora playlist',
          // 'label:tr': 'Oynatma listesini yoksay',
          'label:de': 'Wiedergabeliste ignorieren',
          'label:pl': 'Zignoruj listę odtwarzania',

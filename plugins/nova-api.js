@@ -6,9 +6,9 @@
    - delay (async)
    // - uiAlert
    - watchElements
-   - runOnPageInitOrTransition
+   - runOnPageLoad
    - css.push
-   - css.getValue
+   - css.get
    //- cookie.get
    //- cookie.getParamLikeObj
    //- cookie.updateParam
@@ -19,7 +19,7 @@
    - aspectRatio.getAspectRatio
    - aspectRatio.calculateHeight
    - aspectRatio.calculateWidth
-   - triggerHUD
+   - triggerOSD
    - getChapterList
    - strToArray
    - searchFilterHTML
@@ -32,6 +32,7 @@
    - dateformat
    //- extractFirstInt
    - prettyRoundInt
+   - extractAsNum
    - updateUrl
    - queryURL.has
    - queryURL.get
@@ -222,7 +223,18 @@ const NOVA = {
    // waitSelector(selector = required(), { container, destroy_after_page_leaving }) {
    waitSelector(selector = required(), limit_data) {
       if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-      if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', limit_data.container);
+      if (limit_data && (/*!Object.keys(limit_data).label ||*/ !limit_data.hasOwnProperty('destroy_after_page_leaving') && !limit_data.hasOwnProperty('container'))) {
+         return new Promise((resolve, reject) => {
+            console.error('waitSelector > check format "limit_data":', ...arguments);
+            reject('waitSelector > check format "limit_data"');
+         });
+      }
+      if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) {
+         return new Promise((resolve, reject) => {
+            console.error('waitSelector > container not HTMLElement:', limit_data.container);
+            reject('waitSelector > container not HTMLElement');
+         });
+      }
 
       // fix - Error: Failed to execute 'querySelector' on 'Element': 'ytd-comment-thread-renderer:has(#linked-comment-badge) #replies' is not a valid selector.
       // https://jsfiddle.net/f6o2amjk/4/ https://www.bram.us/2023/01/04/css-has-feature-detection-with-supportsselector-you-want-has-not-has/
@@ -241,7 +253,7 @@ const NOVA = {
       // alt:
       // https://git.io/waitForKeyElements.js
       // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
-      // https://github.com/CoeJoder/waitForKeyElements.js/blob/master/waitForKeyElements.js
+      // https://github.com/CoeJoder/waitForKeyElements.js
       // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
       // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur)
       // https://greasyfork.org/scripts/464780-global-module/code/global_module.js
@@ -285,7 +297,7 @@ const NOVA = {
                observer.disconnect();
                return resolve(element);
             }
-         })
+         });
 
          observerFactory
             .observe(limit_data?.container || document.body || document.documentElement || document, {
@@ -297,8 +309,9 @@ const NOVA = {
                //  characterDataOldValue: true
             });
 
+         // destructure self
          if (limit_data?.destroy_after_page_leaving) {
-            // on page init
+            // url save init
             isURLChange();
             // on page update
             window.addEventListener('transitionend', ({ target }) => {
@@ -308,7 +321,7 @@ const NOVA = {
             });
 
             function isURLChange() {
-               return (this.prevURL === location.href) ? false : this.prevURL = location.href;
+               return (this.prevURL === document.URL) ? false : this.prevURL = document.URL;
             }
          }
       });
@@ -424,12 +437,12 @@ const NOVA = {
     * @param  {function} callback
     * @return {void}
    */
-   runOnPageInitOrTransition(callback) {
+   runOnPageLoad(callback) {
       if (!callback || typeof callback !== 'function') {
-         return console.error('runOnPageInitOrTransition > callback not function:', ...arguments);
+         return console.error('runOnPageLoad > callback not function:', ...arguments);
       }
-      let prevURL = location.href;
-      const isURLChange = () => (prevURL === location.href) ? false : prevURL = location.href;
+      let prevURL = document.URL;
+      const isURLChange = () => (prevURL === document.URL) ? false : prevURL = document.URL;
       // init
       isURLChange() || callback();
       // update
@@ -448,6 +461,12 @@ const NOVA = {
          // console.debug('css\n', ...arguments);
          if (typeof css === 'object') {
             if (!selector) return console.error('injectStyle > empty json-selector:', ...arguments);
+
+            // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+            if (selector.includes(':has(') && !CSS.supports('selector(:has(*))')) {
+               // throw new Error('CSS ":has()" unsupported');
+               return console.error('CSS ":has()" unsupported', ...arguments);
+            }
 
             // if (set_important) {
             injectCss(selector + json2css(css));
@@ -517,7 +536,7 @@ const NOVA = {
       // https://developer.mozilla.org/ru/docs/Web/API/CSSStyleDeclaration
       // HTMLElement.prototype.getIntValue = () {}
       // const { position, right, bottom, zIndex, boxShadow } = window.getComputedStyle(container); // multiple
-      getValue(selector = required(), prop_name = required()) {
+      get(selector = required(), prop_name = required()) {
          return (el = (selector instanceof HTMLElement) ? selector : document.body?.querySelector(selector))
             ? getComputedStyle(el).getPropertyValue(prop_name) : null; // for some callback functions (Match.max) return "undefined" is not valid
       },
@@ -663,7 +682,6 @@ const NOVA = {
             if (remove) el.remove();
             else {
                if (document.getElementById(selector_id)) return;
-               // el.style.visibility = 'hidden'; // left scroll space
                el.style.display = 'none';
                // create button
                const btn = document.createElement('a');
@@ -671,6 +689,7 @@ const NOVA = {
                btn.id = selector_id;
                btn.className = 'more-button style-scope ytd-video-secondary-info-renderer';
                // btn.className = 'ytd-vertical-list-renderer';
+               // btn.style.cssText = '';
                Object.assign(btn.style, {
                   cursor: 'pointer',
                   'text-align': 'center',
@@ -680,8 +699,7 @@ const NOVA = {
                });
                btn.addEventListener('click', () => {
                   btn.remove();
-                  // el.style.visibility = 'visible'; // left scroll space
-                  el.style.display = 'unset';
+                  el.style.display = 'inherit';
                   window.dispatchEvent(new Event('scroll')); // need to "comments-visibility" (https://stackoverflow.com/a/68202306)
                });
                el.before(btn);
@@ -715,9 +733,35 @@ const NOVA = {
       getAspectRatio({ width = required(), height = required() }) {
          const
             gcd = (a, b) => b ? gcd(b, a % b) : a,
-            divisor = gcd(width, height);
+            divisor = gcd(width, height),
+            w = width / divisor,
+            h = height / divisor;
 
-         return width / divisor + ':' + height / divisor;
+         return (w > 10 && h > 10 && Math.abs(w - h) <= 2) // fix ration "91:90", "121:120" etc.
+            ? '1:1'
+            : w + ':' + h;
+
+         // switch (w + ':' + h) {
+         //    case '64:27':
+         //    case '43:18':
+         //    case '12:5':
+         //    case '7:3':
+         //       return '21:9';
+         //    case '2:1':
+         //       return '18:9';
+         //    case '18:5':
+         //    case '16:5':
+         //       return '32:9';
+         //    case '16:9':
+         //       return '16:9';
+         //    case '16:10':
+         //       return '16:10';
+         //    case '41:30':
+         //    case '4:3':
+         //       return '4:3';
+         //    default:
+         //       return width + 'x' + height;
+         // }
       },
 
       /**
@@ -783,13 +827,13 @@ const NOVA = {
     * @param  {string} text
     * @return {void}
    */
-   triggerHUD(text) {
-      // console.debug('triggerHUD', ...arguments);
+   triggerOSD(text) {
+      // console.debug('triggerOSD', ...arguments);
       if (!text || !['watch', 'embed'].includes(this.currentPage)) return;
       if (typeof this.fateBezel === 'number') clearTimeout(this.fateBezel); // reset hide
 
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
-      if (!bezelEl) return console.warn(`triggerHUD ${text}=>${bezelEl}`);
+      if (!bezelEl) return console.warn(`triggerOSD ${text}=>${bezelEl}`);
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
@@ -871,7 +915,7 @@ const NOVA = {
             // '#comments ytd-comment-thread-renderer:first-child #content',
             // all comments
             // Strategy 1. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-            //...[...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
+            // ...[...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
             // Strategy 2
             ...[...document.body.querySelectorAll(`#comments #comment #comment-content ${selectorTimestampLink} + *:last-child`)]
                // .map(el => el.closest('#comment')?.textContent),
@@ -910,8 +954,9 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
-                                 .trim().replace(/^[:\-–—|●►▷]|(\[\])?[:\-–—.;|]$/g, '').trim() // clear of quotes and list characters
-                                 //.trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
+                                 .trim().replace(/^[\u2011-\u26FF:\-|\[\]]+|[\u2011-\u26FF:\-.;]+$/g, '') // clear of quotes and list characters
+                                 .replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, '') // Symbols
+                                 // .trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
                                  // ^[\"(]|[\")]$ && .trim().replace(/^[\"(].*[\")]$/g, '') // quote stripping example - "text"
                                  .trim()
                            });
@@ -921,7 +966,7 @@ const NOVA = {
             });
 
          // if 1 mark < 25% video_duration
-         if (timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 4)) {
+         if (timestampsCollect.length == 1 && (timestampsCollect[0].sec < (video_duration / 4))) {
             return timestampsCollect;
          }
          else if (timestampsCollect.length > 1) {
@@ -959,7 +1004,7 @@ const NOVA = {
                }
             });
          // if 1 mark < 25% video_duration. Ex skip intro info in comment
-         if (timestampsCollect.length == 1 && timestampsCollect[0].sec < (video_duration / 4)) {
+         if (timestampsCollect.length == 1 && (timestampsCollect[0].sec < (video_duration / 4))) {
             return timestampsCollect;
          }
          else if (timestampsCollect.length > 1) {
@@ -1044,8 +1089,10 @@ const NOVA = {
    */
    strToArray(str) {
       return str
-         ?.split(/[\n,;]/)
-         .map(e => e.toString().trim().toLowerCase())
+         ?.trim().split(/[\n,;]/)
+         // .map(e => e.toString().trim().toLowerCase())
+         // .map(e => e.replace(/(\s\n)$/, '')) // trim new line
+         .map(e => e.replace(/^(\s+)$/, '')) // trim empty line
          .filter(e => e.length);
    },
 
@@ -1154,7 +1201,7 @@ const NOVA = {
 
          return [
             titleStr,
-            location.href, // 'music.youtube.com' or 'youtube.com#music'
+            document.URL, // 'music.youtube.com' or 'youtube.com#music'
             channelName,
             // video genre
             playerData?.microformat?.playerMicroformatRenderer.category, // exclude embed page
@@ -1221,7 +1268,9 @@ const NOVA = {
       //       return arr.reduce((acc, time) => (60 * acc) + +time);
       //    }
       // },
-      hmsToSec(str) { // format out "h:mm:ss" > "sec". if str don't have ":" return zero
+      hmsToSec(str = required()) { // format out "h:mm:ss" > "sec". if str don't have ":" return zero
+         // if (!str?.includes(':')) return console.warn('hmsToSec err:', str);
+
          let
             parts = str?.split(':'),
             t = 0;
@@ -1349,18 +1398,18 @@ const NOVA = {
          if (!(date instanceof Date)) return console.error('"date" is not Date type:', date);
 
          const samples = [
-            { label: 'year', seconds: 31536000 },
-            { label: 'month', seconds: 2592000 },
-            { label: 'day', seconds: 86400 },
-            { label: 'hour', seconds: 3600 },
-            { label: 'minute', seconds: 60 },
-            { label: 'second', seconds: 1 }
+            { label: 'year', sec: 31536000 },
+            { label: 'month', sec: 2592000 },
+            { label: 'day', sec: 86400 },
+            { label: 'hour', sec: 3600 },
+            { label: 'minute', sec: 60 },
+            { label: 'second', sec: 1 }
          ];
          const
             now = date.getTime(),
             seconds = ~~((Date.now() - Math.abs(now)) / 1000),
-            interval = samples.find(i => i.seconds < seconds),
-            time = ~~(seconds / interval.seconds);
+            interval = samples.find(i => i.sec < seconds),
+            time = ~~(seconds / interval.sec);
 
          // return `${time} ${interval.label}${time !== 1 ? 's' : ''} ago`;
          return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
@@ -1395,7 +1444,7 @@ const NOVA = {
 
       return format
          // .replace(/a|A|Z|S(SS)?|ss?|mm?|HH?|hh?|D{1,4}|M{1,4}|YY(YY)?|'([^']|'')*'/g, partPattern => { // full
-         .replace(/A|Z|S(SS)?|ss?|mm?|HH?|hh?|D{1,4}|M{1,4}|YY(YY)?|'([^']|'')*'/g, partPattern => { // remove "a" for "at"
+         .replace(/A|Z|S(SS)?|ss?|mm?|HH?|hh?|D{1,4}|M{1,4}|YY(YY)?|'([^']|'')*'/g, partPattern => { // remove key "a" for use text "at"
             let out;
             switch (partPattern) {
                case 'YY': out = year.substr(2); break;
@@ -1459,6 +1508,14 @@ const NOVA = {
          return ~~(n * prec) / prec;
       }
    },
+   // extractAsNum(re) {
+   //    const [xn, xq] = re?.slice(1) ?? ["0", ""]
+   //    const [n, q] = [parseFloat(xn.replace(",", ".")), xq.trim()]
+   //    if (q == "") return n;
+   //    if (q == "k") return 1000 * n;
+   //    if (q == "M") return 1000 * 1000 * n;
+   //    return 0;
+   // },
 
    /**
     * @param  {string} new_url
@@ -1483,7 +1540,7 @@ const NOVA = {
       */
       set(query_obj = {}, url_string) {
          // console.log('queryURL.set:', ...arguments);
-         if (typeof query_obj != 'object' || !Object.keys(query_obj).length) return console.error('query_obj:', query_obj)
+         if (typeof query_obj != 'object' || !Object.keys(query_obj).length) return console.error('query_obj:', query_obj);
          const url = new URL(url_string || location);
          Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
          return url.toString();
@@ -1938,5 +1995,5 @@ const NOVA = {
          console.trace();
          console.groupEnd();
       }
-   }
-}
+   },
+};

@@ -1,8 +1,8 @@
 const App = {
-   prevURL: location.href,
+   prevURL: document.URL,
 
-   isURLChange() {
-      return (this.prevURL === location.href) ? false : this.prevURL = location.href;
+   isURLChanged() {
+      return (this.prevURL == document.URL) ? false : this.prevURL = document.URL;
    },
 
    isMobile: location.host == 'm.youtube.com',
@@ -11,9 +11,9 @@ const App = {
    storage: {
       set(settings) {
          this.settingsStore = settings;
-         if (window.self !== window.top) {
+         if (window.self !== window.top) { // is iframe
             // Disabled the script if youtube is embedded
-            if (settings?.exclude_iframe) { // window.frameElement
+            if (settings?.exclude_iframe) {
                return console.warn('processed in the iframe disable');
             }
             // Disabled the script if iframe in not "embed"
@@ -35,14 +35,17 @@ const App = {
       const manifest = browser.runtime.getManifest();
       console.log('%c /* %s */', 'color:#0096fa; font-weight:bold;', manifest.name + ' v.' + manifest.version);
 
-      // skip first page transition
-      // Strategy 1
+      // on page updated url
+      // Strategy 1 (HTML). Skip first page transition
       if (this.isMobile) {
-         window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChange() && this.run());
+         window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && this.isURLChanged() && this.run());
       }
-      // Strategy 2
+      // Strategy 2 (API)
       else {
-         document.addEventListener('yt-navigate-start', () => this.isURLChange() && this.run());
+         document.addEventListener('yt-navigate-start', () => this.isURLChanged() && this.run());
+
+         // miniplayer fix (https://github.com/raingart/Nova-YouTube-extension/issues/145)
+         document.addEventListener('yt-action', this.reloadAfterMiniplayer.bind(this));
       }
 
       // for test
@@ -58,6 +61,29 @@ const App = {
       Plugins.injectScript('window.nova_plugins = [];');
       Plugins.load(['nova-api.js']);
       Plugins.load(); // all
+   },
+
+   // miniplayer fix (https://github.com/raingart/Nova-YouTube-extension/issues/145)
+   reloadAfterMiniplayer(evt) {
+      // if (!location.search.includes('list=')) return;
+
+      // console.log(evt.detail?.actionName);
+      // switch (evt.detail?.actionName) {
+      //    // case 'yt-miniplayer-endpoint-changed'':
+      //    case 'yt-cache-miniplayer-page-action':
+      // console.log(evt.detail?.actionName); // flltered
+      if (location.pathname == '/watch'
+         // && evt.detail?.actionName.includes('miniplayer')
+         && (evt.detail?.actionName == 'yt-cache-miniplayer-page-action')
+         && this.isURLChanged()
+      ) {
+         // console.log(evt.detail?.actionName); // flltered
+         document.removeEventListener('yt-action', this.reloadAfterMiniplayer); // stop listener
+         this.run();
+         // location.reload();
+      }
+      //       break;
+      // }
    },
 
    run() {
@@ -91,6 +117,7 @@ const App = {
          if (window.nova_plugins.length !== plugins_count) {
             // show notice
             const notice = document.createElement('div');
+            // notice.style.cssText = '';
             Object.assign(notice.style, {
                position: 'fixed',
                top: 0,
@@ -150,7 +177,7 @@ const App = {
                   'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform'
                   + '?entry.35504208=' + encodeURIComponent(trace_name)
                   + '&entry.151125768=' + encodeURIComponent(err_stack)
-                  + '&entry.744404568=' + encodeURIComponent(location.href)
+                  + '&entry.744404568=' + encodeURIComponent(document.URL)
                   + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
                   // + '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
                   , '_blank');

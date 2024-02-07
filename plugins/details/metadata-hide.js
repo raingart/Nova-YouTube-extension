@@ -15,7 +15,7 @@ window.nova_plugins.push({
    'title:ua': 'Приховати метадані',
    run_on_pages: 'watch',
    section: 'details',
-   desc: 'Cover link to games, movies, etc.',
+   desc: 'Cover link to games, movies, merch, etc.',
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',

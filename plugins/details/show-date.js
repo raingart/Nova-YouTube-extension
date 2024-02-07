@@ -31,7 +31,7 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'nova-video-date:',
          DATE_SELECTOR_ID = 'nova-video-published-date';
 
-      NOVA.runOnPageInitOrTransition(async () => {
+      NOVA.runOnPageLoad(async () => {
          if (NOVA.currentPage == 'watch') {
             await NOVA.waitUntil(() => typeof movie_player === 'object', 1000); // 1sec
 

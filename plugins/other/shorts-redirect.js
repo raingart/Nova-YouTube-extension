@@ -6,12 +6,12 @@ window.nova_plugins.push({
    title: 'Redirect Shorts to regular (watch) URLs',
    'title:zh': '将 Shorts 重定向到常规（watch）URL',
    'title:ja': 'ショートパンツを通常の（watch）URLにリダイレクトする',
-   'title:ko': 'Shorts를 일반(watch) URL로 리디렉션',
-   'title:id': 'Redirect Shorts ke URL reguler (watch)',
-   'title:es': 'Redirigir Shorts a URL normales (watch)',
+   // 'title:ko': 'Shorts를 일반(watch) URL로 리디렉션',
+   // 'title:id': 'Redirect Shorts ke URL reguler (watch)',
+   // 'title:es': 'Redirigir Shorts a URL normales (watch)',
    'title:pt': 'Redirecionar Shorts para URLs regulares (watch)',
    'title:fr': 'Rediriger les shorts vers des URL normales (watch)',
-   'title:it': 'Reindirizza i cortometraggi a URL normali (watch).',
+   // 'title:it': 'Reindirizza i cortometraggi a URL normali (watch).',
    // 'title:tr': "Shorts'ları normal (watch) URL'lerine yönlendirin",
    'title:de': 'Leiten Sie Shorts zu regulären (watch) URLs um',
    'title:pl': 'Przełączaj Shorts na zwykłe adresy URL',
@@ -24,12 +24,12 @@ window.nova_plugins.push({
    desc: 'Redirect Shorts video to normal player',
    'desc:zh': '将 Shorts 视频重定向到普通播放器',
    'desc:ja': 'ショートパンツのビデオを通常のプレーヤーにリダイレクトする',
-   'desc:ko': 'Shorts 비디오를 일반 플레이어로 리디렉션',
-   'desc:id': 'Redirect video Shorts ke pemutar normal',
-   'desc:es': 'Redirigir el video de Shorts al reproductor normal',
+   // 'desc:ko': 'Shorts 비디오를 일반 플레이어로 리디렉션',
+   // 'desc:id': 'Redirect video Shorts ke pemutar normal',
+   // 'desc:es': 'Redirigir el video de Shorts al reproductor normal',
    'desc:pt': 'Redirecionar o vídeo do Shorts para o player normal',
    'desc:fr': 'Rediriger la vidéo Short vers un lecteur normal',
-   'desc:it': 'Reindirizza il video dei cortometraggi al lettore normale',
+   // 'desc:it': 'Reindirizza il video dei cortometraggi al lettore normale',
    // 'desc:tr': 'Shorts videosunu normal oynatıcıya yönlendir',
    'desc:de': 'Shorts-Video auf normalen Player umleiten',
    'desc:pl': 'Przełącza krótkie filmy do normalnego odtwarzacza',
@@ -38,7 +38,7 @@ window.nova_plugins.push({
 
       location.href = location.href.replace('shorts/', 'watch?v=');
 
-      // NOVA.runOnPageInitOrTransition(redirectPageToNormal);
+      // NOVA.runOnPageLoad(redirectPageToNormal);
 
       // function redirectPageToNormal() {
       //    if ('shorts' == NOVA.currentPage) {
@@ -58,17 +58,28 @@ window.nova_plugins.push({
 
       // document.addEventListener('yt-action', evt => {
       //    // console.log(evt.detail?.actionName);
-      //    if ([
-      //       'yt-append-continuation-items-action', // home, results, feed, channel, watch
-      //       'ytd-update-grid-state-action', // feed, channel
-      //       'yt-service-request', // results, watch
-      //       'ytd-rich-item-index-update-action', // home, channel
-      //    ]
-      //       .includes(evt.detail?.actionName)
-      //    ) {
-      //       if (NOVA.currentPage == 'channel' && !['shorts'].includes(NOVA.channelTab)) return;
+      //    switch (evt.detail?.actionName) {
+      //       case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
+      //       case 'ytd-update-grid-state-action': // feed, channel
+      //       case 'yt-rich-grid-layout-refreshed': // feed
+      //       // case 'ytd-rich-item-index-update-action': // home, channel
+      //       case 'yt-store-grafted-ve-action': // results, watch
+      //          // case 'ytd-update-elements-per-row-action': // feed
 
-      //       patchThumbShort();
+      //          // universal
+      //          // case 'ytd-update-active-endpoint-action':
+      //          // case 'yt-window-scrolled':
+      //          // case 'yt-service-request': // results, watch
+
+      //          // console.log(evt.detail?.actionName); // flltered
+
+      //          if (NOVA.currentPage == 'channel' && !['shorts'].includes(NOVA.channelTab)) return;
+
+      //          patchThumbShort();
+      //          break;
+
+      //       // default:
+      //       //    break;
       //    }
       // });
 

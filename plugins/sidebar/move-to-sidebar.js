@@ -4,20 +4,19 @@
 window.nova_plugins.push({
    id: 'move-to-sidebar',
    title: 'Move to sidebar',
-   // 'title:zh': '',
-   // 'title:ja': '',
+   'title:zh': '转移到侧边栏',
+   'title:ja': 'サイドバーに転送',
    // 'title:ko': '',
    // 'title:id': '',
    // 'title:es': '',
-   // 'title:pt': '',
-   // 'title:fr': '',
+   'title:pt': 'Transferir para a barra lateral',
+   'title:fr': 'Transférer vers la barre latérale',
    // 'title:it': '',
    // 'title:tr': '',
-   // 'title:de': '',
-   // 'title:pl': '',
-   // 'title:ua': '',
+   'title:de': 'Zur Seitenleiste übertragen',
+   'title:pl': 'Przenieś na pasek boczny',
+   'title:ua': 'Перенести на бічну панель',
    run_on_pages: 'watch, -mobile',
-   // run_on_pages: 'watch, live_chat, -mobile',
    // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
@@ -102,10 +101,11 @@ window.nova_plugins.push({
 
                   document.body.querySelector(`${SELECTOR_SECONDARY}`)?.appendChild(comments);
                   // make the conmments scrollable
-                  Object.assign(comments.style, {
-                     height: '100vh',
-                     'overflow-y': 'auto',
-                  });
+                  comments.style.cssText = 'height:100vh; overflow-y:auto;';
+                  // Object.assign(comments.style, {
+                  //    height: '100vh',
+                  //    'overflow-y': 'auto',
+                  // });
                   // NOVA.css.push(
                   //    `#comments {
                   //       height: 100vh !important;
@@ -147,8 +147,8 @@ window.nova_plugins.push({
       move_to_sidebar_target: {
          _tagName: 'select',
          label: 'Target of movement',
-         // 'label:zh': '',
-         // 'label:ja': '',
+         'label:zh': '运动目标',
+         'label:ja': '移動の対象',
          // 'label:ko': '',
          // 'label:id': '',
          // 'label:es': '',

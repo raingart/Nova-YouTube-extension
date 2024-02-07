@@ -7,6 +7,7 @@
 // https://www.youtube.com/watch?v=qAYlTiV-Zf8
 // https://www.youtube.com/watch?v=Prwn-qrukT0
 // https://www.youtube.com/watch?v=LIVQbQfke1E
+// https://www.youtube.com/watch?v=knTCepRTS7E
 
 window.nova_plugins.push({
    id: 'video-unblock-warn-content',

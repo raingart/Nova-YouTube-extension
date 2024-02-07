@@ -4,7 +4,7 @@ window.nova_plugins.push({
    title: 'YouTube logo link',
    'title:zh': 'YouTube 徽标',
    'title:ja': 'YouTubeロゴ',
-   'title:ko': '유튜브 로고',
+   // 'title:ko': '유튜브 로고',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',

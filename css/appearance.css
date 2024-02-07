@@ -7,12 +7,14 @@
    grid-column: appearance;
    display: grid;
    grid-gap: 10px;
-   grid-template-columns: auto 20% 10%;
+   grid-template-columns: auto auto 20% 10%;
    grid-template-areas:
-      "header header other"
-      "player sidebar other"
-      "details sidebar other"
-      "comments empty other"
+      "header header header other"
+      "player player playlist other"
+      "control-panel control-panel playlist other"
+      "details details-buttons sidebar other"
+      "comments comments sidebar thumbs"
+      "comments comments empty thumbs"
 }
 
 .appearance>* {
@@ -45,19 +47,40 @@
 
 .appearance>.player {
    grid-area: player;
-   height: 100px;
+   height: 80px;
    color: #efefef;
-   background: url(/images/appearance_player.png) no-repeat center bottom;
+   /* background: url(/images/appearance_player.png) no-repeat center bottom;
+   background-size: 100% auto; */
+   background-color: #000;
+}
+
+.appearance>.details>span,
+.appearance>.details-buttons>span {
+   font-size: 1.1em;
+}
+
+.appearance>.control-panel {
+   grid-area: control-panel;
+   height: 40px;
+   color: #efefef;
+   /* background: url(/images/appearance_player.png) no-repeat center bottom; */
    background-size: 100% auto;
    background-color: #000;
+   white-space: nowrap;
+}
+
+.appearance>.playlist {
+   grid-area: playlist;
 }
 
 .appearance>.sidebar {
    grid-area: sidebar;
 }
 
+.appearance>.playlist>span,
 .appearance>.sidebar>span,
-.appearance>.other>span {
+.appearance>.other>span,
+.appearance>.thumbs>span {
    /* writing-mode: vertical-rl;
    transform: rotate(180deg); */
    transform: translate(-50%, -50%) rotate(-90deg);
@@ -68,6 +91,11 @@
    height: 40px;
 }
 
+.appearance>.details-buttons {
+   grid-area: details-buttons;
+   height: 40px;
+}
+
 .appearance>.comments {
    grid-area: comments;
    height: 100px;
@@ -75,6 +103,10 @@
 
 .appearance>.other {
    grid-area: other;
+}
+
+.appearance>.thumbs {
+   grid-area: thumbs;
 }
 
 /* .appearance>.other:not(.empty):hover {

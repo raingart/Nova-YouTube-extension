@@ -22,8 +22,8 @@ const
 //    // 'oldKey': 'newKey',
 // });
 
-// Disabled script if youtube is embedded
-if (user_settings?.exclude_iframe && (window.frameElement || window.self !== window.top)) {
+// Disabled script if youtube is embedded (is iframe)
+if (user_settings?.exclude_iframe && (window.self !== window.top)) {
    return console.warn(GM_info.script.name + ': processed in the iframe disable');
 }
 
@@ -32,7 +32,7 @@ registerMenuCommand();
 // is configPage
 if (location.hostname === new URL(configPage).hostname) setupConfigPage();
 else {
-   // Disabled the script if iframe in not "embed"
+   // Disabled the script if iframe in not "embed" (is frame)
    if ((window.self !== window.top) && !location.pathname.startsWith('/embed')) {
       return console.warn('iframe skiped:', location.pathname);
    }
@@ -41,8 +41,8 @@ else {
 
    // is user_settings empty
    if (!user_settings || !Object.keys(user_settings).length) {
-      // if (confirm('Active plugins undetected. Open the settings page now?')) window.open(configPage);
-      if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(configPage);
+      if (confirm('Active plugins undetected. Open the settings page now?')) window.open(configPage, '_blank');
+      // if (confirm('Active plugins undetected. Open the settings page now?')) GM_openInTab(configPage);
 
       // default plugins settings
       user_settings['report_issues'] = 'on';
@@ -60,6 +60,7 @@ else {
       delete exportedSettings['thumbs_filter_title_blocklist'];
       delete exportedSettings['search_filter_channels_blocklist'];
       delete exportedSettings['thumbs_hide_live_channels_exception'];
+      delete exportedSettings['comments_sort_words_blocklist'];
       unsafeWindow.window.nova_settings = exportedSettings;
    }
 }
@@ -125,17 +126,41 @@ function appLander() {
       appRun();
    }
 
-   let prevURL = location.href;
-   const isURLChanged = () => prevURL == location.href ? false : prevURL = location.href;
+   let prevURL = document.URL;
+   const isURLChanged = () => prevURL == document.URL ? false : prevURL = document.URL;
 
    // on page updated url
-   // Strategy 1
+   // Strategy 1 (HTML). Skip first page transition
    if (isMobile = (location.host == 'm.youtube.com')) {
-      window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && isURLChange() && appRun());
+      window.addEventListener('transitionend', ({ target }) => target.id == 'progress' && isURLChanged() && appRun());
    }
-   // Strategy 2
+   // Strategy 2 (API)
    else {
       document.addEventListener('yt-navigate-start', () => isURLChanged() && appRun());
+
+      // miniplayer fix (https://github.com/raingart/Nova-YouTube-extension/issues/145)
+      document.addEventListener('yt-action', reloadAfterMiniplayer);
+      function reloadAfterMiniplayer(evt) {
+         // if (!location.search.includes('list=')) return;
+
+         // if ([
+         //    'yt-miniplayer-endpoint-changed',
+         //    'yt-cache-miniplayer-page-action',
+         // ]
+         //    .includes(evt.detail?.actionName)
+         // ) {
+
+         if (location.pathname == '/watch'
+            // && evt.detail?.actionName.includes('miniplayer')
+            && (evt.detail?.actionName == 'yt-cache-miniplayer-page-action')
+            && isURLChanged()
+         ) {
+            // console.log(evt.detail?.actionName);
+            document.removeEventListener('yt-action', reloadAfterMiniplayer);
+            appRun();
+            // location.reload();
+         }
+      }
    }
 
    function appRun() {
@@ -158,45 +183,45 @@ function appLander() {
 //       'app_ver': GM_info.script.version,
 //    });
 //    // page: url change
-//    let prevURL = location.href;
-//    const isURLChanged = () => (prevURL == location.href) ? false : prevURL = location.href;
+//    let prevURL = document.URL;
+//    const isURLChanged = () => (prevURL == document.URL) ? false : prevURL = document.URL;
 //    // skip first page transition
 //    document.addEventListener('yt-navigate-start', () => isURLChanged() && initPlugins());
 // }
 
 function registerMenuCommand() {
-   // GM_registerMenuCommand('Settings', () => window.open(configPage));
-   GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
+   GM_registerMenuCommand('Settings', () => window.open(configPage, '_blank'));
+   // GM_registerMenuCommand('Settings', () => GM_openInTab(configPage));
    GM_registerMenuCommand('Import settings', () => {
       // if (navigator.userAgent.match(/firefox|fxios/i)) {
       if (json = JSON.parse(prompt('Enter json file context'))) {
          saveImportSettings(json);
       }
-      //    // else alert('Import failed');
+      // else alert('Import failed');
       // }
-      // else {
-      //    const f = document.createElement('input');
-      //    f.type = 'file';
-      //    f.accept = 'application/JSON';
-      //    f.style.display = 'none';
-      //    f.addEventListener('change', function () {
-      //       if (f.files.length !== 1) return alert('file empty');
-      //       const rdr = new FileReader();
-      //       rdr.addEventListener('load', function () {
-      //          try {
-      //             saveImportSettings(JSON.parse(rdr.result));
-      //          }
-      //          catch (err) {
-      //             alert(`Error parsing settings\n${err.name}: ${err.message}`);
-      //          }
-      //       });
-      //       rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
-      //       rdr.readAsText(f.files[0]);
-      //    });
-      //    document.body.append(f);
-      //    f.click();
-      //    f.remove();
-      // }
+      else if (confirm('Import via file?')) {
+         const f = document.createElement('input');
+         f.type = 'file';
+         f.accept = 'application/JSON';
+         f.style.display = 'none';
+         f.addEventListener('change', function () {
+            if (f.files.length !== 1) return alert('file empty');
+            const rdr = new FileReader();
+            rdr.addEventListener('load', function () {
+               try {
+                  saveImportSettings(JSON.parse(rdr.result));
+               }
+               catch (err) {
+                  alert(`Error parsing settings\n${err.name}: ${err.message}`);
+               }
+            });
+            rdr.addEventListener('error', error => alert('Error loading file\n' + rdr?.error || error));
+            rdr.readAsText(f.files[0]);
+         });
+         document.body.append(f);
+         f.click();
+         f.remove();
+      }
 
       function saveImportSettings(json) {
          GM_setValue(configStoreName, json);
@@ -254,7 +279,8 @@ function registerMenuCommand() {
             'skip_into_step': 'skip_into_sec',
             'miniplayer-disable': 'default-miniplayer-disable',
          });
-         alert('Settings imported successfully!');
+         // alert('Settings imported successfully!');
+         alert('Settings imported!');
          location.reload();
       }
    });
@@ -309,6 +335,7 @@ function insertSettingButton() {
          //     <path d="M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z"/>
          // </svg>`;
          // a.textContent = '►';
+         // a.style.cssText = '';
          // Object.assign(a.style, {
          //    'font-size': '24px',
          //    'color': 'deepskyblue !important',
@@ -325,10 +352,11 @@ function insertSettingButton() {
          tooltip.className = 'style-scope ytd-topbar-menu-button-renderer';
          // tooltip.setAttribute('role', 'tooltip');
          tooltip.textContent = titleMsg;
-
          a.appendChild(tooltip);
-         menu.prepend(a);
 
+         // const style = document.createElement('style');
+         // style.innerHTML += `#${SETTING_BTN_ID} button {display: contents;}`;
+         // style.innerHTML += (
          NOVA.css.push(
             `#${SETTING_BTN_ID}[tooltip]:hover:after {
                position: absolute;
@@ -379,6 +407,11 @@ function insertSettingButton() {
                /*stop-color: #fff700;*/
             }`);
 
+         // a.appendChild(style);
+         // menu.attachShadow({ mode: 'open' });
+         // menu.shadowRoot.prepend(a);
+         menu.prepend(a);
+
          // const btn = document.createElement('button');
          // btn.className = 'ytd-topbar-menu-button-renderer';
          // btn.title = 'Nova Settings';
@@ -389,6 +422,7 @@ function insertSettingButton() {
          //          <path d='M3 1.8v20.4L21 12L3 1.8z M6 7l9 5.1l-9 5.1V7z' />
          //       </g>
          //    </svg>`;
+         // btn.style.cssText = '';
          // Object.assign(btn.style, {
          //    // color: 'var(--yt-spec-text-secondary)',
          //    padding: '0 24px',
@@ -410,19 +444,21 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
    }
 
    function openBugReport() {
-      // window.open(
-      GM_openInTab(
+      // const userAgent = navigator.userAgent || JSON.stringify(navigator.userAgentData.brands.find(i => !i.brand.includes('Brand')));
+      // const userAgent = navigator.userAgent || Object.values(navigator.userAgentData.brands.find(i => !i.brand.includes('Brand'))).join(' ');
+      window.open(
+         // GM_openInTab(
          'https://docs.google.com/forms/u/0/d/e/1FAIpQLScfpAvLoqWlD5fO3g-fRmj4aCeJP9ZkdzarWB8ge8oLpE5Cpg/viewform' +
          '?entry.35504208=' + encodeURIComponent(trace_name) +
          '&entry.151125768=' + encodeURIComponent(err_stack) +
-         '&entry.744404568=' + encodeURIComponent(location.href) +
+         '&entry.744404568=' + encodeURIComponent(document.URL) +
          '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + navigator.userAgent + ' [' + window.navigator.language + ']')
-         // '&entry.1416921320=' + encodeURIComponent(app_ver + ' | ' + (navigator.userAgentData?.brands.length && JSON.stringify(navigator.userAgentData?.brands)))
-      );
-      // , '_blank');
+         // );
+         , '_blank');
    }
 }
 
+// Disabled for minified version
 window.addEventListener('unhandledrejection', err => {
    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
    if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {

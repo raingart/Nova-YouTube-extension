@@ -17,7 +17,8 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    'title:ua': 'Вимкнути мінівідтворювач',
-   run_on_pages: 'watch, -mobile',
+   // run_on_pages: 'watch, -mobile',
+   run_on_pages: 'results, feed, channel, watch, -mobile',
    section: 'other',
    desc: 'shown on changeable page when playing playlist',
    // 'desc:zh': '',
@@ -34,7 +35,7 @@ window.nova_plugins.push({
    'desc:ua': 'Відображається на іншій сторінці під час відтворення плейлиста',
    _runtime: user_settings => {
 
-      // hide player button
+      // hide player button in bottom panel
       NOVA.css.push(
          `.ytp-right-controls .ytp-miniplayer-button {
             display: none !important;
@@ -53,8 +54,15 @@ window.nova_plugins.push({
             // 'yt-miniplayer-play-state-changed'
             // 'yt-miniplayer-active'
 
-            document.body.querySelector('ytd-miniplayer[active] #movie_player button.ytp-miniplayer-close-button')
-               ?.click();
+            // document.body.querySelector('ytd-miniplayer[active] #movie_player video')
+            document.body.querySelector('ytd-miniplayer[active]')
+               ?.remove();
+
+            // document.body.querySelector('ytd-miniplayer[active] #movie_player button.ytp-miniplayer-close-button')
+            //    ?.click();
+
+            // document.body.querySelector('tp-yt-paper-dialog #confirm-button')
+            //    ?.click();
 
             // force way
             // const btn = document.body.querySelector('#movie_player .ytp-miniplayer-ui button.ytp-miniplayer-close-button');
@@ -66,25 +74,25 @@ window.nova_plugins.push({
       });
 
       // remove from page
-      // NOVA.waitSelector('.ytp-chrome-bottom button[class^="ytp-miniplayer"]')
+      // NOVA.waitSelector('ytd-miniplayer[active]')
       //    .then(() => {
       //       document.body.querySelectorAll('[class^="ytp-miniplayer"]')
       //          .forEach(el => el.remove());
       //    });
 
       // disable hotkey
-      // document.addEventListener('keydown', ({ keyCode }) => (keyCode === 13)
+      // document.addEventListener('keydown', ({ keyCode }) => (keyCode === 73)
       // document.addEventListener('keydown', ({ key }) => {
-      // document.addEventListener('keydown', evt => {
-      //    if (['input', 'textarea'].includes(target.localName) || target.isContentEditable) return;
-      //    // if (NOVA.currentPage == 'watch' && evt.code === 'KeyI') {
-      //    if (NOVA.currentPage == 'watch' && evt.key === 'i') {
-      //       alert(1);
-      //       evt.preventDefault(); // Doesn't work. Replace to preventDefault patch
-      //       evt.stopImmediatePropagation(); // Doesn't work. Replace to preventDefault patch
-      //       evt.stopPropagation(); // Doesn't work. Replace to preventDefault patch
-      //    }
-      // });
+      document.addEventListener('keydown', evt => {
+         if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+
+         if (NOVA.currentPage == 'watch' && evt.code === 'KeyI') {
+            // if (NOVA.currentPage == 'watch' && (evt.key === 'i' || evt.keyCode === 73)) {
+            evt.preventDefault();
+            // evt.stopImmediatePropagation();
+            // evt.stopPropagation();
+         }
+      }, { capture: true }); // before all events
 
    },
 });
