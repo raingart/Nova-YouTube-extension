@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '缩略图过滤',
    'title:ja': 'サムネイルのフィルタリング',
    // 'title:ko': '썸네일 필터링',
+   // 'title:vi': '',
    // 'title:id': 'Pemfilteran gambar mini',
    // 'title:es': 'Filtrado de miniaturas',
    'title:pt': 'Filtragem de miniaturas',
@@ -371,7 +372,7 @@ window.nova_plugins.push({
             // conflict with [thumbnails-watched] plugin
             if (!user_settings['thumbnails-watched']) return;
 
-            const PERCENT_COMPLETE = user_settings.thumbs_hide_watched_percent_complete || 90;
+            const PERCENT_COMPLETE = +user_settings.thumbs_hide_watched_percent_complete || 90;
 
             // Strategy 1 (API)
             // document.body.querySelectorAll(thumbsSelectors)
@@ -387,7 +388,7 @@ window.nova_plugins.push({
             //       }
             //    });
             // Strategy 2 (HTML)
-            document.body.querySelectorAll('#thumbnail #overlays #progress')
+            document.body.querySelectorAll('#thumbnail #overlays #progress[style*="width"]')
                .forEach(el => {
                   // if (parseInt(el.style.width) > PERCENT_COMPLETE) {
                   //    el.closest(thumbsSelectors)?.remove();
@@ -421,6 +422,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏短裤',
          'label:ja': 'ショーツを隠す',
          // 'label:ko': '반바지 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan Celana Pendek',
          // 'label:es': 'Ocultar pantalones cortos',
          'label:pt': 'Ocultar shorts',
@@ -440,6 +442,7 @@ window.nova_plugins.push({
          'label:zh': '最短持续时间（以秒为单位）',
          'label:ja': '秒単位の最小期間',
          // 'label:ko': '최소 지속 시간(초)',
+         // 'label:vi': '',
          // 'label:id': 'Durasi lebih sedikit dalam detik',
          // 'label:es': 'Duración mínima en segundos',
          'label:pt': 'Duração mínima em segundos',
@@ -456,6 +459,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -486,6 +490,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏首映/即将上映',
          'label:ja': 'プレミア公開/近日公開を非表示',
          // 'label:ko': 'Premieres/예정 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan Tayang Perdana/Mendatang',
          // 'label:es': 'Ocultar estrenos/próximos',
          'label:pt': 'Ocultar Estreias/Próximas',
@@ -500,6 +505,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -516,6 +522,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏直播',
          'label:ja': 'ライブ ストリームを非表示にする',
          // 'label:ko': '라이브 스트림 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan streaming langsung',
          // 'label:es': 'Ocultar transmisiones en vivo',
          'label:pt': 'Ocultar transmissões ao vivo',
@@ -530,6 +537,7 @@ window.nova_plugins.push({
          'title:zh': '正在播出',
          'title:ja': '放映中',
          // 'title:ko': '지금 방영중',
+         // 'title:vi': '',
          // 'title:id': 'Sekarang ditayangkan',
          // 'title:es': 'Ahora al aire',
          'title:pt': 'Agora no ar',
@@ -546,6 +554,7 @@ window.nova_plugins.push({
          'label:zh': '异常通道列表',
          'label:ja': '例外チャネルのリスト',
          // 'label:ko': '채널 목록',
+         // 'label:vi': '',
          // 'label:id': 'Daftar',
          // 'label:es': 'Lista',
          // 'label:pt': 'Lista',
@@ -559,6 +568,7 @@ window.nova_plugins.push({
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',
          // 'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         // 'title:vi': '',
          // 'title:id': 'pemisah: "," atau ";" atau "baris baru"',
          // 'title:es': 'separador: "," o ";" o "new line"',
          'title:pt': 'separador: "," ou ";" ou "new line"',
@@ -577,6 +587,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏完成的流',
          'label:ja': '終了したストリームを非表示にする',
          // 'label:ko': '완료된 스트림 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan aliran yang sudah selesai',
          // 'label:es': 'Ocultar flujos terminados',
          'label:pt': 'Ocultar streams concluídos',
@@ -596,6 +607,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏[混合]缩略图',
          'label:ja': '「Mix」サムネイルを非表示',
          // 'label:ko': '"믹스" 썸네일 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan gambar mini "Mix"',
          // 'label:es': "Ocultar miniaturas de 'Mix'",
          'label:pt': "Ocultar miniaturas de 'Mix'",
@@ -610,6 +622,7 @@ window.nova_plugins.push({
          'title:zh': '[混合]提供重新观看已经看过的内容',
          'title:ja': '「Mix」は、すでに見たものを再視聴することを提案します',
          // 'title:ko': '[Mix]는 이미 본 것을 다시 볼 것을 제안합니다',
+         // 'title:vi': '',
          // 'title:id': '[Mix] menawarkan untuk menonton ulang apa yang telah dilihat',
          // 'title:es': '[Mix] ofrece volver a ver lo que ya vio',
          'title:pt': '[Mix] se oferece para rever o que já viu',
@@ -625,6 +638,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏观看',
          'label:ja': '監視対象を非表示',
          // 'label:ko': '시청 숨기기',
+         // 'label:vi': '',
          // 'label:id': 'Sembunyikan ditonton',
          // 'label:es': 'Ocultar visto',
          'label:pt': 'Ocultar assistidos',
@@ -640,6 +654,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -658,6 +673,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

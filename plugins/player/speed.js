@@ -14,6 +14,7 @@ window.nova_plugins.push({
    'title:zh': '播放速度控制',
    'title:ja': '再生速度制御',
    // 'title:ko': '재생 속도 제어',
+   // 'title:vi': '',
    // 'title:id': 'Kontrol kecepatan pemutaran',
    // 'title:es': 'Controle de velocidade de reprodução',
    'title:pt': 'Controle de velocidade de reprodução',
@@ -24,13 +25,14 @@ window.nova_plugins.push({
    'title:pl': 'Kontrola prędkości odtwarzania',
    'title:ua': 'Контроль швидкості відтворення',
    // run_on_pages: 'watch, embed, -mobile',
-   run_on_pages: 'home, results, feed, channel, watch, embed',
+   run_on_pages: 'home, results, feed, channel, playlist, watch, embed',
    section: 'player',
    // desc: 'Use mouse wheel to change playback speed',
    desc: 'With mouse wheel',
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
    // 'desc:ko': '마우스 휠로',
+   // 'desc:vi': '',
    // 'desc:id': 'Dengan roda mouse',
    // 'desc:es': 'Con rueda de ratón',
    'desc:pt': 'Com roda do mouse',
@@ -75,7 +77,7 @@ window.nova_plugins.push({
             // Strategy 2
             video.addEventListener('ratechange', function () {
                // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
-               NOVA.triggerHUD(this.playbackRate + 'x');
+               NOVA.triggerOSD(this.playbackRate + 'x');
 
                // slider update
                if (Object.keys(sliderContainer).length) {
@@ -210,8 +212,8 @@ window.nova_plugins.push({
             && (+user_settings.rate_default <= 2)
             && (NOVA.videoElement.playbackRate <= 2)
             && ((NOVA.videoElement.playbackRate % .25) === 0)
-            && (typeof movie_player !== 'undefined' && movie_player.hasOwnProperty('getPlaybackRate')),
-         // && (typeof movie_player !== 'undefined' && ('getPlaybackRate' in movie_player)),
+            && (typeof movie_player === 'object' && typeof movie_player.getPlaybackRate === 'function'),
+         // && movie_player.hasOwnProperty('getPlaybackRate') && ('getPlaybackRate' in movie_player)),
 
          async set(level = 1) {
             this.log('set', ...arguments);
@@ -375,7 +377,7 @@ window.nova_plugins.push({
             }
 
             ${SELECTOR} [type="checkbox"]:checked {
-               background: #f00;
+               background-color: #f00;
             }
 
             ${SELECTOR} [type="checkbox"]:checked:after {
@@ -580,6 +582,7 @@ window.nova_plugins.push({
          'label:zh': '启动速度',
          'label:ja': '起動時の速度',
          // 'label:ko': '시작 시 속도',
+         // 'label:vi': '',
          // 'label:id': 'Kecepatan saat startup',
          // 'label:es': 'Velocidad al inicio',
          'label:pt': 'Velocidade na inicialização',
@@ -602,6 +605,7 @@ window.nova_plugins.push({
          // 'label:zh': '音乐流派视频',
          // 'label:ja': '音楽ジャンルのビデオ',
          // 'label:ko': '음악 장르',
+         // 'label:vi': '',
          // 'label:id': 'Genre musik',
          // 'label:es': 'Género musical',
          // 'label:pt': 'Gênero musical',
@@ -615,6 +619,7 @@ window.nova_plugins.push({
          'title:zh': '扩展检测 - 可能会错误触发',
          'title:ja': '拡張検出-誤ってトリガーされる可能性があります',
          // 'title:ko': '확장 감지 - 잘못 트리거될 수 있음',
+         // 'title:vi': '',
          // 'title:id': 'Deteksi diperpanjang - dapat memicu salah',
          // 'title:es': 'Detección extendida - puede activarse falsamente',
          'title:pt': 'Detecção estendida - pode disparar falsamente',
@@ -630,6 +635,7 @@ window.nova_plugins.push({
                'label:zh': '跳过',
                'label:ja': 'スキップ',
                // 'label:ko': '건너 뛰기',
+               // 'label:vi': '',
                // 'label:id': 'merindukan',
                // 'label:es': 'saltar',
                'label:pt': 'pular',
@@ -660,6 +666,7 @@ window.nova_plugins.push({
                'label:zh': '施力',
                'label:ja': '力を加える',
                // 'label:ko': '강제 적용',
+               // 'label:vi': '',
                // 'label:id': 'berlaku paksa',
                // 'label:es': 'aplicar fuerza',
                'label:pt': 'aplicar força',
@@ -679,6 +686,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -693,6 +701,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -710,6 +719,7 @@ window.nova_plugins.push({
          'label:zh': '热键',
          'label:ja': 'ホットキー',
          // 'label:ko': '단축키',
+         // 'label:vi': '',
          // 'label:id': 'Tombol pintas',
          // 'label:es': 'Tecla de acceso rápido',
          'label:pt': 'Tecla de atalho',
@@ -735,6 +745,7 @@ window.nova_plugins.push({
       //    'label:zh': '模式',
       //    'label:ja': 'モード',
       //    // 'label:ko': '방법',
+      //    // 'label:vi': '',
       //    // 'label:id': 'Mode',
       //    // 'label:es': 'Modo',
       //    'label:pt': 'Modo',
@@ -760,6 +771,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -822,6 +834,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -884,6 +897,7 @@ window.nova_plugins.push({
          'label:zh': '步',
          'label:ja': 'ステップ',
          // 'label:ko': '단계',
+         // 'label:vi': '',
          // 'label:id': 'Melangkah',
          // 'label:es': 'Paso',
          'label:pt': 'Degrau',
@@ -898,6 +912,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -919,6 +934,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -933,6 +949,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

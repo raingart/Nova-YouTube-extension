@@ -2,8 +2,8 @@
 // https://www.youtube.com/@Karujika/videos- many live
 
 window.nova_plugins.push({
-   id: 'thumbs-watch-later',
-   title: 'Add "Watch Later" button on thumbnails',
+   id: 'thumbs-not-interested',
+   title: 'Add "Not Interested" button on thumbnails',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -17,9 +17,9 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    // 'title:ua': '',
-   // run_on_pages: 'home, results, feed, channel, watch, -mobile',
-   run_on_pages: 'feed, -mobile',
+   run_on_pages: 'feed, channel, watch, -mobile',
    section: 'thumbs',
+   opt_api_key_warn: true,
    desc: 'You must be logged in',
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -36,9 +36,11 @@ window.nova_plugins.push({
    // 'desc:ua': '',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/458907-youtube-video-download-buttons
+
       const
-         SELECTOR_OVERLAY_ID_NAME = 'nova-thumb-overlay', // shared container for [thumbs-not-interested] plugin
-         SELECTOR_CLASS_NAME = 'nova-thumbs-watch-later-btn',
+         SELECTOR_OVERLAY_ID_NAME = 'nova-thumb-overlay', // shared container for [thumbs-watch-later] plugin
+         SELECTOR_CLASS_NAME = 'nova-thumbs-not-interested-btn',
          thumbsSelectors = [
             'ytd-rich-item-renderer', // home, channel, feed
             'ytd-video-renderer', // results
@@ -59,8 +61,8 @@ window.nova_plugins.push({
             case 'yt-rich-grid-layout-refreshed': // feed
             // case 'ytd-rich-item-index-update-action': // home, channel
             case 'yt-store-grafted-ve-action': // results, watch
-               // case 'ytd-update-elements-per-row-action': // feed
-               // case 'yt-forward-redux-action-to-live-chat-iframe': // watch test
+            // case 'ytd-update-elements-per-row-action': // feed
+            case 'yt-forward-redux-action-to-live-chat-iframe': // watch test
 
                // universal
                // case 'ytd-update-active-endpoint-action':
@@ -72,26 +74,26 @@ window.nova_plugins.push({
                   // case 'home':
                   // case 'results':
                   case 'feed':
-                     // case 'channel':
-                     // case 'watch':
+                  // case 'channel':
+                  case 'watch':
                      document.body.querySelectorAll(thumbsSelectors)
                         .forEach(thumb => {
                            thumb.classList.add(SELECTOR_CLASS_NAME);
 
                            if (container = thumb.querySelector('a#thumbnail')) {
-                              // if (user_settings['thumbs-not-interested']) {
-                              //    NOVA.waitSelector(`#${SELECTOR_OVERLAY_ID_NAME}`, { 'container': container })
-                              //       .then(container => {
-                              //          container.append(renderButton(thumb));
-                              //       });
-                              // }
-                              // else {
-                              const div = document.createElement('div');
-                              div.id = SELECTOR_OVERLAY_ID_NAME;
-                              div.append(renderButton(thumb));
-                              container.append(div);
+                              if (user_settings['thumbs-watch-later']) {
+                                 NOVA.waitSelector(`#${SELECTOR_OVERLAY_ID_NAME}`, { 'container': container })
+                                    .then(container => {
+                                       container.append(renderButton(thumb));
+                                    });
+                              }
+                              else {
+                                 const div = document.createElement('div');
+                                 div.id = SELECTOR_OVERLAY_ID_NAME;
+                                 div.append(renderButton(thumb));
+                                 container.append(div);
+                              }
                            }
-                           // }
                            // if (vidId = NOVA.queryURL.get('v', thumb.href)) {
                            // }
                         });
@@ -108,15 +110,19 @@ window.nova_plugins.push({
       });
 
 
+      if (!user_settings['thumbs-watch-later']) {
+         NOVA.css.push(
+            `#${SELECTOR_OVERLAY_ID_NAME} {
+               position: absolute;
+               top: 0;
+               left: 0;
+               z-index: 999;
+            }`);
+      }
+
       // button style
       NOVA.css.push(
-         `#${SELECTOR_OVERLAY_ID_NAME} {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 999;
-         }
-         button.${SELECTOR_CLASS_NAME} {
+         `button.${SELECTOR_CLASS_NAME} {
             border: 0;
             cursor: pointer;
             height: 1.3em;
@@ -129,15 +135,15 @@ window.nova_plugins.push({
       function renderButton(thumb = required()) {
          const btn = document.createElement('button');
          btn.className = SELECTOR_CLASS_NAME;
-         // btn.textContent = '⏱';
+         // btn.textContent = '[no int]';
          // btn.textContent = '🕓';
          btn.innerHTML =
             `<svg viewBox="0 0 24 24" height="100%" width="100%">
                <g fill="currentColor">
-                  <path d="M14.97 16.95 10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM12 3c-4.96 0-9 4.04-9 9s4.04 9 9 9 9-4.04 9-9-4.04-9-9-9m0-1c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z" />
+                  <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zM3 12c0 2.31.87 4.41 2.29 6L18 5.29C16.41 3.87 14.31 3 12 3c-4.97 0-9 4.03-9 9zm15.71-6L6 18.71C7.59 20.13 9.69 21 12 21c4.97 0 9-4.03 9-9 0-2.31-.87-4.41-2.29-6z" />
                </g>
             </svg>`;
-         btn.title = 'Watch Later';
+         btn.title = 'Not Interested';
          // btn.style.cssText = '';
          // Object.assign(btn.style, {
          //    border: 0,
@@ -158,16 +164,16 @@ window.nova_plugins.push({
             if (menu = thumb.querySelector('#menu button')) {
                menu.click();
                await NOVA.waitSelector('#menu [menu-active]', { container: thumb, destroy_after_page_leaving: true });
-               // click by original "watch later" menu item
-               if (menuItemEl = document.body.querySelector('tp-yt-iron-dropdown [role="menuitem"]:has(path[d^="M14.97"])')) {
+               // click by original "Not interested" menu item
+               if (menuItemEl = document.body.querySelector('tp-yt-iron-dropdown [role="menuitem"]:has(path[d^="M12 2c5.52"])')) {
                   menuItemEl.style.backgroundColor = 'red';
-                  // await NOVA.delay(500);
+                  await NOVA.delay(500);
                   // if(confirm('click to mark red item?')) {
                   menuItemEl.click();
                   // }
                   menuItemEl.style.backgroundColor = null;
                }
-               document.body.click(); // close menu
+               // document.body.click(); // close menu
                // menu.click();
             }
          });

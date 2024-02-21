@@ -8,6 +8,7 @@
 // https://www.youtube.com/watch?v=Prwn-qrukT0
 // https://www.youtube.com/watch?v=LIVQbQfke1E
 // https://www.youtube.com/watch?v=knTCepRTS7E
+// https://www.youtube.com/watch?v=D4KROpdUkrM - The following content may contain graphic or violent imagery
 
 window.nova_plugins.push({
    id: 'video-unblock-warn-content',
@@ -15,6 +16,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -30,6 +32,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',

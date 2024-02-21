@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:zh': 'カスタム プレーヤー ボタンを追加する',
    'title:ja': 'カスタム プレーヤー ボタンを追加する',
    // 'title:ko': '맞춤 플레이어 버튼 추가',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Adicione botões de player personalizados',
@@ -95,7 +96,7 @@ window.nova_plugins.push({
                // pipBtn.title = 'Open in PictureInPicture';
                pipBtn.setAttribute('tooltip', 'Open in PictureInPicture');
                pipBtn.innerHTML = createSVG();
-               pipBtn.innerHTML =
+               // pipBtn.innerHTML =
                //    `<svg viewBox="-8 -6 36 36" height="100%" width="100%">
                //       <g fill="currentColor">
                //          <path d="M2.5,17A1.5,1.5,0,0,1,1,15.5v-9A1.5,1.5,0,0,1,2.5,5h13A1.5,1.5,0,0,1,17,6.5V10h1V6.5A2.5,2.5,0,0,0,15.5,4H2.5A2.5,2.5,0,0,0,0,6.5v9A2.5,2.5,0,0,0,2.5,18H7V17Z M18.5,11h-8A2.5,2.5,0,0,0,8,13.5v5A2.5,2.5,0,0,0,10.5,21h8A2.5,2.5,0,0,0,21,18.5v-5A2.5,2.5,0,0,0,18.5,11Z" />
@@ -171,7 +172,7 @@ window.nova_plugins.push({
                   });
 
                   url = new URL(
-                     document.querySelector('link[itemprop="embedUrl"][href]')?.href
+                     document.head.querySelector('link[itemprop="embedUrl"][href]')?.href
                      || (location.origin + '/embed/' + movie_player.getVideoData().video_id)
                   );
                   // list param ex.
@@ -181,21 +182,10 @@ window.nova_plugins.push({
                   url.searchParams.set('autoplay', 1);
                   url.searchParams.set('popup', true); // deactivate popup-button for used window
 
-                  openPopup({ 'url': url.href, 'title': document.title, 'width': width, 'height': height });
+                  NOVA.openPopup({ 'url': url.href, 'width': width, 'height': height });
                });
 
                container.prepend(popupBtn);
-
-               function openPopup({ url, title, width, height }) {
-                  // center screen
-                  const left = (screen.width / 2) - (width / 2);
-                  const top = (screen.height / 2) - (height / 2);
-                  // bottom right corner
-                  // left = window.innerWidth;
-                  // top = window.innerHeight;
-                  const newWindow = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
-                  newWindow.document.title = title;
-               }
             }
 
             if (user_settings.player_buttons_custom_items?.includes('screenshot')) {
@@ -296,12 +286,56 @@ window.nova_plugins.push({
                   const
                      container = document.getElementById(SELECTOR_SCREENSHOT_ID) || document.createElement('a'),
                      canvas = container.querySelector('canvas') || document.createElement('canvas'),
+                     context = canvas.getContext('2d'),
                      mime = `image/${user_settings.player_buttons_custom_screenshot || 'png'}`;
 
                   canvas.width = NOVA.videoElement.videoWidth;
                   canvas.height = NOVA.videoElement.videoHeight;
-                  canvas.getContext('2d').drawImage(NOVA.videoElement, 0, 0, canvas.width, canvas.height);
+                  context.drawImage(NOVA.videoElement, 0, 0, canvas.width, canvas.height);
                   canvas.title = 'Click to save';
+
+                  // subtitle
+                  if (textString = document.body.querySelector('[id^="caption-window"]')?.innerText) {
+                     // const fontSizePt = +user_settings.player_buttons_custom_screenshot_subtitle_font_size || 40;
+                     // context.font = `bold ${fontSizePt}pt Arial`; //  Atention! before textWidth
+                     context.font = `bold ${~~(canvas.height * .05)}px Arial`; //  Atention! before textWidth
+                     context.textAlign = 'buttom';
+                     context.textBaseline = 'middle';
+                     // context.fillStyle = 'pink';
+                     context.fillStyle = user_settings.player_buttons_custom_screenshot_subtitle_color || 'white';
+                     // shadow
+                     context.strokeStyle = user_settings.player_buttons_custom_screenshot_subtitle_shadow_color || 'black';
+                     context.lineWidth = canvas.height / 1000; // ~(0.2(240p)...1(1080p))
+
+                     // multi-line
+                     let h = canvas.height * .9; // 90% bottom
+                     textString
+                        .split('\n')
+                        .forEach((text, i) => {
+                           const
+                              metrics = context.measureText(text),
+                              // fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent,
+                              lineHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent,
+                              textWidth = context.measureText(text).width,
+                              w = (canvas.width / 2) - (textWidth / 2);
+
+                           context.fillText(text, w, h);
+                           context.strokeText(text, w, h);
+
+                           h += lineHeight; // + linespacing; // Atention! after render for next line
+                        });
+
+                     // one-line
+                     // const
+                     //    textWidth = context.measureText(textString).width,
+                     //    w = (canvas.width / 2) - (textWidth / 2),
+                     //    h = canvas.height * .9;
+                     // context.fillText(text, w, h);
+                     // shadow
+                     // context.lineWidth = 1;
+                     // context.strokeStyle = user_settings.player_buttons_custom_screenshot_subtitle_shadow_color || 'black';
+                     // context.strokeText(textString, w, h);
+                  }
 
                   try {
                      // fix Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
@@ -420,22 +454,38 @@ window.nova_plugins.push({
                         '' // width: 120
                      ];
 
+                  // const thumbsSizes = {
+                  //    'maxres': { width: 1280, height: 640 },
+                  //    'sd': { width: 640, height: 480 },
+                  //    'hq': { width: 480, height: 320 },
+                  //    'mq': { width: 320, height: 120 },
+                  //    // '': { width: 120, height:  },
+                  // }[resPrefix];
+
                   document.body.style.cursor = 'wait';
                   for (const resPrefix of thumbsSizesTemplate) {
                      const
                         imgUrl = `https://i.ytimg.com/vi/${videoId}/${resPrefix}default.jpg`,
-                        filename = document.getElementById('movie_player').getVideoData().title,
                         response = await fetch(imgUrl);
 
                      if (response.status === 200) {
-                        document.body.style.cursor = 'default';
-                        // window.open(imgUrl);
-                        window.open(imgUrl, '_blank', filename);
+                        const imageBlob = await response.blob();
+                        const img = new Image();
+                        img.src = URL.createObjectURL(imageBlob);
+
+                        img.addEventListener('load', () => {
+                           NOVA.openPopup({
+                              'url': imgUrl,
+                              // 'title': document.getElementById('movie_player').getVideoData().title,
+                              'width': img.width,
+                              'height': img.height,
+                              // 'width': thumbsSizes.width,
+                              // 'height': thumbsSizes.height,
+                           });
+                        });
+                        document.body.style.cursor = null;
                         break;
                      }
-
-                     // const thumbnail_image = new Image();
-                     // thumbnail_image.addEventListener("load", checkHighQualityThumbnail, false);
                   }
                });
                container.prepend(thumbBtn);
@@ -472,6 +522,8 @@ window.nova_plugins.push({
                   if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
 
                   if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
                   if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey) {
                      rotateVideo();
                   }
@@ -490,7 +542,8 @@ window.nova_plugins.push({
             }
 
             if (user_settings.player_buttons_custom_items?.includes('aspect-ratio')) {
-               // alt - https://greasyfork.org/en/scripts/370586-youtube-aspect-ratio-switcher
+               // alt1 - https://greasyfork.org/en/scripts/370586-youtube-aspect-ratio-switcher
+               // alt2 - https://greasyfork.org/en/scripts/487825
                const
                   aspectRatioBtn = document.createElement('a'),
                   // Strategy 1. https://codepen.io/JacobLett/pen/YWeOMo
@@ -508,13 +561,18 @@ window.nova_plugins.push({
                   // ];
                   // Strategy 2
                   aspectRatioList = [
-                     { '16:9': 1.335 }, // HD, FHD, QHD, 4K, 8K
-                     { '4:3': .75 }, // HD, FHD, QHD, 4K, 8K
-                     { '9:16': 1.777777778 }, // mobile
-                     { 'auto': 1 },
+                     { '16:9': 'scaleX(1.3333)' }, // (Widescreen) - HD, FHD, QHD, 4K, 8K
+                     { '4:3': 'scaleX(.75)' }, // (TV) - HD, FHD, QHD, 4K, 8K
+                     { '9:16': 'scaleX(1.777777778)' }, // (Letterbox) mobile
+                     // { '9:16': 'scaleY(1.3333)' }, // (Letterbox) mobile
+                     { '21:9': 'scaleY(.7168)' }, // (Ultra Widescreen)
+                     // { 'Letterbox Half-Zoom': 'scaleY(1.1666)' }, // (Letterbox Half-Zoom)
+                     // { 'Widescreen On TV': 'scaleY(.5625)' }, // (Widescreen On TV)
+                     { 'default': 'scale(1)' },
                      // hd720: { label: '720p', badge: 'HD' },
-                  ],
-                  genTooltip = (key = 0) => `Switch aspect ratio to ` + Object.keys(aspectRatioList[key]);
+                     ,],
+                  // genTooltip = (key = 0) => `Switch aspect ratio to ` + Object.keys(aspectRatioList[key]);
+                  genTooltip = (key = 0) => `next ` + Object.keys(aspectRatioList[key]);
 
                // if (NOVA.videoElement?.videoWidth < NOVA.videoElement?.videoHeight) {
                aspectRatioBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
@@ -522,7 +580,7 @@ window.nova_plugins.push({
                aspectRatioBtn.style.fontWeight = 'bold';
                // aspectRatioBtn.title = genTooltip(Object.keys(aspectRatioList[0])));
                aspectRatioBtn.setAttribute('tooltip', genTooltip());
-               aspectRatioBtn.innerHTML = '1:1';
+               aspectRatioBtn.innerHTML = 'default';
 
                aspectRatioBtn.addEventListener('click', () => {
                   if (!NOVA.videoElement) return;
@@ -535,7 +593,7 @@ window.nova_plugins.push({
                   // Object.assign(NOVA.videoElement.style, { 'object-fit': 'fill', }); // object-fit: cover;
                   // console.debug('>', NOVA.videoElement.style.width);
                   // Strategy 2 (transform-scale)
-                  NOVA.videoElement.style.transform = `scaleX(${Object.values(aspectRatioList[this.listIdx])})`;
+                  NOVA.videoElement.style.transform = Object.values(aspectRatioList[this.listIdx]);
 
                   aspectRatioBtn.setAttribute('tooltip', genTooltip(getNextIdx()));
                   aspectRatioBtn.textContent = Object.keys(aspectRatioList[this.listIdx]);
@@ -713,7 +771,7 @@ window.nova_plugins.push({
                   listQuality = document.createElement('ul'),
                   // btn <span>
                   SELECTOR_QUALITY_TITLE_ID = SELECTOR_QUALITY_CLASS_NAME + '-title',
-                  qualityBtn = document.createElement('span'),
+                  qualitySpan = document.createElement('span'),
 
                   qualityFormatList = {
                      highres: { label: '4320p', badge: '8K' },
@@ -770,7 +828,7 @@ window.nova_plugins.push({
                      cursor: pointer;
                      white-space: nowrap;
                      line-height: 1.4;
-                     background: rgba(28, 28, 28, 0.9);
+                     background-color: rgba(28, 28, 28, 0.9);
                      margin: .3em 0;
                      padding: .5em 3em;
                      border-radius: .3em;
@@ -783,17 +841,17 @@ window.nova_plugins.push({
                      width: 1.7em;
                   }
 
-                  ${SELECTOR_QUALITY_LIST} li.active { background: #720000; }
+                  ${SELECTOR_QUALITY_LIST} li.active { background-color: #720000; }
                   ${SELECTOR_QUALITY_LIST} li.disable { color: #666; }
-                  ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background: #c00; }`);
+                  ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: #c00; }`);
                // ${SELECTOR_QUALITY_LIST} li:hover:not(.active) { background-color: var(--yt-spec-brand-button-background); }`);
                // container <a>
                qualityContainerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_QUALITY_CLASS_NAME}`;
-               // qualityContainerBtn.title = 'Change quality';
-               // qualityContainerBtn.setAttribute('tooltip', 'Change quality');
                // btn <span>
-               qualityBtn.id = SELECTOR_QUALITY_TITLE_ID;
-               qualityBtn.textContent = qualityFormatList[movie_player.getPlaybackQuality()]?.label || '[N/A]' // '[out of range]';
+               qualitySpan.id = SELECTOR_QUALITY_TITLE_ID;
+               // qualitySpan.title = 'Change quality';
+               // qualitySpan.setAttribute('tooltip', 'Change quality');
+               qualitySpan.textContent = qualityFormatList[movie_player.getPlaybackQuality()]?.label || '[N/A]' // '[out of range]';
                // list <ul>
                listQuality.id = SELECTOR_QUALITY_LIST_ID;
 
@@ -806,7 +864,7 @@ window.nova_plugins.push({
                   // document.getElementById(SELECTOR_QUALITY_LIST_ID li..) li.className = 'active';
                });
 
-               qualityContainerBtn.prepend(qualityBtn);
+               qualityContainerBtn.prepend(qualitySpan);
                qualityContainerBtn.append(listQuality);
 
                container.prepend(qualityContainerBtn);
@@ -889,16 +947,31 @@ window.nova_plugins.push({
 
                container.prepend(clockEl);
 
-               setInterval(() => {
-                  if (document.visibilityState == 'hidden' // tab inactive
-                     || movie_player.classList.contains('ytp-autohide') // dubious optimization hack
-                  ) {
-                     return;
-                  }
+               let clockInterval;
 
-                  const time = new Date().toTimeString().slice(0, 8);
-                  clockEl.textContent = time;
-               }, 1000); // 1sec
+               if (user_settings.player_buttons_custom_clock_fullcreen) {
+                  document.addEventListener('fullscreenchange', () => {
+                     if (document.fullscreenElement) setIntervalClock();
+                     else {
+                        clearInterval(clockInterval);
+                        clockEl.textContent = '';
+                     }
+                  });
+               }
+               else setIntervalClock();
+
+               function setIntervalClock() {
+                  clockInterval = setInterval(() => {
+                     if (document.visibilityState == 'hidden' // tab inactive
+                        || movie_player.classList.contains('ytp-autohide') // dubious optimization hack
+                     ) {
+                        return;
+                     }
+
+                     const time = new Date().toTimeString().slice(0, 8);
+                     clockEl.textContent = time;
+                  }, 1000); // 1sec
+               }
             }
 
             if (user_settings.player_buttons_custom_items?.includes('range-speed')) {
@@ -982,6 +1055,8 @@ window.nova_plugins.push({
                   if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
 
                   if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
                   if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey) {
                      switchRate();
                   }
@@ -990,7 +1065,7 @@ window.nova_plugins.push({
                NOVA.videoElement.addEventListener('ratechange', function () {
                   speedBtn.setAttribute('tooltip', genTooltip());
                   // same fn in "video-rate" plugin
-                  if (!user_settings['video-rate']) NOVA.triggerHUD(this.playbackRate + 'x');
+                  if (!user_settings['video-rate']) NOVA.triggerOSD(this.playbackRate + 'x');
                });
 
                function switchRate() {
@@ -1091,6 +1166,7 @@ window.nova_plugins.push({
          'label:zh': '纽扣',
          'label:ja': 'ボタン',
          // 'label:ko': '버튼',
+         // 'label:vi': '',
          // 'label:id': 'Tombol',
          // 'label:es': 'Botones',
          'label:pt': 'Botões',
@@ -1104,6 +1180,7 @@ window.nova_plugins.push({
          'title:zh': '[Ctrl+Click] 选择多个',
          'title:ja': '「Ctrl+Click」して、いくつかを選択します',
          // 'title:ko': '[Ctrl+Click] 여러 선택',
+         // 'title:vi': '',
          // 'title:id': '[Ctrl+Klik] untuk memilih beberapa',
          // 'title:es': '[Ctrl+Click] para seleccionar varias',
          'title:pt': '[Ctrl+Click] para selecionar vários',
@@ -1122,6 +1199,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1137,6 +1215,7 @@ window.nova_plugins.push({
                'label:zh': '质量',
                'label:ja': '品質',
                // 'label:ko': '품질',
+               // 'label:vi': '',
                // 'label:id': 'kualitas',
                // 'label:es': 'calidad',
                'label:pt': 'qualidade',
@@ -1152,6 +1231,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1167,6 +1247,7 @@ window.nova_plugins.push({
                'label:zh': '切换速度',
                'label:ja': 'トグル速度',
                // 'label:ko': '토글 속도',
+               // 'label:vi': '',
                // 'label:id': 'beralih kecepatan',
                // 'label:es': 'alternar velocidad',
                'label:pt': 'velocidade de alternância',
@@ -1182,6 +1263,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1197,6 +1279,7 @@ window.nova_plugins.push({
                'label:zh': '截屏',
                'label:ja': 'スクリーンショット',
                // 'label:ko': '스크린샷',
+               // 'label:vi': '',
                // 'label:id': 'tangkapan layar',
                // 'label:es': 'captura de pantalla',
                'label:pt': 'captura de tela',
@@ -1212,6 +1295,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1227,6 +1311,7 @@ window.nova_plugins.push({
                'label:zh': '弹出式播放器',
                'label:ja': 'ポップアッププレーヤー',
                // 'label:ko': '썸네일',
+               // 'label:vi': '',
                // 'label:id': 'muncul',
                // 'label:es': 'jugadora emergente',
                'label:pt': 'jogador pop-up',
@@ -1242,6 +1327,7 @@ window.nova_plugins.push({
                'label:zh': '旋转',
                'label:ja': '回転する',
                // 'label:ko': '회전',
+               // 'label:vi': '',
                // 'label:id': 'memutar',
                // 'label:es': 'girar',
                'label:pt': 'girar',
@@ -1257,6 +1343,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1272,6 +1359,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1287,6 +1375,7 @@ window.nova_plugins.push({
                'label:zh': '缩略图',
                'label:ja': 'サムネイル',
                // 'label:ko': '썸네일',
+               // 'label:vi': '',
                // 'label:id': 'miniatura',
                // 'label:es': 'miniatura',
                'label:pt': 'captura de tela',
@@ -1305,6 +1394,7 @@ window.nova_plugins.push({
       //    'label:zh': '播放器窗口大小纵横比',
       //    'label:ja': 'プレーヤーのウィンドウサイズのアスペクト比',
       //    'label:ko': '플레이어 창 크기 종횡비',
+      //    'label:vi': '',
       //    'label:id': 'Rasio aspek ukuran jendela pemutar',
       //    'label:es': 'Relación de aspecto del tamaño de la ventana del reproductor',
       //    'label:pt': 'Proporção do tamanho da janela do jogador',
@@ -1319,6 +1409,7 @@ window.nova_plugins.push({
       //    'title:zh': '较小的值 - 较大的尺寸',
       //    'title:ja': '小さい値-大きいサイズ',
       //    // 'title:ko': '더 작은 값 - 더 큰 크기',
+      //    // 'title:vi': '',
       //    // 'title:id': 'Nilai lebih kecil - ukuran lebih besar',
       //    // 'title:es': 'Valor más pequeño - tamaño más grande',
       //    'title:pt': 'Valor menor - tamanho maior',
@@ -1342,6 +1433,7 @@ window.nova_plugins.push({
          'label:zh': '热键切换速度',
          'label:ja': '速度を切り替えるためのホットボタン',
          // 'label:ko': '단축키 토글 속도',
+         // 'label:vi': '',
          // 'label:id': 'Kecepatan beralih tombol pintas',
          // 'label:es': 'Velocidad de cambio de teclas de acceso rápido',
          'label:pt': 'Velocidade de alternância da tecla de atalho',
@@ -1356,12 +1448,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            // { label: 'shiftL', value: 'ShiftLeft' },
+            // { label: 'shiftR', value: 'ShiftRight' },
+            // { label: 'ctrlL', value: 'ControlLeft' },
+            // { label: 'ctrlR', value: 'ControlRight' },
+            // { label: 'altL', value: 'AltLeft' },
+            // { label: 'altR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -1403,6 +1495,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -1417,12 +1510,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            // { label: 'shiftL', value: 'ShiftLeft' },
+            // { label: 'shiftR', value: 'ShiftRight' },
+            // { label: 'ctrlL', value: 'ControlLeft' },
+            // { label: 'ctrlR', value: 'ControlRight' },
+            // { label: 'altL', value: 'AltLeft' },
+            // { label: 'altR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -1464,6 +1557,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -1479,6 +1573,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1494,6 +1589,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1513,6 +1609,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -1528,6 +1625,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1543,6 +1641,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1558,6 +1657,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -1577,6 +1677,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -1590,12 +1691,93 @@ window.nova_plugins.push({
          // title: '',
          'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
       },
+      player_buttons_custom_screenshot_subtitle_color: {
+         _tagName: 'input',
+         type: 'color',
+         value: '#ffffff',
+         label: 'Subtitle color',
+         // 'label:zh': '颜色',
+         // 'label:ja': '色',
+         // // 'label:ko': '색깔',
+         // // 'label:vi': '',
+         // // 'label:id': 'Warna',
+         // // 'label:es': 'Color',
+         // 'label:pt': 'Cor',
+         // 'label:fr': 'Couleur',
+         // // 'label:it': 'Colore',
+         // // 'label:tr': 'Renk',
+         // 'label:de': 'Farbe',
+         // 'label:pl': 'Kolor',
+         // 'label:ua': 'Колір',
+         // title: 'default - #fff',
+         'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
+      },
+      player_buttons_custom_screenshot_subtitle_shadow_color: {
+         _tagName: 'input',
+         type: 'color',
+         value: '#000000',
+         label: 'Subtitle shadow color',
+         // 'label:zh': '颜色',
+         // 'label:ja': '色',
+         // // 'label:ko': '색깔',
+         // // 'label:vi': '',
+         // // 'label:id': 'Warna',
+         // // 'label:es': 'Color',
+         // 'label:pt': 'Cor',
+         // 'label:fr': 'Couleur',
+         // // 'label:it': 'Colore',
+         // // 'label:tr': 'Renk',
+         // 'label:de': 'Farbe',
+         // 'label:pl': 'Kolor',
+         // 'label:ua': 'Колір',
+         // title: 'default - #000',
+         'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
+      },
+      // player_buttons_custom_screenshot_subtitle_font_size: {
+      //    _tagName: 'input',
+      //    label: 'Subtitle font size',
+      //    // 'label:zh': '',
+      //    // 'label:ja': '',
+      //    // 'label:ko': '',
+      //    // 'label:vi': '',
+      //    // 'label:id': '',
+      //    // 'label:es': '',
+      //    // 'label:pt': '',
+      //    // 'label:fr': '',
+      //    // 'label:it': '',
+      //    // 'label:tr': '',
+      //    // 'label:de': '',
+      //    // 'label:pl': '',
+      //    // 'label:ua': '',
+      //    type: 'number',
+      //    title: '40 - default',
+      //    // 'title:zh': '',
+      //    // 'title:ja': '',
+      //    // 'title:ko': '',
+      //    // 'title:vi': '',
+      //    // 'title:id': '',
+      //    // 'title:es': '',
+      //    // 'title:pt': '',
+      //    // 'title:fr': '',
+      //    // 'title:it': '',
+      //    // 'title:tr': '',
+      //    // 'title:de': '',
+      //    // 'title:pl': '',
+      //    // 'title:ua': '',
+      //    placeholder: '20-80',
+      //    step: 5,
+      //    min: 20,
+      //    max: 80,
+      //    value: 40,
+      //    'data-dependent': { 'player_buttons_custom_items': ['screenshot'] },
+      // },
       range_speed_unlimit: {
          _tagName: 'input',
          label: 'Range speed unlimit',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -1608,6 +1790,46 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: '',
          'data-dependent': { 'player_buttons_custom_items': ['range-speed'] },
+      },
+      range_speed_unlimit: {
+         _tagName: 'input',
+         label: 'Range speed unlimit',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+         'data-dependent': { 'player_buttons_custom_items': ['range-speed'] },
+      },
+      player_buttons_custom_clock_fullcreen: {
+         _tagName: 'input',
+         label: 'Clock only fullscreen',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+         'data-dependent': { 'player_buttons_custom_items': ['clock'] },
       },
    }
 });

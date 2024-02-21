@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '将排序/过滤器添加到“保存到播放列表”菜单',
    'title:ja': '「プレイリストに保存」メニューにソート/フィルターを追加',
    // 'title:ko': '"재생 목록에 저장" 메뉴에 정렬/필터 추가',
+   // 'title:vi': '',
    // 'title:id': 'Tambahkan sortir/filter ke menu "Simpan ke daftar putar".',
    // 'title:es': 'Agregar ordenar/filtrar al menú "Guardar en lista de reproducción"',
    'title:pt': 'Adicionar classificação/filtro ao menu "Salvar na lista de reprodução"',
@@ -22,6 +23,8 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/392141-youtube-save-to-playlist-incremental-search
       // alt3 - https://greasyfork.org/en/scripts/451914-youtube-sort-filter-playlists-when-saving-video
       // alt4 - https://greasyfork.org/en/scripts/400524-youtube-sort-playlist
+
+      // alt - https://chromewebstore.google.com/detail/youtube-playlist-helper/ibdakohjhchaagmccfedeejmeillongg
 
       // NOVA.waitSelector('#title.ytd-add-to-playlist-renderer')
       NOVA.waitSelector('tp-yt-paper-dialog #playlists')
@@ -168,6 +171,7 @@ window.nova_plugins.push({
          'label:zh': '默认按字母顺序排序',
          'label:ja': 'デフォルトのアルファベット順のソート',
          // 'label:ko': '알파벳순 기본 정렬',
+         // 'label:vi': '',
          // 'label:id': 'Penyortiran default menurut abjad',
          // 'label:es': 'Clasificación predeterminada alfabéticamente',
          'label:pt': 'Classificação padrão em ordem alfabética',

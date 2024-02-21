@@ -93,7 +93,7 @@ input[type=search]:placeholder-shown+#search_clear {
 }
 
 .active .item:nth-child(even) {
-   background: #232323;
+   background-color: #232323;
 } */
 
 li>ul>li {

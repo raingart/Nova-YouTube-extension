@@ -5,6 +5,7 @@ window.nova_plugins.push({
    'title:zh': 'YouTube 徽标',
    'title:ja': 'YouTubeロゴ',
    // 'title:ko': '유튜브 로고',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -17,7 +18,7 @@ window.nova_plugins.push({
    run_on_pages: '*, -embed, -mobile, -live_chat',
    section: 'header',
    // desc: '',
-   // 'data-conflict': 'subscriptions-home',
+   // 'plugins-conflict': 'subscriptions-home',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/445197-youtube-premium-logo

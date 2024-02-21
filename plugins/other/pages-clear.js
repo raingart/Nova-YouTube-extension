@@ -6,6 +6,7 @@ window.nova_plugins.push({
    'title:zh': '清除垃圾页面',
    'title:ja': 'ジャンクページをクリアする',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Limpar páginas de lixo',
@@ -23,6 +24,7 @@ window.nova_plugins.push({
    'desc:zh': '删除烦人的东西',
    'desc:ja': '煩わしいものを取り除く',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    'desc:pt': 'Remova as coisas irritantes',
@@ -38,6 +40,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/462455-remove-youtube-propaganda
       // alt3 - https://greasyfork.org/en/scripts/407207-ad-free-youtube-grid
       // alt4 - https://greasyfork.org/en/scripts/480134-starburst-ads
+      // alt5 - https://greasyfork.org/en/scripts/486616-youtube-search-results-cleanup
 
       // hide donate"
       // '#donation-shelf',

@@ -10,6 +10,7 @@ window.nova_plugins.push({
    'title:zh': '滚动时固定播放器',
    'title:ja': 'スクロール中にプレイヤーを固定する',
    // 'title:ko': '스크롤하는 동안 플레이어 고정',
+   // 'title:vi': '',
    // 'title:id': 'Sematkan pemutar saat menggulir',
    // 'title:es': 'Fijar jugador mientras se desplaza',
    'title:pt': 'Fixar jogador enquanto rola',
@@ -26,6 +27,7 @@ window.nova_plugins.push({
    // 'desc:zh': '滚动时播放器始终可见',
    // 'desc:ja': 'スクロール中、プレーヤーは常に表示されたままになります',
    // 'desc:ko': '스크롤하는 동안 플레이어가 항상 표시됨',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // // 'desc:es': 'El jugador permanece siempre visible mientras se desplaza',
    // 'desc:pt': 'O jogador fica sempre visível enquanto rola',
@@ -458,9 +460,9 @@ window.nova_plugins.push({
             document.addEventListener('mousedown', evt => {
                if (!el_target.classList.contains(CLASS_VALUE)) return;
                this.dragStart.apply(this, [evt]);
-               // cancel default events
-               evt.preventDefault();
-               evt.stopImmediatePropagation();
+               // Doesn't work. Text selection broken default events
+               // evt.preventDefault();
+               // evt.stopImmediatePropagation();
             });
             document.addEventListener('mouseup', evt => {
                if (this.moving) this.dragTarget.removeAttribute(this.attrNameMoving); // mark on moving
@@ -513,7 +515,7 @@ window.nova_plugins.push({
             this.initialX = this.currentX;
             this.initialY = this.currentY;
             this.moving = false;
-            document.body.style.cursor = 'default';
+            document.body.style.cursor = null;
          },
 
          draging(evt) {
@@ -671,6 +673,7 @@ window.nova_plugins.push({
       //    'label:zh': '模式',
       //    'label:ja': 'モード',
       //    'label:ko': '방법',
+      //    // 'label:vi': '',
       //    // 'label:id': 'Mode',
       //    'label:es': 'Modo',
       //    'label:pt': 'Modo',
@@ -691,6 +694,7 @@ window.nova_plugins.push({
          'label:zh': '播放器尺寸',
          'label:ja': 'プレーヤーのサイズ',
          // 'label:ko': '플레이어 크기',
+         // 'label:vi': '',
          // 'label:id': 'Ukuran pemain',
          // 'label:es': 'Tamaño del jugador',
          'label:pt': 'Tamanho do jogador',
@@ -705,6 +709,7 @@ window.nova_plugins.push({
          'title:zh': '较小的值 - 较大的尺寸',
          'title:ja': '小さい値-大きいサイズ',
          // 'title:ko': '더 작은 값 - 더 큰 크기',
+         // 'title:vi': '',
          // 'title:id': 'Nilai lebih kecil - ukuran lebih besar',
          // 'title:es': 'Valor más pequeño - tamaño más grande',
          'title:pt': 'Valor menor - tamanho maior',
@@ -728,6 +733,7 @@ window.nova_plugins.push({
          'label:zh': '球员位置',
          'label:ja': 'プレイヤーの位置',
          // 'label:ko': '선수 위치',
+         // 'label:vi': '',
          // 'label:id': 'Posisi pemain',
          // 'label:es': 'Posición de jugador',
          'label:pt': 'Posição do jogador',
@@ -739,10 +745,12 @@ window.nova_plugins.push({
          'label:ua': 'Позиція відтворювача',
          options: [
             {
-               label: 'Top left', value: 'top-left',
+               // label: 'Top left', value: 'top-left',
+               label: '↖', value: 'top-left',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -754,10 +762,12 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'Top right', value: 'top-right', selected: true,
+               // label: 'Top right', value: 'top-right', selected: true,
+               label: '↗', value: 'top-right', selected: true,
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -769,10 +779,12 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'Bottom left', value: 'bottom-left',
+               // label: 'Bottom left', value: 'bottom-left',
+               label: '↙', value: 'bottom-left',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -784,10 +796,12 @@ window.nova_plugins.push({
                // 'label:ua': '',
             },
             {
-               label: 'Bottom right', value: 'bottom-right',
+               // label: 'Bottom right', value: 'bottom-right',
+               label: '↘', value: 'bottom-right',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -807,6 +821,7 @@ window.nova_plugins.push({
       //    'label:zh': '播放器灵敏度可见范围',
       //    'label:ja': 'プレイヤーの感度の可視範囲',
       //    'label:ko': '플레이어 감도 가시 범위',
+      //    'label:vi': '',
       //    'label:id': 'Rentang visibilitas sensitivitas pemain',
       //    'label:es': 'Rango de visibilidad de la sensibilidad del jugador',
       //    'label:pt': 'Faixa de visibilidade da sensibilidade do jogador',
@@ -821,6 +836,7 @@ window.nova_plugins.push({
       //    // 'title:zh': '',
       //    // 'title:ja': '',
       //    // 'title:ko': '',
+      //    // 'title:vi': '',
       //    // 'title:id': '',
       //    // 'title:es': '',
       //    // 'title:pt': '',
@@ -848,6 +864,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',

@@ -1,9 +1,10 @@
 window.nova_plugins.push({
    id: 'player-indicator',
-   title: 'Custom OSD',
+   title: 'Custom On-Screen Display (OSD)',
    'title:zh': '替换默认指示器',
    'title:ja': 'デフォルトのインジケーターを置き換える',
    // 'title:ko': '기본 표시기 교체',
+   // 'title:vi': '',
    // 'title:id': 'Ganti OSD (bezel)',
    // 'title:es': 'Reemplazar indicador predeterminado',
    // 'title:pt': 'Substituir o indicador padrão',
@@ -19,6 +20,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -117,7 +119,9 @@ window.nova_plugins.push({
                // console.log('bezel mutation detected', record.type, target.textContent);
                if (target.textContent) {
                   // fix round volume level on range player change
-                  if (target.textContent?.endsWith('%') || target.textContent?.endsWith('x')) {
+                  if ((target.textContent?.endsWith('%') && parseInt(target.textContent) <= 100)
+                     || target.textContent?.endsWith('x')
+                  ) {
                      return;
                   }
                   OSD.set({
@@ -233,7 +237,11 @@ window.nova_plugins.push({
 
          set({ pt = 100, suffix = '', timeout_ms = 800 }) {
             // console.debug('OSD set', ...arguments);
-            if (typeof this.fateNovaOSD === 'number') clearTimeout(this.fateNovaOSD); // reset hide
+            if (typeof this.fadeNovaOSD === 'number') {
+               clearTimeout(this.fadeNovaOSD); // reset fade
+
+
+            }
 
             let hudContainer = this.get();
             const text = pt + suffix;
@@ -271,9 +279,9 @@ window.nova_plugins.push({
             hudContainer.style.opacity = 1;
             // hudContainer.style.visibility = 'visible';
 
-            this.fateNovaOSD = setTimeout(() => {
+            this.fadeNovaOSD = setTimeout(() => {
                hudContainer.style.transition = 'opacity 200ms ease-in';
-               hudContainer.style.opacity = null;
+               hudContainer.style.opacity = 0;
                // hudContainer.style.visibility = 'hidden';
             }, timeout_ms); // total 1s = 800ms + 200ms(hudContainer.style.transition)
          }
@@ -287,6 +295,7 @@ window.nova_plugins.push({
          'label:zh': '指标类型',
          'label:ja': 'インジケータータイプ',
          // 'label:ko': '표시기 유형',
+         // 'label:vi': '',
          // 'label:id': 'Gösterge tipi',
          // 'label:es': 'Tipo de indicador',
          'label:pt': 'Tipo de indicador',
@@ -302,6 +311,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -317,6 +327,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -332,6 +343,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -347,6 +359,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -367,6 +380,7 @@ window.nova_plugins.push({
          'label:zh': '颜色',
          'label:ja': '色',
          // 'label:ko': '색깔',
+         // 'label:vi': '',
          // 'label:id': 'Warna',
          // 'label:es': 'Color',
          'label:pt': 'Cor',
@@ -385,6 +399,7 @@ window.nova_plugins.push({
          'label:zh': '在开始章节显示信息',
          'label:ja': '章の開始時に情報を表示',
          // 'label:ko': '시작 장에 정보 표시',
+         // 'label:vi': '',
          // 'label:id': 'Tampilkan info di awal bab',
          // 'label:es': 'Mostrar información al inicio del capítulo',
          'label:pt': 'Mostrar informações no capítulo inicial',
@@ -403,6 +418,7 @@ window.nova_plugins.push({
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',
@@ -422,6 +438,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -435,6 +452,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -457,6 +475,7 @@ window.nova_plugins.push({
          'label:zh': '不透明度',
          'label:ja': '不透明度',
          // 'label:ko': '불투명',
+         // 'label:vi': '',
          // 'label:id': 'Kegelapan',
          // 'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
@@ -471,6 +490,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

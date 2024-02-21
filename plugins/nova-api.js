@@ -10,7 +10,7 @@
    - css.push
    - css.get
    //- cookie.get
-   //- cookie.getParamLikeObj
+   //- cookie.parseQueryToObj
    //- cookie.updateParam
    - isInViewport
    // - checkVisibility
@@ -19,6 +19,7 @@
    - aspectRatio.getAspectRatio
    - aspectRatio.calculateHeight
    - aspectRatio.calculateWidth
+   - openPopup
    - triggerOSD
    - getChapterList
    - strToArray
@@ -57,30 +58,6 @@
 const NOVA = {
    // DEBUG: true,
 
-   // find once.
-   // more optimized compared to MutationObserver
-   // waitSelector(selector = required()) {
-   //    this.log('waitSelector:', selector);
-   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-
-   //    return new Promise((resolve, reject) => {
-   //       // try {
-   //       let nodeInterval
-   //       const checkIfExists = () => {
-   //          if (el = document.body.querySelector(selector)) {
-   //             if (typeof nodeInterval === 'number') clearInterval(nodeInterval);
-   //             resolve(el);
-
-   //          } else return;
-   //       }
-   //       checkIfExists();
-   //       nodeInterval = setInterval(checkIfExists, 50); // ms
-   //       // } catch (err) { // does not output the reason/line to the stack
-   //       //    reject(new Error('Error waitSelector', err));
-   //       // }
-   //    });
-   // },
-
    //    waitForElementNotHidden(selector, timeout) {
    //       return new Promise((resolve, reject) => {
    //         const startTime = Date.now();
@@ -106,94 +83,6 @@ const NOVA = {
    //       });
    //   },
 
-   // waitSelector(selector = required(), container) {
-   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-   //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
-   //    // console.debug('waitSelector:', selector);
-
-   //    return Promise.resolve((container || document.body).querySelector(selector));
-   // },
-
-   // waitSelector(selector = required(), container) {
-   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-   //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
-   //    // console.debug('waitSelector:', selector);
-
-   //    return new Promise(async (resolve) => {
-   //       if (result = await Promise.resolve((container || document.body).querySelector(selector))) {
-   //          // console.debug('waitUntil[1]', result, condition, timeout);
-   //          resolve(result);
-   //       }
-   //    });
-   // },
-
-   //    export const findElement = (selector: string): Promise<Element> => {
-   //       return new Promise((resolve) => {
-   //           const interval = setInterval(() => {
-   //               const elem = document.body.querySelector(selector);
-   //               if (elem !== null) {
-   //                   clearInterval(interval);
-   //                   resolve(elem);
-   //               }
-   //           });
-   //       });
-   //   };
-
-   // waitSelector('details[data-pref]', {
-   //    recur(elems) {
-   //      for (const el of elems) {
-   //        prefs.subscribe(el.dataset.pref, updateOnPrefChange, {runNow: true});
-   //        new MutationObserver(saveOnChange)
-   //          .observe(el, {attributes: true, attributeFilter: ['open']});
-   //      }
-   //    },
-   //  });
-
-   /**
-    * @param {string} selector - beware of $ quirks with `#dotted.id` that won't work with $$
-    * @param {Object} [opt]
-    * @param {function(Node[]):boolean} [opt.recur] - called on each match until stopOnDomReady,
-      you can also return `false` to disconnect the observer
-    * @param {boolean} [opt.stopOnDomReady] - stop observing on DOM ready
-    * @returns {Promise<Node>} - resolves on first match
-   */
-   // https://github.com/openstyles/stylus/blob/master/js/dom.js#L388-L422
-   // waitSelector(selector, { recur, stopOnDomReady = true } = {}) {
-   //    let el = $(selector);
-   //    let elems;
-   //    return el && (!recur || recur(elems = $$(selector)) === false)
-   //       ? Promise.resolve(el)
-   //       : new Promise(resolve => {
-   //          new MutationObserver((mutations, observer) => {
-   //             if (!el) el = $(selector);
-   //             if (!el) return;
-   //             if (!recur ||
-   //                callRecur(mutations) === false ||
-   //                stopOnDomReady && document.readyState === 'complete') {
-   //                observer.disconnect();
-   //             }
-   //             if (resolve) {
-   //                resolve(el);
-   //                resolve = null;
-   //             }
-   //          }).observe(document, { childList: true, subtree: true });
-   //          function isMatching(n) {
-   //             return n.tagName && (n.matches(selector) || n.firstElementChild && $(selector, n));
-   //          }
-   //          function callRecur([m0, m1]) {
-   //             // Checking addedNodes if only 1 MutationRecord to skip simple mutations quickly
-   //             if (m1 || (m0 = m0.addedNodes)[3] || [].some.call(m0, isMatching)) {
-   //                const all = $$(selector); // Using one $$ call instead of ~100 calls for each node
-   //                const added = !elems ? all : all.filter(el => !elems.includes(el));
-   //                if (added.length) {
-   //                   elems = all;
-   //                   return recur(added);
-   //                }
-   //             }
-   //          }
-   //       });
-   // },
-
    // waitSelector(selector, intervalMs = 500, maxTries = 6) {
    //    return new Promise((resolve, reject) => {
    //       let tried = 1
@@ -214,6 +103,34 @@ const NOVA = {
    //    })
    // }
 
+   // waitSelector(selector = required(), container) {
+   //    if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
+   //    if (container && !(container instanceof HTMLElement)) return console.error('wait > container not HTMLElement:', container);
+   //    // console.debug('waitSelector:', selector);
+
+   //    return Promise.resolve((container || document.body).querySelector(selector));
+   // },
+
+   /**
+     * https://stackoverflow.com/a/61511955
+     * @param {String} selector The CSS selector used to select the element
+     * @returns {Promise<Element>} The selected element
+   */
+   // waitForElement(selector) {
+   //    return new Promise((resolve) => {
+   //       if (document.querySelector(selector)) return resolve(document.querySelector(selector));
+
+   //       const observer = new MutationObserver(() => {
+   //          if (document.querySelector(selector)) {
+   //             observer.disconnect();
+   //             resolve(document.querySelector(selector));
+   //          }
+   //       });
+
+   //       observer.observe(document.body, { childList: true, subtree: true });
+   //    });
+   // },
+
    /**
     * @param  {string} selector
     * @param  {Node*} container
@@ -222,47 +139,47 @@ const NOVA = {
    // untilDOM
    // waitSelector(selector = required(), { container, destroy_after_page_leaving }) {
    waitSelector(selector = required(), limit_data) {
-      if (typeof selector !== 'string') return console.error('wait > selector:', typeof selector);
-      if (limit_data && (/*!Object.keys(limit_data).label ||*/ !limit_data.hasOwnProperty('destroy_after_page_leaving') && !limit_data.hasOwnProperty('container'))) {
-         return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
+         // reject
+         if (typeof selector !== 'string') {
+            console.error('wait > selector:', ...arguments);
+            return reject('wait > selector:', typeof selector);
+         }
+
+         if (limit_data && (/*!Object.keys(limit_data).label ||*/ !limit_data.hasOwnProperty('destroy_after_page_leaving') && !limit_data.hasOwnProperty('container'))) {
             console.error('waitSelector > check format "limit_data":', ...arguments);
-            reject('waitSelector > check format "limit_data"');
-         });
-      }
-      if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) {
-         return new Promise((resolve, reject) => {
-            console.error('waitSelector > container not HTMLElement:', limit_data.container);
-            reject('waitSelector > container not HTMLElement');
-         });
-      }
+            return reject('waitSelector > check format "limit_data"');
+         }
+         if (limit_data?.container && !(limit_data.container instanceof HTMLElement)) {
+            console.error('waitSelector > container not HTMLElement:', ...arguments);
+            return reject('waitSelector > container not HTMLElement');
+         }
 
-      // fix - Error: Failed to execute 'querySelector' on 'Element': 'ytd-comment-thread-renderer:has(#linked-comment-badge) #replies' is not a valid selector.
-      // https://jsfiddle.net/f6o2amjk/4/ https://www.bram.us/2023/01/04/css-has-feature-detection-with-supportsselector-you-want-has-not-has/
-      // if (selector.includes(':has(')) selector = `@supports selector(:has(*)) {${selector}}`
-      if (selector.includes(':has(') && !CSS.supports('selector(:has(*))')) {
-         // throw new Error('CSS ":has()" unsupported');
-         return new Promise((resolve, reject) => {
+         // fix - Error: Failed to execute 'querySelector' on 'Element': 'ytd-comment-thread-renderer:has(#linked-comment-badge) #replies' is not a valid selector.
+         // https://jsfiddle.net/f6o2amjk/4/ https://www.bram.us/2023/01/04/css-has-feature-detection-with-supportsselector-you-want-has-not-has/
+         // if (selector.includes(':has(')) selector = `@supports selector(:has(*)) {${selector}}`
+         if (selector.includes(':has(') && !CSS.supports('selector(:has(*))')) {
+            // throw new Error('CSS ":has()" unsupported');
             console.warn('CSS ":has()" unsupported');
-            reject('CSS ":has()" unsupported');
-         });
-      }
-      // console.debug('waitSelector:', selector);
+            return reject('CSS ":has()" unsupported');
+         }
+         // console.debug('waitSelector:', selector);
 
-      // https://stackoverflow.com/a/68262400
-      // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
-      // alt:
-      // https://git.io/waitForKeyElements.js
-      // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
-      // https://github.com/CoeJoder/waitForKeyElements.js
-      // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
-      // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur)
-      // https://greasyfork.org/scripts/464780-global-module/code/global_module.js
+         // https://stackoverflow.com/a/68262400
+         // best https://codepad.co/snippet/wait-for-an-element-to-exist-via-mutation-observer
+         // alt:
+         // https://git.io/waitForKeyElements.js
+         // https://github.com/fuzetsu/userscripts/tree/master/wait-for-elements
+         // https://github.com/CoeJoder/waitForKeyElements.js
+         // https://gist.githubusercontent.com/sidneys/ee7a6b80315148ad1fb6847e72a22313/raw/
+         // https://greasyfork.org/scripts/21927-arrive-js/code/arrivejs.js  (ex: https://greasyfork.org/en/scripts/429783-confirm-and-upload-imgur)
+         // https://greasyfork.org/scripts/464780-global-module/code/global_module.js
 
-      // There is a more correct method - transitionend.
-      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
-      // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
+         // There is a more correct method - transitionend.
+         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/transitionend_event
+         // But this requires a change in the logic of the current implementation. It will also complicate the restoration of the expansion if in the future, if YouTube replaces logic.
 
-      return new Promise(resolve => {
+         // resolve
          if (element = (limit_data?.container || document.body || document).querySelector(selector)) {
             // console.debug('[1]', selector);
             return resolve(element);
@@ -569,7 +486,7 @@ const NOVA = {
    //       this.set(name, '', -1);
    //    },
    //    clear: function () {
-   //       for (let key in this.get()) {
+   //       for (const key in this.get()) {
    //          this.delete(key);
    //       }
    //       let domain = location.hostname.replace(/^www\./i, '');
@@ -578,6 +495,22 @@ const NOVA = {
    // },
 
    // cookie: {
+   //    // 69.97 % slower
+   //    parseQueryToObj(str) {
+   //       return str && [...new URLSearchParams(str).entries()]
+   //          .reduce((acc, [k, v]) => ((acc[k] = v), acc), {});
+   //    },
+   //    parseQueryToObj(str) {
+   //       return str && Object.fromEntries(
+   //          str
+   //             ?.split(/&/)
+   //             .map(c => {
+   //                const [key, ...v] = c.split('=');
+   //                return [key, decodeURIComponent(v.join('='))];
+   //             }) || []
+   //       );
+   //    },
+
    //    get(name = required()) {
    //       return Object.fromEntries(
    //          document.cookie
@@ -605,17 +538,6 @@ const NOVA = {
    //          .map(([key, value]) => `${key}=${value}`).join('; '); // if no "value" = undefined
 
    //       console.assert(this.get(name) == value, 'cookie set err:', ...arguments, document.cookie);
-   //    },
-
-   //    getParamLikeObj(name = required()) {
-   //       return Object.fromEntries(
-   //          this.get(name)
-   //             ?.split(/&/)
-   //             .map(c => {
-   //                const [key, ...v] = c.split('=');
-   //                return [key, decodeURIComponent(v.join('='))];
-   //             }) || []
-   //       );
    //    },
 
    //    updateParam({ key = required(), param = required(), value = required() }) {
@@ -824,16 +746,41 @@ const NOVA = {
    },
 
    /**
+    * @param  {object} 2 str, 2 int
+    * @return {void}
+   */
+   openPopup({ url = required(), title = document.title, width = window.innerWidth, height = window.innerHeight, closed_callback }) {
+      // console.debug('openPopup', ...arguments);
+      // center screen
+      const left = (screen.width / 2) - (width / 2);
+      const top = (screen.height / 2) - (height / 2);
+      // bottom right corner
+      // left = window.innerWidth;
+      // top = window.innerHeight;
+      const win = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
+      // win.document.title = title; // ncaught TypeError: Cannot read properties of null (reading 'document')
+
+      if (closed_callback && typeof closed_callback === 'function') {
+         const timer = setInterval(() => {
+            if (win.closed) {
+               clearInterval(timer);
+               closed_callback();
+            }
+         }, 500);
+      }
+   },
+
+   /**
     * @param  {string} text
     * @return {void}
    */
    triggerOSD(text) {
       // console.debug('triggerOSD', ...arguments);
       if (!text || !['watch', 'embed'].includes(this.currentPage)) return;
-      if (typeof this.fateBezel === 'number') clearTimeout(this.fateBezel); // reset hide
+      if (typeof this.fadeBezel === 'number') clearTimeout(this.fadeBezel); // reset fade
 
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
-      if (!bezelEl) return console.warn(`triggerOSD ${text}=>${bezelEl}`);
+      if (!bezelEl) return console.error(`triggerOSD ${text}=>${bezelEl}`);
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
@@ -860,7 +807,7 @@ const NOVA = {
          ms = 600
       }
 
-      this.fateBezel = setTimeout(() => {
+      this.fadeBezel = setTimeout(() => {
          bezelContainer.classList.remove(CLASS_VALUE);
          bezelEl.textContent = ''; // fix not showing bug when frequent calls
       }, ms);
@@ -892,7 +839,7 @@ const NOVA = {
       }
 
       function descriptionExpand() {
-         document.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click();
+         document.body.querySelector('#meta [collapsed] #more, [description-collapsed] #description #expand')?.click();
       }
 
       function getFromDescriptionText() {
@@ -1109,8 +1056,8 @@ const NOVA = {
       document.body.querySelectorAll(filter_selectors)
          .forEach(item => {
             const
-               text = item.textContent,
-               // text = item.innerText,
+               // text = item.textContent,
+               text = item.innerText,
                // text = item.querySelector(highlight_selector).getAttribute('title'),
                hasText = text?.toLowerCase().includes(keyword),
                highlight = el => {
@@ -1137,7 +1084,8 @@ const NOVA = {
          // console.debug('highlightTerm:', ...arguments);
          const
             // content = target.innerHTML,
-            content = target.textContent,
+            // content = target.textContent,
+            content = target.innerText,
             pattern = new RegExp('(>[^<.]*)?(' + keyword + ')([^<.]*)?', 'gi'),
             highlightStyle = highlightClass ? `class="${highlightClass}"` : 'style="background-color:#afafaf"',
             replaceWith = `$1<mark ${highlightStyle}>$2</mark>$3`,
@@ -1687,14 +1635,14 @@ const NOVA = {
       // local search
       let result = [
          // global
-         document.querySelector('meta[itemprop="channelId"][content]')?.content,
+         document.head.querySelector('meta[itemprop="channelId"][content]')?.content,
          // channel page
          (document.body.querySelector('ytd-app')?.__data?.data?.response
             || document.body.querySelector('ytd-app')?.data?.response
             || window.ytInitialData
          )
             ?.metadata?.channelMetadataRenderer?.externalId,
-         document.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
+         document.head.querySelector('link[itemprop="url"][href]')?.href.split('/')[4],
          location.pathname.split('/')[2],
          // playlist page
          document.body.querySelector('#video-owner a[href]')?.href.split('/')[4],

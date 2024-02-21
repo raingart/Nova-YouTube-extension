@@ -4,7 +4,8 @@
 // https://www.youtube.com/watch?v=KOCZaxzZE34 - (91:90)
 // https://www.youtube.com/watch?v=z-2w7eAL-98 - (121:120)
 // https://www.youtube.com/watch?v=TaQwW5eQZeY - (121:120)
-// https://www.youtube.com/watch?v=U9mUwZ47z3E - (ultra-wide)
+// https://www.youtube.com/watch?v=aznxojO15M0 - (ultra-wide)
+// https://www.youtube.com/watch?v=U9mUwZ47z3E - (ultra-ultra-wide)
 
 window.nova_plugins.push({
    id: 'player-resize-ratio',
@@ -12,6 +13,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -27,6 +29,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -66,7 +69,11 @@ window.nova_plugins.push({
                            'width': video.videoWidth,
                            'height': video.videoHeight,
                         });
-                        return ('4:3' == aspectRatio || '1:1' == aspectRatio);
+
+                        return (
+                           (video.videoWidth / video.videoHeight) > 2.3 // ultra wide
+                           || '4:3' == aspectRatio || '1:1' == aspectRatio
+                        );
                      };
 
                   // Strategy 1 (API)
@@ -75,9 +82,11 @@ window.nova_plugins.push({
                      // const backupFn = ytd_watch.calculateNormalPlayerSize_;
 
                      // init
-                     NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && patchYtCalculateFn());
+                     patchYtCalculateFn()
                      // update video
-                     video.addEventListener('loadeddata', patchYtCalculateFn);
+                     video.addEventListener('loadeddata', () => {
+                        (NOVA.currentPage == 'watch') && patchYtCalculateFn();
+                     });
 
                      function sizeBypass() {
                         let width = height = NaN;

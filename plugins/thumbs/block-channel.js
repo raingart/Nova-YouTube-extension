@@ -5,6 +5,7 @@ window.nova_plugins.push({
    'title:zh': '屏蔽频道列表',
    'title:ja': 'ブロックされたチャネルのリスト',
    // 'title:ko': '차단된 채널 목록',
+   // 'title:vi': '',
    // 'title:id': 'Saluran yang diblokir',
    // 'title:es': 'Lista de canales bloqueados',
    'title:pt': 'Lista de canais bloqueados',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    'desc:zh': '在搜索页面上隐藏频道',
    'desc:ja': '検索ページでチャンネルを非表示にする',
    // 'desc:ko': '검색 페이지에서 채널 숨기기',
+   // 'desc:vi': '',
    // 'desc:id': 'Sembunyikan saluran di halaman pencarian',
    // 'desc:es': 'Ocultar canales en la página de búsqueda',
    'desc:pt': 'Ocultar canais na página de pesquisa',
@@ -129,6 +131,56 @@ window.nova_plugins.push({
                //    break;
             }
          });
+
+         if (typeof GM_info === 'object') {
+            // NOVA.waitSelector('#menu [menu-active] [role="menuitem"]')
+            NOVA.waitSelector('tp-yt-iron-dropdown:not([aria-hidden="true"]) ytd-menu-popup-renderer[slot="dropdown-content"] [role="menuitem"]')
+               .then(container => {
+                  const btn = document.createElement('div');
+                  btn.classList = 'style-scope ytd-menu-service-item-renderer';
+                  // `<yt-formatted-string class="style-scope ytd-menu-service-item-renderer">Block</yt-formatted-string>`;
+                  // btn.style.cssText = '';
+                  Object.assign(btn.style, {
+                     'font-size': '14px',
+                     padding: '9px 15px 9px 56px',
+                     cursor: 'pointer',
+                  });
+                  // btn.textContent = 'Nova block channel';
+                  btn.innerHTML = '<b>Nova block channel</b>';
+                  // btn.innerHTML =
+                  //    `<svg viewBox="0 0 24 24" height="100%" width="100%">
+                  //       <g fill="currentColor">
+                  //          <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zM3 12c0 2.31.87 4.41 2.29 6L18 5.29C16.41 3.87 14.31 3 12 3c-4.97 0-9 4.03-9 9zm15.71-6L6 18.71C7.59 20.13 9.69 21 12 21c4.97 0 9-4.03 9-9 0-2.31-.87-4.41-2.29-6z" />
+                  //       </g>
+                  //    </svg>Nova block channel`;
+                  btn.title = 'Nova block channel';
+
+                  btn.addEventListener('click', () => {
+                     // console.debug('search_filter_channels_blocklist', user_settings.search_filter_channels_blocklist);
+                     const currentCannelName = document.querySelector('#menu [menu-active]')
+                        .closest('#details, #meta')
+                        .querySelector('#channel-name a')?.textContent;
+
+                     if (currentCannelName && confirm(`Add channel [${currentCannelName}] to the blacklist?`)) {
+                        user_settings.search_filter_channels_blocklist += '\n' + currentCannelName;
+                        GM_setValue(configStoreName, user_settings);
+                     }
+                  });
+
+                  container.after(btn);
+
+                  // new IntersectionObserver(([entry]) => {
+                  //    if (entry.isIntersecting) {
+                  //       container.style.display = 'block';
+                  //    }
+                  // }, {
+                  //    // https://github.com/raingart/Nova-YouTube-extension/issues/28
+                  //    // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+                  //    threshold: .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+                  // })
+                  //    .observe(container);
+               });
+         }
       }
 
    },
@@ -139,6 +191,7 @@ window.nova_plugins.push({
          'label:zh': '频道列表',
          'label:ja': 'チャンネルリスト',
          // 'label:ko': '채널 목록',
+         // 'label:vi': '',
          // 'label:id': 'Daftar',
          // 'label:es': 'Lista',
          'label:pt': 'Lista',
@@ -152,6 +205,7 @@ window.nova_plugins.push({
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',
          // 'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         // 'title:vi': '',
          // 'title:id': 'pemisah: "," atau ";" atau "baris baru"',
          // 'title:es': 'separador: "," o ";" o "new line"',
          'title:pt': 'separador: "," ou ";" ou "new line"',

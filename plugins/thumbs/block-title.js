@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '按标题阻止缩略图',
    'title:ja': 'タイトルでサムネイルをブロックする',
    // 'title:ko': '제목으로 축소판 차단',
+   // 'title:vi': '',
    // 'title:id': 'Blokir gambar mini berdasarkan judul',
    // 'title:es': 'Bloquear miniaturas por título',
    'title:pt': 'Bloquear miniaturas por título',
@@ -78,10 +79,10 @@ window.nova_plugins.push({
 
          function hideThumb() {
             document.body.querySelectorAll('#video-title')
-               .forEach(el => {
+               .forEach(titleEl => {
                   BLOCK_KEYWORDS.forEach(keyword => {
-                     if (el.innerText.toLowerCase().includes(keyword)
-                        && (thumb = el.closest(thumbsSelectors))
+                     if (titleEl.textContent.toLowerCase().includes(keyword)
+                        && (thumb = titleEl.closest(thumbsSelectors))
                      ) {
                         thumb.remove();
                         // thumb.style.display = 'none';
@@ -102,6 +103,7 @@ window.nova_plugins.push({
          'label:zh': '单词列表',
          'label:ja': '単語リスト',
          // 'label:ko': '단어 목록',
+         // 'label:vi': '',
          // 'label:id': 'Daftar kata',
          // 'label:es': 'lista de palabras',
          'label:pt': 'Lista de palavras',
@@ -115,6 +117,7 @@ window.nova_plugins.push({
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',
          // 'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         // 'title:vi': '',
          // 'title:id': 'pemisah: "," atau ";" atau "baris baru"',
          // 'title:es': 'separador: "," o ";" o "new line"',
          'title:pt': 'separador: "," ou ";" ou "new line"',

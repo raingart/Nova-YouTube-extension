@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '转移到侧边栏',
    'title:ja': 'サイドバーに転送',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Transferir para a barra lateral',
@@ -20,7 +21,7 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'sidebar',
    // desc: '',
-   'data-conflict': 'description-popup',
+   'plugins-conflict': 'description-popup',
    _runtime: user_settings => {
 
       // exclude playlists
@@ -150,6 +151,7 @@ window.nova_plugins.push({
          'label:zh': '运动目标',
          'label:ja': '移動の対象',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',

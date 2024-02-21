@@ -8,6 +8,7 @@ window.nova_plugins.push({
    'title:zh': '停止视频预加载',
    'title:ja': 'ビデオのプリロードを停止します',
    // 'title:ko': '비디오 미리 로드 중지',
+   // 'title:vi': '',
    // 'title:id': 'Hentikan pramuat video',
    // 'title:es': 'Detener la precarga de video',
    'title:pt': 'Parar o pré-carregamento de vídeo',
@@ -25,6 +26,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -34,7 +36,7 @@ window.nova_plugins.push({
    // 'desc:de': '',
    // 'desc:pl': '',
    // 'desc:ua': '',
-   // 'data-conflict': 'video-autopause',
+   // 'plugins-conflict': 'video-autopause',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/448590-youtube-autoplay-disable
@@ -73,6 +75,18 @@ window.nova_plugins.push({
       //       }
       //    });
 
+      if (user_settings.video_autostop_peview_thumbnail && NOVA.currentPage == 'watch') {
+         NOVA.css.push(
+            // `.ended-mode {
+            // `.paused-mode:not(:hover) {
+            `.unstarted-mode {
+               background: url("https://i.ytimg.com/vi/${NOVA.queryURL.get('v')}/maxresdefault.jpg") center center / contain no-repeat content-box;
+            }
+            .unstarted-mode video {
+               opacity: 0 !important;
+            }`);
+      }
+
       // Strategy 2
       NOVA.waitSelector('#movie_player')
          .then(async movie_player => {
@@ -81,7 +95,7 @@ window.nova_plugins.push({
             // reset disableStop (before on page change)
             document.addEventListener('yt-navigate-start', () => disableStop = false);
 
-            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function' /*&& movie_player.hasOwnProperty('stopVideo')*/, 100); // fix specific error for firefox
+            await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.stopVideo === 'function', 100); // fix specific error for firefox
 
             movie_player.stopVideo(); // init before update onStateChange
 
@@ -116,6 +130,8 @@ window.nova_plugins.push({
                if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
 
                if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+               if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
                if (evt.code == 'Space') disableHoldStop();
             });
             document.addEventListener('click', evt => {
@@ -148,12 +164,64 @@ window.nova_plugins.push({
 
    },
    options: {
+      video_autostop_embed: {
+         _tagName: 'select',
+         label: 'Apply to video type',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         'label:ua': 'Застосувати до відео',
+         options: [
+            {
+               label: 'all', value: false, selected: true,
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:vi': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               'label:ua': 'всіх',
+            },
+            {
+               label: 'embed', value: 'on',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:vi': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               'label:ua': 'вбудованих',
+            },
+         ],
+      },
       video_autostop_ignore_playlist: {
          _tagName: 'input',
          label: 'Ignore playlist',
          'label:zh': '忽略播放列表',
          'label:ja': 'プレイリストを無視する',
          // 'label:ko': '재생목록 무시',
+         // 'label:vi': '',
          // 'label:id': 'Abaikan daftar putar',
          // 'label:es': 'Ignorar lista de reproducción',
          'label:pt': 'Ignorar lista de reprodução',
@@ -173,6 +241,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -192,6 +261,7 @@ window.nova_plugins.push({
       //    'label:zh': '仅适用于嵌入式视频',
       //    'label:ja': '埋め込みビデオのみ',
       //    'label:ko': '삽입된 동영상에만 해당',
+      //    'label:vi': '',
       //    'label:id': 'Hanya untuk video tersemat',
       //    'label:es': 'Solo para videos incrustados',
       //    'label:pt': 'Apenas para vídeos incorporados',
@@ -203,12 +273,13 @@ window.nova_plugins.push({
       //    'label:ua': 'Тільки для вбудованих відео',
       //    type: 'checkbox',
       // },
-      video_autostop_embed: {
-         _tagName: 'select',
-         label: 'Apply to video type',
+      video_autostop_peview_thumbnail: {
+         _tagName: 'input',
+         label: 'Show video preview thumbnail',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -217,39 +288,23 @@ window.nova_plugins.push({
          // 'label:tr': '',
          // 'label:de': '',
          // 'label:pl': '',
-         'label:ua': 'Застосувати до відео',
-         options: [
-            {
-               label: 'all', value: false, selected: true,
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               'label:ua': 'всіх',
-            },
-            {
-               label: 'embed', value: 'on',
-               // 'label:zh': '',
-               // 'label:ja': '',
-               // 'label:ko': '',
-               // 'label:id': '',
-               // 'label:es': '',
-               // 'label:pt': '',
-               // 'label:fr': '',
-               // 'label:it': '',
-               // 'label:tr': '',
-               // 'label:de': '',
-               // 'label:pl': '',
-               'label:ua': 'вбудованих',
-            },
-         ],
+         // 'label:ua': '',
+         type: 'checkbox',
+         title: 'Instead black-screen',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'label:ua': '',
+         'data-dependent': { 'video_autostop_embed': false },
       },
       // video_autostop_ignore_active_tab: {
       //    _tagName: 'input',
@@ -257,6 +312,7 @@ window.nova_plugins.push({
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',
@@ -271,6 +327,7 @@ window.nova_plugins.push({
       //    // 'title:zh': '',
       //    // 'title:ja': '',
       //    // 'title:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'title:es': '',
       //    // 'title:pt': '',

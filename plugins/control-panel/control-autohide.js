@@ -6,6 +6,7 @@ window.nova_plugins.push({
    'title:zh': '播放器上的自动隐藏控件',
    'title:ja': 'プレーヤーのコントロールを自動非表示',
    // 'title:ko': '플레이어의 자동 숨기기 컨트롤',
+   // 'title:vi': '',
    // 'title:id': 'Sembunyikan kontrol pada pemutar',
    // 'title:es': 'Ocultar automáticamente los controles en el reproductor',
    'title:pt': 'Auto-ocultar controles no player',
@@ -21,6 +22,7 @@ window.nova_plugins.push({
    'desc:zh': '将鼠标悬停在它上面以显示它',
    'desc:ja': 'カーソルを合わせると表示されます',
    // 'desc:ko': '그것을 표시하려면 그 위로 마우스를 가져갑니다',
+   // 'desc:vi': '',
    // 'desc:id': 'Arahkan kontrol untuk menampilkannya',
    // 'desc:es': 'Coloca el cursor sobre él para mostrarlo',
    'desc:pt': 'Passe o mouse sobre ele para exibi-lo',
@@ -30,7 +32,7 @@ window.nova_plugins.push({
    'desc:de': 'Bewegen Sie den Mauszeiger darüber, um es anzuzeigen',
    'desc:pl': 'Najedź, aby wyświetlić',
    'desc:ua': 'Наведіть мишкою щоб показати',
-   'data-conflict': 'player-control-below',
+   'plugins-conflict': 'player-control-below',
    _runtime: user_settings => {
 
       if (user_settings['player-control-below']) return; // conflict with [player-control-below] plugin
@@ -107,7 +109,7 @@ window.nova_plugins.push({
       // // this.mouseMoveIntervalId = fixControlFreeze()
       // // a copy of the function is also in plugin [player-control-below]
       function fixControlFreeze(ms = 2000) {
-         // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset interval
+         // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset timeout
          // const moveMouse = new Event('mousemove');
          // this.mouseMoveIntervalId = setInterval(() => {
          return setInterval(() => {
@@ -131,6 +133,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -146,6 +149,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -161,6 +165,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',

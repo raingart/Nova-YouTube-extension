@@ -35,6 +35,7 @@ window.nova_plugins.push({
    'title:zh': '时间跳跃',
    'title:ja': 'タイムジャンプ',
    // 'title:ko': '시간 점프',
+   // 'title:vi': '',
    // 'title:id': 'Lompatan waktu',
    // 'title:es': 'Salto de tiempo',
    'title:pt': 'Salto no tempo',
@@ -50,6 +51,7 @@ window.nova_plugins.push({
    'desc:zh': '用于跳过介绍或广告插入',
    'desc:ja': 'イントロや広告挿入をスキップするために使用します',
    // 'desc:ko': '인트로 또는 광고 삽입을 건너뛸 때 사용',
+   // 'desc:vi': '',
    // 'desc:id': 'Gunakan untuk melewati intro atau sisipan iklan',
    // 'desc:es': 'Úselo para omitir la introducción o las inserciones de anuncios.',
    'desc:pt': 'Use para pular a introdução ou inserções de anúncios',
@@ -60,6 +62,34 @@ window.nova_plugins.push({
    'desc:pl': 'Służy do pomijania wstępu lub wstawek reklamowych',
    'desc:ua': 'Використовуйте щоб пропустити інтро',
    _runtime: user_settings => {
+
+      // https://github.com/raingart/Nova-YouTube-extension/issues/147
+      // NOVA.css.push(
+      //    `.html5-video-player > [aria-live="polite"] {
+      //       display: block !important;
+      //       z-index: 99999;
+      //    }
+      //    .ytp-player-content, .html5-video-container, .ytp-iv-video-content{
+      //       display: none !important;
+      //    }`);
+
+      // NOVA.waitSelector('.html5-video-player > [aria-live="polite"]')
+      //    .then(container => {
+      //       container.addEventListener('click', () => {
+      //          alert(1)
+      //       });
+
+      //       new IntersectionObserver(([entry]) => {
+      //          if (entry.isIntersecting) {
+      //             container.style.display = 'block';
+      //          }
+      //       }, {
+      //          // https://github.com/raingart/Nova-YouTube-extension/issues/28
+      //          // threshold: (+user_settings.player_float_scroll_sensivity_range / 100) || .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+      //          threshold: .5, // set offset 0.X means trigger if atleast X0% of element in viewport
+      //       })
+      //          .observe(container);
+      //    });
 
       // alt - https://greasyfork.org/en/scripts/437859-next-chapter-button-for-youtube
 
@@ -118,7 +148,7 @@ window.nova_plugins.push({
                   msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.formatTimeOut.HMS.digit(currentTime);
                }
 
-               NOVA.triggerHUD(msg); // trigger default indicator
+               NOVA.triggerOSD(msg); // trigger default indicator
             }
 
             function seekTime(sec) {
@@ -152,13 +182,13 @@ window.nova_plugins.push({
       //             // wait chapter-title update
       //             document.body.querySelector('.ytp-chapter-title-content')
       //                ?.addEventListener('DOMNodeInserted', ({ target }) => {
-      //                   NOVA.triggerHUD(
+      //                   NOVA.triggerOSD(
       //                      target.textContent + ' • ' + NOVA.formatTimeOut.HMS.digit(video.currentTime)
       //                   );// trigger default indicator
       //                }, { capture: true, once: true });
       //          }
       //          else {
-      //             NOVA.triggerHUD(`+${user_settings.time_jump_step} sec`); // trigger default indicator
+      //             NOVA.triggerOSD(`+${user_settings.time_jump_step} sec`); // trigger default indicator
       //          }
       //          // console.debug('seekTo', sec);
       //          this.currentTime = sec;
@@ -334,6 +364,7 @@ window.nova_plugins.push({
          // 'label:ja': 'ステップ時間',
          'label:zh': '步骤时间',
          // 'label:ko': '단계 시간',
+         // 'label:vi': '',
          // 'label:id': 'Langkah waktu',
          // 'label:es': 'Tiempo de paso',
          'label:pt': 'Tempo da etapa',
@@ -356,6 +387,7 @@ window.nova_plugins.push({
          'label:zh': '热键（双击）',
          'label:ja': 'Hotkey (ダブルプレス)',
          // 'label:ko': '단축키(더블 클릭)',
+         // 'label:vi': '',
          // 'label:id': 'Tombol pintas (klik dua kali)',
          // 'label:es': 'Tecla de acceso rápido (doble clic)',
          'label:pt': 'Atalho (duplo clique)',
@@ -370,6 +402,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -430,6 +463,7 @@ window.nova_plugins.push({
          'label:zh': '在进度条中显示时间偏移',
          'label:ja': 'プログレスバーに時間オフセットを表示する',
          // 'label:ko': '진행률 표시줄에 시간 오프셋 표시',
+         // 'label:vi': '',
          // 'label:id': 'Tampilkan offset waktu di bilah kemajuan',
          // 'label:es': 'Mostrar compensación de tiempo en la barra de progreso',
          'label:pt': 'Mostrar a diferença de tempo na barra de progresso',
@@ -445,6 +479,7 @@ window.nova_plugins.push({
          'title:zh': '与当前播放时间的时间偏移',
          'title:ja': '現在の再生時間からの時間オフセット',
          // 'title:ko': '현재 재생 시간으로부터의 시간 오프셋',
+         // 'label:vi': '',
          // 'label:id': 'Waktu offset dari waktu pemutaran saat ini',
          // 'title:es': 'Desfase de tiempo del tiempo de reproducción actual',
          'title:pt': 'Deslocamento de tempo do tempo de reprodução atual',
@@ -461,6 +496,7 @@ window.nova_plugins.push({
       //    'label:zh': '显示章节列表块',
       //    'label:ja': 'チャプターリストブロックを表示',
       //    'label:ko': '챕터 목록 섹션 표시',
+      //    'label:vi': '',
       //    'label:id': 'Tampilkan bagian daftar bab',
       //    'label:es': 'Mostrar bloque de lista de capítulos',
       //    'label:pt': 'Mostrar bloco de lista de capítulos',
@@ -480,6 +516,7 @@ window.nova_plugins.push({
          'label:zh': '设置开始时间',
          'label:ja': '開始時刻を設定',
          // 'label:ko': '시작 시간 설정',
+         // 'label:vi': '',
          // 'label:id': 'Tetapkan waktu mulai',
          // 'label:es': 'Establecer hora de inicio',
          'label:pt': 'Definir horário de início',
@@ -494,6 +531,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -515,6 +553,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',

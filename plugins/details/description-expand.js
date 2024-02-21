@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '展开说明',
    'title:ja': '説明を展開',
    // 'title:ko': '설명 펼치기',
+   // 'title:vi': '',
    // 'title:id': 'Perluas deskripsi',
    // 'title:es': 'Ampliar descripción',
    'title:pt': 'Expandir descrição',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -29,7 +31,7 @@ window.nova_plugins.push({
    // 'desc:de': '',
    // 'desc:pl': '',
    // 'desc:ua': '',
-   'data-conflict': 'description-popup, comments-sidebar-position-exchange',
+   'plugins-conflict': 'description-popup, comments-sidebar-position-exchange',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/452405-youtube-scrollable-right-side-description
@@ -77,6 +79,7 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          // 'label:ko': '방법',
+         // 'label:vi': '',
          // 'label:id': 'Mode',
          // 'label:es': 'Modo',
          'label:pt': 'Modo',
@@ -93,6 +96,7 @@ window.nova_plugins.push({
                'label:zh': '每次',
                'label:ja': 'いつも',
                // 'label:ko': '언제나',
+               // 'label:vi': '',
                // 'label:id': 'selalu',
                // 'label:es': 'siempre',
                'label:pt': 'sempre',
@@ -108,6 +112,7 @@ window.nova_plugins.push({
                'label:zh': '悬停时',
                'label:ja': 'ホバー時に',
                // 'label:ko': '호버에',
+               // 'label:vi': '',
                // 'label:id': 'saat melayang',
                // 'label:es': 'en vuelo estacionario',
                'label:pt': 'pairando',

@@ -11,6 +11,7 @@ window.nova_plugins.push({
    'title:zh': '浮动播放器进度条',
    'title:ja': 'フロートプレーヤーのプログレスバー',
    // 'title:ko': '플로팅 플레이어 진행률 표시줄',
+   // 'title:vi': '',
    // 'title:id': 'Bilah kemajuan pemain mengambang',
    // 'title:es': 'Barra de progreso flotante del jugador',
    'title:pt': 'Barra de progresso do jogador flutuante',
@@ -23,7 +24,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed, -mobile',
    section: 'control-panel',
    // desc: '',
-   // 'data-conflict': 'description-expand',
+   // 'plugins-conflict': 'description-expand',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/434990-youtube-always-show-progress-bar-forked
@@ -73,6 +74,9 @@ window.nova_plugins.push({
             // render progress
             // NOVA.waitSelector(`${SELECTOR}-progress`)
             //    .then(progressEl => {
+            // video.addEventListener('durationchange', function () {
+            //    console.debug('durationchange', this.duration);
+            // });
             video.addEventListener('timeupdate', function () {
                if (notInteractiveToRender()) return;
 
@@ -253,6 +257,7 @@ window.nova_plugins.push({
          function showSwitch(evt) {
             if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
             if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+            // if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
 
             if ((el = document.getElementById(SELECTOR_ID))
                && el.querySelector('span[time]') // have chapters
@@ -414,6 +419,7 @@ window.nova_plugins.push({
          'label:zh': '高度',
          'label:ja': '身長',
          // 'label:ko': '키',
+         // 'label:vi': '',
          // 'label:id': 'Tinggi',
          // 'label:es': 'Altura',
          'label:pt': 'Altura',
@@ -428,6 +434,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -448,6 +455,7 @@ window.nova_plugins.push({
          'label:zh': '不透明度',
          'label:ja': '不透明度',
          // 'label:ko': '불투명',
+         // 'label:vi': '',
          // 'label:id': 'Kegelapan',
          // 'label:es': 'Opacidad',
          'label:pt': 'Opacidade',

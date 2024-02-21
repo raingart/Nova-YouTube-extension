@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '显示直播视频的时长',
    'title:ja': 'ライブビデオの表示時間',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Mostrar a duração da transmissão',
@@ -25,8 +26,8 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/470937-youtube-live-datetime-tooltip
       // alt3 - https://chrome.google.com/webstore/detail/cnllmiliafeacdmlngaofjpjaljoolpc
 
-      // new Date(document.querySelector('meta[itemprop="startDate"][content]')?.content);
-      // new Date(document.querySelector('meta[itemprop="endDate"][content]')?.content);
+      // new Date(document.head.querySelector('meta[itemprop="startDate"][content]')?.content);
+      // new Date(document.head.querySelector('meta[itemprop="endDate"][content]')?.content);
 
       // Strategy 1. UnHide default
       NOVA.waitSelector('#movie_player video')

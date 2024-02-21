@@ -4,6 +4,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -19,6 +20,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -69,7 +71,6 @@ window.nova_plugins.push({
                // movie_player.contains(document.activeElement) // don't use! stay overline
                if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
                // if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
-               // console.debug('evt.code', evt.code);
 
                if (evt.code == 'ArrowLeft' || evt.code == 'ArrowRight') reSaveTime();
             });
@@ -199,6 +200,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -213,6 +215,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -236,6 +239,7 @@ window.nova_plugins.push({
          'label:zh': '颜色',
          'label:ja': '色',
          // 'label:ko': '색깔',
+         // 'label:vi': '',
          // 'label:id': 'Warna',
          // 'label:es': 'Color',
          'label:pt': 'Cor',

@@ -7,6 +7,7 @@ window.nova_plugins.push({
    // 'title:zh': '播放器全模式',
    // 'title:ja': 'プレーヤーフル-モード付き',
    // 'title:ko': '플레이어 풀-위드 모드',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': 'Reproductor completo con modo',
    // 'title:pt': 'Modo de jogador completo',
@@ -19,12 +20,13 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'player',
    // desc: '',
-   // 'data-conflict': 'player-fullscreen-mode, embed-popup, player-control-below',
+   // 'plugins-conflict': 'player-fullscreen-mode, embed-popup, player-control-below',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/10523-youtube-always-theater-mode
       // alt2 - https://chrome.google.com/webstore/detail/dgognhgbpdoeidccnbfhohblklhbbomh
-      // alt3 - https://greasyfork.org/en/scripts/480701-youtube-fullpage-theater/code
+      // alt3 - https://greasyfork.org/en/scripts/480701-youtube-fullpage-theater
+      // alt4 - https://chromewebstore.google.com/detail/gdkadbhiemijfpoochcieonikoaciapi
 
       if (user_settings.player_full_viewport_mode == 'redirect_watch_to_embed') {
          return location.assign(`https://www.youtube.com/embed/` + NOVA.queryURL.get('v'));
@@ -128,7 +130,7 @@ window.nova_plugins.push({
                PINNED_SELECTOR = '.nova-player-pin', // fix for "player-pin-scroll" plugin
                PLAYER_SCROLL_LOCK_CLASS_NAME = 'nova-lock-scroll',
                PLAYER_SELECTOR = `${PLAYER_CONTAINER_SELECTOR} #movie_player:not(${PINNED_SELECTOR}):not(.${PLAYER_SCROLL_LOCK_CLASS_NAME})`, // fix for [player-pin-scroll] plugin
-               zIindex = Math.max(getComputedStyle(movie_player)['z-index'], 2020); // remember update pkugin [player-control-below]
+               zIndex = Math.max(getComputedStyle(movie_player)['z-index'], 2020); // remember update pkugin [player-control-below]
 
             addScrollDownBehavior();
 
@@ -157,6 +159,8 @@ window.nova_plugins.push({
                   // alt4 - https://greasyfork.org/en/scripts/33243-maximizer-for-youtube
                   // alt5 - https://greasyfork.org/en/scripts/442089-pkga-youtube-theater-mode
                   // alt6 - https://greasyfork.org/en/scripts/480701-youtube-fullpage-theater
+                  // alt7 - https://greasyfork.org/en/scripts/487233-youtube-true-theater-mode
+
                   setPlayerFullViewport(user_settings.player_full_viewport_mode_exit);
                   break;
 
@@ -192,7 +196,7 @@ window.nova_plugins.push({
                   // alt2 - https://chrome.google.com/webstore/detail/bfbmjmiodbnnpllbbbfblcplfjjepjdn
                   NOVA.css.push(
                      PLAYER_SELECTOR + ` {
-                        z-index: ${zIindex};
+                        z-index: ${zIndex};
                      }
 
                      ${PLAYER_SELECTOR}:before {
@@ -222,7 +226,7 @@ window.nova_plugins.push({
                      [class*="popup"],
                      [role="navigation"],
                      [role="dialog"] {
-                        z-index: ${zIindex + 1};
+                        z-index: ${zIndex + 1};
                      }
                      #playlist:hover {
                         position: relative;
@@ -243,7 +247,7 @@ window.nova_plugins.push({
                      height: 100vh;
                      position: fixed;
                      bottom: 0 !important;
-                     z-index: ${zIindex};
+                     z-index: ${zIndex};
                      background-color: black;
                   }`);
 
@@ -252,7 +256,7 @@ window.nova_plugins.push({
                   NOVA.css.push(
                      `#masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]) {
                         position: fixed;
-                        z-index: ${zIindex + 1};
+                        z-index: ${zIndex + 1};
                         opacity: 0;
                      }
                      #masthead-container:has( ~ #page-manager ytd-watch-flexy[theater]):hover,
@@ -285,8 +289,10 @@ window.nova_plugins.push({
                               window.dispatchEvent(new Event('resize'));
                            }
                         });
-                        // video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
+                        // fix overwrite video height after pause
+                        video.addEventListener('play', () => window.dispatchEvent(new Event('resize')));
                         // video.addEventListener('playing', () => window.dispatchEvent(new Event('resize')));
+                        // video.addEventListener('pause', () => window.dispatchEvent(new Event('resize')));
                      });
 
                   // fix overlapped ".paused-mode" after you scroll the time in the player with the mouse
@@ -299,14 +305,6 @@ window.nova_plugins.push({
                               movie_player.classList.add(CLASS_OVER_PAUSED);
                               // }
                            });
-                        });
-                     });
-
-                  // fix overwrite video height after pause
-                  NOVA.waitSelector('video')
-                     .then(video => {
-                        video.addEventListener('play', () => {
-                           window.dispatchEvent(new Event('resize')); // fix: restore player size
                         });
                      });
                }
@@ -330,9 +328,7 @@ window.nova_plugins.push({
                   });
                   // up (on top page)
                   document.addEventListener('scroll', evt => {
-                     if (window.scrollY === 0
-                        && movie_player.classList.contains(PLAYER_SCROLL_LOCK_CLASS_NAME)
-                     ) {
+                     if (window.scrollY === 0 && movie_player.classList.contains(PLAYER_SCROLL_LOCK_CLASS_NAME)) {
                         movie_player.classList.remove(PLAYER_SCROLL_LOCK_CLASS_NAME);
                      }
                   });
@@ -354,6 +350,7 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          // 'label:ko': '방법',
+         // 'label:vi': '',
          // 'label:id': 'Mode',
          // 'label:es': 'Modo',
          'label:pt': 'Modo',
@@ -369,6 +366,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -384,6 +382,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -399,6 +398,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -414,6 +414,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -429,6 +430,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -444,6 +446,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -464,6 +467,7 @@ window.nova_plugins.push({
          'label:zh': '视频结束/暂停时退出',
          'label:ja': 'ビデオが終了/一時停止したら終了します',
          // 'label:ko': '동영상이 종료/일시 중지되면 종료',
+         // 'label:vi': '',
          // 'label:id': 'Keluar dari viewport penuh jika video berakhir/jeda',
          // 'label:es': 'Salir si el video termina/pausa',
          'label:pt': 'Sair se o vídeo terminar/pausar',
@@ -483,6 +487,7 @@ window.nova_plugins.push({
          'label:zh': '全视口不包括短裤',
          'label:ja': 'フルビューポートはショートパンツを除外します',
          // 'label:ko': '전체 뷰포트 제외 반바지',
+         // 'label:vi': '',
          // 'label:id': 'Area pandang penuh tidak termasuk celana pendek',
          // 'label:es': 'Vista completa excluir pantalones cortos',
          'label:pt': 'Shorts de exclusão da janela de visualização completa',
@@ -502,6 +507,7 @@ window.nova_plugins.push({
          'label:zh': '不透明度',
          'label:ja': '不透明度',
          // 'label:ko': '불투명',
+         // 'label:vi': '',
          // 'label:id': 'Kegelapan',
          // 'label:es': 'Opacidad',
          'label:pt': 'Opacidade',
@@ -526,6 +532,7 @@ window.nova_plugins.push({
          'label:zh': '忽略播放列表',
          'label:ja': 'プレイリストを無視する',
          // 'label:ko': '재생목록 무시',
+         // 'label:vi': '',
          // 'label:id': 'Abaikan daftar putar',
          // 'label:es': 'Ignorar lista de reproducción',
          'label:pt': 'Ignorar lista de reprodução',
@@ -544,6 +551,7 @@ window.nova_plugins.push({
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',

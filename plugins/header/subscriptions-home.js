@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '从主页重定向到订阅页面',
    'title:ja': 'ホーム ページからサブスクリプション ページへのリダイレクト',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Redirecionar da página inicial para a página de assinaturas',
@@ -17,7 +18,7 @@ window.nova_plugins.push({
    restart_on_location_change: true,
    section: 'header',
    // desc: '',
-   'data-conflict': 'page-logo',
+   'plugins-conflict': 'page-logo',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/475942-youtube-recommendations-be-gone-cleaner-youtube

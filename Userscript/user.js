@@ -11,6 +11,7 @@ console.log('%c /• %s •/', 'color:#0096fa; font-weight:bold;', GM_info.scrip
 // }
 
 const
+   // configPage = 'https://raingart.github.io/nova/', // ?tabs=tab-plugins
    configPage = 'https://raingart.github.io/options.html', // ?tabs=tab-plugins
    configStoreName = 'user_settings',
    user_settings = GM_getValue(configStoreName, null);
@@ -285,7 +286,7 @@ function registerMenuCommand() {
       }
    });
    GM_registerMenuCommand('Export settings', () => {
-      let d = document.createElement('a');
+      const d = document.createElement('a');
       d.style.display = 'none';
       d.download = 'nova_backup.json';
       d.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(user_settings));
@@ -316,7 +317,8 @@ function insertSettingButton() {
             SETTING_BTN_ID = 'nova_settings_button';
 
          a.id = SETTING_BTN_ID;
-         a.href = configPage + '?tabs=tab-plugins';
+         // a.href = configPage + '?tabs=tab-plugins';
+         a.href = configPage;
          a.target = '_blank';
          // a.textContent = '▷';
          a.innerHTML =

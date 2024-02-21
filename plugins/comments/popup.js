@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '弹出窗口中的评论部分',
    'title:ja': 'ポップアップのコメントセクション',
    // 'title:ko': '팝업의 댓글 섹션',
+   // 'title:vi': '',
    // 'title:id': 'Bagian komentar di popup',
    // 'title:es': 'Sección de comentarios en ventana emergente',
    'title:pt': 'Seção de comentários no pop-up',
@@ -68,7 +69,7 @@ window.nova_plugins.push({
                   font-family: Roboto, Arial, sans-serif;
                   font-size: 11px;
                   color: #eee;
-                  background: rgba(0,0,0,0.3);
+                  background-color: rgba(0,0,0,0.3);
                }
 
                /* comments section */
@@ -120,11 +121,11 @@ window.nova_plugins.push({
                }
 
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-corner {
-                  background: transparent;
+                  background-color: transparent;
                }
 
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-thumb {
-                  background: #e1e1e1;
+                  background-color: #e1e1e1;
                   /*background-color: var(--yt-spec-text-secondary);*/
                   border: 0;
                   border-radius: 0;
@@ -133,12 +134,12 @@ window.nova_plugins.push({
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-thumb {}
 
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-track {
-                  background: #666;
+                  background-color: #666;
                   border: 0;
                   border-radius: 0;
                }
                ${COMMENTS_SELECTOR} #contents::-webkit-scrollbar-track:hover {
-                  background: #666;
+                  background-color: #666;
                }
                /* fixs */
                ytd-comments-header-renderer {
@@ -172,6 +173,7 @@ window.nova_plugins.push({
          'label:zh': '宽度',
          'label:ja': '幅',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          'label:pt': 'Largura',
@@ -187,6 +189,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -208,6 +211,7 @@ window.nova_plugins.push({
          'label:zh': '隐藏文本区域',
          'label:ja': 'テキストエリアを隠す',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          'label:pt': 'Ocultar área de texto',

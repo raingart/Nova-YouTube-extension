@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:zh': '将嵌入式视频重定向到弹出窗口',
    'title:ja': '埋め込まれたビデオをポップアップにリダイレクトします',
    // 'title:ko': '포함된 비디오를 팝업으로 리디렉션',
+   // 'title:vi': '',
    // 'title:id': '포함된 비디오를 팝업으로 리디렉션',
    // 'title:es': 'Redirigir video incrustado a ventana emergente',
    'title:pt': 'Redirecionar vídeo incorporado para pop-up',
@@ -24,6 +25,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -33,7 +35,7 @@ window.nova_plugins.push({
    // 'desc:de': '',
    // 'desc:pl': '',
    // 'desc:ua': '',
-   'data-conflict': 'player-fullscreen-mode',
+   'plugins-conflict': 'player-fullscreen-mode',
    _runtime: user_settings => {
 
       // alt - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector
@@ -81,7 +83,7 @@ window.nova_plugins.push({
          movie_player.stopVideo();
 
          const url = new URL(
-            document.querySelector('link[itemprop="embedUrl"][href]')?.href
+            document.head.querySelector('link[itemprop="embedUrl"][href]')?.href
             || (location.origin + '/embed/' + movie_player.getVideoData().video_id)
          );
          // list param ex.
@@ -90,18 +92,7 @@ window.nova_plugins.push({
          url.searchParams.set('autoplay', 1);
          url.searchParams.set('popup', true); // deactivate popup-button for used window
 
-         openPopup({ 'url': url.href, 'title': document.title, 'width': width, 'height': height });
-
-         function openPopup({ url, title, width, height }) {
-            // center screen
-            const left = (screen.width / 2) - (width / 2);
-            const top = (screen.height / 2) - (height / 2);
-            // bottom right corner
-            // left = window.innerWidth;
-            // top = window.innerHeight;
-            const newWindow = window.open(url, '_blank', `popup=1,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=${width},height=${height},top=${top},left=${left}`);
-            // newWindow.document.title = title; // ncaught TypeError: Cannot read properties of null (reading 'document')
-         }
+         NOVA.openPopup({ 'url': url.href, 'width': width, 'height': height });
       }
 
    },

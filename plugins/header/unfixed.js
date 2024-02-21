@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '标题未固定',
    'title:ja': 'ヘッダーは固定されていません',
    // 'title:ko': '헤더가 고정되지 않음',
+   // 'title:vi': '',
    // 'title:id': 'Tajuk tidak diperbaiki',
    // 'title:es': 'Encabezado sin arreglar',
    'title:pt': 'Cabeçalho não corrigido',
@@ -21,6 +22,7 @@ window.nova_plugins.push({
    'desc:zh': '防止头部粘连',
    'desc:ja': 'ヘッダーがくっつくのを防ぎます',
    // 'desc:ko': '헤더가 달라붙는 것을 방지',
+   // 'desc:vi': '',
    // 'desc:id': 'Mencegah header menempel',
    // 'desc:es': 'Evita que el cabezal se pegue',
    'desc:pt': 'Impede que o cabeçalho grude',
@@ -61,6 +63,8 @@ window.nova_plugins.push({
          // hotkey
          document.addEventListener('keyup', evt => {
             if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+            // if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
             if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey) {
                document.documentElement.classList.toggle(CLASS_NAME_TOGGLE);
             }
@@ -101,7 +105,7 @@ window.nova_plugins.push({
             // scrollDownButton.style.cssText = '';
             Object.assign(scrollDownButton.style, {
                cursor: 'pointer',
-               background: 'transparent',
+               'background-color': 'transparent',
                color: 'deepskyblue',
                border: 'none',
             });
@@ -121,6 +125,7 @@ window.nova_plugins.push({
          'label:zh': '在标题后滚动',
          'label:ja': 'ヘッダーの後にスクロール',
          // 'label:ko': '헤더 뒤 스크롤',
+         // 'label:vi': '',
          // 'label:id': 'Gulir setelah tajuk',
          // 'label:es': 'Desplazarse después del encabezado',
          'label:pt': 'Role após o cabeçalho',
@@ -135,6 +140,7 @@ window.nova_plugins.push({
          'title:zh': '在小屏幕上有意义',
          'title:ja': '小さな画面で意味があります',
          // 'title:ko': '작은 화면에서 이해하기',
+         // 'title:vi': '',
          // 'title:id': 'Masuk akal di layar kecil',
          // 'title:es': 'Tiene sentido en una pantalla pequeña',
          'title:pt': 'Faz sentido em uma tela pequena',
@@ -151,6 +157,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',

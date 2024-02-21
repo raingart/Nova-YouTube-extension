@@ -4,6 +4,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -17,7 +18,7 @@ window.nova_plugins.push({
    // restart_on_location_change: true,
    section: 'details-buttons',
    // desc: '',
-   // 'data-conflict': 'details-buttons',
+   // 'plugins-conflict': 'details-buttons',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/455474-youtube-auto-like
@@ -43,7 +44,7 @@ window.nova_plugins.push({
                // init
                if (user_settings.auto_likes_for_subscribed) {
                   Timer.disable = true;
-                  // NOVA.triggerHUD('Auto-like is disable');
+                  // NOVA.triggerOSD('Auto-like is disable');
                }
                else Timer.reset.bind(Timer)
             });
@@ -59,7 +60,7 @@ window.nova_plugins.push({
                   // Timer.disable();
                   Timer.disable = true;
                   setLike();
-                  NOVA.triggerHUD('Auto-like is activation');
+                  NOVA.triggerOSD('Auto-like is activation');
                }
                // console.debug('Auto-like timeupdate');
             });
@@ -81,7 +82,7 @@ window.nova_plugins.push({
                if (Timer.disable) return;
                // Timer.disable();
                Timer.disable = true;
-               NOVA.triggerHUD('Auto-like is deactivated');
+               NOVA.triggerOSD('Auto-like is deactivated');
             });
 
          if (user_settings.auto_likes_for_subscribed) {
@@ -91,7 +92,7 @@ window.nova_plugins.push({
                .then(() => {
                   // Timer.reset();
                   Timer.disable = false;
-                  NOVA.triggerHUD('Auto-like is enable');
+                  NOVA.triggerOSD('Auto-like is enable');
                });
          }
 
@@ -163,6 +164,7 @@ window.nova_plugins.push({
          'label:zh': '观察阈值（%）',
          'label:ja': '監視しきい値 (%)',
          // 'label:ko': '감시 임계값(%)',
+         // 'label:vi': '',
          // 'label:id': 'Ambang batas tontonan dalam %',
          // 'label:es': 'Umbral de vigilancia en %',
          'label:pt': 'Limite de observação em %',
@@ -178,6 +180,7 @@ window.nova_plugins.push({
          'title:zh': '视频在时间进度后被点赞',
          'title:ja': '時間の経過後にビデオが「いいね！」される',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': 'El porcentaje visto para darle me gusta al video en',
          // 'title:pt': '',
@@ -199,6 +202,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',

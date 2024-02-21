@@ -5,6 +5,7 @@ window.nova_plugins.push({
    'title:zh': '恢复播放时间状态',
    'title:ja': '再生時間の位置を再開します',
    // 'title:ko': '재생 시간 위치 재개',
+   // 'title:vi': '',
    // 'title:id': 'Lanjutkan posisi waktu pemutaran',
    // 'title:es': 'Reanudar posición de tiempo de reproducción',
    'title:pt': 'Retomar a posição do tempo de reprodução',
@@ -20,6 +21,7 @@ window.nova_plugins.push({
    'desc:zh': '在页面重新加载 - 恢复播放',
    'desc:ja': 'ページがリロードされると、再生が復元されます',
    // 'desc:ko': '페이지 새로고침 시 - 재생 재개',
+   // 'desc:vi': '',
    // 'desc:id': 'Muat ulang halaman - lanjutkan pemutaran',
    // 'desc:es': 'En la recarga de la página - reanudar la reproducción',
    'desc:pt': 'Recarregar na página - retomar a reprodução',
@@ -48,7 +50,7 @@ window.nova_plugins.push({
 
       let cacheName;
 
-      NOVA.waitSelector('video')
+      NOVA.waitSelector('#movie_player video')
          .then(video => {
             cacheName = getCacheName(); // for optimization
 
@@ -127,7 +129,7 @@ window.nova_plugins.push({
          });
          // clear
          this.addEventListener('play', () => {
-            if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL);
+            if (typeof delaySaveOnPauseURL === 'number') clearTimeout(delaySaveOnPauseURL); // reset timeout
 
             if (NOVA.queryURL.has('t')) NOVA.updateUrl(NOVA.queryURL.remove('t'));
          });
@@ -141,6 +143,7 @@ window.nova_plugins.push({
          'label:zh': '暂停时在 URL 中节省时间',
          'label:ja': '一時停止したときにURLで時間を節約する',
          // 'label:ko': '일시 중지 시 URL에 시간 표시',
+         // 'label:vi': '',
          // 'label:id': 'Tandai waktu di URL saat dijeda',
          // 'label:es': 'Marcar tiempo en URL cuando está en pausa',
          'label:pt': 'Marcar tempo no URL quando pausado',
@@ -156,6 +159,7 @@ window.nova_plugins.push({
          'title:zh': '保存书签时有意义',
          'title:ja': 'ブックマークを保存するときに意味があります',
          // 'title:ko': '북마크를 저장할 때 의미가 있습니다.',
+         // 'title:vi': '',
          // 'title:id': 'Masuk akal saat menyimpan bookmark',
          // 'title:es': 'Tiene sentido al guardar marcadores',
          'title:pt': 'Faz sentido ao salvar favoritos',
@@ -172,6 +176,7 @@ window.nova_plugins.push({
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',

@@ -5,6 +5,7 @@ window.nova_plugins.push({
    'title:zh': '특정 채널에 저장',
    'title:ja': '特定のチャンネル用に保存',
    // 'title:ko': '특정 채널에 저장',
+   // 'title:vi': '',
    // 'title:id': 'Simpan untuk saluran tertentu',
    // 'title:es': 'Guardar para un canal específico',
    'title:pt': 'Salvar para canal específico',
@@ -76,12 +77,12 @@ window.nova_plugins.push({
                               <path d="M23.4 24.2c-.3.8-1.1 1.4-2 1.4-.9 0-1.7-.6-2-1.4H9.3c-.3 0-.6-.3-.6-.6v-.3c0-.3.3-.6.6-.6h10.1c.3-.9 1.1-1.5 2.1-1.5s1.8.6 2.1 1.5h3.2c.3 0 .6.3.6.6v.3c0 .3-.3.6-.6.6h-3.4zm-7.7-5.3c-.3.9-1.1 1.5-2.1 1.5s-1.8-.6-2.1-1.5H9.3c-.3 0-.6-.3-.6-.6V18c0-.3.3-.6.6-.6h2.2c.3-.8 1.1-1.4 2.1-1.4s1.8.6 2.1 1.4h11.1c.3 0 .6.3.6.6v.3c0 .3-.3.6-.6.6H15.7zm7.9-5.4c-.3.8-1.1 1.4-2.1 1.4-.9 0-1.7-.6-2.1-1.4H9.3c-.3 0-.6-.3-.6-.6v-.3c0-.3.3-.6.6-.6h10.1c.3-.9 1.1-1.6 2.1-1.6s1.9.7 2.1 1.6h3.1c.3 0 .6.3.6.6v.3c0 .3-.3.6-.6.6h-3.1z" />
                            </g>
                         </svg>`;
-                        // `<svg width="100%" height="100%" viewBox="-300 -300 1000 1000">
-                        //    <g fill="currentColor">
-                        //       <path d="M388.49,0H0.022v453.03h452.986V64.561L388.49,0z M385.017,221.834H110.68V25.691h274.337V221.834z"/>
-                        //       <rect x="272.568" y="46.701" width="80.718" height="154.102" />
-                        //    </g>
-                        // </svg>`;
+                     // `<svg width="100%" height="100%" viewBox="-300 -300 1000 1000">
+                     //    <g fill="currentColor">
+                     //       <path d="M388.49,0H0.022v453.03h452.986V64.561L388.49,0z M385.017,221.834H110.68V25.691h274.337V221.834z"/>
+                     //       <rect x="272.568" y="46.701" width="80.718" height="154.102" />
+                     //    </g>
+                     // </svg>`;
 
                      btn.prepend(btnTitle);
                      btn.append(genList());
@@ -122,12 +123,10 @@ window.nova_plugins.push({
                movie_player.toggleSubtitlesOn();
                return true;
             },
-            // customInit: movie_player.toggleSubtitlesOn,
-            customInit: () => {
-               NOVA.waitUntil(() => {
-                  movie_player.toggleSubtitlesOn();
-                  return document.body.querySelector('.ytp-caption-window-top[id^="caption-window"]');
-               }, 500); // 500ms
+            // customInit: movie_player.toggleSubtitlesOn, // Error - ReferenceError: movie_player is not defined
+            customInit: async () => {
+               await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.toggleSubtitlesOn === 'function', 500); // 500ms
+               movie_player.toggleSubtitlesOn();
             },
          });
          // }
@@ -294,7 +293,7 @@ window.nova_plugins.push({
                cursor: pointer;
                white-space: nowrap;
                line-height: 1.4;
-               background: rgba(28, 28, 28, 0.9);
+               background-color: rgba(28, 28, 28, 0.9);
                margin: .3em 0;
                padding: .5em 1em;
                border-radius: .3em;
@@ -311,7 +310,7 @@ window.nova_plugins.push({
                padding-left: 5px;
             }
 
-            ${SELECTOR_BUTTON_LIST} li.active { background: #720000; }
+            ${SELECTOR_BUTTON_LIST} li.active { background-color: #720000; }
             ${SELECTOR_BUTTON_LIST} li.disable { color: #666; }
             ${SELECTOR_BUTTON_LIST} li:not(:hover) { opacity: .8; }
             /* brackets */
@@ -326,7 +325,7 @@ window.nova_plugins.push({
             }
 
             ${SELECTOR_BUTTON_LIST} [type="checkbox"]:checked {
-               background: #f00;
+               background-color: #f00;
             }
 
             ${SELECTOR_BUTTON_LIST} [type="checkbox"]:checked:after {

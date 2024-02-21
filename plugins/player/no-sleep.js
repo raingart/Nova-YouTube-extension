@@ -6,6 +6,7 @@ window.nova_plugins.push({
    'title:zh': '玩家永远保持活跃',
    'title:ja': 'プレーヤーは永遠にアクティブなままです',
    // 'title:ko': '플레이어는 영원히 활성 상태를 유지',
+   // 'title:vi': '',
    // 'title:id': 'Pemain tetap aktif selamanya',
    // 'title:es': 'El jugador permanece activo para siempre',
    'title:pt': 'Jogador permanece ativo para sempre',
@@ -23,6 +24,7 @@ window.nova_plugins.push({
    // 'desc:zh': '防止[视频暂停]警报',
    // 'desc:ja': '「Video paused」アラートを防止します',
    // 'desc:ko': '[Video paused] 알림을 방지합니다',
+   // 'desc:vi': '',
    // 'desc:id': 'mencegah peringatan [Video dijeda]',
    // 'desc:es': 'evitar la alerta de [Video en pausa]',
    // 'desc:pt': 'evitar o alerta de [Vídeo pausado]',
@@ -85,5 +87,11 @@ window.nova_plugins.push({
       // alt10 - https://greasyfork.org/en/scripts/429909-comfortable-youtube
 
       // skipConfirmDialog();
+      // alt11 - https://greasyfork.org/en/scripts/420723-youtube-better-player
+      // NOVA.waitSelector('video')
+      //    .then(video => {
+      //       video.addEventListener('pause', skipConfirmDialog);
+      //       video.addEventListener('waiting', skipConfirmDialog);
+      //    });
    },
 });

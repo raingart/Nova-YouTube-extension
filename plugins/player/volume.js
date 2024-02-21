@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '体积',
    'title:ja': '音量',
    // 'title:ko': '용량',
+   // 'title:vi': '',
    // 'title:id': 'Volume',
    // 'title:es': 'Volumen',
    // 'title:pt': 'Volume',
@@ -23,6 +24,7 @@ window.nova_plugins.push({
    'desc:zh': '带鼠标滚轮',
    'desc:ja': 'マウスホイール付き',
    // 'desc:ko': '마우스 휠로',
+   // 'desc:vi': '',
    // 'desc:id': 'Dengan roda mouse',
    // 'desc:es': 'Con rueda de ratón',
    'desc:pt': 'Com roda do mouse',
@@ -61,8 +63,8 @@ window.nova_plugins.push({
             video.addEventListener('volumechange', function () {
                // demonstration of different values
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
-               // NOVA.triggerHUD(movie_player.getVolume() + '%');
-               NOVA.triggerHUD(Math.round(this.volume * 100) + '%');
+               // NOVA.triggerOSD(movie_player.getVolume() + '%');
+               NOVA.triggerOSD(Math.round(this.volume * 100) + '%');
                playerVolume.buildVolumeSlider();
 
                if (user_settings.volume_mute_unsave) {
@@ -139,12 +141,15 @@ window.nova_plugins.push({
                      }, { capture: true });
                   });
             }
+
             // init volume_default
-            if (+user_settings.volume_default) {
-               playerVolume.set(+user_settings.volume_default);
-               // (user_settings.volume_unlimit || +user_settings.volume_default > 100)
-               //    ? playerVolume.unlimit(+user_settings.volume_default)
-               //    : playerVolume.set(+user_settings.volume_default);
+            if (defaultLevel = +user_settings.volume_default) {
+               // console.debug('defaultLevel:', defaultLevel);
+               video.addEventListener('canplay', () => {
+                  (defaultLevel > 100 /*&& user_settings.volume_unlimit*/)
+                     ? playerVolume.unlimit(defaultLevel)
+                     : playerVolume.set(defaultLevel);
+               }, { capture: true, once: true });
             }
 
             // custom volume from [save-channel-state] plugin
@@ -161,6 +166,7 @@ window.nova_plugins.push({
          });
 
 
+      // alt - https://greasyfork.org/en/scripts/420723-youtube-better-player
       const playerVolume = {
          adjust(delta) {
             const level = movie_player?.getVolume() + +delta;
@@ -168,7 +174,7 @@ window.nova_plugins.push({
          },
 
          set(level = 50) {
-            if (typeof movie_player === 'undefined' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
+            if (typeof movie_player !== 'object' || !movie_player.hasOwnProperty('getVolume')) return console.error('Error getVolume');
 
             const newLevel = Math.max(0, Math.min(100, +level));
 
@@ -211,19 +217,20 @@ window.nova_plugins.push({
          },
 
          unlimit(level = 300) {
+            // console.debug('unlimit:', level);
             if (level > 100) {
                if (!this.audioCtx) {
                   this.audioCtx = new AudioContext();
                   const source = this.audioCtx.createMediaElementSource(NOVA.videoElement);
                   this.node = this.audioCtx.createGain();
-                  this.node.gain.value = 1;
+                  this.node.gain.value = ~~(level / 100);
                   source.connect(this.node);
                   this.node.connect(this.audioCtx.destination);
                }
 
                if (this.node.gain.value < 7) this.node.gain.value += 1; // 7(700%) max
 
-               NOVA.triggerHUD(movie_player.getVolume() * this.node.gain.value + '%');
+               NOVA.triggerOSD(movie_player.getVolume() * this.node.gain.value + '%');
                // this.buildVolumeSlider();
             }
             else {
@@ -234,12 +241,11 @@ window.nova_plugins.push({
             }
             // console.debug('unlimit', this.node.gain.value);
          },
-         // alt1 - https://greasyfork.org/en/scripts/420723-youtube-better-player
-         // alt2 - https://greasyfork.org/en/scripts/479475-youtube-display-current-volume
+         // alt - https://greasyfork.org/en/scripts/479475-youtube-display-current-volume
          buildVolumeSlider(timeout_ms = 800) {
             if (volumeArea = movie_player?.querySelector('.ytp-volume-area')) {
                // reset hide
-               if (typeof this.showTimeout === 'number') clearTimeout(this.showTimeout);
+               if (typeof this.showTimeout === 'number') clearTimeout(this.showTimeout); // reset timeout
                // show
                volumeArea.dispatchEvent(new Event('mouseover', { bubbles: true }));
                // hide
@@ -298,6 +304,7 @@ window.nova_plugins.push({
          'label:zh': '默认音量',
          'label:ja': 'デフォルトのボリューム',
          // 'label:ko': '기본 볼륨',
+         // 'label:vi': '',
          // 'label:id': 'Tingkat default',
          // 'label:es': 'Volumen predeterminado',
          'label:pt': 'Volume padrão',
@@ -310,10 +317,10 @@ window.nova_plugins.push({
          type: 'number',
          title: '0 - auto',
          placeholder: '%',
-         step: 1,
+         step: 5,
          min: 0,
-         max: 100,
-         // max: 600,
+         // max: 100,
+         max: 600, // to playerVolume.unlimit
          value: 100,
       },
       volume_hotkey: {
@@ -322,6 +329,7 @@ window.nova_plugins.push({
          'label:zh': '热键',
          'label:ja': 'ホットキー',
          // 'label:ko': '단축키',
+         // 'label:vi': '',
          // 'label:id': 'Tombol pintas',
          // 'label:es': 'Tecla de acceso rápido',
          'label:pt': 'Tecla de atalho',
@@ -332,7 +340,7 @@ window.nova_plugins.push({
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',
          options: [
-            { label: 'none', /*value: false*/ },
+            { label: 'none', value: false },
             { label: 'wheel', value: 'none', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
@@ -346,6 +354,7 @@ window.nova_plugins.push({
          'label:zh': '步',
          'label:ja': 'ステップ',
          // 'label:ko': '단계',
+         // 'label:vi': '',
          // 'label:id': 'Melangkah',
          // 'label:es': 'Paso',
          'label:pt': 'Degrau',
@@ -360,6 +369,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -383,6 +393,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -442,6 +453,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -504,6 +516,7 @@ window.nova_plugins.push({
          'label:zh': '不保存静音模式',
          'label:ja': 'マナーモードを保存しない',
          // 'label:ko': '무음 모드를 저장하지 않음',
+         // 'label:vi': '',
          // 'label:id': 'Jangan simpan mode senyap',
          // 'label:es': 'No guarde el modo silencioso',
          'label:pt': 'Não salve o modo silencioso',
@@ -518,6 +531,7 @@ window.nova_plugins.push({
          'title:zh': '只影响新标签',
          'title:ja': '新しいタブにのみ影響します',
          // 'title:ko': '새 탭에만 영향',
+         // 'title:vi': '',
          // 'title:id': 'Hanya memengaruhi tab baru',
          // 'title:es': 'Solo afecta a las pestañas nuevas',
          'title:pt': 'Afeta apenas novas guias',
@@ -535,6 +549,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -549,6 +564,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -565,6 +581,7 @@ window.nova_plugins.push({
          'label:zh': '允许超过 100%',
          'label:ja': '100％以上を許可する',
          // 'label:ko': '100% 이상 허용',
+         // 'label:vi': '',
          // 'label:id': 'Izinkan di atas 100%',
          // 'label:es': 'Permitir por encima del 100%',
          'label:pt': 'Permitir acima de 100%',
@@ -580,6 +597,7 @@ window.nova_plugins.push({
          // 'title:zh': '允许设定音量高于 100%',
          // 'title:ja': '100％を超える設定ボリュームを許可する',
          // 'title:ko': '100% 이상의 설정 볼륨 허용',
+         // 'title:vi': '',
          // 'title:id': 'izinkan volume yang disetel di atas 100%',
          // 'title:es': 'permitir el volumen establecido por encima del 100%',
          // 'title:pt': 'permitir volume definido acima de 100%',
@@ -589,6 +607,7 @@ window.nova_plugins.push({
          // 'title:de': 'eingestellte Lautstärke über 100% zulassen',
          // 'title:pl': 'zezwala ustawić powyżej 100%',
          // 'title:ua': 'Дозволити встановити звук більше 100%',
+         'data-dependent': { 'volume_hotkey': ['!false'] },
       },
    }
 });

@@ -17,6 +17,7 @@ window.nova_plugins.push({
    'title:zh': '视频质量',
    'title:ja': 'ビデオ品質',
    // 'title:ko': '비디오 품질',
+   // 'title:vi': '',
    // 'title:id': 'Kualitas video',
    // 'title:es': 'Calidad de video',
    'title:pt': 'Qualidade de vídeo',
@@ -175,13 +176,13 @@ window.nova_plugins.push({
             //    console.info(`no has selectedQuality: "${selectedQuality}". Choosing instead the top-most quality available "${newQuality}" of ${JSON.stringify(availableQualityLevels)}`);
             // }
 
-            if (movie_player.hasOwnProperty('setPlaybackQuality')) {
+            if (typeof movie_player.setPlaybackQuality === 'function') {
                // console.debug('use setPlaybackQuality');
                movie_player.setPlaybackQuality(newQuality);
             }
 
             // set QualityRange
-            if (movie_player.hasOwnProperty('setPlaybackQualityRange')) {
+            if (typeof movie_player.setPlaybackQualityRange === 'function') {
                // console.debug('use setPlaybackQualityRange');
                movie_player.setPlaybackQualityRange(newQuality, newQuality);
             }
@@ -214,9 +215,9 @@ window.nova_plugins.push({
          const qualityMenuButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"]:last-child`);
          qualityMenuButton.click(); // open
          // Strategy 1
-         // const qualityItem = [...document.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
-         // const qualityItem = [...document.querySelectorAll('.ytp-quality-menu .ytp-menuitem[role="menuitemradio"]:has(.ytp-premium-label)')]
-         const qualityItem = [...document.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]')]
+         // const qualityItem = [...document.body.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
+         // const qualityItem = [...document.body.querySelectorAll('.ytp-quality-menu .ytp-menuitem[role="menuitemradio"]:has(.ytp-premium-label)')]
+         const qualityItem = [...document.body.querySelectorAll('.ytp-quality-menu [role="menuitemradio"]')]
             .find(menuItem => menuItem.textContent.includes(qualityLabel));
          // Strategy 2
          // const qualityItem = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
@@ -229,8 +230,8 @@ window.nova_plugins.push({
          // player.removeEventListener('onStateChange', setQuality1);
 
          // unfocused
-         document.querySelector('body').click();
-         document.querySelector('video').focus();
+         document.body.querySelector('body').click();
+         document.body.querySelector('video').focus();
          // }
 
          setQuality.quality_lock = true;
@@ -257,6 +258,7 @@ window.nova_plugins.push({
          'label:zh': '默认视频质量',
          'label:ja': 'デフォルトのビデオ品質',
          // 'label:ko': '기본 비디오 품질',
+         // 'label:vi': '',
          // 'label:id': 'Kualitas bawaan',
          // 'label:es': 'Calidad predeterminada',
          'label:pt': 'Qualidade padrão',
@@ -289,6 +291,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -304,10 +307,12 @@ window.nova_plugins.push({
       video_quality_manual_save_in_tab: {
          _tagName: 'input',
          // label: 'Manually selected qualities are saved in the current tab' // too much long
-         label: 'Save manually selected for the same tab',
+         // label: 'Save manually selected for the same tab',
+         label: 'Save manual selection for next video',
          'label:zh': '手动选择的质量保存在当前选项卡中',
          'label:ja': '手動で選択した品質が現在のタブに保存されます',
          // 'label:ko': '동일한 탭에 대해 수동으로 선택한 저장',
+         // 'label:vi': '',
          // 'label:id': 'Simpan dipilih secara manual untuk tab yang sama',
          // 'label:es': 'Guardar seleccionado manualmente para la misma pestaña',
          'label:pt': 'Salvar selecionado manualmente para a mesma guia',
@@ -322,6 +327,7 @@ window.nova_plugins.push({
          'title:zh': '对下一个视频的影响',
          'title:ja': '次の動画への影響',
          // 'title:ko': '다음 동영상에 영향',
+         // 'title:vi': '',
          // 'title:id': 'Mempengaruhi video berikutnya',
          // 'title:es': 'Afecta a los siguientes videos',
          'title:pt': 'Afeta para os próximos vídeos',
@@ -338,6 +344,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -351,6 +358,7 @@ window.nova_plugins.push({
          'title:zh': '节省流量/提高速度',
          'title:ja': 'トラフィックを節約/速度を上げる',
          // 'title:ko': '트래픽 절약 / 속도 향상',
+         // 'title:vi': '',
          // 'title:id': 'untuk menghemat lalu lintas / meningkatkan kecepatan',
          // 'title:es': 'para ahorrar tráfico / aumentar la velocidad',
          'title:pt': 'para economizar tráfego / aumentar a velocidade',
@@ -382,6 +390,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -395,6 +404,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

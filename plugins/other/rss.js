@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '添加 RSS 提要链接',
    'title:ja': 'RSSフィードリンクを追加',
    // 'title:ko': 'RSS 피드 링크 추가',
+   // 'title:vi': '',
    // 'title:id': 'Tambahkan tautan Umpan RSS',
    // 'title:es': 'Agregar enlace de fuente RSS',
    'title:pt': 'Adicionar link de feed RSS',
@@ -51,7 +52,7 @@ window.nova_plugins.push({
                      container = document.body.querySelector('#channel-header #inner-header-container #buttons');
                   }
 
-                  if (url = (document.querySelector('link[type="application/rss+xml"][href]')?.href
+                  if (url = (document.head.querySelector('link[type="application/rss+xml"][href]')?.href
                      || genChannelURL(NOVA.getChannelId(user_settings['user-api-key'])))
                   ) {
                      insertToHTML({ 'url': url, 'container': container });

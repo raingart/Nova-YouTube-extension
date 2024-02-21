@@ -25,7 +25,6 @@ const Plugins = {
       // 'player/autopause.js',
       // 'player/fullscreen-on-playback.js',
       // 'player/-thumb-pause.js',
-      // 'player/scrollbar-hide.js',
       // 'player/subtitle-lang.js',
       // 'player/next-autoplay.js',
       // 'player/block-embed.js',
@@ -43,6 +42,7 @@ const Plugins = {
       'control-panel/save-for-channel.js',
       'control-panel/time-remaining.js',
       'control-panel/live-duration.js',
+      'control-panel/download-video.js',
 
       'thumbs/block-title.js',
       'thumbs/block-channel.js',
@@ -50,6 +50,7 @@ const Plugins = {
       'thumbs/preview-clear.js',
       'thumbs/title-normalize.js',
       'thumbs/watched.js',
+      'thumbs/not-interested.js',
       'thumbs/watch-later.js',
       'thumbs/row-count.js',
       // 'thumbs/shorts-time.js',
@@ -59,6 +60,7 @@ const Plugins = {
       // 'thumbs/sort.js',
       // 'thumbs/sort.js',
 
+      'other/scrollbar-hide.js',
       'other/title-time.js',
       'other/collapse-navigation-panel.js',
       'other/channel-trailer-stop.js',
@@ -67,6 +69,7 @@ const Plugins = {
       'other/pages-clear.js',
       'other/rss.js',
       'other/scroll-to-top.js',
+      'other/copy-url.js',
       'other/shorts-redirect.js',
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
@@ -80,11 +83,11 @@ const Plugins = {
       'details/description-expand.js',
       'details/description-popup.js',
       'details/transcript.js',
+      'details/video-title-hashtag.js',
       'details/metadata-hide.js',
       'details/timestamps-scroll.js',
       'details/redirect-clear.js',
       'details/save-to-playlist.js',
-      // 'details/download-video.js',
 
       'comments/visibility.js',
       'comments/square-avatars.js',
@@ -115,11 +118,6 @@ const Plugins = {
    // for test
    // list: [
    //    // 'plugin_example.js'
-   //    // 'header/test.js',
-   //    // 'player/test.js',
-   //    // 'sidebar/test.js',
-   //    // 'comments/test.js',
-   //    // 'other/test.js',
    // ],
 
    load(list) {
@@ -276,7 +274,10 @@ const Plugins = {
       function identifyCurrentPage(page = 'home', channel_tab) {
          switch (page) {
             case '': page = 'home'; break;
-            case 'live_chat': page = 'live_chat'; break;
+
+            case 'live_chat':
+            case 'live_chat_replay':
+               page = 'live_chat'; break;
 
             // channel
             case 'channel':

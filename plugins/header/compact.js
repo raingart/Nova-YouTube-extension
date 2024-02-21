@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '标题紧凑',
    'title:ja': 'ヘッダーコンパクト',
    // 'title:ko': '헤더 컴팩트',
+   // 'title:vi': '',
    // 'title:id': 'Kompak tajuk',
    // 'title:es': 'Encabezado compacto',
    'title:pt': 'Cabeçalho compacto',

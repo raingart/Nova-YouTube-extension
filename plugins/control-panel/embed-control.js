@@ -7,6 +7,7 @@ window.nova_plugins.push({
    'title:zh': '埋め込みでコントロール パネルを強制的に有効にする',
    'title:ja': '强制启用嵌入的控制面板',
    // 'title:ko': '임베디드에서 강제 활성화 제어판',
+   // 'title:vi': '',
    // 'title:id': 'Paksa aktifkan panel kontrol di sematan',
    // 'title:es': 'Forzar habilitar el panel de control en incrustar',
    'title:pt': 'Forçar ativação do painel de controle na incorporação',

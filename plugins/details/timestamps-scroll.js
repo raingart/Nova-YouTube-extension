@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:zh': '没有在时间戳上滚动到播放器',
    'title:ja': 'タイムスタンプでプレーヤーにスクロールしない',
    // 'title:ko': '타임스탬프에서 플레이어로 스크롤하지 않음',
+   // 'title:vi': '',
    // 'title:id': 'Tidak ada gulir ke pemain pada stempel waktu',
    // 'title:es': 'Sin desplazamiento al jugador en marcas de tiempo',
    'title:pt': 'Sem rolar para o jogador em timestamps',
@@ -24,6 +25,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -33,7 +35,7 @@ window.nova_plugins.push({
    // 'title:de': '',
    'desc:pl': 'Wyłącza przewijanie do odtwarzacza podczas klikania znaczników czasu',
    'desc:ua': 'Вимикає прокрутку до відтворювача при натисканні на часову мітку',
-   // 'data-conflict': 'description-popup',
+   // 'plugins-conflict': 'description-popup',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/438943-youtube-no-scroll-to-top-on-timestamps

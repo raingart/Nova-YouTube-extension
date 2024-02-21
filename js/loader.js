@@ -1,6 +1,7 @@
 const App = {
    prevURL: document.URL,
 
+   // onUrlChange
    isURLChanged() {
       return (this.prevURL == document.URL) ? false : this.prevURL = document.URL;
    },
@@ -49,6 +50,7 @@ const App = {
       }
 
       // for test
+      // document.documentElement.addEventListener('load', () => console.debug('documentElement-load'));
       // document.addEventListener('yt-navigate-start', () => console.debug('yt-navigate-start'));
       // document.addEventListener('yt-navigate-finish', () => console.debug('yt-navigate-finish'));
       // document.addEventListener('yt-page-data-updated', () => console.debug('yt-page-data-updated'));

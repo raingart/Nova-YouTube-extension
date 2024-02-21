@@ -107,8 +107,8 @@ const Opt = {
                      <div class="opt">
                         <input type="checkbox" name="${plugin.id}" id="${plugin.id}" />
                      </div>`;
-                  if (plugin.hasOwnProperty('data-conflict')) {
-                     li.querySelector('input').setAttribute('data-conflict', plugin['data-conflict']);
+                  if (plugin.hasOwnProperty('plugins-conflict')) {
+                     li.querySelector('input').setAttribute('plugins-conflict', plugin['plugins-conflict']);
                   }
 
                   if (plugin.options) {
@@ -489,7 +489,7 @@ window.addEventListener('load', () => {
    }
 
    function pluginConflictDisable() {
-      const attributeName = 'data-conflict';
+      const attributeName = 'plugins-conflict';
       document.body.querySelectorAll(`[${attributeName}]`)
          .forEach(targetEl => {
             // console.debug('targetEl', targetEl);

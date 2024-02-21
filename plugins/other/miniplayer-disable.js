@@ -8,6 +8,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -24,6 +25,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -85,6 +87,7 @@ window.nova_plugins.push({
       // document.addEventListener('keydown', ({ key }) => {
       document.addEventListener('keydown', evt => {
          if (['input', 'textarea'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+         if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
 
          if (NOVA.currentPage == 'watch' && evt.code === 'KeyI') {
             // if (NOVA.currentPage == 'watch' && (evt.key === 'i' || evt.keyCode === 73)) {

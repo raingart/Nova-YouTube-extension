@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '折叠导航面板',
    'title:ja': 'ナビゲーション パネルを折りたたむ',
    // 'title:ko': '탐색 패널 접기',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': 'Contraer panel de navegación',
    'title:pt': 'Recolher painel de navegação',

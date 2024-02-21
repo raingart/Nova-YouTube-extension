@@ -11,6 +11,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -31,6 +32,7 @@ window.nova_plugins.push({
       // alt1 - https://github.com/afreakk/greasemonkeyscripts/blob/master/youtube_sponsorblock.js
       // alt2 - https://codeberg.org/mthsk/userscripts/src/branch/master/simple-sponsor-skipper
       // alt3 - https://github.com/mchangrh/sb.js/blob/main/docs/sb.user.js
+      // alt4 - https://chromewebstore.google.com/detail/mnjggcdmjocbbbhaepdhchncahnbgone
 
       NOVA.waitSelector('#movie_player video')
          .then(video => {
@@ -155,9 +157,11 @@ window.nova_plugins.push({
                }
 
                function novaNotification(prefix = '') {
+                  if (!user_settings.sponsor_block_notification) return;
+
                   const msg = `${prefix} [${categoryNameLabel[category]}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
-                  NOVA.triggerHUD(msg); // trigger default indicator
+                  NOVA.triggerOSD(msg); // trigger default indicator
                }
 
             });
@@ -223,7 +227,7 @@ window.nova_plugins.push({
                {
                   method: 'GET', // *GET, POST, PUT, DELETE, etc.
                   // mode: 'no-cors', // no-cors, *cors, same-origin
-                  headers: { 'Content-Type': 'application/json' } // 'Content-Type': 'application/x-www-form-urlencoded',
+                  headers: { 'Content-Type': 'application/json' }, // 'Content-Type': 'application/x-www-form-urlencoded',
                }
             )
                // .then(response => response.text())
@@ -242,7 +246,7 @@ window.nova_plugins.push({
                )
                .catch(error => {
                   // mute console warn
-                  // console.warn(`Sponsorblock: failed fetching skipSegments for ${ videoId }, reason: ${ error } `)
+                  // console.warn(`Sponsorblock: failed fetching skipSegments for ${videoId}, reason: ${error}`);
                });
 
             if (result = await fetchAPI()) {
@@ -257,6 +261,43 @@ window.nova_plugins.push({
          }
       }
 
+      // alt
+      // test https://www.youtube.com/watch?v=9Yhc6mmdJC4
+      // async function getSkipSegments(videoId = required()) {
+      //    const fetchAPI = () => fetch(`https://model.sponsor-skipper.com/getSponsorChaptersFor?videoID=${videoId}`,
+      //       {
+      //          method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      //          mode: 'no-cors', // no-cors, *cors, same-origin
+      //          headers: { 'Content-Type': 'application/json' }, // 'Content-Type': 'application/x-www-form-urlencoded',
+      //       }
+      //    )
+      //       .then(response => response.json())
+      //       // {
+      //       //    "sponsored_chapters":[
+      //       //       {"end_time_sec":146.4,"start_time_sec":104.56}
+      //       //    ],"videoID":""
+      //       // }
+      //       .then(json => json?.sponsored_chapters.map(o => ({
+      //          'segmentStart': o.start_time_sec,
+      //          'segmentEnd': o.end_time_sec,
+      //       }))
+      //       )
+      //       .catch(error => {
+      //          // mute console warn
+      //          console.warn(`sponsor-skipper: failed fetching skipSegments for ${videoId}, reason: ${error}`);
+      //       });
+
+      //    if (result = await fetchAPI()) {
+      //       // console.debug('result sponsor', result
+      //       //    // , (user_settings.sponsor_block_url || 'https://sponsor.ajay.app') + `/api/skipSegments?${query}`
+      //       // );
+      //       if (navigator.cookieEnabled) {
+      //          sessionStorage.setItem(CACHE_PREFIX + videoId, JSON.stringify(result));
+      //       }
+      //       return result;
+      //    }
+      // }
+
    },
    options: {
       sponsor_block_category: {
@@ -265,6 +306,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -278,6 +320,7 @@ window.nova_plugins.push({
          'title:zh': '[Ctrl+Click] 选择多个',
          'title:ja': '「Ctrl+Click」して、いくつかを選択します',
          // 'title:ko': '[Ctrl+Click] 여러 선택',
+         // 'title:vi': '',
          // 'title:id': '[Ctrl+Klik] untuk memilih beberapa',
          // 'title:es': '[Ctrl+Click] para seleccionar varias',
          'title:pt': '[Ctrl+Click] para selecionar vários',
@@ -296,6 +339,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -311,6 +355,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -326,6 +371,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -341,6 +387,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -356,6 +403,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -371,6 +419,7 @@ window.nova_plugins.push({
             //    // 'label:zh': '',
             //    // 'label:ja': '',
             //    // 'label:ko': '',
+            //    // 'label:vi': '',
             //    // 'label:id': '',
             //    // 'label:es': '',
             //    // 'label:pt': '',
@@ -386,6 +435,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -401,6 +451,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -416,6 +467,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -431,6 +483,7 @@ window.nova_plugins.push({
             //    // 'label:zh': '',
             //    // 'label:ja': '',
             //    // 'label:ko': '',
+            //    // 'label:vi': '',
             //    // 'label:id': '',
             //    // 'label:es': '',
             //    // 'label:pt': '',
@@ -449,6 +502,7 @@ window.nova_plugins.push({
          'label:zh': '模式',
          'label:ja': 'モード',
          // 'label:ko': '방법',
+         // 'label:vi': '',
          // 'label:id': 'Mode',
          // 'label:es': 'Modo',
          'label:pt': 'Modo',
@@ -465,6 +519,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -480,6 +535,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -495,6 +551,7 @@ window.nova_plugins.push({
             //    // 'label:zh': '',
             //    // 'label:ja': '',
             //    // 'label:ko': '',
+            //    // 'label:vi': '',
             //    // 'label:id': '',
             //    // 'label:es': '',
             //    // 'label:pt': '',
@@ -510,6 +567,7 @@ window.nova_plugins.push({
             //    // 'label:zh': '',
             //    // 'label:ja': '',
             //    // 'label:ko': '',
+            //    // 'label:vi': '',
             //    // 'label:id': '',
             //    // 'label:es': '',
             //    // 'label:pt': '',
@@ -531,6 +589,25 @@ window.nova_plugins.push({
          placeholder: 'https://youtube.com/...',
          value: 'https://sponsor.ajay.app',
          required: true,
+      },
+      sponsor_block_notification: {
+         _tagName: 'input',
+         label: 'Showing OSD Notification',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
       },
    }
 });

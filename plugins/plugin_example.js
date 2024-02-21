@@ -13,7 +13,7 @@ window.nova_plugins.push({
    // minus in front denotes an exception
    // exclude page from launch:
    // https://www.youtube.com/embed/*** <-- -embed
-   run_on_pages: '*, home, results, feed, channel, watch, -embed, -live_chat',
+   run_on_pages: '*, home, results, feed, channel, playlist, watch, -embed, -live_chat',
 
    // deactivate if use NOVA.HTMLElement.watch
    restart_on_location_change: true, // optional. Restart plugin on every url change
@@ -23,12 +23,13 @@ window.nova_plugins.push({
    opt_api_key_warn: true, // optional. Graphical indicator in the settings depending on the api key
    desc: 'Title description', // optional. Plugin description in settings. Don't use double quotes inside the text!
 
-   'data-conflict': 'plugin-id, plugin-id2, ...', // mark plugins with which the current plugin conflicts
+   'plugins-conflict': 'plugin-id, plugin-id2, ...', // mark plugins with which the current plugin conflicts
 
    // localization
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -42,6 +43,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -119,6 +121,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -133,6 +136,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '禁用全屏滚动',
    'title:ja': 'フルスクリーンスクロールを無効にする',
    // 'title:ko': '전체 화면 스크롤 비활성화',
+   // 'title:vi': '',
    // 'title:id': 'Nonaktifkan pengguliran pemain dalam mode layar penuh',
    // 'title:es': 'Desactivar el desplazamiento a pantalla completa',
    'title:pt': 'Desabilitar rolagem em tela cheia',
@@ -26,7 +27,7 @@ window.nova_plugins.push({
       document.addEventListener('fullscreenchange', () => {
          document.fullscreenElement
             ? document.addEventListener('wheel', lockscroll, { passive: false })
-            : document.removeEventListener('wheel', lockscroll)
+            : document.removeEventListener('wheel', lockscroll);
       });
 
       function lockscroll(evt) {

@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:zh': '自动暂停除活动选项卡以外的所有选项卡',
    'title:ja': 'アクティブなタブを除くすべてのタブを自動一時停止',
    // 'title:ko': '활성 탭을 제외한 모든 탭 자동 일시 중지',
+   // 'title:vi': '',
    // 'title:id': 'Jeda otomatis semua tab latar belakang kecuali yang aktif',
    // 'title:es': 'Pausar automáticamente todas las pestañas excepto la activa',
    'title:pt': 'Pausar automaticamente todas as guias, exceto a ativa',
@@ -25,6 +26,7 @@ window.nova_plugins.push({
    // 'desc:zh': '支持 iframe 和其他窗口',
    // 'desc:ja': 'iframeやその他のウィンドウをサポート',
    // 'desc:ko': 'iframe 및 기타 창 지원',
+   // 'desc:vi': '',
    // 'desc:id': 'Mendukung iframe dan jendela lainnya',
    // 'desc:es': 'Soporta iframes y otras ventanas',
    // 'desc:pt': 'Suporta iframes e outras janelas',
@@ -201,7 +203,7 @@ window.nova_plugins.push({
       //             console.debug('exitPictureInPicture');
       //             // video.disablePictureInPicture = true;
       //             // setTimeout(() => video.disablePictureInPicture = false, 1000 * 2);
-      //             // clearTimeout(timeoutPiP);
+      //             // clearTimeout(timeoutPiP); // reset timeout
       //             return document.exitPictureInPicture();
       //          }
       //          // tab unfocus - enable PiP
@@ -278,6 +280,7 @@ window.nova_plugins.push({
       //    'label:zh': '在标签焦点上自动播放',
       //    'label:ja': 'タブフォーカスでの自動再生',
       //    'label:ko': '탭 포커스에서 자동 재생',
+      //    'label:vi': '',
       //    'label:id': 'Putar otomatis pada fokus tab',
       //    'label:es': 'Reproducción automática en el enfoque de la pestaña',
       //    'label:pt': 'Reprodução automática no foco da guia',
@@ -296,6 +299,7 @@ window.nova_plugins.push({
          'label:zh': '在标签焦点上自动播放',
          'label:ja': 'タブフォーカスでの自動再生',
          // 'label:ko': '탭 포커스에서 자동 재생',
+         // 'label:vi': '',
          // 'label:id': 'Putar otomatis pada fokus tab',
          // 'label:es': 'Reproducción automática en el enfoque de la pestaña',
          'label:pt': 'Reprodução automática no foco da guia',
@@ -311,6 +315,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -326,6 +331,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -341,6 +347,7 @@ window.nova_plugins.push({
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
+               // 'label:vi': '',
                // 'label:id': '',
                // 'label:es': '',
                // 'label:pt': '',
@@ -359,6 +366,7 @@ window.nova_plugins.push({
          'label:zh': '如果选项卡失去焦点，则自动暂停视频',
          'label:ja': 'タブがフォーカスを失った場合にビデオを自動一時停止',
          // 'label:ko': '탭이 초점을 잃으면 비디오 자동 일시 중지',
+         // 'label:vi': '',
          // 'label:id': 'Jeda otomatis video jika tab kehilangan fokus',
          // 'label:es': 'Pausa automática del video si la pestaña pierde el foco',
          'label:pt': 'Pausar automaticamente o vídeo se a guia perder o foco',

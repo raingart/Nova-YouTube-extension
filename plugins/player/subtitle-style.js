@@ -9,6 +9,7 @@ window.nova_plugins.push({
    'title:zh': '字幕样式',
    'title:ja': '字幕スタイル',
    // 'title:ko': '자막 스타일',
+   // 'title:vi': '',
    // 'title:id': 'Gaya subtitel',
    // 'title:es': 'Estilo de subtítulos',
    'title:pt': 'estilo de legenda',
@@ -21,7 +22,7 @@ window.nova_plugins.push({
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
    // desc: '',
-   _runtime: user_settings => {
+   _runtime: async user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/458161-youtube-subtitle-caption-stylish
       // alt2 - https://chrome.google.com/webstore/detail/oanhbddbfkjaphdibnebkklpplclomal
@@ -35,6 +36,7 @@ window.nova_plugins.push({
       // dual subtitle
       // https://chromewebstore.google.com/detail/youtube-dual-subtitles/hkbdddpiemdeibjoknnofflfgbgnebcm
       // https://greasyfork.org/en/scripts/464879-youtube-dual-subtitle
+      // translate subtitle inside in the video - https://greasyfork.org/en/scripts/482236-youtube-subtitle-pc-version - (test - https://www.youtube.com/watch?v=4_YTgbH2xps)
 
       // alt caption style
       // const storeName = 'yt-player-caption-display-settings';
@@ -49,6 +51,9 @@ window.nova_plugins.push({
       // localStorage.setItem(storeName, JSON.stringify(
       //    Object.assign({ fontSizeIncrement: 1, color: '#ff0' }, obj.data)
       // ));
+
+      // reset style
+      // movie_player.resetSubtitlesUserSettings();
 
       const SELECTOR = '.ytp-caption-segment';
 
@@ -125,7 +130,7 @@ window.nova_plugins.push({
                font-size: calc(32px * ${+user_settings.subtitle_font_size || 1}) !important;
             }`);
          // Strategy 2. API
-         // NOVA.waitUntil(() => movie_player.hasOwnProperty('getSubtitlesUserSettings'), 1000) // 1sec
+         // NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.getSubtitlesUserSettings === 'function', 1000) // 1sec
          //    .then(() => {
          //       // settings = {
          //       //    "background": "#080808",
@@ -145,14 +150,40 @@ window.nova_plugins.push({
          //    });
       }
 
+      if (user_settings.subtitle) {
+         await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.toggleSubtitlesOn === 'function', 500); // 500ms
+         movie_player.toggleSubtitlesOn();
+      }
+
    },
    options: {
+      subtitle: {
+         _tagName: 'input',
+         // label: 'Default enabled',
+         label: 'Automatically enable the subtitles',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+      },
       subtitle_transparent: {
          _tagName: 'input',
          label: 'Transparent',
          'label:zh': '透明的',
          'label:ja': '透明',
          // 'label:ko': '투명한',
+         // 'label:vi': '',
          // 'label:id': 'Transparan',
          // 'label:es': 'Transparentes',
          'label:pt': 'Transparentes',
@@ -172,6 +203,7 @@ window.nova_plugins.push({
          'label:zh': '粗体',
          'label:ja': '太字',
          // 'label:ko': '굵은 텍스트',
+         // 'label:vi': '',
          // 'label:id': 'Teks tebal',
          // 'label:es': 'Texto en negrita',
          'label:pt': 'Texto em negrito',
@@ -190,6 +222,7 @@ window.nova_plugins.push({
          'label:zh': '从下方固定',
          'label:ja': '下から固定',
          // 'label:ko': '아래에서 고정',
+         // 'label:vi': '',
          // 'label:id': 'Diperbaiki dari bawah',
          // 'label:es': 'Fijado desde abajo',
          'label:pt': 'Fixo por baixo',
@@ -204,6 +237,7 @@ window.nova_plugins.push({
          'title:zh': '暂停/恢复时防止字幕跳上/跳下',
          'title:ja': '一時停止/再開時にキャプションが上下にジャンプしないようにする',
          // 'title:ko': '일시 중지/다시 시작 시 캡션이 위/아래로 점프하는 것을 방지',
+         // 'title:vi': '',
          // 'title:id': 'Mencegah teks melompat ke atas/bawah saat menjeda/melanjutkan',
          // 'title:es': 'Evitar que los subtítulos salten hacia arriba/abajo al pausar/reanudar',
          'title:pt': 'Evitando que as legendas subam/descem ao pausar/reiniciar',
@@ -220,6 +254,7 @@ window.nova_plugins.push({
          'label:zh': '使字幕可选',
          'label:ja': '字幕を選択可能にする',
          // 'label:ko': '자막 선택 가능',
+         // 'label:vi': '',
          // 'label:id': 'Jadikan subtitle dapat dipilih',
          // 'label:es': 'Hacer subtítulos seleccionables',
          'label:pt': 'Tornar as legendas selecionáveis',
@@ -238,6 +273,7 @@ window.nova_plugins.push({
          'label:zh': '字体大小',
          'label:ja': 'フォントサイズ',
          // 'label:ko': '글꼴 크기',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': 'Tamaño de fuente',
          'label:pt': 'Tamanho da fonte',
@@ -252,6 +288,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -275,6 +312,7 @@ window.nova_plugins.push({
          'label:zh': '颜色',
          'label:ja': '色',
          // 'label:ko': '색깔',
+         // 'label:vi': '',
          // 'label:id': 'Warna',
          // 'label:es': 'Color',
          'label:pt': 'Cor',
@@ -288,6 +326,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

@@ -2,7 +2,9 @@
 // https://www.youtube.com/watch?v=dQw4w9WgXcQ - too many comments
 // https://www.youtube.com/watch?v=kXYiU_JCYtU - too many comments
 // https://www.youtube.com/watch?v=hWozHt9wbO4 - many comments
+// https://www.youtube.com/watch?v=FNez9XBzTQI - [403] The video identified by the \u003ccode\u003e\u003ca href=\"/youtube/v3/docs/commentThreads/list#videoId\"\u003evideoId\u003c/a\u003e\u003c/code\u003e parameter has disabled comments.
 
+// https://www.youtube.com/watch?v=lP4djyHSzzg - min test
 
 window.nova_plugins.push({
    id: 'comments-sort',
@@ -10,6 +12,7 @@ window.nova_plugins.push({
    'title:zh': '评论排序',
    'title:ja': 'コメントの並べ替え',
    // 'title:ko': '댓글 정렬',
+   // 'title:vi': '',
    // 'title:id': 'Mengurutkan komentar',
    // 'title:es': 'Clasificación de comentarios',
    'title:pt': 'classificação de comentários',
@@ -27,6 +30,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -99,19 +103,18 @@ window.nova_plugins.push({
                         top: 'var(--ytd-masthead-height)',
                         // right: '1em',
                         visibility: 'visible',
-                        'z-index':
-                           1 + Math.max(
-                              // getComputedStyle(menu)['z-index'],
-                              // NOVA.css.get('yt-live-chat-app', 'z-index'),
-                              NOVA.css.get('.ytp-chrome-top', 'z-index'),
-                              60),
+                        'z-index': 1 + Math.max(
+                           // getComputedStyle(menu)['z-index'],
+                           // NOVA.css.get('yt-live-chat-app', 'z-index'),
+                           NOVA.css.get('.ytp-chrome-top', 'z-index'),
+                           60),
                         'font-size': '18px',
                      }
                      : {
                         'font-size': '24px',
                         'text-decoration': 'none',
                         padding: '0 10px',
-                        background: 'transparent',
+                        'background-color': 'transparent',
                         border: 'none',
                      },
                   // common
@@ -261,6 +264,8 @@ window.nova_plugins.push({
 
          const ul = document.createElement('tbody');
 
+         const channelName = (href = document.body.querySelector('#channel-name a[href]')?.href) && new URL(href).pathname;
+
          commentList
             .sort((a, b) => b.likeCount - a.likeCount) // default sorting by number of likes
             .forEach(comment => {
@@ -272,6 +277,9 @@ window.nova_plugins.push({
                      li = document.createElement('tr');
 
                   li.className = 'item';
+                  // isAuthor
+                  if (channelName && comment.authorChannelUrl.includes(channelName)) li.classList.add('author');
+
                   li.innerHTML =
                      `<td>${comment.likeCount}</td>
                      <td sorttable_customkey="${comment.totalReplyCount}" class="nova-switch">
@@ -319,6 +327,8 @@ window.nova_plugins.push({
 
                            const li = document.createElement('tr');
                            // li.className = 'item';
+                           // isAuthor
+                           if (channelName && reply.snippet.authorChannelUrl.includes(channelName)) li.classList.add('author');
                            li.innerHTML =
                               `<td>
                                  <a href="${reply.snippet.authorChannelUrl}" target="_blank" title="${reply.snippet.authorDisplayName}">
@@ -402,6 +412,31 @@ window.nova_plugins.push({
 
          // add sort event
          connectSortable().makeSortable(document.body.querySelector('table.sortable'));
+
+         // scroll to top on sorting
+         // document.body.querySelector(`#${MODAL_CONTENT_SELECTOR_ID} table.sortable thead`)
+         document.body.querySelector(`table.sortable thead`)
+            .addEventListener('click', ({ target }) => {
+               if (['input', 'textarea', 'select'].includes(target.localName) || target.isContentEditable) return;
+
+               // new MutationObserver((mutationRecordsArray, observer) => {
+               //    mutationRecordsArray.forEach(mutation => {
+               //       // const { target } = mutation;
+               //       // .sorttable_sorted OR .sorttable_sorted_reverse
+               //       if (mutation.attributeName === 'class') {
+               //          observer.disconnect();
+               //          if (containerScroll = document.body.querySelector('.modal-container')) containerScroll.scrollTop = 0;
+               //          // mutation.target.classList.contains('is-busy')
+               //       }
+               //    });
+               // })
+               //    .observe(target, {
+               //       attributes: true,
+               //       attributeFilter: ['class']
+               //    });
+
+               if (containerScroll = document.body.querySelector('.modal-container')) containerScroll.scrollTop = 0;
+            });
 
          insertFilterInput(MODAL_CONTENT_FILTER_SELECTOR_ID);
 
@@ -583,7 +618,7 @@ window.nova_plugins.push({
                background-color: mark;
 
                /* outline: 2px dashed rgba(255, 127, 127, 0.8);
-               background: transparent;
+               background-color: transparent;
                color: inherit;*/
             }`);
 
@@ -627,7 +662,7 @@ window.nova_plugins.push({
                position: fixed;
                top: 0;
                left: 0;
-               background: rgba(0, 0, 0, .8);
+               background-color: rgba(0, 0, 0, .8);
                display: flex;
                align-items: center;
                justify-content: center;
@@ -846,6 +881,14 @@ window.nova_plugins.push({
                max-width: 1200px;
                /*min-width: 450px;*/
             }
+
+            #${MODAL_CONTENT_SELECTOR_ID} tr.author {
+            }
+
+            #${MODAL_CONTENT_SELECTOR_ID} .author > td > .text-overflow-dynamic-ellipsis {
+               background-color: rgba(0, 47, 144, .2);
+            }
+
             #${MODAL_CONTENT_SELECTOR_ID} td a {
                text-decoration: none;
                color: var(--yt-spec-call-to-action);
@@ -870,6 +913,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -887,6 +931,7 @@ window.nova_plugins.push({
          'label:zh': '最少字数',
          'label:ja': '最小単語数',
          // 'label:ko': '최소 단어 수',
+         // 'label:vi': '',
          // 'label:id': '',
          'label:es': 'Recuento mínimo de palabras',
          'label:pt': 'Contagem mínima de palavras',
@@ -901,6 +946,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -922,6 +968,7 @@ window.nova_plugins.push({
          'label:zh': '被阻止的单词列表',
          'label:ja': 'ブロックされた単語のリスト',
          // 'label:ko': '단어 목록',
+         // 'label:vi': '',
          // 'label:id': 'Daftar kata',
          // 'label:es': 'lista de palabras',
          'label:pt': 'Lista de bloqueio de palavras',
@@ -935,6 +982,7 @@ window.nova_plugins.push({
          'title:zh': '分隔器： "," 或 ";" 或 "新队"',
          'title:ja': 'セパレータ： "," または ";" または "改行"',
          // 'title:ko': '구분 기호: "," 또는 ";" 또는 "새 줄"',
+         // 'title:vi': '',
          // 'title:id': 'pemisah: "," atau ";" atau "baris baru"',
          // 'title:es': 'separador: "," o ";" o "new line"',
          'title:pt': 'separador: "," ou ";" ou "new line"',

@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '修复侧边栏中的频道链接',
    'title:ja': 'サイドバーのチャネルリンクを修正',
    // 'title:ko': '사이드바에서 채널 링크 수정',
+   // 'title:vi': '',
    // 'title:id': 'Perbaiki tautan saluran di bilah sisi',
    // 'title:es': 'Arreglar enlaces de canales en la barra lateral',
    'title:pt': 'Corrigir links de canais na barra lateral',

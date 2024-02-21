@@ -8,6 +8,7 @@ window.nova_plugins.push({
    'title:zh': '停止频道预告片',
    'title:ja': 'チャンネルの予告編を停止する',
    // 'title:ko': '채널 예고편 중지',
+   // 'title:vi': '',
    // 'title:id': 'Hentikan cuplikan saluran',
    // 'title:es': 'Detener el tráiler del canal',
    'title:pt': 'Parar o trailer do canal',

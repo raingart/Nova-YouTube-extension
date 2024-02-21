@@ -14,6 +14,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -29,6 +30,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -104,6 +106,8 @@ window.nova_plugins.push({
                   if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
 
                   if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
                   if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey
                      && (maxZoomPercent = geVideoMaxWidthPercent())
                   ) {
@@ -191,7 +195,7 @@ window.nova_plugins.push({
                }
 
                // show UI notification
-               NOVA.triggerHUD(`Zoom: ${~~zoom_pt}%`);
+               NOVA.triggerOSD(`Zoom: ${~~zoom_pt}%`);
 
                // For optimozation, don`t update again
                if (zoom_pt === zoomPercent) return;
@@ -237,6 +241,7 @@ window.nova_plugins.push({
          'label:zh': '热键',
          'label:ja': 'ホットキー',
          // 'label:ko': '단축키',
+         // 'label:vi': '',
          // 'label:id': 'Tombol pintas',
          // 'label:es': 'Tecla de acceso rápido',
          'label:pt': 'Tecla de atalho',
@@ -261,6 +266,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -274,12 +280,12 @@ window.nova_plugins.push({
          options: [
             { label: '+', value: '+', selected: true },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            // { label: 'shiftL', value: 'ShiftLeft' },
+            // { label: 'shiftR', value: 'ShiftRight' },
+            // { label: 'ctrlL', value: 'ControlLeft' },
+            // { label: 'ctrlR', value: 'ControlRight' },
+            // { label: 'altL', value: 'AltLeft' },
+            // { label: 'altR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -321,6 +327,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -381,6 +388,7 @@ window.nova_plugins.push({
          'label:zh': '步',
          'label:ja': 'ステップ',
          // 'label:ko': '단계',
+         // 'label:vi': '',
          // 'label:id': 'Melangkah',
          // 'label:es': 'Paso',
          'label:pt': 'Degrau',
@@ -395,6 +403,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',
@@ -416,6 +425,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -434,6 +444,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -447,6 +458,7 @@ window.nova_plugins.push({
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
+         // 'title:vi': '',
          // 'title:id': '',
          // 'title:es': '',
          // 'title:pt': '',

@@ -7,6 +7,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -24,6 +25,7 @@ window.nova_plugins.push({
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    // 'title:pt': '',
@@ -33,12 +35,13 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    // 'title:ua': '',
-   // 'data-conflict': 'details-buttons',
+   // 'plugins-conflict': 'details-buttons',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/436115-return-youtube-dislike
       // alt2 - https://greasyfork.org/en/scripts/480949-show-youtube-like-dislike-ratios-in-video-descriptions
       // alt3 - https://greasyfork.org/en/scripts/473533-return-youtube-dislike-on-mobile
+      // alt4 - https://greasyfork.org/en/scripts/483626-youtube-pro
 
       // fix conflict with [details-buttons] plugin
       if (user_settings.details_button_no_labels
@@ -55,7 +58,7 @@ window.nova_plugins.push({
          if (NOVA.currentPage != 'watch') return;
 
          document.addEventListener('yt-action', dislikeIsUpdated);
-         // await NOVA.delay(500)
+         // await NOVA.delay(500);
          // NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
          //    .then(el => setDislikeCount(el));
       });
@@ -67,7 +70,6 @@ window.nova_plugins.push({
 
       function dislikeIsUpdated(evt) {
          if (NOVA.currentPage != 'watch') return;
-         // console.log(evt.detail?.actionName);
 
          switch (evt.detail?.actionName) {
             // case 'yt-reload-continuation-items-command':
@@ -102,7 +104,7 @@ window.nova_plugins.push({
                {
                   method: 'GET', // *GET, POST, PUT, DELETE, etc.
                   // mode: 'no-cors', // no-cors, *cors, same-origin
-                  headers: { 'Content-Type': 'application/json' } // 'Content-Type': 'application/x-www-form-urlencoded',
+                  headers: { 'Content-Type': 'application/json' }, // 'Content-Type': 'application/x-www-form-urlencoded',
                }
             )
                .then(response => response.json())

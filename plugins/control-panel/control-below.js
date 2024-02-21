@@ -4,6 +4,7 @@ window.nova_plugins.push({
    'title:zh': '控制面板位于播放器下方',
    'title:ja': 'プレーヤーの下にあるコントロールパネル',
    // 'title:ko': '',
+   // 'title:vi': '',
    // 'title:id': '',
    // 'title:es': '',
    'title:pt': 'Painel de controle abaixo do player',
@@ -19,6 +20,7 @@ window.nova_plugins.push({
    // 'desc:zh': '',
    // 'desc:ja': '',
    // 'desc:ko': '',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': '',
    // 'desc:pt': '',
@@ -34,6 +36,7 @@ window.nova_plugins.push({
       // alt2 - https://greasyfork.org/en/scripts/469704-youtube-player-controls-below-video
       // alt3 - https://greasyfork.org/en/scripts/976-youtube-right-side-description
       // alt4 - https://greasyfork.org/en/scripts/474286-always-show-the-control-bar-below-the-video
+      // alt5 - https://chromewebstore.google.com/detail/gmlbhbdkhnfhhmhdjopdbcfliajcafde
 
       // if (['cinema_mode', 'force'].includes(user_settings.player_full_viewport_mode)) return; // conflict with plugin [theater-mode]
       // if (user_settings['player-float-progress-bar']) return; // conflict with plugin [player-float-progress-bar]
@@ -139,7 +142,7 @@ window.nova_plugins.push({
          ) {
             return;
          }
-         // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset interval
+         // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset timeout
          // const moveMouse = new Event('mousemove');
          // this.mouseMoveIntervalId = setInterval(() => {
          return setInterval(() => {

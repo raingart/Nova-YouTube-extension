@@ -1,36 +1,47 @@
+// for test:
+// https://www.youtube.com/watch?v=hYHb7rltxrE
+
 window.nova_plugins.push({
-   id: 'comments-visibility',
-   title: 'Collapse comments section',
-   'title:zh': '收起评论区',
-   'title:ja': 'コメント欄を折りたたむ',
-   // 'title:ko': '댓글 섹션 축소',
+   id: 'video-title-hashtag',
+   title: 'Title hashtag',
+   // 'title:zh': '',
+   // 'title:ja': '',
+   // 'title:ko': '',
    // 'title:vi': '',
-   // 'title:id': 'Ciutkan bagian komentar',
-   // 'title:es': 'Ocultar sección de comentarios',
-   'title:pt': 'Recolher seção de comentários',
-   'title:fr': 'Réduire la section des commentaires',
-   // 'title:it': 'Comprimi la sezione commenti',
-   // 'title:tr': 'Yorumlar bölümünü daralt',
-   'title:de': 'Kommentarbereich minimieren',
-   'title:pl': 'Zwiń sekcję komentarzy',
-   'title:ua': 'Згорнути розділ коментарів',
-   run_on_pages: 'watch, -mobile',
-   restart_on_location_change: true,
-   section: 'comments',
+   // 'title:id': '',
+   // 'title:es': '',
+   // 'title:pt': '',
+   // 'title:fr': '',
+   // 'title:it': '',
+   // 'title:tr': '',
+   // 'title:de': '',
+   // 'title:pl': '',
+   // 'title:ua': '',
+   run_on_pages: 'watch',
+   section: 'details',
    // desc: '',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/425221-youtube-hide-video-comments
+      let cssObj = {};
 
-      NOVA.collapseElement({
-         selector: '#comments',
-         label: 'comments',
-         remove: (user_settings.comments_visibility_mode == 'disable') ? true : false,
-      });
+      switch (user_settings.title_hashtag_visibility_mode) {
+         case 'uncolorize':
+            cssObj['color'] = 'var(--yt-endpoint-color, var(--yt-spec-text-primary))';
+            break;
+
+         // case 'hide':
+         default:
+            cssObj['display'] = 'none';
+            break;
+      }
+
+      if (Object.keys(cssObj).length) {
+         NOVA.css.push(cssObj, 'h1 a[href*="/hashtag/"]', 'important');
+      }
 
    },
    options: {
-      comments_visibility_mode: {
+      title_hashtag_visibility_mode: {
          _tagName: 'select',
          label: 'Mode',
          'label:zh': '模式',
@@ -41,14 +52,14 @@ window.nova_plugins.push({
          // 'label:es': 'Modo',
          'label:pt': 'Modo',
          // 'label:fr': 'Mode',
-         // 'label:it': 'Modalità',
+         // 'label:it': 'Mode',
          // 'label:tr': 'Mod',
          'label:de': 'Modus',
          'label:pl': 'Tryb',
          'label:ua': 'Режим',
          options: [
             {
-               label: 'collapse', value: 'hide', selected: true,
+               label: 'hide', /*value: 'hide',*/ selected: true,
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -60,11 +71,11 @@ window.nova_plugins.push({
                // 'label:it': '',
                // 'label:tr': '',
                // 'label:de': '',
-               'label:pl': 'zwiń',
-               'label:ua': 'сховати',
+               // 'label:pl': '',
+               // 'label:ua': '',
             },
             {
-               label: 'remove', value: 'disable',
+               label: 'uncolorize', value: 'uncolorize',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -76,8 +87,8 @@ window.nova_plugins.push({
                // 'label:it': '',
                // 'label:tr': '',
                // 'label:de': '',
-               'label:pl': 'usuń',
-               'label:ua': 'усунути',
+               // 'label:pl': '',
+               // 'label:ua': '',
             },
          ],
       },

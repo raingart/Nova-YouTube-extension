@@ -11,6 +11,7 @@ window.nova_plugins.push({
    'title:zh': '弹出窗口中的描述部分',
    'title:ja': 'ポップアップの説明セクション',
    // 'title:ko': '팝업의 설명 섹션',
+   // 'title:vi': '',
    // 'title:id': 'Bagian deskripsi dalam popup',
    // 'title:es': 'Sección de descripción en ventana emergente',
    'title:pt': 'Seção de descrição no pop-up',
@@ -23,8 +24,8 @@ window.nova_plugins.push({
    run_on_pages: 'watch, -mobile',
    section: 'details',
    // desc: '',
-   'data-conflict': 'description-timestamps-scroll',
-   // 'data-conflict': 'move-to-sidebar[description]',
+   'plugins-conflict': 'description-timestamps-scroll',
+   // 'plugins-conflict': 'move-to-sidebar[description]',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/409893-youtube-widescreen-new-design-polymer
@@ -65,7 +66,7 @@ window.nova_plugins.push({
                   font-family: Roboto, Arial, sans-serif;
                   font-size: 11px;
                   color: #eee;
-                  background: rgba(0,0,0,0.3);
+                  background-color: rgba(0,0,0,0.3);
                }
 
                /* description section */
@@ -104,23 +105,23 @@ window.nova_plugins.push({
                }
 
                ${DESCRIPTION_SELECTOR}::-webkit-scrollbar-corner {
-                  background: transparent;
+                  background-color: transparent;
                }
 
                ${DESCRIPTION_SELECTOR}::-webkit-scrollbar-thumb {
-                  background: #e1e1e1;
+                  background-color: #e1e1e1;
                   border: 0;
                   border-radius: 0;
                }
 
                ${DESCRIPTION_SELECTOR}::-webkit-scrollbar-track {
-                  background: #666;
+                  background-color: #666;
                   border: 0;
                   border-radius: 0;
                }
 
                ${DESCRIPTION_SELECTOR}::-webkit-scrollbar-track:hover {
-                  background: #666;
+                  background-color: #666;
                }`);
          });
 

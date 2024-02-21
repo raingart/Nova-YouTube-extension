@@ -8,6 +8,7 @@ window.nova_plugins.push({
    'title:zh': '添加循环播放按钮',
    'title:ja': 'ループ再生ボタンを追加する',
    // 'title:ko': '루프 재생 버튼 추가',
+   // 'title:vi': '',
    // 'title:id': 'Tambahkan tombol pemutaran ulangi (loop)',
    // 'title:es': 'Agregar un botón de reproducción en bucle',
    'title:pt': 'Adicionar um botão de reprodução em loop',
@@ -23,6 +24,7 @@ window.nova_plugins.push({
    // 'desc:zh': '循环播放视频',
    // 'desc:ja': 'ビデオ再生をループする',
    // 'desc:ko': '루프 비디오 재생',
+   // 'desc:vi': '',
    // 'desc:id': '',
    // 'desc:es': 'Reproducción de video en bucle',
    // 'desc:pt': 'Reprodução de vídeo em loop',
@@ -87,6 +89,8 @@ window.nova_plugins.push({
                   if (NOVA.currentPage != 'watch' && NOVA.currentPage != 'embed') return;
 
                   if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
+                  if (evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey) return;
+
                   if ((hotkey.length === 1 ? evt.key : evt.code) === hotkey) {
                      toggleLoop();
                      // btn.click();
@@ -99,8 +103,8 @@ window.nova_plugins.push({
 
                NOVA.videoElement.loop = !NOVA.videoElement.loop;
                btn.style.opacity = NOVA.videoElement.loop ? 1 : .5;
-               NOVA.triggerHUD('Loop is ' + Boolean(NOVA.videoElement.loop));
-               // NOVA.triggerHUD('Loop is ' + movie_player.getLoopVideo());
+               NOVA.triggerOSD('Loop is ' + Boolean(NOVA.videoElement.loop));
+               // NOVA.triggerOSD('Loop is ' + movie_player.getLoopVideo());
             }
 
             // NOVA.runOnPageLoad(async () => {
@@ -154,6 +158,7 @@ window.nova_plugins.push({
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
+         // 'label:vi': '',
          // 'label:id': '',
          // 'label:es': '',
          // 'label:pt': '',
@@ -166,12 +171,12 @@ window.nova_plugins.push({
             { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            // { label: 'shiftL', value: 'ShiftLeft' },
+            // { label: 'shiftR', value: 'ShiftRight' },
+            // { label: 'ctrlL', value: 'ControlLeft' },
+            // { label: 'ctrlR', value: 'ControlRight' },
+            // { label: 'altL', value: 'AltLeft' },
+            // { label: 'altR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -213,6 +218,7 @@ window.nova_plugins.push({
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',
@@ -227,6 +233,7 @@ window.nova_plugins.push({
       //    'title:zh': '对下一个视频的影响',
       //    'title:ja': '次の動画への影響',
       //    // 'title:ko': '다음 동영상에 영향',
+      //    // 'title:vi': '',
       //    // 'title:id': 'Mempengaruhi video berikutnya',
       //    // 'title:es': 'Afecta a los siguientes videos',
       //    'title:pt': 'Afeta para os próximos vídeos',
@@ -242,7 +249,7 @@ window.nova_plugins.push({
       //    label: 'Auto enabled in music',
       //    // 'label:zh': '',
       //    // 'label:ja': '',
-      //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',
@@ -260,7 +267,7 @@ window.nova_plugins.push({
       //    label: 'Show button only in music',
       //    // 'label:zh': '',
       //    // 'label:ja': '',
-      //    // 'label:ko': '',
+      //    // 'label:vi': '',
       //    // 'label:id': '',
       //    // 'label:es': '',
       //    // 'label:pt': '',
