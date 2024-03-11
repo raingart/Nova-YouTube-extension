@@ -29,6 +29,7 @@ window.nova_plugins.push({
 
       // alt1 - https://greasyfork.org/en/scripts/463204-youtube-player-controls-edited
       // alt2 - https://greasyfork.org/en/scripts/486936-youtube-video-player-bar-simplified
+      // alt3 - https://greasyfork.org/en/scripts/488224-control-panel-for-youtube
 
       const SELECTORS = {
          // 'country_code': '#masthead #country-code',

@@ -41,6 +41,7 @@ window.nova_plugins.push({
       // alt3 - https://greasyfork.org/en/scripts/407207-ad-free-youtube-grid
       // alt4 - https://greasyfork.org/en/scripts/480134-starburst-ads
       // alt5 - https://greasyfork.org/en/scripts/486616-youtube-search-results-cleanup
+      // alt5 - https://greasyfork.org/en/scripts/488224-control-panel-for-youtube
 
       // hide donate"
       // '#donation-shelf',
@@ -141,7 +142,8 @@ window.nova_plugins.push({
                   // 'ytd-item-section-renderer:has(ytd-ad-slot-renderer)', // Doesn't work. Ad buy
 
                   // watch page
-                  'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // hide chat "Live chat replay was turned off for this video."
+                  // 'ytd-live-chat-frame#chat[collapsed]:has(iframe#chatframe[src="about:blank"])', // broken - https://www.youtube.com/watch?v=lSD_L-xic9o
+                  '#chat[collapsed] #message', // hide chat "Live chat replay was turned off for this video.", "Chat Replay is disabled for this Premiere."
 
                   'ytd-popup-container:has(yt-tooltip-renderer[position-type="OPEN_POPUP_POSITION_BOTTOM"])', // hide tooltip below "join" buttob. $details-text = "Join this channel and unlock members-only perks" (https://www.youtube.com/watch?v=tBRT_RbnGOk)
                ]);

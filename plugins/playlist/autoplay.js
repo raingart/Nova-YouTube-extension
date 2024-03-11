@@ -154,7 +154,7 @@ window.nova_plugins.push({
                      currentIndex = movie_player.getPlaylistIndex(),
                      lastAvailableIdx = vids_list.findIndex(i => i.hasOwnProperty('messageRenderer')) - 1;
 
-                  // console.log(currentIndex, lastAvailableIdx)
+                  // console.debug(currentIndex, lastAvailableIdx)
 
                   if (currentIndex === lastAvailableIdx) {
                      // ex: https://www.youtube.com/watch?v=-whp15J2n_M&list=FLsWT--HCC3qCRRPDqDCCGKA

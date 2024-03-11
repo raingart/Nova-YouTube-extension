@@ -25,6 +25,10 @@ input[type=number] {
    width: 3em;
 }
 
+input[type=checkbox]:focus:not(:checked) {
+   box-shadow: none !important;
+}
+
 .tabs-content>div {
    margin: 0 auto;
 }
@@ -184,6 +188,26 @@ input[type=search]:focus, input[type=text]:focus {
    justify-self: center;
 }
 
+/* .item:has(.info+.opt>[disabled]) { */
+.item.disable-blind {
+   /* opacity: .5; */
+   /* color: rgb(from var(--label2) r g b / 50%) !important; */
+   color: rgb(from slategrey r g b / 50%) !important;
+   animation: blinkBackground 500ms normal;
+}
+
+/* beautify ignore:start */
+@keyframes blinkBackground {
+   /* 0%		{ background-color: #10c018; }
+   25%	{ background-color: #1056c0; }
+   50%	{ background-color: #ef0a1a; }
+   75%	{ background-color: #254878; }
+   100%	{ background-color: #04a1d5; } */
+   from	{ background-color: red; }
+   to	{ background-color: inherit; }
+}
+/* beautify ignore:end */
+
 .opt+ul, .info+ul {
    grid-column: ul;
    /* align-self: center;
@@ -279,7 +303,9 @@ li>label+* {
 .item a[href*="wiki"] {
    font-weight: bold;
    margin-left: 3px;
-   opacity: .2;
+   /* opacity: .2; */
+   /* opacity: .1; */
+   opacity: 0;
 }
 
 .item:hover a[href*="wiki"] {

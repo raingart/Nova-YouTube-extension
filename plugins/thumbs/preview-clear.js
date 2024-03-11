@@ -4,7 +4,7 @@
 // https://www.youtube.com/c/cafemusicbgmchannel/videos - live
 
 window.nova_plugins.push({
-   id: 'thumbnails-clear',
+   id: 'thumbs-clear',
    title: 'Thumbnails preview image',
    'title:zh': '清除缩略图',
    'title:ja': 'サムネイルをクリアする',
@@ -45,7 +45,7 @@ window.nova_plugins.push({
       // Strategy 1 (API). Doesn't work
       // when thums update
       // document.addEventListener('yt-action', evt => {
-      //    // console.log(evt.detail?.actionName);
+      //    // console.debug(evt.detail?.actionName);
       //    switch (evt.detail?.actionName) {
       //       case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
       //       case 'ytd-update-grid-state-action': // feed, channel
@@ -59,7 +59,7 @@ window.nova_plugins.push({
       //          // case 'yt-window-scrolled':
       //          // case 'yt-service-request': // results, watch
 
-      //          // console.log(evt.detail?.actionName); // flltered
+      //          // console.debug(evt.detail?.actionName); // flltered
 
       //          patchThumb();
       //          break;
@@ -133,19 +133,19 @@ window.nova_plugins.push({
       });
 
       // alt - https://greasyfork.org/en/scripts/422843-youtube-remove-clickable-labels-on-watch-later-and-add-to-queue-buttons
-      if (user_settings.thumbnails_clear_overlay) {
+      if (user_settings.thumbs_clear_overlay) {
          NOVA.css.push(
             `#hover-overlays {
                visibility: hidden !important;
             }`);
       }
 
-      // if (user_settings.thumbnails_overlay_playing) {
+      // if (user_settings.thumbs_overlay_playing) {
       //    // alt - https://greasyfork.org/en/scripts/454694-disable-youtube-inline-playback-on-all-pages
 
       //    // Strategy 1 (API)
       // document.addEventListener('yt-action', evt => {
-      //    // console.log(evt.detail?.actionName);
+      //    // console.debug(evt.detail?.actionName);
       //    switch (evt.detail?.actionName) {
       //       case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
       //       case 'ytd-update-grid-state-action': // feed, channel
@@ -159,7 +159,7 @@ window.nova_plugins.push({
       //          // case 'yt-window-scrolled':
       //          // case 'yt-service-request': // results, watch
 
-      //          // console.log(evt.detail?.actionName); // flltered
+      //          // console.debug(evt.detail?.actionName); // flltered
       //          document.body.querySelectorAll('#mouseover-overlay')
       //             .forEach(el => el.remove());
       //          break;
@@ -181,7 +181,7 @@ window.nova_plugins.push({
       // }
 
       // patch end card
-      // if (user_settings.thumbnails_clear_videowall && !user_settings['pages-clear']) {
+      // if (user_settings.thumbs_clear_videowall && !user_settings['pages-clear']) {
       //    // force show title
       //    NOVA.css.push(
       //       `.ytp-videowall-still .ytp-videowall-still-info-content {
@@ -221,17 +221,17 @@ window.nova_plugins.push({
          // hq1,hq2,hq3,hq720,default,sddefault,mqdefault,hqdefault,maxresdefault(excluding for thumbs)
          // /(hq(1|2|3|720)|(sd|mq|hq|maxres)?default)/i - unnecessarily exact
          // if ((re = /(\w{1}qdefault|hq\d+).jpg/i) && re.test(str)) { // for pc
-         //    return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.jpg');
+         //    return str.replace(re, (user_settings.thumbs_clear_preview_timestamp || 'hq2') + '.jpg');
          // }
          // https://i.ytimg.com/vi/ir6nk2zrMG0/sddefault.jpg
          if ((re = /(\w{2}default|hq\d+)./i) && re.test(str)) { // for mobile and pc
-            return str.replace(re, (user_settings.thumbnails_clear_preview_timestamp || 'hq2') + '.');
+            return str.replace(re, (user_settings.thumbs_clear_preview_timestamp || 'hq2') + '.');
          }
       }
 
    },
    options: {
-      thumbnails_clear_preview_timestamp: {
+      thumbs_clear_preview_timestamp: {
          _tagName: 'select',
          label: 'Thumbnail timestamps moment',
          'label:zh': '缩略图时间戳',
@@ -312,7 +312,7 @@ window.nova_plugins.push({
             }
          ],
       },
-      thumbnails_clear_overlay: {
+      thumbs_clear_overlay: {
          _tagName: 'input',
          label: 'Hide overlay buttons on a thumbnail',
          'label:zh': '隐藏覆盖在缩略图上的按钮',
@@ -344,7 +344,7 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
       },
-      // thumbnails_overlay_playing: {
+      // thumbs_overlay_playing: {
       //    _tagName: 'input',
       //    label: 'Disable thumbnail preview on hover',
       //    'label:zh': '悬停时禁用缩略图预览',
@@ -362,7 +362,7 @@ window.nova_plugins.push({
       //    'label:ua': 'Вимкнути попередній перегляд ескізів при наведенні',
       //    type: 'checkbox',
       // },
-      // thumbnails_clear_videowall: {
+      // thumbs_clear_videowall: {
       //    _tagName: 'input',
       //    label: 'Apply for thumbnails after video ends',
       //    'label:zh': '视频结束后申请缩略图',

@@ -49,6 +49,7 @@ window.nova_plugins.push({
          .then(masthead => {
 
             NOVA.css.push(
+               // top: min(${masthead.offsetHeight || 56}px, var(--ytd-watch-flexy-masthead-height));
                `${COMMENTS_SELECTOR},
                ${COMMENTS_SELECTOR}:before {
                   position: fixed;

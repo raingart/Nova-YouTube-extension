@@ -53,6 +53,7 @@ const Plugins = {
       'thumbs/not-interested.js',
       'thumbs/watch-later.js',
       'thumbs/row-count.js',
+      'thumbs/title-lang.js',
       // 'thumbs/shorts-time.js',
       // 'thumbs/quality.js',
       // 'thumbs/rating.js',
@@ -62,7 +63,6 @@ const Plugins = {
 
       'other/scrollbar-hide.js',
       'other/title-time.js',
-      'other/collapse-navigation-panel.js',
       'other/channel-trailer-stop.js',
       'other/channel-tab.js',
       'other/miniplayer-disable.js',
@@ -71,6 +71,7 @@ const Plugins = {
       'other/scroll-to-top.js',
       'other/copy-url.js',
       'other/shorts-redirect.js',
+      // 'other/collapse-navigation-panel.js',
       // 'other/channel-thumbs-row.js',
       // 'other/dark-theme.js',
       // 'other/lang.js',
@@ -78,9 +79,9 @@ const Plugins = {
       'details/show-date.js',
       'details/videos-count.js',
       'details/buttons-hide.js',
+      'details/ad-state.js',
       'details/auto-likes.js',
       'details/return-dislike.js',
-      'details/description-expand.js',
       'details/description-popup.js',
       'details/transcript.js',
       'details/video-title-hashtag.js',
@@ -88,6 +89,7 @@ const Plugins = {
       'details/timestamps-scroll.js',
       'details/redirect-clear.js',
       'details/save-to-playlist.js',
+      // 'details/description-expand.js',
 
       'comments/visibility.js',
       'comments/square-avatars.js',
@@ -97,6 +99,7 @@ const Plugins = {
 
       'sidebar/related-visibility.js',
       'sidebar/livechat-visibility.js',
+      'sidebar/toggle-mode.js',
       'sidebar/move-to-sidebar.js',
       'sidebar/channel-link.js',
       // 'sidebar/livechat-filter.js',
@@ -125,6 +128,28 @@ const Plugins = {
          .forEach(plugin => {
             try {
                this.injectScript(browser.runtime.getURL('/plugins/' + plugin));
+               // browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+               //    browser.scripting.executeScript(
+               //       {
+               //          target: { tabId: tab.id, allFrames: true },
+               //          files: [browser.runtime.getURL('/plugins/' + plugin)],
+               //          // function: () => {}, // files or function, both do not work.
+               //       })
+               // })
+               //    .then(() => console.log("script injected in all frames"));
+               // async function getCurrentTabId() {
+               //    const queryOptions = {
+               //       active: true,
+               //       currentWindow: true
+               //    };
+               //    let [tab] = await browser.tabs.query(queryOptions);
+               //    return tab.id;
+               // }
+               // browser.scripting.executeScript({
+               //    target: { tabId: await getCurrentTabId(), allFrames: true },
+               //    files: [browser.runtime.getURL('/plugins/' + plugin)],
+               //    // function: () => {}, // files or function, both do not work.
+               // });
             } catch (error) {
                console.error(`plugin loading failed: ${plugin}\n${error.stack}`);
             }
@@ -132,6 +157,7 @@ const Plugins = {
    },
 
    injectScript(source = required()) {
+      // console.debug('injectScript:', ...arguments);
       const script = document.createElement('script');
 
       if (source.endsWith('.js')) {
@@ -149,7 +175,7 @@ const Plugins = {
       (document.head || document.documentElement).append(script);
 
       script.onload = () => {
-         // console.log('script injected:', script.src || script.textContent.substr(0, 100));
+         // console.debug('script injected:', script.src || script.textContent.substr(0, 100));
          script.remove(script); // Remove <script> node after injectScript runs.
       };
    },
@@ -160,7 +186,7 @@ const Plugins = {
    // },
 
    run: ({ user_settings, app_ver }) => {
-      // console.debug('plugins_executor', ...arguments);
+      console.debug('plugins_executor', ...arguments);
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 
@@ -293,13 +319,9 @@ const Plugins = {
                break;
 
             default:
-               // fix for "/[A-Z\d_]/.test(page)"
-               // https://www.youtube.com/live_chat
-               // https://www.youtube.com/live_chat_replay
-               if (page?.includes('live_chat')) page = 'live_chat';
-               // channel
-               else if (page?.startsWith('@') // https://www.youtube.com/@ALBO
-                  || /[A-Z\d_]/.test(page) // containsUppercase(without unicode))
+               // if (page?.includes('live_chat')) page = 'live_chat';
+               if (page?.startsWith('@') // https://www.youtube.com/@ALBO
+                  || /[A-Z\d_]/.test(page) // containsUppercase(without unicode)) (skip - https://www.youtube.com/kansas)
                ) {
                   page = 'channel';
                }

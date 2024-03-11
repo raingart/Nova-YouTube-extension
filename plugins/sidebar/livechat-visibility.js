@@ -31,6 +31,7 @@ window.nova_plugins.push({
       // window['nova-lock-live-chat'] = true; // set lock
 
       if (user_settings.livechat_visibility_mode == 'disable') {
+         // live_chat - iframe#chatframe #chat-messages #close-button button
          NOVA.waitSelector('#chat', { destroy_after_page_leaving: true })
             .then(chat => {
                chat.remove();

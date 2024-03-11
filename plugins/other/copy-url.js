@@ -19,6 +19,8 @@ window.nova_plugins.push({
    // desc: 'use「Ctrl+C」',
    _runtime: user_settings => {
 
+      const SELECTOR_ID = 'nova-copy-notification';
+
       document.addEventListener('keydown', evt => {
          const hotkeyMod = user_settings.copy_url_hotkey || 'ctrlKey';
          // on selected text
@@ -28,6 +30,10 @@ window.nova_plugins.push({
          // console.debug('evt.code', evt.code);
          // evt.ctrlKey || evt.altKey || evt.shiftKey || evt.metaKey
          if (evt[hotkeyMod] && evt.code === 'KeyC') {
+            evt.preventDefault();
+            evt.stopPropagation();
+            evt.stopImmediatePropagation();
+
             // const url = (NOVA.currentPage == 'watch')
             //    ? 'https://youtu.be/' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id)
             //    : location.href;
@@ -53,17 +59,18 @@ window.nova_plugins.push({
             }
             if (url) {
                navigator.clipboard.writeText(url);
-               // showNotification('Shortened URL copied to clipboard\n' + text);
+               // showNotification('Shortened URL copied to clipboard\n' + url);
                showNotification('URL copied');
             }
          }
       });
 
       function showNotification(msg) {
-         if (typeof this.fade === 'number') clearTimeout(this.fade); // reset timeout
+         if (typeof showNotification.fade === 'number') clearTimeout(showNotification.fade); // reset timeout
 
-         this.notification = (this.notification || (function () {
+         const notification = (document.getElementById(SELECTOR_ID) || (function () {
             const el = document.createElement('div');
+            el.id = SELECTOR_ID;
 
             let initcss = {
                position: 'fixed',
@@ -71,10 +78,10 @@ window.nova_plugins.push({
                // right: '20px',
                'z-index': 9999,
                'border-radius': '2px',
-               'background-color': user_settings.copy_url_color || 'crimson',
+               'background-color': user_settings.copy_url_color || '#e85717',
                'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
                'border-radius': user_settings['square-avatars'] ? 'inherit' : '12px',
-               'font-size': `${+user_settings.copy_url_font_size || 1.8}em`,
+               'font-size': `${+user_settings.copy_url_font_size || 1.7}em`,
                color: 'var(--yt-spec-text-primary, #fff)',
                padding: '.5em .8em',
                cursor: 'pointer',
@@ -86,12 +93,6 @@ window.nova_plugins.push({
                   initcss.top = '60px';
                   initcss.left = '20px';
                   break;
-               case 'top-right':
-                  // initcss.top = user_settings['header-unfixed'] ? 0
-                  // : (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
-                  initcss.top = '60px';
-                  initcss.right = '20px';
-                  break;
                case 'bottom-left':
                   initcss.bottom = '20px';
                   initcss.left = '20px';
@@ -100,23 +101,31 @@ window.nova_plugins.push({
                   initcss.bottom = '20px';
                   initcss.right = '20px';
                   break;
+               // case 'top-right':
+               default:
+                  // initcss.top = user_settings['header-unfixed'] ? 0
+                  // : (document.getElementById('masthead-container')?.offsetHeight || 0) + 'px';
+                  initcss.top = '60px';
+                  initcss.right = '20px';
+                  break;
             }
             // el.style.cssText = '';
             Object.assign(el.style, initcss);
             return document.body.appendChild(el);
          })());
 
-         this.notification.innerText = msg;
-         this.notification.style.opacity = +user_settings.copy_url_opacity || 1;
-         // hudContainer.style.visibility = 'visible';
+         notification.textContent = msg;
+         // notification.innerText = msg;
+         notification.style.opacity = +user_settings.copy_url_opacity || 1;
+         notification.style.visibility = 'visible';
 
          // notification.addEventListener('click', notification.remove);
          // setTimeout(notification.remove, 3000);
 
-         this.fade = setTimeout(() => {
-            this.notification.style.transition = 'opacity 200ms ease-in';
-            this.notification.style.opacity = 0;
-            // this.notification.style.visibility = 'hidden';
+         showNotification.fade = setTimeout(() => {
+            notification.style.transition = 'opacity 200ms ease-in';
+            notification.style.opacity = 0;
+            setTimeout(() => notification.style.visibility = 'hidden', 1000); // completely hide after 1s
          }, 600); // 600ms
       }
 
@@ -292,7 +301,7 @@ window.nova_plugins.push({
          step: .1,
          min: .5,
          max: 3,
-         value: 1.8,
+         value: 1.7,
       },
       copy_url_color: {
          _tagName: 'input',

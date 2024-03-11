@@ -45,6 +45,7 @@ window.nova_plugins.push({
          .then(masthead => {
 
             NOVA.css.push(
+               // top: min(${masthead.offsetHeight || 56}px, var(--ytd-watch-flexy-masthead-height));
                // position: ${user_settings['header-unfixed'] ? 'absolute' : 'fixed' };
                `${DESCRIPTION_SELECTOR},
                ${DESCRIPTION_SELECTOR}:before {
@@ -141,11 +142,6 @@ window.nova_plugins.push({
          NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && restoreDateLine());
       }
 
-      // alt1 - https://chrome.google.com/webstore/detail/amdebbajoolgbbgdhdnkhmgkkdlbkdgi
-      // alt2 - https://greasyfork.org/en/scripts/457850-youtube-video-info
-      // alt3 - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
-      // alt4 - https://greasyfork.org/en/scripts/457478-show-youtube-s-video-date-behind-subscription-button
-      // alt5 - https://chrome.google.com/webstore/detail/nenoecmaibjcahoahnmeinahlapheblg
       let oldDateText;
       function restoreDateLine() {
          NOVA.waitSelector('#title h1')
@@ -210,9 +206,17 @@ window.nova_plugins.push({
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
             (document.getElementById(DATE_SELECTOR_ID) || (function () {
-               container.insertAdjacentHTML('afterend',
-                  `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${text}</span>`);
-               return document.getElementById(DATE_SELECTOR_ID);
+               const el = document.createElement('span');
+               el.id = DATE_SELECTOR_ID;
+               el.className = 'style-scope yt-formatted-string bold';
+               el.style.cssText = 'font-size: 1.35rem; line-height: 2rem; font-weight:400;';
+               container.after(el);
+               // container.insertAdjacentElement('afterend', el);
+               return el;
+               // 62.88 % slower
+               // container.insertAdjacentHTML('afterend',
+               //    `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${text}</span>`);
+               // return document.getElementById(DATE_SELECTOR_ID);
             })())
                .textContent = text;
          }

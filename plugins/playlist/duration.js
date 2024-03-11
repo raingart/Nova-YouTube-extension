@@ -170,7 +170,7 @@ window.nova_plugins.push({
       }
 
       function getPlaylistDurationFromThumbnails(items_selector = required()) {
-         // console.log('thumbnails_method', ...arguments);
+         // console.debug('thumbnails_method', ...arguments);
          if (container && !(container instanceof HTMLElement)) {
             return console.error('container not HTMLElement:', container);
          }
@@ -220,7 +220,7 @@ window.nova_plugins.push({
       }
 
       function outFormat(duration = 0, total) {
-         // console.log('outFormat', ...arguments);
+         // console.debug('outFormat', ...arguments);
          let outArr = [
             // time
             NOVA.formatTimeOut.HMS.digit(
@@ -230,7 +230,7 @@ window.nova_plugins.push({
          ];
          // pt
          if (total) {
-            outArr.push(`(${~~(duration * 100 / total) + '%'})`);
+            outArr.push(`(${Math.trunc(duration * 100 / total) + '%'})`);
             // progress type (done, left, total)
             if (user_settings.playlist_duration_progress_type) {
                outArr.push(user_settings.playlist_duration_progress_type);
@@ -245,14 +245,15 @@ window.nova_plugins.push({
 
          // (document.getElementById(SELECTOR_ID) || (function () { // for 1 pages
          (container.querySelector(`#${SELECTOR_ID}`) || (function () { // for 2 parallel pages - playlist, watch
-            // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
-            // return document.getElementById(SELECTOR_ID);
             const el = document.createElement('span');
             el.id = SELECTOR_ID;
             // el.className = 'style-scope ytd-playlist-sidebar-primary-info-renderer';
             // el.style.display = 'inline-block';
             // el.style.margin = '0 .5em';
             return container.appendChild(el);
+            // 62.88 % slower
+            // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
+            // return document.getElementById(SELECTOR_ID);
          })())
             .textContent = ' ' + text;
 

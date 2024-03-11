@@ -77,13 +77,16 @@ window.nova_plugins.push({
          createArrowButton();
          // scroll
          document.addEventListener('yt-action', evt => {
-            // console.log(evt.detail?.actionName);
-            if (evt.detail?.actionName == 'yt-store-grafted-ve-action'
-               // || evt.detail?.actionName == 'yt-set-page-offset'
-               // || evt.detail?.actionName.startsWith('ytd-update-')
-            ) {
-               // console.log(evt.detail?.actionName);
-               scrollAfter();
+            // console.debug(evt.detail?.actionName);
+            switch (evt.detail?.actionName) {
+               case 'yt-store-grafted-ve-action':
+               case 'yt-open-popup-action': // watch
+                  // console.debug(evt.detail?.actionName);
+                  scrollAfter();
+                  break;
+
+               // default:
+               //    break;
             }
          });
 
@@ -97,10 +100,17 @@ window.nova_plugins.push({
          }
 
          // create arrow button
-         // alt - https://greasyfork.org/en/scripts/33218-new-youtube-obnoxious-bar-fix
+         // alt1 - https://greasyfork.org/en/scripts/33218-new-youtube-obnoxious-bar-fix
+         // alt2 - https://greasyfork.org/en/scripts/488486-youtube-collapsible-top-bar
          function createArrowButton() {
             const scrollDownButton = document.createElement('button');
-            scrollDownButton.textContent = '▼';
+            // scrollDownButton.textContent = '▼';
+            scrollDownButton.innerHTML =
+               `<svg viewBox="0 0 16 16" height="100%" width="100%">
+                  <g fill="currentColor">
+                     <path d="M3.35 4.97 8 9.62 12.65 4.97l.71.71L8 11.03l-5.35-5.35.7-.71z" />
+                  </g>
+               </svg>`;
             scrollDownButton.title = 'Scroll down';
             // scrollDownButton.style.cssText = '';
             Object.assign(scrollDownButton.style, {
@@ -108,8 +118,9 @@ window.nova_plugins.push({
                'background-color': 'transparent',
                color: 'deepskyblue',
                border: 'none',
+               height: '3em',
             });
-            scrollDownButton.onclick = scrollAfter;
+            scrollDownButton.addEventListener('click', scrollAfter);
 
             if (endnode = document.getElementById('end')) {
                endnode.parentElement.insertBefore(scrollDownButton, endnode);
@@ -172,12 +183,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

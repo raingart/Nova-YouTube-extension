@@ -38,7 +38,8 @@ window.nova_plugins.push({
    'plugins-conflict': 'player-fullscreen-mode',
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector
+      // alt1 - https://greasyfork.org/en/scripts/466414-youtube-embed-to-watch-redirector
+      // alt2 - https://greasyfork.org/en/scripts/467070-youtube-popup-window/code
 
       // enable only in iframe
       if (window.top === window.self // not iframe
@@ -79,8 +80,8 @@ window.nova_plugins.push({
          });
 
          // stop playing in parent tab
-         // location.assign(NOVA.queryURL.set({ 'autoplay': false }));
-         movie_player.stopVideo();
+         location.assign(NOVA.queryURL.set({ 'autoplay': false }));
+         // movie_player.stopVideo();
 
          const url = new URL(
             document.head.querySelector('link[itemprop="embedUrl"][href]')?.href
@@ -90,7 +91,7 @@ window.nova_plugins.push({
          // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
          url.searchParams.set('autoplay', 1);
-         url.searchParams.set('popup', true); // deactivate popup-button for used window
+         url.searchParams.set('popup', true); // mark for deactivate self (plugin)
 
          NOVA.openPopup({ 'url': url.href, 'width': width, 'height': height });
       }

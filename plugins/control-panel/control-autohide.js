@@ -53,8 +53,8 @@ window.nova_plugins.push({
                   triggerOnHoverElement({
                      'element': movie_player,
                      'callback': function (hovered) {
-                        if (hovered) this.mouseMoveIntervalId = fixControlFreeze();
-                        else clearInterval(this.mouseMoveIntervalId);
+                        if (hovered) fixControlFreeze.mouseMoveIntervalId = fixControlFreeze();
+                        else clearInterval(fixControlFreeze.mouseMoveIntervalId);
                      },
                   });
                });
@@ -98,7 +98,7 @@ window.nova_plugins.push({
          document.addEventListener('mousemove', function checkHover() {
             const hovered = isHover(element);
             if (hovered !== checkHover.hovered) {
-               // console.log(hovered ? 'hovered' : 'not hovered');
+               // console.debug(hovered ? 'hovered' : 'not hovered');
                checkHover.hovered = hovered;
                return callback(hovered);
             }
@@ -106,12 +106,12 @@ window.nova_plugins.push({
       }
 
       // // moveMousePeriodic
-      // // this.mouseMoveIntervalId = fixControlFreeze()
+      // // fixControlFreeze.mouseMoveIntervalId = fixControlFreeze()
       // // a copy of the function is also in plugin [player-control-below]
       function fixControlFreeze(ms = 2000) {
-         // if (typeof this.mouseMoveIntervalId === 'number') clearTimeout(this.mouseMoveIntervalId); // reset timeout
+         // if (typeof fixControlFreeze.mouseMoveIntervalId === 'number') clearTimeout(fixControlFreeze.mouseMoveIntervalId); // reset timeout
          // const moveMouse = new Event('mousemove');
-         // this.mouseMoveIntervalId = setInterval(() => {
+         // fixControlFreeze.mouseMoveIntervalId = setInterval(() => {
          return setInterval(() => {
             if (NOVA.currentPage === 'watch'
                && document.visibilityState == 'visible'

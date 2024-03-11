@@ -12,7 +12,7 @@
 
 window.nova_plugins.push({
    id: 'video-unblock-warn-content',
-   title: 'Skip warn about inappropriate/offensive content',
+   title: 'Skip inappropriate/offensive content warn',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',

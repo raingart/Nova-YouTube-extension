@@ -3,7 +3,6 @@
 // https://www.youtube.com/watch?v=3eJZcpoSpKY
 // https://www.youtube.com/watch?v=pf9WOuzeWhw
 // https://www.youtube.com/watch?v=KboTw3NBuuk - ad in multi chaprtes
-// https://www.youtube.com/watch?v=KboTw3NBuuk - ad in multi chaprtes
 
 window.nova_plugins.push({
    id: 'sponsor-block',
@@ -76,8 +75,8 @@ window.nova_plugins.push({
                      if (idx === chaptersEls.length - 1) return; // if last chapter
 
                      const
-                        chapterStart = ~~NOVA.formatTimeOut.hmsToSec(chapterEl.getAttribute('time')),
-                        chapterNextStart = ~~NOVA.formatTimeOut.hmsToSec(chaptersEls[idx + 1].getAttribute('time'));
+                        chapterStart = Math.trunc(NOVA.formatTimeOut.hmsToSec(chapterEl.getAttribute('time'))),
+                        chapterNextStart = Math.trunc(NOVA.formatTimeOut.hmsToSec(chaptersEls[idx + 1].getAttribute('time')));
 
                      for (const [i, value] of segmentsList.entries()) {
                         const [segmentStart, segmentEnd, category] = value;
@@ -86,9 +85,9 @@ window.nova_plugins.push({
                         // console.debug('chapterStart', chapterStart);
                         // console.debug('chapterNextStart', chapterNextStart);
 
-                        // if ((~~segmentStart <= chapterNextStart) && (~~segmentEnd >= chapterStart)) {
-                        if (((~~segmentStart + deflectionSec) <= chapterNextStart)
-                           && ((~~segmentEnd - deflectionSec) >= chapterStart)
+                        // if ((Math.trunc(segmentStart) <= chapterNextStart) && (Math.trunc(segmentEnd) >= chapterStart)) {
+                        if (((Math.trunc(segmentStart) + deflectionSec) <= chapterNextStart)
+                           && ((Math.trunc(segmentEnd) - deflectionSec) >= chapterStart)
                         ) {
                            chapterEl.title = [chapterEl.title, categoryNameLabel[category]].join(', ');
                            let color;
@@ -117,7 +116,7 @@ window.nova_plugins.push({
                for (let i = 0; i < segmentsList.length; i++) {
                   // console.debug('>>', segmentsList, i);
                   [segmentStart, segmentEnd, category] = segmentsList[i];
-                  segmentStart = ~~segmentStart;
+                  segmentStart = Math.trunc(segmentStart);
                   segmentEnd = Math.ceil(segmentEnd);
 
                   const inSegment = (this.currentTime > segmentStart && this.currentTime < segmentEnd);
@@ -150,7 +149,8 @@ window.nova_plugins.push({
                            this.currentTime = segmentEnd;
                            segmentsList.splice(i, 1); // for optimization use segment once
 
-                           return novaNotification('skipped');
+                           // return novaNotification('skipped');
+                           return novaNotification();
                         }
                         break;
                   }
@@ -159,7 +159,7 @@ window.nova_plugins.push({
                function novaNotification(prefix = '') {
                   if (!user_settings.sponsor_block_notification) return;
 
-                  const msg = `${prefix} [${categoryNameLabel[category]}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
+                  const msg = `${prefix} ${NOVA.formatTimeOut.HMS.digit(segmentEnd - segmentStart)} [${categoryNameLabel[category]}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
                   NOVA.triggerOSD(msg); // trigger default indicator
                }
@@ -335,7 +335,7 @@ window.nova_plugins.push({
          size: 7, // = options.length
          options: [
             {
-               label: 'Sponsor', value: 'sponsor',
+               label: 'Ads/Sponsor', value: 'sponsor',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -586,13 +586,13 @@ window.nova_plugins.push({
          type: 'url',
          pattern: "https://.*",
          // title: '',
-         placeholder: 'https://youtube.com/...',
+         placeholder: 'https://domain.com',
          value: 'https://sponsor.ajay.app',
          required: true,
       },
       sponsor_block_notification: {
          _tagName: 'input',
-         label: 'Showing OSD Notification',
+         label: 'Showing OSD notification',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

@@ -66,6 +66,7 @@ window.nova_plugins.push({
 
       const
          storeName = 'nova-playing-instanceIDTab',
+         // instanceID = crypto.randomUUID(), // 91.07 % slower. Generate a random script instance ID
          instanceID = String(Math.random()), // Generate a random script instance ID
          removeStorage = () => localStorage.removeItem(storeName);
 

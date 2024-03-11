@@ -58,30 +58,65 @@
 const NOVA = {
    // DEBUG: true,
 
-   //    waitForElementNotHidden(selector, timeout) {
-   //       return new Promise((resolve, reject) => {
-   //         const startTime = Date.now();
+   /**
+   * @typedef {{
+   *   name?: string
+   *   stopIf?: () => boolean
+   *   timeout?: number
+   *   context?: Document | HTMLElement
+   * }} GetElementOptions
+   *
+   * @param {string} selector
+   * @param {GetElementOptions} options
+   * @returns {Promise<HTMLElement | null>}
+   */
+   // getElement(selector, {
+   //    name = null,
+   //    stopIf = null,
+   //    timeout = Infinity,
+   //    context = document,
+   // } = {}) {
+   //    return new Promise((resolve) => {
+   //       let startTime = Date.now()
+   //       let rafId
+   //       let timeoutId
 
-   //         function checkElement() {
-   //           let element = document.body.querySelector(selector);
+   //       function stop($element, reason) {
+   //          if ($element == null) {
+   //             warn(`stopped waiting for ${name || selector} after ${reason}`)
+   //          }
+   //          else if (Date.now() > startTime) {
+   //             log(`${name || selector} appeared after`, Date.now() - startTime, 'ms')
+   //          }
+   //          if (rafId) {
+   //             cancelAnimationFrame(rafId)
+   //          }
+   //          if (timeoutId) {
+   //             clearTimeout(timeoutId)
+   //          }
+   //          resolve($element)
+   //       }
 
-   //           if (element) {
-   //               if (element.style.display != 'none') {
-   //                   resolve(element);
-   //               }
-   //               else {
-   //                   setTimeout(checkElement, 100); // Check again in 100ms
-   //               }
-   //           } else if (Date.now() - startTime >= timeout) {
-   //             reject(new Error(`Element '${selector}' not found within ${timeout}ms`));
-   //           } else {
-   //             setTimeout(checkElement, 100); // Check again in 100ms
-   //           }
-   //         }
+   //       if (timeout !== Infinity) {
+   //          timeoutId = setTimeout(stop, timeout, null, `${timeout}ms timeout`)
+   //       }
 
-   //         checkElement();
-   //       });
-   //   },
+   //       function queryElement() {
+   //          let $element = context.querySelector(selector)
+   //          if ($element) {
+   //             stop($element)
+   //          }
+   //          else if (stopIf?.() === true) {
+   //             stop(null, 'stopIf condition met')
+   //          }
+   //          else {
+   //             rafId = requestAnimationFrame(queryElement)
+   //          }
+   //       }
+
+   //       queryElement()
+   //    })
+   // },
 
    // waitSelector(selector, intervalMs = 500, maxTries = 6) {
    //    return new Promise((resolve, reject) => {
@@ -99,7 +134,7 @@ const NOVA = {
    //             return
    //          }
    //          tried++
-   //       }, ~~intervalMs || 500) // default 500ms
+   //       }, +intervalMs || 500) // default 500ms
    //    })
    // }
 
@@ -112,7 +147,6 @@ const NOVA = {
    // },
 
    /**
-     * https://stackoverflow.com/a/61511955
      * @param {String} selector The CSS selector used to select the element
      * @returns {Promise<Element>} The selected element
    */
@@ -137,7 +171,7 @@ const NOVA = {
     * @return {Promise<Element>}
    */
    // untilDOM
-   // waitSelector(selector = required(), { container, destroy_after_page_leaving }) {
+   // waitSelector(selector = required(), { container, destroy_after_page_leaving, destroy_timeout }) {
    waitSelector(selector = required(), limit_data) {
       return new Promise((resolve, reject) => {
          // reject
@@ -185,13 +219,15 @@ const NOVA = {
             return resolve(element);
          }
 
+         // const startTime = Date.now();
+
          const observerFactory = new MutationObserver((mutationRecordsArray, observer) => {
             for (const record of mutationRecordsArray) {
                for (const node of record.addedNodes) {
                   if (![1, 3, 8].includes(node.nodeType) || !(node instanceof HTMLElement)) continue; // speedup hack
 
                   if (node.matches && node.matches(selector)) { // this node
-                     // console.debug('[2]', record.type, node.nodeType, selector);
+                     // console.debug('[2]', Date.now() - startTime, 'ms', record.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(node);
                   }
@@ -200,7 +236,7 @@ const NOVA = {
                      && (parentEl instanceof HTMLElement)
                      && (element = parentEl.querySelector(selector))
                   ) {
-                     // console.debug('[3]', record.type, node.nodeType, selector);
+                     // console.debug('[3]', Date.now() - startTime, 'ms', record.type, node.nodeType, selector);
                      observer.disconnect();
                      return resolve(element);
                   }
@@ -225,6 +261,11 @@ const NOVA = {
                //  attributeOldValue: true,
                //  characterDataOldValue: true
             });
+
+         // destructure self
+         if (ms = +limit_data?.destroy_timeout) {
+            setTimeout(observerFactory.disconnect, ms);
+         }
 
          // destructure self
          if (limit_data?.destroy_after_page_leaving) {
@@ -267,7 +308,7 @@ const NOVA = {
                   resolve(result);
                }
                // console.debug('waitUntil[3]', result, condition, timeout);
-            }, ~~timeout || 500); // default 500ms
+            }, +timeout || 500); // default 500ms
          }
       });
    },
@@ -803,7 +844,7 @@ const NOVA = {
       bezelContainer.classList.add(CLASS_VALUE);
 
       let ms = 1200;
-      if (text.endsWith('%') || text.endsWith('x')) {
+      if ((text = String(text)) && (text.endsWith('%') || text.endsWith('x'))) {
          ms = 600
       }
 
@@ -853,6 +894,7 @@ const NOVA = {
 
          [
             // description
+            // https://www.youtube.com/watch?v=4_m3HsaNwOE - bold chapater "Screenshot moment" show markdown "*Screenshot moment*"
             (
                document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.shortDescription
                || document.body.querySelector('ytd-watch-metadata #description.ytd-watch-metadata')?.textContent
@@ -880,7 +922,10 @@ const NOVA = {
                   ?.split('\n')
                   .forEach(line => {
                      line = line?.toString().trim(); // clear spaces
-                     if (line.length > 5 && line.length < 200 && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))) {
+                     if (line.length > 5
+                        && (timestamp = /((\d?\d:){1,2}\d{2})/g.exec(line))
+                        && (line.length - timestamp.length) < 200 // 200 max line length (https://www.youtube.com/watch?v=kSfPHLVFBQk&t=763s)
+                     ) {
                         // console.debug('line', line);
                         timestamp = timestamp[0]; // ex:"0:00"
                         const
@@ -901,6 +946,7 @@ const NOVA = {
                               'time': timestamp,
                               'title': line
                                  .replace(timestamp, '')
+                                 .replace(/\*(.*?)\*/g, '<b>$1</b>') // Markdown bold text to convert html
                                  .trim().replace(/^[\u2011-\u26FF:\-|\[\]]+|[\u2011-\u26FF:\-.;]+$/g, '') // clear of quotes and list characters
                                  .replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g, '') // Symbols
                                  // .trim().replace(/^([:\-–—|]|(\d+[\.)]))|(\[\])?[:\-–—.;|]$/g, '') // clear numeric list prefix
@@ -1234,11 +1280,11 @@ const NOVA = {
          parseTime(time_sec) {
             const ts = Math.abs(+time_sec);
             return {
-               d: ~~(ts / 86400),
-               h: ~~((ts % 86400) / 3600),
-               m: ~~((ts % 3600) / 60),
-               // min = ~~(Math.log(sec) / Math.log(60)), // after sec
-               s: ~~(ts % 60),
+               d: Math.round(ts / 86400),
+               h: Math.round((ts % 86400) / 3600),
+               m: Math.round((ts % 3600) / 60),
+               // min = Math.round(Math.log(sec) / Math.log(60)), // after sec
+               s: Math.round(ts % 60),
             };
          },
 
@@ -1288,10 +1334,10 @@ const NOVA = {
             // 81.34 % slower
             // const ts = Math.abs(+time_sec);
             // return [
-            //    days = { label: 'd', time: ~~(ts / 86400) },
-            //    hours = { label: 'h', time: ~~((ts % 86400) / 3600) },
-            //    minutes = { label: 'm', time: ~~((ts % 3600) / 60) },
-            //    // { label: 's', time: ~~(Math.log(sec) / Math.log(60)) },
+            //    days = { label: 'd', time: Math.round(ts / 86400) },
+            //    hours = { label: 'h', time: Math.round((ts % 86400) / 3600) },
+            //    minutes = { label: 'm', time: Math.round((ts % 3600) / 60) },
+            //    // { label: 's', time: Math.round(Math.log(sec) / Math.log(60)) },
             //    seconds = { label: 's', time: Math.floor(ts % 60) },
             // ]
             //    .map((i, idx, arr) =>
@@ -1355,9 +1401,9 @@ const NOVA = {
          ];
          const
             now = date.getTime(),
-            seconds = ~~((Date.now() - Math.abs(now)) / 1000),
+            seconds = Math.round((Date.now() - Math.abs(now)) / 1000),
             interval = samples.find(i => i.sec < seconds),
-            time = ~~(seconds / interval.sec);
+            time = Math.round(seconds / interval.sec);
 
          // return `${time} ${interval.label}${time !== 1 ? 's' : ''} ago`;
          return `${(now < 0 ? '-' : '') + time} ${interval.label}${time !== 1 ? 's' : ''}`;
@@ -1384,8 +1430,8 @@ const NOVA = {
          twoDigit = n => n.toString().padStart(2, '0'),
          date = this.getDate(),
          year = this.getFullYear(),
-         month = this.getMonth(),
-         day = this.getDay(),
+         monthIdx = this.getMonth(),
+         dayWeekIdx = this.getDay(),
          hours = this.getHours(),
          minutes = this.getMinutes(),
          seconds = this.getSeconds();
@@ -1397,14 +1443,14 @@ const NOVA = {
             switch (partPattern) {
                case 'YY': out = year.substr(2); break;
                case 'YYYY': out = year; break;
-               case 'M': out = month; break;
-               case 'MM': out = twoDigit(month); break;
-               case 'MMM': out = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month]; break;
-               case 'MMMM': out = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][month]; break;
+               case 'M': out = monthIdx + 1; break;
+               case 'MM': out = twoDigit(monthIdx + 1); break;
+               case 'MMM': out = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][monthIdx]; break;
+               case 'MMMM': out = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][monthIdx]; break;
                case 'D': out = date; break;
                case 'DD': out = twoDigit(date); break;
-               case 'DDD': out = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'][day]; break;
-               case 'DDDD': out = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]; break;
+               case 'DDD': out = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'][dayWeekIdx]; break;
+               case 'DDDD': out = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayWeekIdx]; break;
                case 'h': out = (hours % 12) || 12; break;
                case 'H': out = hours; break;
                case 'HH': out = twoDigit(hours); break;
@@ -1446,14 +1492,14 @@ const NOVA = {
       if (num === 0) return '';
       if (num < 1000) return num; // speed up
       const sizes = ['', 'K', 'M', 'B'];
-      const i = ~~(Math.log(Math.abs(num)) / Math.log(1000));
+      const i = Math.round(Math.log(Math.abs(num)) / Math.log(1000));
       return sizes[i]
-         ? round(num / 1000 ** i, 1) + sizes[i]
+         ? round(num / 1000 ** i, num < 10000 ? 1 : 0) + sizes[i]
          : num; // out range
 
       function round(n, precision = 2) {
          const prec = 10 ** precision;
-         return ~~(n * prec) / prec;
+         return Math.round(n * prec) / prec;
       }
    },
    // extractAsNum(re) {
@@ -1487,7 +1533,7 @@ const NOVA = {
        * @return {string}
       */
       set(query_obj = {}, url_string) {
-         // console.log('queryURL.set:', ...arguments);
+         // console.debug('queryURL.set:', ...arguments);
          if (typeof query_obj != 'object' || !Object.keys(query_obj).length) return console.error('query_obj:', query_obj);
          const url = new URL(url_string || location);
          Object.entries(query_obj).forEach(([key, value]) => url.searchParams.set(key, value));
@@ -1550,7 +1596,7 @@ const NOVA = {
                return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
             }
 
-            const referRandKey = arr => api_key || 'AIzaSy' + arr[~~(Math.random() * arr.length)];
+            const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.round(Math.random() * arr.length)];
             // combine GET
             const query = Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))

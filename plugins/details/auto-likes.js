@@ -55,8 +55,8 @@ window.nova_plugins.push({
             video.addEventListener('timeupdate', function () {
                if (Timer.disable || isNaN(this.duration)) return;
                // exceeds the progress threshold
-               // if (this.currentTime / this.duration > ((~~user_settings.auto_likes_percent / 100) || .8)) {
-               if ((+Timer.progressTime / this.duration) > ((~~+user_settings.auto_likes_percent / 100) || .8)) {
+               // if (this.currentTime / this.duration > ((Math.trunc(user_settings.auto_likes_percent) / 100) || .8)) {
+               if ((+Timer.progressTime / this.duration) > ((Math.trunc(user_settings.auto_likes_percent) / 100) || .8)) {
                   // Timer.disable();
                   Timer.disable = true;
                   setLike();
@@ -101,7 +101,7 @@ window.nova_plugins.push({
 
       // function likeIsUpdated(evt) {
       //    if (NOVA.currentPage != 'watch') return;
-      //    // console.log(evt.detail?.actionName);
+      //    // console.debug(evt.detail?.actionName);
 
       //    switch (evt.detail?.actionName) {
       //       // case 'yt-reload-continuation-items-command':

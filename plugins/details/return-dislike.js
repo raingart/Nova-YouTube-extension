@@ -44,7 +44,7 @@ window.nova_plugins.push({
       // alt4 - https://greasyfork.org/en/scripts/483626-youtube-pro
 
       // fix conflict with [details-buttons] plugin
-      if (user_settings.details_button_no_labels
+      if (user_settings.details_buttons_label_hide
          || user_settings.details_buttons_hide?.includes('like_dislike')
       ) {
          return;
@@ -54,13 +54,15 @@ window.nova_plugins.push({
          CACHE_PREFIX = 'nova-dislikes-count:',
          SELECTOR_ID = 'nova-dislikes-count';
 
-      NOVA.runOnPageLoad(async () => {
+      // on page init
+      NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
+         .then(el => setDislikeCount(el));
+
+      NOVA.runOnPageLoad(() => {
          if (NOVA.currentPage != 'watch') return;
 
+         // on page update
          document.addEventListener('yt-action', dislikeIsUpdated);
-         // await NOVA.delay(500);
-         // NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
-         //    .then(el => setDislikeCount(el));
       });
 
       // document.addEventListener('yt-navigate-finish', () => {
@@ -71,9 +73,11 @@ window.nova_plugins.push({
       function dislikeIsUpdated(evt) {
          if (NOVA.currentPage != 'watch') return;
 
+         // console.debug(evt.detail?.actionName);
          switch (evt.detail?.actionName) {
-            // case 'yt-reload-continuation-items-command':
+            case 'yt-set-active-panel-item-action':
             case 'yt-reload-continuation-items-command':
+               // console.debug(evt.detail?.actionName); // flltered
                document.removeEventListener('yt-action', dislikeIsUpdated); // stop listener
 
                NOVA.waitSelector('#actions dislike-button-view-model button', { destroy_after_page_leaving: true })
@@ -134,14 +138,22 @@ window.nova_plugins.push({
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-            // const percent = ~~(data.likes * 100 / (data.likes + data.dislikes)); // liked
-            const percent = ~~(data.dislikes * 100 / (data.likes + data.dislikes)); // disliked
+            // const percent = Math.trunc(data.likes * 100 / (data.likes + data.dislikes)); // liked
+            const percent = Math.trunc(data.dislikes * 100 / (data.likes + data.dislikes)); // disliked
             const text = `${NOVA.prettyRoundInt(data.dislikes)} (${percent}%)`;
 
             (document.getElementById(SELECTOR_ID) || (function () {
-               container.insertAdjacentHTML('beforeend',
-                  `<span id="${SELECTOR_ID}" style="text-overflow:ellipsis; overflow:visible; white-space:nowrap; padding-left:3px;">${text}</span>`);
-               return document.getElementById(SELECTOR_ID);
+               const el = document.createElement('span');
+               el.id = SELECTOR_ID;
+               el.className = 'style-scope yt-formatted-string bold';
+               el.style.cssText = 'text-overflow:ellipsis; overflow:visible; white-space:nowrap; padding-left:3px;';
+               return container.appendChild(el);
+               // container.insertAdjacentElement('beforeend', el);
+               // return el;
+               // 62.88 % slower
+               // container.insertAdjacentHTML('beforeend',
+               //    `<span id="${SELECTOR_ID}" style="text-overflow:ellipsis; overflow:visible; white-space:nowrap; padding-left:3px;">${text}</span>`);
+               // return document.getElementById(SELECTOR_ID);
             })())
                .textContent = text;
 

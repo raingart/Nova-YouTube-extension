@@ -37,7 +37,7 @@ window.nova_plugins.push({
 
       // comment
       NOVA.watchElements({
-         selectors: ['#comment #expander[collapsed] #more:not([hidden])'],
+         selectors: ['#comments #expander[collapsed] #more:not([hidden])'],
          attr_mark: 'nova-comment-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
@@ -57,13 +57,46 @@ window.nova_plugins.push({
 
                // default: // disable
             }
+            // btn.style.border = '2px solid red'; // mark for test
          },
       });
 
       // comment replies
+      // const MARK_ATTR = 'asd';
+      // document.addEventListener('yt-action', evt => {
+      //    if (NOVA.currentPage != 'watch') return;
+
+      //    // console.debug(evt.detail?.actionName);
+      //    switch (evt.detail?.actionName) {
+      //       // case 'yt-reload-continuation-items-command':
+      //       case 'yt-append-continuation-items-action':
+      //          // console.debug(evt.detail?.actionName); // flltered
+      //          document.body.querySelectorAll(`#replies #more-replies button:not([${MARK_ATTR}])`)
+      //             .forEach(btn => {
+      //                btn.setAttribute(MARK_ATTR, true);
+
+      //                const moreExpand = () => btn.click();
+
+      //                // on hover auto expand
+      //                switch (user_settings.comments_view_reply) {
+      //                   case 'onhover':
+      //                      btn.addEventListener('mouseenter', moreExpand, { capture: true, once: true });
+      //                      break;
+
+      //                   case 'always':
+      //                      moreExpand();
+      //                      break;
+
+      //                   // default: // disable
+      //                }
+      //             });
+      //          break;
+      //    }
+      // });
+
+      // comment replies
       NOVA.watchElements({
-         // selectors: ['#comment + #replies #more-replies button'],
-         selectors: ['#replies #more-replies button'],
+         selectors: ['#replies #more-replies button', '#replies #expander-contents ytd-continuation-item-renderer button'],
          attr_mark: 'nova-replies-expanded',
          callback: btn => {
             const moreExpand = () => btn.click();
@@ -80,6 +113,7 @@ window.nova_plugins.push({
 
                // default: // disable
             }
+            // btn.style.border = '2px solid violet'; // mark for test
          },
       });
 

@@ -275,7 +275,7 @@ window.nova_plugins.push({
       // },
       video_autostop_peview_thumbnail: {
          _tagName: 'input',
-         label: 'Show video preview thumbnail',
+         label: 'Display preview thumbnail',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

@@ -18,12 +18,28 @@ window.nova_plugins.push({
    // run_on_pages: '*, -embed, -results, -live_chat',
    section: 'thumbs',
    desc: 'Upper Case thumbnails title back to normal',
-   'desc:ua': 'Зняти слова з великої літери для назв мініатюр',
+   // 'desc:zh': '',
+   // 'desc:ja': '',
+   // 'desc:ko': '',
+   // 'desc:vi': '',
+   // 'desc:id': '',
+   // 'desc:es': '',
+   // 'desc:pt': '',
+   // 'desc:fr': '',
+   // 'desc:it': '',
+   // 'desc:tr': '',
+   // 'desc:de': '',
+   // 'desc:pl': '',
+   // 'desc:ua': '',
+   'plugins-conflict': 'thumbs-title-lang',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/445780-youtube-remove-caps-from-videos-titles
       // alt2 - https://chrome.google.com/webstore/detail/pgpdaocammeipkkgaeelifgakbhjoiel
       // alt3 - https://github.com/MarcGuiselin/youtube-refined/blob/main/code/scripts/common/title-caps.js
+
+      // conflict with [thumbs-title-lang] plugin
+      if (user_settings['thumbs-title-lang']) return;
 
       const
          VIDEO_TITLE_SELECTOR = [
@@ -36,13 +52,13 @@ window.nova_plugins.push({
             // 'ytd-watch-metadata #title h1' // watch
          ]
             .map(i => i + ':not(:empty)'),
-         MAX_CAPS_LETTERS = +user_settings.thumbnails_title_normalize_smart_max_words || 2,
+         MAX_CAPS_LETTERS = +user_settings.thumbs_title_normalize_smart_max_words || 2,
          ATTR_MARK = 'nova-thumb-title-normalized',
          // /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g // full
          clearOfSymbols = str => str.replace(/[\u2011-\u26FF]/g, ' ').replace(/\s{2,}/g, ' '), // simple
          clearOfEmoji = str => str.replace(/[^<>=\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu, ' ').replace(/\s{2,}/g, ' ');
 
-      if (user_settings.thumbnails_title_normalize_show_full) {
+      if (user_settings.thumbs_title_show_full) {
          NOVA.css.push(
             VIDEO_TITLE_SELECTOR.join(',') + `{
                display: block !important;
@@ -68,11 +84,11 @@ window.nova_plugins.push({
             let countCaps = 0;
 
             // need before count
-            if (user_settings.thumbnails_title_clear_emoji) {
+            if (user_settings.thumbs_title_clear_emoji) {
                videoTitleEl.textContent = clearOfEmoji(videoTitleEl.innerText).trim();
             }
 
-            if (user_settings.thumbnails_title_clear_symbols) {
+            if (user_settings.thumbs_title_clear_symbols) {
                videoTitleEl.textContent = clearOfSymbols(videoTitleEl.innerText).trim();
             }
 
@@ -100,7 +116,7 @@ window.nova_plugins.push({
 
       // fix bug with not updating thumbnails
       document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
+         // console.debug(evt.detail?.actionName);
          if (evt.detail?.actionName == 'yt-chip-cloud-chip-select-action') { // click on sort thumbs
             window.addEventListener('transitionend', restoreTitle, { capture: true, once: true });
          }
@@ -121,7 +137,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      thumbnails_title_normalize_show_full: {
+      thumbs_title_show_full: {
          _tagName: 'input',
          label: 'Show full title',
          'label:zh': '显示完整标题',
@@ -139,7 +155,26 @@ window.nova_plugins.push({
          'label:ua': 'Показати повну назву',
          type: 'checkbox'
       },
-      thumbnails_title_normalize_smart_max_words: {
+      // thumbs_title_decapitalize: {
+      //    _tagName: 'input',
+      //    label: 'Decapitalize title',
+      //    'label:zh': '从大写中删除缩略图标题',
+      //    'label:ja': 'サムネイルのタイトルを大文字から外す',
+      //    // 'label:ko': '썸네일 제목을 대문자로',
+      //    // 'label:vi': '',
+      //    // 'label:id': 'Judul gambar mini decapitalize',
+      //    // 'label:es': 'Descapitalizar el título de las miniaturas',
+      //    'label:pt': 'Decapitalize o título das miniaturas',
+      //    'label:fr': 'Démajuscule le titre des vignettes',
+      //    // 'label:it': 'Decapitalizza il titolo delle miniature',
+      //    // 'label:tr': 'Küçük resim başlığının büyük harflerini kaldır',
+      //    'label:de': 'Thumbnails-Titel entfernen',
+      //    'label:pl': 'Zmniejsz czcionkę w tytule miniatur',
+      //    'label:ua': 'Завжди маленькі літери для назв мініатюр',
+      //    type: 'checkbox',
+      //    // title: '',
+      // },
+      thumbs_title_normalize_smart_max_words: {
          _tagName: 'input',
          label: 'Max words in uppercase',
          'label:zh': '大写字数上限',
@@ -162,7 +197,7 @@ window.nova_plugins.push({
          max: 10,
          value: 2,
       },
-      thumbnails_title_clear_emoji: {
+      thumbs_title_clear_emoji: {
          _tagName: 'input',
          label: 'Remove emoji',
          // label: 'Remove symbols and emoji',
@@ -182,7 +217,7 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: '',
       },
-      thumbnails_title_clear_symbols: {
+      thumbs_title_clear_symbols: {
          _tagName: 'input',
          label: 'Remove symbols',
          // 'label:zh': '',

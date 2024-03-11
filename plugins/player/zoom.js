@@ -142,8 +142,8 @@ window.nova_plugins.push({
 
             //          // if (!squareAspectRatio()
             //          //    && (maxZoomPercent = geVideoMaxWidthPercent())
-            //          //    && (~~maxZoomPercent !== 100) // was changed earlier
-            //          //    && (~~maxZoomPercent < 175) // skip ultra-wide (179.63446475195823)
+            //          //    && (Math.trunc(maxZoomPercent) !== 100) // was changed earlier
+            //          //    && (Math.trunc(maxZoomPercent) < 175) // skip ultra-wide (179.63446475195823)
             //          // ) {
 
             //          // }
@@ -169,8 +169,8 @@ window.nova_plugins.push({
 
                         if (!squareAspectRatio()
                            && (maxZoomPercent = geVideoMaxWidthPercent())
-                           && (~~maxZoomPercent !== 100) // was changed earlier
-                           && (~~maxZoomPercent < 175) // skip ultra-wide (179.63446475195823)
+                           && (Math.trunc(maxZoomPercent) !== 100) // was changed earlier
+                           && (Math.trunc(maxZoomPercent) < 175) // skip ultra-wide (179.63446475195823)
                         ) {
                            setScale(maxZoomPercent);
                         }
@@ -182,7 +182,7 @@ window.nova_plugins.push({
                // console.debug('setScale', ...arguments);
                // limit zoom
                // zoom_pt = Math.max(100, Math.min(geVideoMaxWidthPercent(), +zoom_pt));
-               zoom_pt = Math.max(100, Math.min(250, +zoom_pt));
+               zoom_pt = Math.max(100, Math.min(250, Math.trunc(zoom_pt)));
 
                // disable
                if (zoom_pt === 100 && container.classList.contains(ZOOM_CLASS_NAME)) {
@@ -195,7 +195,7 @@ window.nova_plugins.push({
                }
 
                // show UI notification
-               NOVA.triggerOSD(`Zoom: ${~~zoom_pt}%`);
+               NOVA.triggerOSD(`Zoom: ${zoom_pt}%`);
 
                // For optimozation, don`t update again
                if (zoom_pt === zoomPercent) return;
@@ -280,12 +280,12 @@ window.nova_plugins.push({
          options: [
             { label: '+', value: '+', selected: true },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            // { label: 'shiftL', value: 'ShiftLeft' },
-            // { label: 'shiftR', value: 'ShiftRight' },
-            // { label: 'ctrlL', value: 'ControlLeft' },
-            // { label: 'ctrlR', value: 'ControlRight' },
-            // { label: 'altL', value: 'AltLeft' },
-            // { label: 'altR', value: 'AltRight' },
+            // { label: 'ShiftL', value: 'ShiftLeft' },
+            // { label: 'ShiftR', value: 'ShiftRight' },
+            // { label: 'CtrlL', value: 'ControlLeft' },
+            // { label: 'CtrlR', value: 'ControlRight' },
+            // { label: 'AltL', value: 'AltLeft' },
+            // { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -341,12 +341,12 @@ window.nova_plugins.push({
          options: [
             { label: '-', value: '-', selected: true },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -472,12 +472,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

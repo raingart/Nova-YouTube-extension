@@ -222,9 +222,9 @@ window.nova_plugins.push({
          // Strategy 2
          // const qualityItem = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
 
-         await NOVA.delay(1500);
+         // await NOVA.delay(1500);
          // console.debug('choosing it quality', qualityItem.textContent, qualityItem.innerText);
-         qualityItem.click(); // choosing it quality
+         await qualityItem.click(); // choosing it quality
          // alert(`choosing it quality:\n${qualityItem.textContent}\n${qualityItem.innerText}`);
 
          // player.removeEventListener('onStateChange', setQuality1);
@@ -254,7 +254,7 @@ window.nova_plugins.push({
    options: {
       video_quality: {
          _tagName: 'select',
-         label: 'Default quality',
+         label: 'Default',
          'label:zh': '默认视频质量',
          'label:ja': 'デフォルトのビデオ品質',
          // 'label:ko': '기본 비디오 품질',
@@ -278,16 +278,16 @@ window.nova_plugins.push({
             { label: 'QHD/1440p', value: 'hd1440' },
             { label: 'FHD/1080p', value: 'hd1080', selected: true },
             { label: 'HD/720p', value: 'hd720' },
-            { label: 'SD/480p', value: 'large' },
-            { label: 'SD/360p', value: 'medium' },
-            { label: 'SD/240p', value: 'small' },
-            { label: 'SD/144p', value: 'tiny' },
+            { label: '480p', value: 'large' },
+            { label: '360p', value: 'medium' },
+            { label: 'SD/240p', value: 'small' }, // VHS
+            { label: '144p', value: 'tiny' },
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
          ],
       },
       video_quality_premium: {
          _tagName: 'input',
-         label: 'use Premium if available',
+         label: 'Use Premium if available',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -381,6 +381,7 @@ window.nova_plugins.push({
             { label: 'SD/360p', value: 'medium' },
             { label: 'SD/240p', value: 'small' },
             { label: 'SD/144p', value: 'tiny' },
+            { label: 'Auto', value: 'auto' },
             { label: 'default', /*value: false,*/ selected: true },
          ],
       },
@@ -427,6 +428,7 @@ window.nova_plugins.push({
             { label: 'SD/360p', value: 'medium' },
             // { label: 'SD/240p', value: 'small' }, // useless for the current mode
             // { label: 'SD/144p', value: 'tiny' }, // useless for the current mode
+            // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
             { label: 'default', /*value: false,*/ selected: true },
          ],
       },

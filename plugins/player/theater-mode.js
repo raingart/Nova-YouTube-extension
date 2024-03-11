@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'theater-mode',
-   title: 'Auto Wide (Theater mode)',
+   title: 'Auto wide player (Theater mode)',
    // 'title:zh': '播放器全模式',
    // 'title:ja': 'プレーヤーフル-モード付き',
    // 'title:ko': '플레이어 풀-위드 모드',

@@ -2,6 +2,7 @@
 // https://www.youtube.com/watch?v=jfKfPfyJRdk - live now
 // https://www.youtube.com/watch?v=c9Ft3LqNmrE - live ended
 // https://www.youtube.com/watch?v=OBt8J5TVfEY - premiere ended
+// https://www.youtube.com/watch?v=nCBALMNMpuI - premiere duration 2 days
 
 window.nova_plugins.push({
    id: 'video-date-format',
@@ -26,7 +27,11 @@ window.nova_plugins.push({
    opt_api_key_warn: true,
    _runtime: user_settings => {
 
-      // alt - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
+      // alt1 - https://chrome.google.com/webstore/detail/amdebbajoolgbbgdhdnkhmgkkdlbkdgi
+      // alt2 - https://greasyfork.org/en/scripts/457850-youtube-video-info
+      // alt3 - https://greasyfork.org/en/scripts/424068-youtube-exact-upload
+      // alt4 - https://greasyfork.org/en/scripts/457478-show-youtube-s-video-date-behind-subscription-button
+      // alt5 - https://chrome.google.com/webstore/detail/nenoecmaibjcahoahnmeinahlapheblg
 
       const
          CACHE_PREFIX = 'nova-video-date:',
@@ -46,8 +51,10 @@ window.nova_plugins.push({
          const videoId = NOVA.queryURL.get('v') || movie_player.getVideoData().video_id;
 
          // // has in cache
-         if (storage = sessionStorage.getItem(CACHE_PREFIX + videoId)) {
-            return insertToHTML({ 'text': storage, 'container': container });
+         if ((storage = sessionStorage.getItem(CACHE_PREFIX + videoId))
+            && storage.format == user_settings.video_date_format // if user not set new format
+         ) {
+            return insertToHTML({ 'text': storage.date, 'container': container });
          }
          // // from local
          // else if (videoDate = document.body.querySelector('ytd-watch-flexy')?.playerData?.microformat?.playerMicroformatRenderer.publishDate ||
@@ -81,69 +88,94 @@ window.nova_plugins.push({
 
                // ex - https://developers.google.com/youtube/v3/docs/videos/list?apix_params=%7B%22part%22%3A%5B%22snippet%22%5D%2C%22id%22%3A%5B%22jfKfPfyJRdk%22%5D%7D
                res?.items?.forEach(item => {
-                  // "liveStreamingDetails": {
-                  //    "actualStartTime": "2022-07-12T15:59:30Z",
-                  //    "scheduledStartTime": "2022-07-12T16:00:00Z",
-                  //    "concurrentViewers": "25194",
-                  //    "activeLiveChatId": ""
-                  //  }
-                  // "statistics": {
-                  //    "viewCount": "313303291",
-                  //    "likeCount": "2376859",
-                  //    "favoriteCount": "0",
-                  //    "commentCount": "0"
-                  //  }
+                  // console.debug('item', item);
 
-                  let innerHTML = user_settings.video_view_count
-                     // ? new Intl.NumberFormat().format(item.statistics.viewCount) + ' • '
-                     ? NOVA.prettyRoundInt(item.statistics.viewCount) + ' • '
-                     : '';
-
-                  if (item.snippet.publishedAt) {
-                     const publishedDate = new Date(item.snippet.publishedAt);
-
-                     innerHTML += (user_settings.video_date_format == 'ago')
-                        ? `${NOVA.formatTimeOut.ago(publishedDate)} ago`
-                        : NOVA.dateformat.apply(publishedDate, [user_settings.video_date_format]);
+                  let outList = [];
+                  // views
+                  if (user_settings.video_view_count && item.statistics.viewCount) {
+                     // "statistics": {
+                     //    "viewCount": "313303291",
+                     //    "likeCount": "2376859",
+                     //    "favoriteCount": "0",
+                     //    "commentCount": "0",
+                     //  }
+                     outList.push(NOVA.prettyRoundInt(item.statistics.viewCount), 'views');
+                     // outList.push(new Intl.NumberFormat().format(item.statistics.viewCount), ' • ');
+                     // outList.push(NOVA.prettyRoundInt(item.statistics.viewCount), ' • ');
                   }
 
+                  // live
                   if (item.liveStreamingDetails) {
-                     const
-                        ACTIVE_LIVE_START = 'Active Livestream since ',
-                        // ENDED_STREAM_START = `${document.body.querySelector('ytd-watch-flexy')?.playerData.videoDetails.isLiveContent ? 'Livestream' : 'Premiere'} from `,
-                        ENDED_STREAM_START = `${movie_player.getVideoData().isLive ? 'Livestream' : 'Premiere'} from `,
-                        DATETIME_UNTIL_PATTERN = ' until ';
+                     // "liveStreamingDetails": {
+                     //    "actualStartTime": "2022-07-12T15:59:30Z",
+                     //    "scheduledStartTime": "2022-07-12T16:00Z",
+                     //    "concurrentViewers": "99",
+                     //    "activeLiveChatId": "...",
+                     //  }
 
-                     if (item.liveStreamingDetails.actualStartTime && item.liveStreamingDetails.actualEndTime) {
+                     // live now
+                     if (movie_player.getVideoData().isLive || item.snippet.liveBroadcastContent == 'live') {
+                        outList.push('Active Livestream',
+                           NOVA.dateformat.apply(new Date(item.liveStreamingDetails.actualStartTime), [user_settings.video_date_format])
+                        );
+                     }
+                     // ended
+                     else if (item.liveStreamingDetails.actualEndTime) {
                         const
                            timeStart = new Date(item.liveStreamingDetails.actualStartTime),
-                           timeEnd = new Date(item.liveStreamingDetails.actualEndTime);
+                           timeEnd = new Date(item.liveStreamingDetails.actualEndTime),
+                           sameDate = timeStart.getDay() === timeEnd.getDay(); // start date and end date are the same
 
-                        innerHTML += ENDED_STREAM_START
-                           + NOVA.dateformat.apply(timeStart, [user_settings.video_date_format]);
+                        outList.push(
+                           // movie_player.getVideoData().isLive  // Doesn't work if the video is not running
+                           document.body.querySelector('ytd-watch-flexy')?.playerData?.videoDetails?.isLiveContent
+                              ? 'Streamed'
+                              : 'Premiered'
+                        );
+                        if (!sameDate) outList.push('from');
+                        outList.push(NOVA.dateformat.apply(timeStart, [user_settings.video_date_format]));
 
-                        innerHTML += DATETIME_UNTIL_PATTERN
-                           + NOVA.dateformat.apply(timeEnd, [
-                              timeStart.getDay() === timeEnd.getDay() // start date and end date are the same
-                                 ? user_settings.video_date_format.split(' at ')[1] // remove "date" if not diff
-                                 : user_settings.video_date_format
-                           ]);
+                        if (!sameDate) {
+                           outList.push('until',
+                              NOVA.dateformat.apply(timeEnd, [user_settings.video_date_format])
+                           );
+                        }
                      }
-                     else if (item.liveStreamingDetails.scheduledStartTime) {
-                        innerHTML += ACTIVE_LIVE_START
-                           + NOVA.dateformat.apply(new Date(item.liveStreamingDetails.scheduledStartTime), [user_settings.video_date_format]);
+                     // Premiere announcement
+                     // else if (item.liveStreamingDetails.scheduledStartTime) {
+                     else if (item.snippet.liveBroadcastContent == 'upcoming') {
+                        outList.push('Scheduled',
+                           NOVA.dateformat.apply(new Date(item.liveStreamingDetails.scheduledStartTime), [user_settings.video_date_format])
+                        );
                      }
                   }
+                  // regular
+                  else if (item.snippet.publishedAt) {
+                     // "snippet": {
+                     //    "liveBroadcastContent": "live", // "none", "upcoming"
+                     //    "publishedAt": "2022-02-28T19:42:38Z",
+                     //  }
+                     const publishedDate = new Date(item.snippet.publishedAt);
 
+                     if (user_settings.video_date_format == 'ago') {
+                        outList.push(NOVA.formatTimeOut.ago(publishedDate), 'ago');
+                     }
+                     else {
+                        outList.push(NOVA.dateformat.apply(publishedDate, [user_settings.video_date_format]));
+                     }
+                  }
+                  // out
+                  if (outList.length) {
+                     insertToHTML({ 'text': outList.join(' '), 'container': container });
+                     // save cache in tabs
+                     sessionStorage.setItem(CACHE_PREFIX + videoId, {
+                        'date': outList.join(' '),
+                        'format': user_settings.video_date_format
+                     });
+                  }
                   // else {
                   //    return console.warn('API is change', item);
                   // }
-
-                  if (innerHTML) {
-                     insertToHTML({ 'text': innerHTML, 'container': container });
-                     // save cache in tabs
-                     sessionStorage.setItem(CACHE_PREFIX + videoId, innerHTML);
-                  }
                });
             });
          // }
@@ -152,10 +184,18 @@ window.nova_plugins.push({
             // console.debug('insertToHTML', ...arguments);
             if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
-            (document.getElementById(DATE_SELECTOR_ID) || (function () {
-               container.insertAdjacentHTML('afterend',
-                  `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${text}</span>`);
-               return document.getElementById(DATE_SELECTOR_ID);
+            (document.getElementById(DATE_SELECTOR_ID) || (() => {
+               const el = document.createElement('span');
+               el.id = DATE_SELECTOR_ID;
+               el.className = 'style-scope yt-formatted-string bold';
+               el.style.cssText = 'font-size: 1.35rem; line-height: 2rem; font-weight:400;';
+               container.after(el);
+               // container.insertAdjacentElement('afterend', el);
+               return el;
+               // 62.88 % slower
+               // container.insertAdjacentHTML('afterend',
+               //    `<span id="${DATE_SELECTOR_ID}" class="style-scope yt-formatted-string bold" style="font-size: 1.35rem; line-height: 2rem; font-weight:400;">${text}</span>`);
+               // return document.getElementById(DATE_SELECTOR_ID);
             })())
                // .textContent = new Date(text).format(user_settings.video_date_format);
                // .textContent = NOVA.dateformat.apply(new Date(text), [user_settings.video_date_format]);
@@ -178,8 +218,7 @@ window.nova_plugins.push({
    options: {
       video_view_count: {
          _tagName: 'input',
-         // label: 'Show view count',
-         label: 'Show number of views',
+         label: 'Show views count',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -214,34 +253,23 @@ window.nova_plugins.push({
          // 'label:ua': '',
          options: [
             { label: 'ago', value: 'ago' },
-            // { label: 'MMMM D, Y', value: 'MMMM D, YYYY' },
             { label: 'January 20, 1999', value: 'MMMM D, YYYY' },
-            // { label: 'D MMM Y', value: 'D MMM YYYY' },
             { label: '20 Jan 1999', value: 'D MMM YYYY' },
-            // { label: 'D MMM at Y H:mm:ss', value: 'D MMM YYYY at H:mm:ss', selected: true },
-            { label: '20 Jan 1999 at 23:00:00', value: 'D MMM YYYY at H:mm:ss', selected: true },
-            // { label: 'DDD DD/MM/YYYY', value: 'DDD DD/MM/YYYY H:mm:ss' },
-            { label: 'Mon 30/01/1999 23:00:00', value: 'DDD DD/MM/YYYY H:mm:ss' },
-            // { label: 'DDDD DD/MM/YYYY', value: 'DDDD DD/MM/YYYY H:mm:ss' },
-            { label: 'Monday 30/01/1999 23:00:00', value: 'DDDD DD/MM/YYYY H:mm:ss' },
-            // { label: 'Y/MM/DD', value: 'YYYY/MM/DD' },
+            { label: '20 Jan 1999 at 23:59', value: 'D MMM YYYY at H:mm', selected: true },
+            { label: 'Mon 20/01/1999 23:59', value: 'DDD DD/MM/YYYY H:mm' },
+            { label: 'Monday 20/01/1999 23:59', value: 'DDDD DD/MM/YYYY H:mm' },
             { label: '1999/01/20', value: 'YYYY/MM/DD' },
-            // { label: 'Y-MM-D', value: 'YYYY-MM-D' },
+            { label: '1999/01/20 at 23:59', value: 'YYYY/MM/DD at H:mm' },
             { label: '1999-01-20', value: 'YYYY-MM-D' },
-            // { label: 'Y.MM.D', value: 'YYYY.MM.D' },
-            { label: '1999.01.20', value: 'YYYY.MM.D' },
-            // { label: 'MM/DD/Y', value: 'MM/DD/YYYY' },
+            { label: '1999-01-20 at 23:59', value: 'YYYY-MM-D at H:mm' },
+            { label: '1999.1.20', value: 'YYYY.M.D' },
+            { label: '1999.1.20 at 23:59', value: 'YYYY.M.D at H:mm' },
             { label: '01/20/1999', value: 'MM/DD/YYYY' },
-            // { label: 'MM/DD/Y at H:mm:ss', value: 'MM/DD/YYYY at H:mm:ss' },
-            { label: '01/20/1999 at 23:00:00', value: 'MM/DD/YYYY at H:mm:ss' },
-            // { label: 'MM-D-Y', value: 'MM-D-YYYY' },
+            { label: '01/20/1999 at 23:59', value: 'MM/DD/YYYY at H:mm' },
             { label: '01-20-1999', value: 'MM-D-YYYY' },
-            // { label: 'MM-D-Y at H:mm:ss', value: 'MM-D-YYYY at H:mm:ss' },
-            { label: '01-20-1999 at 23:00:00', value: 'MM-D-YYYY at H:mm:ss' },
-            // { label: 'MM.D.Y', value: 'MM.D.YYYY' },
+            { label: '01-20-1999 at 23:59', value: 'MM-D-YYYY at H:mm' },
             { label: '01.20.1999', value: 'MM.D.YYYY' },
-            // { label: 'MM.D.Y at H:mm:ss', value: 'MM.D.YYYY at H:mm:ss' },
-            { label: '01.20.1999 at 23:00:00', value: 'MM.D.YYYY at H:mm:ss' },
+            { label: '01.20.1999 at 23:59', value: 'MM.D.YYYY at H:mm' },
          ],
       },
    }

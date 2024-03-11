@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'thumbs-watch-later',
-   title: 'Add "Watch Later" button on thumbnails',
+   title: 'Add "Watch Later" button on thumbnails (for feed page)',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -52,7 +52,7 @@ window.nova_plugins.push({
 
       // page update event
       document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
+         // console.debug(evt.detail?.actionName);
          switch (evt.detail?.actionName) {
             case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
             case 'ytd-update-grid-state-action': // feed, channel
@@ -67,7 +67,7 @@ window.nova_plugins.push({
                // case 'yt-window-scrolled':
                // case 'yt-service-request': // results, watch
 
-               // console.log(evt.detail?.actionName); // flltered
+               // console.debug(evt.detail?.actionName); // flltered
                switch (NOVA.currentPage) {
                   // case 'home':
                   // case 'results':
@@ -78,7 +78,7 @@ window.nova_plugins.push({
                         .forEach(thumb => {
                            thumb.classList.add(SELECTOR_CLASS_NAME);
 
-                           if (container = thumb.querySelector('a#thumbnail')) {
+                           if (container = thumb.querySelector('a#thumbnail.ytd-thumbnail')) {
                               // if (user_settings['thumbs-not-interested']) {
                               //    NOVA.waitSelector(`#${SELECTOR_OVERLAY_ID_NAME}`, { 'container': container })
                               //       .then(container => {
@@ -163,7 +163,7 @@ window.nova_plugins.push({
                   menuItemEl.style.backgroundColor = 'red';
                   // await NOVA.delay(500);
                   // if(confirm('click to mark red item?')) {
-                  menuItemEl.click();
+                  await menuItemEl.click();
                   // }
                   menuItemEl.style.backgroundColor = null;
                }

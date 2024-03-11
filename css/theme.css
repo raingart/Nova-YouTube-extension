@@ -30,7 +30,8 @@
       --input-bg: #171717;
       --input-border: #2d2d2d;
       --checkbox-bg: #188cc3;
-      --li-item: #353535;
+      /* --li-item: #353535; */
+      --li-item: #303030;
       --hr: #3d3d3d;
       --btn-bg: #3e3e3e;
 
@@ -97,22 +98,13 @@ input[type=button]:hover {
    height: 8px;
 }
 
-::-webkit-scrollbar-thumb {
-   /* background-color: #ccc; */
-   background-color: #bbb;
-}
-
-::-webkit-scrollbar-thumb:hover {
-   background-color: #aaa;
-}
-
-::-webkit-scrollbar-thumb:active {
-   background-color: #888;
-}
-
-::-webkit-scrollbar-track {
-   background-color: #ddd;
-}
+/* ::-webkit-scrollbar-thumb { background-color: #ccc; } */
+/* beautify ignore:start */
+::-webkit-scrollbar-thumb        { background-color: #bbb; }
+::-webkit-scrollbar-thumb:hover  { background-color: #aaa; }
+::-webkit-scrollbar-thumb:active { background-color: #888; }
+::-webkit-scrollbar-track        { background-color: #ddd; }
+/* beautify ignore:end */
 
 /* ::-webkit-scrollbar-button:single-button {
    background-color: radial-gradient(circle at center, #333 40%, var(--scrollbar-bg) 0)
@@ -135,28 +127,13 @@ input[type=button]:hover {
    border: 2px solid transparent
 }
 
+/* beautify ignore:start */
 @media (prefers-color-scheme:dark) {
-   body:after {
-      display: none;
-   }
-
-   ::-webkit-scrollbar-thumb {
-      background-color: #555;
-   }
-
-   ::-webkit-scrollbar-thumb:hover {
-      background-color: #888;
-   }
-
-   ::-webkit-scrollbar-thumb:active {
-      background-color: #ccc;
-   }
-
-   ::-webkit-scrollbar-track {
-      background-color: #222;
-   }
-
-   /* ::-webkit-scrollbar-track:hover {
-      background-color: #444;
-   } */
+   body:after { display: none; }
+   ::-webkit-scrollbar-thumb        { background-color: #555; }
+   ::-webkit-scrollbar-thumb:hover  { background-color: #888; }
+   ::-webkit-scrollbar-thumb:active { background-color: #ccc; }
+   ::-webkit-scrollbar-track        { background-color: #222; }
+   /* ::-webkit-scrollbar-track:hover { background-color: #444; } */
 }
+/* beautify ignore:end */

@@ -22,10 +22,11 @@ window.nova_plugins.push({
    section: 'sidebar',
    // desc: '',
    'plugins-conflict': 'description-popup',
+   // 'plugins-conflict': 'playlist-extended',
    _runtime: user_settings => {
 
       // exclude playlists
-      if (location.search.includes('list=')) return;
+      if (user_settings.move_to_sidebar_target != 'info' && location.search.includes('list=')) return;
 
       const
          SELECTOR_CONTAINER = 'ytd-watch-flexy:not([fullscreen])',

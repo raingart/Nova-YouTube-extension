@@ -39,6 +39,7 @@ window.nova_plugins.push({
       // alt4 - https://greasyfork.org/en/scripts/39153-youtube-auto-resume
       // alt5 - https://greasyfork.org/en/scripts/478990-youtube-resume
       // alt6 - https://greasyfork.org/en/scripts/481388-youtube-video-resumer
+      // alt7 - https://greasyfork.org/en/scripts/487305-youtube-save-resume-progress
 
       // fix - Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document.
       if (!navigator.cookieEnabled && NOVA.currentPage == 'embed') return;
@@ -80,8 +81,8 @@ window.nova_plugins.push({
          // ad skip
          if (this.currentTime > 5 && this.duration > 30 && !movie_player.classList.contains('ad-showing')) {
             // console.debug('save progress time', this.currentTime);
-            sessionStorage.setItem(cacheName, ~~this.currentTime);
-            // new URL(location.href).searchParams.set('t', ~~this.currentTime); // url way
+            sessionStorage.setItem(cacheName, Math.trunc(this.currentTime));
+            // new URL(location.href).searchParams.set('t', Math.trunc(this.currentTime)); // url way
          }
       }
 
@@ -123,7 +124,7 @@ window.nova_plugins.push({
             // fix video ended
             if (this.currentTime < (this.duration - 1) && this.currentTime > 5 && this.duration > 10) {
                delaySaveOnPauseURL = setTimeout(() => {
-                  NOVA.updateUrl(NOVA.queryURL.set({ 't': ~~this.currentTime + 's' }));
+                  NOVA.updateUrl(NOVA.queryURL.set({ 't': Math.trunc(this.currentTime) + 's' }));
                }, 100); // 100ms
             }
          });

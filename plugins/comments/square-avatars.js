@@ -63,6 +63,7 @@ window.nova_plugins.push({
 
       // apply flag
       NOVA.waitUntil(() => {
+         // NOTE: the 'yt' object is only accessible when using 'unsafeWindow'
          if (window.yt && (obj = yt?.config_?.EXPERIMENT_FLAGS) && Object.keys(obj).length) {
             yt.config_.EXPERIMENT_FLAGS.web_rounded_thumbnails = false;
             return true;

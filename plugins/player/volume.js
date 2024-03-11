@@ -1,5 +1,6 @@
 // for test
 // the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
+// https://www.youtube.com/watch?v=e8ODm-F9-IM - stereo test
 
 window.nova_plugins.push({
    id: 'video-volume',
@@ -223,12 +224,12 @@ window.nova_plugins.push({
                   this.audioCtx = new AudioContext();
                   const source = this.audioCtx.createMediaElementSource(NOVA.videoElement);
                   this.node = this.audioCtx.createGain();
-                  this.node.gain.value = ~~(level / 100);
+                  this.node.gain.value = Math.trunc(level / 100);
                   source.connect(this.node);
                   this.node.connect(this.audioCtx.destination);
                }
 
-               if (this.node.gain.value < 7) this.node.gain.value += 1; // 7(700%) max
+               if (this.node.gain.value <= 6) this.node.gain.value += 1; // max 600%
 
                NOVA.triggerOSD(movie_player.getVolume() * this.node.gain.value + '%');
                // this.buildVolumeSlider();
@@ -266,7 +267,6 @@ window.nova_plugins.push({
 
                (document.getElementById(SELECTOR_ID) || (function () {
                   const SELECTOR = '#' + SELECTOR_ID; // for css
-
                   NOVA.css.push(`
                      ${SELECTOR} {
                         display: none;
@@ -281,12 +281,14 @@ window.nova_plugins.push({
                         display: block;
                      }`);
 
-                  // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
-                  // return document.getElementById(SELECTOR_ID);
                   const el = document.createElement('span');
                   el.id = SELECTOR_ID;
-                  container.insertAdjacentElement('beforeend', el);
-                  return el;
+                  return container.appendChild(el);
+                  // container.insertAdjacentElement('beforeend', el);
+                  // return el;
+                  // 62.88 % slower
+                  // container.insertAdjacentHTML('beforeend', `<span id="${SELECTOR_ID}">${text}</span>`);
+                  // return document.getElementById(SELECTOR_ID);
                })())
                   .textContent = text;
 
@@ -406,12 +408,12 @@ window.nova_plugins.push({
          // title: '',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -466,12 +468,12 @@ window.nova_plugins.push({
          // title: '',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

@@ -6,6 +6,7 @@
 // https://www.youtube.com/watch?v=TaQwW5eQZeY - (121:120)
 // https://www.youtube.com/watch?v=aznxojO15M0 - (ultra-wide)
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - (ultra-ultra-wide)
+// https://www.youtube.com/watch?v=nk43m_R9IVc - 21:9
 
 window.nova_plugins.push({
    id: 'player-resize-ratio',
@@ -93,7 +94,7 @@ window.nova_plugins.push({
 
                         if (!ytd_watch.theater) {
                            width = movie_player.offsetWidth;
-                           height = Math.round(movie_player.offsetWidth / (16 / 9));
+                           height = Math.ceil(movie_player.offsetWidth / (16 / 9));
 
                            if (ytd_watch.updateStyles) {
                               ytd_watch.updateStyles({

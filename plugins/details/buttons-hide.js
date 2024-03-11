@@ -23,6 +23,9 @@ window.nova_plugins.push({
    // 'plugins-conflict': 'return-dislike',
    _runtime: user_settings => {
 
+      // alt1 - https://greasyfork.org/en/scripts/488224-control-panel-for-youtube
+      // alt2 - https://greasyfork.org/en/scripts/472081-youtube-hide-tool
+
       const SELECTOR_BTN_CONTAINER = 'ytd-watch-metadata #actions';
 
       // alt - https://greasyfork.org/en/scripts/447614-youtube-hide-download-clip-and-thanks-buttons

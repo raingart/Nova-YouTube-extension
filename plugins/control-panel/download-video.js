@@ -485,7 +485,7 @@ window.nova_plugins.push({
                   console.debug('streamingData', streamingData);
 
                   // https://tyrrrz.me/blog/reverse-engineering-youtube
-                  // console.log(`stream:`, streamArr);
+                  // console.debug(`stream:`, streamArr);
                   // [
                   //    "itag": 12
                   //    "url": "https://xx.googlevideo.com/videoplayback",
@@ -493,7 +493,7 @@ window.nova_plugins.push({
                   //    "fps": 30,
                   //    "qualityLabel": "720p"
                   // ]
-                  // console.log(`adaptive:`, streamArr);
+                  // console.debug(`adaptive:`, streamArr);
                   // [
                   //    "itag": 18
                   //    "url": "https://xx.googlevideo.com/videoplayback",
@@ -573,6 +573,7 @@ window.nova_plugins.push({
                   if (typeof ytplayer === 'object'
                      && (endpoint = ytplayer.config?.assets?.js
                         || ytplayer.web_player_context_config?.jsUrl)
+                        // NOTE: the 'yt' object is only accessible when using 'unsafeWindow'
                         // yt.config_.PLAYER_JS_URL // diff ver
                   ) {
                      return 'https://' + location.host + endpoint;

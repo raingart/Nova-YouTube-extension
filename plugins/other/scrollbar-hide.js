@@ -48,7 +48,7 @@ window.nova_plugins.push({
 
       if (user_settings.scrollbar_hide_toggle_on_scroll) {
          // toggle on scroll
-         window.addEventListener('scroll', () => {
+         window.addEventListener('scroll', function blink() {
             if (NOVA.currentPage != 'watch') return;
 
             if (document.documentElement.scrollHeight > window.innerHeight) {
@@ -56,9 +56,8 @@ window.nova_plugins.push({
                if (document.documentElement.hasAttribute(HIDE_SCROLL_ATTR)) {
                   document.documentElement.removeAttribute(HIDE_SCROLL_ATTR); // remove
                }
-
-               if (typeof this.fade === 'number') clearTimeout(this.fade); // reset timeout
-               this.fade = setTimeout(() => {
+               if (typeof blink.fade === 'number') clearTimeout(blink.fade); // reset timeout
+               blink.fade = setTimeout(() => {
                   document.documentElement.setAttribute(HIDE_SCROLL_ATTR, true); // add
                }, 700); // 700ms
             }

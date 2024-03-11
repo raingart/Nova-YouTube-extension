@@ -19,7 +19,6 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'feed, channel, watch, -mobile',
    section: 'thumbs',
-   opt_api_key_warn: true,
    desc: 'You must be logged in',
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -54,7 +53,7 @@ window.nova_plugins.push({
 
       // page update event
       document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
+         // console.debug(evt.detail?.actionName);
          switch (evt.detail?.actionName) {
             case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
             case 'ytd-update-grid-state-action': // feed, channel
@@ -69,7 +68,7 @@ window.nova_plugins.push({
                // case 'yt-window-scrolled':
                // case 'yt-service-request': // results, watch
 
-               // console.log(evt.detail?.actionName); // flltered
+               // console.debug(evt.detail?.actionName); // flltered
                switch (NOVA.currentPage) {
                   // case 'home':
                   // case 'results':
@@ -80,7 +79,7 @@ window.nova_plugins.push({
                         .forEach(thumb => {
                            thumb.classList.add(SELECTOR_CLASS_NAME);
 
-                           if (container = thumb.querySelector('a#thumbnail')) {
+                           if (container = thumb.querySelector('a#thumbnail.ytd-thumbnail')) {
                               if (user_settings['thumbs-watch-later']) {
                                  NOVA.waitSelector(`#${SELECTOR_OVERLAY_ID_NAME}`, { 'container': container })
                                     .then(container => {
@@ -167,9 +166,9 @@ window.nova_plugins.push({
                // click by original "Not interested" menu item
                if (menuItemEl = document.body.querySelector('tp-yt-iron-dropdown [role="menuitem"]:has(path[d^="M12 2c5.52"])')) {
                   menuItemEl.style.backgroundColor = 'red';
-                  await NOVA.delay(500);
+                  // await NOVA.delay(500);
                   // if(confirm('click to mark red item?')) {
-                  menuItemEl.click();
+                  await menuItemEl.click();
                   // }
                   menuItemEl.style.backgroundColor = null;
                }

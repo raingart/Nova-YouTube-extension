@@ -3,7 +3,7 @@
 // https://www.youtube.com/channel/UCdNqq07dfQ_hBuOJRfWvRRA
 
 window.nova_plugins.push({
-   id: 'thumbnails-grid-count',
+   id: 'thumbs-grid-count',
    title: 'Thumbnails count in row',
    // 'title:zh': '',
    // 'title:ja': '',
@@ -33,7 +33,7 @@ window.nova_plugins.push({
       // Strategy 1
       const
          MathMin_orig = Math.min,
-         addRowCount = +user_settings.thumbnails_grid_count || 1;
+         addRowCount = +user_settings.thumbs_grid_count || 1;
 
       Math.min = function () {
          return MathMin_orig.apply(Math, arguments)
@@ -41,7 +41,7 @@ window.nova_plugins.push({
       };
 
       // Strategy 2
-      // const videosPerRow = +user_settings.thumbnails_grid_count;
+      // const videosPerRow = +user_settings.thumbs_grid_count;
       // 4
       // `.ytd-rich-grid-renderer {
       //            --ytd-rich-grid-items-per-row: 4;
@@ -188,7 +188,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      thumbnails_grid_count: {
+      thumbs_grid_count: {
          _tagName: 'input',
          label: 'Add to row',
          // 'label:zh': '',

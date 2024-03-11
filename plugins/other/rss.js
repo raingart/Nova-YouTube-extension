@@ -77,7 +77,7 @@ window.nova_plugins.push({
             const link = document.createElement('a');
             link.id = SELECTOR_ID;
             link.target = '_blank';
-            // link.title = 'RSS';
+            link.title = 'Nova RSS';
             link.className = `yt-spec-button-shape-next--overlay`;
             link.innerHTML =
                // `<svg viewBox="-28.364 -29.444 42.324 42.822" height="100%" width="100%">

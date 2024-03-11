@@ -1,5 +1,6 @@
 // for test
 // https://www.youtube.com/channel/UC9qr4fem8L5HEx0IDoktEpw/videos - many live
+// https://www.youtube.com/channel/UC5__XjulX-kPz8ejxOQVX6A - short duration
 
 window.nova_plugins.push({
    id: 'thumbs-hide',
@@ -23,6 +24,7 @@ window.nova_plugins.push({
 
       // alt1 - https://github.com/EvHaus/youtube-hide-watched
       // alt2 - https://greasyfork.org/en/scripts/446507-youtube-sub-feed-filter-2
+      // alt3 - https://greasyfork.org/en/scripts/488224-control-panel-for-youtube
 
       const
          SELECTOR_THUMBS_HIDE_CLASS_NAME = 'nova-thumbs-hide',
@@ -39,7 +41,7 @@ window.nova_plugins.push({
 
       // page update event
       document.addEventListener('yt-action', evt => {
-         // console.log(evt.detail?.actionName);
+         // console.debug(evt.detail?.actionName);
          switch (evt.detail?.actionName) {
             case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
             case 'ytd-update-grid-state-action': // feed, channel
@@ -53,7 +55,7 @@ window.nova_plugins.push({
                // case 'yt-window-scrolled':
                // case 'yt-service-request': // results, watch
 
-               // console.log(evt.detail?.actionName); // flltered
+               // console.debug(evt.detail?.actionName); // flltered
                switch (NOVA.currentPage) {
                   case 'home':
                      thumbRemove.live();
@@ -102,7 +104,7 @@ window.nova_plugins.push({
             // default:
             //    break;
          }
-         });
+      });
       // }, { capture: true }); // before all events. Possible loading slowdown
 
       // inset filter-switch button
@@ -343,6 +345,19 @@ window.nova_plugins.push({
          mix() {
             if (!user_settings.thumbs_hide_mix) return;
 
+            // NOVA.isMobile
+            // ? `ytm-rich-item-renderer:has(> ytm-radio-renderer), ytm-compact-radio-renderer`
+            // :;
+            // mobile
+            // hideCssSelectors.push(
+            //    // Chip in Home
+            //    `ytm-chip-cloud-chip-renderer:has(> .chip-container[aria-label="${getString('MIXES')}"])`,
+            //    // Home
+            //    'ytm-rich-item-renderer:has(> ytm-radio-renderer)',
+            //    // Search result
+            //    'ytm-compact-radio-renderer',
+            // )
+
             document.body.querySelectorAll(
                // .ytp-videowall-still[data-is-mix=true],
                // ytd-browse[page-subtype=home] a[href$="start_radio=1"],
@@ -369,8 +384,8 @@ window.nova_plugins.push({
          // alt2 - https://greasyfork.org/en/scripts/424945-youtube-watched-subscription-hider
          watched() {
             if (!user_settings.thumbs_hide_watched) return;
-            // conflict with [thumbnails-watched] plugin
-            if (!user_settings['thumbnails-watched']) return;
+            // conflict with [thumbs-watched] plugin
+            if (!user_settings['thumbs-watched']) return;
 
             const PERCENT_COMPLETE = +user_settings.thumbs_hide_watched_percent_complete || 90;
 
@@ -550,7 +565,7 @@ window.nova_plugins.push({
       },
       thumbs_hide_live_channels_exception: {
          _tagName: 'textarea',
-         label: 'Channels exception',
+         label: 'Live channels exception',
          'label:zh': '异常通道列表',
          'label:ja': '例外チャネルのリスト',
          // 'label:ko': '채널 목록',

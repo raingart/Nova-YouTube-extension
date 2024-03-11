@@ -230,7 +230,7 @@ window.nova_plugins.push({
 
       //          //          // console.debug('Chapter', chapterRatio, chapterWidth);
       //          //          if (chapterRatio >= progressRatio && chapterRatio < 1) {
-      //          //             return ~~(chapterRatio * this.duration) + chapterMargin + 1;
+      //          //             return Math.trunc(chapterRatio * this.duration) + chapterMargin + 1;
       //          //          }
       //          //          // accumulate passed
       //          //          passedWidth += chapterWidth + chapterMargin;
@@ -276,32 +276,28 @@ window.nova_plugins.push({
          let
             pressed,
             isDoublePress,
+            lastWhich,
             lastPressed = keyNameFilter;
 
-         const
-            timeOut = () => setTimeout(() => isDoublePress = false, 500), // 500ms
-            handleDoublePresss = key => {
-               // console.debug(key.key, 'pressed two times');
-               if (callback && typeof callback === 'function') return callback(key);
-            };
+         document.addEventListener('keyup', keyPress);
 
          function keyPress(evt) {
             if (['input', 'textarea', 'select'].includes(evt.target.localName) || evt.target.isContentEditable) return;
 
             pressed = (keyNameFilter.length === 1) || ['Control', 'Shift'].includes(keyNameFilter) ? evt.key : evt.code;
             // console.debug('doubleKeyPressListener %s=>%s=%s', lastPressed, pressed, isDoublePress);
-            if (isDoublePress && pressed === lastPressed) {
+            if (isDoublePress && (lastWhich === evt.which) && (pressed === lastPressed)) {
                isDoublePress = false;
-               handleDoublePresss(evt);
+               if (callback && typeof callback === 'function') return callback(evt);
             }
             else {
                isDoublePress = true;
-               timeOut();
+               setTimeout(() => isDoublePress = false, 500); // 500ms
             }
 
             if (!keyNameFilter) lastPressed = pressed;
+            lastWhich = evt.which;
          }
-         document.addEventListener('keyup', keyPress);
       }
 
       // custom volume from [save-channel-state] plugin
@@ -323,18 +319,18 @@ window.nova_plugins.push({
                });
             });
       }
-      else if (+user_settings.skip_into_sec) {
+      else if (+user_settings.skip_into_sec && !NOVA.queryURL.has('t')) {
          NOVA.waitSelector('#movie_player video')
             .then(video => {
                NOVA.runOnPageLoad(() => {
                   if (NOVA.currentPage == 'watch') {
-                     video.addEventListener('canplay', timeLeapInto.bind(video), { capture: true, once: true });
+                     video.addEventListener('canplay', timeLeapInto.bind(video, user_settings.skip_into_sec), { capture: true, once: true });
                   }
                });
             });
       }
 
-      function timeLeapInto(time_seek = user_settings.skip_into_sec || 10) {
+      function timeLeapInto(time_seek = 10) {
          if (!time_seek && !user_settings.skip_into_sec_in_music && NOVA.isMusic()) return;
          // start - fix conflict with plugin [player-resume-playback]
          const
@@ -349,7 +345,7 @@ window.nova_plugins.push({
 
          // isNaN(this.duration) - waiting for the duration can be too expensive and long
          if ((isNaN(this.duration) || this.duration > 30)
-            && this.currentTime < (+user_settings.skip_into_sec || +time_seek)
+            && (this.currentTime < +time_seek)
          ) {
             // console.debug('ad intro seek', time_seek);
             this.currentTime = +time_seek;
@@ -414,15 +410,15 @@ window.nova_plugins.push({
          // 'title:ua': '',
          options: [
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shift (any)', value: 'Shift' },
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrl (any)', value: 'Control' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight', selected: true },
-            // { label: 'alt (both)', value: 'alt' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'Shift (any)', value: 'Shift' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'Ctrl (any)', value: 'Control' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight', selected: true },
+            // { label: 'Alt (both)', value: 'alt' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

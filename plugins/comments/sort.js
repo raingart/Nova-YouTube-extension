@@ -24,8 +24,8 @@ window.nova_plugins.push({
    'title:ua': 'Сортування коментарів',
    run_on_pages: 'watch, -mobile',
    // restart_on_location_change: true,
-   opt_api_key_warn: true,
    section: 'comments',
+   opt_api_key_warn: true,
    desc: 'add modal',
    // 'desc:zh': '',
    // 'desc:ja': '',
@@ -50,11 +50,12 @@ window.nova_plugins.push({
       // #comments #contents #submessage[is-empty] - "Comments are turned off."
 
       const
-         MAX_COMMENTS = 500,
+         MAX_COMMENTS = 250, // no API key limit comments
          // CACHE_PREFIX = 'nova-channel-videos-count:',
          MODAL_NAME_SELECTOR_ID = 'nova-modal-comments',
          MODAL_CONTENT_SELECTOR_ID = 'modal-content',
          NOVA_REPLYS_SELECTOR_ID = 'nova-replys',
+         NOVA_REPLYS_SWITCH_CLASS_NAME = NOVA_REPLYS_SELECTOR_ID + '-switch',
          // textarea to array
          BLOCK_KEYWORDS = NOVA.strToArray(user_settings.comments_sort_words_blocklist?.toLowerCase());
       // getCacheName = () => CACHE_PREFIX + ':' + (NOVA.queryURL.get('v') || movie_player.getVideoData().video_id);
@@ -165,7 +166,7 @@ window.nova_plugins.push({
          const params = {
             'videoId': NOVA.queryURL.get('v') || movie_player.getVideoData().video_id,
             'part': 'snippet,replies',
-            'maxResults': 100, // max 100
+            'maxResults': 100, // API max limit 100
             'order': 'relevance', // 'time',
          };
 
@@ -233,10 +234,12 @@ window.nova_plugins.push({
                   }
                });
 
-               // max 500 comments
-               if (!user_settings['user-api-key'] && commentList.length > MAX_COMMENTS) {
-                  // NOVA.uiAlert('Use your personal API key to overcome the 500 comments limit');
-                  alert('Use your personal API key to overcome the 500 comments limit');
+               // no API key limit comments
+               if (!user_settings['user-api-key'] && commentList.length >= MAX_COMMENTS) {
+                  // const msgMaxComments = `Use your personal API key to overcome the ${MAX_COMMENTS} comments limit`;
+                  // // NOVA.uiAlert(msgMaxComments);
+                  // alert(msgMaxComments);
+                  // console.warn(msgMaxComments);
                   genTable();
                }
                // get next page
@@ -245,7 +248,7 @@ window.nova_plugins.push({
                // ) {
                else if (res?.nextPageToken) {
                   // display current download status
-                  document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Loading: ${commentList.length}</pre>`;
+                  document.getElementById(MODAL_CONTENT_SELECTOR_ID).innerHTML = `<pre>Loading: ${commentList.length + (user_settings['user-api-key'] ? '' : '/' + MAX_COMMENTS)}</pre>`;
 
                   getComments(res?.nextPageToken);
                }
@@ -264,7 +267,8 @@ window.nova_plugins.push({
 
          const ul = document.createElement('tbody');
 
-         const channelName = (href = document.body.querySelector('#channel-name a[href]')?.href) && new URL(href).pathname;
+         // @channelA
+         const channelName = (href = document.body.querySelector('#owner #upload-info #channel-name a[href]')?.href) && new URL(href).pathname;
 
          commentList
             .sort((a, b) => b.likeCount - a.likeCount) // default sorting by number of likes
@@ -282,7 +286,7 @@ window.nova_plugins.push({
 
                   li.innerHTML =
                      `<td>${comment.likeCount}</td>
-                     <td sorttable_customkey="${comment.totalReplyCount}" class="nova-switch">
+                     <td sorttable_customkey="${comment.totalReplyCount}" class="${NOVA_REPLYS_SWITCH_CLASS_NAME}">
                      ${comment.comments?.length
                         ? `<a href="https://www.youtube.com/watch?v=${comment.videoId}&lc=${comment.id}" target="_blank" title="Open comment link">${comment.comments.length}</a> <label for="${replyInputName}"></label>`
                         : ''}</td>
@@ -458,7 +462,7 @@ window.nova_plugins.push({
             }
 
             /* replies checkbox */
-            .nova-switch input[type=checkbox] {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox] {
                --height: 1.5em;
                --disabled-opacity: .7;
 
@@ -501,13 +505,13 @@ window.nova_plugins.push({
                font-weight: bold;
             }
 
-            .nova-switch input[type=checkbox]:hover:before {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:hover:before {
                background-color: var(--off-hover-bg);
                /* background-color: greenyellow; */
             }
 
-            .nova-switch input[type=checkbox]:after,
-            .nova-switch input[type=checkbox]:before {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:after,
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:before {
                position: absolute;
                transition: left 200ms ease-in-out;
                width: 100%;
@@ -516,51 +520,51 @@ window.nova_plugins.push({
                /* box-shadow: 0 0 .25em rgba(0, 0, 0, .3); */
             }
 
-            .nova-switch input[type=checkbox]:after {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:after {
                left: 100%;
                content: var(--text-on);
                font-weight: bold;
             }
 
-            .nova-switch input[type=checkbox]:before {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:before {
                left: 0;
                content: var(--text-off);
             }
 
-            .nova-switch input[type=checkbox]:active {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:active {
                /* line on press */
                background-color: var(--checked-bg);
             }
 
-            .nova-switch input[type=checkbox]:active:before {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:active:before {
                left: -10%;
                content: var(--text-on-press);
             }
 
-            .nova-switch input[type=checkbox]:checked {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:checked {
                color: var(--checked-color);
                background-color: var(--checked-bg);
             }
 
-            .nova-switch input[type=checkbox]:checked:before {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:checked:before {
                left: -100%;
             }
 
-            .nova-switch input[type=checkbox]:checked:after {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:checked:after {
                left: 0;
             }
 
-            .nova-switch input[type=checkbox]:checked:active:after {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox]:checked:active:after {
                left: 10%;
                content: var(--text-off-press);
                background-color: var(--checked-bg-active);
             }
 
-            .nova-switch input[type=checkbox] [disabled] {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox] [disabled] {
                cursor: not-allowed;
             }
 
-            .nova-switch input[type=checkbox] [disabled] {
+            .${NOVA_REPLYS_SWITCH_CLASS_NAME} input[type=checkbox] [disabled] {
                opacity: var(--disabled-opacity);
             }
             `);
@@ -582,10 +586,10 @@ window.nova_plugins.push({
 
       //       if (t = NOVA.queryURL.get('t', target.href)) {
       //          // '10m42s' > '10:42' > '642'
-      //          t = NOVA.formatTimeOut.hmsToSec(t.replace(/m/, ':').replace(/s$/, ''));
+      //          t = Math.trunc(NOVA.formatTimeOut.hmsToSec(t.replace(/m/, ':').replace(/s$/, '')));
 
-      //          target.href = NOVA.queryURL.set({ 't': ~~t + 's' }, target.href);
-      //          NOVA.updateUrl(NOVA.queryURL.set({ 't': ~~t + 's' }, target.href));
+      //          target.href = NOVA.queryURL.set({ 't': t + 's' }, target.href);
+      //          NOVA.updateUrl(NOVA.queryURL.set({ 't': t + 's' }, target.href));
       //          // alert(target.href);
       //       }
       //    }
@@ -721,6 +725,7 @@ window.nova_plugins.push({
             }
 
             .modal-close:before { content: "\\2715"; }
+            /* .modal-close:before { content: "❌"; } */
 
             .modal-close:hover {
                background-color: #ea3c3c;

@@ -54,7 +54,7 @@ window.nova_plugins.push({
          // Strategy 2 (optimized but doesn't work in mobile)
          // page update event
          document.addEventListener('yt-action', evt => {
-            // console.log(evt.detail?.actionName);
+            // console.debug(evt.detail?.actionName);
             switch (evt.detail?.actionName) {
                case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
                case 'ytd-update-grid-state-action': // feed, channel
@@ -68,7 +68,7 @@ window.nova_plugins.push({
                   // case 'yt-window-scrolled':
                   // case 'yt-service-request': // results, watch
 
-                  // console.log(evt.detail?.actionName); // flltered
+                  // console.debug(evt.detail?.actionName); // flltered
                   hideThumb();
                   break;
 

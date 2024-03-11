@@ -16,20 +16,7 @@ window.nova_plugins.push({
    // 'title:ua': 'Замінити стандартний інтерфейс',
    run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   desc: "'bezel' that's what YouTube called",
-   // 'desc:zh': '',
-   // 'desc:ja': '',
-   // 'desc:ko': '',
-   // 'desc:vi': '',
-   // 'desc:id': '',
-   // 'desc:es': '',
-   // 'desc:pt': '',
-   // 'desc:fr': '',
-   // 'desc:it': '',
-   // 'desc:tr': '',
-   // 'desc:de': '',
-   // 'desc:pl': '',
-   // 'desc:ua': '',
+   // desc: "'bezel' that's what YouTube called",
    _runtime: user_settings => {
 
       // alt:
@@ -45,24 +32,26 @@ window.nova_plugins.push({
             // volume
             video.addEventListener('volumechange', function () {
                // console.debug('volumechange', movie_player.getVolume(), this.volume); // there is a difference
-               OSD.set({
+               OSD.show({
                   'pt': Math.round(movie_player.getVolume()),
                   'suffix': '%',
                   // 'timeout_ms': 0,
+                  'clear_previous_text': true,
                });
             });
             // rate
-            video.addEventListener('ratechange', () => OSD.set({
+            video.addEventListener('ratechange', () => OSD.show({
                'pt': video.playbackRate,
                'suffix': 'x',
                // 'timeout_ms': 0,
+               'clear_previous_text': true,
             }));
 
             if (user_settings.player_indicator_chapter) {
                // loaded description == loaded chapterList
                NOVA.waitSelector('ytd-watch-metadata #description.ytd-watch-metadata')
                   .then(() => {
-                     const getNextChapterIndex = () => chapterList?.findIndex(c => c.sec > ~~video.currentTime);
+                     const getNextChapterIndex = () => chapterList?.findIndex(c => c.sec > Math.trunc(video.currentTime));
                      let chapterList, lastChapTime = 0;
 
                      // reset chapterList
@@ -116,18 +105,24 @@ window.nova_plugins.push({
                // for (const record of mutationRecordsArray) {
                //    console.debug('Old value:', record.oldValue);
                // }
-               // console.log('bezel mutation detected', record.type, target.textContent);
+               // console.debug('bezel mutation detected', record.type, target.textContent);
                if (target.textContent) {
                   // fix round volume level on range player change
-                  if ((target.textContent?.endsWith('%') && parseInt(target.textContent) <= 100)
+                  if ((target.textContent?.endsWith('%')
+                     && (parseInt(target.textContent) <= 100
+                        || (user_settings.volume_unlimit && parseInt(target.textContent) <= 600)
+                     )
+                  )
                      || target.textContent?.endsWith('x')
+                     || target.textContent?.startsWith('+')
                   ) {
                      return;
                   }
-                  OSD.set({
+                  OSD.show({
                      'pt': target.textContent,
                      // 'suffix': '',
                      'timeout_ms': (user_settings.player_indicator_chapter_time || 1.8) * 1000, // ms
+                     // 'clear_previous_text': false,
                   });
                }
             })
@@ -136,9 +131,6 @@ window.nova_plugins.push({
          });
 
       const OSD = {
-         get() {
-            return this.container || this.create();
-         },
          // TODO The idea of ​​copying the progress bar. To display segments of time markers
          // a = el.cloneNode(true)
          // document.getElementById(SELECTOR_ID).innerHTML = a.innerHTML
@@ -171,7 +163,13 @@ window.nova_plugins.push({
                   color: var(--color);
                }`);
             // template
-            movie_player.insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
+
+            const template = document.createElement('div');
+            template.id = SELECTOR_ID;
+            template.innerHTML = '<span></span>';
+            movie_player.append(template);
+            // 25.72 % slower
+            // movie_player.insertAdjacentHTML('beforeend', `<div id="${SELECTOR_ID}"><span></span></div>`);
 
             this.container = document.getElementById(SELECTOR_ID);
             this.spanOSD = this.container.querySelector('span'); // export el
@@ -235,16 +233,27 @@ window.nova_plugins.push({
             return this.container;
          },
 
-         set({ pt = 100, suffix = '', timeout_ms = 800 }) {
-            // console.debug('OSD set', ...arguments);
-            if (typeof this.fadeNovaOSD === 'number') {
-               clearTimeout(this.fadeNovaOSD); // reset fade
+         show({ pt = 100, suffix = '', timeout_ms = 800, clear_previous_text }) {
+            // console.debug('OSD show', ...arguments);
 
+            if (typeof this.fade === 'number') clearTimeout(this.fade); // reset fade
 
+            const hudContainer = this.container || this.create();
+
+            if (this.oldMsg) {
+               // this.spanOSD.innerText = this.oldMsg + '\n' + pt + suffix;
+               this.spanOSD.innerText += '\n' + pt + suffix;
+            }
+            else {
+               this.spanOSD.innerHTML = pt + suffix; // fix bold text. Like "Screenshot moment" (https://www.youtube.com/watch?v=4_m3HsaNwOE&list=PLhW3qG5bs-L9sJKoT1LC5grGT77sfW0Z8&index=1&t=405s)
+               // this.spanOSD.textContent = pt + suffix;
             }
 
-            let hudContainer = this.get();
-            const text = pt + suffix;
+            if (!clear_previous_text) {
+               this.oldMsg = this.spanOSD.innerText;
+               clearTimeout(this.timeoutMultiLine);
+               this.timeoutMultiLine = setTimeout(() => this.oldMsg = null, 600); // forget old msg after 600ms
+            }
 
             // rate to pt
             if (suffix == 'x') {
@@ -256,33 +265,30 @@ window.nova_plugins.push({
             switch (user_settings.player_indicator_type) {
                case 'bar-center':
                   this.spanOSD.style.width = pt + '%';
-                  this.spanOSD.textContent = text;
                   break;
 
                case 'bar-vertical':
                   this.spanOSD.style.height = pt + '%';
-                  this.spanOSD.textContent = text;
                   break;
 
                case 'bar-top':
                   hudContainer.style.background = `linear-gradient(to right, ${COLOR_OSD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
                   this.spanOSD.style.width = pt + '%';
-                  this.spanOSD.textContent = text;
                   break;
 
                // case 'text-top':
-               default:
-                  this.spanOSD.textContent = text;
+               // default:
             }
 
             hudContainer.style.transition = 'none';
             hudContainer.style.opacity = 1;
-            // hudContainer.style.visibility = 'visible';
+            hudContainer.style.visibility = 'visible';
 
-            this.fadeNovaOSD = setTimeout(() => {
+            this.fade = setTimeout(() => {
                hudContainer.style.transition = 'opacity 200ms ease-in';
                hudContainer.style.opacity = 0;
-               // hudContainer.style.visibility = 'hidden';
+               // setTimeout(() => this.spanOSD.textContent = '', 200); // clear text
+               setTimeout(() => hudContainer.style.visibility = 'hidden', 1000); // completely hide after 1s
             }, timeout_ms); // total 1s = 800ms + 200ms(hudContainer.style.transition)
          }
       };
@@ -291,20 +297,34 @@ window.nova_plugins.push({
    options: {
       player_indicator_type: {
          _tagName: 'select',
-         label: 'OSD type',
-         'label:zh': '指标类型',
-         'label:ja': 'インジケータータイプ',
-         // 'label:ko': '표시기 유형',
+         label: 'Mode',
+         'label:zh': '模式',
+         'label:ja': 'モード',
+         // 'label:ko': '방법',
          // 'label:vi': '',
-         // 'label:id': 'Gösterge tipi',
-         // 'label:es': 'Tipo de indicador',
-         'label:pt': 'Tipo de indicador',
-         'label:fr': "Type d'indicateur",
-         // 'label:it': 'Tipo di indicatore',
-         // 'label:tr': 'Varsayılan göstergeyi değiştir',
-         'label:de': 'Indikatortyp',
-         'label:pl': 'Typ wskaźnika',
-         'label:ua': 'Тип індикатора',
+         // 'label:id': 'Mode',
+         // 'label:es': 'Modo',
+         'label:pt': 'Modo',
+         // 'label:fr': 'Mode',
+         // 'label:it': 'Modalità',
+         // 'label:tr': 'Mod',
+         'label:de': 'Modus',
+         'label:pl': 'Tryb',
+         'label:ua': 'Режим',
+         // label: 'OSD type',
+         // 'label:zh': '指标类型',
+         // 'label:ja': 'インジケータータイプ',
+         // // 'label:ko': '표시기 유형',
+         // // 'label:vi': '',
+         // // 'label:id': 'Gösterge tipi',
+         // // 'label:es': 'Tipo de indicador',
+         // 'label:pt': 'Tipo de indicador',
+         // 'label:fr': "Type d'indicateur",
+         // // 'label:it': 'Tipo di indicatore',
+         // // 'label:tr': 'Varsayılan göstergeyi değiştir',
+         // 'label:de': 'Indikatortyp',
+         // 'label:pl': 'Typ wskaźnika',
+         // 'label:ua': 'Тип індикатора',
          options: [
             {
                label: 'text-top', value: 'text-top', selected: true,

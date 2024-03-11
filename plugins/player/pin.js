@@ -1,8 +1,11 @@
 // for test:
 // https://www.youtube.com/watch?v=d94PwdKQ3Ag
 // https://www.youtube.com/watch?v=twFNTZ6Y_OI - wide
+// https://www.youtube.com/watch?v=WbrSLLv0AlA - wide
 // https://www.youtube.com/watch?v=nX2anEXG0eE - square
 // https://www.youtube.com/watch?v=SDjbK8JWA_Y - square
+// https://www.youtube.com/watch?v=FGBhQbmPwH8 - square
+// https://www.youtube.com/watch?v=nk43m_R9IVc - 21:9
 
 window.nova_plugins.push({
    id: 'player-pin-scroll',
@@ -73,7 +76,7 @@ window.nova_plugins.push({
       //       //    try {
       //       //       await NOVA.videoElement.requestPictureInPicture();
       //       //    } catch (err) {
-      //       //       console.log(err)
+      //       //       console.error(err)
       //       //    }
       //       // });
       //       // document.body.prepend(pipBtn);
@@ -85,7 +88,7 @@ window.nova_plugins.push({
       //                try {
       //                   await document.exitPictureInPicture();
       //                } catch (err) {
-      //                   console.log(err)
+      //                   console.error(err)
       //                }
       //                // clickElement(pipBtn);
       //             }
@@ -96,7 +99,7 @@ window.nova_plugins.push({
       //             try {
       //                await video.requestPictureInPicture();
       //             } catch (err) {
-      //                console.log(err)
+      //                console.error(err)
       //             }
       //             // clickElement(pipBtn);
       //          }
@@ -136,7 +139,8 @@ window.nova_plugins.push({
                   // leave viewport
                   if (entry.isIntersecting) {
                      movie_player.classList.remove(CLASS_VALUE);
-                     makeDraggable.reset(); // save old pos. Clear curr pos
+                     makeDraggable.reset(); // reset current pos (old coordinates are saved)
+                     makeDraggable.disable(); // prevent unintended use
                   }
                   // enter viewport.
                   // else if (!movie_player.isFullscreen() // fix bug on scroll in fullscreen player mode
@@ -144,6 +148,9 @@ window.nova_plugins.push({
                      && document.documentElement.scrollTop // fix bug on exit fullscreen mode (https://github.com/raingart/Nova-YouTube-extension/issues/69)
                   ) {
                      movie_player.classList.add(CLASS_VALUE);
+                     // add drag
+                     makeDraggable.init(movie_player);
+                     // dragElement(player); // incorrect work
                      if (makeDraggable.storePos?.X) makeDraggable.moveByCoordinates(makeDraggable.storePos); // restore pos
                   }
 
@@ -159,10 +166,6 @@ window.nova_plugins.push({
 
       NOVA.waitSelector(PINNED_SELECTOR)
          .then(async player => {
-            // add drag
-            makeDraggable.init(player);
-            // dragElement(player); // incorrect work
-
             // wait video size
             await NOVA.waitUntil(
                // movie_player.clientWidth && movie_player.clientHeight
@@ -189,7 +192,7 @@ window.nova_plugins.push({
                   video.addEventListener('loadeddata', () => {
                      if (NOVA.currentPage != 'watch') return;
 
-                     NOVA.waitSelector(PINNED_SELECTOR)
+                     NOVA.waitSelector(PINNED_SELECTOR, { destroy_after_page_leaving: true })
                         .then(() => {
                            const width = NOVA.aspectRatio.calculateWidth(
                               movie_player.clientHeight,
@@ -236,12 +239,12 @@ window.nova_plugins.push({
                }, { capture: true });
                // Strategy 2
                // document.addEventListener('yt-action', evt => {
-               //    // console.log(evt.detail?.actionName);
+               //    // console.debug(evt.detail?.actionName);
                //    switch (evt.detail?.actionName) {
                //       // case 'yt-fullscreen-change-action': // to late
                //       // case 'yt-window-scrolled':
                //       case 'yt-close-all-popups-action':
-               //          // console.log(evt.detail?.actionName); // flltered
+               //          // console.debug(evt.detail?.actionName); // flltered
 
                //          scrollPos = document.documentElement.scrollTop;
                //          // console.debug('1', scrollPos, document.documentElement.scrollTop);
@@ -366,8 +369,7 @@ window.nova_plugins.push({
                left: 0 !important;
                top: 0 !important;
             }
-
-            .ended-mode video {
+            ${PINNED_SELECTOR}.ended-mode video {
                visibility: hidden;
             }`);
       }
@@ -436,13 +438,6 @@ window.nova_plugins.push({
          // storePos: { X, Y },
          attrNameMoving: 'nova-el-moving',
 
-         reset(clear_storePos) {
-            // switchElement.style.transform = ''; // clear drag state
-            this.dragTarget?.style.removeProperty('transform');// clear drag state
-            if (clear_storePos) this.storePos = this.xOffset = this.yOffset = 0;
-            else this.storePos = { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
-         },
-
          init(el_target = required()) {
             this.log('drag init', ...arguments);
             if (!(el_target instanceof HTMLElement)) return console.error('el_target not HTMLElement:', el_target);
@@ -450,41 +445,48 @@ window.nova_plugins.push({
             this.dragTarget = el_target;
 
             // touchs
-            // document.addEventListener('touchstart', this.dragStart.bind(this));
-            // document.addEventListener('touchend', this.dragEnd.bind(this));
-            // document.addEventListener('touchmove', this.draging.bind(this));
+            document.addEventListener('touchstart', this.dragStart.bind(this));
+            document.addEventListener('touchend', this.dragEnd.bind(this));
+            document.addEventListener('touchmove', this.draging.bind(this));
+            // document.addEventListener('focusin', this..bind(this));
+            // document.addEventListener('focusout', this..bind(this));
             // mouse
-            // document.addEventListener('mousedown', this.dragStart.bind(this));
-            // document.addEventListener('mouseup', this.dragEnd.bind(this));
-            // document.addEventListener('mousemove', this.draging.bind(this));
-            document.addEventListener('mousedown', evt => {
-               if (!el_target.classList.contains(CLASS_VALUE)) return;
-               this.dragStart.apply(this, [evt]);
-               // Doesn't work. Text selection broken default events
-               // evt.preventDefault();
-               // evt.stopImmediatePropagation();
-            });
-            document.addEventListener('mouseup', evt => {
-               if (this.moving) this.dragTarget.removeAttribute(this.attrNameMoving); // mark on moving
-               this.dragEnd.apply(this, [evt]);
-            });
-            document.addEventListener('mousemove', evt => {
-               if (this.moving && !this.dragTarget.hasAttribute(this.attrNameMoving)) {
-                  this.dragTarget.setAttribute(this.attrNameMoving, true); //  mark on moving
-               }
-               this.draging.apply(this, [evt]);
-            });
+            document.addEventListener('mousedown', this.dragStart.bind(this));
+            document.addEventListener('mouseup', this.dragEnd.bind(this));
+            document.addEventListener('mousemove', this.draging.bind(this));
 
-            // Mark on moving. alt preventDefault
-            NOVA.css.push(
-               `[${this.attrNameMoving}]:active {
-                  pointer-events: none;
-               }`);
-            // `[${this.attrNameMoving}]:active {
-            //    pointer-events: none;
-            //    cursor: grab; /* <-- Doesn't work */
-            //    outline: 2px dashed #3ea6ff !important;
-            // }`);
+            // css on moving
+            // NOVA.css.push(
+            //    `[${this.attrNameMoving}]:active {
+            //       pointer-events: none;
+            //       cursor: grab; /* <-- Doesn't work */
+            //       outline: 2px dashed #3ea6ff !important;
+            //    }`);
+         },
+
+         reset(clear_storePos) {
+            // switchElement.style.transform = ''; // clear drag state
+            this.dragTarget?.style.removeProperty('transform');// clear drag state
+            this.storePos = clear_storePos
+               ? this.xOffset = this.yOffset = 0
+               : { 'X': this.xOffset, 'Y': this.yOffset }; // save pos
+         },
+
+         disable() {
+            this.log('dragDisable', ...arguments);
+
+            this.dragTarget = null;
+
+            // touchs
+            document.removeEventListener('touchstart', this.dragStart);
+            document.removeEventListener('touchend', this.dragEnd);
+            document.removeEventListener('touchmove', this.draging);
+            // document.removeEventListener('focusin', this..bind(this));
+            // document.removeEventListener('focusout', this..bind(this));
+            // mouse
+            document.removeEventListener('mousedown', this.dragStart);
+            document.removeEventListener('mouseup', this.dragEnd);
+            document.removeEventListener('mousemove', this.draging);
          },
 
          dragStart(evt) {
@@ -503,9 +505,8 @@ window.nova_plugins.push({
                   this.initialY = evt.clientY - (this.yOffset || 0);
                   break;
             }
+
             this.moving = true;
-            // document.body.style.cursor = 'grab';
-            document.body.style.cursor = 'move';
          },
 
          dragEnd(evt) {
@@ -514,14 +515,22 @@ window.nova_plugins.push({
 
             this.initialX = this.currentX;
             this.initialY = this.currentY;
+
             this.moving = false;
+            this.dragTarget.style.pointerEvents = null;
             document.body.style.cursor = null;
+            this.dragTarget.removeAttribute(this.attrNameMoving); // unmark after moved
          },
 
          draging(evt) {
             if (!this.moving) return;
 
             this.log('draging');
+
+            this.dragTarget.style.pointerEvents = 'none';
+            // document.body.style.cursor = 'grab';
+            document.body.style.cursor = 'move';
+            if (!this.dragTarget.hasAttribute(this.attrNameMoving)) this.dragTarget.setAttribute(this.attrNameMoving, true); //  mark on moving
 
             switch (evt.type) {
                case 'touchmove':

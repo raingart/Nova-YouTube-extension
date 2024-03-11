@@ -18,7 +18,7 @@ const App = {
                return console.warn('processed in the iframe disable');
             }
             // Disabled the script if iframe in not "embed"
-            else if (!location.pathname.startsWith('/embed')) {
+            else if (!location.pathname.startsWith('/embed') && !location.pathname.startsWith('/live_chat')) {
                return console.warn('iframe skiped:', location.pathname);
             }
          }
@@ -69,17 +69,17 @@ const App = {
    reloadAfterMiniplayer(evt) {
       // if (!location.search.includes('list=')) return;
 
-      // console.log(evt.detail?.actionName);
+      // console.debug(evt.detail?.actionName);
       // switch (evt.detail?.actionName) {
       //    // case 'yt-miniplayer-endpoint-changed'':
       //    case 'yt-cache-miniplayer-page-action':
-      // console.log(evt.detail?.actionName); // flltered
+      // console.debug(evt.detail?.actionName); // flltered
       if (location.pathname == '/watch'
          // && evt.detail?.actionName.includes('miniplayer')
          && (evt.detail?.actionName == 'yt-cache-miniplayer-page-action')
          && this.isURLChanged()
       ) {
-         // console.log(evt.detail?.actionName); // flltered
+         // console.debug(evt.detail?.actionName); // flltered
          document.removeEventListener('yt-action', this.reloadAfterMiniplayer); // stop listener
          this.run();
          // location.reload();
@@ -128,7 +128,8 @@ const App = {
                margin: '50px',
                'z-index': 9999,
                'border-radius': '2px',
-               'background-color': typeof NOVA === 'object' ? '#0099ff' : 'crimson',
+               // 'background-color': typeof NOVA === 'object' ? '#0099ff' : 'crimson',
+               'background-color': typeof NOVA === 'object' ? '#e85717' : 'crimson',
                'box-shadow': 'rgb(0 0 0 / 50%) 0px 0px 3px',
                'font-size': '12px',
                color: '#fff',

@@ -93,8 +93,7 @@ window.nova_plugins.push({
                // alt - https://greasyfork.org/en/scripts/463641-enable-the-built-in-pip-button-on-youtube-media-control
                const pipBtn = document.createElement('button');
                pipBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME}`;
-               // pipBtn.title = 'Open in PictureInPicture';
-               pipBtn.setAttribute('tooltip', 'Open in PictureInPicture');
+               pipBtn.setAttribute('tooltip', 'Picture in Picture (PiP)');
                pipBtn.innerHTML = createSVG();
                // pipBtn.innerHTML =
                //    `<svg viewBox="-8 -6 36 36" height="100%" width="100%">
@@ -178,7 +177,7 @@ window.nova_plugins.push({
                   // list param ex.
                   // https://www.youtube.com/embed/PBlOi5OVcKs?start=0&amp;playsinline=1&amp;controls=0&amp;fs=20&amp;disablekb=1&amp;rel=0&amp;origin=https%3A%2F%2Ftyping-tube.net&amp;enablejsapi=1&amp;widgetid=1
 
-                  if (currentTime = ~~NOVA.videoElement?.currentTime) url.searchParams.set('start', currentTime);
+                  if (currentTime = Math.trunc(NOVA.videoElement?.currentTime)) url.searchParams.set('start', currentTime);
                   url.searchParams.set('autoplay', 1);
                   url.searchParams.set('popup', true); // deactivate popup-button for used window
 
@@ -298,7 +297,7 @@ window.nova_plugins.push({
                   if (textString = document.body.querySelector('[id^="caption-window"]')?.innerText) {
                      // const fontSizePt = +user_settings.player_buttons_custom_screenshot_subtitle_font_size || 40;
                      // context.font = `bold ${fontSizePt}pt Arial`; //  Atention! before textWidth
-                     context.font = `bold ${~~(canvas.height * .05)}px Arial`; //  Atention! before textWidth
+                     context.font = `bold ${Math.trunc(canvas.height * .05)}px Arial`; //  Atention! before textWidth
                      context.textAlign = 'buttom';
                      context.textBaseline = 'middle';
                      // context.fillStyle = 'pink';
@@ -354,6 +353,11 @@ window.nova_plugins.push({
                      // alert("The video is protected. Can't take screenshot due to security policy");
                      // container.remove();
                   }
+
+                  if (user_settings.player_buttons_custom_screenshot_to_clipboard && navigator.clipboard?.write) {
+                     return NOVA.triggerOSD('Screenshot copied to clipboard');
+                  }
+
                   // create
                   if (!container.id) {
                      container.id = SELECTOR_SCREENSHOT_ID;
@@ -890,8 +894,14 @@ window.nova_plugins.push({
                            if (qualityData = qualityFormatList[quality]) {
                               qualityItem.textContent = qualityData.label;
                               if (badge = qualityData.badge) {
-                                 qualityItem.insertAdjacentHTML('beforeend',
-                                    `<span class="quality-menu-item-label-badge">${badge}</span>`);
+                                 const labelBadge = document.createElement('span');
+                                 labelBadge.className = 'quality-menu-item-label-badge';
+                                 labelBadge.textContent = badge;
+                                 qualityItem.append(labelBadge);
+                                 // qualityItem.insertAdjacentElement('beforeend', labelBadge);
+                                 // 50.59 % slower
+                                 // qualityItem.insertAdjacentHTML('beforeend',
+                                 //    `<span class="quality-menu-item-label-badge">${badge}</span>`);
                               }
                               // if (movie_player.getVideoData().video_quality == quality) qualityItem.className = 'active';
 
@@ -968,7 +978,8 @@ window.nova_plugins.push({
                         return;
                      }
 
-                     const time = new Date().toTimeString().slice(0, 8);
+                     const formatLength = user_settings.player_buttons_custom_clock_seconds ? 8 : 5;
+                     const time = new Date().toTimeString().slice(0, formatLength);
                      clockEl.textContent = time;
                   }, 1000); // 1sec
                }
@@ -1077,9 +1088,9 @@ window.nova_plugins.push({
                   }
                   // return default
                   else {
-                     rateOrig = ((movie_player
-                        && (NOVA.videoElement.playbackRate % .25) === 0)
-                        || (NOVA.videoElement.playbackRate <= 2))
+                     rateOrig = (typeof movie_player === 'object'
+                        && (NOVA.videoElement.playbackRate % .25 === 0)
+                        && (NOVA.videoElement.playbackRate <= 2))
                         ? { 'default': movie_player.getPlaybackRate() }
                         : { 'html5': NOVA.videoElement.playbackRate };
 
@@ -1096,6 +1107,7 @@ window.nova_plugins.push({
 
                const playerRate = {
                   set(obj) {
+                     // console.debug('playerRate obj:', obj);
                      if (obj.hasOwnProperty('html5') || !movie_player) {
                         NOVA.videoElement.playbackRate = obj.html5;
                      }
@@ -1291,6 +1303,7 @@ window.nova_plugins.push({
                'label:ua': 'фото екрану',
             },
             {
+               // label: 'Picture in Picture (PiP)', value: 'picture-in-picture',
                label: 'picture-in-picture', value: 'picture-in-picture',
                // 'label:zh': '',
                // 'label:ja': '',
@@ -1371,7 +1384,8 @@ window.nova_plugins.push({
                'label:ua': 'переглянути пізніше',
             },
             {
-               label: 'thumbnail', value: 'thumbnail',
+               // label: 'thumbnail', value: 'thumbnail',
+               label: 'preview cover', value: 'thumbnail',
                'label:zh': '缩略图',
                'label:ja': 'サムネイル',
                // 'label:ko': '썸네일',
@@ -1448,12 +1462,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            // { label: 'shiftL', value: 'ShiftLeft' },
-            // { label: 'shiftR', value: 'ShiftRight' },
-            // { label: 'ctrlL', value: 'ControlLeft' },
-            // { label: 'ctrlR', value: 'ControlRight' },
-            // { label: 'altL', value: 'AltLeft' },
-            // { label: 'altR', value: 'AltRight' },
+            // { label: 'ShiftL', value: 'ShiftLeft' },
+            // { label: 'ShiftR', value: 'ShiftRight' },
+            // { label: 'CtrlL', value: 'ControlLeft' },
+            // { label: 'CtrlR', value: 'ControlRight' },
+            // { label: 'AltL', value: 'AltLeft' },
+            // { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -1510,12 +1524,12 @@ window.nova_plugins.push({
             // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            // { label: 'shiftL', value: 'ShiftLeft' },
-            // { label: 'shiftR', value: 'ShiftRight' },
-            // { label: 'ctrlL', value: 'ControlLeft' },
-            // { label: 'ctrlR', value: 'ControlRight' },
-            // { label: 'altL', value: 'AltLeft' },
-            // { label: 'altR', value: 'AltRight' },
+            // { label: 'ShiftL', value: 'ShiftLeft' },
+            // { label: 'ShiftR', value: 'ShiftRight' },
+            // { label: 'CtrlL', value: 'ControlLeft' },
+            // { label: 'CtrlR', value: 'ControlRight' },
+            // { label: 'AltL', value: 'AltLeft' },
+            // { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -1810,6 +1824,26 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: '',
          'data-dependent': { 'player_buttons_custom_items': ['range-speed'] },
+      },
+      player_buttons_custom_clock_seconds: {
+         _tagName: 'input',
+         label: 'Clock show seconds',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         type: 'checkbox',
+         // title: '',
+         'data-dependent': { 'player_buttons_custom_items': ['clock'] },
       },
       player_buttons_custom_clock_fullcreen: {
          _tagName: 'input',

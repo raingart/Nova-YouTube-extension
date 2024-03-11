@@ -2,7 +2,7 @@
 // https://www.youtube.com/watch?v=oWoWkxzeiok&list=OLAK5uy_kDx6ubTnuS4mYHCPyyX1NpXyCtoQN08M4&index=3
 
 window.nova_plugins.push({
-   id: 'thumbnails-watched',
+   id: 'thumbs-watched',
    // title: 'Mark watched videos',
    title: 'Mark watched thumbnails',
    'title:zh': '标记您观看的缩略图',
@@ -37,19 +37,19 @@ window.nova_plugins.push({
          /*a.ytp-videowall-still.ytp-suggestion-set:visited, <-- Doesn't work*/
          a#thumbnail:visited,
          a[class*="thumbnail"]:visited {
-            outline: 1px solid ${user_settings.thumbnails_watched_frame_color || 'red'} !important;
+            outline: 1px solid ${user_settings.thumbs_watched_frame_color || 'red'} !important;
          }
 
          /*for playlist*/
          ytd-playlist-panel-video-renderer a:visited #meta * {
-            color: ${user_settings.thumbnails_watched_title_color || '#ff4500'} !important;
+            color: ${user_settings.thumbs_watched_title_color || '#ff4500'} !important;
          }`);
 
-      if (user_settings.thumbnails_watched_title) {
+      if (user_settings.thumbs_watched_title) {
          NOVA.css.push(
             `a#video-title:visited:not(:hover),
             #description a:visited {
-               color: ${user_settings.thumbnails_watched_title_color} !important;
+               color: ${user_settings.thumbs_watched_title_color} !important;
             }`);
       }
 
@@ -71,7 +71,7 @@ window.nova_plugins.push({
 
    },
    options: {
-      thumbnails_watched_frame_color: {
+      thumbs_watched_frame_color: {
          _tagName: 'input',
          label: 'Frame color',
          'label:zh': '框架颜色',
@@ -90,7 +90,7 @@ window.nova_plugins.push({
          type: 'color',
          value: '#FF0000',
       },
-      thumbnails_watched_title: {
+      thumbs_watched_title: {
          _tagName: 'input',
          label: 'Set title color',
          'label:zh': '您要更改标题颜色吗？',
@@ -109,7 +109,7 @@ window.nova_plugins.push({
          type: 'checkbox',
          // title: '',
       },
-      thumbnails_watched_title_color: {
+      thumbs_watched_title_color: {
          _tagName: 'input',
          label: 'Choose title color',
          'label:zh': '选择标题颜色',
@@ -128,7 +128,7 @@ window.nova_plugins.push({
          type: 'color',
          // title: '',
          value: '#ff4500',
-         'data-dependent': { 'thumbnails_watched_title': true },
+         'data-dependent': { 'thumbs_watched_title': true },
       },
    }
 });

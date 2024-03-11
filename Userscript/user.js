@@ -34,7 +34,9 @@ registerMenuCommand();
 if (location.hostname === new URL(configPage).hostname) setupConfigPage();
 else {
    // Disabled the script if iframe in not "embed" (is frame)
-   if ((window.self !== window.top) && !location.pathname.startsWith('/embed')) {
+   if ((window.self !== window.top)
+      && (!location.pathname.startsWith('/embed') && !location.pathname.startsWith('/live_chat'))
+   ) {
       return console.warn('iframe skiped:', location.pathname);
    }
 
@@ -62,6 +64,8 @@ else {
       delete exportedSettings['search_filter_channels_blocklist'];
       delete exportedSettings['thumbs_hide_live_channels_exception'];
       delete exportedSettings['comments_sort_words_blocklist'];
+      delete exportedSettings['download_video_mode'];
+      delete exportedSettings['video_unblock_region_domain'];
       unsafeWindow.window.nova_settings = exportedSettings;
    }
 }
@@ -156,7 +160,7 @@ function appLander() {
             && (evt.detail?.actionName == 'yt-cache-miniplayer-page-action')
             && isURLChanged()
          ) {
-            // console.log(evt.detail?.actionName);
+            // console.debug(evt.detail?.actionName);
             document.removeEventListener('yt-action', reloadAfterMiniplayer);
             appRun();
             // location.reload();
@@ -250,8 +254,6 @@ function registerMenuCommand() {
             'player_float_progress_bar_color': 'player_progress_bar_color',
             'header-short': 'header-compact',
             'player-buttons-custom': 'player-quick-buttons',
-            'button-no-labels': 'details_button_no_labels',
-            'button_no_labels_opacity': 'details_button_no_labels_opacity',
             'shorts_thumbnails_time': 'shorts-thumbnails-time',
             'comments-sidebar-position-exchange': 'move-in-sidebar',
             'comments_sidebar_position_exchange_target': 'move_in_sidebar_target',
@@ -259,7 +261,9 @@ function registerMenuCommand() {
             'streamed_disable_channels_exception': 'thumbs_hide_live_channels_exception',
             'video_quality_in_music_quality': 'video_quality_for_music',
             'volume_normalization': 'volume_loudness_normalization',
+            'button_no_labels_opacity': 'details_buttons_opacity',
             'details_button_no_labels_opacity': 'details_buttons_opacity',
+            'button-no-labels': 'details_buttons_label_hide',
             'details_button_no_labels': 'details_buttons_label_hide',
             'volume-wheel': 'video-volume',
             'rate-wheel': 'video-rate',
@@ -279,6 +283,19 @@ function registerMenuCommand() {
             'move_in_sidebar_target': 'move_to_sidebar_target',
             'skip_into_step': 'skip_into_sec',
             'miniplayer-disable': 'default-miniplayer-disable',
+            'thumbnails_title_normalize_show_full': 'thumbs_title_show_full',
+            'thumbnails_title_normalize_smart_max_words': 'thumbs_title_normalize_smart_max_words',
+            'thumbnails_title_clear_emoji': 'thumbs_title_clear_emoji',
+            'thumbnails_title_clear_symbols': 'thumbs_title_clear_symbols',
+            'thumbnails-clear': 'thumbs-clear',
+            'thumbnails_clear_preview_timestamp': 'thumbs_clear_preview_timestamp',
+            'thumbnails_clear_overlay': 'thumbs_clear_overlay',
+            'thumbnails-grid-count': 'thumbs-grid-count',
+            'thumbnails_grid_count': 'thumbs_grid_count',
+            'thumbnails-watched': 'thumbs-watched',
+            'thumbnails_watched_frame_color': 'thumbs_watched_frame_color',
+            'thumbnails_watched_title': 'thumbs_watched_title',
+            'thumbnails_watched_title_color': 'thumbs_watched_title_color',
          });
          // alert('Settings imported successfully!');
          alert('Settings imported!');
@@ -461,9 +478,9 @@ function _pluginsCaptureException({ trace_name, err_stack, confirm_msg, app_ver 
 }
 
 // Disabled for minified version
-window.addEventListener('unhandledrejection', err => {
+user_settings.report_issues && window.addEventListener('unhandledrejection', err => {
    // if (user_settings.report_issues && err.reason.stack.includes('/Nova%20YouTube.user.js'))
-   if (user_settings.report_issues && (err.reason?.stack || err.stack)?.includes('Nova')) {
+   if ((err.reason?.stack || err.stack)?.includes('Nova')) {
       console.error('[ERROR PROMISE]\n', err.reason, '\nPlease report the bug: https://github.com/raingart/Nova-YouTube-extension/issues/new?body=' + encodeURIComponent(GM_info.script.version + ' | ' + navigator.userAgent));
 
       _pluginsCaptureException({

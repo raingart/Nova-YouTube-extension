@@ -4,14 +4,14 @@ console.debug('init options.js');
 
 const PopulateForm = {
    fill(settings, container) {
-      // console.log("Load from Storage: %s=>%s", container?.id, JSON.stringify(settings));
+      // console.debug("Load from Storage: %s=>%s", container?.id, JSON.stringify(settings));
 
       for (const key in settings) {
          const val = settings[key];
          // const el = document.body.getElementsByName(key)[0] || document.getElementById(key);
          if (el = (container || document.body).querySelector(`[name="${key}"]`)
             || (container || document.body).querySelector('#' + key)) {
-            // console.log('>opt %s#%s=%s', el.tagName, key, val);
+            // console.debug('>opt %s#%s=%s', el.tagName, key, val);
 
             switch (el.tagName.toLowerCase()) {
                // case 'div': // for isContentEditable (contenteditable="true")
@@ -76,7 +76,7 @@ const PopulateForm = {
       function showOrHide(targetEl, rules) {
          // console.debug('showOrHide', ...arguments);
          for (const parrentName in rules) {
-            // console.log(`dependent_data.${name} = ${dependent_data[name]}`);
+            // console.debug(`dependent_data.${name} = ${dependent_data[name]}`);
             const subtargetEl = Array.from(document.getElementsByName(parrentName))
                .find(e => (e.type == 'radio') ? e.checked : e); // return radio:checked or document.getElementsByName(parrentName)[0]
 
@@ -195,6 +195,18 @@ const PopulateForm = {
          this.saveOptions(evt.target);
          this.btnSubmitAnimation._defaut();
       }, { capture: true });
+      // hotkey ctrl+s
+      document.addEventListener('keydown', evt => {
+         if (evt.ctrlKey && evt.keyCode === 83) {
+            // Prevent the Save dialog to open
+            evt.preventDefault();
+            // send form
+            // document.getElementsByName('form')[0]
+            document.getElementsByTagName('form')[0]
+               .dispatchEvent(new Event('submit'));
+            // .submit(); // reload page
+         }
+      });
       // form unsave
       document.addEventListener('change', ({ target }) => {
          // console.debug('change', target, 'name:', target.name);

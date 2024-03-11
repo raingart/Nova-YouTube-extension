@@ -10,6 +10,7 @@
 // https://www.youtube.com/watch?v=HCq5y6CcaxE - https://watannetwork.com/tools/blocked/#url=HCq5y6CcaxE
 // https://www.youtube.com/watch?v=IvZOmE36PLc - https://watannetwork.com/tools/blocked/#url=IvZOmE36PLc
 // https://www.youtube.com/watch?v=de9FGmm-Wg0 - https://watannetwork.com/tools/blocked/#url=de9FGmm-Wg0
+// https://www.youtube.com/watch?v=m5whz6p0BGE - https://watannetwork.com/tools/blocked/#url=m5whz6p0BGE
 
 window.nova_plugins.push({
    id: 'video-unblock-region',
@@ -27,24 +28,24 @@ window.nova_plugins.push({
    'title:de': 'Versuchen Sie, Videos für Ihre Region zu entsperren',
    'title:pl': 'Spróbuj odblokować, jeśli film nie jest dostępny w Twoim kraju',
    'title:ua': 'Спробувати розблокувати якщо відео не доступне у країні',
-   // run_on_pages: 'watch, embed, -mobile',
-   run_on_pages: 'watch, -mobile',
+   run_on_pages: 'watch, embed, -mobile',
    section: 'player',
-   desc: 'Attempt fix "is not available in your country"',
-   'desc:zh': '尝试修复“在您的国家不可用”',
-   'desc:ja': '「お住まいの国では利用できません」という修正を試みる',
-   // 'desc:ko': '수정 시도 "해당 국가에서는 사용할 수 없습니다"',
-   // 'desc:vi': '',
-   // 'desc:id': 'Coba perbaiki "tidak tersedia di negara Anda"',
-   // 'desc:es': 'Intento de corrección "no está disponible en su país"',
-   'desc:pt': 'Tentativa de correção "não está disponível em seu país"',
-   'desc:fr': 'Tentative de correction "n\'est pas disponible dans votre pays"',
-   // 'desc:it': 'Tentativo di correzione "non è disponibile nel tuo paese"',
-   // 'desc:tr': '',
-   'desc:de': 'Versuchen Sie, "ist in Ihrem Land nicht verfügbar" zu beheben',
-   'desc:pl': 'Próba naprawienia nie jest dostępna w Twoim kraju',
-   'desc:ua': 'Спроба розблокувати доступ до відео',
-   // 'plugins-conflict': 'video-unavailable',
+   opt_api_key_warn: true,
+   desc: 'Some mirrors will partially replace VPNs',
+   // desc: 'Attempt fix "is not available in your country"',
+   // 'desc:zh': '尝试修复“在您的国家不可用”',
+   // 'desc:ja': '「お住まいの国では利用できません」という修正を試みる',
+   // // 'desc:ko': '수정 시도 "해당 국가에서는 사용할 수 없습니다"',
+   // // 'desc:vi': '',
+   // // 'desc:id': 'Coba perbaiki "tidak tersedia di negara Anda"',
+   // // 'desc:es': 'Intento de corrección "no está disponible en su país"',
+   // 'desc:pt': 'Tentativa de correção "não está disponível em seu país"',
+   // 'desc:fr': 'Tentative de correction "n\'est pas disponible dans votre pays"',
+   // // 'desc:it': 'Tentativo di correzione "non è disponibile nel tuo paese"',
+   // // 'desc:tr': '',
+   // 'desc:de': 'Versuchen Sie, "ist in Ihrem Land nicht verfügbar" zu beheben',
+   // 'desc:pl': 'Próba naprawienia nie jest dostępna w Twoim kraju',
+   // 'desc:ua': 'Спроба розблокувати доступ до відео',
    _runtime: user_settings => {
 
       // alt1 - https://greasyfork.org/en/scripts/9062-youtube-unblocker
@@ -68,7 +69,8 @@ window.nova_plugins.push({
       //       });
       //    });
 
-      const SELECTOR = 'ytd-watch-flexy[player-unavailable] #player-error-message-container #info';
+      const SELECTOR_EMBED = '#movie_player.ytp-embed-error .ytp-error[role="alert"] .ytp-error-content-wrap-subreason:not(:empty)';
+      const SELECTOR = `ytd-watch-flexy[player-unavailable] #player-error-message-container #info, ${SELECTOR_EMBED}`;
 
       NOVA.waitSelector(SELECTOR, { destroy_after_page_leaving: true })
          .then(async container => {
@@ -122,8 +124,13 @@ window.nova_plugins.push({
                      ul.append(li); // append
                   });
 
-               ul.insertAdjacentHTML('beforeend',
-                  `<li class="bold style-scope yt-formatted-string">Based on the data on the map, select an allowed country in the VPN</li>`);
+               const liAtention = document.createElement('li');
+               liAtention.className = 'bold style-scope yt-formatted-string';
+               liAtention.textContent = 'Based on the data on the map, select an allowed country in the VPN';
+               ul.append(liAtention);
+               // 50.59 % slower
+               // ul.insertAdjacentHTML('beforeend',
+               //    `<li class="bold style-scope yt-formatted-string">Based on the data on the map, select an allowed country in the VPN</li>`);
 
                container.append(ul); // append
             }
@@ -132,7 +139,7 @@ window.nova_plugins.push({
 
       // '#movie_player .ytp-error'
       // '#movie_player .ytp-error .ytp-error-content-wrap-reason'
-      NOVA.waitSelector('ytd-watch-flexy[player-unavailable]', { destroy_after_page_leaving: true })
+      NOVA.waitSelector(`ytd-watch-flexy[player-unavailable], ${SELECTOR_EMBED}`, { destroy_after_page_leaving: true })
          // To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
          // NOVA.waitSelector('ytd-watch-flexy[player-unavailable] yt-player-error-message-renderer #button.yt-player-error-message-renderer:not(:has(button))')
          .then(el => {
@@ -317,7 +324,7 @@ window.nova_plugins.push({
       // },
       video_unblock_region_open_map: {
          _tagName: 'input',
-         label: 'Open the map in which regions is available',
+         label: 'Open the map',
          'label:zh': '打开可用区域的地图',
          'label:ja': '利用可能な地域の地図を開く',
          // 'label:ko': '이용 가능한 지역의 지도를 엽니다.',
@@ -332,7 +339,20 @@ window.nova_plugins.push({
          'label:pl': 'Otwórz mapę z dostępnością w regionach',
          'label:ua': 'Відкрити карту з доступністю в регіонах',
          type: 'checkbox',
-         // title: '',
+         title: 'which regions is available',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:vi': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
          // 'data-dependent': { 'video_unblock_region_redirect': true },
       },
    }

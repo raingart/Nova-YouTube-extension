@@ -29,7 +29,7 @@ You can now load the extension into your browser through the browser's extension
 4. Drag the script onto the extensions page OR click the "Load unpacked extension" button, navigate to extracted script folder, and click "OK"..
 
 ### Firefox
-Need one of the builds __Firefox Extended Support Release (ESR)__, __Firefox Developer Edition__ and __Nightly__
+Need one of the builds __Firefox Extended Support Release (ESR)__, __Firefox Developer Edition__ and __Nightly__.
 Only this versions allow you to override the setting to enforce the extension signing requirement!
 1. [Download](https://github.com/raingart/Nova-YouTube-extension/archive/refs/heads/master.zip) the script. And move the files in the directory inside the archive to the root of the archive. The file `manifest.json` etc. must be in the root of the archive (not inside folders)
 2. Type `about:config` page in your address bar to bring up the "Firefox Configuration Editor" page. Agree with warning
@@ -68,5 +68,5 @@ Please read [plugin document](https://github.com/raingart/Nova-YouTube-extension
 ### compatibility with other scripts
 For compatibility with other scripts, you can access the list of settings (read only) Available only in userscript ver.
 ```
-window.nova_setting
+window.nova_settings
 ```

@@ -82,9 +82,16 @@ window.nova_plugins.push({
       //    if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
       //    (document.getElementById(SELECTOR_ID) || (function () {
-      //       container.insertAdjacentHTML('afterend',
-      //          `<span id="${SELECTOR_ID}" class="" style="">${text}</span>`);
-      //       return document.getElementById(SELECTOR_ID);
+      //       const el = document.createElement('span');
+      //       el.id = SELECTOR_ID;
+      //       // el.className = '';
+      //       // el.style.cssText = '';
+      //       container.after(el);
+      //       // container.insertAdjacentElement('afterend', el);
+      //       return el;
+      //       // container.insertAdjacentHTML('afterend',
+      //       //    `<span id="${SELECTOR_ID}" class="" style="">${text}</span>`);
+      //       // return document.getElementById(SELECTOR_ID);
       //    })())
       //       .textContent = text;
       // }

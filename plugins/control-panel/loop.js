@@ -171,12 +171,12 @@ window.nova_plugins.push({
             { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            // { label: 'shiftL', value: 'ShiftLeft' },
-            // { label: 'shiftR', value: 'ShiftRight' },
-            // { label: 'ctrlL', value: 'ControlLeft' },
-            // { label: 'ctrlR', value: 'ControlRight' },
-            // { label: 'altL', value: 'AltLeft' },
-            // { label: 'altR', value: 'AltRight' },
+            // { label: 'ShiftL', value: 'ShiftLeft' },
+            // { label: 'ShiftR', value: 'ShiftRight' },
+            // { label: 'CtrlL', value: 'ControlLeft' },
+            // { label: 'CtrlR', value: 'ControlRight' },
+            // { label: 'AltL', value: 'AltLeft' },
+            // { label: 'AltR', value: 'AltRight' },
             // { label: 'ArrowUp', value: 'ArrowUp' },
             // { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

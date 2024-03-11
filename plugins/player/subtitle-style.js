@@ -160,7 +160,7 @@ window.nova_plugins.push({
       subtitle: {
          _tagName: 'input',
          // label: 'Default enabled',
-         label: 'Automatically enable the subtitles',
+         label: 'Subtitles enable by default',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -284,7 +284,7 @@ window.nova_plugins.push({
          'label:pl': 'Rozmiar czcionki',
          'label:ua': 'Розмір шрифту',
          type: 'number',
-         title: '0 - disable',
+         title: '0 - default',
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',

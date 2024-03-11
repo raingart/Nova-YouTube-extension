@@ -11,7 +11,9 @@
    --text-on: 'ON';
    --text-on-press: '>';
    /* --text-on: attr(text-on); */
-   --text-off: '-';
+   /* --text-off: '-'; */
+   /* --text-off: '▷'; */
+   /* --text-off: '•'; */
    /* --text-off: 'OFF'; */
    --text-off-press: 'OFF?';
    /* --text-on: attr(text-off); */

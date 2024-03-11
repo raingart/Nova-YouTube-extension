@@ -71,8 +71,8 @@ window.nova_plugins.push({
 
                const
                   // for optimozation
-                  currentTime = ~~this.currentTime,
-                  duration = ~~this.duration,
+                  currentTime = Math.trunc(this.currentTime),
+                  duration = Math.trunc(this.duration),
                   delta = duration - currentTime,
                   getPercent = () => {
                      const
@@ -121,14 +121,16 @@ window.nova_plugins.push({
                if (!(container instanceof HTMLElement)) return console.error('container not HTMLElement:', container);
 
                (document.getElementById(SELECTOR_ID) || (function () {
-                  // const el = document.createElement('span');
-                  // el.id = SELECTOR_ID;
-                  // container.after(el);
-                  // container.insertAdjacentElement('afterend', '&nbsp;' + el);
-                  container.insertAdjacentHTML('afterend', `&nbsp;<span id="${SELECTOR_ID}">${text}</span>`);
-                  return document.getElementById(SELECTOR_ID);
+                  const el = document.createElement('span');
+                  el.id = SELECTOR_ID;
+                  container.after(el);
+                  // container.insertAdjacentElement('afterend', el);
+                  return el;
+                  // 62.88 % slower
+                  // container.insertAdjacentHTML('afterend', `&nbsp;<span id="${SELECTOR_ID}">${text}</span>`);
+                  // return document.getElementById(SELECTOR_ID);
                })())
-                  .textContent = text;
+                  .textContent = ' ' + text;
             }
 
          });

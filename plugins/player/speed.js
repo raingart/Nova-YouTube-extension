@@ -532,14 +532,14 @@ window.nova_plugins.push({
 
          // page update event
          document.addEventListener('yt-action', evt => {
-            // console.log(evt.detail?.actionName);
+            // console.debug(evt.detail?.actionName);
             switch (evt.detail?.actionName) {
                case 'yt-append-continuation-items-action': // home, results, feed, channel, watch
                case 'ytd-update-grid-state-action': // feed, channel
                case 'yt-service-request': // results, watch
                case 'ytd-rich-item-index-update-action': // home, channel
 
-                  // console.log(evt.detail?.actionName); // flltered
+                  // console.debug(evt.detail?.actionName); // flltered
                   switch (NOVA.currentPage) {
                      case 'home':
                      case 'results':
@@ -682,7 +682,7 @@ window.nova_plugins.push({
       },
       rate_overlay_time: {
          _tagName: 'input',
-         label: 'Recalculate overlay time',
+         label: 'Recalculate time in thumbnail overlay',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -697,7 +697,7 @@ window.nova_plugins.push({
          // 'label:pl': '',
          // 'label:ua': '',
          type: 'checkbox',
-         title: 'by startup value',
+         title: 'by "startup" value',
          // 'title:zh': '',
          // 'title:ja': '',
          // 'title:ko': '',
@@ -787,12 +787,12 @@ window.nova_plugins.push({
             { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             { label: 'ArrowUp', value: 'ArrowUp' },
             { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },
@@ -850,12 +850,12 @@ window.nova_plugins.push({
             { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
-            { label: 'shiftL', value: 'ShiftLeft' },
-            { label: 'shiftR', value: 'ShiftRight' },
-            { label: 'ctrlL', value: 'ControlLeft' },
-            { label: 'ctrlR', value: 'ControlRight' },
-            { label: 'altL', value: 'AltLeft' },
-            { label: 'altR', value: 'AltRight' },
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
             { label: 'ArrowUp', value: 'ArrowUp' },
             { label: 'ArrowDown', value: 'ArrowDown' },
             // { label: 'ArrowLeft', value: 'ArrowLeft' },

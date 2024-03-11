@@ -119,27 +119,38 @@ window.nova_plugins.push({
          // if (user_settings['subtitles']) {
          listItem.push({
             name: 'subtitles',
-            getCurrentState: () => {
+            getCurrentState: async () => {
+               await waitMoviePlayer('toggleSubtitlesOn');
                movie_player.toggleSubtitlesOn();
                return true;
             },
             // customInit: movie_player.toggleSubtitlesOn, // Error - ReferenceError: movie_player is not defined
             customInit: async () => {
-               await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player.toggleSubtitlesOn === 'function', 500); // 500ms
-               movie_player.toggleSubtitlesOn();
+               await waitMoviePlayer('toggleSubtitlesOn');
+               return movie_player.toggleSubtitlesOn();
             },
          });
          // }
          // the same name as in the corresponding option inside the plugin
          if (user_settings['video-quality']) {
-            listItem.push({ name: 'quality', getCurrentState: movie_player.getPlaybackQuality });
+            listItem.push({
+               name: 'quality', getCurrentState: async () => {
+                  await waitMoviePlayer('getPlaybackQuality');
+                  return movie_player.getPlaybackQuality();
+               }
+            });
          }
          if (user_settings['video-rate']) {
             // listItem.push({ name: 'speed', getCurrentState: movie_player.getPlaybackRate });
             listItem.push({ name: 'speed', getCurrentState: () => NOVA.videoElement.playbackRate });
          }
          if (user_settings['video-volume']) {
-            listItem.push({ name: 'volume', getCurrentState: () => ~~(movie_player.getVolume()) });
+            listItem.push({
+               name: 'volume', getCurrentState: async () => {
+                  await waitMoviePlayer('getVolume');
+                  return Math.round(movie_player.getVolume());
+               }
+            });
          }
          if (user_settings['player-resume-playback']) {
             listItem.push({ name: 'ignore-playback', label: 'unsave playback time', getCurrentState: () => true });
@@ -252,6 +263,10 @@ window.nova_plugins.push({
          }
 
          return ul;
+
+         async function waitMoviePlayer(fn_name = required()) {
+            return await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player[fn_name] === 'function', 500); // 500ms
+         }
       }
 
       function initStyles() {

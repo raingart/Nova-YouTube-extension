@@ -37,12 +37,15 @@ window.nova_plugins.push({
    'desc:ua': 'Відображається на іншій сторінці під час відтворення плейлиста',
    _runtime: user_settings => {
 
+      // alt - https://greasyfork.org/en/scripts/489096-remove-miniplayer-on-youtube
+
       // hide player button in bottom panel
       NOVA.css.push(
          `.ytp-right-controls .ytp-miniplayer-button {
             display: none !important;
          }`);
 
+      // NOTE: the 'yt' object is only accessible when using 'unsafeWindow'
       // yt.config_.EXPERIMENT_FLAGS['kevlar_miniplayer']
 
       document.addEventListener('yt-action', evt => {
@@ -50,7 +53,7 @@ window.nova_plugins.push({
 
          // if (NOVA.currentPage != 'watch' && evt.detail?.actionName.includes('miniplayer')) {
          if (evt.detail?.actionName.includes('miniplayer')) {
-            // console.log(evt.detail?.actionName);
+            // console.debug(evt.detail?.actionName);
             // 'yt-cache-miniplayer-page-action'
             // 'yt-miniplayer-endpoint-changed'
             // 'yt-miniplayer-play-state-changed'

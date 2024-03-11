@@ -143,7 +143,7 @@ window.nova_plugins.push({
                );
             }
 
-            connectChapterJump();
+            if (user_settings.player_float_progress_bar_hotkey) connectChapterJump();
          });
 
       function insertFloatBar({ init_container = movie_player, z_index = 60 }) {
@@ -264,11 +264,11 @@ window.nova_plugins.push({
             ) {
                switch (evt.type) {
                   case 'keydown':
-                     if (/*evt.ctrlKey || */evt.altKey || evt.shiftKey || evt.metaKey) {
-                        if (!hotkeyActivated) {
-                           el.classList.add(CHP_JUMP_TOGGLE_CLASS_VALUE);
-                           hotkeyActivated = true;
-                        }
+                     // if (/*evt.ctrlKey || */evt.altKey || evt.shiftKey || evt.metaKey) {
+                     const hotkey = user_settings.player_float_progress_bar_hotkey.length === 1 ? evt.key : evt.code;
+                     if (user_settings.player_float_progress_bar_hotkey == hotkey && !hotkeyActivated) {
+                        el.classList.add(CHP_JUMP_TOGGLE_CLASS_VALUE);
+                        hotkeyActivated = true;
                      }
                      break;
 
@@ -282,20 +282,22 @@ window.nova_plugins.push({
             }
          }
 
-         document.getElementById(SELECTOR_ID).addEventListener('click', ({ target }) => {
-            if (!(secTime = target.getAttribute('time'))) return;
+         document.getElementById(SELECTOR_ID)
+            .addEventListener('click', ({ target }) => {
+               if (!(secTime = target.getAttribute('time'))) return;
 
-            const sec = NOVA.formatTimeOut.hmsToSec(secTime);
-            // console.debug('jump chapter start:', sec);
+               const sec = NOVA.formatTimeOut.hmsToSec(secTime);
+               // console.debug('jump chapter start:', sec);
 
-            if (typeof movie_player.seekBy === 'function') {
-               movie_player.seekTo(sec);
-            }
-            // for embed
-            else if (NOVA.videoElement) {
-               NOVA.videoElement.currentTime = sec;
-            }
-         }, { capture: true });
+               if (typeof movie_player.seekBy === 'function') {
+                  movie_player.seekTo(sec);
+               }
+               // for embed
+               else if (NOVA.videoElement) {
+                  NOVA.videoElement.currentTime = sec;
+               }
+            }, { capture: true });
+
       }
 
       // alt - https://chrome.google.com/webstore/detail/jahmafmcpgdedfjfknmfkhaiejlfdcfc
@@ -403,7 +405,7 @@ window.nova_plugins.push({
                   //    // newChapter.style.backgroundColor = '';
                   // }
 
-                  chaptersContainer.append(newChapter);
+                  chaptersContainer && chaptersContainer.append(newChapter);
                });
 
             // console.debug('renderChaptersMarkers', chapterList);
@@ -472,6 +474,67 @@ window.nova_plugins.push({
          min: 0,
          max: 1,
          value: .7,
+      },
+      player_float_progress_bar_hotkey: {
+         _tagName: 'select',
+         label: 'Hotkey to jump by click',
+         // 'label:zh': '',
+         // 'label:ja': '',
+         // 'label:ko': '',
+         // 'label:vi': '',
+         // 'label:id': '',
+         // 'label:es': '',
+         // 'label:pt': '',
+         // 'label:fr': '',
+         // 'label:it': '',
+         // 'label:tr': '',
+         // 'label:de': '',
+         // 'label:pl': '',
+         // 'label:ua': '',
+         // title: '',
+         options: [
+            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', value: false },
+            // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+            { label: 'ShiftL', value: 'ShiftLeft' },
+            { label: 'ShiftR', value: 'ShiftRight' },
+            { label: 'CtrlL', value: 'ControlLeft' },
+            { label: 'CtrlR', value: 'ControlRight' },
+            { label: 'AltL', value: 'AltLeft' },
+            { label: 'AltR', value: 'AltRight' },
+            // { label: 'ArrowUp', value: 'ArrowUp' },
+            // { label: 'ArrowDown', value: 'ArrowDown' },
+            // { label: 'ArrowLeft', value: 'ArrowLeft' },
+            // { label: 'ArrowRight', value: 'ArrowRight' },
+            { label: 'A', value: 'KeyA' },
+            { label: 'B', value: 'KeyB' },
+            { label: 'C', value: 'KeyC' },
+            { label: 'D', value: 'KeyD' },
+            { label: 'E', value: 'KeyE' },
+            { label: 'F', value: 'KeyF' },
+            { label: 'G', value: 'KeyG' },
+            { label: 'H', value: 'KeyH' },
+            { label: 'I', value: 'KeyI' },
+            { label: 'J', value: 'KeyJ' },
+            { label: 'K', value: 'KeyK' },
+            { label: 'L', value: 'KeyL' },
+            { label: 'M', value: 'KeyM' },
+            { label: 'N', value: 'KeyN' },
+            { label: 'O', value: 'KeyO' },
+            { label: 'P', value: 'KeyP' },
+            { label: 'Q', value: 'KeyQ' },
+            { label: 'R', value: 'KeyR' },
+            { label: 'S', value: 'KeyS' },
+            { label: 'T', value: 'KeyT' },
+            { label: 'U', value: 'KeyU' },
+            { label: 'V', value: 'KeyV' },
+            { label: 'W', value: 'KeyW' },
+            { label: 'X', value: 'KeyX' },
+            { label: 'Y', value: 'KeyY' },
+            { label: 'Z', value: 'KeyZ' },
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+            ']', '[', '+', '-', ',', '.', '/', '<', ';', '\\',
+         ],
       },
    }
 });

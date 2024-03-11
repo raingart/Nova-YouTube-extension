@@ -500,9 +500,29 @@ window.addEventListener('load', () => {
                   // console.debug('parrentName', parrentName);
                   document.getElementsByName(parrentName)
                      .forEach(subtargetEl => {
+                        if (targetEl.checked) subtargetEl.checked = false;
                         subtargetEl.disabled = targetEl.checked;
-                        if (subtargetEl.disabled) subtargetEl.checked = false;
-                        subtargetEl.title = subtargetEl.disabled ? `conflict wich ${parrentName}` : '';
+
+                        const
+                           DISABLE_BLIND_MARK_CLASS = 'disable-blind',
+                           rootEl = subtargetEl.closest('.item');
+
+                        if (subtargetEl.disabled) rootEl.classList.add(DISABLE_BLIND_MARK_CLASS); // mark
+                        else rootEl.classList.remove(DISABLE_BLIND_MARK_CLASS); // unmark
+
+                        rootEl.querySelector('.info')
+                           .setAttribute('tooltip', subtargetEl.disabled ? `conflict wich [${parrentName}]` : '')
+                        // checkbox style
+                        subtargetEl.style.setProperty('--text-on-press', subtargetEl.disabled ? '"✕"' : null);
+                        subtargetEl.style.setProperty('--text-off', subtargetEl.disabled ? '"🔺"' : null);
+                        const color = subtargetEl.disabled
+                           // ? '#e85717'
+                           ? 'red'
+                           // ? 'darkorange'
+                           : null;
+                        subtargetEl.style.setProperty('--checked-bg', color);
+                        subtargetEl.style.setProperty('color', color);
+                        // subtargetEl.style.backgroundColor = color
                         // console.debug('', targetEl, targetEl.checked, subtargetEl.checked);
                      });
                }

@@ -14,7 +14,7 @@ window.nova_plugins.push({
    'title:de': 'Sortieren/Filtern zum Menü „In Wiedergabeliste speichern“ hinzufügen',
    'title:pl': 'Dodaj sortowanie/filtr do menu „Zapisz na liście odtwarzania”.',
    'title:ua': 'Додати сортування/фільтр до меню "Зберегти до плейлиста"',
-   run_on_pages: 'home, feed, channel, results, watch, -mobile',
+   run_on_pages: 'home, feed, results, channel, watch, -mobile',
    section: 'details-buttons',
    // desc: '',
    _runtime: user_settings => {
