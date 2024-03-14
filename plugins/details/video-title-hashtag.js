@@ -59,7 +59,7 @@ window.nova_plugins.push({
          'label:ua': 'Режим',
          options: [
             {
-               label: 'hide', /*value: 'hide',*/ selected: true,
+               label: 'hide', /* value: 'hide', */ selected: true, // fill value if no "selected" mark another option
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

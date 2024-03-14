@@ -3,7 +3,7 @@
 
 window.nova_plugins.push({
    id: 'livechat-visibility',
-   title: 'Collapse live chat',
+   title: 'Collapse livechat',
    'title:zh': '隐藏实时聊天',
    'title:ja': 'ライブチャットを非表示',
    // 'title:ko': '실시간 채팅 숨기기',

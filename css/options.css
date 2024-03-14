@@ -300,6 +300,10 @@ li>label+* {
    margin-right: 10px;
 }
 
+.item:has(.opt>input[type="checkbox"]:not(:checked)) .info>b:not(:hover) {
+   opacity: .1;
+}
+
 .item a[href*="wiki"] {
    font-weight: bold;
    margin-left: 3px;

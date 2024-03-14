@@ -1,9 +1,6 @@
 // for test
 // https://www.youtube.com/embed/yWUMMg3dmFY?wmode=opaque&amp;rel=0&amp;controls=0&amp;modestbranding=1&amp;showinfo=0&amp;enablejsapi=1 - embed when disable chrome-bottom
 
-// Chapters not indicated in the description block
-// https://www.youtube.com/watch?v=PtSNcZLyNaU
-
 window.nova_plugins.push({
    id: 'player-float-progress-bar',
    // title: 'Sticky progress bar',
@@ -227,7 +224,8 @@ window.nova_plugins.push({
                   margin: 0;
                }
 
-               ${SELECTOR}-chapters span:not(:first-child) {
+               /* ${SELECTOR}-chapters span:not(:first-child) { */
+               ${SELECTOR}-chapters span:not([time="0:00"]) {
                   /* border-left: ${CHAPTERS_MARK_WIDTH_PX} solid #000; */
                   border-left: ${CHAPTERS_MARK_WIDTH_PX} solid rgba(255,255,255,.7);
                }
@@ -493,7 +491,7 @@ window.nova_plugins.push({
          // 'label:ua': '',
          // title: '',
          options: [
-            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'ShiftL', value: 'ShiftLeft' },

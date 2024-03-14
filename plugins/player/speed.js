@@ -77,7 +77,7 @@ window.nova_plugins.push({
             // Strategy 2
             video.addEventListener('ratechange', function () {
                // console.debug('ratechange', movie_player.getPlaybackRate(), this.playbackRate);
-               NOVA.triggerOSD(this.playbackRate + 'x');
+               NOVA.showOSD(this.playbackRate + 'x');
 
                // slider update
                if (Object.keys(sliderContainer).length) {
@@ -110,12 +110,15 @@ window.nova_plugins.push({
             // NOVA.runOnPageLoad(() => (NOVA.currentPage == 'watch') && expandAvailableRatesMenu());
 
             NOVA.runOnPageLoad(async () => {
+               // const fn = () => playerRate.set(userRate);
+               // video.removeEventListener('canplay', fn);
                if (NOVA.currentPage == 'watch' || NOVA.currentPage == 'embed') {
                   // custom speed from [save-channel-state] plugin
                   // alt - https://greasyfork.org/en/scripts/27091-youtube-speed-rememberer
                   if (user_settings['save-channel-state']) {
                      if (userRate = await NOVA.storage_obj_manager.getParam('speed')) {
-                        playerRate.set(userRate);
+                        // video.addEventListener('canplay', fn);
+                        // playerRate.set(userRate);
                         video.addEventListener('canplay', () => playerRate.set(userRate), { capture: true, once: true });
                      }
                   }
@@ -730,7 +733,7 @@ window.nova_plugins.push({
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',
          options: [
-            // { label: 'none', /*value: false*/ },
+            // { label: 'none', /* value: false */ }, // fill value if no "selected" mark another option
             { label: 'none', value: false }, // need for for 'data-dependent' in rate_max
             { label: 'alt+wheel', value: 'altKey', selected: true },
             { label: 'shift+wheel', value: 'shiftKey' },
@@ -784,7 +787,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: ']', value: ']', selected: true },
-            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'ShiftL', value: 'ShiftLeft' },
@@ -847,7 +850,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             { label: '[', value: '[', selected: true },
-            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'ShiftL', value: 'ShiftLeft' },

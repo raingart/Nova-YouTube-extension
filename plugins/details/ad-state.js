@@ -1,3 +1,6 @@
+// for test:
+// https://www.youtube.com/watch?v=Zrv1EDIqHkY - Includes paid promotion
+
 window.nova_plugins.push({
    id: 'ad-state',
    title: 'Show Ads info',
@@ -21,6 +24,8 @@ window.nova_plugins.push({
    _runtime: user_settings => {
 
       const SELECTOR_ID = 'nova-monetization';
+
+      // movie_player.getAdState();
 
       // update state on url change
       // NOVA.runOnPageLoad(async () => {

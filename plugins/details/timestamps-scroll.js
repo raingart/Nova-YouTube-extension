@@ -5,7 +5,7 @@
 window.nova_plugins.push({
    id: 'description-timestamps-scroll',
    // title: 'No scroll to top when clicking timestamps',
-   title: 'No scroll to top on timestamps',
+   title: 'Disable scroll to top on click timestamps',
    'title:zh': '没有在时间戳上滚动到播放器',
    'title:ja': 'タイムスタンプでプレーヤーにスクロールしない',
    // 'title:ko': '타임스탬프에서 플레이어로 스크롤하지 않음',

@@ -14,7 +14,7 @@
 
 window.nova_plugins.push({
    id: 'video-unblock-region',
-   title: 'Try unblock if video not available in your country',
+   title: 'Redirect video not available in your country',
    'title:zh': '尝试解锁您所在地区的视频',
    'title:ja': 'お住まいの地域の動画のブロックを解除してみてください',
    // 'title:ko': '해당 지역의 동영상 차단을 해제해 보세요',

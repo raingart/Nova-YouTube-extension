@@ -17,8 +17,8 @@ window.nova_plugins.push({
    // 'title:de': '',
    // 'title:pl': '',
    // 'title:ua': '',
-   run_on_pages: 'home, results, feed, channel, watch',
-   // run_on_pages: 'results, channel, -mobile',
+   run_on_pages: 'feed, channel, watch',
+   // run_on_pages: 'home, results, channel, -mobile',
    section: 'thumbs',
    opt_api_key_warn: true,
    // desc: '',
@@ -43,7 +43,10 @@ window.nova_plugins.push({
 
       // if (user_settings.thumbs_title_lang_hover) {
       NOVA.css.push(
-         `*:hover > #video-title[${SELECTOR_THUMBS_PATCHED_ATTR}],
+         `#video-title[${SELECTOR_THUMBS_PATCHED_ATTR}] {
+            color: #86d2ed
+         }
+         *:hover > #video-title[${SELECTOR_THUMBS_PATCHED_ATTR}],
          *:not(:hover) > #video-title[${SELECTOR_THUMBS_PATCHED_ATTR}] + #video-title {
             display: none !important;
          }`);

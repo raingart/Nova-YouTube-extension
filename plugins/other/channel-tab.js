@@ -363,7 +363,7 @@ window.nova_plugins.push({
          // 'title:ua': 'Перенаправлення безпечніше, але повільніше',
          options: [
             {
-               label: 'click', /*value: '',*/
+               label: 'click', /* value: '', */
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -417,7 +417,7 @@ window.nova_plugins.push({
          // title: '',
          options: [
             {
-               label: 'newest', /*value: 'newest',*/ selected: true,
+               label: 'newest', /* value: 'newest', */ selected: true, // fill value if no "selected" mark another option
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

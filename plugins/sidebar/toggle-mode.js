@@ -1,6 +1,6 @@
 window.nova_plugins.push({
    id: 'livechat-toggle-mode',
-   title: '"Live chat" mode instead of "Top chat"',
+   title: '"Livechat" mode instead of "Top chat"',
    // 'title:zh': '',
    // 'title:ja': '',
    // 'title:ko': '',
@@ -16,17 +16,17 @@ window.nova_plugins.push({
    // 'title:ua': '',
    run_on_pages: 'live_chat, -mobile',
    restart_on_location_change: true,
-   section: 'playlist',
+   section: 'sidebar',
    // desc: '',
    _runtime: user_settings => {
 
-      // NOVA.waitSelector('#chat-messages #menu a:nth-child(2)[aria-selected="false"]')
-      NOVA.waitSelector('#chat-messages #menu a:last-child[aria-selected="false"]')
+      // document.querySelector('#chat-messages #view-selector #trigger').click() // expand dropdown
+      // NOVA.waitSelector('#chat-messages #menu a:last-child[aria-selected="false"]')
+      NOVA.waitSelector('#chat-messages #menu a[aria-selected="false"]')
          .then(async btn => {
-            // await NOVA.delay(500);
+            // await NOVA.delay(500);dropdown
             await btn.click();
          });
-      // .then(btn => btn.click());
 
    },
 });

@@ -39,6 +39,7 @@ window.nova_plugins.push({
    // 'desc:tr': 'Kaydırma sırasında oyuncu her zaman görünür kalır',
    // 'desc:de': 'Player bleibt beim Scrollen immer sichtbar',
    // 'desc:ua': 'Відтворювач завжди залишається видимим коли гортаєш',
+   'plugins-conflict': 'player-pip',
    _runtime: user_settings => {
 
       // alt1 - https://chrome.google.com/webstore/detail/aeilijiaejfdnbagnpannhdoaljpkbhe
@@ -48,76 +49,6 @@ window.nova_plugins.push({
       // alt5 - https://greasyfork.org/en/scripts/484817-youtube-video-auto-pop-out
 
       if (!('IntersectionObserver' in window)) return alert('Nova\n\nPin player Error!\nIntersectionObserver not supported.');
-
-      // alt - https://developer.chrome.com/blog/media-updates-in-chrome-73/#auto-pip
-      // only for PWA
-      // NOVA.waitSelector('video')
-      //    .then(vid => {
-      //       vid.setAttribute('autopictureinpicture', '');
-      //    });
-      // return;
-
-      // // Doesn't work because scroll is not part of the [user-trusted events](https://html.spec.whatwg.org/multipage/interaction.html#triggered-by-user-activation).
-      // // if (user_settings.player_pin_mode == 'pip') {
-      // //    // alt1 - https://chrome.google.com/webstore/detail/gcfcmfbcpibcjmcinnimklngkpkkcing
-      // //    // alt2 - https://chrome.google.com/webstore/detail/hlbdhflagoegglpdminhlpenkdgloabe
-      // //    if (!document.pictureInPictureEnabled) return console.error('document pip is disable');
-
-      // NOVA.waitSelector('video')
-      //    .then(video => {
-      //       if (video.disablePictureInPicture) return console.error('video pip is disable');
-
-      //       // const pipBtn = document.createElement('button');
-      //       // pipBtn.style.display = 'none';
-      //       // // pipBtn.addEventListener('click', () => document.pictureInPictureElement
-      //       // //    ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
-      //       // // );
-      //       // pipBtn.addEventListener('click', async () => {
-      //       //    try {
-      //       //       await NOVA.videoElement.requestPictureInPicture();
-      //       //    } catch (err) {
-      //       //       console.error(err)
-      //       //    }
-      //       // });
-      //       // document.body.prepend(pipBtn);
-
-      //       new window.IntersectionObserver(async ([entry]) => {
-      //          if (entry.isIntersecting) {
-      //             if (video === document.pictureInPictureElement) {
-      //                console.debug('exitPictureInPicture');
-      //                try {
-      //                   await document.exitPictureInPicture();
-      //                } catch (err) {
-      //                   console.error(err)
-      //                }
-      //                // clickElement(pipBtn);
-      //             }
-      //             return
-      //          }
-      //          if (!document.pictureInPictureElement && video.readyState > 0) {
-      //             console.debug('requestPictureInPicture');
-      //             try {
-      //                await video.requestPictureInPicture();
-      //             } catch (err) {
-      //                console.error(err)
-      //             }
-      //             // clickElement(pipBtn);
-      //          }
-      //       }, {
-      //          root: null,
-      //          threshold: 0.2, // set offset 0.X means trigger if atleast X0% of element in viewport
-      //       })
-      //          .observe(video);
-
-      //       function clickElement(el) {
-      //          const clickEvent = document.createEvent('MouseEvents');
-      //          clickEvent.initEvent('click', true, true);
-      //          clickEvent.artificialevent = true;
-      //          el.dispatchEvent(clickEvent);
-      //       }
-      //    });
-      // return;
-      // // }
 
       const
          CLASS_VALUE = 'nova-player-pin',

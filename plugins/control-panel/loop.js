@@ -103,8 +103,8 @@ window.nova_plugins.push({
 
                NOVA.videoElement.loop = !NOVA.videoElement.loop;
                btn.style.opacity = NOVA.videoElement.loop ? 1 : .5;
-               NOVA.triggerOSD('Loop is ' + Boolean(NOVA.videoElement.loop));
-               // NOVA.triggerOSD('Loop is ' + movie_player.getLoopVideo());
+               NOVA.showOSD('Loop is ' + Boolean(NOVA.videoElement.loop));
+               // NOVA.showOSD('Loop is ' + movie_player.getLoopVideo());
             }
 
             // NOVA.runOnPageLoad(async () => {
@@ -168,7 +168,7 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          options: [
-            { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             // { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             // { label: 'ShiftL', value: 'ShiftLeft' },

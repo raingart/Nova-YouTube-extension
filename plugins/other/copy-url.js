@@ -19,7 +19,7 @@ window.nova_plugins.push({
    // desc: 'use「Ctrl+C」',
    _runtime: user_settings => {
 
-      const SELECTOR_ID = 'nova-copy-notification';
+      const SELECTOR_ID = 'nova-copy-notify';
 
       document.addEventListener('keydown', evt => {
          const hotkeyMod = user_settings.copy_url_hotkey || 'ctrlKey';
@@ -59,16 +59,16 @@ window.nova_plugins.push({
             }
             if (url) {
                navigator.clipboard.writeText(url);
-               // showNotification('Shortened URL copied to clipboard\n' + url);
-               showNotification('URL copied');
+               // shownotify('Shortened URL copied to clipboard\n' + url);
+               shownotify('URL copied');
             }
          }
       });
 
-      function showNotification(msg) {
-         if (typeof showNotification.fade === 'number') clearTimeout(showNotification.fade); // reset timeout
+      function shownotify(msg) {
+         if (typeof shownotify.fade === 'number') clearTimeout(shownotify.fade); // reset timeout
 
-         const notification = (document.getElementById(SELECTOR_ID) || (function () {
+         const notify = (document.getElementById(SELECTOR_ID) || (function () {
             const el = document.createElement('div');
             el.id = SELECTOR_ID;
 
@@ -114,18 +114,18 @@ window.nova_plugins.push({
             return document.body.appendChild(el);
          })());
 
-         notification.textContent = msg;
-         // notification.innerText = msg;
-         notification.style.opacity = +user_settings.copy_url_opacity || 1;
-         notification.style.visibility = 'visible';
+         notify.textContent = msg;
+         // notify.innerText = msg;
+         notify.style.opacity = +user_settings.copy_url_opacity || 1;
+         notify.style.visibility = 'visible';
 
-         // notification.addEventListener('click', notification.remove);
-         // setTimeout(notification.remove, 3000);
+         // notify.addEventListener('click', notify.remove);
+         // setTimeout(notify.remove, 3000);
 
-         showNotification.fade = setTimeout(() => {
-            notification.style.transition = 'opacity 200ms ease-in';
-            notification.style.opacity = 0;
-            setTimeout(() => notification.style.visibility = 'hidden', 1000); // completely hide after 1s
+         shownotify.fade = setTimeout(() => {
+            notify.style.transition = 'opacity 200ms ease-in';
+            notify.style.opacity = 0;
+            setTimeout(() => notify.style.visibility = 'hidden', 1000); // completely hide after 1s
          }, 600); // 600ms
       }
 
@@ -156,7 +156,7 @@ window.nova_plugins.push({
       copy_url_position: {
          _tagName: 'select',
          // label: 'Position in the corner',
-         label: 'Notification position',
+         label: 'notify position',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',

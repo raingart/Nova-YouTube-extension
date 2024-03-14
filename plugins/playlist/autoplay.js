@@ -55,7 +55,7 @@ window.nova_plugins.push({
             height: var(--height);
             line-height: 1.6em;
             border-radius: 3em;
-            background-color: var(--paper-toggle-button-unchecked-bar-color, #000000);
+            background-color: var(--paper-toggle-button-unchecked-bar-color, #000);
             appearance: none;
             -webkit-appearance: none;
             position: relative;
@@ -73,7 +73,7 @@ window.nova_plugins.push({
             border-radius: 50%;
             background-color: var(--color);
             box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
-            /* box-shadow: 0 .1em .25em #999999; */
+            /* box-shadow: 0 .1em .25em #999; */
          }
          ${SELECTOR}[type=checkbox]:checked:after {
             left: calc(100% - var(--height));

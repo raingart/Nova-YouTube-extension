@@ -180,7 +180,7 @@ window.nova_plugins.push({
          'label:ua': 'Перемикання гарячою клавішею',
          // title: '',
          options: [
-            // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'ShiftL', value: 'ShiftLeft' },

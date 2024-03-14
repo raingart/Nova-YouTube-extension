@@ -74,7 +74,7 @@ window.nova_plugins.push({
                            if (chapterData = chapterList[nextChapterIndex - 1]) {
                               const separator = ' • ';
                               const msg = chapterData.title + separator + chapterData.time;
-                              NOVA.triggerOSD(msg);
+                              NOVA.showOSD(msg);
                            }
                         }
                      });
@@ -109,9 +109,9 @@ window.nova_plugins.push({
                if (target.textContent) {
                   // fix round volume level on range player change
                   if ((target.textContent?.endsWith('%')
-                     && (parseInt(target.textContent) <= 100
-                        || (user_settings.volume_unlimit && parseInt(target.textContent) <= 600)
-                     )
+                     // && (parseInt(target.textContent) <= 100
+                     //    || (user_settings.volume_unlimit && parseInt(target.textContent) <= 600)
+                     // )
                   )
                      || target.textContent?.endsWith('x')
                      || target.textContent?.startsWith('+')
@@ -238,7 +238,7 @@ window.nova_plugins.push({
 
             if (typeof this.fade === 'number') clearTimeout(this.fade); // reset fade
 
-            const hudContainer = this.container || this.create();
+            const notify = this.container || this.create();
 
             if (this.oldMsg) {
                // this.spanOSD.innerText = this.oldMsg + '\n' + pt + suffix;
@@ -272,7 +272,7 @@ window.nova_plugins.push({
                   break;
 
                case 'bar-top':
-                  hudContainer.style.background = `linear-gradient(to right, ${COLOR_OSD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
+                  notify.style.background = `linear-gradient(to right, ${COLOR_OSD}50 ${pt}%, rgba(0,0,0,.8) ${pt}%)`;
                   this.spanOSD.style.width = pt + '%';
                   break;
 
@@ -280,16 +280,16 @@ window.nova_plugins.push({
                // default:
             }
 
-            hudContainer.style.transition = 'none';
-            hudContainer.style.opacity = 1;
-            hudContainer.style.visibility = 'visible';
+            notify.style.transition = 'none';
+            notify.style.opacity = 1;
+            notify.style.visibility = 'visible';
 
             this.fade = setTimeout(() => {
-               hudContainer.style.transition = 'opacity 200ms ease-in';
-               hudContainer.style.opacity = 0;
+               notify.style.transition = 'opacity 200ms ease-in';
+               notify.style.opacity = 0;
                // setTimeout(() => this.spanOSD.textContent = '', 200); // clear text
-               setTimeout(() => hudContainer.style.visibility = 'hidden', 1000); // completely hide after 1s
-            }, timeout_ms); // total 1s = 800ms + 200ms(hudContainer.style.transition)
+               setTimeout(() => notify.style.visibility = 'hidden', 1000); // completely hide after 1s
+            }, timeout_ms); // total 1s = 800ms + 200ms(notify.style.transition)
          }
       };
 
@@ -392,6 +392,44 @@ window.nova_plugins.push({
             },
          ],
       },
+      player_indicator_opacity: {
+         _tagName: 'input',
+         label: 'Opacity',
+         'label:zh': '不透明度',
+         'label:ja': '不透明度',
+         // 'label:ko': '불투명',
+         // 'label:vi': '',
+         // 'label:id': 'Kegelapan',
+         // 'label:es': 'Opacidad',
+         'label:pt': 'Opacidade',
+         'label:fr': 'Opacité',
+         // 'label:it': 'Opacità',
+         'label:tr': 'opaklık',
+         'label:de': 'Opazität',
+         'label:pl': 'Przezroczystość',
+         'label:ua': 'Прозорість',
+         type: 'number',
+         title: 'less value - more transparency',
+         // 'title:zh': '',
+         // 'title:ja': '',
+         // 'title:ko': '',
+         // 'title:vi': '',
+         // 'title:id': '',
+         // 'title:es': '',
+         // 'title:pt': '',
+         // 'title:fr': '',
+         // 'title:it': '',
+         // 'title:tr': '',
+         // 'title:de': '',
+         // 'title:pl': '',
+         // 'title:ua': '',
+         placeholder: '0-1',
+         step: .1,
+         min: .1,
+         max: .9,
+         value: .3,
+         // 'data-dependent': { 'player_indicator_type': ['text-top', bar-top'] },
+      },
       player_indicator_color: {
          _tagName: 'input',
          type: 'color',
@@ -488,44 +526,6 @@ window.nova_plugins.push({
          max: 10,
          value: 1.8,
          'data-dependent': { 'player_indicator_chapter': true },
-      },
-      player_indicator_opacity: {
-         _tagName: 'input',
-         label: 'Opacity',
-         'label:zh': '不透明度',
-         'label:ja': '不透明度',
-         // 'label:ko': '불투명',
-         // 'label:vi': '',
-         // 'label:id': 'Kegelapan',
-         // 'label:es': 'Opacidad',
-         'label:pt': 'Opacidade',
-         'label:fr': 'Opacité',
-         // 'label:it': 'Opacità',
-         'label:tr': 'opaklık',
-         'label:de': 'Opazität',
-         'label:pl': 'Przezroczystość',
-         'label:ua': 'Прозорість',
-         type: 'number',
-         title: 'less value - more transparency',
-         // 'title:zh': '',
-         // 'title:ja': '',
-         // 'title:ko': '',
-         // 'title:vi': '',
-         // 'title:id': '',
-         // 'title:es': '',
-         // 'title:pt': '',
-         // 'title:fr': '',
-         // 'title:it': '',
-         // 'title:tr': '',
-         // 'title:de': '',
-         // 'title:pl': '',
-         // 'title:ua': '',
-         placeholder: '0-1',
-         step: .1,
-         min: .1,
-         max: .9,
-         value: .3,
-         // 'data-dependent': { 'player_indicator_type': ['text-top', bar-top'] },
       },
    }
 });

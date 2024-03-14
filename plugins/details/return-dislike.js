@@ -140,7 +140,7 @@ window.nova_plugins.push({
 
             // const percent = Math.trunc(data.likes * 100 / (data.likes + data.dislikes)); // liked
             const percent = Math.trunc(data.dislikes * 100 / (data.likes + data.dislikes)); // disliked
-            const text = `${NOVA.prettyRoundInt(data.dislikes)} (${percent}%)`;
+            const text = `${NOVA.numberFormat.abbr(data.dislikes)} (${percent}%)`;
 
             (document.getElementById(SELECTOR_ID) || (function () {
                const el = document.createElement('span');

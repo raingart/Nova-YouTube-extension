@@ -312,7 +312,7 @@ window.nova_plugins.push({
          'label:ua': 'Автовідтворення при виборі вкладки',
          options: [
             {
-               label: 'disable', /*value: false,*/ selected: true,
+               label: 'disable', /* value: false, */ selected: true, // fill value if no "selected" mark another option
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

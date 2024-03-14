@@ -150,7 +150,7 @@ window.nova_plugins.push({
       //       if (ytd_watch.theater) return;
       //       // const
       //       //    width = movie_player.offsetWidth,
-      //       // height = Math.round(movie_player.offsetWidth / (16 / 9));
+      //       // height = Math.ceil(movie_player.offsetWidth / (16 / 9));
 
       //       const aspectRatio = NOVA.aspectRatio.getAspectRatio(video.videoWidth, video.videoHeight);
       //       console.debug('>', aspectRatio, video.videoWidth, height);

@@ -101,7 +101,7 @@ window.nova_plugins.push({
                   if (res?.error) return alert(`Error [${res.code}]: ${res.reason}\n` + res.error);
 
                   res?.items?.forEach(item => {
-                     if (videoCount = NOVA.prettyRoundInt(item.statistics.videoCount)) {
+                     if (videoCount = NOVA.numberFormat.abbr(item.statistics.videoCount)) {
                         insertToHTML({ 'text': videoCount, 'container': container });
                         // save cache in tabs
                         sessionStorage.setItem(CACHE_PREFIX + channelId, videoCount);

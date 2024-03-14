@@ -77,10 +77,9 @@ window.nova_plugins.push({
                         ?.contents[0].itemSectionRenderer
                         ?.contents[0].playlistVideoListRenderer?.contents
                         || document.body.querySelector('ytd-watch-flexy')?.__data.playlistData?.contents
-                        || document.body.querySelector('ytd-watch-flexy')?.data?.playlist?.playlist?.contents
-                        ;
+                        || document.body.querySelector('ytd-watch-flexy')?.data?.playlist?.playlist?.contents;
 
-                     const duration = vids_list?.reduce((acc, vid) => acc + (isNaN(vid.playlistVideoRenderer?.lengthSeconds) ? 0 : parseInt(vid.playlistVideoRenderer.lengthSeconds)), 0);
+                     const duration = vids_list?.reduce((acc, vid) => acc + (+vid.playlistVideoRenderer?.lengthSeconds || 0), 0);
 
                      if (duration) {
                         return outFormat(duration);

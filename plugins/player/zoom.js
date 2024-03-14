@@ -5,7 +5,8 @@
 // https://www.youtube.com/watch?v=z-2w7eAL-98 - (121:120)
 // https://www.youtube.com/watch?v=TaQwW5eQZeY - (121:120)
 // https://www.youtube.com/watch?v=U9mUwZ47z3E - (ultra-wide) - now broken
-// https://www.youtube.com/watch?v=EqYYmQVs36I- (16:9) horizontal black bars
+// https://www.youtube.com/watch?v=mco3UX9SqDA - (16:9) horizontal black bars
+// https://www.youtube.com/watch?v=EqYYmQVs36I - (16:9) horizontal black bars
 // https://www.youtube.com/watch?v=EIVgSuuUTwQ - (4:3) horizontal black bars
 
 window.nova_plugins.push({
@@ -195,7 +196,7 @@ window.nova_plugins.push({
                }
 
                // show UI notification
-               NOVA.triggerOSD(`Zoom: ${zoom_pt}%`);
+               NOVA.showOSD(`Zoom: ${zoom_pt}%`);
 
                // For optimozation, don`t update again
                if (zoom_pt === zoomPercent) return;
@@ -212,7 +213,7 @@ window.nova_plugins.push({
             }
 
             function geVideoMaxWidthPercent() {
-               return movie_player.clientWidth / NOVA.videoElement.videoHeight * 100;
+               return Math.trunc(movie_player.clientWidth / NOVA.videoElement.videoHeight * 100);
             }
             // for css scale you need a percentage and not a resolution
             // NOVA.aspectRatio.sizeToFit({
@@ -252,7 +253,7 @@ window.nova_plugins.push({
          'label:pl': 'Klawisz skrótu',
          'label:ua': 'Гаряча клавіша',
          options: [
-            { label: 'none', /*value: false*/ },
+            { label: 'none', /* value: false */ }, // fill value if no "selected" mark another option
             { label: 'wheel', value: 'none' },
             { label: 'shift+wheel', value: 'shiftKey' },
             { label: 'ctrl+wheel', value: 'ctrlKey' },
@@ -469,7 +470,7 @@ window.nova_plugins.push({
          // 'title:pl': '',
          // 'title:ua': '',
          options: [
-            // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             { label: 'ShiftL', value: 'ShiftLeft' },

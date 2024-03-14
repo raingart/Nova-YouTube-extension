@@ -186,7 +186,7 @@ const Plugins = {
    // },
 
    run: ({ user_settings, app_ver }) => {
-      console.debug('plugins_executor', ...arguments);
+      // console.debug('plugins.run', ...arguments);
       if (!window.nova_plugins?.length) return console.error('nova_plugins empty', window.nova_plugins);
       if (!user_settings) return console.error('user_settings empty', user_settings);
 

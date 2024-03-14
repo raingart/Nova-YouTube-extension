@@ -121,6 +121,7 @@ window.nova_plugins.push({
                // </svg>
                pipBtn.addEventListener('click', () => document.pictureInPictureElement
                   ? document.exitPictureInPicture() : NOVA.videoElement.requestPictureInPicture()
+                  // ? document.exitPictureInPicture() : movie_player.togglePictureInPicture()
                );
 
                container.prepend(pipBtn);
@@ -355,7 +356,7 @@ window.nova_plugins.push({
                   }
 
                   if (user_settings.player_buttons_custom_screenshot_to_clipboard && navigator.clipboard?.write) {
-                     return NOVA.triggerOSD('Screenshot copied to clipboard');
+                     return NOVA.showOSD('Screenshot copied to clipboard');
                   }
 
                   // create
@@ -534,7 +535,7 @@ window.nova_plugins.push({
                });
                function rotateVideo() {
                   // get first number part (rotate, without scale). Code: remove text before numbers, and extract first number group
-                  let angle = parseInt(NOVA.videoElement.style.transform.replace(/\D+/, '')) || 0;
+                  let angle = NOVA.extractAsNum.int(NOVA.videoElement.style.transform) || 0;
                   // fix ratio scale. Before angle calc
                   const scale = (angle === 0 || angle === 180) ? movie_player.clientHeight / NOVA.videoElement.clientWidth : 1;
                   angle += 90;
@@ -556,10 +557,10 @@ window.nova_plugins.push({
                   //    { '4:3': 'calc(100% / 4 * 3)' }, // HD, FHD, QHD, 4K, 8K
                   //    // { '9:16': 1.777777778 }, // mobile
                   //    { '21:9': 'calc(100% / 21 * 9)' },
-                  //    // { '16:9': Math.round((NOVA.videoElement.clientWidth / 16) * 9) + 'px' }, // HD, FHD, QHD, 4K, 8K
-                  //    // { '4:3': Math.round((NOVA.videoElement.clientWidth / 4) * 3) + 'px' }, // HD, FHD, QHD, 4K, 8K
+                  //    // { '16:9': ((NOVA.videoElement.clientWidth / 16) * 9) + 'px' }, // HD, FHD, QHD, 4K, 8K
+                  //    // { '4:3': ((NOVA.videoElement.clientWidth / 4) * 3) + 'px' }, // HD, FHD, QHD, 4K, 8K
                   //    // // { '9:16': 1.777777778 }, // mobile
-                  //    // { '21:9': Math.round((NOVA.videoElement.clientWidth / 21) * 9) + 'px' },
+                  //    // { '21:9': ((NOVA.videoElement.clientWidth / 21) * 9) + 'px' },
                   //    // { 'default': '100%' },
                   //    // hd720: { label: '720p', badge: 'HD' },
                   // ];
@@ -721,7 +722,7 @@ window.nova_plugins.push({
                // </svg>`;
 
                // `<svg viewBox="0 0 1300 1000" height="100%" width="100%">
-               //    <g fill="currentColor" transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)">
+               //    <g fill="currentColor" transform="translate(0.000000,511) scale(0.1,-0.1)">
                //       <path
                //          d="M1419.5,3442.2c-23.7-11.9-53.4-47.5-63.3-81.1c-27.7-77.2-29.7-2423.3-2-2494.5c41.5-112.8,170.1-138.5,257.2-51.4c37.6,37.6,39.6,67.3,39.6,464.9v425.3h3966.3h3966.3V-85v-1790.3H6972.3H4359.1l-47.5-49.5c-59.3-59.3-63.3-126.6-7.9-195.8l39.6-51.4h2737.8h2737.8l39.6,51.4l41.5,53.4V631.2c0,2874.3,2,2787.3-89,2822.9C9751.6,3475.8,1466.9,3465.9,1419.5,3442.2z M9583.5,2575.7V2002H5617.2H1650.9v573.7v573.7h3966.3h3966.3V2575.7z" />
                //       <path
@@ -910,7 +911,7 @@ window.nova_plugins.push({
                               }
                               else {
                                  // set max quality limit (viewport + 30%)
-                                 // if (+(+qualityData.label.replace(/[^0-9]/g, '') || 0) <= (window.innerWidth * 1.3)) {
+                                 // if ((NOVA.extractAsNum.int(qualityData.label) || 0) <= (window.innerWidth * 1.3)) {
 
                                  // incorrect window size definition in embed
                                  const maxWidth = (NOVA.currentPage == 'watch'
@@ -920,7 +921,7 @@ window.nova_plugins.push({
                                     ? screen.width
                                     : window.innerWidth;
                                  // set max quality limit (screen resolution + 30%)
-                                 if (+(qualityData.label.replace(/[^0-9]/g, '') || 0) <= (maxWidth * 1.3)) {
+                                 if ((NOVA.extractAsNum.int(qualityData.label) || 0) <= (maxWidth * 1.3)) {
                                     qualityItem.addEventListener('click', () => {
                                        // console.debug('setPlaybackQuality', quality);
                                        movie_player.setPlaybackQualityRange(quality, quality);
@@ -952,8 +953,10 @@ window.nova_plugins.push({
             if (user_settings.player_buttons_custom_items?.includes('clock')) {
                const clockEl = document.createElement('span');
                clockEl.className = 'ytp-time-display';
+               // clockEl.className = `ytp-time-display ${SELECTOR_BTN_CLASS_NAME}`;
                clockEl.title = 'Now time';
-               // clockEl.innerText = 'time init';
+               // clockEl.setAttribute('tooltip', 'Now time');
+               // clockEl.textContent = 'time init';
 
                container.prepend(clockEl);
 
@@ -1076,7 +1079,7 @@ window.nova_plugins.push({
                NOVA.videoElement.addEventListener('ratechange', function () {
                   speedBtn.setAttribute('tooltip', genTooltip());
                   // same fn in "video-rate" plugin
-                  if (!user_settings['video-rate']) NOVA.triggerOSD(this.playbackRate + 'x');
+                  if (!user_settings['video-rate']) NOVA.showOSD(this.playbackRate + 'x');
                });
 
                function switchRate() {
@@ -1459,7 +1462,7 @@ window.nova_plugins.push({
          'label:ua': 'Гаряча клавіша увімкнути швидкість',
          // title: '',
          options: [
-            // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             // { label: 'ShiftL', value: 'ShiftLeft' },
@@ -1521,7 +1524,7 @@ window.nova_plugins.push({
          // 'label:ua': '',
          // title: '',
          options: [
-            // { label: 'none', /*value: false,*/ }, // activate if no default "selected" mark
+            // { label: 'none', /* value: false, */ }, // fill value if no "selected" mark another option
             { label: 'none', value: false },
             // https://css-tricks.com/snippets/javascript/javascript-keycodes/
             // { label: 'ShiftL', value: 'ShiftLeft' },
@@ -1709,7 +1712,7 @@ window.nova_plugins.push({
          _tagName: 'input',
          type: 'color',
          value: '#ffffff',
-         label: 'Subtitle color',
+         label: 'Screenshot subtitle color',
          // 'label:zh': '颜色',
          // 'label:ja': '色',
          // // 'label:ko': '색깔',
@@ -1730,7 +1733,7 @@ window.nova_plugins.push({
          _tagName: 'input',
          type: 'color',
          value: '#000000',
-         label: 'Subtitle shadow color',
+         label: 'Screenshot subtitle shadow color',
          // 'label:zh': '颜色',
          // 'label:ja': '色',
          // // 'label:ko': '색깔',
@@ -1749,7 +1752,7 @@ window.nova_plugins.push({
       },
       // player_buttons_custom_screenshot_subtitle_font_size: {
       //    _tagName: 'input',
-      //    label: 'Subtitle font size',
+      //    label: 'Screenshot subtitle font size',
       //    // 'label:zh': '',
       //    // 'label:ja': '',
       //    // 'label:ko': '',

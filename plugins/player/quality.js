@@ -10,6 +10,7 @@
 // https://www.youtube.com/watch?v=IUWJ8_lkFAA - hd2880
 // https://www.youtube.com/watch?v=Hf5enZVznC4 - highres
 // https://www.youtube.com/watch?v=5USuekk16e0 - highres
+// https://www.youtube.com/watch?v=yK4mTN3B1d8 - Premium bitrate
 
 window.nova_plugins.push({
    id: 'video-quality',
@@ -137,9 +138,9 @@ window.nova_plugins.push({
             // premium support
             if (user_settings.video_quality_premium
                && (qualityToSet = [...movie_player.getAvailableQualityData()]
-                  .find(q => q.quality == selectedQuality
-                     && q.isPlayable
-                     && q.qualityLabel?.toLocaleLowerCase().includes('premium'))?.qualityLabel
+                  .find(q => //q.quality == selectedQuality
+                     q.isPlayable &&
+                     q.qualityLabel?.toLocaleLowerCase().includes('premium'))?.qualityLabel
                )
             ) {
                return setPremium(qualityToSet);
@@ -212,7 +213,9 @@ window.nova_plugins.push({
          settingsButton.click(); // open
 
          // quality menu
-         const qualityMenuButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"]:last-child`);
+         //const qualityMenuButton = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"]:last-child`);
+         const qualityMenuButton = [...document.body.querySelectorAll(`${SELECTOR_CONTAINER} .ytp-settings-menu [role="menuitem"] .ytp-menuitem-content`)]
+            .find(menuItem => menuItem.textContent.toLocaleLowerCase().includes('auto') || (NOVA.extractAsNum.int(menuItem.textContent) >= 144));
          qualityMenuButton.click(); // open
          // Strategy 1
          // const qualityItem = [...document.body.querySelector('.ytp-quality-menu .ytp-panel-menu').children]
@@ -222,15 +225,15 @@ window.nova_plugins.push({
          // Strategy 2
          // const qualityItem = await NOVA.waitSelector(`${SELECTOR_CONTAINER} .ytp-settings-menu .ytp-quality-menu .ytp-premium-label`);
 
-         // await NOVA.delay(1500);
+         await NOVA.delay(1500);
          // console.debug('choosing it quality', qualityItem.textContent, qualityItem.innerText);
-         await qualityItem.click(); // choosing it quality
+         qualityItem.click(); // choosing it quality
          // alert(`choosing it quality:\n${qualityItem.textContent}\n${qualityItem.innerText}`);
 
          // player.removeEventListener('onStateChange', setQuality1);
 
          // unfocused
-         document.body.querySelector('body').click();
+         document.body.click();
          document.body.querySelector('video').focus();
          // }
 
@@ -287,7 +290,7 @@ window.nova_plugins.push({
       },
       video_quality_premium: {
          _tagName: 'input',
-         label: 'Use Premium if available',
+         label: 'Use Premium bitrate if available',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -382,7 +385,7 @@ window.nova_plugins.push({
             { label: 'SD/240p', value: 'small' },
             { label: 'SD/144p', value: 'tiny' },
             { label: 'Auto', value: 'auto' },
-            { label: 'default', /*value: false,*/ selected: true },
+            { label: 'default', /* value: false, */ selected: true }, // fill value if no "selected" mark another option
          ],
       },
       video_quality_for_fullscreen: {
@@ -429,7 +432,7 @@ window.nova_plugins.push({
             // { label: 'SD/240p', value: 'small' }, // useless for the current mode
             // { label: 'SD/144p', value: 'tiny' }, // useless for the current mode
             // { label: 'Auto', value: 'auto' }, // no sense, deactivation does too
-            { label: 'default', /*value: false,*/ selected: true },
+            { label: 'default', /* value: false, */ selected: true }, // fill value if no "selected" mark another option
          ],
       },
    }

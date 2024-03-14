@@ -76,6 +76,7 @@ window.nova_plugins.push({
 
                // Strategy 4 (Cookie) (Doesn't work without refreshing the page)
                // document.cookie = 'wide=1;domain=.youtube.com';
+               // NOVA.cookie.set('wide', 1, 99);
             }
 
             // fix broken offensive video
@@ -362,7 +363,7 @@ window.nova_plugins.push({
          'label:ua': 'Режим',
          options: [
             {
-               label: 'default', /*value: '',*/ selected: true,
+               label: 'default', /* value: '', */ selected: true, // fill value if no "selected" mark another option
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
@@ -564,7 +565,7 @@ window.nova_plugins.push({
       //    type: 'checkbox',
       //    options: [
       //       {
-      //          label: 'false', /*value: '',*/ selected: true,
+      //          label: 'false', /* value: '', */ selected: true, // fill value if no "selected" mark another option
       //          // 'label:zh': '',
       //          // 'label:ja': '',
       //          // 'label:ko': '',

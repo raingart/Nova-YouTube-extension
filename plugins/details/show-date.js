@@ -99,9 +99,18 @@ window.nova_plugins.push({
                      //    "favoriteCount": "0",
                      //    "commentCount": "0",
                      //  }
-                     outList.push(NOVA.prettyRoundInt(item.statistics.viewCount), 'views');
-                     // outList.push(new Intl.NumberFormat().format(item.statistics.viewCount), ' • ');
-                     // outList.push(NOVA.prettyRoundInt(item.statistics.viewCount), ' • ');
+                     switch (user_settings.video_view_count) {
+                        case 'friendly':
+                           outList.push(NOVA.numberFormat.friendly(item.statistics.viewCount), 'views');
+                           break;
+
+                        // case 'abbr':
+                        default:
+                           outList.push(NOVA.numberFormat.abbr(item.statistics.viewCount), 'views');
+                           // outList.push(new Intl.NumberFormat().format(item.statistics.viewCount), ' • ');
+                           // outList.push(NOVA.numberFormat.abbr(item.statistics.viewCount), ' • ');
+                           break;
+                     }
                   }
 
                   // live
@@ -116,7 +125,7 @@ window.nova_plugins.push({
                      // live now
                      if (movie_player.getVideoData().isLive || item.snippet.liveBroadcastContent == 'live') {
                         outList.push('Active Livestream',
-                           NOVA.dateformat.apply(new Date(item.liveStreamingDetails.actualStartTime), [user_settings.video_date_format])
+                           NOVA.dateFormat.apply(new Date(item.liveStreamingDetails.actualStartTime), [user_settings.video_date_format])
                         );
                      }
                      // ended
@@ -133,11 +142,11 @@ window.nova_plugins.push({
                               : 'Premiered'
                         );
                         if (!sameDate) outList.push('from');
-                        outList.push(NOVA.dateformat.apply(timeStart, [user_settings.video_date_format]));
+                        outList.push(NOVA.dateFormat.apply(timeStart, [user_settings.video_date_format]));
 
                         if (!sameDate) {
                            outList.push('until',
-                              NOVA.dateformat.apply(timeEnd, [user_settings.video_date_format])
+                              NOVA.dateFormat.apply(timeEnd, [user_settings.video_date_format])
                            );
                         }
                      }
@@ -145,7 +154,7 @@ window.nova_plugins.push({
                      // else if (item.liveStreamingDetails.scheduledStartTime) {
                      else if (item.snippet.liveBroadcastContent == 'upcoming') {
                         outList.push('Scheduled',
-                           NOVA.dateformat.apply(new Date(item.liveStreamingDetails.scheduledStartTime), [user_settings.video_date_format])
+                           NOVA.dateFormat.apply(new Date(item.liveStreamingDetails.scheduledStartTime), [user_settings.video_date_format])
                         );
                      }
                   }
@@ -161,7 +170,7 @@ window.nova_plugins.push({
                         outList.push(NOVA.formatTimeOut.ago(publishedDate), 'ago');
                      }
                      else {
-                        outList.push(NOVA.dateformat.apply(publishedDate, [user_settings.video_date_format]));
+                        outList.push(NOVA.dateFormat.apply(publishedDate, [user_settings.video_date_format]));
                      }
                   }
                   // out
@@ -198,13 +207,13 @@ window.nova_plugins.push({
                // return document.getElementById(DATE_SELECTOR_ID);
             })())
                // .textContent = new Date(text).format(user_settings.video_date_format);
-               // .textContent = NOVA.dateformat.apply(new Date(text), [user_settings.video_date_format]);
+               // .textContent = NOVA.dateFormat.apply(new Date(text), [user_settings.video_date_format]);
                .textContent = text;
          }
 
          // simple
          // Date.prototype.format = function (format = 'YYYY/MM/DD') {
-         // function NOVA.dateformat(format = 'YYYY/MM/DD') {
+         // function NOVA.dateFormat(format = 'YYYY/MM/DD') {
          //    return format
          //       .replace('YYYY', this.getFullYear())
          //       .replace('MMM', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][(this.getMonth() + 1)]) // Attention! before "MM"
@@ -217,8 +226,8 @@ window.nova_plugins.push({
    },
    options: {
       video_view_count: {
-         _tagName: 'input',
-         label: 'Show views count',
+         _tagName: 'select',
+         label: 'Show views count format',
          // 'label:zh': '',
          // 'label:ja': '',
          // 'label:ko': '',
@@ -232,8 +241,11 @@ window.nova_plugins.push({
          // 'label:de': '',
          // 'label:pl': '',
          // 'label:ua': '',
-         type: 'checkbox',
-         // title: '',
+         options: [
+            { label: 'disable', value: false, }, // fill value if no "selected" mark another option
+            { label: '9.9K', value: 'abbr', selected: true },
+            { label: '9,999', value: 'friendly' },
+         ],
       },
       video_date_format: {
          _tagName: 'select',

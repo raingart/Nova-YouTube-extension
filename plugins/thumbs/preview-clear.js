@@ -282,7 +282,7 @@ window.nova_plugins.push({
                label: 'middle', value: 'hq2', selected: true,
                'label:zh': '中间',
                'label:ja': '真ん中',
-               // 'label:ko': '~ 아니다',
+               // 'label:ko': '아니다',
                // 'label:vi': '',
                // 'label:id': 'tengah',
                // 'label:es': 'medio',

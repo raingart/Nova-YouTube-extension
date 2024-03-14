@@ -34,6 +34,7 @@ window.nova_plugins.push({
                dropdownMenu = document.createElement('ul'),
                // btn <span>
                SELECTOR_BTN_TITLE_ID = SELECTOR_BTN_CLASS_NAME + '-title',
+               SELECTOR_BTN_TITLE = '#' + SELECTOR_BTN_TITLE_ID,
                dropdownSpan = document.createElement('span');
 
             NOVA.runOnPageLoad(() => {
@@ -45,6 +46,52 @@ window.nova_plugins.push({
                   containerBtn.addEventListener('click', generateMenu, { capture: true, once: true });
                }
             });
+
+            // custon tooltip (with animation)
+            // NOVA.css.push(
+            //    `${SELECTOR_BTN_TITLE}[tooltip]::before {
+            //       content: attr(tooltip);
+            //       position: absolute;
+            //       top: -3em;
+            //       line-height: normal;
+            //       background-color: rgba(28,28,28,.9);
+            //       border-radius: 2px;
+            //       padding: 5px 9px;
+            //       color: #fff;
+            //       font-weight: bold;
+            //       white-space: nowrap;
+
+            //       /*animation*/
+            //       --scale: 0;
+            //       transform: translateX(-25%) scale(var(--scale));
+            //       transition: 50ms transform;
+            //       transform-origin: bottom center;
+            //    }
+            //    ${SELECTOR_BTN_TITLE}[tooltip]:hover::before {
+            //       --scale: 1
+            //    }`);
+            NOVA.css.push(
+               `${SELECTOR_BTN_TITLE} {
+                  display: block;
+                  height: inherit;
+               }
+               ${SELECTOR_BTN_TITLE}[tooltip]:hover::before {
+                  content: attr(tooltip);
+                  position: absolute;
+                  top: -3em;
+                  transform: translateX(-30%);
+                  line-height: normal;
+                  background-color: rgba(28,28,28,.9);
+                  border-radius: .3em;
+                  padding: 5px 9px;
+                  color: #fff;
+                  font-weight: bold;
+                  white-space: nowrap;
+               }
+               /* for embed */
+               html[data-cast-api-enabled] ${SELECTOR_BTN_TITLE}[tooltip]:hover::before {
+                  font-weight: normal;
+               }`);
 
             NOVA.css.push(
                SELECTOR_BTN + ` {
@@ -98,8 +145,8 @@ window.nova_plugins.push({
             containerBtn.className = `ytp-button ${SELECTOR_BTN_CLASS_NAME} ${SELECTOR_BTN_CLASS_NAME}`;
             // btn <span>
             dropdownSpan.id = SELECTOR_BTN_TITLE_ID;
-            dropdownSpan.title = 'Nova video download';
-            // dropdownSpan.setAttribute('tooltip', 'Nova video download');
+            // dropdownSpan.title = 'Nova video download';
+            dropdownSpan.setAttribute('tooltip', 'Nova video download');
             // dropdownSpan.textContent = '🖫';
             dropdownSpan.innerHTML =
                `<svg viewBox="0 0 120 120" width="100%" height="100%" style="scale: .6;">
@@ -573,8 +620,8 @@ window.nova_plugins.push({
                   if (typeof ytplayer === 'object'
                      && (endpoint = ytplayer.config?.assets?.js
                         || ytplayer.web_player_context_config?.jsUrl)
-                        // NOTE: the 'yt' object is only accessible when using 'unsafeWindow'
-                        // yt.config_.PLAYER_JS_URL // diff ver
+                     // NOTE: the 'yt' object is only accessible when using 'unsafeWindow'
+                     // yt.config_.PLAYER_JS_URL // diff ver
                   ) {
                      return 'https://' + location.host + endpoint;
                   }
@@ -629,17 +676,32 @@ window.nova_plugins.push({
       }
 
       function fmtBitrate(size) {
-         return fmtSize(size, ['kbps', 'Mbps', 'Gbps']);
+         return fmtSize(size, ['kbps', 'Mbps', 'Gbps'], 1000);
       }
 
-      function fmtSize(size, units = ['kB', 'MB', 'GB'], divisor = 1000) {
+      function fmtSize(size, units = ['kB', 'MB', 'GB'], divisor = 1024) {
+         size = Math.abs(+size);
+         if (size === 0) return 'n/a';
+         size /= divisor;
          for (let i = 0; i < units.length; ++i) {
-            size /= divisor;
             if (size < 10) return Math.round(size * 100) / 100 + units[i];
-            if (size < 100) return Math.round(size * 10) / 10 + units[i];
-            if (size < 1000 || i == units.length - 1) return Math.round(size) + units[i];
+            else if (size < 100) return Math.round(size * 10) / 10 + units[i];
+            else if (size < 1000 || i == (units.length - 1)) return Math.round(size) + units[i];
          }
       }
+
+      // function bytesToSize(bytes, sizes = ['Bytes', 'kB', 'MB', 'GB', 'TB'], divisor = 1024) {
+      //    bytes = Math.abs(+bytes);
+      //    if (bytes === 0 || isNaN(num)) return 'n/a';
+      //    const i = Math.floor(Math.log(bytes) / Math.log(divisor));
+      //    return (i === 0 ? bytes : round(bytes / Math.pow(divisor, i))) + sizes[i];
+
+      //    function round(n, precision = 2) {
+      //       // const prec = Math.pow(10, precision);
+      //       const prec = 10 ** precision;
+      //       return Math.round(n * prec) / prec;
+      //    }
+      // }
 
    },
    options: {

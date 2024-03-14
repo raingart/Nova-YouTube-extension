@@ -1,6 +1,7 @@
 // for test
 // the adjustment area depends on the video size. Problems are visible at non-standard aspect ratio
 // https://www.youtube.com/watch?v=e8ODm-F9-IM - stereo test
+// https://www.youtube.com/watch?v=mco3UX9SqDA - audio loudness normalization
 
 window.nova_plugins.push({
    id: 'video-volume',
@@ -64,8 +65,8 @@ window.nova_plugins.push({
             video.addEventListener('volumechange', function () {
                // demonstration of different values
                // console.debug('volumechange', movie_player.getVolume(), this.volume);
-               // NOVA.triggerOSD(movie_player.getVolume() + '%');
-               NOVA.triggerOSD(Math.round(this.volume * 100) + '%');
+               // NOVA.showOSD(movie_player.getVolume() + '%');
+               NOVA.showOSD(Math.round(this.volume * 100) + '%');
                playerVolume.buildVolumeSlider();
 
                if (user_settings.volume_mute_unsave) {
@@ -231,7 +232,7 @@ window.nova_plugins.push({
 
                if (this.node.gain.value <= 6) this.node.gain.value += 1; // max 600%
 
-               NOVA.triggerOSD(movie_player.getVolume() * this.node.gain.value + '%');
+               NOVA.showOSD(movie_player.getVolume() * this.node.gain.value + '%');
                // this.buildVolumeSlider();
             }
             else {

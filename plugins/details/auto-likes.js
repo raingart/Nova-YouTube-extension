@@ -44,7 +44,7 @@ window.nova_plugins.push({
                // init
                if (user_settings.auto_likes_for_subscribed) {
                   Timer.disable = true;
-                  // NOVA.triggerOSD('Auto-like is disable');
+                  // NOVA.showOSD('Auto-like is disable');
                }
                else Timer.reset.bind(Timer)
             });
@@ -60,7 +60,7 @@ window.nova_plugins.push({
                   // Timer.disable();
                   Timer.disable = true;
                   setLike();
-                  NOVA.triggerOSD('Auto-like is activation');
+                  NOVA.showOSD('Auto-like is activation');
                }
                // console.debug('Auto-like timeupdate');
             });
@@ -82,7 +82,7 @@ window.nova_plugins.push({
                if (Timer.disable) return;
                // Timer.disable();
                Timer.disable = true;
-               NOVA.triggerOSD('Auto-like is deactivated');
+               NOVA.showOSD('Auto-like is deactivated');
             });
 
          if (user_settings.auto_likes_for_subscribed) {
@@ -92,7 +92,7 @@ window.nova_plugins.push({
                .then(() => {
                   // Timer.reset();
                   Timer.disable = false;
-                  NOVA.triggerOSD('Auto-like is enable');
+                  NOVA.showOSD('Auto-like is enable');
                });
          }
 

@@ -9,8 +9,14 @@
    - runOnPageLoad
    - css.push
    - css.get
+   //- cookie.clearAllCookies
    //- cookie.get
+   //- cookie.set
+   //- cookie.delete
+   //- cookie.clear
    //- cookie.parseQueryToObj
+   //- cookie.get
+   //- cookie.set
    //- cookie.updateParam
    - isInViewport
    // - checkVisibility
@@ -20,7 +26,7 @@
    - aspectRatio.calculateHeight
    - aspectRatio.calculateWidth
    - openPopup
-   - triggerOSD
+   - showOSD
    - getChapterList
    - strToArray
    - searchFilterHTML
@@ -30,10 +36,12 @@
    - formatTimeOut.HMS.abbr
    //- formatTimeOut.HMS.abbrFull
    - formatTimeOut.ago
-   - dateformat
-   //- extractFirstInt
-   - prettyRoundInt
-   - extractAsNum
+   - dateFormat
+   - numberFormat.abbr
+   - numberFormat.friendly
+   - extractAsNum.float
+   - extractAsNum.int
+   //- extractAsNum.firstInt
    - updateUrl
    - queryURL.has
    - queryURL.get
@@ -815,13 +823,13 @@ const NOVA = {
     * @param  {string} text
     * @return {void}
    */
-   triggerOSD(text) {
-      // console.debug('triggerOSD', ...arguments);
+   showOSD(text) {
+      // console.debug('showOSD', ...arguments);
       if (!text || !['watch', 'embed'].includes(this.currentPage)) return;
       if (typeof this.fadeBezel === 'number') clearTimeout(this.fadeBezel); // reset fade
 
       const bezelEl = document.body.querySelector('.ytp-bezel-text');
-      if (!bezelEl) return console.error(`triggerOSD ${text}=>${bezelEl}`);
+      if (!bezelEl) return console.error(`showOSD ${text}=>${bezelEl}`);
 
       const
          bezelContainer = bezelEl.parentElement.parentElement,
@@ -889,7 +897,7 @@ const NOVA = {
          const selectorTimestampLink = 'a[href*="&t="]';
          let
             timestampsCollect = [],
-            nowComment,
+            unreliableSorting,
             prevSec = -1;
 
          [
@@ -902,21 +910,26 @@ const NOVA = {
 
             // first comment (pinned)
             // '#comments ytd-comment-thread-renderer:first-child #content',
-            // all comments
+            // comment have max timestamp count
             // Strategy 1. To above v105 https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-            // ...[...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
-            // Strategy 2
-            ...[...document.body.querySelectorAll(`#comments #comment #comment-content ${selectorTimestampLink} + *:last-child`)]
-               // .map(el => el.closest('#comment')?.textContent),
-               .map(el => ({
-                  'source': 'comment',
-                  'text': el.closest('#comment-content')?.textContent,
-               })),
+            ...([...document.body.querySelectorAll(`#comments #comment #comment-content:has(${selectorTimestampLink})`)]
+               .map(el => [...el.querySelectorAll(selectorTimestampLink)]
+                  .map(a => ({
+                     'source': 'comment',
+                     'text': `${a.textContent} ${a.nextSibling.textContent}`, // nextElementSibling
+                     // 'text': a.previousSibling.textContent, // previousElementSibling
+                  }))
+               )
+               ?.sort((a, b) => b.length - a.length) // sort by length
+               ?.shift() // get first (max)
+               // ?.flat() // Doesn't work
+               || [])
          ]
             .forEach(data => {
-               if (timestampsCollect.length > 1) return; // skip if exist in priority selector (#1 description, #2 comments)
+               // console.debug('data', data);
+               // if (timestampsCollect.length > 1) return; // skip if exist in priority selector (#1 description, #2 comments)
                // needed for check, applying sorting by timestamps
-               nowComment = Boolean(data?.source);
+               unreliableSorting = Boolean(data?.source);
 
                (data?.text || data)
                   ?.split('\n')
@@ -935,11 +948,11 @@ const NOVA = {
                         if (
                            // fix invalid sort timestamp
                            // ex: https://www.youtube.com/watch?v=S66Q7T7qqxU https://www.youtube.com/watch?v=nkyXwDU97ms
-                           (nowComment ? true : (sec > prevSec && sec < +video_duration))
+                           (unreliableSorting ? true : (sec > prevSec && sec < +video_duration))
                            // not in the middle of the line
                            && (timestampPos < 5 || (timestampPos + timestamp.length) === line.length)
                         ) {
-                           if (nowComment) prevSec = sec;
+                           if (unreliableSorting) prevSec = sec;
 
                            timestampsCollect.push({
                               'sec': sec,
@@ -954,6 +967,9 @@ const NOVA = {
                                  .trim()
                            });
                         }
+                        // else {
+                        //    console.debug('skip line:', line);
+                        // }
                      }
                   });
             });
@@ -963,7 +979,7 @@ const NOVA = {
             return timestampsCollect;
          }
          else if (timestampsCollect.length > 1) {
-            if (nowComment) {
+            if (unreliableSorting) {
                // apply sort by sec (ex: https://www.youtube.com/watch?v=kXsAqdwB52o&lc=Ugx0zm8M0iSAFNvTV_R4AaABAg)
                timestampsCollect = timestampsCollect.sort((a, b) => a.sec - b.sec);
             }
@@ -1280,11 +1296,11 @@ const NOVA = {
          parseTime(time_sec) {
             const ts = Math.abs(+time_sec);
             return {
-               d: Math.round(ts / 86400),
-               h: Math.round((ts % 86400) / 3600),
-               m: Math.round((ts % 3600) / 60),
-               // min = Math.round(Math.log(sec) / Math.log(60)), // after sec
-               s: Math.round(ts % 60),
+               d: Math.trunc(ts / 86400),
+               h: Math.trunc((ts % 86400) / 3600),
+               m: Math.trunc((ts % 3600) / 60),
+               // min = Math.trunc(Math.log(sec) / Math.log(60)), // after sec
+               s: Math.trunc(ts % 60),
             };
          },
 
@@ -1296,7 +1312,7 @@ const NOVA = {
          // digit(ts = required()) { // format out "h:mm:ss"
          //    const
          //       ts = Math.abs(+ts),
-         //       days = Math.floor(ts / 86400);
+         //       days = Math.trunc(ts / 86400);
 
          //    let t = new Date(ts).toISOString();
          //    if (ts < 3600000) t = t.substr(14, 5); // add hours
@@ -1334,11 +1350,11 @@ const NOVA = {
             // 81.34 % slower
             // const ts = Math.abs(+time_sec);
             // return [
-            //    days = { label: 'd', time: Math.round(ts / 86400) },
-            //    hours = { label: 'h', time: Math.round((ts % 86400) / 3600) },
-            //    minutes = { label: 'm', time: Math.round((ts % 3600) / 60) },
-            //    // { label: 's', time: Math.round(Math.log(sec) / Math.log(60)) },
-            //    seconds = { label: 's', time: Math.floor(ts % 60) },
+            //    days = { label: 'd', time: Math.trunc(ts / 86400) },
+            //    hours = { label: 'h', time: Math.trunc((ts % 86400) / 3600) },
+            //    minutes = { label: 'm', time: Math.trunc((ts % 3600) / 60) },
+            //    // { label: 's', time: Math.trunc(Math.log(sec) / Math.log(60)) },
+            //    seconds = { label: 's', time: Math.trunc(ts % 60) },
             // ]
             //    .map((i, idx, arr) =>
             //       (i.time ? (arr[idx - 1] ? i.time.toString().padStart(2, '0') : i.time) + i.label : '')
@@ -1360,24 +1376,24 @@ const NOVA = {
 
          //    if (ts >= 86400) {
          //       const
-         //          days = Math.floor(ts / 86400),
-         //          hours = Math.round(ts / 3600 - days * 24);
+         //          days = Math.trunc(ts / 86400),
+         //          hours = Math.trunc(ts / 3600 - days * 24);
          //       return pluralandplural(days, 'day', hours, 'hour');
          //    }
          //    else if (ts >= 3600) {
          //       const
-         //          hours = Math.floor(ts / 3600),
-         //          minutes = Math.round(ts / 60 - hours * 60);
+         //          hours = Math.trunc(ts / 3600),
+         //          minutes = Math.trunc(ts / 60 - hours * 60);
          //       return pluralandplural(hours, 'hour', minutes, 'min');
          //    }
          //    else if (ts >= 60) {
          //       const
-         //          minutes = Math.floor(ts / 60),
-         //          seconds = Math.round(ts - minutes * 60);
+         //          minutes = Math.trunc(ts / 60),
+         //          seconds = Math.trunc(ts - minutes * 60);
          //       return pluralandplural(minutes, 'min', seconds, 'sec');
          //    }
          //    else {
-         //       const seconds = Math.max(0, Math.floor(ts));
+         //       const seconds = Math.max(0, Math.trunc(ts));
          //       return plural(seconds, 'second');
          //    }
          // },
@@ -1415,15 +1431,15 @@ const NOVA = {
     * @param  {format} string
     * @return {string}
    */
-   // NOVA.dateformat.apply(new Date(text), [user_settings.video_date_format]);
+   // NOVA.dateFormat.apply(new Date(text), [user_settings.video_date_format]);
    // Date.prototype.format = function (format = 'YYYY/MM/DD') {
-   dateformat(format = 'YYYY/MM/DD') {
+   dateFormat(format = 'YYYY/MM/DD') {
       // info and alt:
       // https://cwestblog.com/2012/09/27/javascript-date-prototype-format/
       // https://github.com/mikebaldry/formatDate-js/blob/master/formatDate.js
       // https://github.com/sean1093/timeSolver/blob/master/src/1.2.0/timeSolver.js
 
-      if (!(this instanceof Date)) return console.error('dateformat - is not Date type:', this);
+      if (!(this instanceof Date)) return console.error('dateFormat - is not Date type:', this);
 
       // console.debug('format', format);
       const
@@ -1472,44 +1488,49 @@ const NOVA = {
          });
    },
 
-   // extractFirstInt: str => str && parseInt(str.replace(/\D/g, '')),
+   numberFormat: {
+      /**
+       * @param  {integer/string} num
+       * @return {string}
+      */
+      // conver number "2111" > "2K"
+      // abbr: num => new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, notation: 'compact', compactDisplay: 'short' }).format(num),
+      abbr(num) {
+         num = Math.abs(+num);
+         if (num === 0 || isNaN(num)) return '';
+         else if (num < 1000) return Math.trunc(num);
+         else if (num < 1e4) return round(num / 1000) + 'K'; // 9.9K (up to 10k)
+         else if (num < 990000) return Math.round(num / 1000) + 'K';
+         else if (num < 990000000) return Math.round(num / 1e5) / 10 + 'M';
+         else return Math.round(num / 1e8) / 10 + 'B';
 
-   /**
-    * @param  {integer/string} num
-    * @return {string}
-   */
-   // prettyRoundInt(num) { // conver number "2111" > "2K" (without decimals)
-   //    num = +num;
-   //    if (num === 0) return '';
-   //    else if (num < 1000) return num;
-   //    else if (num < 990000) return Math.max(1, Math.round(num / 1000)) + 'K'; // K on youtube are never decimals
-   //    else if (num < 990000000) return Math.max(1, Math.round(num / 100000) / 10) + 'M';
-   //    else return Math.max(1, Math.round(num / 100000000) / 10) + 'B';
-   // },
-   // 81.46% slower
-   prettyRoundInt(num) { // conver number "2111" > "2.1K"
-      num = +num;
-      if (num === 0) return '';
-      if (num < 1000) return num; // speed up
-      const sizes = ['', 'K', 'M', 'B'];
-      const i = Math.round(Math.log(Math.abs(num)) / Math.log(1000));
-      return sizes[i]
-         ? round(num / 1000 ** i, num < 10000 ? 1 : 0) + sizes[i]
-         : num; // out range
+         function round(n, precision = 1) {
+            // const prec = Math.pow(10, precision);
+            const prec = 10 ** precision;
+            return Math.round(n * prec) / prec;
+         }
+      },
+      // broken "1000000" => '1000K'
+      // abbr(num, units = ['', 'K', 'M', 'B']) {
+      //    const sign = Math.sign(num);
+      //    let unit = 0;
 
-      function round(n, precision = 2) {
-         const prec = 10 ** precision;
-         return Math.round(n * prec) / prec;
-      }
+      //    while (Math.abs(num) > 1000) {
+      //       unit = unit + 1;
+      //       num = Math.floor(Math.abs(num) / 100) / 10;
+      //    }
+      //    return sign * Math.abs(num) + units[unit];
+      // },
+
+      // "9999999" => "9,999,999"
+      friendly: num => new Intl.NumberFormat().format(Math.round(num * 10) / 10),
    },
-   // extractAsNum(re) {
-   //    const [xn, xq] = re?.slice(1) ?? ["0", ""]
-   //    const [n, q] = [parseFloat(xn.replace(",", ".")), xq.trim()]
-   //    if (q == "") return n;
-   //    if (q == "k") return 1000 * n;
-   //    if (q == "M") return 1000 * 1000 * n;
-   //    return 0;
-   // },
+
+   extractAsNum: {
+      float: str => (n = str?.replace(/[^0-9.]/g, '')) && +n,
+      int: str => (n = str?.replace(/\D+/g, '')) && +n,
+      // firstInt: str => str && parseInt(str.replace(/\D/g, '')),
+   },
 
    /**
     * @param  {string} new_url
@@ -1596,7 +1617,7 @@ const NOVA = {
                return console.error('YOUTUBE_API_KEYS empty:', YOUTUBE_API_KEYS);
             }
 
-            const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.round(Math.random() * arr.length)];
+            const referRandKey = arr => api_key || 'AIzaSy' + arr[Math.trunc(Math.random() * arr.length)];
             // combine GET
             const query = Object.keys(params)
                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))

@@ -34,13 +34,12 @@ window.nova_plugins.push({
       // append (recalc) count
       NOVA.runOnPageLoad(() => {
          if (NOVA.currentPage == 'watch') {
-            NOVA.waitSelector('ytd-comments-header-renderer #title #count', { destroy_after_page_leaving: true })
-               .then(count => {
-                  document.body.querySelector(COMMENTS_SELECTOR)
-                     ?.setAttribute(counterAttrName,
-                        // parseFloat(count.textContent.replace(/[^0-9.]/g, ''));
-                        NOVA.prettyRoundInt(parseInt(count.textContent.replace(/,/g, '')))
-                     );
+            NOVA.waitSelector('ytd-comments-header-renderer #title #count:not(:empty)', { destroy_after_page_leaving: true })
+               .then(countEl => {
+                  if (count = NOVA.extractAsNum.int(countEl.textContent)) {
+                     document.body.querySelector(COMMENTS_SELECTOR)
+                        ?.setAttribute(counterAttrName, NOVA.numberFormat.abbr(count));
+                  }
                });
          }
       });

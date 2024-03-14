@@ -177,7 +177,7 @@ window.nova_plugins.push({
                   <span class="yt-spec-button-shape-next__icon" style="height:100%">
                      <svg viewBox="0 0 24 24" height="100%" width="100%">
                         <g fill="currentColor">
-                           <path d="M20 12V13C20 17.4183 16.4183 21 12 21C7.58172 21 4 17.4183 4 13V12M12 17C9.79086 17 8 15.2091 8 13V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V13C16 15.2091 14.2091 17 12 17Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                           <path d="M20 12V13C20 17.4183 16.4183 21 12 21C7.58172 21 4 17.4183 4 13V12M12 17C9.79086 17 8 15.2091 8 13V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V13C16 15.2091 14.2091 17 12 17Z" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </g>
                      </svg>
                   </span>
@@ -207,7 +207,7 @@ window.nova_plugins.push({
          'label:ua': 'Режим',
          options: [
             {
-               label: 'expand default section', /*value: 'expand',*/ selected: true,
+               label: 'expand default section', /* value: 'expand', */ selected: true, // fill value if no "selected" mark another option
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',

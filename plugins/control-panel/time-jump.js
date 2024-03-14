@@ -148,7 +148,7 @@ window.nova_plugins.push({
                   msg = `+${user_settings.time_jump_step} sec` + separator + NOVA.formatTimeOut.HMS.digit(currentTime);
                }
 
-               NOVA.triggerOSD(msg); // trigger default indicator
+               NOVA.showOSD(msg); // trigger default indicator
             }
 
             function seekTime(sec) {
@@ -182,13 +182,13 @@ window.nova_plugins.push({
       //             // wait chapter-title update
       //             document.body.querySelector('.ytp-chapter-title-content')
       //                ?.addEventListener('DOMNodeInserted', ({ target }) => {
-      //                   NOVA.triggerOSD(
+      //                   NOVA.showOSD(
       //                      target.textContent + ' • ' + NOVA.formatTimeOut.HMS.digit(video.currentTime)
       //                   );// trigger default indicator
       //                }, { capture: true, once: true });
       //          }
       //          else {
-      //             NOVA.triggerOSD(`+${user_settings.time_jump_step} sec`); // trigger default indicator
+      //             NOVA.showOSD(`+${user_settings.time_jump_step} sec`); // trigger default indicator
       //          }
       //          // console.debug('seekTo', sec);
       //          this.currentTime = sec;

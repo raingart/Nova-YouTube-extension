@@ -119,38 +119,39 @@ window.nova_plugins.push({
          // if (user_settings['subtitles']) {
          listItem.push({
             name: 'subtitles',
-            getCurrentState: async () => {
-               await waitMoviePlayer('toggleSubtitlesOn');
-               movie_player.toggleSubtitlesOn();
+            getCurrentState: () => {
+               movie_player.toggleSubtitlesOn(); // enable on check
                return true;
             },
-            // customInit: movie_player.toggleSubtitlesOn, // Error - ReferenceError: movie_player is not defined
-            customInit: async () => {
-               await waitMoviePlayer('toggleSubtitlesOn');
-               return movie_player.toggleSubtitlesOn();
+            customApply: () => {
+               // Doesn't work
+               // NOVA.waitSelector('#movie_player.playing-mode')
+               //    .then(movie_player => movie_player.toggleSubtitlesOn());
+
+               NOVA.waitSelector('#movie_player video')
+                  .then(video => {
+                     video.addEventListener('canplay', async () => {
+                        // await waitMoviePlayer('toggleSubtitlesOn');
+                        movie_player.toggleSubtitlesOn();
+                     }, { capture: true, once: true });
+                  });
+
+               // async function waitMoviePlayer(fn_name = required()) {
+               //    return await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player[fn_name] === 'function', 500); // 500ms
+               // }
             },
          });
          // }
          // the same name as in the corresponding option inside the plugin
          if (user_settings['video-quality']) {
-            listItem.push({
-               name: 'quality', getCurrentState: async () => {
-                  await waitMoviePlayer('getPlaybackQuality');
-                  return movie_player.getPlaybackQuality();
-               }
-            });
+            listItem.push({ name: 'quality', getCurrentState: movie_player.getPlaybackQuality });
          }
          if (user_settings['video-rate']) {
             // listItem.push({ name: 'speed', getCurrentState: movie_player.getPlaybackRate });
             listItem.push({ name: 'speed', getCurrentState: () => NOVA.videoElement.playbackRate });
          }
          if (user_settings['video-volume']) {
-            listItem.push({
-               name: 'volume', getCurrentState: async () => {
-                  await waitMoviePlayer('getVolume');
-                  return Math.round(movie_player.getVolume());
-               }
-            });
+            listItem.push({ name: 'volume', getCurrentState: () => Math.round(movie_player.getVolume()) });
          }
          if (user_settings['player-resume-playback']) {
             listItem.push({ name: 'ignore-playback', label: 'unsave playback time', getCurrentState: () => true });
@@ -162,7 +163,11 @@ window.nova_plugins.push({
             listItem.push({ name: 'transcript' });
          }
          if (user_settings['video-zoom']) {
-            listItem.push({ name: 'zoom', getCurrentState: () => parseFloat(document.body.querySelector('.html5-video-container').style.transform.replace(/\D+/, '')) });
+            listItem.push({
+               name: 'zoom', getCurrentState: () => NOVA.extractAsNum.float(
+                  document.body.querySelector('.html5-video-container').style.transform
+               )
+            });
          }
 
          // input-checkbox
@@ -182,8 +187,8 @@ window.nova_plugins.push({
                </label>`;
             li.title = storage ? `Currently stored value ${storage}` : 'none';
 
-            if (Boolean(storage) && element.hasOwnProperty('customInit') && typeof element.customInit === 'function') {
-               element.customInit();
+            if (Boolean(storage) && element.hasOwnProperty('customApply') && typeof element.customApply === 'function') {
+               element.customApply();
             }
 
             checkbox.addEventListener('change', () => {
@@ -263,10 +268,6 @@ window.nova_plugins.push({
          }
 
          return ul;
-
-         async function waitMoviePlayer(fn_name = required()) {
-            return await NOVA.waitUntil(() => typeof movie_player === 'object' && typeof movie_player[fn_name] === 'function', 500); // 500ms
-         }
       }
 
       function initStyles() {

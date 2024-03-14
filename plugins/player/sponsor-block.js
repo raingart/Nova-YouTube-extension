@@ -161,7 +161,7 @@ window.nova_plugins.push({
 
                   const msg = `${prefix} ${NOVA.formatTimeOut.HMS.digit(segmentEnd - segmentStart)} [${categoryNameLabel[category]}] • ${NOVA.formatTimeOut.HMS.digit(segmentStart)} - ${NOVA.formatTimeOut.HMS.digit(segmentEnd)}`;
                   console.info(videoId, msg); // user log
-                  NOVA.triggerOSD(msg); // trigger default indicator
+                  NOVA.showOSD(msg); // trigger default indicator
                }
 
             });
