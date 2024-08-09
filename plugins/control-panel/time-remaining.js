@@ -97,7 +97,7 @@ window.nova_plugins.push({
                // getTimeLeftByRate = () => (this.playbackRate == 1) ? '' : '-' + NOVA.formatTimeOut.HMS.digit(delta_ / this.playbackRate);
 
                const text = user_settings.time_remaining_format
-                  .replace(/duration(\*speed)|left(\*speed|%)?|done(%)?|'([^']|'')*'/g, partPattern => { // remove key "a" for use text "at"
+                  .replace(/speed|duration(\*speed)|left(\*speed|%)?|done(%)?|'([^']|'')*'/g, partPattern => { // remove key "a" for use text "at"
                      let out;
                      switch (partPattern) {
                         case 'left*speed': out = getTimeLeftByRate(); break;
@@ -105,6 +105,7 @@ window.nova_plugins.push({
                         case 'left%': out = getPercent('L'); break;
                         case 'done': out = currentTime; break;
                         case 'done%': out = getPercent(); break;
+                        case 'speed': out = this.playbackRate; break;
                         case 'duration*speed': out = NOVA.formatTimeOut.HMS.digit(duration / this.playbackRate); break;
                         case 'duration': out = duration; break;
                         // default: console.debug('skiped:', partPattern); break;
@@ -293,6 +294,22 @@ window.nova_plugins.push({
             },
             {
                label: 'left/left*speed', value: 'left/left*speed (done%)',
+               // 'label:zh': '',
+               // 'label:ja': '',
+               // 'label:ko': '',
+               // 'label:vi': '',
+               // 'label:id': '',
+               // 'label:es': '',
+               // 'label:pt': '',
+               // 'label:fr': '',
+               // 'label:it': '',
+               // 'label:tr': '',
+               // 'label:de': '',
+               // 'label:pl': '',
+               // 'label:ua': '',
+            },
+            {
+               label: 'left/left*speed speed', value: 'left/left*speed (done%) speedx',
                // 'label:zh': '',
                // 'label:ja': '',
                // 'label:ko': '',
