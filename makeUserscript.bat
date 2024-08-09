@@ -16,7 +16,7 @@ del /q %outFile%
 type .\Userscript\meta.js
 type .\Userscript\compatibility.js
 :: add plugins container
-echo window.nova_plugins = [];
+type .\Userscript\plugin-container.js
 
 ::for /f "delims=" %%a in ('dir /s/b/a-d *.js') do (echo %%~na | find "-" && echo %%~na [Excluded] || echo %%~na [OK])
 for /f "delims=" %%i in ('dir /b /s .\plugins\*.js ^| findstr /i /v "\\-"') do type "%%i
