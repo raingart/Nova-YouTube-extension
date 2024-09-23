@@ -112,7 +112,7 @@ window.nova_plugins.push({
                }
 
                const text = user_settings.time_remaining_format
-                  .replace(/\{(speed|left|done|duration)([\^%])?}/g, patternHandler);
+                  .replace(/\{(speed|left|done|duration)([\^%*])?}/g, patternHandler);
 
                if (text) insertToHTML({ 'text': text, 'container': container });
             }
